@@ -5,13 +5,15 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0"
   },
   "private": true,
   "dependencies": {
     "@floating-ui/react-dom": "^1.0.1",
     "@floating-ui/react-dom-interactions": "^0.13.3",
     "@headlessui/react": "^1.7.7",
+    "@heroicons/react": "^2.0.13",
     "@hookform/resolvers": "^2.9.10",
     "@nrwl/next": "15.2.1",
     "@tanstack/react-table": "^8.7.4",

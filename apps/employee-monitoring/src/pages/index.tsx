@@ -6,11 +6,7 @@ export function Index() {
    *
    * Note: The corresponding styles are in the ./index.css file.
    */
-  return (
-    <div className="">
-      <Sidebar>TEST</Sidebar>
-    </div>
-  );
+  return <>{/** w-16 for collapsed, w-64 for non collapsed */}</>;
 }
 
 export default Index;
