@@ -4,7 +4,11 @@ export function Index() {
    *
    * Note: The corresponding styles are in the ./index.css file.
    */
-  return <>{/** w-16 for collapsed, w-64 for non collapsed */}</>;
+  return (
+    <div className="w-full h-full ">
+      <div className="flex items-center justify-center w-full h-full">TEST</div>
+    </div>
+  );
 }
 
 export default Index;

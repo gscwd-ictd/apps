@@ -5,9 +5,9 @@ export const SideNavigation = () => {
   const { isCollapsed } = useContext(AsideContext);
 
   return (
-    <Sidebar className="w-full">
+    <Sidebar className="relative w-full">
       <Sidebar.Header>
-        <div className="flex items-center justify-center w-full gap-2 py-5 text-white">
+        <div className="z-50 flex items-center justify-center w-full gap-2 py-5 text-white">
           <section className="">
             <div className="w-7 h-7">
               <svg
@@ -44,6 +44,7 @@ export const SideNavigation = () => {
           </Sidebar.Header>
           <Sidebar.Item
             display="Dashboard"
+            className="text-xs"
             icon={
               <>
                 <svg
@@ -68,6 +69,7 @@ export const SideNavigation = () => {
           {/**DTR */}
           <Sidebar.Item
             display="Daily Time Record"
+            className="text-xs"
             icon={
               <>
                 <svg
@@ -92,6 +94,7 @@ export const SideNavigation = () => {
           {/**LEAVE CREDITS */}
           <Sidebar.Item
             display="Leave Credits"
+            className="text-xs"
             icon={
               <>
                 <svg
@@ -116,6 +119,7 @@ export const SideNavigation = () => {
           {/**OVERTIME */}
           <Sidebar.Item
             display="Overtime"
+            className="text-xs"
             icon={
               <>
                 <svg
@@ -140,6 +144,7 @@ export const SideNavigation = () => {
           {/**PASS SLIP */}
           <Sidebar.Item
             display="Pass Slip"
+            className="text-xs"
             icon={
               <>
                 <svg

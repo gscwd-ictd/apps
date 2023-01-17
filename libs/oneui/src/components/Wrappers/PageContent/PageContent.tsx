@@ -1,7 +1,11 @@
 import { createContext, FunctionComponent, ReactNode, useState } from 'react';
 
 type PageContentProps = {
-  children: ReactNode | ReactNode[];
+  header: JSX.Element;
+  sidebar: JSX.Element;
+  main: JSX.Element;
+  children?: ReactNode | ReactNode[];
+  footer?: JSX.Element;
 };
 
 type AsideContextState = {
@@ -12,14 +16,24 @@ type AsideContextState = {
 export const AsideContext = createContext({} as AsideContextState);
 
 export const PageContent: FunctionComponent<PageContentProps> = ({
+  main,
+  header,
+  sidebar,
   children,
+  footer,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <AsideContext.Provider value={{ isCollapsed, setIsCollapsed }}>
       <div className="flex w-screen h-screen overflow-x-hidden bg-slate-100">
-        {children}
+        {sidebar}
+        <div className="flex flex-col w-full">
+          {header}
+          {main}
+          {children}
+          {footer}
+        </div>
       </div>
     </AsideContext.Provider>
   );
