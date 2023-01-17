@@ -4,22 +4,23 @@ import '../../styles/tailwind.css';
 import '../../styles/custom.css';
 import {
   Aside,
-  AsideContext,
   Button,
   Main,
+  AsideContext,
   PageContent,
   Sidebar,
 } from '@gscwd-apps/oneui';
 import { useContext } from 'react';
 import { SideNavigation } from '../components/fixed/navigations/SideNavigation';
+import { TopNavigation } from '../components/fixed/navigations/TopNavigation';
 
 function CustomApp({ Component, pageProps }: AppProps) {
-  const { collapsed, setCollapsed } = useContext(AsideContext);
+  const { isCollapsed, setIsCollapsed } = useContext(AsideContext);
 
   return (
     <>
       <Head>
-        <title>Welcome to employee-monitoring!</title>
+        <title>GSCWD Employee Monitoring</title>
       </Head>
 
       <PageContent>
@@ -28,6 +29,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
         </Aside>
 
         <Main className="app">
+          <TopNavigation />
           <Component {...pageProps} />
         </Main>
       </PageContent>

@@ -1,23 +1,13 @@
-import { createContext, FunctionComponent, ReactNode, useState } from 'react';
+import { FunctionComponent, ReactNode, useContext } from 'react';
+import { AsideContext } from '../PageContent';
 import { asideClass } from './Aside.styles';
-
-type AsideContextState = {
-  collapsed: boolean;
-  setCollapsed: (state: boolean) => void;
-};
 
 type AsideProps = {
   children: ReactNode | ReactNode[];
 };
 
-export const AsideContext = createContext({} as AsideContextState);
-
 export const Aside: FunctionComponent<AsideProps> = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(true);
+  const { isCollapsed } = useContext(AsideContext);
 
-  return (
-    <AsideContext.Provider value={{ collapsed, setCollapsed }}>
-      <aside className={asideClass(collapsed)}>{children}</aside>
-    </AsideContext.Provider>
-  );
+  return <aside className={asideClass(isCollapsed)}>{children}</aside>;
 };
