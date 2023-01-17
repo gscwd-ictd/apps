@@ -1,5 +1,3 @@
-import { Sidebar } from '@gscwd-apps/oneui';
-
 export function Index() {
   /*
    * Replace the elements below with your own.

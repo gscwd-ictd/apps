@@ -1,9 +1,8 @@
 import { AsideContext, Sidebar } from '@gscwd-apps/oneui';
 import { useContext } from 'react';
-import { ChevronDoubleLeft } from '../icons/ChevronDoubleLeft';
 
 export const SideNavigation = () => {
-  const { isCollapsed, setIsCollapsed } = useContext(AsideContext);
+  const { isCollapsed } = useContext(AsideContext);
 
   return (
     <Sidebar className="w-full">
