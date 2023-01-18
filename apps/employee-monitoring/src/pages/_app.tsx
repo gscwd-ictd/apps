@@ -3,9 +3,9 @@ import Head from 'next/head';
 import '../../styles/tailwind.css';
 import '../../styles/custom.css';
 import { Aside, Main, PageContent } from '@gscwd-apps/oneui';
-import { SideNavigation } from '../components/fixed/navigations/SideNavigation';
-import { TopBar } from '../components/fixed/navigations/TopBar';
-import { BottomBar } from '../components/fixed/navigations/BottomBar';
+import { SideNavigation } from '../components/navigations/SideNavigation';
+import { TopNavigation } from '../components/navigations/TopNavigation';
+import { Footer } from '../components/navigations/Footer';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -14,20 +14,21 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>GSCWD Employee Monitoring</title>
       </Head>
 
-      <PageContent
-        header={<TopBar />}
-        footer={<BottomBar />}
-        sidebar={
-          <Aside>
-            <SideNavigation />
-          </Aside>
-        }
-        main={
+      <PageContent>
+        <Aside>
+          <SideNavigation />
+        </Aside>
+
+        <div className="flex flex-col w-full">
+          <TopNavigation />
+
           <Main>
             <Component {...pageProps} />
           </Main>
-        }
-      />
+
+          <Footer />
+        </div>
+      </PageContent>
     </>
   );
 }

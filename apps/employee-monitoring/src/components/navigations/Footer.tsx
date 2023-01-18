@@ -1,4 +1,4 @@
-export const BottomBar = () => {
+export const Footer = () => {
   return (
     <footer id="page-bottombar">
       <div className="static bottom-0 flex w-full px-5 py-5 bg-slate-200 ">

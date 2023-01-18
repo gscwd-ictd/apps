@@ -1,7 +1,7 @@
 import { AsideContext, Nav } from '@gscwd-apps/oneui';
 import { useContext } from 'react';
 
-export const TopBar = () => {
+export const TopNavigation = () => {
   const { isCollapsed, setIsCollapsed } = useContext(AsideContext);
 
   return (
