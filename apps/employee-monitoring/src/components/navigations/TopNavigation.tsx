@@ -9,11 +9,11 @@ export const TopNavigation = () => {
   return (
     <header id="page-topbar" className="w-full">
       <Nav>
-        <div className="flex items-center w-full px-5 py-4 text-center ">
+        <div className="static flex items-center w-full py-4 pl-5 text-center pr-14 ">
           <section className="w-[30%] flex text-left">
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="text-gray-700 bg-transparent"
+              className="text-gray-700 bg-transparent "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@ export const TopNavigation = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="w-6 h-6 "
               >
                 <path
                   strokeLinecap="round"
@@ -32,16 +32,16 @@ export const TopNavigation = () => {
             </button>
           </section>
           <section className="w-[50%]"></section>
-          <section className="w-[20%]   sm:right-20 md:right-5 lg:-right-10 hover:cursor-pointer">
+          <section className="w-[20%]  flex justify-end hover:cursor-pointer">
             <div className="flex items-center gap-4">
-              <div className="text-gray-500">
+              <div className="text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6"
+                  className="w-6 h-6 animate-wiggle"
                 >
                   <path
                     strokeLinecap="round"

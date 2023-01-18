@@ -9,21 +9,19 @@ export const SideNavigation = () => {
   return (
     <Sidebar className="relative w-full">
       <Sidebar.Header>
-        <div className="z-50 flex items-center justify-center w-full gap-2 py-5 text-white">
+        <div className="z-50 flex items-center justify-center w-full py-5 text-white">
           <section className="">
             <div className="w-7 h-7">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="skyblue"
+                viewBox="0 0 20 20"
+                fill="skyblue"
                 className="w-full h-full"
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"
+                  fillRule="evenodd"
+                  d="M1 2.75A.75.75 0 011.75 2h16.5a.75.75 0 010 1.5H18v8.75A2.75 2.75 0 0115.25 15h-1.072l.798 3.06a.75.75 0 01-1.452.38L13.41 18H6.59l-.114.44a.75.75 0 01-1.452-.38L5.823 15H4.75A2.75 2.75 0 012 12.25V3.5h-.25A.75.75 0 011 2.75zM7.373 15l-.391 1.5h6.037l-.392-1.5H7.373zm7.49-8.931a.75.75 0 01-.175 1.046 19.326 19.326 0 00-3.398 3.098.75.75 0 01-1.097.04L8.5 8.561l-2.22 2.22A.75.75 0 115.22 9.72l2.75-2.75a.75.75 0 011.06 0l1.664 1.663a20.786 20.786 0 013.122-2.74.75.75 0 011.046.176z"
+                  clipRule="evenodd"
                 />
               </svg>
             </div>
@@ -67,6 +65,15 @@ export const SideNavigation = () => {
             }
             path=""
           ></Sidebar.Item>
+
+          {/**Monitoring Header */}
+          <Sidebar.Header
+            className={`py-5 ${isCollapsed ? 'hidden' : 'block'}`}
+          >
+            <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
+              Monitoring
+            </span>
+          </Sidebar.Header>
 
           {/**DTR */}
           <Sidebar.Item
