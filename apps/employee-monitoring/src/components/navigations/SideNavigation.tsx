@@ -1,8 +1,10 @@
-import { AsideContext, Sidebar } from '@gscwd-apps/oneui';
+import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
 import { useContext } from 'react';
 
 export const SideNavigation = () => {
-  const { isCollapsed } = useContext(AsideContext);
+  const {
+    aside: { isCollapsed },
+  } = useContext(PageContentContext);
 
   return (
     <Sidebar className="relative w-full">

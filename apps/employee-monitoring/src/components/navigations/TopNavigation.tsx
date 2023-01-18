@@ -1,8 +1,10 @@
-import { AsideContext, Nav } from '@gscwd-apps/oneui';
+import { PageContentContext, Nav } from '@gscwd-apps/oneui';
 import { useContext } from 'react';
 
 export const TopNavigation = () => {
-  const { isCollapsed, setIsCollapsed } = useContext(AsideContext);
+  const {
+    aside: { isCollapsed, setIsCollapsed },
+  } = useContext(PageContentContext);
 
   return (
     <header id="page-topbar" className="w-full">
