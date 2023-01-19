@@ -5,7 +5,7 @@ import '../../styles/custom.css';
 import { Aside, Main, PageContent } from '@gscwd-apps/oneui';
 import { SideNavigation } from '../components/navigations/SideNavigation';
 import { TopNavigation } from '../components/navigations/TopNavigation';
-import { Path } from '../components/navigations/Path';
+import { BreadCrumbs } from '../components/navigations/BreadCrumbs';
 import { Footer } from '../components/navigations/Footer';
 
 function CustomApp({ Component, pageProps }: AppProps) {
@@ -24,7 +24,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
           <TopNavigation />
 
           <Main>
-            <Path />
+            <BreadCrumbs />
             <Component {...pageProps} />
           </Main>
           <Footer />

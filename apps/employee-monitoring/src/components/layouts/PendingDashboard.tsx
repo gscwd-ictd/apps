@@ -2,16 +2,16 @@ import { CardMiniStats } from '../cards/CardMiniStats';
 
 export const PendingDashboard = () => {
   return (
-    <div className="flex w-full gap-5 ">
+    <div className="w-full gap-4 sm:flex sm:flex-col lg:flex lg:flex-row">
       {/** Card Pending DTR */}
-      <div className="sm:w-full lg:min-w-[16rem] lg:w-full h-[6rem]">
+      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
         <CardMiniStats
-          className="rounded-md"
+          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="w-8 h-8 fill-sky-800/90"
+              className="w-10 h-10 px-2 rounded-full bg-gradient-to-tl hover:bg-gradient-to-r from-sky-800/90 via-sky-500/90 to-sky-800/90 fill-white shrink-0"
             >
               <path
                 fillRule="evenodd"
@@ -26,14 +26,14 @@ export const PendingDashboard = () => {
       </div>
 
       {/**Card Leave Applications */}
-      <div className="sm:w-full lg:min-w-[16rem] lg:w-full h-[6rem]">
+      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
         <CardMiniStats
-          className="rounded-md"
+          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="w-8 h-8 fill-sky-800/90"
+              className="w-10 h-10 px-2 rounded-full bg-gradient-to-tl hover:bg-gradient-to-r from-sky-800/90 via-sky-500/90 to-sky-800/90 fill-white shrink-0"
             >
               <path d="M12.75 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM7.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM8.25 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM9.75 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM10.5 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM12.75 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM14.25 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 13.5a.75.75 0 100-1.5.75.75 0 000 1.5z" />
               <path
@@ -49,14 +49,14 @@ export const PendingDashboard = () => {
       </div>
 
       {/**Card Pending Overtime */}
-      <div className="sm:w-full lg:min-w-[16rem] lg:w-full h-[6rem]">
+      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
         <CardMiniStats
-          className="rounded-md"
+          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="w-8 h-8 fill-sky-800/90"
+              className="w-10 h-10 rounded-full fill-white hover:bg-gradient-to-r bg-gradient-to-tl from-sky-800/90 via-sky-500/90 to-sky-800/90 shrink-0"
             >
               <path
                 fillRule="evenodd"
@@ -71,14 +71,14 @@ export const PendingDashboard = () => {
       </div>
 
       {/**Card Pending Pass Slip */}
-      <div className="sm:w-full lg:min-w-[16rem] lg:w-full h-[6rem]">
+      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
         <CardMiniStats
-          className="rounded-md"
+          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="w-8 h-8 fill-sky-800/90"
+              className="w-10 h-10 px-2 rounded-full hover:bg-gradient-to-r bg-gradient-to-tl from-sky-800/90 via-sky-500/90 to-sky-800/90 fill-white shrink-0"
             >
               <path
                 fillRule="evenodd"
