@@ -13,7 +13,7 @@ export const itemClass = (
 ) => {
   return cls(
     classnames,
-    'w-full hover:bg-red-700/50 border-l-4 duration-100 ease-in-out transition-all',
+    'w-full border-l-4 duration-100 ease-in-out transition-all',
     {
       'border-l-transparent': !selected,
       'border-l-green-500 bg-slate-700/50': selected,

@@ -1,5 +1,5 @@
 import { FunctionComponent, useContext } from 'react';
-import { AsideContext, Sidebar } from '@gscwd-apps/oneui';
+import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
 import {
   HiOutlineChevronRight,
@@ -15,7 +15,9 @@ const paths = ['/login', '/about', '/contacts', '/table', '/'];
 
 export const SideNavigation: FunctionComponent = () => {
   // access context from aside to control its collapse state
-  const { collapsed, setCollapsed } = useContext(AsideContext);
+  const {
+    aside: { isCollapsed, setIsCollapsed },
+  } = useContext(PageContentContext);
 
   // initialize router
   const router = useRouter();
@@ -23,17 +25,17 @@ export const SideNavigation: FunctionComponent = () => {
   return (
     <Sidebar className="text-white">
       <Sidebar.Header className="p-5">
-        <button onClick={() => setCollapsed(!collapsed)}>
+        <button onClick={() => setIsCollapsed(!isCollapsed)}>
           <HiOutlineChevronRight
             className={`${
-              collapsed ? 'rotate-180' : 'rotate-0'
+              isCollapsed ? 'rotate-180' : 'rotate-0'
             } transition-all`}
           />
         </button>
       </Sidebar.Header>
 
       <Sidebar.Content>
-        <ul className="text-sm space-y-1">
+        <ul className="space-y-1 text-sm">
           <Sidebar.Item
             selected={router.pathname === paths[0] ? true : false}
             display="Dashboard"

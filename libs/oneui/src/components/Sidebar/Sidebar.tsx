@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { FunctionComponent, ReactNode, useContext } from 'react';
-import { AsideContext } from '../Wrappers/PageContent';
+import { PageContentContext } from '../Wrappers/PageContent';
 import { itemClass, linkClass, sidebarClass } from './Sidebar.styles';
 
 type Props = {
@@ -74,7 +74,9 @@ const Item: FunctionComponent<ItemProps> = ({
   path,
   className,
 }) => {
-  const { isCollapsed } = useContext(AsideContext);
+  const {
+    aside: { isCollapsed },
+  } = useContext(PageContentContext);
 
   return (
     <li className={itemClass(className, selected)}>
@@ -104,5 +106,5 @@ Sidebar.Item = Item;
 Sidebar.Footer = Footer;
 
 Sidebar.defaultProps = {
-  background: 'bg-gray-900/90',
+  background: 'bg-slate-800/95',
 };

@@ -6,17 +6,15 @@ type PageContentProps = {
 
 type PageContentContextState = {
   //main : {},
-  aside: { isCollapsed: boolean; setIsCollapsed: (state: boolean) => void };
+  aside: {
+    isCollapsed: boolean;
+    setIsCollapsed: (state: boolean) => void;
+    previousState: boolean;
+    setPreviousState: (state: boolean) => void;
+  };
   // header: {},
   // footer: {},
 };
-
-type AsideContextState = {
-  isCollapsed: boolean;
-  setIsCollapsed: (state: boolean) => void;
-};
-
-export const AsideContext = createContext({} as AsideContextState);
 
 export const PageContentContext = createContext({} as PageContentContextState);
 
@@ -24,10 +22,13 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
   children,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [previousState, setPreviousState] = useState(false);
 
   return (
     <PageContentContext.Provider
-      value={{ aside: { isCollapsed, setIsCollapsed } }}
+      value={{
+        aside: { isCollapsed, setIsCollapsed, previousState, setPreviousState },
+      }}
     >
       <div className="flex w-screen h-screen overflow-x-hidden bg-slate-100">
         {children}
