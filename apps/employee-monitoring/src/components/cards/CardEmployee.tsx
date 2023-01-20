@@ -4,8 +4,8 @@ export const CardEmployee = () => {
       {/** TOP PART */}
       <section className="min-w-full h-[50%] bg-blue-200 rounded-t">
         <div className="flex flex-col m-5">
-          <span className="font-medium text-indigo-600">Welcome Back!</span>
-          <span className="text-sm font-light text-indigo-600">
+          <span className="font-medium text-blue-600">Welcome Back!</span>
+          <span className="text-xs font-light text-blue-600">
             Employee Monitoring Dashboard
           </span>
         </div>

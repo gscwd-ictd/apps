@@ -44,14 +44,14 @@ export const TardinessChart = () => {
         {
           label: 'Male',
           data: [12, 2, 15, 4, 7, 4, 1, 6, 9],
-          borderColor: 'rgb(7, 137, 218)',
-          backgroundColor: 'rgba(7, 137, 218,0.95)',
+          borderColor: 'rgb(77, 164, 218)',
+          backgroundColor: 'rgba(77, 164, 218,0.95)',
         },
         {
           label: 'Female',
           data: [5, 8, 14, 1, 6, 1, 1, 2, 3],
-          borderColor: 'rgb(235, 53, 53)',
-          backgroundColor: 'rgba(235, 53, 53, 0.95)',
+          borderColor: 'rgb(231, 100, 100)',
+          backgroundColor: 'rgba(231, 100, 100, 0.95)',
         },
       ],
     });

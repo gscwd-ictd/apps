@@ -2,7 +2,7 @@ import { CardMiniStats } from '../cards/CardMiniStats';
 
 export const PendingDashboard = () => {
   return (
-    <div className="w-full gap-4 sm:flex sm:flex-col lg:flex lg:flex-row">
+    <div className="w-full gap-5 sm:flex sm:flex-col lg:flex lg:flex-row">
       {/** Card Pending DTR */}
       <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
         <CardMiniStats

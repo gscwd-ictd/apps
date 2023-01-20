@@ -26,8 +26,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
           <Main>
             <BreadCrumbs />
             <Component {...pageProps} />
+            <Footer />
           </Main>
-          <Footer />
         </div>
       </PageContent>
     </>
