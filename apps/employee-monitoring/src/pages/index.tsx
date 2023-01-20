@@ -1,6 +1,5 @@
 import { PageContentContext } from '@gscwd-apps/oneui';
 import { useContext, useEffect, useState } from 'react';
-import { Card } from '../components/cards/Card';
 import { CardEmployee } from '../components/cards/CardEmployee';
 import { Holidays } from '../components/cards/Holidays';
 import { TardinessChart } from '../components/charts/Tardiness';

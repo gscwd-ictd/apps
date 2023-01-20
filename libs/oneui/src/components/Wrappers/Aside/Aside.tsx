@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactNode, useContext } from 'react';
-import { AsideContext } from '../PageContent';
+import { PageContentContext } from '../PageContent';
 import { asideClass } from './Aside.styles';
 
 type AsideProps = {
@@ -7,7 +7,9 @@ type AsideProps = {
 };
 
 export const Aside: FunctionComponent<AsideProps> = ({ children }) => {
-  const { isCollapsed } = useContext(AsideContext);
+  const {
+    aside: { isCollapsed },
+  } = useContext(PageContentContext);
 
   return <aside className={asideClass(isCollapsed)}>{children}</aside>;
 };
