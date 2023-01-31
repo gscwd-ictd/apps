@@ -1,5 +1,10 @@
 import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
 import { useContext } from 'react';
+import {
+  MyCalendarClockIcon,
+  MyCalendarHeartIcon,
+  MyCalendarPlusIcon,
+} from '../icons/MyLucideIcons';
 
 export const SideNavigation = () => {
   const {
@@ -63,8 +68,8 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path=""
-          ></Sidebar.Item>
+            path="/"
+          />
 
           {/**Monitoring Header */}
           <Sidebar.Header
@@ -77,7 +82,7 @@ export const SideNavigation = () => {
 
           {/**DTR */}
           <Sidebar.Item
-            display="Daily Time Record"
+            display=" Daily Time Record"
             className="text-xs"
             icon={
               <>
@@ -98,7 +103,7 @@ export const SideNavigation = () => {
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
 
           {/**LEAVE CREDITS */}
           <Sidebar.Item
@@ -123,11 +128,11 @@ export const SideNavigation = () => {
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
 
           {/**OVERTIME */}
           <Sidebar.Item
-            display="Overtime"
+            display="        Overtime"
             className="text-xs"
             icon={
               <>
@@ -148,7 +153,7 @@ export const SideNavigation = () => {
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
 
           {/**PASS SLIP */}
           <Sidebar.Item
@@ -173,7 +178,7 @@ export const SideNavigation = () => {
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
 
           {/**Maintenance Header */}
           <Sidebar.Header
@@ -207,32 +212,66 @@ export const SideNavigation = () => {
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
 
           {/**Maintenance LEAVE CREDITS */}
+
           <Sidebar.Item
-            display="Leave Credits"
+            display="Leave"
             className="text-xs"
+            hasSubItem
             icon={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                />
+              </svg>
+            }
+            subItems={
               <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-                  />
-                </svg>
+                <Sidebar.Item
+                  display="Recurring"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  icon={
+                    <>
+                      <MyCalendarClockIcon />
+                    </>
+                  }
+                  path="/leave-maintenance/recurring"
+                />
+                <Sidebar.Item
+                  display="Cumulative"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  icon={
+                    <>
+                      <MyCalendarPlusIcon />
+                    </>
+                  }
+                  path="/leave-maintenance/cumulative"
+                />
+                <Sidebar.Item
+                  display="Special Leave"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  icon={
+                    <>
+                      <MyCalendarHeartIcon />
+                    </>
+                  }
+                  path="/leave-maintenance/special-leave"
+                />
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
 
           {/** Maintenance OVERTIME */}
           <Sidebar.Item
@@ -257,7 +296,7 @@ export const SideNavigation = () => {
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
 
           {/** Maintenance PASS SLIP */}
           <Sidebar.Item
@@ -282,7 +321,7 @@ export const SideNavigation = () => {
               </>
             }
             path=""
-          ></Sidebar.Item>
+          />
         </ul>
       </Sidebar.Content>
       {/* <Sidebar.Footer>Footer</Sidebar.Footer> */}

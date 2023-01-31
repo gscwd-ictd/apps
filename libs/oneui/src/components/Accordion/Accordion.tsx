@@ -16,18 +16,27 @@ type AccordionComposition = {
   Body: typeof Body;
 };
 
-const AccordionContext = createContext<AccordionContextState>({ open: false });
+const AccordionContext = createContext<AccordionContextState>({
+  open: false,
+});
 
-export const Accordion: FunctionComponent<AccordionProps> & AccordionComposition = ({ className, children }) => {
+export const Accordion: FunctionComponent<AccordionProps> &
+  AccordionComposition = ({ className, children }) => {
   return (
     <Disclosure as="div" className={className}>
-      {({ open }) => <AccordionContext.Provider value={{ open }}>{children}</AccordionContext.Provider>}
+      {({ open }) => (
+        <AccordionContext.Provider value={{ open }}>
+          {children}
+        </AccordionContext.Provider>
+      )}
     </Disclosure>
   );
 };
 
 const Button: FunctionComponent<AccordionProps> = ({ children, className }) => {
-  return <Disclosure.Button className={className}>{children}</Disclosure.Button>;
+  return (
+    <Disclosure.Button className={className}>{children}</Disclosure.Button>
+  );
 };
 
 const Body: FunctionComponent<AccordionProps> = ({ children, className }) => {
@@ -41,7 +50,11 @@ const Body: FunctionComponent<AccordionProps> = ({ children, className }) => {
           key={open ? 'less' : 'more'}
           initial={{ opacity: 1, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0, transition: { duration: 0.15, ease: 'easeInOut' } }}
+          exit={{
+            opacity: 0,
+            height: 0,
+            transition: { duration: 0.15, ease: 'easeInOut' },
+          }}
         >
           <Disclosure.Panel static className={className}>
             {children}

@@ -1,4 +1,10 @@
-import { createContext, FunctionComponent, ReactNode, useState } from 'react';
+import {
+  createContext,
+  FunctionComponent,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 
 type PageContentProps = {
   children?: ReactNode | ReactNode[];
@@ -21,8 +27,28 @@ export const PageContentContext = createContext({} as PageContentContextState);
 export const PageContent: FunctionComponent<PageContentProps> = ({
   children,
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [previousState, setPreviousState] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [previousState, setPreviousState] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  //choose the screen size
+  const handleResize = () => {
+    if (window.innerWidth < 1080) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isMobile) setIsCollapsed(true);
+    else if (!isMobile) setIsCollapsed(false);
+  }, [isMobile, setIsCollapsed]);
+
+  // create an event listener
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+  });
 
   return (
     <PageContentContext.Provider
