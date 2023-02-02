@@ -5,6 +5,10 @@ import {
   ChevronUpIcon,
   SearchIcon,
   XIcon,
+  CalendarDaysIcon,
+  CalendarRangeIcon,
+  TimerResetIcon,
+  FileInputIcon,
 } from 'lucide-react';
 import { FunctionComponent } from 'react';
 
@@ -19,7 +23,14 @@ export const MyCalendarClockIcon: FunctionComponent<MyIconProps> = ({
   size = 25,
   className,
 }) => {
-  return <CalendarClockIcon color={color} size={size} className={className} />;
+  return (
+    <CalendarClockIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
 };
 
 export const MyCalendarPlusIcon: FunctionComponent<MyIconProps> = ({
@@ -27,7 +38,14 @@ export const MyCalendarPlusIcon: FunctionComponent<MyIconProps> = ({
   size = 25,
   className,
 }) => {
-  return <CalendarPlusIcon color={color} size={size} className={className} />;
+  return (
+    <CalendarPlusIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
 };
 
 export const MyCalendarHeartIcon: FunctionComponent<MyIconProps> = ({
@@ -35,7 +53,14 @@ export const MyCalendarHeartIcon: FunctionComponent<MyIconProps> = ({
   size = 25,
   className,
 }) => {
-  return <CalendarHeartIcon color={color} size={size} className={className} />;
+  return (
+    <CalendarHeartIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
 };
 
 export const MyChevronUpIcon: FunctionComponent<MyIconProps> = ({
@@ -43,7 +68,14 @@ export const MyChevronUpIcon: FunctionComponent<MyIconProps> = ({
   size = 25,
   className,
 }) => {
-  return <ChevronUpIcon color={color} size={size} className={className} />;
+  return (
+    <ChevronUpIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
 };
 
 export const MySearchIcon: FunctionComponent<MyIconProps> = ({
@@ -51,7 +83,74 @@ export const MySearchIcon: FunctionComponent<MyIconProps> = ({
   size = 25,
   className,
 }) => {
-  return <SearchIcon color={color} size={size} className={className} />;
+  return (
+    <SearchIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
+};
+
+export const MyCalendarDaysIcon: FunctionComponent<MyIconProps> = ({
+  color = 'currentColor',
+  size = 25,
+  className,
+}) => {
+  return (
+    <CalendarDaysIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
+};
+
+export const MyCalendarRangeIcon: FunctionComponent<MyIconProps> = ({
+  color = 'currentColor',
+  size = 25,
+  className,
+}) => {
+  return (
+    <CalendarRangeIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
+};
+
+export const MyTimerResetIcon: FunctionComponent<MyIconProps> = ({
+  color = 'currentColor',
+  size = 25,
+  className,
+}) => {
+  return (
+    <TimerResetIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
+};
+
+export const MyFileInputIcon: FunctionComponent<MyIconProps> = ({
+  color = 'currentColor',
+  size = 25,
+  className,
+}) => {
+  return (
+    <FileInputIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
 };
 
 export const MyXIcon: FunctionComponent<MyIconProps> = ({
@@ -59,5 +158,7 @@ export const MyXIcon: FunctionComponent<MyIconProps> = ({
   size = 25,
   className,
 }) => {
-  return <XIcon color={color} size={size} className={className} />;
+  return (
+    <XIcon strokeWidth={1.5} color={color} size={size} className={className} />
+  );
 };

@@ -8,7 +8,7 @@ export const CumulativePageHeader = (): JSX.Element => {
   return (
     <div className="flex justify-between w-full pl-3 ">
       <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
-      <Button type="button">
+      <Button type="button" variant="info">
         <div className="flex items-center w-full gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,33 +1,23 @@
 import { Button } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { RecurringPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/leave/recurring/Footer';
-import { RecurringPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/leave/recurring/Header';
+import { SpecialPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/leave/special-leave/Footer';
+import { SpecialPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/leave/special-leave/Header';
+import { Leave } from 'libs/utils/src/lib/types/leave-type';
 import React from 'react';
 
-type Leave = {
-  title: string;
-  code: string;
-  actions: string;
-  status: string;
-  distribution: string;
-  accumulated_credits: number;
-};
-
-const recurringLeaves: Array<Leave> = [
+const specialLeaves: Array<Partial<Leave>> = [
   {
-    title: 'Forced Leave',
+    title: 'Paternity Leave',
     code: '001',
-    distribution: 'Yearly',
-    accumulated_credits: 5,
+    maximum_credits: 14,
     status: 'active',
     actions: '',
   },
   {
-    title: 'Special Privilege Leave',
+    title: 'Maternity Leave',
     code: '002',
-    distribution: 'Yearly',
-    accumulated_credits: 3,
+    maximum_credits: 105,
     status: 'active',
     actions: '',
   },
@@ -35,13 +25,13 @@ const recurringLeaves: Array<Leave> = [
 
 export default function Index() {
   return (
-    <div className="min-h-[100%] w-full">
+    <div className="min-h-[100%] min-w-full">
       <BreadCrumbs
-        title="Recurring Leave"
+        title="Special Leave"
         crumbs={[
           {
             layerNo: 1,
-            layerText: 'Recurring Leave Maintenance',
+            layerText: 'Special Leave Maintenance',
             path: '',
           },
         ]}
@@ -50,35 +40,43 @@ export default function Index() {
         <Card title={''}>
           {/** Top Card */}
           <div className="flex flex-col w-full h-full">
-            <RecurringPageHeader />
+            <SpecialPageHeader />
             <div className="w-full px-5 mt-5">
               <table className="w-full">
                 <thead>
                   <tr className="text-xs border-b-2 text-slate-700">
-                    <th className="font-semibold w-[40%] text-left ">
+                    <th className="font-semibold w-[1/5] text-left ">
                       Leave Name
                     </th>
-                    <th className="font-semibold w-[20%] text-left">Code</th>
-                    <th className="font-semibold w-[20%] text-left">Status</th>
-                    <th className="font-semibold w-[20%] text-center">
+                    <th className="font-semibold w-[1/5] text-left">Code</th>
+
+                    <th className="font-semibold w-[1/5] text-left">
+                      Credit Ceiling
+                    </th>
+                    <th className="font-semibold w-[1/5] text-left">Status</th>
+                    <th className="font-semibold w-[1/5] text-center">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide">
-                  {recurringLeaves &&
-                    recurringLeaves.map((leave, index) => {
+                  {specialLeaves &&
+                    specialLeaves.map((leave, index) => {
                       return (
                         <React.Fragment key={index}>
-                          <tr className="h-[4rem] font-light">
-                            <td className="w-[40%] text-sm ">{leave.title}</td>
-                            <td className="w-[20%] text-sm">{leave.code}</td>
-                            <td className="w-[20%] text-sm uppercase">
+                          <tr className="h-[4rem] text-gray-700">
+                            <td className="w-[1/5] text-xs ">{leave.title}</td>
+                            <td className="w-[1/5] text-xs">{leave.code}</td>
+                            <td className="w-[1/5] text-xs">
+                              {leave.maximum_credits}
+                            </td>
+
+                            <td className="w-[1/5] text-xs uppercase">
                               {leave.status}
                             </td>
-                            <td className="w-[20%]">
+                            <td className="w-[1/5]">
                               <div className="flex justify-center w-full gap-2">
-                                <Button>
+                                <Button variant="info">
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
@@ -112,7 +110,7 @@ export default function Index() {
                 </tbody>
               </table>
             </div>
-            <RecurringPageFooter />
+            <SpecialPageFooter />
           </div>
         </Card>
       </div>

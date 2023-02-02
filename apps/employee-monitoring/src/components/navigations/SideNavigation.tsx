@@ -1,4 +1,5 @@
 import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
+import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import {
   MyCalendarClockIcon,
@@ -6,10 +7,19 @@ import {
   MyCalendarPlusIcon,
 } from '../icons/MyLucideIcons';
 
+const Route = [
+  '/dashboard',
+  '/maintenance/leave/recurring',
+  '/maintenance/leave/cumulative',
+  '/maintenance/leave/special',
+];
+
 export const SideNavigation = () => {
   const {
     aside: { isCollapsed },
   } = useContext(PageContentContext);
+
+  const { pathname } = useRouter();
 
   return (
     <Sidebar className="relative w-full">
@@ -50,6 +60,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Dashboard"
             className="text-xs"
+            selected={pathname === Route[0] ? true : false}
             icon={
               <>
                 <svg
@@ -68,7 +79,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path="/"
+            path={Route[0]}
           />
 
           {/**Monitoring Header */}
@@ -102,7 +113,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path=""
+            path="/dtr"
           />
 
           {/**LEAVE CREDITS */}
@@ -127,12 +138,12 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path=""
+            path="/leave-credits"
           />
 
           {/**OVERTIME */}
           <Sidebar.Item
-            display="        Overtime"
+            display="Overtime"
             className="text-xs"
             icon={
               <>
@@ -152,7 +163,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path=""
+            path="/overtime"
           />
 
           {/**PASS SLIP */}
@@ -194,22 +205,20 @@ export const SideNavigation = () => {
             display="Daily Time Record"
             className="text-xs"
             icon={
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-                  />
-                </svg>
-              </>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                />
+              </svg>
             }
             path=""
           />
@@ -241,32 +250,35 @@ export const SideNavigation = () => {
                 <Sidebar.Item
                   display="Recurring"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Route[1] ? true : false}
                   icon={
                     <>
                       <MyCalendarClockIcon />
                     </>
                   }
-                  path="/leave-maintenance/recurring"
+                  path={Route[1]}
                 />
                 <Sidebar.Item
                   display="Cumulative"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Route[2] ? true : false}
                   icon={
                     <>
                       <MyCalendarPlusIcon />
                     </>
                   }
-                  path="/leave-maintenance/cumulative"
+                  path={Route[2]}
                 />
                 <Sidebar.Item
                   display="Special Leave"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Route[3] ? true : false}
                   icon={
                     <>
                       <MyCalendarHeartIcon />
                     </>
                   }
-                  path="/leave-maintenance/special-leave"
+                  path={Route[3]}
                 />
               </>
             }

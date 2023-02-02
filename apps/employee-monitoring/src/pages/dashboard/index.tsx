@@ -1,8 +1,8 @@
-import { CardEmployee } from '../components/cards/CardEmployee';
-import { Holidays } from '../components/cards/Holidays';
-import { TardinessChart } from '../components/charts/Tardiness';
-import { PendingDashboard } from '../components/layouts/PendingDashboard';
-import { BreadCrumbs } from '../components/navigations/BreadCrumbs';
+import { CardEmployee } from '../../components/cards/CardEmployee';
+import { Holidays } from '../../components/cards/Holidays';
+import { TardinessChart } from '../../components/charts/Tardiness';
+import { PendingDashboard } from '../../components/layouts/PendingDashboard';
+import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
 
 export function Index() {
   return (

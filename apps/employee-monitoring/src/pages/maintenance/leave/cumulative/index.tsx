@@ -3,18 +3,8 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { CumulativePageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/leave/cumulative/Footer';
 import { CumulativePageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/leave/cumulative/Header';
+import { Leave } from '../../../../../../../libs/utils/src/lib/types/leave-type';
 import React from 'react';
-
-type Leave = {
-  title: string;
-  code: string;
-  actions: string;
-  status: string;
-  distribution: string;
-  accumulated_credits: number;
-  monetizable: boolean;
-  carried_over: boolean;
-};
 
 const cumulativeLeaves: Array<Leave> = [
   {
@@ -88,28 +78,28 @@ export default function Index() {
                     cumulativeLeaves.map((leave, index) => {
                       return (
                         <React.Fragment key={index}>
-                          <tr className="h-[4rem] font-light">
-                            <td className="w-[1/8] text-sm ">{leave.title}</td>
-                            <td className="w-[1/8] text-sm">{leave.code}</td>
-                            <td className="w-[1/8] text-sm">
+                          <tr className="h-[4rem] text-gray-700">
+                            <td className="w-[1/8] text-xs ">{leave.title}</td>
+                            <td className="w-[1/8] text-xs">{leave.code}</td>
+                            <td className="w-[1/8] text-xs">
                               {leave.distribution}
                             </td>
 
-                            <td className="w-[1/8] text-sm">
+                            <td className="w-[1/8] text-xs">
                               {leave.accumulated_credits}
                             </td>
-                            <td className="w-[1/8] text-sm">
+                            <td className="w-[1/8] text-xs">
                               {leave.monetizable === true ? 'Yes' : 'No'}
                             </td>
-                            <td className="w-[1/8] text-sm">
+                            <td className="w-[1/8] text-xs">
                               {leave.carried_over === true ? 'Yes' : 'No'}
                             </td>
-                            <td className="w-[1/8] text-sm uppercase">
+                            <td className="w-[1/8] text-xs uppercase">
                               {leave.status}
                             </td>
                             <td className="w-[1/8]">
                               <div className="flex justify-center w-full gap-2">
-                                <Button>
+                                <Button variant="info">
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
