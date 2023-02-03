@@ -1,8 +1,8 @@
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { RecurringPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/leave/recurring/Footer';
-import { RecurringPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/leave/recurring/Header';
+import { RecurringPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/recurring/Footer';
+import { RecurringPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/recurring/Header';
 import React, { useEffect, useState } from 'react';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { Leave } from 'libs/utils/src/lib/types/leave-type';
@@ -15,18 +15,17 @@ type Distribution = {
 // mock
 const recurringLeaves: Array<Partial<Leave>> = [
   {
-    title: 'Forced Leave',
-    code: '001',
-    distribution: 'Yearly',
-    accumulated_credits: 5,
+    leaveName: 'Forced Leave',
+    creditDistribution: 'Yearly',
+    accumulatedCredits: 5,
     status: 'active',
     actions: '',
   },
   {
-    title: 'Special Privilege Leave',
-    code: '002',
-    distribution: 'Yearly',
-    accumulated_credits: 3,
+    leaveName: 'Special Privilege Leave',
+
+    creditDistribution: 'Yearly',
+    accumulatedCredits: 3,
     status: 'active',
     actions: '',
   },
@@ -61,13 +60,17 @@ export default function Index() {
     setLeaves(recurringLeaves);
   }, []);
 
+  useEffect(() => {
+    console.log(action);
+  }, [action]);
+
   return (
     <div className="min-h-[100%] w-full">
       <Modal
         open={leaveModalIsOpen}
         setOpen={setLeaveModalIsOpen}
         steady
-        size="md"
+        size="sm"
       >
         <Modal.Header>
           <div className="flex justify-between w-full">
@@ -88,17 +91,12 @@ export default function Index() {
               <LabelInput
                 id={'recurringName'}
                 label={'Leave Name'}
-                value={leaveForEdit.title}
+                value={leaveForEdit.leaveName}
                 onChange={(e) =>
-                  setLeaveForEdit({ ...leaveForEdit, title: e.target.value })
-                }
-              />
-              <LabelInput
-                id="recurringCode"
-                label="Code"
-                value={leaveForEdit.code}
-                onChange={(e) =>
-                  setLeaveForEdit({ ...leaveForEdit, code: e.target.value })
+                  setLeaveForEdit({
+                    ...leaveForEdit,
+                    leaveName: e.target.value,
+                  })
                 }
               />
 
@@ -109,7 +107,7 @@ export default function Index() {
                 <select
                   id="recurringDistribution"
                   className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
-                  value={leaveForEdit.distribution}
+                  value={leaveForEdit.creditDistribution}
                 >
                   {distributionSelection &&
                     distributionSelection.map((dist) => {
@@ -120,14 +118,14 @@ export default function Index() {
 
               <LabelInput
                 id="recurringAccCredits"
-                label="Credits"
+                label="Accumulated Credits"
                 type="number"
-                value={leaveForEdit.accumulated_credits}
+                value={leaveForEdit.accumulatedCredits}
                 onWheel={(e) => e.currentTarget.blur()}
                 onChange={(e) =>
                   setLeaveForEdit({
                     ...leaveForEdit,
-                    accumulated_credits: e.target.valueAsNumber,
+                    accumulatedCredits: e.target.valueAsNumber,
                   })
                 }
               />
@@ -162,18 +160,18 @@ export default function Index() {
               <table className="w-full">
                 <thead>
                   <tr className="text-xs border-b-2 text-slate-700">
-                    <th className="font-semibold w-[1/6] text-left ">
+                    <th className="font-semibold w-[1/5] text-left ">
                       Leave Name
                     </th>
-                    <th className="font-semibold w-[1/6] text-left">Code</th>
-                    <th className="font-semibold w-[1/6] text-left">
+
+                    <th className="font-semibold w-[1/5] text-left">
                       Distribution
                     </th>
-                    <th className="font-semibold w-[1/6] text-left">
+                    <th className="font-semibold w-[1/5] text-left">
                       Accumulated Credits
                     </th>
-                    <th className="font-semibold w-[1/6] text-left">Status</th>
-                    <th className="font-semibold w-[1/6] text-center">
+                    <th className="font-semibold w-[1/5] text-left">Status</th>
+                    <th className="font-semibold w-[1/5] text-center">
                       Actions
                     </th>
                   </tr>
@@ -184,18 +182,19 @@ export default function Index() {
                       return (
                         <React.Fragment key={index}>
                           <tr className="h-[4rem]  text-gray-700">
-                            <td className="w-[1/6] text-xs ">{leave.title}</td>
-                            <td className="w-[1/6] text-xs">{leave.code}</td>
-                            <td className="w-[1/6] text-xs">
-                              {leave.distribution}
+                            <td className="w-[1/5] text-xs ">
+                              {leave.leaveName}
                             </td>
-                            <td className="w-[1/6] text-xs">
-                              {leave.accumulated_credits}
+                            <td className="w-[1/5] text-xs">
+                              {leave.creditDistribution}
                             </td>
-                            <td className="w-[1/6] text-xs uppercase">
+                            <td className="w-[1/5] text-xs">
+                              {leave.accumulatedCredits}
+                            </td>
+                            <td className="w-[1/5] text-xs uppercase">
                               {leave.status}
                             </td>
-                            <td className="w-[1/6]">
+                            <td className="w-[1/5]">
                               <div className="flex justify-center w-full gap-2">
                                 <Button
                                   variant="info"

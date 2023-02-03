@@ -4,11 +4,13 @@ import { FunctionComponent } from 'react';
 type SearchBoxProps = {
   searchValue: string;
   setSearchValue: (searchValue: string) => void;
+  placeholder?: string;
 };
 
 export const SearchBox: FunctionComponent<SearchBoxProps> = ({
   searchValue,
   setSearchValue,
+  placeholder = 'Search by name',
 }) => {
   return (
     <div className="flex items-center ">
@@ -32,7 +34,7 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
       <input
         className="rounded-full min-w-[2rem] max-w-[24rem] h-[2rem] -mx-6 outline-none border border-gray-300 px-10 text-xs"
         value={searchValue}
-        placeholder="Search by name"
+        placeholder={placeholder}
         onChange={(e: any) => setSearchValue(e.target.value)}
       />
       {!isEmpty(searchValue) ? (

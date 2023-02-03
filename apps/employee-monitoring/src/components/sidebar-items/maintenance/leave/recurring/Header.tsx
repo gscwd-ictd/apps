@@ -1,8 +1,8 @@
 import { Button } from '@gscwd-apps/oneui';
 import { useState } from 'react';
-import { SearchBox } from '../../../inputs/SearchBox';
+import { SearchBox } from '../../../../inputs/SearchBox';
 
-export const CumulativePageHeader = (): JSX.Element => {
+export const RecurringPageHeader = (): JSX.Element => {
   const [searchValue, setSearchValue] = useState<string>('');
 
   return (
@@ -22,7 +22,7 @@ export const CumulativePageHeader = (): JSX.Element => {
               clipRule="evenodd"
             />
           </svg>
-          <span> Add Cumulative Leave</span>
+          <span className="font-normal"> Add Recurring Leave</span>
         </div>
       </Button>
     </div>

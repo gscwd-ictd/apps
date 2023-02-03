@@ -1,35 +1,71 @@
-import { Button } from '@gscwd-apps/oneui';
+import { Button, Modal } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { CumulativePageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/leave/cumulative/Footer';
-import { CumulativePageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/leave/cumulative/Header';
+import { CumulativePageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/cumulative/Footer';
+import { CumulativePageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/cumulative/Header';
 import { Leave } from '../../../../../../../libs/utils/src/lib/types/leave-type';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+
+type Distribution = {
+  label: string;
+  value: string;
+};
 
 const cumulativeLeaves: Array<Leave> = [
   {
-    title: 'Vacation Leave',
-    code: '001',
-    distribution: 'Monthly',
-    accumulated_credits: 1.25,
-    monetizable: true,
-    carried_over: true,
+    leaveName: 'Vacation Leave',
+    creditDistribution: 'Monthly',
+    accumulatedCredits: 1.25,
+    isMonetizable: true,
+    canBeCarriedOver: true,
     status: 'active',
     actions: '',
   },
   {
-    title: 'Sick Leave',
-    code: '002',
-    distribution: 'Monthly',
-    accumulated_credits: 1.25,
-    monetizable: true,
-    carried_over: true,
+    leaveName: 'Sick Leave',
+    creditDistribution: 'Monthly',
+    accumulatedCredits: 1.25,
+    isMonetizable: true,
+    canBeCarriedOver: true,
     status: 'active',
     actions: '',
   },
 ];
 
+// mock
+const distributionSelection: Array<Distribution> = [
+  { label: '--None selected--', value: '' },
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Yearly', value: 'yearly' },
+];
+
 export default function Index() {
+  const [action, setAction] = useState<string>('');
+  const [leaves, setLeaves] = useState<Array<Partial<Leave>>>([]);
+  const [leaveForEdit, setLeaveForEdit] = useState<Partial<Leave>>(
+    {} as Partial<Leave>
+  );
+  const [leaveModalIsOpen, setLeaveModalIsOpen] = useState<boolean>(false);
+
+  const editAction = (leave: Partial<Leave>) => {
+    setAction('update');
+    setLeaveForEdit(leave);
+    setLeaveModalIsOpen(true);
+  };
+
+  const closeAction = () => {
+    setLeaveModalIsOpen(false);
+  };
+
+  useEffect(() => {
+    setLeaves(cumulativeLeaves);
+  }, []);
+
+  useEffect(() => {
+    console.log(action);
+  }, [action]);
+
   return (
     <div className="min-h-[100%] min-w-full">
       <BreadCrumbs
@@ -42,6 +78,127 @@ export default function Index() {
           },
         ]}
       />
+      <Modal
+        open={leaveModalIsOpen}
+        setOpen={setLeaveModalIsOpen}
+        steady
+        size="lg"
+      >
+        <Modal.Header>
+          <div className="flex justify-between w-full">
+            <span className="text-2xl text-gray-600">Edit</span>
+            <button
+              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
+              type="button"
+              onClick={closeAction}
+            >
+              x
+            </button>
+          </div>
+        </Modal.Header>
+        <hr />
+        <Modal.Body>
+          <div className="w-full mt-5">
+            <div className="flex flex-col w-full gap-5">
+              <LabelInput
+                id={'cumulativeName'}
+                label={'Leave Name'}
+                value={leaveForEdit.leaveName}
+                onChange={(e) =>
+                  setLeaveForEdit({
+                    ...leaveForEdit,
+                    leaveName: e.target.value,
+                  })
+                }
+              />
+
+              <div className="flex flex-col">
+                <label htmlFor="cumulativeDistribution">
+                  <span className="text-xs text-gray-700">Distribution</span>
+                </label>
+                <select
+                  id="cumulativeDistribution"
+                  className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
+                  value={leaveForEdit.creditDistribution}
+                >
+                  {distributionSelection &&
+                    distributionSelection.map((dist) => {
+                      return <option key={dist.value}>{dist.label}</option>;
+                    })}
+                </select>
+              </div>
+
+              <LabelInput
+                id="cumulativeAccCredits"
+                label="Credits"
+                type="number"
+                value={leaveForEdit.accumulatedCredits}
+                onWheel={(e) => e.currentTarget.blur()}
+                onChange={(e) =>
+                  setLeaveForEdit({
+                    ...leaveForEdit,
+                    accumulatedCredits: e.target.valueAsNumber,
+                  })
+                }
+              />
+
+              {/**Monetizable */}
+              <div className="flex flex-col">
+                <label htmlFor="cumulativeIsMonetizable">
+                  <span className="text-xs text-gray-700">Monetizable?</span>
+                </label>
+                <select
+                  id="cumulativeIsMonetizable"
+                  className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
+                  value={leaveForEdit.isMonetizable ? 'Yes' : 'No'}
+                >
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/**Carried Over */}
+              <div className="flex flex-col">
+                <label htmlFor="cumulativeCanBeCarriedOver">
+                  <span className="text-xs text-gray-700">
+                    Can be carried over?
+                  </span>
+                </label>
+                <select
+                  id="cumulativeCanBeCarriedOver"
+                  className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
+                  value={leaveForEdit.canBeCarriedOver ? 'Yes' : 'No'}
+                >
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/**Active */}
+              <div className="flex flex-col">
+                <label htmlFor="cumulativeStatus">
+                  <span className="text-xs text-gray-700">Status</span>
+                </label>
+                <select
+                  id="cumulativeStatus"
+                  className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
+                  value={leaveForEdit.status}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end w-full">
+            <Button variant="info">
+              <span className="text-xs font-normal">Update</span>
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
       <div className="mx-5">
         <Card title={''}>
           {/** Top Card */}
@@ -51,55 +208,60 @@ export default function Index() {
               <table className="w-full">
                 <thead>
                   <tr className="text-xs border-b-2 text-slate-700">
-                    <th className="font-semibold w-[1/8] text-left ">
+                    <th className="font-semibold w-[1/7] text-left ">
                       Leave Name
                     </th>
-                    <th className="font-semibold w-[1/8] text-left">Code</th>
-                    <th className="font-semibold w-[1/8] text-left">
+
+                    <th className="font-semibold w-[1/7] text-left">
                       Distribution
                     </th>
-                    <th className="font-semibold w-[1/8] text-left">
+                    <th className="font-semibold w-[1/7] text-left">
                       Accumulated Credits
                     </th>
-                    <th className="font-semibold w-[1/8] text-left">
+                    <th className="font-semibold w-[1/7] text-left">
                       Monetizable
                     </th>
-                    <th className="font-semibold w-[1/8] text-left">
+                    <th className="font-semibold w-[1/7] text-left">
                       Carried Over
                     </th>
-                    <th className="font-semibold w-[1/8] text-left">Status</th>
-                    <th className="font-semibold w-[1/8] text-center">
+                    <th className="font-semibold w-[1/7] text-left">Status</th>
+                    <th className="font-semibold w-[1/7] text-center">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide">
-                  {cumulativeLeaves &&
-                    cumulativeLeaves.map((leave, index) => {
+                  {leaves &&
+                    leaves.map((leave, index) => {
                       return (
                         <React.Fragment key={index}>
                           <tr className="h-[4rem] text-gray-700">
-                            <td className="w-[1/8] text-xs ">{leave.title}</td>
-                            <td className="w-[1/8] text-xs">{leave.code}</td>
-                            <td className="w-[1/8] text-xs">
-                              {leave.distribution}
+                            <td className="w-[1/7] text-xs ">
+                              {leave.leaveName}
                             </td>
 
-                            <td className="w-[1/8] text-xs">
-                              {leave.accumulated_credits}
+                            <td className="w-[1/7] text-xs">
+                              {leave.creditDistribution}
                             </td>
-                            <td className="w-[1/8] text-xs">
-                              {leave.monetizable === true ? 'Yes' : 'No'}
+
+                            <td className="w-[1/7] text-xs">
+                              {leave.accumulatedCredits}
                             </td>
-                            <td className="w-[1/8] text-xs">
-                              {leave.carried_over === true ? 'Yes' : 'No'}
+                            <td className="w-[1/7] text-xs">
+                              {leave.isMonetizable === true ? 'Yes' : 'No'}
                             </td>
-                            <td className="w-[1/8] text-xs uppercase">
+                            <td className="w-[1/7] text-xs">
+                              {leave.canBeCarriedOver === true ? 'Yes' : 'No'}
+                            </td>
+                            <td className="w-[1/7] text-xs uppercase">
                               {leave.status}
                             </td>
-                            <td className="w-[1/8]">
+                            <td className="w-[1/7]">
                               <div className="flex justify-center w-full gap-2">
-                                <Button variant="info">
+                                <Button
+                                  variant="info"
+                                  onClick={() => editAction(leave)}
+                                >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"

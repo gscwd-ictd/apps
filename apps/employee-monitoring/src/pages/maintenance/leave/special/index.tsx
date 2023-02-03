@@ -1,31 +1,123 @@
 import { Button } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { SpecialPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/leave/special-leave/Footer';
-import { SpecialPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/leave/special-leave/Header';
+import { SpecialPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/special-leave/Footer';
+import { SpecialPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/special-leave/Header';
 import { Leave } from 'libs/utils/src/lib/types/leave-type';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Modal } from '@gscwd-apps/oneui';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
 const specialLeaves: Array<Partial<Leave>> = [
   {
-    title: 'Paternity Leave',
-    code: '001',
-    maximum_credits: 14,
+    leaveName: 'Paternity Leave',
+    maximumCredits: 14,
     status: 'active',
     actions: '',
   },
   {
-    title: 'Maternity Leave',
-    code: '002',
-    maximum_credits: 105,
+    leaveName: 'Maternity Leave',
+    maximumCredits: 105,
     status: 'active',
     actions: '',
   },
 ];
 
 export default function Index() {
+  const [action, setAction] = useState<string>('');
+  const [leaves, setLeaves] = useState<Array<Partial<Leave>>>([]);
+  const [leaveForEdit, setLeaveForEdit] = useState<Partial<Leave>>(
+    {} as Partial<Leave>
+  );
+  const [leaveModalIsOpen, setLeaveModalIsOpen] = useState<boolean>(false);
+
+  const editAction = (leave: Partial<Leave>) => {
+    setAction('update');
+    setLeaveForEdit(leave);
+    setLeaveModalIsOpen(true);
+  };
+
+  const closeAction = () => {
+    setLeaveModalIsOpen(false);
+  };
+
+  useEffect(() => {
+    setLeaves(specialLeaves);
+  }, []);
   return (
     <div className="min-h-[100%] min-w-full">
+      <Modal
+        open={leaveModalIsOpen}
+        setOpen={setLeaveModalIsOpen}
+        steady
+        size="md"
+      >
+        <Modal.Header>
+          <div className="flex justify-between w-full">
+            <span className="text-2xl text-gray-600">Edit</span>
+            <button
+              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
+              type="button"
+              onClick={closeAction}
+            >
+              x
+            </button>
+          </div>
+        </Modal.Header>
+        <hr />
+        <Modal.Body>
+          <div className="w-full mt-5">
+            <div className="flex flex-col w-full gap-5">
+              <LabelInput
+                id={'specialName'}
+                label={'Leave Name'}
+                value={leaveForEdit.leaveName}
+                onChange={(e) =>
+                  setLeaveForEdit({
+                    ...leaveForEdit,
+                    leaveName: e.target.value,
+                  })
+                }
+              />
+
+              <LabelInput
+                id={'specialCeiling'}
+                label={'Credit Ceiling'}
+                type="number"
+                onWheel={(e) => e.currentTarget.blur()}
+                value={leaveForEdit.maximumCredits}
+                onChange={(e) =>
+                  setLeaveForEdit({
+                    ...leaveForEdit,
+                    maximumCredits: e.target.valueAsNumber,
+                  })
+                }
+              />
+
+              <div className="flex flex-col">
+                <label htmlFor="specialStatus">
+                  <span className="text-xs text-gray-700">Status</span>
+                </label>
+                <select
+                  id="specialStatus"
+                  className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
+                  value={leaveForEdit.creditDistribution}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end w-full">
+            <Button variant="info">
+              <span className="text-xs font-normal">Update</span>
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
       <BreadCrumbs
         title="Special Leave"
         crumbs={[
@@ -45,38 +137,41 @@ export default function Index() {
               <table className="w-full">
                 <thead>
                   <tr className="text-xs border-b-2 text-slate-700">
-                    <th className="font-semibold w-[1/5] text-left ">
+                    <th className="font-semibold w-[1/4] text-left ">
                       Leave Name
                     </th>
-                    <th className="font-semibold w-[1/5] text-left">Code</th>
 
-                    <th className="font-semibold w-[1/5] text-left">
+                    <th className="font-semibold w-[1/4] text-left">
                       Credit Ceiling
                     </th>
-                    <th className="font-semibold w-[1/5] text-left">Status</th>
-                    <th className="font-semibold w-[1/5] text-center">
+                    <th className="font-semibold w-[1/4] text-left">Status</th>
+                    <th className="font-semibold w-[1/4] text-center">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide">
-                  {specialLeaves &&
-                    specialLeaves.map((leave, index) => {
+                  {leaves &&
+                    leaves.map((leave, index) => {
                       return (
                         <React.Fragment key={index}>
                           <tr className="h-[4rem] text-gray-700">
-                            <td className="w-[1/5] text-xs ">{leave.title}</td>
-                            <td className="w-[1/5] text-xs">{leave.code}</td>
-                            <td className="w-[1/5] text-xs">
-                              {leave.maximum_credits}
+                            <td className="w-[1/4] text-xs ">
+                              {leave.leaveName}
+                            </td>
+                            <td className="w-[1/4] text-xs">
+                              {leave.maximumCredits}
                             </td>
 
-                            <td className="w-[1/5] text-xs uppercase">
+                            <td className="w-[1/4] text-xs uppercase">
                               {leave.status}
                             </td>
-                            <td className="w-[1/5]">
+                            <td className="w-[1/4]">
                               <div className="flex justify-center w-full gap-2">
-                                <Button variant="info">
+                                <Button
+                                  variant="info"
+                                  onClick={() => editAction(leave)}
+                                >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"

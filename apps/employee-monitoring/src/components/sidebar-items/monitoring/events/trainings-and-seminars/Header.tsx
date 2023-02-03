@@ -1,8 +1,8 @@
 import { Button } from '@gscwd-apps/oneui';
+import { SearchBox } from 'apps/employee-monitoring/src/components/inputs/SearchBox';
 import { useState } from 'react';
-import { SearchBox } from '../../../inputs/SearchBox';
 
-export const SpecialPageHeader = (): JSX.Element => {
+export const TrainingsPageHeader = (): JSX.Element => {
   const [searchValue, setSearchValue] = useState<string>('');
 
   return (
@@ -22,7 +22,7 @@ export const SpecialPageHeader = (): JSX.Element => {
               clipRule="evenodd"
             />
           </svg>
-          <span className="font-normal">Add Special Leave</span>
+          <span className="font-normal"> Add Training/Seminar</span>
         </div>
       </Button>
     </div>

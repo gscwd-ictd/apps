@@ -5,14 +5,10 @@ import {
   MyCalendarClockIcon,
   MyCalendarHeartIcon,
   MyCalendarPlusIcon,
+  MyCalendarRangeIcon,
+  MyLightBulbIcon,
 } from '../icons/MyLucideIcons';
-
-const Route = [
-  '/dashboard',
-  '/maintenance/leave/recurring',
-  '/maintenance/leave/cumulative',
-  '/maintenance/leave/special',
-];
+import { Paths } from '../../utils/constants/route';
 
 export const SideNavigation = () => {
   const {
@@ -60,7 +56,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Dashboard"
             className="text-xs"
-            selected={pathname === Route[0] ? true : false}
+            selected={pathname === Paths[0] ? true : false}
             icon={
               <>
                 <svg
@@ -79,7 +75,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path={Route[0]}
+            path={Paths[0]}
           />
 
           {/**Monitoring Header */}
@@ -113,7 +109,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path="/dtr"
+            path={Paths[1]}
           />
 
           {/**LEAVE CREDITS */}
@@ -138,7 +134,59 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path="/leave-credits"
+            path={Paths[2]}
+          />
+
+          {/** Maintenance Events */}
+          <Sidebar.Item
+            display="Events"
+            path=""
+            className="text-xs"
+            hasSubItem
+            icon={
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                  />
+                </svg>
+              </>
+            }
+            subItems={
+              <>
+                <Sidebar.Item
+                  display="Holidays"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[3] ? true : false}
+                  icon={
+                    <>
+                      <MyCalendarRangeIcon />
+                    </>
+                  }
+                  path={Paths[3]}
+                />
+                <Sidebar.Item
+                  display="Training & Seminars"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[4] ? true : false}
+                  icon={
+                    <>
+                      <MyLightBulbIcon />
+                    </>
+                  }
+                  path={Paths[4]}
+                />
+              </>
+            }
           />
 
           {/**OVERTIME */}
@@ -163,7 +211,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path="/overtime"
+            path={Paths[5]}
           />
 
           {/**PASS SLIP */}
@@ -188,7 +236,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path=""
+            path={Paths[6]}
           />
 
           {/**Maintenance Header */}
@@ -220,7 +268,7 @@ export const SideNavigation = () => {
                 />
               </svg>
             }
-            path=""
+            path={Paths[7]}
           />
 
           {/**Maintenance LEAVE CREDITS */}
@@ -250,39 +298,91 @@ export const SideNavigation = () => {
                 <Sidebar.Item
                   display="Recurring"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
-                  selected={pathname === Route[1] ? true : false}
+                  selected={pathname === Paths[8] ? true : false}
                   icon={
                     <>
                       <MyCalendarClockIcon />
                     </>
                   }
-                  path={Route[1]}
+                  path={Paths[8]}
                 />
                 <Sidebar.Item
                   display="Cumulative"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
-                  selected={pathname === Route[2] ? true : false}
+                  selected={pathname === Paths[9] ? true : false}
                   icon={
                     <>
                       <MyCalendarPlusIcon />
                     </>
                   }
-                  path={Route[2]}
+                  path={Paths[9]}
                 />
                 <Sidebar.Item
-                  display="Special Leave"
+                  display="Special"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
-                  selected={pathname === Route[3] ? true : false}
+                  selected={pathname === Paths[10] ? true : false}
                   icon={
                     <>
                       <MyCalendarHeartIcon />
                     </>
                   }
-                  path={Route[3]}
+                  path={Paths[10]}
                 />
               </>
             }
             path=""
+          />
+
+          {/** Maintenance Events */}
+          <Sidebar.Item
+            display="Events"
+            path=""
+            className="text-xs"
+            hasSubItem
+            icon={
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                  />
+                </svg>
+              </>
+            }
+            subItems={
+              <>
+                <Sidebar.Item
+                  display="Holidays"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[11] ? true : false}
+                  icon={
+                    <>
+                      <MyCalendarRangeIcon />
+                    </>
+                  }
+                  path={Paths[11]}
+                />
+                <Sidebar.Item
+                  display="Training & Seminars"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[12] ? true : false}
+                  icon={
+                    <>
+                      <MyLightBulbIcon />
+                    </>
+                  }
+                  path={Paths[12]}
+                />
+              </>
+            }
           />
 
           {/** Maintenance OVERTIME */}
@@ -307,7 +407,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path=""
+            path={Paths[13]}
           />
 
           {/** Maintenance PASS SLIP */}
@@ -332,7 +432,7 @@ export const SideNavigation = () => {
                 </svg>
               </>
             }
-            path=""
+            path={Paths[14]}
           />
         </ul>
       </Sidebar.Content>

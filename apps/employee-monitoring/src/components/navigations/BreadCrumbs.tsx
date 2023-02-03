@@ -24,7 +24,7 @@ export const BreadCrumbs: FunctionComponent<BreadCrumbsProps> = ({
         <>
           <a
             className="flex items-center h-full text-xs text-gray-900 select-none"
-            href="/"
+            href="/dashboard"
           >
             {crumbs.length === 0 ? 'Dashboards' : 'Dashboard'}
           </a>
