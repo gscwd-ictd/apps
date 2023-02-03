@@ -20,12 +20,12 @@ function CustomApp({ Component, pageProps }: AppProps) {
           <SideNavigation />
         </Aside>
 
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full h-full">
           <TopNavigation />
-
           <Main>
-            <BreadCrumbs />
-            <Component {...pageProps} />
+            <div className="w-full h-[93%] overflow-y-auto">
+              <Component {...pageProps} />
+            </div>
             <Footer />
           </Main>
         </div>
