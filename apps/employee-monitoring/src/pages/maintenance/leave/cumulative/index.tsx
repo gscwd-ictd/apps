@@ -3,7 +3,7 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { CumulativePageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/cumulative/Footer';
 import { CumulativePageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/cumulative/Header';
-import { Leave } from '../../../../../../../libs/utils/src/lib/types/leave-type';
+import { Leave } from '../../../../../../../libs/utils/src/lib/types/leave.type';
 import React, { useEffect, useState } from 'react';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
@@ -41,6 +41,7 @@ const distributionSelection: Array<Distribution> = [
 ];
 
 export default function Index() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [action, setAction] = useState<string>('');
   const [leaves, setLeaves] = useState<Array<Partial<Leave>>>([]);
   const [leaveForEdit, setLeaveForEdit] = useState<Partial<Leave>>(
@@ -61,10 +62,6 @@ export default function Index() {
   useEffect(() => {
     setLeaves(cumulativeLeaves);
   }, []);
-
-  useEffect(() => {
-    console.log(action);
-  }, [action]);
 
   return (
     <div className="min-h-[100%] min-w-full">
@@ -150,7 +147,7 @@ export default function Index() {
                 <select
                   id="cumulativeIsMonetizable"
                   className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
-                  value={leaveForEdit.isMonetizable ? 'Yes' : 'No'}
+                  value={leaveForEdit.isMonetizable ? 'yes' : 'no'}
                 >
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
@@ -167,7 +164,7 @@ export default function Index() {
                 <select
                   id="cumulativeCanBeCarriedOver"
                   className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
-                  value={leaveForEdit.canBeCarriedOver ? 'Yes' : 'No'}
+                  value={leaveForEdit.canBeCarriedOver ? 'yes' : 'no'}
                 >
                   <option value="yes">Yes</option>
                   <option value="no">No</option>

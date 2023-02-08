@@ -6,7 +6,7 @@ import { TrainingsPageFooter } from 'apps/employee-monitoring/src/components/sid
 import { TrainingsPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/events/trainings-and-seminars/Header';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Training } from '../../../../../../../libs/utils/src/lib/types/training-type';
+import { Training } from '../../../../../../libs/utils/src/lib/types/training-type';
 
 const training: Array<Training> = [
   {
