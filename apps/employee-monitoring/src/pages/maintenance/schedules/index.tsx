@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -7,11 +8,14 @@ import { Schedule } from '../../../../../../libs/utils/src/lib/types/schedule.ty
 import React, { useEffect, useState } from 'react';
 import { ScheduleShift } from 'libs/utils/src/lib/enums/schedule.enum';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import MyListBox from 'apps/employee-monitoring/src/components/inputs/ListBox';
+import { useForm } from 'react-hook-form';
+import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
+import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
+import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 
-type RestDay = {
-  value: string;
+type SelectOption = {
   label: string;
+  value: number | string;
 };
 
 const listOfSchedules: Array<Schedule> = [
@@ -30,7 +34,7 @@ const listOfSchedules: Array<Schedule> = [
     timeOut: '04:00',
     lunchIn: '11:00',
     lunchOut: '11:30',
-    restDays: [6, 0],
+    restDays: [1, 0],
     shift: ScheduleShift.MORNING,
   },
   {
@@ -39,7 +43,7 @@ const listOfSchedules: Array<Schedule> = [
     timeOut: '03:00',
     lunchIn: '10:00',
     lunchOut: '10:30',
-    restDays: [6, 0],
+    restDays: [1, 2],
     shift: ScheduleShift.MORNING,
   },
   {
@@ -62,39 +66,105 @@ const listOfSchedules: Array<Schedule> = [
   },
 ];
 
+const listOfRestDays: Array<SelectOption> = [
+  { label: 'Sunday', value: 0 },
+  { label: 'Monday', value: 1 },
+  { label: 'Tuesday', value: 2 },
+  { label: 'Wednesday', value: 3 },
+  { label: 'Thursday', value: 4 },
+  { label: 'Friday', value: 5 },
+  { label: 'Saturday', value: 6 },
+];
+
 const shiftSelection: Array<{ label: string; value: string }> = [
   { label: 'Morning', value: 'morning' },
   { label: 'Night', value: 'night' },
 ];
 
 export default function Index() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [action, setAction] = useState<string>('');
   const [scheduleForEdit, setScheduleForEdit] = useState<Schedule>(
     {} as Schedule
   );
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<RestDay>>([]);
+  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
+    []
+  );
+
   const [scheduleModalIsOpen, setScheduleModalIsOpen] =
     useState<boolean>(false);
 
-  const [schedules, setSchedules] = useState<Array<Schedule>>([]);
+  const schedules = useScheduleStore((state) => state.schedules);
+  const setSchedules = useScheduleStore((state) => state.setSchedules);
 
   const capitalizer = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   };
 
-  const editAction = (sched: Schedule) => {
+  const {
+    setValue,
+    watch,
+    register,
+    formState: { errors },
+  } = useForm<Schedule>({
+    mode: 'onChange',
+    defaultValues: {
+      id: '',
+      timeIn: '00:00:00',
+      timeOut: '00:00:00',
+      lunchIn: null,
+      lunchOut: null,
+      name: '',
+      restDays: [],
+      shift: ScheduleShift.MORNING,
+    },
+  });
+
+  // transforms the array of numbers(rest days) to array of key value pair
+  const transformRestDays = async (restDays: Array<number>) => {
+    const tempRestDays = restDays.map((day: number) => {
+      return { ...listOfRestDays.find((tempDay) => tempDay.value === day) };
+    });
+    return tempRestDays;
+    // .sort((a, b) => (a.value > b.value ? 1 : -1));
+  };
+
+  // when edit action is clicked
+  const editAction = async (sched: Schedule, idx: number) => {
     setAction('update');
     setScheduleForEdit(sched);
+    setSelectedRestDays(await transformRestDays(sched.restDays));
+    loadNewDefaultValues(sched);
     setScheduleModalIsOpen(true);
+  };
+
+  // loads the default values, utilizes react hook forms
+  const loadNewDefaultValues = (sched: Schedule) => {
+    setValue('id', sched.id);
+    setValue('name', sched.name);
+    setValue('timeIn', sched.timeIn);
+    setValue('timeOut', sched.timeOut);
+    setValue('lunchIn', sched.lunchIn);
+    setValue('lunchOut', sched.lunchOut);
+    setValue('shift', sched.shift);
   };
 
   const closeAction = () => {
     setScheduleModalIsOpen(false);
   };
 
+  //! this must be replaced with fetch
   useEffect(() => {
     setSchedules(listOfSchedules);
   }, []);
+
+  useEffect(() => {
+    setValue('lunchIn', null);
+  }, [watch('lunchIn')]);
+
+  useEffect(() => {
+    setValue('lunchOut', null);
+  }, [watch('lunchOut')]);
 
   return (
     <>
@@ -135,13 +205,15 @@ export default function Index() {
                 <LabelInput
                   id={'scheduleName'}
                   label={'Schedule Name'}
-                  value={scheduleForEdit.name}
+                  controller={{ ...register('name') }}
                   onChange={(e) =>
                     setScheduleForEdit({
                       ...scheduleForEdit,
                       name: e.target.value,
                     })
                   }
+                  isError={errors.name ? true : false}
+                  errorMessage={errors.name?.message}
                 />
 
                 {/** Time in */}
@@ -149,13 +221,15 @@ export default function Index() {
                   id={'scheduleTimeIn'}
                   type="time"
                   label={'Time In'}
-                  value={scheduleForEdit.timeIn}
                   onChange={(e) =>
                     setScheduleForEdit({
                       ...scheduleForEdit,
                       timeIn: e.target.value,
                     })
                   }
+                  controller={{ ...register('timeIn') }}
+                  isError={errors.timeIn ? true : false}
+                  errorMessage={errors.timeIn?.message}
                 />
 
                 {/** Time Out */}
@@ -163,13 +237,15 @@ export default function Index() {
                   id={'scheduleTimeOut'}
                   type="time"
                   label={'Time Out'}
-                  value={scheduleForEdit.timeOut}
                   onChange={(e) =>
                     setScheduleForEdit({
                       ...scheduleForEdit,
                       timeOut: e.target.value,
                     })
                   }
+                  controller={{ ...register('timeOut') }}
+                  isError={errors.timeOut ? true : false}
+                  errorMessage={errors.timeOut?.message}
                 />
 
                 {/** Lunch In */}
@@ -177,13 +253,15 @@ export default function Index() {
                   id={'scheduleLunchIn'}
                   type="time"
                   label={'Lunch In'}
-                  value={scheduleForEdit.lunchIn}
                   onChange={(e) =>
                     setScheduleForEdit({
                       ...scheduleForEdit,
                       lunchIn: e.target.value,
                     })
                   }
+                  controller={{ ...register('lunchIn') }}
+                  isError={errors.lunchIn ? true : false}
+                  errorMessage={errors.lunchIn?.message}
                 />
 
                 {/** Lunch Out */}
@@ -191,44 +269,112 @@ export default function Index() {
                   id={'scheduleLunchOut'}
                   type="time"
                   label={'Lunch Out'}
-                  value={scheduleForEdit.lunchOut}
                   onChange={(e) =>
                     setScheduleForEdit({
                       ...scheduleForEdit,
                       lunchOut: e.target.value,
                     })
                   }
+                  controller={{ ...register('lunchIn') }}
+                  isError={errors.lunchOut ? true : false}
+                  errorMessage={errors.lunchOut?.message}
                 />
 
                 {/** Shift */}
-                <div className="flex flex-col">
-                  <label htmlFor="scheduleShift">
-                    <span className="text-xs text-gray-700">Shift</span>
-                  </label>
-                  <select
-                    id="scheduleShift"
-                    className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
-                    value={scheduleForEdit.shift}
-                  >
-                    {shiftSelection &&
-                      shiftSelection.map((shift) => {
-                        return (
-                          <option key={shift.value} value={shift.value}>
-                            {shift.label}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
+                <SelectListRF
+                  id="scheduleShift"
+                  selectList={shiftSelection}
+                  controller={{ ...register('shift') }}
+                  label="Shift"
+                />
 
                 {/** Rest Day */}
-                <div className="flex flex-col w-full">
-                  <div className="text-xs text-gray-700">Rest Day</div>
-                  <MyListBox
-                    selected={selectedRestDays}
-                    setSelected={setSelectedRestDays}
+                <div className="flex flex-col w-full min-h-[2.25rem]">
+                  <MySelectList
+                    id="scheduleRestDays"
+                    label="Rest Day(s)"
+                    multiple
+                    options={listOfRestDays}
+                    onChange={(o) => setSelectedRestDays(o)}
+                    value={selectedRestDays}
                   />
                 </div>
+                {/* <div className="flex flex-col w-full">
+                  <div className="text-xs text-gray-700">Rest Day</div>
+                  <MyListBox
+                    selectedItems={selectedRestDays}
+                    setSelectedItems={setSelectedRestDays}
+                  />
+                </div> */}
+                {/* <div className="flex flex-col w-full">
+                  <label htmlFor="scheduleRestDay">
+                    <span className="text-xs text-gray-700">Rest Day/s</span>
+                  </label>
+                  <div
+                    className="w-full border rounded border-gray-300/90"
+                    id="scheduleRestDay"
+                  >
+                    <table className="w-full table-fixed">
+                      <thead>
+                        <tr className="text-xs border-b divide-x-2">
+                          <th className="font-light w-[1/7]">
+                            <label htmlFor="Sunday" className="select-none">
+                              Sunday
+                            </label>
+                          </th>
+                          <th className="font-light w-[1/7]">
+                            <label htmlFor="Monday" className="select-none">
+                              Monday
+                            </label>
+                          </th>
+                          <th className="font-light w-[1/7]">
+                            <label htmlFor="Tuesday" className="select-none">
+                              Tuesday
+                            </label>
+                          </th>
+                          <th className="font-light w-[1/7]">
+                            <label htmlFor="Wednesday" className="select-none">
+                              Wednesday
+                            </label>
+                          </th>
+                          <th className="font-light w-[1/7]">
+                            <label htmlFor="Thursday" className="select-none">
+                              Thursday
+                            </label>
+                          </th>
+                          <th className="font-light w-[1/7]">
+                            <label htmlFor="Friday" className="select-none">
+                              Friday
+                            </label>
+                          </th>
+                          <th className="font-light w-[1/7]">
+                            <label htmlFor="Saturday" className="select-none">
+                              Saturday
+                            </label>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide">
+                        <tr className="divide-x-2">
+                          {listOfRestDays.map((day) => {
+                            return (
+                              <td
+                                key={day.value}
+                                className="w-[1/7]  text-center"
+                              >
+                                <input
+                                  type="checkbox"
+                                  id={day.label}
+                               
+                                />
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div> */}
               </div>
             </div>
           </Modal.Body>
@@ -326,10 +472,10 @@ export default function Index() {
                                 })}
                               </td>
                               <td className="w-[1/8]">
-                                <div className="flex justify-center w-full gap-2">
+                                <div className="flex w-full gap-2 text-center">
                                   <Button
                                     variant="info"
-                                    onClick={() => editAction(sched)}
+                                    onClick={() => editAction(sched, index)}
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
@@ -368,18 +514,6 @@ export default function Index() {
             </div>
           </Card>
         </div>
-        {/* <div className="flex items-center gap-2">
-          <input
-            type="time"
-            className="border-gray-400 rounded-full focus:border-gray-600 focus:outline-none"
-            onChange={(e) => console.log(e.target.value)}
-          />
-          to
-          <input
-            type="time"
-            className="border-gray-400 rounded-full focus:border-gray-600 focus:outline-none"
-          />
-        </div> */}
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { Leave } from 'libs/utils/src/lib/types/leave-type';
+import { Leave } from 'libs/utils/src/lib/types/leave.type';
 import { create } from 'zustand';
 
 export type LeaveState = {
