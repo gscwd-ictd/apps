@@ -35,7 +35,7 @@ export const LabelInput: FunctionComponent<
         readOnly={muted}
         disabled={muted}
         {...controller}
-        className={`rounded border border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4 ${className}`}
+        className={`rounded border  focus:border-blue-500 border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4 ${className}`}
         placeholder={placeholder}
       />
     </div>

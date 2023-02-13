@@ -113,32 +113,34 @@ export function MySelectList({
         onBlur={() => setIsOpen(false)}
         onClick={() => setIsOpen((prev) => !prev)}
         tabIndex={0}
-        className="flex hover:cursor-pointer relative w-full border rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border-blue-500"
+        className="flex hover:cursor-pointer relative w-full border border-gray-300/90 rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border-blue-300"
       >
         <span className="pl-2 text-xs text-gray-700 ">
           {multiple
-            ? value.map((v) => (
-                <button
-                  className="px-2 "
-                  key={v.value}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    selectOption(v);
-                  }}
-                >
-                  <div className="flex gap-1 p-1 px-2 text-xs border rounded hover:bg-gray-200 border-gray-300/90">
-                    {v.label}
-                    <span className="flex text-gray-500">&times;</span>
-                  </div>
-                </button>
-              ))
+            ? value
+                .sort((a, b) => (a.value > b.value ? 1 : -1))
+                .map((v) => (
+                  <button
+                    className="px-2 "
+                    key={v.value}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      selectOption(v);
+                    }}
+                  >
+                    <div className="flex items-center gap-1 p-1 px-2 text-xs text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-400 border-gray-300/90">
+                      {v.label}
+                      <span className="flex text-sm text-white">&times;</span>
+                    </div>
+                  </button>
+                ))
             : multiple === false
             ? value.label
             : null}
         </span>
         <div className="flex items-center gap-2">
           <button
-            className="flex px-2 text-gray-500 rounded text-md hover:bg-gray-200"
+            className="flex px-2 text-xl text-gray-500 rounded hover:text-white hover:bg-red-400"
             type="button"
             onClick={(e) => {
               e.stopPropagation();
@@ -149,7 +151,7 @@ export function MySelectList({
           </button>
           <span className="px-2 font-light text-gray-500">|</span>
           <span
-            className={`text-gray-600 hover:cursor-pointer px-2 hover:bg-gray-200 hover:rounded ${
+            className={`text-gray-600 hover:cursor-pointer px-2 hover:text-gray-800 ${
               isOpen ? 'rotate-180 transition-all' : ''
             }`}
           >
@@ -159,7 +161,7 @@ export function MySelectList({
         <ul
           className={`${
             isOpen ? 'block' : 'hidden'
-          } border absolute  rounded  max-h-[12em] bg-white z-50 p-2 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
+          } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
         >
           {options.map((option, index) => (
             <li
@@ -169,15 +171,17 @@ export function MySelectList({
               }}
               key={option.value}
               onMouseEnter={() => setHighlightedIndex(index)}
-              className={`px-2 py-1 text-xs  cursor-pointer   ${
-                isOptionSelected(option)
-                  ? 'bg-blue-300 text-white'
+              className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
+                isOptionSelected(option) && index === highlightedIndex
+                  ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-400 hover hover:cursor-grab '
+                  : !isOptionSelected(option) && index === highlightedIndex
+                  ? 'hover:bg-blue-600 hover:text-white'
+                  : isOptionSelected(option) && index !== highlightedIndex
+                  ? 'bg-blue-100 text-gray-500'
                   : 'text-gray-700'
-              } ${
-                index === highlightedIndex
-                  ? 'hover:bg-blue-500 hover:text-white'
-                  : ''
-              }`}
+              }
+          
+              `}
             >
               {option.label}
             </li>

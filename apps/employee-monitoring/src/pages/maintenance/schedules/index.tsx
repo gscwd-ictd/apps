@@ -12,11 +12,10 @@ import { useForm } from 'react-hook-form';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
-
-type SelectOption = {
-  label: string;
-  value: number | string;
-};
+import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
+import { listOfRestDays } from '../../../../../../libs/utils/src/lib/constants/rest-days.const';
+import Toggle from 'apps/employee-monitoring/src/components/switch/Toggle';
+import { isEmpty } from 'lodash';
 
 const listOfSchedules: Array<Schedule> = [
   {
@@ -25,6 +24,7 @@ const listOfSchedules: Array<Schedule> = [
     timeOut: '05:00',
     lunchIn: '12:00',
     lunchOut: '12:30',
+    withLunch: true,
     restDays: [6, 0],
     shift: ScheduleShift.MORNING,
   },
@@ -32,6 +32,7 @@ const listOfSchedules: Array<Schedule> = [
     name: 'Flexible Time Clock A',
     timeIn: '07:00',
     timeOut: '04:00',
+    withLunch: true,
     lunchIn: '11:00',
     lunchOut: '11:30',
     restDays: [1, 0],
@@ -41,6 +42,7 @@ const listOfSchedules: Array<Schedule> = [
     name: 'Flexible Time Clock B',
     timeIn: '06:00',
     timeOut: '03:00',
+    withLunch: true,
     lunchIn: '10:00',
     lunchOut: '10:30',
     restDays: [1, 2],
@@ -50,8 +52,9 @@ const listOfSchedules: Array<Schedule> = [
     name: 'Pumping Station Morning Time Clock',
     timeIn: '07:00',
     timeOut: '07:00',
-    lunchIn: '',
-    lunchOut: '',
+    withLunch: false,
+    lunchIn: null,
+    lunchOut: null,
     restDays: [6, 0],
     shift: ScheduleShift.MORNING,
   },
@@ -59,21 +62,12 @@ const listOfSchedules: Array<Schedule> = [
     name: 'Pumping Station Night Time Clock',
     timeIn: '19:00',
     timeOut: '07:00',
-    lunchIn: '',
-    lunchOut: '',
+    withLunch: false,
+    lunchIn: null,
+    lunchOut: null,
     restDays: [6, 0],
     shift: ScheduleShift.NIGHT,
   },
-];
-
-const listOfRestDays: Array<SelectOption> = [
-  { label: 'Sunday', value: 0 },
-  { label: 'Monday', value: 1 },
-  { label: 'Tuesday', value: 2 },
-  { label: 'Wednesday', value: 3 },
-  { label: 'Thursday', value: 4 },
-  { label: 'Friday', value: 5 },
-  { label: 'Saturday', value: 6 },
 ];
 
 const shiftSelection: Array<{ label: string; value: string }> = [
@@ -84,6 +78,7 @@ const shiftSelection: Array<{ label: string; value: string }> = [
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [action, setAction] = useState<string>('');
+  const [withLunch, setWithLunch] = useState<boolean>(false);
   const [scheduleForEdit, setScheduleForEdit] = useState<Schedule>(
     {} as Schedule
   );
@@ -103,6 +98,7 @@ export default function Index() {
 
   const {
     setValue,
+    getValues,
     watch,
     register,
     formState: { errors },
@@ -112,6 +108,7 @@ export default function Index() {
       id: '',
       timeIn: '00:00:00',
       timeOut: '00:00:00',
+      withLunch: true,
       lunchIn: null,
       lunchOut: null,
       name: '',
@@ -144,6 +141,8 @@ export default function Index() {
     setValue('name', sched.name);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
+    setValue('withLunch', sched.withLunch);
+    setWithLunch(sched.withLunch);
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
@@ -158,13 +157,21 @@ export default function Index() {
     setSchedules(listOfSchedules);
   }, []);
 
+  // set it to null
   useEffect(() => {
-    setValue('lunchIn', null);
+    if (isEmpty(watch('lunchIn'))) setValue('lunchIn', null);
   }, [watch('lunchIn')]);
 
+  // set it to null
   useEffect(() => {
-    setValue('lunchOut', null);
+    if (isEmpty(watch('lunchOut'))) setValue('lunchOut', null);
   }, [watch('lunchOut')]);
+
+  // with lunch in/out listener
+  useEffect(() => {
+    if (withLunch) setValue('withLunch', true);
+    else if (!withLunch) setValue('withLunch', false);
+  }, [withLunch]);
 
   return (
     <>
@@ -248,37 +255,72 @@ export default function Index() {
                   errorMessage={errors.timeOut?.message}
                 />
 
+                {/** With Lunch */}
+                <div className="flex gap-2 text-start">
+                  <Toggle
+                    labelPosition="top"
+                    enabled={withLunch}
+                    setEnabled={setWithLunch}
+                    label={'With Lunch In & Out:'}
+                  />
+                  <div
+                    className={`text-xs ${
+                      withLunch ? 'text-blue-400' : 'text-gray-400'
+                    }`}
+                  >
+                    {withLunch ? (
+                      <button
+                        onClick={() => setWithLunch((prev) => !prev)}
+                        className="underline"
+                      >
+                        <span>Yes</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setWithLunch((prev) => !prev)}
+                        className="underline"
+                      >
+                        <span>No</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
                 {/** Lunch In */}
-                <LabelInput
-                  id={'scheduleLunchIn'}
-                  type="time"
-                  label={'Lunch In'}
-                  onChange={(e) =>
-                    setScheduleForEdit({
-                      ...scheduleForEdit,
-                      lunchIn: e.target.value,
-                    })
-                  }
-                  controller={{ ...register('lunchIn') }}
-                  isError={errors.lunchIn ? true : false}
-                  errorMessage={errors.lunchIn?.message}
-                />
+                {watch('withLunch') === true ? (
+                  <LabelInput
+                    id={'scheduleLunchIn'}
+                    type="time"
+                    label={'Lunch In'}
+                    onChange={(e) =>
+                      setScheduleForEdit({
+                        ...scheduleForEdit,
+                        lunchIn: e.target.value,
+                      })
+                    }
+                    controller={{ ...register('lunchIn') }}
+                    isError={errors.lunchIn ? true : false}
+                    errorMessage={errors.lunchIn?.message}
+                  />
+                ) : null}
 
                 {/** Lunch Out */}
-                <LabelInput
-                  id={'scheduleLunchOut'}
-                  type="time"
-                  label={'Lunch Out'}
-                  onChange={(e) =>
-                    setScheduleForEdit({
-                      ...scheduleForEdit,
-                      lunchOut: e.target.value,
-                    })
-                  }
-                  controller={{ ...register('lunchIn') }}
-                  isError={errors.lunchOut ? true : false}
-                  errorMessage={errors.lunchOut?.message}
-                />
+                {watch('withLunch') === true ? (
+                  <LabelInput
+                    id={'scheduleLunchOut'}
+                    type="time"
+                    label={'Lunch Out'}
+                    onChange={(e) =>
+                      setScheduleForEdit({
+                        ...scheduleForEdit,
+                        lunchOut: e.target.value,
+                      })
+                    }
+                    controller={{ ...register('lunchOut') }}
+                    isError={errors.lunchOut ? true : false}
+                    errorMessage={errors.lunchOut?.message}
+                  />
+                ) : null}
 
                 {/** Shift */}
                 <SelectListRF
@@ -446,30 +488,32 @@ export default function Index() {
                                 {capitalizer(sched.shift)}
                               </td>
                               <td className="w-[1/8] text-xs ">
-                                {sched.restDays.map((day, index) => {
-                                  return (
-                                    <React.Fragment key={index}>
-                                      {day === 0
-                                        ? 'Sunday'
-                                        : day === 1
-                                        ? 'Monday'
-                                        : day === 2
-                                        ? 'Tuesday'
-                                        : day === 3
-                                        ? 'Wednesday'
-                                        : day === 4
-                                        ? 'Thursday'
-                                        : day === 5
-                                        ? 'Friday'
-                                        : day === 6
-                                        ? 'Saturday'
-                                        : null}
-                                      {index + 1 < sched.restDays.length
-                                        ? ','
-                                        : ''}
-                                    </React.Fragment>
-                                  );
-                                })}
+                                {sched.restDays
+                                  .sort((a, b) => (a > b ? 1 : -1))
+                                  .map((day, index) => {
+                                    return (
+                                      <React.Fragment key={index}>
+                                        {day === 0
+                                          ? 'Sunday'
+                                          : day === 1
+                                          ? 'Monday'
+                                          : day === 2
+                                          ? 'Tuesday'
+                                          : day === 3
+                                          ? 'Wednesday'
+                                          : day === 4
+                                          ? 'Thursday'
+                                          : day === 5
+                                          ? 'Friday'
+                                          : day === 6
+                                          ? 'Saturday'
+                                          : null}
+                                        {index + 1 < sched.restDays.length
+                                          ? ', '
+                                          : ''}
+                                      </React.Fragment>
+                                    );
+                                  })}
                               </td>
                               <td className="w-[1/8]">
                                 <div className="flex w-full gap-2 text-center">

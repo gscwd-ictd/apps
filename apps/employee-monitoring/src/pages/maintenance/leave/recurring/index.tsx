@@ -5,13 +5,9 @@ import { RecurringPageFooter } from 'apps/employee-monitoring/src/components/sid
 import { RecurringPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/recurring/Header';
 import React, { useEffect, useState } from 'react';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { Leave } from 'libs/utils/src/lib/types/leave-type';
+import { Leave } from 'libs/utils/src/lib/types/leave.type';
 import { useLeaveStore } from 'apps/employee-monitoring/src/store/leave.store';
-
-type Distribution = {
-  label: string;
-  value: string;
-};
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 // mock
 const listOfRecurringLeaves: Array<Leave> = [
@@ -38,7 +34,7 @@ const listOfRecurringLeaves: Array<Leave> = [
 ];
 
 // mock
-const distributionSelection: Array<Distribution> = [
+const distributionSelection: Array<SelectOption> = [
   { label: '--None selected--', value: '' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
