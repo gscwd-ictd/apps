@@ -1,26 +1,26 @@
-import { Leave } from 'libs/utils/src/lib/types/leave-type';
+import { Leave } from 'libs/utils/src/lib/types/leave.type';
 import { create } from 'zustand';
 
 export type LeaveState = {
-  recurringLeave: Array<Leave>;
-  setRecurringLeave: (recurringLeave: Array<Leave>) => void;
-  cumulativeLeave: Array<Leave>;
-  setCumulativeLeave: (cumulativeLeave: Array<Leave>) => void;
-  specialLeave: Array<Leave>;
-  setSpecialLeave: (specialLeave: Array<Leave>) => void;
+  recurringLeaves: Array<Leave>;
+  setRecurringLeaves: (recurringLeave: Array<Leave>) => void;
+  cumulativeLeaves: Array<Leave>;
+  setCumulativeLeaves: (cumulativeLeave: Array<Leave>) => void;
+  specialLeaves: Array<Leave>;
+  setSpecialLeaves: (specialLeave: Array<Leave>) => void;
 };
 
 export const useLeaveStore = create<LeaveState>((set) => ({
-  recurringLeave: [],
-  cumulativeLeave: [],
-  specialLeave: [],
-  setRecurringLeave: (recurringLeave: Array<Leave>) => {
-    set((state) => ({ ...state, recurringLeave }));
+  recurringLeaves: [],
+  cumulativeLeaves: [],
+  specialLeaves: [],
+  setRecurringLeaves: (recurringLeaves: Array<Leave>) => {
+    set((state) => ({ ...state, recurringLeaves }));
   },
-  setCumulativeLeave: (cumulativeLeave: Array<Leave>) => {
-    set((state) => ({ ...state, cumulativeLeave }));
+  setCumulativeLeaves: (cumulativeLeaves: Array<Leave>) => {
+    set((state) => ({ ...state, cumulativeLeaves }));
   },
-  setSpecialLeave: (specialLeave: Array<Leave>) => {
-    set((state) => ({ ...state, specialLeave }));
+  setSpecialLeaves: (specialLeaves: Array<Leave>) => {
+    set((state) => ({ ...state, specialLeaves }));
   },
 }));

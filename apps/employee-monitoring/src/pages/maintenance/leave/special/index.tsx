@@ -3,7 +3,7 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { SpecialPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/special-leave/Footer';
 import { SpecialPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/special-leave/Header';
-import { Leave } from 'libs/utils/src/lib/types/leave-type';
+import { Leave } from 'libs/utils/src/lib/types/leave.type';
 import React, { useEffect, useState } from 'react';
 import { Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';

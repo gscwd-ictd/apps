@@ -5,25 +5,27 @@ import { RecurringPageFooter } from 'apps/employee-monitoring/src/components/sid
 import { RecurringPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/recurring/Header';
 import React, { useEffect, useState } from 'react';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { Leave } from 'libs/utils/src/lib/types/leave-type';
-
-type Distribution = {
-  label: string;
-  value: string;
-};
+import { Leave } from 'libs/utils/src/lib/types/leave.type';
+import { useLeaveStore } from 'apps/employee-monitoring/src/store/leave.store';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 // mock
-const recurringLeaves: Array<Partial<Leave>> = [
+const listOfRecurringLeaves: Array<Leave> = [
   {
     leaveName: 'Forced Leave',
     creditDistribution: 'Yearly',
     accumulatedCredits: 5,
     status: 'active',
+    canBeCarriedOver: false,
+    isMonetizable: false,
+    maximumCredits: 0,
     actions: '',
   },
   {
     leaveName: 'Special Privilege Leave',
-
+    canBeCarriedOver: false,
+    isMonetizable: false,
+    maximumCredits: 0,
     creditDistribution: 'Yearly',
     accumulatedCredits: 3,
     status: 'active',
@@ -32,15 +34,16 @@ const recurringLeaves: Array<Partial<Leave>> = [
 ];
 
 // mock
-const distributionSelection: Array<Distribution> = [
+const distributionSelection: Array<SelectOption> = [
   { label: '--None selected--', value: '' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
 ];
 
 export default function Index() {
+  const recurringLeaves = useLeaveStore((state) => state.recurringLeaves);
+  const setRecurringLeaves = useLeaveStore((state) => state.setRecurringLeaves);
   const [action, setAction] = useState<string>('');
-  const [leaves, setLeaves] = useState<Array<Partial<Leave>>>([]);
   const [leaveForEdit, setLeaveForEdit] = useState<Partial<Leave>>(
     {} as Partial<Leave>
   );
@@ -57,7 +60,7 @@ export default function Index() {
   };
 
   useEffect(() => {
-    setLeaves(recurringLeaves);
+    setRecurringLeaves(listOfRecurringLeaves);
   }, []);
 
   useEffect(() => {
@@ -177,8 +180,8 @@ export default function Index() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide">
-                  {leaves &&
-                    leaves.map((leave, index) => {
+                  {recurringLeaves &&
+                    recurringLeaves.map((leave, index) => {
                       return (
                         <React.Fragment key={index}>
                           <tr className="h-[4rem]  text-gray-700">

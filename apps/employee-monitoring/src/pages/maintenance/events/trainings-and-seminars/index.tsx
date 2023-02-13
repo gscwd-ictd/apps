@@ -80,8 +80,8 @@ export default function Index() {
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 <LabelInput
-                  id={'categoryName'}
-                  label={'Category Name'}
+                  id={'trainingTypeName'}
+                  label={'Name'}
                   value={categoryForEdit.name}
                   onChange={(e) =>
                     setCategoryForEdit({

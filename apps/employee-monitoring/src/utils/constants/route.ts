@@ -1,9 +1,9 @@
 export const Paths = [
   '/dashboard', //0
   '/monitoring/daily-time-record', //1
-  '/monitoring/leave-credits', //2
-  '/monitoring/events/holidays', //3
-  '/monitoring/events/trainings-and-seminars', // 4
+  '/monitoring/leave-benefits', //2
+  '/monitoring/travel-orders', // 3
+  '/monitoring/trainings-and-seminars', // 4
   '/monitoring/overtime', // 5
   '/monitoring/pass-slip', //6
   '/maintenance/daily-time-record', // 7
@@ -14,4 +14,5 @@ export const Paths = [
   '/maintenance/events/trainings-and-seminars', // 12
   '/maintenance/overtime', // 13
   '/maintenance/pass-slip', // 14
+  '/maintenance/schedules', // 15
 ];

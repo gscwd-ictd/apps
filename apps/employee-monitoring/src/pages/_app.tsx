@@ -5,7 +5,7 @@ import '../../styles/custom.css';
 import { Aside, Main, PageContent } from '@gscwd-apps/oneui';
 import { SideNavigation } from '../components/navigations/SideNavigation';
 import { TopNavigation } from '../components/navigations/TopNavigation';
-import { BreadCrumbs } from '../components/navigations/BreadCrumbs';
+
 import { Footer } from '../components/navigations/Footer';
 
 function CustomApp({ Component, pageProps }: AppProps) {
@@ -13,6 +13,10 @@ function CustomApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>GSCWD Employee Monitoring</title>
+        <link
+          href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+          rel="stylesheet"
+        />
       </Head>
 
       <PageContent>
@@ -23,10 +27,10 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <div className="flex flex-col w-full h-full">
           <TopNavigation />
           <Main>
-            <div className="w-full h-[93%] overflow-y-auto">
+            <div className="w-full h-full overflow-y-auto">
               <Component {...pageProps} />
+              <Footer />
             </div>
-            <Footer />
           </Main>
         </div>
       </PageContent>
