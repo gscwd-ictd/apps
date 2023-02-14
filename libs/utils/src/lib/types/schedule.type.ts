@@ -1,3 +1,4 @@
+import { Categories } from '../enums/category.enum';
 import { ScheduleShift } from '../enums/schedule.enum';
 
 type ScheduleWithLunch = {
@@ -14,6 +15,7 @@ type ScheduleWithoutLunch = {
 
 export type Schedule = {
   id?: string;
+  category: Categories;
   name: string;
   timeIn: string;
   timeOut: string;

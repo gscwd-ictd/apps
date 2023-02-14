@@ -16,6 +16,7 @@ export function Index() {
 
         <section className="flex flex-col sm:w-full lg:w-[70%] h-full gap-5">
           <PendingDashboard />
+
           <TardinessChart />
         </section>
       </div>

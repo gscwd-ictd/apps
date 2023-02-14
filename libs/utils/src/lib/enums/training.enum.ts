@@ -1,4 +1,4 @@
-export enum TrainingType {
+export enum TrainingTypes {
   MANAGERIAL = 'managerial',
   PROFESSIONAL = 'professional',
   TECHNICAL = 'technical',

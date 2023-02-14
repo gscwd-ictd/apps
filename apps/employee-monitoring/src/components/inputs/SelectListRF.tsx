@@ -40,7 +40,7 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
         className={`rounded border border-gray-300/90 hover:cursor-pointer w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4 ${className}`}
         {...props}
       >
-        <option value="">Select {defaultOption}...</option>
+        {/* <option value="">Select {defaultOption}...</option> */}
         {selectList.map((item: Item, idx: number) => (
           <option value={item.value} key={idx}>
             {item.label}

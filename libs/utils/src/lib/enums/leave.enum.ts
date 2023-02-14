@@ -1,4 +1,4 @@
-export enum CreditDistribution {
+export enum CreditDistributions {
   MONTHLY = 'monthly',
   YEARLY = 'yearly',
 }
