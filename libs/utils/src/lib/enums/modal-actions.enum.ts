@@ -1,4 +1,5 @@
 export enum ModalActions {
-  create = 'create',
-  update = 'update',
+  EMPTY = '',
+  CREATE = 'create',
+  UPDATE = 'update',
 }

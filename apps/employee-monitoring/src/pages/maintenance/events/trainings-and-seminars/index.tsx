@@ -4,9 +4,13 @@ import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/Label
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { TrainingCategoriesPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/events/trainings-and-seminars/Footer';
 import { TrainingCategoriesPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/events/trainings-and-seminars/Header';
+import { useTrainingTypeStore } from 'apps/employee-monitoring/src/store/training-type.store';
+import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { TrainingType } from 'libs/utils/src/lib/types/training-type';
 import React from 'react';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { v4 as uuidv4 } from 'uuid';
 
 const types: Array<TrainingType> = [
   {
@@ -28,22 +32,76 @@ const types: Array<TrainingType> = [
 ];
 
 export default function Index() {
-  const [action, setAction] = useState<string>('');
-  const [trainingTypes, setTrainingTypes] = useState<Array<TrainingType>>([]);
+  const action = useTrainingTypeStore((state) => state.action);
+  const setAction = useTrainingTypeStore((state) => state.setAction);
+  const modalIsOpen = useTrainingTypeStore((state) => state.modalIsOpen);
+  const setModalIsOpen = useTrainingTypeStore((state) => state.setModalIsOpen);
+  const trainingTypes = useTrainingTypeStore((state) => state.trainingTypes);
+  const setTrainingTypes = useTrainingTypeStore(
+    (state) => state.setTrainingTypes
+  );
   const [categoryForEdit, setCategoryForEdit] = useState<TrainingType>(
     {} as TrainingType
   );
-  const [trainingCategoryModalIsOpen, setTrainingTypeModalIsOpen] =
-    useState<boolean>(false);
 
-  const editAction = (category: TrainingType) => {
-    setAction('update');
-    setCategoryForEdit(category);
-    setTrainingTypeModalIsOpen(true);
+  const { setValue, watch, handleSubmit, reset, register } =
+    useForm<TrainingType>({
+      mode: 'onChange',
+      defaultValues: {
+        id: '',
+        name: '',
+      },
+    });
+
+  const onSubmit = handleSubmit(
+    (trainingType: TrainingType, e: React.FormEvent<HTMLInputElement>) => {
+      e.preventDefault();
+
+      // create action
+      if (action === ModalActions.CREATE) {
+        trainingType.id = uuidv4(); //! Remove this, this is for testing only!
+        const oldTrainingTypes = [...trainingTypes];
+        oldTrainingTypes.push(trainingType);
+        setTrainingTypes(oldTrainingTypes);
+        setModalIsOpen(false);
+        setAction(ModalActions.EMPTY);
+      }
+
+      // update action
+      else if (action === ModalActions.UPDATE) {
+        const oldTrainingTypes = [...trainingTypes];
+        // const filteredTrainingTypes = oldTrainingTypes.filter(
+        //   (oldTrainingType) => oldTrainingType.id !== trainingType.id
+        // );
+        oldTrainingTypes.map((oldTrainingType) => {
+          if (oldTrainingType.id === trainingType.id) {
+            oldTrainingType.name = trainingType.name;
+          }
+          return oldTrainingType;
+        });
+
+        setTrainingTypes(oldTrainingTypes);
+        setModalIsOpen(false);
+        setAction(ModalActions.EMPTY);
+      }
+    }
+  );
+
+  const editAction = (trainingType: TrainingType) => {
+    setAction(ModalActions.UPDATE);
+    setCategoryForEdit(trainingType);
+    setDefaultValues(trainingType);
+    setModalIsOpen(true);
   };
 
   const closeAction = () => {
-    setTrainingTypeModalIsOpen(false);
+    setModalIsOpen(false);
+    reset();
+  };
+
+  const setDefaultValues = (trainingType: TrainingType) => {
+    setValue('id', trainingType.id);
+    setValue('name', trainingType.name);
   };
 
   useEffect(() => {
@@ -51,56 +109,66 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    console.log(action);
-  }, [action]);
+    console.log(trainingTypes);
+  }, [trainingTypes]);
 
   return (
     <>
       <div className="min-h-[100%] min-w-full">
-        <Modal
-          open={trainingCategoryModalIsOpen}
-          setOpen={setTrainingTypeModalIsOpen}
-          steady
-          size="sm"
-        >
-          <Modal.Header>
-            <div className="flex justify-between w-full">
-              <span className="text-2xl text-gray-600">Edit</span>
-              <button
-                className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
-                type="button"
-                onClick={closeAction}
-              >
-                x
-              </button>
-            </div>
-          </Modal.Header>
-          <hr />
-          <Modal.Body>
-            <div className="w-full mt-5">
-              <div className="flex flex-col w-full gap-5">
-                <LabelInput
-                  id={'trainingTypeName'}
-                  label={'Name'}
-                  value={categoryForEdit.name}
-                  onChange={(e) =>
-                    setCategoryForEdit({
-                      ...categoryForEdit,
-                      name: e.target.value,
-                    })
-                  }
-                />
+        <form onSubmit={onSubmit} id="trainingType">
+          <Modal open={modalIsOpen} setOpen={setModalIsOpen} steady size="sm">
+            <Modal.Header>
+              <div className="flex justify-between w-full">
+                <span className="text-2xl text-gray-600">
+                  {action === ModalActions.CREATE
+                    ? 'New'
+                    : action === ModalActions.UPDATE
+                    ? 'Edit'
+                    : ''}
+                </span>
+                <button
+                  className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
+                  type="button"
+                  onClick={closeAction}
+                >
+                  x
+                </button>
               </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <div className="flex justify-end w-full">
-              <Button variant="info">
-                <span className="text-xs font-normal">Update</span>
-              </Button>
-            </div>
-          </Modal.Footer>
-        </Modal>
+            </Modal.Header>
+            <hr />
+            <Modal.Body>
+              <div className="w-full mt-5">
+                <div className="flex flex-col w-full gap-5">
+                  <LabelInput
+                    id={'trainingTypeName'}
+                    label={'Name'}
+                    controller={{ ...register('name') }}
+                    onChange={(e) =>
+                      setCategoryForEdit({
+                        ...categoryForEdit,
+                        name: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <div className="flex justify-end w-full">
+                <Button variant="info" type="submit" form="trainingType">
+                  <span className="text-xs font-normal">
+                    {action === ModalActions.CREATE
+                      ? 'Add'
+                      : action === ModalActions.UPDATE
+                      ? 'Update'
+                      : ''}
+                  </span>
+                </Button>
+              </div>
+            </Modal.Footer>
+          </Modal>
+        </form>
+
         <BreadCrumbs
           title="Trainings & Seminars"
           crumbs={[

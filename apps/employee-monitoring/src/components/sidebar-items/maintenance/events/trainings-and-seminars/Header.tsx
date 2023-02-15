@@ -1,9 +1,19 @@
 import { Button } from '@gscwd-apps/oneui';
+import { useTrainingTypeStore } from 'apps/employee-monitoring/src/store/training-type.store';
+import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { useState } from 'react';
 import { SearchBox } from '../../../../inputs/SearchBox';
 
 export const TrainingCategoriesPageHeader = (): JSX.Element => {
   const [searchValue, setSearchValue] = useState<string>('');
+  const setAction = useTrainingTypeStore((state) => state.setAction);
+  const setModalIsOpen = useTrainingTypeStore((state) => state.setModalIsOpen);
+
+  // open modal
+  const createModalIsOpen = () => {
+    setModalIsOpen(true);
+    setAction(ModalActions.CREATE);
+  };
 
   return (
     <div className="flex justify-between w-full pl-3 ">
@@ -12,7 +22,7 @@ export const TrainingCategoriesPageHeader = (): JSX.Element => {
         setSearchValue={setSearchValue}
         placeholder="Search by category"
       />
-      <Button type="button" variant="info">
+      <Button type="button" variant="info" onClick={createModalIsOpen}>
         <div className="flex items-center w-full gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"

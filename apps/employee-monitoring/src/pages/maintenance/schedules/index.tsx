@@ -19,6 +19,7 @@ import { isEmpty } from 'lodash';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
+import { capitalizer } from 'apps/employee-monitoring/src/utils/functions/capitalizer';
 
 const listOfSchedules: Array<Schedule> = [
   {
@@ -94,7 +95,7 @@ export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const action = useScheduleStore((state) => state.action);
   const setAction = useScheduleStore((state) => state.setAction);
-  const [withLunch, setWithLunch] = useState<boolean>(false);
+  const [withLunch, setWithLunch] = useState<boolean>(true);
   const [scheduleForEdit, setScheduleForEdit] = useState<Schedule>(
     {} as Schedule
   );
@@ -107,10 +108,6 @@ export default function Index() {
 
   const schedules = useScheduleStore((state) => state.schedules);
   const setSchedules = useScheduleStore((state) => state.setSchedules);
-
-  const capitalizer = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-  };
 
   const {
     setValue,
@@ -154,7 +151,7 @@ export default function Index() {
 
   // when edit action is clicked
   const editAction = async (sched: Schedule, idx: number) => {
-    setAction(ModalActions.update);
+    setAction(ModalActions.UPDATE);
     setScheduleForEdit(sched);
     setSelectedRestDays(await transformRestDays(sched.restDays));
     loadNewDefaultValues(sched);
@@ -185,6 +182,7 @@ export default function Index() {
   const resetToDefaultValues = () => {
     reset();
     setSelectedRestDays([]);
+    setWithLunch(true);
   };
 
   //! this must be replaced with fetch
@@ -227,9 +225,9 @@ export default function Index() {
           <Modal.Header>
             <div className="flex justify-between w-full">
               <span className="text-2xl text-gray-600">
-                {action === ModalActions.create
+                {action === ModalActions.CREATE
                   ? 'New Schedule'
-                  : action === ModalActions.update
+                  : action === ModalActions.UPDATE
                   ? 'Edit'
                   : ''}
               </span>
@@ -470,9 +468,9 @@ export default function Index() {
             <div className="flex justify-end w-full">
               <Button variant="info">
                 <span className="text-xs font-normal">
-                  {action === ModalActions.create
+                  {action === ModalActions.CREATE
                     ? 'Add'
-                    : action === ModalActions.update
+                    : action === ModalActions.UPDATE
                     ? 'Update'
                     : ''}
                 </span>

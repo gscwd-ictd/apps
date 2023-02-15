@@ -5,7 +5,6 @@ import '../../styles/custom.css';
 import { Aside, Main, PageContent } from '@gscwd-apps/oneui';
 import { SideNavigation } from '../components/navigations/SideNavigation';
 import { TopNavigation } from '../components/navigations/TopNavigation';
-
 import { Footer } from '../components/navigations/Footer';
 
 import ability from '../context/casl/Ability';
@@ -17,10 +16,6 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <AbilityContext.Provider value={ability}>
         <Head>
           <title>GSCWD Employee Monitoring</title>
-          <link
-            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-            rel="stylesheet"
-          />
         </Head>
 
         <PageContent>

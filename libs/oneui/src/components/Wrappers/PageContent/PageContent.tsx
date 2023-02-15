@@ -29,26 +29,6 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
 }) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [previousState, setPreviousState] = useState<boolean>(false);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  //choose the screen size
-  const handleResize = () => {
-    if (window.innerWidth < 1080) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isMobile) setIsCollapsed(true);
-    else if (!isMobile) setIsCollapsed(false);
-  }, [isMobile, setIsCollapsed]);
-
-  // create an event listener
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-  });
 
   return (
     <PageContentContext.Provider

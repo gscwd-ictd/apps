@@ -11,7 +11,7 @@ export const SchedulesPageHeader = (): JSX.Element => {
 
   const createModalIsOpen = () => {
     setModalIsOpen(true);
-    setAction(ModalActions.create);
+    setAction(ModalActions.CREATE);
   };
 
   return (
@@ -21,6 +21,7 @@ export const SchedulesPageHeader = (): JSX.Element => {
         setSearchValue={setSearchValue}
         placeholder="Search by category"
       />
+
       <Button type="button" variant="info" onClick={createModalIsOpen}>
         <div className="flex items-center w-full gap-2">
           <svg
