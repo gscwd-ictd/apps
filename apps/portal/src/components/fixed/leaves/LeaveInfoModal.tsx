@@ -190,7 +190,7 @@ export default function LeaveInfoModal() {
                 : 'hidden'
             }`}
           >
-            <label className="pt-2 text-slate-500 text-md font-medium ">
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
               Within Philippines:
             </label>
             <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
@@ -204,7 +204,7 @@ export default function LeaveInfoModal() {
                 : 'hidden'
             }`}
           >
-            <label className="pt-2 text-slate-500 text-md font-medium ">
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
               Abroad:
             </label>
             <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
@@ -218,7 +218,7 @@ export default function LeaveInfoModal() {
                 : 'hidden'
             }`}
           >
-            <label className="pt-2 text-slate-500 text-md font-medium ">
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
               In Hospital:
             </label>
             <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
@@ -232,25 +232,62 @@ export default function LeaveInfoModal() {
                 : 'hidden'
             }`}
           >
-            <label className="pt-2 text-slate-500 text-md font-medium ">
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
               Out Patient:
             </label>
             <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
               {selectedLeave.detailsOfLeave.illness}
             </div>
           </div>
-          <div
+          <label
             className={`${
               selectedLeave.detailsOfLeave.masterDegree
+                ? ' pt-2 text-slate-500 text-lg font-medium'
+                : 'hidden'
+            }`}
+          >
+            {`For Completion of Master's Degree`}
+          </label>
+          <label
+            className={`${
+              selectedLeave.detailsOfLeave.bar
+                ? ' pt-2 text-slate-500 text-lg font-medium'
+                : 'hidden'
+            }`}
+          >
+            {`For BAR/Board Examination Review`}
+          </label>
+          <label
+            className={`${
+              selectedLeave.detailsOfLeave.monetization
+                ? ' pt-2 text-slate-500 text-lg font-medium'
+                : 'hidden'
+            }`}
+          >
+            {`For Monetization of Leave Credits`}
+          </label>
+          <label
+            className={`${
+              selectedLeave.detailsOfLeave.terminal
+                ? ' pt-2 text-slate-500 text-lg font-medium'
+                : 'hidden'
+            }`}
+          >
+            {`For Terminal Leave`}
+          </label>
+
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.other
                 ? 'flex flex-row gap-4'
                 : 'hidden'
             }`}
           >
-            <label className="pt-2 text-slate-500 text-md font-medium ">
-              Out Patient:
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
+              Other Reason:
             </label>
             <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.illness}
+              {selectedLeave.detailsOfLeave.other}
             </div>
           </div>
         </div>

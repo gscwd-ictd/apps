@@ -20,6 +20,7 @@ export type LeaveApplication = {
     bar: boolean;
     monetization: boolean;
     terminal: boolean;
+    other: string;
   };
   numberOfWorkingDays: string;
   commutation: string;
