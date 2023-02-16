@@ -8,10 +8,13 @@ import React, { useEffect, useState } from 'react';
 import { EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import useSWR from 'swr';
 import fetcher from 'apps/employee-monitoring/src/utils/fetcher/Fetcher';
+import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
+import { isEmpty } from 'lodash';
 
 export default function Index() {
   const [employees, setEmployees] = useState<Array<EmployeeProfile>>([]);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const selectedAssignment = useDtrStore((state) => state.selectedAssignment);
 
   const { data } = useSWR(
     `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees`,
@@ -82,7 +85,9 @@ export default function Index() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide">
+                    {/** Unfiltered */}
                     {employees &&
+                      isEmpty(selectedAssignment) &&
                       employees.map((employee, index) => {
                         return (
                           <React.Fragment key={index}>
@@ -135,6 +140,8 @@ export default function Index() {
                           </React.Fragment>
                         );
                       })}
+
+                    {/** Filtered */}
                   </tbody>
                 </table>
               </div>

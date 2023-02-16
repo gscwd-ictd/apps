@@ -64,9 +64,7 @@ export default function Index() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    console.log(action);
-  }, [action]);
+
 
   return (
     <div className="min-h-[100%] w-full">

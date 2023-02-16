@@ -8,7 +8,9 @@ import { Assignment } from 'libs/utils/src/lib/types/employee.type';
 export const DailyTimeRecordPageHeader = (): JSX.Element => {
   const searchValue = useDtrStore((state) => state.searchValue);
   const setSearchValue = useDtrStore((state) => state.setSearchValue);
-  const [selectedAssignment, setSelectedAssignment] = useState<string>('');
+  const setSelectedAssignment = useDtrStore(
+    (state) => state.setSelectedAssignment
+  );
   const [assignments, setAssignments] = useState<Array<Assignment>>([]);
 
   const { data } = useSWR(
@@ -18,14 +20,9 @@ export const DailyTimeRecordPageHeader = (): JSX.Element => {
 
   useEffect(() => {
     if (data) {
-      console.log(data.data);
       setAssignments(data.data);
     }
   }, [data]);
-
-  useEffect(() => {
-    console.log('Selected >>>>> ', selectedAssignment);
-  }, [selectedAssignment]);
 
   return (
     <div className="flex w-full pl-3 ">
@@ -46,6 +43,7 @@ export const DailyTimeRecordPageHeader = (): JSX.Element => {
             className="w-full text-xs border border-gray-300 rounded bg-gray-200/50"
             onChange={(e) => setSelectedAssignment(e.currentTarget.value)}
           >
+            <option value="">All</option>
             {assignments &&
               assignments.map((assignment: Assignment) => {
                 return (
