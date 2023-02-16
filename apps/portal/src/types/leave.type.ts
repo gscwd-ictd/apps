@@ -19,7 +19,7 @@ export type LeaveApplication = {
     materDegree: boolean;
     bar: boolean;
     monetization: boolean;
-    termal: boolean;
+    terminal: boolean;
   };
   numberOfWorkingDays: string;
   commutation: string;
