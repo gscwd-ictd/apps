@@ -28,12 +28,12 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
     if (tab === 1) {
       if (!modal.isOpen) {
         setAction('Cancel Leave Application');
-        setModal({ ...modal, page: 1, isOpen: true });
+        setModal({ ...modal, page: 2, isOpen: true });
       }
     } else if (tab === 2) {
       if (!modal.isOpen) {
         setAction('View');
-        setModal({ ...modal, page: 1, isOpen: true });
+        setModal({ ...modal, page: 2, isOpen: true });
       }
     }
   };
