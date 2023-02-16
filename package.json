@@ -6,7 +6,8 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0"
+    "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0",
+    "portal": "nx serve portal --port 3102 --hostname 0.0.0.0"
   },
   "private": true,
   "dependencies": {
@@ -25,8 +26,10 @@
     "axios": "^1.2.1",
     "boxicons": "^2.1.4",
     "core-js": "^3.6.5",
+    "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
     "framer-motion": "^7.6.4",
+    "keen-slider": "^6.8.5",
     "lucide-react": "^0.108.0",
     "next": "13.0.0",
     "react": "18.2.0",
@@ -35,6 +38,7 @@
     "react-hook-form": "^7.43.0",
     "react-icons": "^4.7.1",
     "regenerator-runtime": "0.13.7",
+    "spinners-react": "^1.0.7",
     "swr": "^2.0.3",
     "tslib": "^2.3.0",
     "universal-cookie": "^4.0.4",
