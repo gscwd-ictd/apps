@@ -61,6 +61,7 @@ export default function Index() {
 
   useEffect(() => {
     setRecurringLeaves(listOfRecurringLeaves);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -154,13 +155,13 @@ export default function Index() {
           },
         ]}
       />
-      <div className="mx-5">
+      <div className="sm:mx-0 lg:mx-5">
         <Card title={''}>
           {/** Top Card */}
           <div className="flex flex-col w-full h-full">
             <RecurringPageHeader />
             <div className="w-full px-5 mt-5">
-              <table className="w-full">
+              <table className="w-full ">
                 <thead>
                   <tr className="text-xs border-b-2 text-slate-700">
                     <th className="font-semibold w-[1/5] text-left ">
@@ -213,6 +214,7 @@ export default function Index() {
                                     <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
                                   </svg>
                                 </Button>
+
                                 <Button variant="danger">
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"

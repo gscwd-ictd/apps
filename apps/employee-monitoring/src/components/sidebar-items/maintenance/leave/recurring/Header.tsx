@@ -6,7 +6,7 @@ export const RecurringPageHeader = (): JSX.Element => {
   const [searchValue, setSearchValue] = useState<string>('');
 
   return (
-    <div className="flex justify-between w-full pl-3 ">
+    <div className="w-full pl-3 sm:flex sm:flex-col lg:flex lg:justify-between ">
       <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
       <Button type="button" variant="info">
         <div className="flex items-center w-full gap-2">

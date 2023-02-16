@@ -1,4 +1,4 @@
-export enum EventType {
+export enum EventTypes {
   HOLIDAY = 'holiday',
   TNS = 'tns',
 }

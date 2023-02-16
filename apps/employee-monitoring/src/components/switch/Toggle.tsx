@@ -32,8 +32,8 @@ export default function Toggle({
           checked={enabled}
           onChange={setEnabled}
           className={`${
-            enabled ? 'bg-blue-400' : 'bg-gray-200'
-          } relative inline-flex h-6 w-11 items-center gap-2 rounded-full`}
+            enabled ? 'bg-blue-400 ' : 'hover:bg-blue-100 bg-gray-200'
+          } relative inline-flex  h-6 w-11 items-center gap-2 rounded-full`}
         >
           <span
             className={`${

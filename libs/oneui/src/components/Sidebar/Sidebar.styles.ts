@@ -16,7 +16,7 @@ export const itemClass = (
     'w-full border-l-4 duration-100 ease-in-out transition-all',
     {
       'border-l-transparent': !selected,
-      'border-l-green-500 bg-slate-700/50': selected,
+      'border-l-cyan-500 bg-slate-700/50': selected,
     }
   );
 };
@@ -26,7 +26,7 @@ export const linkClass = (
   selected: boolean | undefined
 ) => {
   return cls(
-    'flex items-center hover:text-slate-50 font-medium py-3 duration-100 ease-in-out transition-all',
+    'flex items-center hover:text-slate-50  font-medium py-3 duration-100 ease-in-out transition-all',
     {
       'justify-center': collapsed,
 

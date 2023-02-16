@@ -1,4 +1,4 @@
-export enum ScheduleShift {
+export enum ScheduleShifts {
   MORNING = 'morning',
   NIGHT = 'night',
 }

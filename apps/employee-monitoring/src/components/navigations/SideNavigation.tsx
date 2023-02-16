@@ -80,6 +80,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display=" Daily Time Record"
             className="text-xs"
+            selected={pathname === Paths[1] ? true : false}
             icon={
               <>
                 <i className="text-2xl bx bx-fingerprint"></i>

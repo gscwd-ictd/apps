@@ -6,11 +6,7 @@ import { CumulativePageHeader } from 'apps/employee-monitoring/src/components/si
 import { Leave } from '../../../../../../../libs/utils/src/lib/types/leave.type';
 import React, { useEffect, useState } from 'react';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-
-type Distribution = {
-  label: string;
-  value: string;
-};
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 const cumulativeLeaves: Array<Leave> = [
   {
@@ -34,8 +30,7 @@ const cumulativeLeaves: Array<Leave> = [
 ];
 
 // mock
-const distributionSelection: Array<Distribution> = [
-  { label: '--None selected--', value: '' },
+const distributionSelection: Array<SelectOption> = [
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
 ];

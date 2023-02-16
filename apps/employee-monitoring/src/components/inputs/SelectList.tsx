@@ -115,7 +115,7 @@ export function MySelectList({
         tabIndex={0}
         className="flex hover:cursor-pointer relative w-full border border-gray-300/90 rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border-blue-300"
       >
-        <span className="pl-2 text-xs text-gray-700 ">
+        <span className="text-xs text-gray-700 ">
           {multiple
             ? value
                 .sort((a, b) => (a.value > b.value ? 1 : -1))

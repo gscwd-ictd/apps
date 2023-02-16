@@ -15,7 +15,7 @@ type SidebarProps = Props & {
 };
 
 type ItemProps = Omit<Props, 'children'> & {
-  icon: JSX.Element;
+  icon: JSX.Element | React.ReactNode | ReactNode[];
   path: string;
   subItems?: React.ReactNode | React.ReactNode[];
   display: string;
@@ -102,22 +102,29 @@ const Item: FunctionComponent<ItemProps> = ({
       ) : (
         <Accordion className="flex flex-col justify-center w-full">
           <Accordion.Button className={linkClass(isCollapsed, selected)}>
-            <div className="flex gap-5 text-center place-items-center">
-              {icon}
+            <div className="flex w-full gap-5 text-center place-items-center">
+              <span
+                className={`${
+                  isCollapsed ? 'w-full' : 'w-[10%]'
+                } flex justify-center`}
+              >
+                {icon}
+              </span>
               {!isCollapsed && (
-                <div className="flex text-center gap-28 place-items-center">
+                <div className="flex w-[90%] text-left justify-between gap-28 place-items-center">
                   <motion.span
                     initial={{ opacity: 0, x: -100 }}
                     animate={{ opacity: 1, x: 0 }}
                   >
                     {display}
                   </motion.span>
+
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="none"
-                    height={24}
-                    width={24}
+                    height={20}
+                    width={20}
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"

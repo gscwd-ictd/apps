@@ -5,11 +5,13 @@ type SearchBoxProps = {
   searchValue: string;
   setSearchValue: (searchValue: string) => void;
   placeholder?: string;
+  fluid?: boolean;
 };
 
 export const SearchBox: FunctionComponent<SearchBoxProps> = ({
   searchValue,
   setSearchValue,
+  fluid = false,
   placeholder = 'Search by name',
 }) => {
   return (
@@ -32,7 +34,9 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
         </svg>
       </span>
       <input
-        className="rounded-full min-w-[2rem] max-w-[24rem] h-[2rem] -mx-6 outline-none border border-gray-300 px-10 text-xs"
+        className={`rounded-full min-w-[2rem] ${
+          fluid ? 'w-full' : 'max-w-[24rem]'
+        } h-[2rem] -mx-6 outline-none border border-gray-300 px-10 text-xs`}
         value={searchValue}
         placeholder={placeholder}
         onChange={(e: any) => setSearchValue(e.target.value)}
