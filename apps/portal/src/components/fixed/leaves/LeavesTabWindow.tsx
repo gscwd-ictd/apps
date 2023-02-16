@@ -12,8 +12,6 @@ type LeavesTabWindowProps = {
 export const LeavesTabWindow = ({
   employeeId,
 }: LeavesTabWindowProps): JSX.Element => {
- 
-
   const pendingLeave = [
     {
       id: '23232',
@@ -26,13 +24,18 @@ export const LeavesTabWindow = ({
       salary: 'P 999,000.00',
       typeOfLeave: 'Vacation Leave',
       detailsOfLeave: {
-        location: 'Within the Philippines',
-        sick: '', 
+        withinThePhilippines: true,
+        abroad: false,
+        location: 'General Santos City',
+        inHospital: false,
+        outPatient: false,
         illness: '',
-        materDegree: false,
+        specialLeaveWomenIllness: '',
+        sick: '',
+        masterDegree: false,
         bar: false,
         monetization: false,
-        termal: false,
+        terminal: false,
       },
       numberOfWorkingDays: '1, 2, 3',
       commutation: 'Not Requested',
@@ -51,13 +54,18 @@ export const LeavesTabWindow = ({
       salary: 'P 999,000.00',
       typeOfLeave: 'Vacation Leave',
       detailsOfLeave: {
-        location: 'Within the Philippines',
-        sick: '', 
+        withinThePhilippines: true,
+        abroad: false,
+        location: 'General Santos City',
+        inHospital: false,
+        outPatient: false,
         illness: '',
-        materDegree: false,
+        specialLeaveWomenIllness: '',
+        sick: '',
+        masterDegree: false,
         bar: false,
         monetization: false,
-        termal: false,
+        terminal: false,
       },
       numberOfWorkingDays: '1, 2',
       commutation: 'Not Requested',
@@ -73,26 +81,27 @@ export const LeavesTabWindow = ({
       salary: 'P 999,000.00',
       typeOfLeave: 'Vacation Leave',
       detailsOfLeave: {
-        location: 'Within the Philippines',
-        sick: '', 
+        withinThePhilippines: false,
+        abroad: true,
+        location: 'USA',
+        inHospital: false,
+        outPatient: false,
         illness: '',
-        materDegree: false,
+        specialLeaveWomenIllness: '',
+        sick: '',
+        masterDegree: false,
         bar: false,
         monetization: false,
-        termal: false,
+        terminal: false,
       },
       numberOfWorkingDays: '1, 2',
       commutation: 'Not Requested',
     },
-  ]
+  ];
 
-  const pendingLeaveList = useLeaveStore(
-    (state) => state.pendingLeaveList
-  );
+  const pendingLeaveList = useLeaveStore((state) => state.pendingLeaveList);
 
-  const fulfilledLeaveList = useLeaveStore(
-    (state) => state.fulfilledLeaveList
-  );
+  const fulfilledLeaveList = useLeaveStore((state) => state.fulfilledLeaveList);
 
   const setPendingLeaveList = useLeaveStore(
     (state) => state.setPendingLeaveList
@@ -107,14 +116,12 @@ export const LeavesTabWindow = ({
   useEffect(() => {
     setPendingLeaveList(pendingLeave);
     setFulfilledLeaveList(fulfilledLeave);
-  },[])
+  }, []);
 
   return (
     <>
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
-        {tab === 1 && (
-          <AllLeavesListTab leaves={pendingLeaveList} tab={tab} />
-        )}
+        {tab === 1 && <AllLeavesListTab leaves={pendingLeaveList} tab={tab} />}
         {tab === 2 && (
           <AllLeavesListTab leaves={fulfilledLeaveList} tab={tab} />
         )}

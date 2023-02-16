@@ -16,7 +16,7 @@ export type LeaveApplication = {
     outPatient: boolean;
     illness: string;
     specialLeaveWomenIllness: string;
-    materDegree: boolean;
+    masterDegree: boolean;
     bar: boolean;
     monetization: boolean;
     terminal: boolean;

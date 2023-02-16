@@ -119,9 +119,9 @@ export default function LeaveInfoModal() {
       <div className="w-full h-full flex flex-col gap-2 ">
         <div className="w-full flex flex-col gap-2 p-4 rounded">
           {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
-          {/* <div className="w-full pb-4">
+          <div className="w-full pb-4">
             <span className="text-slate-500 text-xl font-medium">
-              {`Your Leave Credits:`}
+              {`Your Leave Credits as of Jan 1, 2023`}
             </span>
             <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
               <tbody>
@@ -169,7 +169,7 @@ export default function LeaveInfoModal() {
                 </tr>
               </tbody>
             </table>
-          </div> */}
+          </div>
           <div className="flex flex-row gap-4">
             <label className="pt-2 text-slate-500 text-xl font-medium ">
               Leave Type:
@@ -183,14 +183,75 @@ export default function LeaveInfoModal() {
               Leave Details:
             </label>
           </div>
-          <div className="flex flex-row gap-4">
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.withinThePhilippines
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
             <label className="pt-2 text-slate-500 text-md font-medium ">
-              Leave Details:
+              Within Philippines:
             </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.location}
+            </div>
           </div>
-
-          <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-            {selectedLeave.detailsOfLeave.location}
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.abroad
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
+            <label className="pt-2 text-slate-500 text-md font-medium ">
+              Abroad:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.location}
+            </div>
+          </div>
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.inHospital
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
+            <label className="pt-2 text-slate-500 text-md font-medium ">
+              In Hospital:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.illness}
+            </div>
+          </div>
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.outPatient
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
+            <label className="pt-2 text-slate-500 text-md font-medium ">
+              Out Patient:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.illness}
+            </div>
+          </div>
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.masterDegree
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
+            <label className="pt-2 text-slate-500 text-md font-medium ">
+              Out Patient:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.illness}
+            </div>
           </div>
         </div>
       </div>
