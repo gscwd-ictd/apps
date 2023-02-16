@@ -14,7 +14,7 @@ export type ScheduleState = {
 export const useScheduleStore = create<ScheduleState>((set) => ({
   schedules: [],
   modalIsOpen: false,
-  action: ModalActions.create,
+  action: ModalActions.CREATE,
   setSchedules: (schedules: Array<Schedule>) => {
     set((state) => ({ ...state, schedules }));
   },
