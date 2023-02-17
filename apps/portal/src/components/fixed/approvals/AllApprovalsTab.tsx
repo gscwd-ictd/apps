@@ -40,7 +40,7 @@ export const AllApprovalsTab = ({
     if (tab === 1) {
       // PENDING APPROVAL PASS SLIP
       if (!modal.isOpen) {
-        setAction('Approve Pass Slip');
+        setAction('Apply Action');
         setModal({ ...modal, page: 1, isOpen: true });
       }
     } else if (tab === 3) {

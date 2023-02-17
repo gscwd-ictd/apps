@@ -43,7 +43,7 @@ export type ApprovalState = {
   selectedLeaveId: string;
   setSelectedLeaveId: (value: string) => void;
   selectedLeave: LeaveApplication;
-  setSelectedLeave: (PassSlip: LeaveApplication) => void;
+  setSelectedLeave: (selectedLeave: LeaveApplication) => void;
   pendingLeaveList: Array<LeaveApplication>;
   setPendingLeaveList: (pendingLeaveList: Array<LeaveApplication>) => void;
   approvedLeaveList: Array<LeaveApplication>;

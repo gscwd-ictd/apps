@@ -8,8 +8,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { HiMail } from 'react-icons/hi';
 import { withSession } from '../../../utils/helpers/session';
-import { useLeaveStore } from '../../../store/leave.store';
-import Leaves from '../../../pages/[id]/leaves';
+import { useApprovalStore } from '../../../../src/store/approvals.store';
 
 // export default function Messages({ pendingAcknowledgements, id }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function ApprovalLeaveModal() {
@@ -21,8 +20,18 @@ export default function ApprovalLeaveModal() {
   const [leaveReminder, setLeaveReminder] = useState<string>(
     'For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985).'
   );
-  const selectedLeave = useLeaveStore((state) => state.selectedLeave);
+  const selectedLeave = useApprovalStore((state) => state.selectedLeave);
+  const [reason, setReason] = useState<string>('');
+  const [action, setAction] = useState<string>('');
 
+  const onChangeType = (action: string) => {
+    setAction(action);
+    console.log(action);
+  };
+
+  const handleReason = (e: string) => {
+    setReason(e);
+  };
   const handleLeaveType = (e: string) => {
     setLeaveType(e);
     setLeaveLocation('');
@@ -286,6 +295,29 @@ export default function ApprovalLeaveModal() {
               {selectedLeave.detailsOfLeave.other}
             </div>
           </div>
+          <div className="w-full flex gap-2 justify-start items-center pt-12">
+            <span className="text-slate-500 text-xl font-medium">Action:</span>
+            <select
+              className={`text-slate-500 w-100  rounded text-lg border border-slate-200'
+                  
+              `}
+              onChange={(e) =>
+                onChangeType(e.target.value as unknown as string)
+              }
+            >
+              <option>Approve</option>
+              <option>Disapprove</option>
+            </select>
+          </div>
+
+          <textarea
+            className={
+              'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
+            }
+            placeholder="Enter Recommendation"
+            rows={3}
+            onChange={(e) => handleReason(e.target.value as unknown as string)}
+          ></textarea>
         </div>
       </div>
     </>

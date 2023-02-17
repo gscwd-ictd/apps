@@ -101,14 +101,14 @@ export default function LeaveInfoModal() {
     }
   };
 
-  const handleLeaveLocation = (e: string) => {
-    setLeaveLocation(e);
-    setLeaveDetails('');
-  };
+  // const handleLeaveLocation = (e: string) => {
+  //   setLeaveLocation(e);
+  //   setLeaveDetails('');
+  // };
 
-  const handleLeaveDetails = (e: string) => {
-    setLeaveDetails(e);
-  };
+  // const handleLeaveDetails = (e: string) => {
+  //   setLeaveDetails(e);
+  // };
 
   return (
     <>
