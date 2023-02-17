@@ -8,10 +8,6 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { HiMail } from 'react-icons/hi';
 import { withSession } from '../../../utils/helpers/session';
-
-import Calendar from '../calendar/Calendar';
-import { SideNav } from '../nav/SideNav';
-import { MainContainer } from '../../modular/custom/containers/MainContainer';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import Leaves from '../../../../src/pages/[id]/leaves';
 
