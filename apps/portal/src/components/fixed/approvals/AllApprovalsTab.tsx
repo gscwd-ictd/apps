@@ -61,6 +61,7 @@ export const AllApprovalsTab = ({
   const onSelectLeave = (leave: LeaveApplication) => {
     setSelectedLeave(leave);
     setSelectedLeaveId(leave.id);
+    console.log(leave);
     if (tab === 2) {
       // PENDING APPROVAL LEAVES
       if (!modal.isOpen) {

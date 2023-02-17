@@ -1,10 +1,5 @@
 import { useApprovalStore } from '../../../../src/store/approvals.store';
-import {
-  HiOutlineTag,
-  HiCheckCircle,
-  HiOutlineCheckCircle,
-  HiCheck,
-} from 'react-icons/hi';
+import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 
 import { TabHeader } from '../tab/TabHeader';
 
