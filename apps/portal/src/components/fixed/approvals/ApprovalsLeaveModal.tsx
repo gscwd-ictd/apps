@@ -126,7 +126,7 @@ export default function ApprovalLeaveModal() {
           {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
           <div className="w-full pb-4">
             <span className="text-slate-500 text-xl font-medium">
-              {`Your Leave Credits as of Jan 1, 2023`}
+              {`${selectedLeave.firstName} ${selectedLeave.middleName} ${selectedLeave.lastName}'s Leave Credits as of Jan 1, 2023`}
             </span>
             <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
               <tbody>
@@ -175,130 +175,211 @@ export default function ApprovalLeaveModal() {
               </tbody>
             </table>
           </div>
-          <div className="flex flex-row gap-4">
-            <label className="pt-2 text-slate-500 text-xl font-medium ">
-              Leave Type:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.typeOfLeave}
+          <div className="w-full flex flex-col gap-2 p-2">
+            <div className={`flex flex-row gap-4`}>
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Employee:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.firstName} {selectedLeave.middleName}{' '}
+                {selectedLeave.lastName}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-row gap-4">
-            <label className="pt-2 text-slate-500 text-xl font-medium ">
-              Leave Details:
-            </label>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.withinThePhilippines
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Within Philippines:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.location}
+            <div className={`flex flex-row gap-4`}>
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Position:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.position}
+              </div>
             </div>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.abroad
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Abroad:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.location}
+            <div className={`flex flex-row gap-4`}>
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Salary:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.salary}
+              </div>
             </div>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.inHospital
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              In Hospital:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.illness}
-            </div>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.outPatient
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Out Patient:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.illness}
-            </div>
-          </div>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.masterDegree
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For Completion of Master's Degree`}
-          </label>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.bar
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For BAR/Board Examination Review`}
-          </label>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.monetization
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For Monetization of Leave Credits`}
-          </label>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.terminal
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For Terminal Leave`}
-          </label>
 
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.other
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Other Reason:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.other}
+            <div className={`flex flex-row gap-40 justify-start`}>
+              <div className={`flex flex-row gap-4`}>
+                <label className="pt-2 text-slate-500 text-lg font-medium ">
+                  Office/Department:
+                </label>
+                <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                  {selectedLeave.office}
+                </div>
+              </div>
             </div>
           </div>
+
+          <div className="w-full flex flex-col gap-2 bg-slate-50 p-2">
+            <div className="flex flex-row gap-4">
+              <label className="pt-2 text-slate-500 text-2xl font-medium ">
+                Leave Details:
+              </label>
+            </div>
+            <div className="flex flex-row gap-4">
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Leave Type:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.typeOfLeave}
+              </div>
+            </div>
+            <div className={`flex flex-row gap-4`}>
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Date Filed:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.dateOfFiling}
+              </div>
+            </div>
+            <div
+              className={`${
+                selectedLeave.detailsOfLeave.withinThePhilippines
+                  ? 'flex flex-row gap-4'
+                  : 'hidden'
+              }`}
+            >
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Within Philippines:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.detailsOfLeave.location}
+              </div>
+            </div>
+            <div
+              className={`${
+                selectedLeave.detailsOfLeave.abroad
+                  ? 'flex flex-row gap-4'
+                  : 'hidden'
+              }`}
+            >
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Abroad:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.detailsOfLeave.location}
+              </div>
+            </div>
+            <div
+              className={`${
+                selectedLeave.detailsOfLeave.inHospital
+                  ? 'flex flex-row gap-4'
+                  : 'hidden'
+              }`}
+            >
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                In Hospital:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.detailsOfLeave.illness}
+              </div>
+            </div>
+            <div
+              className={`${
+                selectedLeave.detailsOfLeave.outPatient
+                  ? 'flex flex-row gap-4'
+                  : 'hidden'
+              }`}
+            >
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Out Patient:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.detailsOfLeave.illness}
+              </div>
+            </div>
+            <label
+              className={`${
+                selectedLeave.detailsOfLeave.masterDegree
+                  ? ' pt-2 text-slate-500 text-lg font-medium'
+                  : 'hidden'
+              }`}
+            >
+              {`For Completion of Master's Degree`}
+            </label>
+            <label
+              className={`${
+                selectedLeave.detailsOfLeave.bar
+                  ? ' pt-2 text-slate-500 text-lg font-medium'
+                  : 'hidden'
+              }`}
+            >
+              {`For BAR/Board Examination Review`}
+            </label>
+            <label
+              className={`${
+                selectedLeave.detailsOfLeave.monetization
+                  ? ' pt-2 text-slate-500 text-lg font-medium'
+                  : 'hidden'
+              }`}
+            >
+              {`For Monetization of Leave Credits`}
+            </label>
+            <label
+              className={`${
+                selectedLeave.detailsOfLeave.terminal
+                  ? ' pt-2 text-slate-500 text-lg font-medium'
+                  : 'hidden'
+              }`}
+            >
+              {`For Terminal Leave`}
+            </label>
+
+            <div
+              className={`${
+                selectedLeave.detailsOfLeave.other
+                  ? 'flex flex-row gap-4'
+                  : 'hidden'
+              }`}
+            >
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Other Reason:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.detailsOfLeave.other}
+              </div>
+            </div>
+            <div
+              className={`${
+                selectedLeave.detailsOfLeave.specialLeaveWomenIllness
+                  ? 'flex flex-row gap-4'
+                  : 'hidden'
+              }`}
+            >
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Illness:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.detailsOfLeave.specialLeaveWomenIllness}
+              </div>
+            </div>
+
+            <div className={`flex flex-row gap-4`}>
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Number of Working Days Applied For:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.numberOfWorkingDays}
+              </div>
+            </div>
+            <div className={`flex flex-row gap-4`}>
+              <label className="pt-2 text-slate-500 text-lg font-medium ">
+                Commutation:
+              </label>
+              <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+                {selectedLeave.commutation}
+              </div>
+            </div>
+          </div>
+
           <div className="w-full flex gap-2 justify-start items-center pt-12">
             <span className="text-slate-500 text-xl font-medium">Action:</span>
             <select
-              className={`text-slate-500 w-100  rounded text-lg border border-slate-200'
+              className={`text-slate-500 w-100 h-10 rounded text-md border border-slate-200'
                   
               `}
               onChange={(e) =>

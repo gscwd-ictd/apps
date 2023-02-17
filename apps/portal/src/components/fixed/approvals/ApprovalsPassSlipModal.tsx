@@ -1,7 +1,5 @@
-import { ListDef, Select } from '@gscwd-apps/oneui';
 import { useState } from 'react';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
-import { ApprovalTypeSelect } from './ApprovalTypeSelect';
 
 export default function ApprovalPassSlipModal() {
   const selectedPassSlip = useApprovalStore((state) => state.selectedPassSlip);
@@ -73,7 +71,7 @@ export default function ApprovalPassSlipModal() {
                 'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
               }
               value={selectedPassSlip.purpose}
-              rows={3}
+              rows={4}
               disabled={true}
             ></textarea>
             <div className="w-full flex gap-2 justify-start items-center pt-12">
@@ -81,7 +79,7 @@ export default function ApprovalPassSlipModal() {
                 Action:
               </span>
               <select
-                className={`text-slate-500 w-100 h-12 rounded text-lg border border-slate-200'
+                className={`text-slate-500 w-100 h-10 rounded text-md border border-slate-200'
                   
               `}
                 onChange={(e) =>

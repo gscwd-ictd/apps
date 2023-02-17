@@ -41,19 +41,34 @@ export const AllApprovalsTab = ({
       // PENDING APPROVAL PASS SLIP
       if (!modal.isOpen) {
         setAction('Apply Action');
-        setModal({ ...modal, page: 1, isOpen: true });
+        setModal({
+          ...modal,
+          page: 1,
+          isOpen: true,
+          title: 'Pass Slip Approval',
+        });
       }
     } else if (tab === 3) {
       // APPROVED PASS SLIP
       if (!modal.isOpen) {
         setAction('View');
-        setModal({ ...modal, page: 2, isOpen: true });
+        setModal({
+          ...modal,
+          page: 2,
+          isOpen: true,
+          title: 'Approved Pass Slip',
+        });
       }
     } else if (tab === 5) {
       // DISAPPROVED PASS SLIP
       if (!modal.isOpen) {
         setAction('View');
-        setModal({ ...modal, page: 2, isOpen: true });
+        setModal({
+          ...modal,
+          page: 2,
+          isOpen: true,
+          title: 'Disapproved Pass Slip',
+        });
       }
     }
   };
@@ -65,20 +80,25 @@ export const AllApprovalsTab = ({
     if (tab === 2) {
       // PENDING APPROVAL LEAVES
       if (!modal.isOpen) {
-        setAction('Approve');
-        setModal({ ...modal, page: 3, isOpen: true });
+        setAction('Apply Action');
+        setModal({ ...modal, page: 3, isOpen: true, title: 'Leave Approval' });
       }
     } else if (tab === 4) {
       // APPROVED LEAVES
       if (!modal.isOpen) {
         setAction('View');
-        setModal({ ...modal, page: 4, isOpen: true });
+        setModal({ ...modal, page: 4, isOpen: true, title: 'Approved Leave' });
       }
     } else if (tab === 6) {
       // DISAPPROVED LEAVES
       if (!modal.isOpen) {
         setAction('View');
-        setModal({ ...modal, page: 4, isOpen: true });
+        setModal({
+          ...modal,
+          page: 4,
+          isOpen: true,
+          title: 'Disapproved Leave',
+        });
       }
     }
   };

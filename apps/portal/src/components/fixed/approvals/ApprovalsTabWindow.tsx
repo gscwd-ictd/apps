@@ -106,8 +106,8 @@ export const ApprovalsTabWindow = ({
         terminal: false,
         other: '',
       },
-      numberOfWorkingDays: '1',
-      commutation: '',
+      numberOfWorkingDays: '3 - January 21, 22, 23, 2023',
+      commutation: 'Requested',
     },
   ];
 
@@ -138,7 +138,7 @@ export const ApprovalsTabWindow = ({
         other: '',
       },
       numberOfWorkingDays: '1',
-      commutation: '',
+      commutation: 'Requested',
     },
   ];
 
@@ -169,7 +169,7 @@ export const ApprovalsTabWindow = ({
         other: '',
       },
       numberOfWorkingDays: '1',
-      commutation: '',
+      commutation: 'Requested',
     },
     {
       id: '6552243',
@@ -197,7 +197,7 @@ export const ApprovalsTabWindow = ({
         other: '',
       },
       numberOfWorkingDays: '1',
-      commutation: '',
+      commutation: 'Requested',
     },
   ];
 
