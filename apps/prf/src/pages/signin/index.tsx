@@ -115,9 +115,6 @@ export default function Signin() {
     // call the login end point to post user credentials object
     const { error } = await userSignin(email, password, (res) => handleLoginError(res));
 
-    // @arn021853
-    // @agnes110777
-
     // reload the page is there is no error
     if (!error) router.reload();
   };
