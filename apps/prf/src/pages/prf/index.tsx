@@ -182,7 +182,6 @@ export default function Prf({ user, employee, profile, pendingRequests, forAppro
 
 export const getServerSideProps: GetServerSideProps = withSession(async () => {
   const employee = getEmployee() as any;
-
   // get user details
   //const user = await getUserDetails(employee.userId);
 
