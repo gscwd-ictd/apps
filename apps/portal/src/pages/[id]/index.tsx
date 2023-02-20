@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { SideNav } from '../../components/fixed/nav/SideNav';
 import { MainContainer } from '../../components/modular/custom/containers/MainContainer';
 import { useAllowedModulesStore } from '../../store/allowed-modules.store';
-// import { withSession, getemployeeDummy } from '../../utils/helpers/session';
+import { withSession, getUserDetails } from '../../utils/helpers/session';
 import { useEmployeeStore } from '../../store/employee.store';
 import { EmployeeDashboard } from '../../components/fixed/dashboard/EmployeeDashboard';
 import { SpinnerDotted } from 'spinners-react';
@@ -21,12 +21,10 @@ import { ProfileCard } from '../../components/fixed/home/profile/ProfileCard';
 import { RemindersCard } from '../../components/fixed/home/reminders/RemindersCard';
 import { AttendanceCard } from '../../components/fixed/home/attendance/AttendanceCard';
 import { StatsCard } from '../../components/fixed/home/stats/StatsCard';
-import { employeeDummy } from '../../types/employee.type';
 
-export default function Dashboard() {
-//   {
-//   employeeDummy,
-// }: InferGetServerSidePropsType<typeof getServerSideProps>
+export default function Dashboard({
+  userDetails,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const setAllowedModules = useAllowedModulesStore(
     (state) => state.setAllowedModules
   );
@@ -34,9 +32,9 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function hydration() {
-    setLocalStorage(employeeDummy);
+    setLocalStorage(userDetails);
 
-    const modules = await setModules(employeeDummy);
+    const modules = await setModules(userDetails);
 
     setAllowedModules(modules);
 
@@ -44,12 +42,12 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    setEmployee(employeeDummy);
+    setEmployee(userDetails);
     setIsLoading(true);
     hydration();
   }, []);
 
-  const employeeName = `${employeeDummy.profile.firstName} ${employeeDummy.profile.lastName}`;
+  const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
 
   return (
     <>
@@ -114,13 +112,13 @@ export default function Dashboard() {
               </div>
               <div className="w-1/5 h-screen flex flex-col gap-5 z-20 mt-1 mb-20">
                 <ProfileCard
-                  firstName={employeeDummy.profile.firstName}
-                  lastName={employeeDummy.profile.lastName}
+                  firstName={userDetails.profile.firstName}
+                  lastName={userDetails.profile.lastName}
                   position={
-                    employeeDummy.employmentDetails.assignment.positionTitle
+                    userDetails.employmentDetails.assignment.positionTitle
                   }
-                  division={employeeDummy.employmentDetails.assignment.name}
-                  photoUrl={employeeDummy.profile.photoUrl}
+                  division={userDetails.employmentDetails.assignment.name}
+                  photoUrl={userDetails.profile.photoUrl}
                 />
                 <EmployeeDashboard />
               </div>
@@ -132,10 +130,10 @@ export default function Dashboard() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = withSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDummy = getemployeeDummy();
-//     // console.log(employeeDummy);
-//     return { props: { employeeDummy } };
-//   }
-// );
+export const getServerSideProps: GetServerSideProps = withSession(
+  async (context: GetServerSidePropsContext) => {
+    const userDetails = getUserDetails();
+    // console.log(userDetails);
+    return { props: { userDetails } };
+  }
+);

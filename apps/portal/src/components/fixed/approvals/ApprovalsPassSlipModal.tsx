@@ -1,7 +1,20 @@
+import { useState } from 'react';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 
 export default function ApprovalPassSlipModal() {
   const selectedPassSlip = useApprovalStore((state) => state.selectedPassSlip);
+  const [reason, setReason] = useState<string>('');
+  const [action, setAction] = useState<string>('');
+
+  const onChangeType = (action: string) => {
+    setAction(action);
+    console.log(action);
+  };
+
+  const handleReason = (e: string) => {
+    setReason(e);
+  };
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2 ">
@@ -58,8 +71,35 @@ export default function ApprovalPassSlipModal() {
                 'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
               }
               value={selectedPassSlip.purpose}
-              rows={5}
+              rows={4}
               disabled={true}
+            ></textarea>
+            <div className="w-full flex gap-2 justify-start items-center pt-12">
+              <span className="text-slate-500 text-xl font-medium">
+                Action:
+              </span>
+              <select
+                className={`text-slate-500 w-100 h-10 rounded text-md border border-slate-200'
+                  
+              `}
+                onChange={(e) =>
+                  onChangeType(e.target.value as unknown as string)
+                }
+              >
+                <option>Approve</option>
+                <option>Disapprove</option>
+              </select>
+            </div>
+
+            <textarea
+              className={
+                'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
+              }
+              placeholder="Enter Reason"
+              rows={3}
+              onChange={(e) =>
+                handleReason(e.target.value as unknown as string)
+              }
             ></textarea>
           </div>
         </div>

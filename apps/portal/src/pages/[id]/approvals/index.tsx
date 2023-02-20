@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect } from 'react';
-import { HiDocumentAdd, HiX } from 'react-icons/hi';
+import { HiX } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -24,13 +24,12 @@ import { ApprovalsTabs } from '../../../../src/components/fixed/approvals/Approv
 import { ApprovalsTabWindow } from '../../../../src/components/fixed/approvals/ApprovalsTabWindow';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 import { ApprovalListController } from '../../../../src/components/fixed/approvals/ApprovalsListController';
-import { ApprovalTypeSelect } from 'apps/portal/src/components/fixed/approvals/ApprovalTypeSelect';
+import { ApprovalTypeSelect } from '../../../../src/components/fixed/approvals/ApprovalTypeSelect';
+import { employeeDummy } from '../../../../src/types/employee.type';
 
 export default function Approvals({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const router = useRouter();
-
   // get state for the modal
   const modal = useApprovalStore((state) => state.modal);
 
@@ -59,7 +58,7 @@ export default function Approvals({
   // open the modal
   const openModal = () => {
     if (!modal.isOpen) {
-      setAction('Apply');
+      setAction('Apply Action');
       setModal({ ...modal, page: 1, isOpen: true });
     }
   };
@@ -106,7 +105,7 @@ export default function Approvals({
             <Modal.Header>
               <h3 className="font-semibold text-2xl text-gray-700">
                 <div className="px-5 flex justify-between">
-                  <span>Approvals</span>
+                  <span>{modal.title}</span>
                   <button
                     className="hover:bg-slate-100 px-1 rounded-full"
                     onClick={modalCancel}
@@ -179,7 +178,7 @@ export default function Approvals({
                       </div>
                       <div className="w-full">
                         <ApprovalsTabWindow
-                          employeeId={employeeDetails.employmentDetails.userId}
+                          employeeId={employeeDummy.employmentDetails.userId}
                         />
                       </div>
                     </div>
@@ -194,10 +193,10 @@ export default function Approvals({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps =
+  // withSession
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+    return { props: { employeeDummy } };
+  };

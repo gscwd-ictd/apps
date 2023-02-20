@@ -21,6 +21,7 @@ import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindo
 import { LeavesModalController } from '../../../components/fixed/leaves/LeavesListController';
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
+import { employeeDummy } from '../../../../src/types/employee.type';
 
 export default function Leaves({
   employeeDetails,
@@ -70,7 +71,7 @@ export default function Leaves({
 
   // set the employee details on page load
   useEffect(() => {
-    setEmployeeDetails(employeeDetails);
+    setEmployeeDetails(employeeDummy);
     setIsLoading(true);
   }, [setEmployeeDetails, setIsLoading]);
 
@@ -160,7 +161,7 @@ export default function Leaves({
                       </div>
                       <div className="w-full">
                         <LeavesTabWindow
-                          employeeId={employeeDetails.employmentDetails.userId}
+                          employeeId={employeeDummy.employmentDetails.userId}
                         />
                       </div>
                     </div>
@@ -175,10 +176,10 @@ export default function Leaves({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDummy } };
+};

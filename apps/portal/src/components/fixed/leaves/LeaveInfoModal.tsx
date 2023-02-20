@@ -8,11 +8,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { HiMail } from 'react-icons/hi';
 import { withSession } from '../../../utils/helpers/session';
-
-import Calendar from '../calendar/Calendar';
-import { SideNav } from '../nav/SideNav';
-import { MainContainer } from '../../modular/custom/containers/MainContainer';
-import { useLeaveStore } from 'apps/portal/src/store/leave.store';
+import { useLeaveStore } from '../../../../src/store/leave.store';
+import Leaves from '../../../../src/pages/[id]/leaves';
 
 // export default function Messages({ pendingAcknowledgements, id }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function LeaveInfoModal() {
@@ -104,14 +101,14 @@ export default function LeaveInfoModal() {
     }
   };
 
-  const handleLeaveLocation = (e: string) => {
-    setLeaveLocation(e);
-    setLeaveDetails('');
-  };
+  // const handleLeaveLocation = (e: string) => {
+  //   setLeaveLocation(e);
+  //   setLeaveDetails('');
+  // };
 
-  const handleLeaveDetails = (e: string) => {
-    setLeaveDetails(e);
-  };
+  // const handleLeaveDetails = (e: string) => {
+  //   setLeaveDetails(e);
+  // };
 
   return (
     <>
@@ -120,7 +117,7 @@ export default function LeaveInfoModal() {
           {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
           <div className="w-full pb-4">
             <span className="text-slate-500 text-xl font-medium">
-              Your current Leave Credits:
+              {`Your Leave Credits as of Jan 1, 2023`}
             </span>
             <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
               <tbody>
@@ -169,184 +166,125 @@ export default function LeaveInfoModal() {
               </tbody>
             </table>
           </div>
-          <label className="pt-2 text-slate-500 text-xl font-medium">
-            Leave Type:
-          </label>
-          <div>
-            <div className="text-slate-500 w-full h-16 rounded text-lg border-slate-300">
+          <div className="flex flex-row gap-4">
+            <label className="pt-2 text-slate-500 text-xl font-medium ">
+              Leave Type:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
               {selectedLeave.typeOfLeave}
             </div>
-            <div
-              className={`${
-                leaveName
-                  ? 'flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1'
-                  : 'hidden'
-              }`}
-            >
-              <span className="font-bold">{leaveName}</span>
-              <span>{leaveDesc}</span>
+          </div>
+          <div className="flex flex-row gap-4">
+            <label className="pt-2 text-slate-500 text-xl font-medium ">
+              Leave Details:
+            </label>
+          </div>
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.withinThePhilippines
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
+              Within Philippines:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.location}
             </div>
           </div>
           <div
-            className={`${leaveType ? 'pt-2 flex flex-col gap-4 ' : 'hidden'}`}
+            className={`${
+              selectedLeave.detailsOfLeave.abroad
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
           >
-            <label
-              className={`${
-                leaveType
-                  ? '-mb-2 text-slate-500 text-xl font-medium'
-                  : 'hidden'
-              }`}
-            >
-              Select Leave Type:
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
+              Abroad:
             </label>
-            <select
-              value={leaveLocation}
-              className={`${
-                leaveType == 'vacation' ||
-                leaveType == 'mandatory' ||
-                leaveType == 'maternity' ||
-                leaveType == 'paternity' ||
-                leaveType == 'maternity' ||
-                leaveType == 'special-privilege' ||
-                leaveType == 'solo-parent' ||
-                leaveType == 'vawc' ||
-                leaveType == 'rehabilitation' ||
-                leaveType == 'special-emergency' ||
-                leaveType == 'adoption'
-                  ? 'text-slate-500 w-full h-16 rounded text-lg border-slate-300'
-                  : 'hidden'
-              }`}
-              onChange={(e) =>
-                handleLeaveLocation(e.target.value as unknown as string)
-              }
-            >
-              <option value="" disabled>
-                Details of Leave
-              </option>
-              <option value="philippines">Within the Philippines</option>
-              <option value="abroad">Abroad (Specify)</option>
-            </select>
-
-            <select
-              value={leaveLocation}
-              className={`${
-                leaveType == 'sick'
-                  ? 'text-slate-500 w-full h-16 rounded text-lg border-slate-300'
-                  : 'hidden'
-              }`}
-              onChange={(e) =>
-                handleLeaveLocation(e.target.value as unknown as string)
-              }
-            >
-              <option value="" disabled>
-                Details of Sick Leave
-              </option>
-              <option value="hospital">In Hospital</option>
-              <option value="outPatient">Out Patient (Specify)</option>
-            </select>
-
-            <select
-              value={leaveLocation}
-              className={`${
-                leaveType == 'study'
-                  ? 'text-slate-500 w-full h-16 rounded text-lg border-slate-300'
-                  : 'hidden'
-              }`}
-              onChange={(e) =>
-                handleLeaveLocation(e.target.value as unknown as string)
-              }
-            >
-              <option value="" disabled>
-                Details of Study Leave
-              </option>
-              <option value="hospital">{`Completion of Master's Degree`}</option>
-              <option value="outPatient">
-                BAR/Board Examination Review Other
-              </option>
-            </select>
-
-            <select
-              value={leaveLocation}
-              className={`${
-                leaveType == 'others'
-                  ? 'text-slate-500 w-full h-16 rounded text-lg border-slate-300'
-                  : 'hidden'
-              }`}
-              onChange={(e) =>
-                handleLeaveLocation(e.target.value as unknown as string)
-              }
-            >
-              <option value="" disabled>
-                Details of Leave
-              </option>
-              <option value="hospital">Monetization of Leave Credits</option>
-              <option value="outPatient">Terminal Leave</option>
-            </select>
-            <div
-              className={`${
-                leaveLocation || leaveType == 'special-women'
-                  ? 'text-slate-500 w-full rounded text-lg'
-                  : 'hidden'
-              }`}
-            >
-              <textarea
-                onChange={(e) =>
-                  handleLeaveDetails(e.target.value as unknown as string)
-                }
-                value={leaveDetails}
-                rows={3}
-                placeholder={`${
-                  leaveType == 'sick'
-                    ? 'Specify Illness'
-                    : leaveType == 'study'
-                    ? 'Specify Purpose'
-                    : leaveType == 'special-women'
-                    ? 'Specify Illness'
-                    : 'Specify Leave Details'
-                }`}
-                className="resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300"
-              ></textarea>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.location}
             </div>
           </div>
-
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.inHospital
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
+              In Hospital:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.illness}
+            </div>
+          </div>
+          <div
+            className={`${
+              selectedLeave.detailsOfLeave.outPatient
+                ? 'flex flex-row gap-4'
+                : 'hidden'
+            }`}
+          >
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
+              Out Patient:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.illness}
+            </div>
+          </div>
           <label
             className={`${
-              leaveDetails && leaveLocation
-                ? 'pt-2 text-slate-500 text-xl font-medium'
+              selectedLeave.detailsOfLeave.masterDegree
+                ? ' pt-2 text-slate-500 text-lg font-medium'
                 : 'hidden'
             }`}
           >
-            Select Leave Dates:
+            {`For Completion of Master's Degree`}
           </label>
+          <label
+            className={`${
+              selectedLeave.detailsOfLeave.bar
+                ? ' pt-2 text-slate-500 text-lg font-medium'
+                : 'hidden'
+            }`}
+          >
+            {`For BAR/Board Examination Review`}
+          </label>
+          <label
+            className={`${
+              selectedLeave.detailsOfLeave.monetization
+                ? ' pt-2 text-slate-500 text-lg font-medium'
+                : 'hidden'
+            }`}
+          >
+            {`For Monetization of Leave Credits`}
+          </label>
+          <label
+            className={`${
+              selectedLeave.detailsOfLeave.terminal
+                ? ' pt-2 text-slate-500 text-lg font-medium'
+                : 'hidden'
+            }`}
+          >
+            {`For Terminal Leave`}
+          </label>
+
           <div
             className={`${
-              leaveDetails && leaveLocation
-                ? 'w-full p-4 bg-gray-50 rounded'
+              selectedLeave.detailsOfLeave.other
+                ? 'flex flex-row gap-4'
                 : 'hidden'
             }`}
           >
-            <div>
-              {/* <div
-                className={`${
-                  leaveDetails
-                    ? 'bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow'
-                    : 'hidden'
-                }`}
-              >
-                2
-              </div> */}
-
-              <div
-                className={`${leaveDetails && leaveLocation ? '' : 'hidden'}`}
-              >
-                <Calendar clickableDate={true} />
-              </div>
+            <label className="pt-2 text-slate-500 text-lg font-medium ">
+              Other Reason:
+            </label>
+            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+              {selectedLeave.detailsOfLeave.other}
             </div>
-          </div>
-          <div
-            className={`flex flex-col gap-2 w-full bg-slate-100 text-sm p-2 mt-1`}
-          >
-            <span>{leaveReminder}</span>
           </div>
         </div>
       </div>

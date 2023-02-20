@@ -3,7 +3,6 @@ import { AlertState } from '../types/alert.type';
 import { LeaveApplication } from '../types/leave.type';
 import { ErrorState, ModalState } from '../types/modal.type';
 
-
 export type LeavesState = {
   alert: AlertState;
   setAlert: (alert: AlertState) => void;
@@ -16,9 +15,9 @@ export type LeavesState = {
   selectedLeaveId: string;
   setSelectedLeaveId: (value: string) => void;
   selectedLeave: LeaveApplication;
-  setSelectedLeave: (PassSlip: LeaveApplication) => void;
+  setSelectedLeave: (Leaves: LeaveApplication) => void;
   leaveList: Array<LeaveApplication>;
-  setLeaveList: (PassSlips: Array<LeaveApplication>) => void;
+  setLeaveList: (Leaves: Array<LeaveApplication>) => void;
 
   pendingIsLoaded: boolean;
   setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
@@ -45,12 +44,8 @@ export const useLeaveStore = create<LeavesState>((set) => ({
   pendingIsLoaded: false,
   fulfilledIsLoaded: false,
   isLoading: false,
-  pendingLeaveList: [
-    
-  ],
-  fulfilledLeaveList: [
-    
-  ],
+  pendingLeaveList: [],
+  fulfilledLeaveList: [],
   tab: 1,
   setAlert: (alert: AlertState) => {
     set((state) => ({ ...state, alert }));
@@ -71,8 +66,8 @@ export const useLeaveStore = create<LeavesState>((set) => ({
     set((state) => ({ ...state, selectedLeave }));
   },
 
-  setLeaveList: (PassSlipList: Array<LeaveApplication>) => {
-    set((state) => ({ ...state, PassSlipList }));
+  setLeaveList: (leaveList: Array<LeaveApplication>) => {
+    set((state) => ({ ...state, leaveList }));
   },
   setPendingIsLoaded: (pendingIsLoaded: boolean) => {
     set((state) => ({ ...state, pendingIsLoaded }));

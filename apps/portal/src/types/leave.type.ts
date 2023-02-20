@@ -9,15 +9,19 @@ export type LeaveApplication = {
   salary: string;
   typeOfLeave: string;
   detailsOfLeave: {
+    withinThePhilippines: boolean;
+    abroad: boolean;
     location: string;
-    sick: string;
+    inHospital: boolean;
+    outPatient: boolean;
     illness: string;
-    materDegree: boolean;
+    specialLeaveWomenIllness: string;
+    masterDegree: boolean;
     bar: boolean;
     monetization: boolean;
-    termal: boolean;
-  }
+    terminal: boolean;
+    other: string;
+  };
   numberOfWorkingDays: string;
   commutation: string;
-
 };
