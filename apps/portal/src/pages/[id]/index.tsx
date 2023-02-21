@@ -54,9 +54,7 @@ export default function Dashboard({
       <Head>
         <title>{employeeName}</title>
       </Head>
-
       <SideNav />
-
       <MainContainer>
         <>
           {isLoading ? (

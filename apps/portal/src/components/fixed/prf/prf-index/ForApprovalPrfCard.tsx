@@ -7,7 +7,9 @@ type ForApprovalPrfCardProps = {
   prf: Array<ForApprovalPrf>;
 };
 
-export const ForApprovalPrfCard: FunctionComponent<ForApprovalPrfCardProps> = ({ prf }) => {
+export const ForApprovalPrfCard: FunctionComponent<ForApprovalPrfCardProps> = ({
+  prf,
+}) => {
   const router = useRouter();
 
   return (
@@ -16,22 +18,34 @@ export const ForApprovalPrfCard: FunctionComponent<ForApprovalPrfCardProps> = ({
         return (
           <React.Fragment key={index}>
             <div
-              onClick={() => router.push(`/prf/for-approval/${forApproval.prfDetailsId}`)}
+              onClick={() =>
+                router.push(
+                  `/${router.query.id}/prf/for-approval/${forApproval.prfDetailsId}`
+                )
+              }
               className="bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
             >
               <header>
-                <h3 className="text-lg font-semibold text-gray-600">{forApproval.prfNo}</h3>
-                <p className="text-xs text-gray-500 w-[16rem] truncate">{forApproval.designation}</p>
+                <h3 className="text-lg font-semibold text-gray-600">
+                  {forApproval.prfNo}
+                </h3>
+                <p className="text-xs text-gray-500 w-[16rem] truncate">
+                  {forApproval.designation}
+                </p>
               </header>
 
               <main className="mt-4">
                 <div className="flex items-center gap-2">
                   <HiOutlineDocumentDuplicate className="text-gray-600" />
-                  <p className="text-sm text-gray-600 w-[15rem] truncate">{forApproval.requestedBy}</p>
+                  <p className="text-sm text-gray-600 w-[15rem] truncate">
+                    {forApproval.requestedBy}
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <HiOutlinePencil className="text-gray-600" />
-                  <p className="text-sm text-indigo-700">{forApproval.status}</p>
+                  <p className="text-sm text-indigo-700">
+                    {forApproval.status}
+                  </p>
                 </div>
               </main>
             </div>

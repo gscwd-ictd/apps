@@ -160,6 +160,8 @@ export default function PendingPrf({
 
 export const getServerSideProps: GetServerSideProps = withSession(
   async (context: GetServerSidePropsContext) => {
+    console.log(context);
+
     try {
       const employee = await getEmployeeDetailsFromHr(context);
 
