@@ -20,7 +20,12 @@ export type TableProps<T> = {
   onRowClick?: (row: Row<T>) => void;
 };
 
-export const DataTable = <T extends object>({ data, columns, paginate, onRowClick }: TableProps<T>) => {
+export const DataTable = <T extends object>({
+  data,
+  columns,
+  paginate,
+  onRowClick,
+}: TableProps<T>) => {
   // set state for sorting the table
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -55,11 +60,16 @@ export const DataTable = <T extends object>({ data, columns, paginate, onRowClic
                       {header.isPlaceholder ? null : (
                         <div
                           {...{
-                            className: tableHeaderStyles(header.column.getCanSort()),
+                            className: tableHeaderStyles(
+                              header.column.getCanSort()
+                            ),
                             onClick: header.column.getToggleSortingHandler(),
                           }}
                         >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                           {header.column.getCanSort() && <SortableColumnSvg />}
                         </div>
                       )}
@@ -84,7 +94,10 @@ export const DataTable = <T extends object>({ data, columns, paginate, onRowClic
                   {row.getVisibleCells().map((cell) => {
                     return (
                       <td key={cell.id} className="py-3 px-6 border-gray-100">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </td>
                     );
                   })}

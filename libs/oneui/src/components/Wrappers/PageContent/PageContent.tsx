@@ -1,4 +1,10 @@
-import { createContext, FunctionComponent, ReactNode, useState } from 'react';
+import {
+  createContext,
+  FunctionComponent,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 
 type PageContentProps = {
   children?: ReactNode | ReactNode[];
@@ -21,8 +27,8 @@ export const PageContentContext = createContext({} as PageContentContextState);
 export const PageContent: FunctionComponent<PageContentProps> = ({
   children,
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [previousState, setPreviousState] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [previousState, setPreviousState] = useState<boolean>(false);
 
   return (
     <PageContentContext.Provider

@@ -1,6 +1,8 @@
+import { OfficeSVG } from '../svgs/Office';
+
 export const CardEmployee = () => {
   return (
-    <div className="static flex flex-col w-full h-[15rem] bg-white rounded">
+    <div className="static flex flex-col w-full h-[18rem] bg-white rounded">
       {/** TOP PART */}
       <section className="min-w-full h-[50%] bg-blue-200 rounded-t">
         <div className="flex flex-col m-5">
@@ -8,6 +10,9 @@ export const CardEmployee = () => {
           <span className="text-xs font-light text-blue-600">
             Employee Monitoring Dashboard
           </span>
+        </div>
+        <div className="flex justify-end w-full h-full pl-[50%] -mt-20">
+          <OfficeSVG />
         </div>
       </section>
 

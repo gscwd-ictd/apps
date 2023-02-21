@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { FunctionComponent, ReactNode, useContext } from 'react';
+import { Accordion } from '../Accordion';
 import { PageContentContext } from '../Wrappers/PageContent';
 import { itemClass, linkClass, sidebarClass } from './Sidebar.styles';
 
@@ -14,10 +15,12 @@ type SidebarProps = Props & {
 };
 
 type ItemProps = Omit<Props, 'children'> & {
-  display: string;
-  icon: JSX.Element;
+  icon: JSX.Element | React.ReactNode | ReactNode[];
   path: string;
+  subItems?: React.ReactNode | React.ReactNode[];
+  display: string;
   selected?: boolean;
+  hasSubItem?: boolean;
 };
 
 type SidebarComposition = {
@@ -70,9 +73,11 @@ const Footer: FunctionComponent<Props> = ({ children, className }) => {
 const Item: FunctionComponent<ItemProps> = ({
   selected,
   icon,
-  display,
   path,
   className,
+  subItems,
+  display,
+  hasSubItem = false,
 }) => {
   const {
     aside: { isCollapsed },
@@ -80,19 +85,66 @@ const Item: FunctionComponent<ItemProps> = ({
 
   return (
     <li className={itemClass(className, selected)}>
-      <Link href={path} className={linkClass(isCollapsed, selected)}>
-        {icon}
-        <AnimatePresence initial={false}>
-          {!isCollapsed && (
-            <motion.span
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              {display}
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </Link>
+      {!hasSubItem ? (
+        <Link href={path} className={linkClass(isCollapsed, selected)}>
+          {icon}
+          <AnimatePresence initial={false}>
+            {!isCollapsed && (
+              <motion.span
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}
+              >
+                {display}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
+      ) : (
+        <Accordion className="flex flex-col justify-center w-full">
+          <Accordion.Button className={linkClass(isCollapsed, selected)}>
+            <div className="flex w-full gap-5 text-center place-items-center">
+              <span
+                className={`${
+                  isCollapsed ? 'w-full' : 'w-[10%]'
+                } flex justify-center`}
+              >
+                {icon}
+              </span>
+              {!isCollapsed && (
+                <div className="flex w-[90%] text-left justify-between gap-28 place-items-center">
+                  <motion.span
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                  >
+                    {display}
+                  </motion.span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    height={20}
+                    width={20}
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className=" ui-open:rotate-180 ui-open:transform ui-open:transition-all"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                </div>
+              )}
+              {/* {!isCollapsed && (
+                
+              )} */}
+            </div>
+          </Accordion.Button>
+          <Accordion.Body>
+            <ul className="-ml-1">{subItems}</ul>
+          </Accordion.Body>
+        </Accordion>
+      )}
     </li>
   );
 };
