@@ -1,5 +1,5 @@
 import { FunctionComponent, useState, useMemo } from 'react';
-import { tableHeaderStyles } from './DataTable.styles';
+import { tableHeaderStyles } from './DataTableHrms.styles';
 import {
   ColumnDef,
   flexRender,
@@ -13,21 +13,30 @@ import {
 } from '@tanstack/react-table';
 // import { Pagination } from '../Pagination';
 
-export type TableProps<T> = {
+export type TablePropsHrms<T> = {
   data: Array<T>;
   columns: Array<ColumnDef<T, unknown>>;
   paginate?: boolean;
+  columnVisibility?: Record<string, boolean>;
   onRowClick?: (row: Row<T>) => void;
 };
 
-export const DataTable = <T extends object>({
+// export type VisibilityState = Record<string, boolean>
+
+// export type VisibilityTableState = {
+//   columnVisibility: VisibilityState
+// }
+
+export const DataTableHrms = <T extends object>({
   data,
   columns,
   paginate,
+  columnVisibility,
   onRowClick,
-}: TableProps<T>) => {
+}: TablePropsHrms<T>) => {
   // set state for sorting the table
   const [sorting, setSorting] = useState<SortingState>([]);
+  // const [columnVisibility, setColumnVisibility] = useState({})
 
   // set table columns
   const tableColumns = useMemo(() => columns, [columns]);
@@ -39,7 +48,7 @@ export const DataTable = <T extends object>({
   const table = useReactTable({
     columns: tableColumns,
     data: tableData,
-    state: { sorting },
+    state: { sorting, columnVisibility },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),

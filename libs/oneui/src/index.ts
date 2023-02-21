@@ -15,3 +15,4 @@ export * from './components/Wrappers/Main';
 export * from './components/Wrappers/Nav';
 export * from './components/Wrappers/PageContent';
 export * from './components/Tables/DataTable';
+export * from './components/Tables/DataTableHrms';
