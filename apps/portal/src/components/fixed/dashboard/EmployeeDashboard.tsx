@@ -61,7 +61,7 @@ const VerticalLayout = (): JSX.Element => {
                   description={description}
                   destination={
                     destination === 'prf'
-                      ? `http://192.168.137.249:3000/prf`
+                      ? `/${router.query.id}/prf`
                       : destination === 'dnr'
                       ? `${router.query.id}/duties-and-responsibilities`
                       : destination === 'endorsement'
