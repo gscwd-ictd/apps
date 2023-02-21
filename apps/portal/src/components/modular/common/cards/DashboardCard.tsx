@@ -1,4 +1,4 @@
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 
@@ -9,6 +9,7 @@ type DashboardCardProps = {
   description: string;
   destination: string;
   children?: ReactNode;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onClick?: Function;
   linkType: 'router' | 'href';
   titleSize?: string;
@@ -44,10 +45,19 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
           // onClick={onClick!()}
           target="_blank"
           className={`flex items-center w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
+          rel="noreferrer"
         >
-          <div className={`flex h-10 w-10 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}>{icon}</div>
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}
+          >
+            {icon}
+          </div>
           <div>
-            <label className={`font-semibold text-gray-600 cursor-pointer ${titleSize}`}>{title}</label>
+            <label
+              className={`font-semibold text-gray-600 cursor-pointer ${titleSize}`}
+            >
+              {title}
+            </label>
             <p className="text-xs text-gray-400">{description}</p>
             <div>{children}</div>
           </div>
@@ -59,9 +69,17 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
           // onClick={onClick!()}
           className={`flex items-center w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
         >
-          <div className={`flex h-10 w-10 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}>{icon}</div>
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}
+          >
+            {icon}
+          </div>
           <div>
-            <label className={`font-semibold text-gray-600 cursor-pointer ${titleSize}`}>{title}</label>
+            <label
+              className={`font-semibold text-gray-600 cursor-pointer ${titleSize}`}
+            >
+              {title}
+            </label>
             <p className="text-xs text-gray-400">{description}</p>
             <div>{children}</div>
           </div>

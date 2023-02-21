@@ -30,7 +30,7 @@ export const Modules: Array<Card> = [
     title: 'Position Request',
     description: 'Request for new positions',
     destination: 'prf',
-    linkType: 'href',
+    linkType: 'router',
     state: true,
   },
   {
