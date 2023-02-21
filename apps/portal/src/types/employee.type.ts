@@ -1,3 +1,5 @@
+import { Roles } from '../utils/constants/user-roles';
+
 export type User = {
   _id: string;
   email: string;
@@ -34,6 +36,31 @@ export type EmployeeDetails = {
   user: User;
   profile: Profile;
   employmentDetails: EmploymentDetails;
+};
+
+export type EmployeeDetailsPrf = {
+  userId: string;
+  companyId: string;
+  userRole: Roles;
+  assignment: {
+    id: string;
+    name: string;
+    positionId: string;
+    positionTitle: string;
+  };
+};
+
+export type EmployeeProfile = {
+  userId: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  nameExt: string;
+  sex: string;
+  birthDate: Date;
+  mobileNumber: string;
+  email: string;
+  photoUrl: string;
 };
 
 export const employeeDummy: EmployeeDetails = {

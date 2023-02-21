@@ -1,368 +1,310 @@
+import { GetServerSideProps } from 'next';
+import { useEffect } from 'react';
+import { Button } from '../../../components/modular/forms/buttons/Button';
+import { PageTitle } from '../../../components/modular/html/PageTitle';
+import { Modal } from '../../../components/modular/overlays/Modal';
+import { getEmployeeProfile } from '../../../utils/helpers/http-requests/employee-requests';
+import { getUserDetails } from '../../../utils/helpers/http-requests/user-requests';
 import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+  EmployeeDetailsPrf,
+  employeeDummy,
+  EmployeeProfile,
+} from '../../../types/employee.type';
+import { User } from '../../../types/user.type';
+import { Roles } from '../../../utils/constants/user-roles';
+import { getEmployee, withSession } from '../../../utils/helpers/with-session';
+import { usePrfStore } from '../../../store/prf.store';
+import { useEmployeeStore } from '../../../store/employee-prf.store';
+import { useUserStore } from '../../../store/user.store';
 import {
-  MainContainer,
-  ContentHeader,
-  ContentBody,
-} from '../../../components/modular/custom/containers/_index';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
-import { Button } from '../../../components/modular/common/forms/Button';
-import { useRouter } from 'next/router';
-import { Footers } from '../../../components/fixed/footer/Footer';
-import { FormModal } from '../../../components/modular/common/overlays/FormModal';
-import { useContext, useState } from 'react';
-import { PrfModalController } from '../../../components/fixed/prf/PrfModalController';
-import { getEmployeeData } from '../../../utils/hoc/employee';
-import { EmployeeContext, PrfContext } from '../../../context/contexts';
-import { Employee } from '../../../utils/types/data';
-import { UserRole } from '../../../utils/enums/userRoles';
-import { postData } from '../../../utils/hoc/axios';
-import Head from 'next/head';
-import dayjs from 'dayjs';
-import useSWR from 'swr';
-import { fetchWithToken } from '../../../utils/hoc/fetcher';
-import { PrfItem } from '../../../components/fixed/prf/PrfItem';
-import Link from 'next/link';
-import { EmployeeProvider } from '../../../context/EmployeeContext';
-import { employee } from '../../../utils/constants/data';
-import { Position } from '../../../types/position.type';
-import { Prf } from '../../../types/prf.type';
+  createPrf,
+  getForApprovalPrfs,
+  getPendingPrfs,
+  savePrf,
+} from '../../../utils/helpers/prf.requests';
+import { PrfModal } from '../../../components/fixed/prf/prf-modal/PrfModal';
+import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingPrfList';
+import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
+import { TabHeader } from '../../../components/fixed/prf/prf-index/TabHeader';
+import { PrfDetails } from '../../../types/prf.types';
+import router from 'next/router';
+import { HiArrowSmLeft } from 'react-icons/hi';
+import { SideNav } from '../../../../src/components/fixed/nav/SideNav';
+import { MainContainer } from '../../../../src/components/modular/custom/containers/MainContainer';
+import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
+import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
+import { SpinnerDotted } from 'spinners-react';
 
-export default function PositionRequest() {
-  // { employee }: InferGetServerSidePropsType<typeof getServerSideProps>
-  // set state for all positions for this office/department/division
+type PrfPageProps = {
+  user: User;
+  employee: EmployeeDetailsPrf;
+  profile: EmployeeProfile;
+  pendingRequests: Array<PrfDetails>;
+  forApproval: Array<any>;
+};
 
-  // employee from employee context
-  // const { employee } = useContext(EmployeeContext);
+export default function Prf({
+  user,
+  employee,
+  profile,
+  pendingRequests,
+  forApproval,
+}: PrfPageProps) {
+  // access modal-open state from store
+  const isOpen = usePrfStore((state) => state.isModalOpen);
 
-  const [allPositions, setAllPositions] = useState<Array<Position>>([]);
+  // access modal page from store
+  const modalPage = usePrfStore((state) => state.modalPage);
 
-  // set state for positions that are selected
-  const [selectedPositions, setSelectedPositions] = useState<Array<Position>>(
-    []
+  const withExam = usePrfStore((state) => state.withExam);
+
+  const selectedPositions = usePrfStore((state) => state.selectedPositions);
+
+  const pendingPrfs = usePrfStore((state) => state.pendingPrfs);
+
+  const forApprovalPrfs = usePrfStore((state) => state.forApprovalPrfs);
+
+  const activeItem = usePrfStore((state) => state.activeItem);
+
+  const setSelectedPositions = usePrfStore(
+    (state) => state.setSelectedPositions
   );
 
-  // set state for filtered positions
-  const [filteredPositions, setFilteredPositions] = useState<Array<Position>>(
-    []
-  );
+  const setPendingPrfs = usePrfStore((state) => state.setPendingPrfs);
 
-  // set state for prf details
-  const [prfDetails, setPrfDetails] = useState({
-    dateNeeded: '',
-    isExamRequired: false,
-  });
+  const setForApprovalPrfs = usePrfStore((state) => state.setForApprovalPrfs);
 
-  // set state for the searched position title
-  const [searchValue, setSearchValue] = useState('');
+  // access function to control with exam value
+  const setWithExam = usePrfStore((state) => state.setWithExam);
 
-  // set sate for handling error
-  const [error, setError] = useState({ isError: false, errorMessage: '' });
+  // access function to control modal page
+  const setModalPage = usePrfStore((state) => state.setModalPage);
 
-  // set state for handling modal page
-  const [modal, setModal] = useState({
-    isOpen: false,
-    page: 1,
-    title: '',
-    subtitle: '',
-  });
+  // access function to set modal-open
+  const setIsOpen = usePrfStore((state) => state.setIsModalOpen);
 
-  // set state for controlling tab page
-  const [tab, setTab] = useState(1);
+  // access function to set user state
+  const setUser = useUserStore((state) => state.setUser);
 
-  // initialize router
-  const router = useRouter();
+  // access function to set employee state
+  const setEmployee = useEmployeeStore((state) => state.setEmployee);
 
-  // set modal main modal action (confirm)
-  const modalAction = async () => {
-    if (modal.page === 1) {
-      // check if there are no selected positions
-      selectedPositions.length === 0
-        ? // set error if no selected positions
-          setError({
-            isError: true,
-            errorMessage: 'Select at least 1 position to proceed',
-          })
-        : // otherwise, check if date needed is blank
-        prfDetails.dateNeeded === ''
-        ? // set error if date needed is blank
-          setError({
-            isError: true,
-            errorMessage: 'Please specify the date needed',
-          })
-        : // otherwise, go to next page
-          !error.isError && setModal({ ...modal, page: modal.page + 1 });
-    } else if (modal.page === 2) {
-      // create an empty array
-      const requestedPositions: any = [];
+  // acacess function to set profile state
+  const setProfile = useEmployeeStore((state) => state.setProfile);
 
-      // loop through selected positions
-      selectedPositions.forEach((position: any) => {
-        // remove unnecessary fields
-        requestedPositions.push(
-          (({
-            designation,
-            designationId,
-            sequenceNo,
-            itemNumber,
-            positionTitle,
-            state,
-            ...rest
-          }) => rest)(position)
-        );
-      });
+  // get loading state from store
+  const isLoading = usePrfStore((state) => state.isLoading);
+  // set loading state from store
+  const setIsLoading = usePrfStore((state) => state.setIsLoading);
 
-      const prfData = {
-        // set to draft by default
-        status: 'pending',
+  useEffect(() => {
+    // update value of user
+    setUser(user);
 
-        // set date requested to date today
-        dateRequested: dayjs().format('YYYY-MM-DD'),
+    // update value of employee
+    setEmployee(employee);
 
-        // set to currently logged in manager
-        employeeId: employee.employmentDetails.employeeId,
+    // update value of profile
+    setProfile(profile);
 
-        // set date needed value from the state
-        dateNeeded: dayjs(prfDetails.dateNeeded).format('YYYY-MM-DD'),
+    setPendingPrfs(pendingRequests);
 
-        // set withExam value from the state
-        withExam: prfDetails.isExamRequired,
+    setForApprovalPrfs(forApproval);
 
-        // set prf positions
-        prfPositions: requestedPositions,
-      };
+    setIsLoading(true);
+  }, []);
 
-      // save prf in the database
-      const { error, result } = await postData(
-        `${process.env.NEXT_PUBLIC_HRIS_URL}/prf`,
-        prfData
-      );
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+    }
+  }, [isLoading, setIsLoading]);
 
-      console.log(result);
+  useEffect(() => console.log(forApprovalPrfs), [forApprovalPrfs]);
 
-      // go to prf summary page
-      error
-        ? console.log(error)
-        : router.push(
-            `/${router.query.id}/prf/${result.prf.prfDetails._id}?render_type=view`
-          );
+  const handleCancel = () => {
+    // check if current modal page is the first page
+    modalPage === 1 ? setIsOpen(false) : setModalPage(modalPage - 1);
+  };
+
+  const handleConfirm = async () => {
+    // check if current modal page is 1
+    if (modalPage === 1) setModalPage(modalPage + 1);
+
+    // check if current modal page is greater than 1
+    if (modalPage > 1) {
+      // create a prf object
+      const prf = createPrf(selectedPositions, withExam, employee.userId);
+
+      // save the newly created prf object in the database
+      const { error, result } = await savePrf(prf);
+
+      // check if there is no error
+      if (!error) {
+        // set pending prfs state
+        setPendingPrfs([...pendingPrfs, result.prf.prfDetails]);
+
+        setForApprovalPrfs([...forApprovalPrfs]);
+
+        // close the modal
+        setIsOpen(false);
+      }
     }
   };
 
-  // set modal cancel action
-  const cancelPrfModal = () =>
-    modal.page !== 1
-      ? setModal({ ...modal, page: modal.page - 1 })
-      : closePrfModal();
+  const handleOpen = () => {
+    // set modal page to default
+    setModalPage(1);
 
-  const openPrfModal = () => {
-    // open the prf modal
-    setModal({ ...modal, page: 1, isOpen: true });
+    // revert value to default
+    setWithExam(false);
 
-    // set all states to their default values upon opening the modal
-    setStateDefaultValues();
-  };
-
-  const closePrfModal = () => {
-    // close the prf modal
-    setModal({ ...modal, isOpen: false });
-  };
-
-  const setStateDefaultValues = () => {
-    // remove all selected positions
+    // set selected positions to default
     setSelectedPositions([]);
 
-    // set prf details value to default
-    setPrfDetails({ dateNeeded: '', isExamRequired: false });
-
-    // set default error value
-    setError({ isError: false, errorMessage: '' });
-
-    // set default value for search
-    setSearchValue('');
+    // make the modal visible
+    setIsOpen(true);
   };
 
   return (
-    // <EmployeeContext.Provider value={employee}>
-    <EmployeeProvider employeeData={employee}>
-      <Head>
-        <title>Position Request</title>
-      </Head>
+    <>
+      <Modal
+        title="Position Request"
+        subtitle="Request for new personnel"
+        isOpen={isOpen}
+        size="xl"
+        child={<PrfModal />}
+        cancelLabel={modalPage === 1 ? 'Cancel' : 'Go Back'}
+        confirmLabel={modalPage === 2 ? 'Confirm' : 'Proceed'}
+        isConfirmDisabled={selectedPositions.length === 0 ? true : false}
+        setIsOpen={setIsOpen}
+        onClose={() => null}
+        onCancel={handleCancel}
+        onConfirm={handleConfirm}
+      />
 
+      <PageTitle title="Position Request" />
       <SideNav />
-
-      <PrfContext.Provider
-        value={{
-          allPositions,
-          setAllPositions,
-          selectedPositions,
-          setSelectedPositions,
-          filteredPositions,
-          setFilteredPositions,
-          searchValue,
-          setSearchValue,
-          prfDetails,
-          setPrfDetails,
-          error,
-          setError,
-        }}
-      >
-        <FormModal
-          isOpen={modal.isOpen}
-          title="Position Request"
-          subtitle="Request for additional personnel"
-          actionLabel={modal.page === 2 ? 'Confirm' : 'Proceed'}
-          isStatic
-          modalSize="xxxxxxxl"
-          withCancelBtn
-          cancelLabel={modal.page === 1 ? 'Cancel' : 'Go Back'}
-          disableActionBtn={selectedPositions.length === 0 ? true : false}
-          setIsOpen={() => setModal({ ...modal })}
-          onAction={modalAction}
-          onCancel={cancelPrfModal}
-          onClose={closePrfModal}
-          children={<PrfModalController page={modal.page} action="create" />}
-        />
-      </PrfContext.Provider>
-
       <MainContainer>
         <div className="w-full h-full px-32">
           <ContentHeader
             title="Position Request"
             subtitle="Request for new personnel"
           >
-            <Button btnLabel="Create Request" shadow onClick={openPrfModal} />
+            <Button
+              btnLabel="Create Request"
+              shadow
+              strong
+              onClick={handleOpen}
+            />
           </ContentHeader>
-          <ContentBody>
-            <>
-              <ul className="flex gap-3 text-gray-500 border-b">
-                <li
-                  className={`border-b-[3px] ${
-                    tab === 1 ? 'border-b-indigo-400' : 'border-b-transparent'
-                  } mr-3 cursor-pointer rounded-t pt-1 hover:bg-indigo-50`}
-                  onClick={() => setTab(1)}
-                >
-                  <span className="text-sm font-medium tracking-tight transition-colors ease-in-out select-none hover:text-indigo-700">
-                    Pending
-                  </span>
-                </li>
+          {isLoading ? (
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="w-full flex h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
+          ) : (
+            <ContentBody>
+              <>
+                <div className="w-full flex">
+                  <div className="w-[58rem]">
+                    <TabHeader />
+                  </div>
+                  <div className="w-full">
+                    {activeItem === 0 && <PendingPrfList />}
 
-                <li
-                  className={`border-b-[3px] ${
-                    tab === 2 ? 'border-b-indigo-400' : 'border-b-transparent'
-                  } cursor-pointer rounded-t pt-1 hover:bg-indigo-50`}
-                  onClick={() => setTab(2)}
-                >
-                  <span className="text-sm font-medium tracking-tight transition-colors ease-in-out select-none hover:text-indigo-700">
-                    For Approval
-                  </span>
-                </li>
-              </ul>
-
-              <div className="mt-14">
-                {tab === 1 && <PendingTab />}
-                {tab === 2 && <RequestsTab />}
-              </div>
-            </>
-          </ContentBody>
+                    {activeItem === 1 && <ForApprovalPrfList />}
+                  </div>
+                </div>
+              </>
+            </ContentBody>
+          )}
         </div>
       </MainContainer>
 
-      {/* <Footer /> */}
-    </EmployeeProvider>
-    // </EmployeeContext.Provider>
+      {/* <div className="w-screen h-screen py-10 px-36 overflow-hidden flex flex-col gap-10">
+        <header className="flex items-center justify-between">
+          <div>
+            <button
+              className="flex items-center gap-2 text-gray-700 transition-colors ease-in-out hover:text-gray-700"
+              onClick={() => router.back()}
+            >
+              <HiArrowSmLeft className="h-5 w-5" />
+              <span className="font-medium">Go Back</span>
+            </button>
+            <section>
+              <h1 className="text-2xl font-semibold text-gray-700">
+                Position Request
+              </h1>
+              <p className="text-gray-500">Request for new personnel</p>
+            </section>
+          </div>
+
+          <section>
+            <Button
+              btnLabel="Create Request"
+              shadow
+              strong
+              onClick={handleOpen}
+            />
+          </section>
+        </header>
+        <main className="h-full flex">
+          <TabHeader />
+
+          {activeItem === 0 && <PendingPrfList />}
+
+          {activeItem === 1 && <ForApprovalPrfList />}
+        </main>
+      </div> */}
+    </>
   );
 }
 
-const PendingTab = (): JSX.Element => {
-  // initialize router
-  const router = useRouter();
+export const getServerSideProps: GetServerSideProps = async () => {
+  // const employee = getEmployee() as any;
+  const employee = employeeDummy;
+  // get user details
+  //const user = await getUserDetails(employee.userId);
 
-  // query prf data of the currently logged in employee
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_HRIS_URL}/prf/${router.query.id}?status=pending`,
-    fetchWithToken
-  );
+  // get employee profile
+  //const profile = await getEmployeeProfile(user._id);
 
-  return (
-    <div>
-      {data && data.length > 0 ? (
-        <>
-          <div className="grid grid-cols-2 gap-y-10">
-            {data.map((prf: Prf, index: number) => {
-              return <PrfItem prf={prf} key={index} />;
-            })}
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="flex justify-center pt-20">
-            <h1 className="text-4xl text-gray-300">
-              No pending requests at the moment
-            </h1>
-          </div>
-        </>
-      )}
-    </div>
-  );
+  // get all pending prfs
+  const pendingRequests = await getPendingPrfs(employee.user._id);
+
+  // get all approved prfs
+  const forApproval = await getForApprovalPrfs(employee.user._id);
+
+  // check if user role is rank_and_file
+  if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employee.profile.firstName.toLowerCase()}.${employee.profile.lastName.toLowerCase()}`,
+      },
+    };
+  }
+
+  return {
+    props: {
+      user: employee.user,
+      employee: employee.employmentDetails,
+      profile: employee.profile,
+      pendingRequests,
+      forApproval,
+    },
+  };
 };
 
-const RequestsTab = (): JSX.Element => {
-  // initialize router
-  const router = useRouter();
-
-  // query prf data of the currently logged in employee
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_HRIS_URL}/prf-trail/employee/${router.query.id}`,
-    fetchWithToken
-  );
-
-  data && console.log(router.query.id);
-
-  return (
-    <div>
-      {data &&
-        data.map((something: any, index: number) => {
-          return (
-            <div key={index}>
-              <button
-                onClick={() =>
-                  router.push(
-                    `/${router.query.id}/prf/${something.prfDetailsId}?render_type=approval`
-                  )
-                }
-              >
-                {something.prfNo}
-              </button>
-            </div>
-          );
-        })}
-    </div>
-  );
-};
-
-// export const getServerSideProps: GetServerSideProps = withSession(async (context: GetServerSidePropsContext) => {
-//   try {
-//     // get the data of the logged in employee from the backend
-//     const employee = (await getEmployeeData(context)) as Employee;
-
-//     // check if user role is rank_and_file
-//     if (employee.userRole === UserRole.RANK_AND_FILE) {
-//       // if true, the employee is not allowed to access this page
-//       return {
-//         redirect: {
-//           permanent: false,
-//           destination: '/403',
-//         },
-//       };
-//     }
-
-//     // return employee as props to prf page
-//     return { props: { employee } };
-//   } catch (error) {
-//     return { notFound: true };
-//   }
-// });
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   return { props: { user, employee: employeeDetails, profile } };
+// };
