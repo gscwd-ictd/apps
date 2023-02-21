@@ -228,49 +228,13 @@ export default function Prf({
           )}
         </div>
       </MainContainer>
-
-      {/* <div className="w-screen h-screen py-10 px-36 overflow-hidden flex flex-col gap-10">
-        <header className="flex items-center justify-between">
-          <div>
-            <button
-              className="flex items-center gap-2 text-gray-700 transition-colors ease-in-out hover:text-gray-700"
-              onClick={() => router.back()}
-            >
-              <HiArrowSmLeft className="h-5 w-5" />
-              <span className="font-medium">Go Back</span>
-            </button>
-            <section>
-              <h1 className="text-2xl font-semibold text-gray-700">
-                Position Request
-              </h1>
-              <p className="text-gray-500">Request for new personnel</p>
-            </section>
-          </div>
-
-          <section>
-            <Button
-              btnLabel="Create Request"
-              shadow
-              strong
-              onClick={handleOpen}
-            />
-          </section>
-        </header>
-        <main className="h-full flex">
-          <TabHeader />
-
-          {activeItem === 0 && <PendingPrfList />}
-
-          {activeItem === 1 && <ForApprovalPrfList />}
-        </main>
-      </div> */}
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  // const employee = getEmployee() as any;
-  const employee = employeeDummy;
+export const getServerSideProps: GetServerSideProps = withSession(async () => {
+  const employee = getEmployee() as any;
+  // const employee = employeeDummy;
   // get user details
   //const user = await getUserDetails(employee.userId);
 
@@ -303,7 +267,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       forApproval,
     },
   };
-};
+});
 
 // export const getServerSideProps: GetServerSideProps = async () => {
 //   return { props: { user, employee: employeeDetails, profile } };

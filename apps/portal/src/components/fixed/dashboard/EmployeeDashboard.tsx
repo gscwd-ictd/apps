@@ -61,7 +61,7 @@ const VerticalLayout = (): JSX.Element => {
                   description={description}
                   destination={
                     destination === 'prf'
-                      ? `${router.query.id}/prf`
+                      ? `/${router.query.id}/prf`
                       : destination === 'dnr'
                       ? `${router.query.id}/duties-and-responsibilities`
                       : destination === 'endorsement'

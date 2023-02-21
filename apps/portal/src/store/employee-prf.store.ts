@@ -1,9 +1,4 @@
 import create from 'zustand';
-import {
-  EmployeeDetails,
-  EmployeeProfile,
-} from '../../../prf/src/types/employee.type';
-import { User } from '../../../prf/src/types/user.type';
 
 export type EmployeeState = {
   employee: any;
