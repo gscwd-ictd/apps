@@ -14,6 +14,7 @@ export type CreateModalState = {
 
 export const useModalStore = create<CreateModalState>((set) => ({
   modal: { isOpen: false, page: 1, subtitle: '', title: '' },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setModal: () => {},
   action: '',
   setAction: (action: string) => {
