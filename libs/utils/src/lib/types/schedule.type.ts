@@ -1,5 +1,5 @@
 import { Categories } from '../enums/category.enum';
-import { ScheduleShift } from '../enums/schedule.enum';
+import { ScheduleShifts } from '../enums/schedule.enum';
 
 type ScheduleWithLunch = {
   withLunch: true;
@@ -19,6 +19,6 @@ export type Schedule = {
   name: string;
   timeIn: string;
   timeOut: string;
-  shift: ScheduleShift;
+  shift: ScheduleShifts;
   restDays: Array<number>;
 } & (ScheduleWithLunch | ScheduleWithoutLunch);
