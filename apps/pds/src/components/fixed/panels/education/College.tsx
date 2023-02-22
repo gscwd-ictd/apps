@@ -15,9 +15,9 @@ import schema from '../../../../schema/College';
 import { EducationInfo } from '../../../../types/data/education.type';
 import { CollegeAlert } from './CollegeAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
-import { EditButton } from 'components/fixed/buttons/Edit';
 import { isEmpty } from 'lodash';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const College = (): JSX.Element => {
   // set college array, employee object state from pds store

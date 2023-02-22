@@ -1,11 +1,11 @@
-import { SVGWelcomeCats } from "../components/fixed/svg/WelcomeCats";
+import { SVGWelcomeCats } from '../components/fixed/svg/WelcomeCats';
 
 export default function Index(): JSX.Element {
   return (
     <>
-      <div className="mt-[10%] flex flex-col items-center">
+      <div className="flex justify-center w-full h-full place-items-center">
         <SVGWelcomeCats />
       </div>
     </>
-  )
+  );
 }

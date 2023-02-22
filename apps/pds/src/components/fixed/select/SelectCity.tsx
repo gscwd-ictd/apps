@@ -1,9 +1,8 @@
-import fetcher from 'components/modular/fetcher/Fetcher';
 import { isEmpty } from 'lodash';
 import React, { MutableRefObject, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Address } from '../../../types/data/address.type';
-import LoadingIndicator from '../loader/LoadingIndicator';
+import fetcher from '../../modular/fetcher/Fetcher';
 
 type City = {
   city_code: string;
@@ -92,10 +91,10 @@ export const SelectCity: React.FC<MySelectCityProps> = ({
   useEffect(() => {
     if (!isEmpty(data)) {
       // filter
-      var filteredCities = data.filter((city: City) => city.province_code === codeVariable.provCode);
+      const filteredCities = data.filter((city: City) => city.province_code === codeVariable.provCode);
 
       // sort
-      var sortedCities = filteredCities.sort((firstItem: City, secondItem: City) =>
+      const sortedCities = filteredCities.sort((firstItem: City, secondItem: City) =>
         firstItem.city_name > secondItem.city_name ? 1 : secondItem.city_name > firstItem.city_name ? -1 : 0
       );
 

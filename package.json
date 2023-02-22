@@ -8,7 +8,7 @@
     "test": "nx test",
     "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0",
     "portal": "nx serve portal --port 3102 --hostname 0.0.0.0",
-    "pds": "nx serve personal-data-sheet --port 3105 --hostname 0.0.0.0"
+    "pds": "nx serve pds --port 3105 --hostname 0.0.0.0"
   },
   "private": true,
   "dependencies": {

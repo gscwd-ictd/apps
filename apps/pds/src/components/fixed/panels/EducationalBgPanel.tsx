@@ -11,13 +11,13 @@ import { NextButton } from '../navigation/button/NextButton';
 import schema from '../../../schema/EducationInfo';
 import { useTabStore } from '../../../store/tab.store';
 import { HeadContainer } from '../head/Head';
-import { usePdsStore } from 'store/pds.store';
-import { useEmployeeStore } from 'store/employee.store';
 import { Toast } from '../toast/Toast';
 import { useContext } from 'react';
-import { NotificationContext } from 'context/NotificationContext';
 import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
 import { trimmer } from '../../../../utils/functions/trimmer';
+import { useEmployeeStore } from '../../../store/employee.store';
+import { usePdsStore } from '../../../store/pds.store';
+import { NotificationContext } from '../../../context/NotificationContext';
 
 // yup validation schema
 
@@ -86,23 +86,19 @@ export const EducationalBgPanel = (): JSX.Element => {
   return (
     <>
       <HeadContainer title="PDS - Educational Background" />
-      <Page
-        title="Educational Background"
-        subtitle=""
-        children={
-          <>
-            <FormProvider {...methods} key="educationInfo">
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="educationInfo">
-                <Elementary />
-                <Secondary />
-                <Vocational />
-                <College />
-                <Graduate />
-              </form>
-            </FormProvider>
-          </>
-        }
-      />
+      <Page title="Educational Background" subtitle="">
+        <>
+          <FormProvider {...methods} key="educationInfo">
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="educationInfo">
+              <Elementary />
+              <Secondary />
+              <Vocational />
+              <College />
+              <Graduate />
+            </form>
+          </FormProvider>
+        </>
+      </Page>
       <PrevButton action={onPrev} type="button" />
       <NextButton formId="educationInfo" />
     </>

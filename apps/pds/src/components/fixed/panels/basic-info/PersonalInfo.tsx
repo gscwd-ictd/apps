@@ -14,7 +14,7 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import { usePdsStore } from '../../../../store/pds.store';
 import { gender, civilStatus, bloodType, citizenshipType } from '../../../../../utils/constants/constants';
 import { PersonalInfoAlert } from './PersonalInfoAlert';
-import fetcher from 'components/modular/fetcher/Fetcher';
+import fetcher from '../../../modular/fetcher/Fetcher';
 
 export const PersonalInfoBI = (): JSX.Element => {
   const countriesUrl = process.env.NEXT_PUBLIC_COUNTRIES; // assign the public countries url
@@ -329,43 +329,43 @@ export const PersonalInfoBI = (): JSX.Element => {
                 focusOutline={true}
                 muted={hasPds ? true : false}
                 className="relative border py-[0.62rem] md:mt-2"
-                children={
-                  <>
-                    <div className="grid-cols-2 xs:grid sm:grid md:grid lg:grid xl:grid">
-                      <RadioButtonRF
-                        id="filipino"
-                        name="citizenship"
-                        label="Filipino"
-                        muted={hasPds && personalInfo.citizenship === 'Filipino' ? false : !hasPds ? false : true}
-                        checked={personalInfo.citizenship === 'Filipino' ? true : false}
-                        value="Filipino"
-                        controller={{ ...register('citizenship', { value: personalInfo.citizenship, onChange: (e) => onChangeCitizenship(e) }) }}
-                      />
-                      <RadioButtonRF
-                        id="dual-citizenship"
-                        name="citizenship"
-                        label="Dual Citizenship"
-                        muted={hasPds && personalInfo.citizenship === 'Dual Citizenship' ? false : !hasPds ? false : true}
-                        checked={personalInfo.citizenship === 'Dual Citizenship' ? true : false}
-                        value="Dual Citizenship"
-                        controller={{ ...register('citizenship', { value: personalInfo.citizenship, onChange: (e) => onChangeCitizenship(e) }) }}
-                      />
-                    </div>
-                    <label
-                      htmlFor="citizenship"
-                      className="peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit 
+              >
+                <>
+                  <div className="grid-cols-2 xs:grid sm:grid md:grid lg:grid xl:grid">
+                    <RadioButtonRF
+                      id="filipino"
+                      name="citizenship"
+                      label="Filipino"
+                      muted={hasPds && personalInfo.citizenship === 'Filipino' ? false : !hasPds ? false : true}
+                      checked={personalInfo.citizenship === 'Filipino' ? true : false}
+                      value="Filipino"
+                      controller={{ ...register('citizenship', { value: personalInfo.citizenship, onChange: (e) => onChangeCitizenship(e) }) }}
+                    />
+                    <RadioButtonRF
+                      id="dual-citizenship"
+                      name="citizenship"
+                      label="Dual Citizenship"
+                      muted={hasPds && personalInfo.citizenship === 'Dual Citizenship' ? false : !hasPds ? false : true}
+                      checked={personalInfo.citizenship === 'Dual Citizenship' ? true : false}
+                      value="Dual Citizenship"
+                      controller={{ ...register('citizenship', { value: personalInfo.citizenship, onChange: (e) => onChangeCitizenship(e) }) }}
+                    />
+                  </div>
+                  <label
+                    htmlFor="citizenship"
+                    className="peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit 
           cursor-text bg-white text-xs font-normal text-gray-400 transition-all peer-placeholder-shown:-inset-y-[0.85rem] peer-placeholder-shown:left-0  peer-placeholder-shown:text-base
             peer-placeholder-shown:text-gray-600 peer-focus:bg-white peer-focus:text-xs peer-focus:text-gray-400"
-                    >
-                      <div className="flex px-1">
-                        {' '}
-                        <span className="text-gray-600">Citizenship</span>
-                        <span className="text-red-700">*</span>
-                      </div>
-                    </label>
-                  </>
-                }
-              />
+                  >
+                    <div className="flex px-1">
+                      {' '}
+                      <span className="text-gray-600">Citizenship</span>
+                      <span className="text-red-700">*</span>
+                    </div>
+                  </label>
+                </>
+              </RadioGroup>
+
               {errors.citizenship && <span className="mt-1 text-xs text-red-600 ">{errors.citizenship.message}</span>}
             </div>
 
