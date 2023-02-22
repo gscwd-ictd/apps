@@ -2,15 +2,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { isEmpty, isEqual } from 'lodash';
 import { HiSearch } from 'react-icons/hi';
-import {
-  Competency,
-  DutiesResponsibilities,
-  DutiesResponsibilitiesList,
-  DutyResponsibility,
-  DutyResponsibilityList,
-  UpdatedDRC,
-  UpdatedDRCD,
-} from '../../../types/dr.type';
+import { Competency, DutyResponsibility } from '../../../types/dr.type';
 import { postData, patchData } from '../../../utils/hoc/axios';
 import { DRModalController } from '../../../components/fixed/dr/DRModalController';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
@@ -27,7 +19,7 @@ import {
   InferGetServerSidePropsType,
 } from 'next';
 import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { Alert, Button, Modal } from '@ericsison/ui-lib';
+import { Alert, Button, Modal } from '@gscwd-apps/oneui';
 import { SpinnerDotted } from 'spinners-react';
 import { DRAlertController } from '../../../components/fixed/dr/DRAlertController';
 import {
@@ -337,37 +329,36 @@ export default function DR({
         open={modal.isOpen}
         setOpen={() => setModal({ ...modal })}
         size={modal.page !== 6 ? 'xl' : 'sm'}
+        steady
       >
-        <Modal.Header withCloseBtn onClose={closeDrModal}>
-          <Modal.Title>
-            <div className="px-5">
-              <h3 className="font-semibold text-xl text-gray-700">
-                {modal.page === 6
-                  ? 'Setting Successful'
-                  : 'Set Duties, Responsibilities, and Competencies'}
-              </h3>
-              <p>
-                {modal.page === 1
-                  ? 'Select a position title'
-                  : modal.page === 2
-                  ? 'Add core or support'
-                  : modal.page === 3
-                  ? `${selectedPosition.positionTitle}`
-                  : modal.page === 4 && 'Position Summary'}
-              </p>
-            </div>
-          </Modal.Title>
+        <Modal.Header>
+          <div className="px-5">
+            <h3 className="text-xl font-semibold text-gray-700">
+              {modal.page === 6
+                ? 'Setting Successful'
+                : 'Set Duties, Responsibilities, and Competencies'}
+            </h3>
+            <p>
+              {modal.page === 1
+                ? 'Select a position title'
+                : modal.page === 2
+                ? 'Add core or support'
+                : modal.page === 3
+                ? `${selectedPosition.positionTitle}`
+                : modal.page === 4 && 'Position Summary'}
+            </p>
+          </div>
         </Modal.Header>
 
-        <Modal.Body scrollable>
+        <Modal.Body>
           <DRModalController page={modal.page} action={action} />
         </Modal.Body>
 
-        <Modal.Footer alignEnd>
-          <div className="flex gap-2 justify-start">
+        <Modal.Footer>
+          <div className="flex justify-start gap-2">
             <div className="w-[6rem]">
               {modal.page !== 6 && (
-                <Button full onClick={cancelDRModal} variant="white">
+                <Button onClick={cancelDRModal} variant="info">
                   Cancel
                 </Button>
               )}
@@ -375,9 +366,8 @@ export default function DR({
             {modal.page !== 1 ? (
               <div className="min-w-[6rem] max-w-auto">
                 <Button
-                  full
                   onClick={modalPosAction}
-                  disable={
+                  disabled={
                     modal.page === 2 &&
                     (DrcChecker(selectedDRCs).noPercentageCounter > 0 ||
                       DrcChecker(selectedDRCs).onEditCounter > 0 ||
@@ -436,8 +426,7 @@ export default function DR({
             {alert.page === 1 && (
               <div className="w-[5rem]">
                 <Button
-                  full
-                  variant="white"
+                  variant="info"
                   onClick={() => setAlert({ ...alert, isOpen: false })}
                 >
                   No
@@ -445,7 +434,7 @@ export default function DR({
               </div>
             )}
             <div className="min-w-[5rem] max-w-auto">
-              <Button full onClick={alertAction}>
+              <Button onClick={alertAction}>
                 {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
               </Button>
             </div>
@@ -470,7 +459,7 @@ export default function DR({
               <SpinnerDotted
                 speed={70}
                 thickness={70}
-                className="w-full flex h-full transition-all "
+                className="flex w-full h-full transition-all "
                 color="slateblue"
                 size={100}
               />
@@ -478,7 +467,7 @@ export default function DR({
           ) : (
             <ContentBody>
               <>
-                <div className="w-full flex">
+                <div className="flex w-full">
                   <div className="w-[58rem]">
                     <DrcTabs tab={tab} />
                   </div>

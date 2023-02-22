@@ -20,9 +20,9 @@ import {
 } from 'next/types';
 import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { Alert, Button, Modal } from '@ericsison/ui-lib';
 import { SpinnerDotted } from 'spinners-react';
 import { AppEndAlertController } from '../../../components/fixed/endorsement/AppEndAlertController';
+import { Modal, Button, Alert } from '@gscwd-apps/oneui';
 
 export default function ApplicantEndorsement({
   employeeDetails,
@@ -83,7 +83,7 @@ export default function ApplicantEndorsement({
   const getArrayOfIdsFromSelectedApplicants = async (
     applicants: Array<Applicant>
   ) => {
-    let applicantIds: Array<string> = [];
+    const applicantIds: Array<string> = [];
     const updatedApplicants = [...applicants];
     updatedApplicants.map((applicant) => {
       applicantIds.push(applicant.postingApplicantId);
@@ -209,28 +209,27 @@ export default function ApplicantEndorsement({
                 ? 'sm'
                 : 'xl'
             }
+            steady
           >
-            <Modal.Header withCloseBtn onClose={closeModal}>
-              <Modal.Title>
-                <h3 className="font-semibold text-xl text-gray-700">
-                  <div className="px-5">
-                    {modal.page === 1
-                      ? 'Select an endorsement'
-                      : modal.page === 3
-                      ? 'Endorsement Summary'
-                      : 'Endorsement'}
-                  </div>
-                </h3>
-              </Modal.Title>
+            <Modal.Header>
+              <h3 className="text-xl font-semibold text-gray-700">
+                <div className="px-5">
+                  {modal.page === 1
+                    ? 'Select an endorsement'
+                    : modal.page === 3
+                    ? 'Endorsement Summary'
+                    : 'Endorsement'}
+                </div>
+              </h3>
             </Modal.Header>
             <Modal.Body>
               <AppEndModalController page={modal.page} />
             </Modal.Body>
-            <Modal.Footer alignEnd>
+            <Modal.Footer>
               <div className="flex gap-2">
                 {modal.page !== 4 ? (
                   <div className="w-[6rem]">
-                    <Button full variant="white" onClick={modalCancel}>
+                    <Button variant="info" onClick={modalCancel}>
                       {modal.page === 1 ? 'Close' : 'Cancel'}
                     </Button>
                   </div>
@@ -238,9 +237,8 @@ export default function ApplicantEndorsement({
                 {modal.page !== 1 && modal.page !== 3 && (
                   <div className="min-w-[6rem] max-w-auto">
                     <Button
-                      full
                       onClick={modalAction}
-                      disable={
+                      disabled={
                         modal.page === 2 && selectedApplicants.length < 1
                       }
                     >
@@ -261,8 +259,7 @@ export default function ApplicantEndorsement({
                 {alert.page === 1 && (
                   <div className="w-[5rem]">
                     <Button
-                      full
-                      variant="white"
+                      variant="info"
                       onClick={() => setAlert({ ...alert, isOpen: false })}
                     >
                       No
@@ -270,7 +267,7 @@ export default function ApplicantEndorsement({
                   </div>
                 )}
                 <div className="min-w-[5rem] max-w-auto">
-                  <Button full onClick={alertAction}>
+                  <Button onClick={alertAction}>
                     {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
                   </Button>
                 </div>
@@ -295,7 +292,7 @@ export default function ApplicantEndorsement({
                   <SpinnerDotted
                     speed={70}
                     thickness={70}
-                    className="w-full flex h-full transition-all "
+                    className="flex w-full h-full transition-all "
                     color="slateblue"
                     size={100}
                   />
@@ -303,7 +300,7 @@ export default function ApplicantEndorsement({
               ) : (
                 <ContentBody>
                   <>
-                    <div className="w-full flex">
+                    <div className="flex w-full">
                       <div className="w-[58rem]">
                         <AppEndTabs tab={tab} />
                       </div>

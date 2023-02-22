@@ -7,7 +7,8 @@
     "build": "nx build",
     "test": "nx test",
     "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0",
-    "portal": "nx serve portal --port 3102 --hostname 0.0.0.0"
+    "portal": "nx serve portal --port 3102 --hostname 0.0.0.0",
+    "pds": "nx serve personal-data-sheet --port 3105 --hostname 0.0.0.0"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,7 @@
     "@heroicons/react": "^2.0.13",
     "@hookform/resolvers": "^2.9.10",
     "@nrwl/next": "15.2.1",
+    "@storybook/react": "^6.5.16",
     "@tanstack/react-table": "^8.7.4",
     "@types/lodash": "^4.14.191",
     "@types/uuid": "^9.0.0",
