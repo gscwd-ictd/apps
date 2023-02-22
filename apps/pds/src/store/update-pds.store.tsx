@@ -1,12 +1,12 @@
-import { EducationInfo } from 'types/data/education.type';
-import { Eligibility } from 'types/data/eligibility.type';
-import { Child } from 'types/data/family.type';
-import { LearningDevelopment } from 'types/data/lnd.type';
-import { Organization, Recognition, Skill } from 'types/data/other-info.type';
-import { Reference } from 'types/data/supporting-info.type';
-import { VoluntaryWork } from 'types/data/vol-work.type';
-import { WorkExperience } from 'types/data/work.type';
 import create from 'zustand';
+import { EducationInfo } from '../types/data/education.type';
+import { Eligibility } from '../types/data/eligibility.type';
+import { Child } from '../types/data/family.type';
+import { LearningDevelopment } from '../types/data/lnd.type';
+import { Skill, Recognition, Organization } from '../types/data/other-info.type';
+import { Reference } from '../types/data/supporting-info.type';
+import { VoluntaryWork } from '../types/data/vol-work.type';
+import { WorkExperience } from '../types/data/work.type';
 
 export type UpdatePdsState = {
   allowPersonalInfoSave: boolean;

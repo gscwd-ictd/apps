@@ -14,10 +14,10 @@ import DarkNav from '../navigation/DarkNav';
 import { ErrorProvider } from '../../../context/ErrorContext';
 import { useTabStore } from '../../../store/tab.store';
 import { tabs, tabsHasPds } from '../../../../utils/constants/tabs';
-import { useEmployeeStore } from 'store/employee.store';
 import { useEffect, useState } from 'react';
-import { NotificationContext } from 'context/NotificationContext';
 import { NotificationController, useNotification } from '../../../../../../libs/oneui/src/components/Notification';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 
 export const NavTab = (): JSX.Element => {
   // get selected tab from tab store

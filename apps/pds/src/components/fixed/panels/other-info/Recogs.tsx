@@ -14,9 +14,9 @@ import schema from '../../../../schema/Recognitions';
 import { Recognition } from '../../../../types/data/other-info.type';
 import { RecognitionsAlert } from './RecogsAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const OIRecogs = (): JSX.Element => {
   // set recognition array, employee object state from pds context

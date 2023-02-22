@@ -2,16 +2,16 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { useEffect, useState } from 'react';
 import { NavTab } from '../../components/fixed/tabs/NavTab';
 import { useEmployeeStore } from '../../store/employee.store';
-import { Pds, usePdsStore } from '../../store/pds.store';
+import { usePdsStore } from '../../store/pds.store';
 import { isEmpty, isEqual } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { pdsToSubmit } from '../../../utils/helpers/pds.helper';
-import { useTabStore } from 'store/tab.store';
 import { tabs, tabsHasPds } from '../../../utils/constants/tabs';
 import axios from 'axios';
+import { useTabStore } from '../../store/tab.store';
 
 dayjs.extend(utc);
 

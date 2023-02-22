@@ -15,10 +15,10 @@ import schema from '../../../../schema/Vocational';
 import { EducationInfo } from '../../../../types/data/education.type';
 import { VocationalAlert } from './VocationalAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { EditButton } from '../../buttons/Edit';
 
 export const Vocational = (): JSX.Element => {
   // set vocational array, employee object from pds store

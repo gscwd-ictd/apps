@@ -1,4 +1,5 @@
-import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import React, { useContext, useEffect } from 'react';
 import { Page } from '../../modular/pages/Page';
 import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
@@ -14,10 +15,10 @@ import { usePdsStore } from '../../../store/pds.store';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { HeadContainer } from '../head/Head';
 import { Toast } from '../toast/Toast';
-import { NotificationContext } from 'context/NotificationContext';
 import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
 import { trimmer } from '../../../../utils/functions/trimmer';
 import { isEmpty } from 'lodash';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 
 export default function FamilyBgPanel(): JSX.Element {
   // set parents object state, employee object, and pds object from the pds store
@@ -101,22 +102,18 @@ export default function FamilyBgPanel(): JSX.Element {
   return (
     <>
       <HeadContainer title="PDS - Family Information" />
-      <Page
-        title="Family Information"
-        subtitle=""
-        children={
-          <>
-            <FormProvider {...methods} key="familyInfo">
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="familyInfo">
-                <SpouseInfo />
-                <FatherInfo />
-                <MotherInfo />
-                <ChildrenInfo />
-              </form>
-            </FormProvider>
-          </>
-        }
-      />
+      <Page title="Family Information" subtitle="">
+        <>
+          <FormProvider {...methods} key="familyInfo">
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="familyInfo">
+              <SpouseInfo />
+              <FatherInfo />
+              <MotherInfo />
+              <ChildrenInfo />
+            </form>
+          </FormProvider>
+        </>
+      </Page>
       <PrevButton action={onPrev} type="button" />
       <NextButton formId="familyInfo" />
     </>

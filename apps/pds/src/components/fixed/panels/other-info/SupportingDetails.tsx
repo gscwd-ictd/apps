@@ -1,6 +1,7 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { useEmployeeStore } from '../../../../store/employee.store';
 import { usePdsStore } from '../../../../store/pds.store';
 import { SupportingDetailsForm } from '../../../../types/data/supporting-info.type';
@@ -251,7 +252,7 @@ export const SupportingDetails = (): JSX.Element => {
         }
       >
         <div className="flex flex-col gap-4">
-          <div className="p-5 border  rounded-xl">
+          <div className="p-5 border rounded-xl">
             <>
               <div className="pb-4">
                 Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office or to
@@ -283,34 +284,28 @@ export const SupportingDetails = (): JSX.Element => {
               <div>
                 <div>b. Within the fourth degree (for Local Government Unit - Career Employees)?</div>
 
-                <RadioGroup
-                  groupName="offRelFourth"
-                  className="w-32"
-                  isFlex={true}
-                  onChange={offRelFourthHandler}
-                  children={
-                    <>
-                      <RadioButtonRF
-                        id={'relfourthtrue'}
-                        label={'Yes'}
-                        controller={{ ...register('offRelFourth', { value: 1 }) }}
-                        value={1}
-                        checked={officeRelation.withinFourthDegree.toString() === 'true' ? true : false}
-                        muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                        // muted={hasPds && officeRelation.withinFourthDegree.toString() === 'true' ? false : !hasPds ? false : true}
-                      />
-                      <RadioButtonRF
-                        id={'relfourthfalse'}
-                        label={'No'}
-                        controller={{ ...register('offRelFourth', { value: 0 }) }}
-                        value={0}
-                        checked={officeRelation.withinFourthDegree.toString() === 'false' ? true : false}
-                        muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                        // muted={hasPds && officeRelation.withinFourthDegree.toString() === 'false' ? true : !hasPds ? false : true}
-                      />
-                    </>
-                  }
-                />
+                <RadioGroup groupName="offRelFourth" className="w-32" isFlex={true} onChange={offRelFourthHandler}>
+                  <>
+                    <RadioButtonRF
+                      id={'relfourthtrue'}
+                      label={'Yes'}
+                      controller={{ ...register('offRelFourth', { value: 1 }) }}
+                      value={1}
+                      checked={officeRelation.withinFourthDegree.toString() === 'true' ? true : false}
+                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                      // muted={hasPds && officeRelation.withinFourthDegree.toString() === 'true' ? false : !hasPds ? false : true}
+                    />
+                    <RadioButtonRF
+                      id={'relfourthfalse'}
+                      label={'No'}
+                      controller={{ ...register('offRelFourth', { value: 0 }) }}
+                      value={0}
+                      checked={officeRelation.withinFourthDegree.toString() === 'false' ? true : false}
+                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                      // muted={hasPds && officeRelation.withinFourthDegree.toString() === 'false' ? true : !hasPds ? false : true}
+                    />
+                  </>
+                </RadioGroup>
 
                 <div className="my-2 ">
                   <FloatingLabelInputRF
@@ -344,34 +339,28 @@ export const SupportingDetails = (): JSX.Element => {
           <div className="p-5 border rounded-xl">
             <div className="pb-4">
               <div>a. Have you ever been found guilty of any administrative offense?</div>
-              <RadioGroup
-                groupName="guilty"
-                className="w-32"
-                isFlex
-                onChange={isGuiltyHandler}
-                children={
-                  <>
-                    <RadioButtonRF
-                      id={'guiltytrue'}
-                      label={'Yes'}
-                      controller={{ ...register('isGuilty', { value: 1 }) }}
-                      value={1}
-                      checked={guiltyCharged.isGuilty.toString() === 'true' ? true : false}
-                      // muted={hasPds && guiltyCharged.isGuilty.toString() === 'true' ? false : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                    <RadioButtonRF
-                      id={'guiltyfalse'}
-                      label={'No'}
-                      controller={{ ...register('isGuilty', { value: 0 }) }}
-                      value={0}
-                      checked={guiltyCharged.isGuilty.toString() === 'false' ? true : false}
-                      // muted={hasPds && guiltyCharged.isGuilty.toString() === 'false' ? true : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                  </>
-                }
-              />
+              <RadioGroup groupName="guilty" className="w-32" isFlex onChange={isGuiltyHandler}>
+                <>
+                  <RadioButtonRF
+                    id={'guiltytrue'}
+                    label={'Yes'}
+                    controller={{ ...register('isGuilty', { value: 1 }) }}
+                    value={1}
+                    checked={guiltyCharged.isGuilty.toString() === 'true' ? true : false}
+                    // muted={hasPds && guiltyCharged.isGuilty.toString() === 'true' ? false : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                  <RadioButtonRF
+                    id={'guiltyfalse'}
+                    label={'No'}
+                    controller={{ ...register('isGuilty', { value: 0 }) }}
+                    value={0}
+                    checked={guiltyCharged.isGuilty.toString() === 'false' ? true : false}
+                    // muted={hasPds && guiltyCharged.isGuilty.toString() === 'false' ? true : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                </>
+              </RadioGroup>
 
               <div className="my-2">
                 <FloatingLabelInputRF
@@ -397,34 +386,28 @@ export const SupportingDetails = (): JSX.Element => {
             <div className="pt-5">
               <div>b. Have you been criminally charged before any court?</div>
 
-              <RadioGroup
-                groupName="charged"
-                className="w-32"
-                isFlex={true}
-                onChange={isChargedHandler}
-                children={
-                  <>
-                    <RadioButtonRF
-                      id={'chargedtrue'}
-                      label={'Yes'}
-                      controller={{ ...register('isCharged', { value: 1 }) }}
-                      value={1}
-                      // muted={hasPds && guiltyCharged.isCharged.toString() === 'true' ? false : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                      checked={guiltyCharged.isCharged.toString() === 'true' ? true : false}
-                    />
-                    <RadioButtonRF
-                      id={'chargedfalse'}
-                      label={'No'}
-                      controller={{ ...register('isCharged', { value: 0 }) }}
-                      value={0}
-                      // muted={hasPds && guiltyCharged.isCharged.toString() === 'false' ? true : !hasPds ? false : false}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                      checked={guiltyCharged.isCharged.toString() === 'false' ? true : false}
-                    />
-                  </>
-                }
-              />
+              <RadioGroup groupName="charged" className="w-32" isFlex={true} onChange={isChargedHandler}>
+                <>
+                  <RadioButtonRF
+                    id={'chargedtrue'}
+                    label={'Yes'}
+                    controller={{ ...register('isCharged', { value: 1 }) }}
+                    value={1}
+                    // muted={hasPds && guiltyCharged.isCharged.toString() === 'true' ? false : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                    checked={guiltyCharged.isCharged.toString() === 'true' ? true : false}
+                  />
+                  <RadioButtonRF
+                    id={'chargedfalse'}
+                    label={'No'}
+                    controller={{ ...register('isCharged', { value: 0 }) }}
+                    value={0}
+                    // muted={hasPds && guiltyCharged.isCharged.toString() === 'false' ? true : !hasPds ? false : false}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                    checked={guiltyCharged.isCharged.toString() === 'false' ? true : false}
+                  />
+                </>
+              </RadioGroup>
 
               <div>
                 <FloatingLabelInputRF
@@ -466,38 +449,32 @@ export const SupportingDetails = (): JSX.Element => {
               </div>
             </div>
           </div>
-          <div className="p-5 border  rounded-xl">
+          <div className="p-5 border rounded-xl">
             <div className="pb-4">
               Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?
             </div>
-            <RadioGroup
-              groupName="convicted"
-              className="w-32"
-              isFlex
-              onChange={isConvictedHandler}
-              children={
-                <>
-                  <RadioButtonRF
-                    id={'convtrue'}
-                    label={'Yes'}
-                    controller={{ ...register('isConvicted', { value: 1 }) }}
-                    value={1}
-                    checked={convicted.isConvicted.toString() === 'true' ? true : false}
-                    // muted={hasPds && convicted.isConvicted.toString() === 'true' ? false : !hasPds ? false : true}
-                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                  />
-                  <RadioButtonRF
-                    id={'convfalse'}
-                    label={'No'}
-                    controller={{ ...register('isConvicted', { value: 0 }) }}
-                    value={0}
-                    checked={convicted.isConvicted.toString() === 'false' ? true : false}
-                    // muted={hasPds && convicted.isConvicted.toString() === 'false' ? true : !hasPds ? false : true}
-                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                  />
-                </>
-              }
-            />
+            <RadioGroup groupName="convicted" className="w-32" isFlex onChange={isConvictedHandler}>
+              <>
+                <RadioButtonRF
+                  id={'convtrue'}
+                  label={'Yes'}
+                  controller={{ ...register('isConvicted', { value: 1 }) }}
+                  value={1}
+                  checked={convicted.isConvicted.toString() === 'true' ? true : false}
+                  // muted={hasPds && convicted.isConvicted.toString() === 'true' ? false : !hasPds ? false : true}
+                  muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                />
+                <RadioButtonRF
+                  id={'convfalse'}
+                  label={'No'}
+                  controller={{ ...register('isConvicted', { value: 0 }) }}
+                  value={0}
+                  checked={convicted.isConvicted.toString() === 'false' ? true : false}
+                  // muted={hasPds && convicted.isConvicted.toString() === 'false' ? true : !hasPds ? false : true}
+                  muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                />
+              </>
+            </RadioGroup>
 
             <div>
               <FloatingLabelInputRF
@@ -520,40 +497,34 @@ export const SupportingDetails = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="p-5 border  rounded-xl">
+          <div className="p-5 border rounded-xl">
             <div className="pb-4">
               Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal,
               termination, end of term, finished contract or phased out (abolition) in the public or private sector?{' '}
             </div>
 
-            <RadioGroup
-              groupName="sepServ"
-              className="w-32"
-              isFlex
-              onChange={isSeparatedHandler}
-              children={
-                <>
-                  <RadioButtonRF
-                    id={'sepservtrue'}
-                    label={'Yes'}
-                    controller={{ ...register('isSeparated', { value: 1 }) }}
-                    value={1}
-                    checked={separatedService.isSeparated.toString() === 'true' ? true : false}
-                    // muted={hasPds && separatedService.isSeparated.toString() === 'true' ? false : !hasPds ? false : true}
-                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                  />
-                  <RadioButtonRF
-                    id={'sepservfalse'}
-                    label={'No'}
-                    controller={{ ...register('isSeparated', { value: 0 }) }}
-                    value={0}
-                    checked={separatedService.isSeparated.toString() === 'false' ? true : false}
-                    // muted={hasPds && separatedService.isSeparated.toString() === 'false' ? true : !hasPds ? false : true}
-                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                  />
-                </>
-              }
-            />
+            <RadioGroup groupName="sepServ" className="w-32" isFlex onChange={isSeparatedHandler}>
+              <>
+                <RadioButtonRF
+                  id={'sepservtrue'}
+                  label={'Yes'}
+                  controller={{ ...register('isSeparated', { value: 1 }) }}
+                  value={1}
+                  checked={separatedService.isSeparated.toString() === 'true' ? true : false}
+                  // muted={hasPds && separatedService.isSeparated.toString() === 'true' ? false : !hasPds ? false : true}
+                  muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                />
+                <RadioButtonRF
+                  id={'sepservfalse'}
+                  label={'No'}
+                  controller={{ ...register('isSeparated', { value: 0 }) }}
+                  value={0}
+                  checked={separatedService.isSeparated.toString() === 'false' ? true : false}
+                  // muted={hasPds && separatedService.isSeparated.toString() === 'false' ? true : !hasPds ? false : true}
+                  muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                />
+              </>
+            </RadioGroup>
 
             <div>
               <FloatingLabelInputRF
@@ -575,37 +546,31 @@ export const SupportingDetails = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="p-5 border  rounded-xl">
+          <div className="p-5 border rounded-xl">
             <div>
               <div>a. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?</div>
-              <RadioGroup
-                groupName="candidate"
-                className="w-32"
-                isFlex
-                onChange={isCandidateHandler}
-                children={
-                  <>
-                    <RadioButtonRF
-                      id={'candtrue'}
-                      label={'Yes'}
-                      controller={{ ...register('isCandidate', { value: 1 }) }}
-                      value={1}
-                      checked={candidateResigned.isCandidate.toString() === 'true' ? true : false}
-                      // muted={hasPds && candidateResigned.isCandidate.toString() === 'true' ? false : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                    <RadioButtonRF
-                      id={'candfalse'}
-                      label={'No'}
-                      controller={{ ...register('isCandidate', { value: 0 }) }}
-                      value={0}
-                      checked={candidateResigned.isCandidate.toString() === 'false' ? true : false}
-                      // muted={hasPds && candidateResigned.isCandidate.toString() === 'false' ? true : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                  </>
-                }
-              />
+              <RadioGroup groupName="candidate" className="w-32" isFlex onChange={isCandidateHandler}>
+                <>
+                  <RadioButtonRF
+                    id={'candtrue'}
+                    label={'Yes'}
+                    controller={{ ...register('isCandidate', { value: 1 }) }}
+                    value={1}
+                    checked={candidateResigned.isCandidate.toString() === 'true' ? true : false}
+                    // muted={hasPds && candidateResigned.isCandidate.toString() === 'true' ? false : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                  <RadioButtonRF
+                    id={'candfalse'}
+                    label={'No'}
+                    controller={{ ...register('isCandidate', { value: 0 }) }}
+                    value={0}
+                    checked={candidateResigned.isCandidate.toString() === 'false' ? true : false}
+                    // muted={hasPds && candidateResigned.isCandidate.toString() === 'false' ? true : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                </>
+              </RadioGroup>
 
               <div>
                 <FloatingLabelInputRF
@@ -632,34 +597,28 @@ export const SupportingDetails = (): JSX.Element => {
                 b. Have you resigned from the government service during the three (3)-month period before the last election to promote/actively
                 campaign for a national or local candidate?
               </div>
-              <RadioGroup
-                groupName="resGovtServ"
-                className="w-32"
-                isFlex
-                onChange={isResignedHandler}
-                children={
-                  <>
-                    <RadioButtonRF
-                      id={'restrue'}
-                      label={'Yes'}
-                      controller={{ ...register('isResigned', { value: 1 }) }}
-                      value={1}
-                      checked={candidateResigned.isResigned.toString() === 'true' ? true : false}
-                      // muted={hasPds && candidateResigned.isResigned.toString() === 'true' ? false : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                    <RadioButtonRF
-                      id={'resfalse'}
-                      label={'No'}
-                      controller={{ ...register('isResigned', { value: 0 }) }}
-                      value={0}
-                      checked={candidateResigned.isResigned.toString() === 'false' ? true : false}
-                      // muted={hasPds && candidateResigned.isResigned.toString() === 'false' ? true : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                  </>
-                }
-              />
+              <RadioGroup groupName="resGovtServ" className="w-32" isFlex onChange={isResignedHandler}>
+                <>
+                  <RadioButtonRF
+                    id={'restrue'}
+                    label={'Yes'}
+                    controller={{ ...register('isResigned', { value: 1 }) }}
+                    value={1}
+                    checked={candidateResigned.isResigned.toString() === 'true' ? true : false}
+                    // muted={hasPds && candidateResigned.isResigned.toString() === 'true' ? false : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                  <RadioButtonRF
+                    id={'resfalse'}
+                    label={'No'}
+                    controller={{ ...register('isResigned', { value: 0 }) }}
+                    value={0}
+                    checked={candidateResigned.isResigned.toString() === 'false' ? true : false}
+                    // muted={hasPds && candidateResigned.isResigned.toString() === 'false' ? true : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                </>
+              </RadioGroup>
 
               <div>
                 <FloatingLabelInputRF
@@ -682,36 +641,30 @@ export const SupportingDetails = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="p-5 border  rounded-xl">
+          <div className="p-5 border rounded-xl">
             <div className="pb-4">Have you acquired the status of an immigrant or permanent resident of another country?</div>
-            <RadioGroup
-              groupName="immigrant"
-              className="w-32"
-              isFlex
-              onChange={isImmigrantHandler}
-              children={
-                <>
-                  <RadioButtonRF
-                    id={'immigranttrue'}
-                    label={'Yes'}
-                    controller={{ ...register('isImmigrant', { value: 1 }) }}
-                    value={1}
-                    checked={immigrant.isImmigrant.toString() === 'true' ? true : false}
-                    // muted={hasPds && immigrant.isImmigrant.toString() === 'true' ? false : !hasPds ? false : true}
-                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                  />
-                  <RadioButtonRF
-                    id={'immigrantfalse'}
-                    label={'No'}
-                    controller={{ ...register('isImmigrant', { value: 0 }) }}
-                    value={0}
-                    checked={immigrant.isImmigrant.toString() === 'false' ? true : false}
-                    // muted={hasPds && immigrant.isImmigrant.toString() === 'false' ? true : !hasPds ? false : true}
-                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                  />
-                </>
-              }
-            />
+            <RadioGroup groupName="immigrant" className="w-32" isFlex onChange={isImmigrantHandler}>
+              <>
+                <RadioButtonRF
+                  id={'immigranttrue'}
+                  label={'Yes'}
+                  controller={{ ...register('isImmigrant', { value: 1 }) }}
+                  value={1}
+                  checked={immigrant.isImmigrant.toString() === 'true' ? true : false}
+                  // muted={hasPds && immigrant.isImmigrant.toString() === 'true' ? false : !hasPds ? false : true}
+                  muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                />
+                <RadioButtonRF
+                  id={'immigrantfalse'}
+                  label={'No'}
+                  controller={{ ...register('isImmigrant', { value: 0 }) }}
+                  value={0}
+                  checked={immigrant.isImmigrant.toString() === 'false' ? true : false}
+                  // muted={hasPds && immigrant.isImmigrant.toString() === 'false' ? true : !hasPds ? false : true}
+                  muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                />
+              </>
+            </RadioGroup>
 
             <div>
               <FloatingLabelInputRF
@@ -733,41 +686,35 @@ export const SupportingDetails = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="p-5 border  rounded-xl">
+          <div className="p-5 border rounded-xl">
             <div>
               <h4>
-                Pursuant to: (a) Indigenous People's Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act
-                of 2000 (RA 8972), please answer the following items:
+                Pursuant to: (a) Indigenous People&apos;s Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare
+                Act of 2000 (RA 8972), please answer the following items:
               </h4>
               <h4>a. Are you a member of any indigenous group?</h4>
-              <RadioGroup
-                groupName="indigenous"
-                className="w-32"
-                isFlex
-                onChange={isIndigenousHandler}
-                children={
-                  <>
-                    <RadioButtonRF
-                      id={'indigenoustrue'}
-                      label={'Yes'}
-                      controller={{ ...register('isIndigenousMember', { value: 1 }) }}
-                      value={1}
-                      checked={indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? true : false}
-                      // muted={hasPds && indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? false : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                    <RadioButtonRF
-                      id={'indigenousfalse'}
-                      label={'No'}
-                      controller={{ ...register('isIndigenousMember', { value: 0 }) }}
-                      value={0}
-                      checked={indigenousPwdSoloParent.isIndigenousMember.toString() === 'false' ? true : false}
-                      // muted={hasPds && indigenousPwdSoloParent.isIndigenousMember.toString() === 'false' ? true : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                  </>
-                }
-              />
+              <RadioGroup groupName="indigenous" className="w-32" isFlex onChange={isIndigenousHandler}>
+                <>
+                  <RadioButtonRF
+                    id={'indigenoustrue'}
+                    label={'Yes'}
+                    controller={{ ...register('isIndigenousMember', { value: 1 }) }}
+                    value={1}
+                    checked={indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? true : false}
+                    // muted={hasPds && indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? false : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                  <RadioButtonRF
+                    id={'indigenousfalse'}
+                    label={'No'}
+                    controller={{ ...register('isIndigenousMember', { value: 0 }) }}
+                    value={0}
+                    checked={indigenousPwdSoloParent.isIndigenousMember.toString() === 'false' ? true : false}
+                    // muted={hasPds && indigenousPwdSoloParent.isIndigenousMember.toString() === 'false' ? true : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                </>
+              </RadioGroup>
 
               <div>
                 <FloatingLabelInputRF
@@ -791,34 +738,28 @@ export const SupportingDetails = (): JSX.Element => {
 
             <div className="pt-5">
               <h4>b. Are you a person with disability?</h4>
-              <RadioGroup
-                groupName="pwd"
-                className="w-32"
-                isFlex
-                onChange={isPWDHandler}
-                children={
-                  <>
-                    <RadioButtonRF
-                      id={'pwdtrue'}
-                      label={'Yes'}
-                      controller={{ ...register('isPwd', { value: 1 }) }}
-                      value={1}
-                      checked={indigenousPwdSoloParent.isPwd.toString() === 'true' ? true : false}
-                      // muted={hasPds && indigenousPwdSoloParent.isPwd.toString() === 'true' ? false : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                    <RadioButtonRF
-                      id={'pwdfalse'}
-                      label={'No'}
-                      controller={{ ...register('isPwd', { value: 0 }) }}
-                      value={0}
-                      checked={indigenousPwdSoloParent.isPwd.toString() === 'false' ? true : false}
-                      // muted={hasPds && indigenousPwdSoloParent.isPwd.toString() === 'false' ? true : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                  </>
-                }
-              />
+              <RadioGroup groupName="pwd" className="w-32" isFlex onChange={isPWDHandler}>
+                <>
+                  <RadioButtonRF
+                    id={'pwdtrue'}
+                    label={'Yes'}
+                    controller={{ ...register('isPwd', { value: 1 }) }}
+                    value={1}
+                    checked={indigenousPwdSoloParent.isPwd.toString() === 'true' ? true : false}
+                    // muted={hasPds && indigenousPwdSoloParent.isPwd.toString() === 'true' ? false : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                  <RadioButtonRF
+                    id={'pwdfalse'}
+                    label={'No'}
+                    controller={{ ...register('isPwd', { value: 0 }) }}
+                    value={0}
+                    checked={indigenousPwdSoloParent.isPwd.toString() === 'false' ? true : false}
+                    // muted={hasPds && indigenousPwdSoloParent.isPwd.toString() === 'false' ? true : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                </>
+              </RadioGroup>
 
               <div>
                 <FloatingLabelInputRF
@@ -842,34 +783,28 @@ export const SupportingDetails = (): JSX.Element => {
 
             <div className="pt-5">
               <h4>c. Are you a solo parent?</h4>
-              <RadioGroup
-                groupName="soloparent"
-                className="w-32"
-                isFlex
-                onChange={isSoloParentHandler}
-                children={
-                  <>
-                    <RadioButtonRF
-                      id={'soloparenttrue'}
-                      label={'Yes'}
-                      controller={{ ...register('isSoloParent', { value: 1 }) }}
-                      value={1}
-                      checked={indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? true : false}
-                      // muted={hasPds && indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? false : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                    <RadioButtonRF
-                      id={'soloparentfalse'}
-                      label={'No'}
-                      controller={{ ...register('isSoloParent', { value: 0 }) }}
-                      value={0}
-                      checked={indigenousPwdSoloParent.isSoloParent.toString() === 'false' ? true : false}
-                      // muted={hasPds && indigenousPwdSoloParent.isSoloParent.toString() === 'false' ? true : !hasPds ? false : true}
-                      muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
-                    />
-                  </>
-                }
-              />
+              <RadioGroup groupName="soloparent" className="w-32" isFlex onChange={isSoloParentHandler}>
+                <>
+                  <RadioButtonRF
+                    id={'soloparenttrue'}
+                    label={'Yes'}
+                    controller={{ ...register('isSoloParent', { value: 1 }) }}
+                    value={1}
+                    checked={indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? true : false}
+                    // muted={hasPds && indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? false : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                  <RadioButtonRF
+                    id={'soloparentfalse'}
+                    label={'No'}
+                    controller={{ ...register('isSoloParent', { value: 0 }) }}
+                    value={0}
+                    checked={indigenousPwdSoloParent.isSoloParent.toString() === 'false' ? true : false}
+                    // muted={hasPds && indigenousPwdSoloParent.isSoloParent.toString() === 'false' ? true : !hasPds ? false : true}
+                    muted={hasPds && supportingInfoOnEdit === false ? true : hasPds && supportingInfoOnEdit === true ? false : false}
+                  />
+                </>
+              </RadioGroup>
 
               <div>
                 <FloatingLabelInputRF

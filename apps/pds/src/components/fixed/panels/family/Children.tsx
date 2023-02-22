@@ -14,12 +14,11 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import { Child } from '../../../../types/data/family.type';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
 import { ChildrenAlert } from './ChildrenAlert';
-import { DeleteButton } from 'components/fixed/buttons/Delete';
-import { useUpdatePdsStore } from 'store/update-pds.store';
-import { EditButton } from 'components/fixed/buttons/Edit';
 import { isEmpty } from 'lodash';
-import { DeleteSVG } from 'components/fixed/svg/Delete';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { DeleteButton } from '../../buttons/Delete';
+import { EditButton } from '../../buttons/Edit';
 
 export const ChildrenInfo = (): JSX.Element => {
   // set children or children array, employee object from pds context
