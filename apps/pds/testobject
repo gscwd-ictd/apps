@@ -1,0 +1,305 @@
+{
+  "personalInfo": {
+    "email": "mikhailsebua@gmail.com",
+    "firstName": "Mikhail Anthony",
+    "middleName": "Mercado",
+    "lastName": "Sebua",
+    "nameExtension": "N/A",
+    "birthDate": "1993-08-08",
+    "birthPlace": "Polomolok, South Cotabato",
+    "sex": "Male",
+    "civilStatus": "Single",
+    "height": "1.65",
+    "weight": "62",
+    "bloodType": "O+",
+    "mobileNumber": "09770912663",
+    "telephoneNumber": "N/A",
+    "citizenship": "Dual Citizenship",
+    "citizenshipType": "By Naturalization",
+    "country": "Philippines",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "permanentAddress": {
+    "houseNumber": "A4",
+    "street": "Ilang-Ilang",
+    "subdivision": "Cannery Housing",
+    "barangay": "Cannery Site",
+    "city": "Polomolok",
+    "province": "South Cotabato",
+    "zipCode": "9504",
+    "cityCode": "126312",
+    "provCode": "1263",
+    "brgyCode": "126312024",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "residentialAddress": {
+    "houseNumber": "A4",
+    "street": "Ilang-Ilang",
+    "subdivision": "Cannery Housing",
+    "barangay": "Cannery Site",
+    "city": "Polomolok",
+    "province": "South Cotabato",
+    "zipCode": "9504",
+    "cityCode": "126312",
+    "provCode": "1263",
+    "brgyCode": "126312024",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "governmentIssuedIds": {
+    "gsisNumber": "11111111111",
+    "pagibigNumber": "2222222222",
+    "philhealthNumber": "333333333333",
+    "sssNumber": "N/A",
+    "tinNumber": "444444444444",
+    "agencyNumber": "55555555555",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "spouse": {
+    "firstName": "Rizel",
+    "middleName": "Novesteras",
+    "lastName": "Sebua",
+    "employer": "Apingkachu",
+    "telephoneNumber": "083-500-2252",
+    "nameExtension": "N/A",
+    "businessAddress": "General Santos City",
+    "occupation": "Owner",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "parents": {
+    "fatherFirstName": "Antonio",
+    "fatherMiddleName": "Arradaza",
+    "fatherLastName": "Sebua",
+    "fatherNameExtension": "N/A",
+    "motherFirstName": "Nannette",
+    "motherMiddleName": "Rafisura",
+    "motherLastName": "Mercado",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "children": [
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "childName": "Cloud Strife",
+      "birthDate": "2019-08-05"
+    },
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "childName": "Kuroud Sturaifu",
+      "birthDate": "2022-06-06"
+    }
+  ],
+  "elementary": {
+    "schoolName": "Elementary",
+    "degree": "Primary Education",
+    "units": "Graduated",
+    "from": "1999",
+    "to": "2002",
+    "yearGraduated": "2002",
+    "awards": "N/A",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "secondary": {
+    "schoolName": "Secondary",
+    "degree": "High School",
+    "units": "Graduated",
+    "from": "2006",
+    "to": "2009",
+    "yearGraduated": "2009",
+    "awards": "N/A",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "vocational": [
+    {
+      "yearGraduated": 2014,
+      "awards": "",
+      "units": "",
+      "to": 2014,
+      "from": 2013,
+      "degree": "Some Degree",
+      "schoolName": "Something School",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+    }
+  ],
+  "college": [
+    {
+      "yearGraduated": 2013,
+      "awards": "",
+      "units": "",
+      "to": 2013,
+      "from": 2009,
+      "degree": "Bachelor of Science in Information and Technology",
+      "schoolName": "Notre Dame of Dadiangas University",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+    }
+  ],
+  "graduate": [],
+  "eligibility": [
+    {
+      "examPlace": "General Santos City",
+      "examDateTo": "2019-03-17",
+      "examDateFrom": "2019-03-17",
+      "rating": 99.85,
+      "name": "Career Service Professional",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "licenseNumber": "",
+      "validity": null
+    }
+  ],
+  "workExperience": [
+    {
+      "to": "Presently working",
+      "from": "2022-05-02",
+      "isGovernmentService": false,
+      "salaryGrade": null,
+      "appointmentStatus": "Job Order",
+      "monthlySalary": 18000,
+      "companyName": "GSC Water District",
+      "positionTitle": "Web Developer",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+    },
+    {
+      "to": "2022-05-01",
+      "from": "2021-11-19",
+      "isGovernmentService": false,
+      "salaryGrade": null,
+      "appointmentStatus": "Job Order",
+      "monthlySalary": 18000,
+      "companyName": "GSC Water District",
+      "positionTitle": "Web Developer",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+    },
+    {
+      "to": "2021-11-18",
+      "from": "2014-07-23",
+      "isGovernmentService": false,
+      "salaryGrade": null,
+      "appointmentStatus": "Regular",
+      "monthlySalary": 15832,
+      "companyName": "RD Hardware & Fishing Supply, Inc.",
+      "positionTitle": "MIS Head - System Administrator",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+    }
+  ],
+  "voluntaryWork": [
+    {
+      "numberOfHours": 600,
+      "to": "2014-04-30",
+      "from": "2013-12-01",
+      "position": "IT Support",
+      "organizationName": "Brokenshire College Socsksargen",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+    }
+  ],
+  "learningDevelopment": [
+    {
+      "numberOfHours": 8,
+      "to": "2021-11-25",
+      "from": "2021-11-25",
+      "type": "Technical",
+      "conductedBy": "GSC Water District",
+      "title": "LND Test #1",
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+    }
+  ],
+  "skills": [
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "skill": "Skill #1"
+    },
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "skill": "Skill #2"
+    }
+  ],
+  "recognitions": [
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "recognition": "Recog #1"
+    },
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "recognition": "Recog #2"
+    }
+  ],
+  "organizations": [
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "organization": "Membership #1"
+    },
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "organization": "Organization #1"
+    }
+  ],
+  "officeRelation": {
+    "withinThirdDegree": true,
+    "withinFourthDegree": false,
+    "details": "The General Manager is my uncle.",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "guiltyCharged": {
+    "isGuilty": false,
+    "guiltyDetails": "",
+    "isCharged": true,
+    "chargedDateFiled": "08/08/2022 ",
+    "chargedCaseStatus": "Dismissed",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "convicted": {
+    "isConvicted": false,
+    "details": "",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "separatedService": {
+    "isSeparated": true,
+    "details": "Resignation: RD Hardware & Fishing Supply, Inc.",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "candidateResigned": {
+    "isCandidate": false,
+    "candidateDetails": "",
+    "isResigned": false,
+    "resignedDetails": "",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "immigrant": {
+    "isImmigrant": false,
+    "details": "",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "indigenousPwdSoloParent": {
+    "isIndigenousMember": false,
+    "indigenousMemberDetails": "",
+    "isPwd": false,
+    "pwdIdNumber": "",
+    "isSoloParent": false,
+    "soloParentIdNumber": "",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  },
+  "references": [
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "name": "Reference #1",
+      "address": "Address #1",
+      "telephoneNumber": "09123213"
+    },
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "name": "Reference #2",
+      "address": "Address #2",
+      "telephoneNumber": "12387213"
+    },
+    {
+      "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026",
+      "name": "Reference #3",
+      "address": "Address #3",
+      "telephoneNumber": "12387123"
+    }
+  ],
+  "governmentIssuedId": {
+    "issuedId": "Philippine Identification (PhilID)",
+    "idNumber": "ID-123213",
+    "issueDate": "2006-01-01",
+    "issuePlace": "General Santos City",
+    "employeeId": "03b7fc9e-93de-4804-9af1-d9fa74f67026"
+  }
+}

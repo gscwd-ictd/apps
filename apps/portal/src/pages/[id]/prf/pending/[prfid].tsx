@@ -160,7 +160,7 @@ export default function PendingPrf({
 
 export const getServerSideProps: GetServerSideProps = withSession(
   async (context: GetServerSidePropsContext) => {
-    console.log(context);
+    console.log(context.query.prfid);
 
     try {
       const employee = await getEmployeeDetailsFromHr(context);
@@ -168,10 +168,13 @@ export const getServerSideProps: GetServerSideProps = withSession(
       const profile = await getEmployeeProfile(employee.userId);
 
       // get prf details
-      const prfDetails = await getPrfById(`${context.query.id}`, context);
+      const prfDetails = await getPrfById(`${context.query.prfid}`, context);
 
       // get prf trail
-      const prfTrail = await getPrfTrailByPrfId(`${context.query.id}`, context);
+      const prfTrail = await getPrfTrailByPrfId(
+        `${context.query.prfid}`,
+        context
+      );
 
       // return the result
       return { props: { profile, employee, prfDetails, prfTrail } };

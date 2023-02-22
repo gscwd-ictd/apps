@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import dayjs from 'dayjs';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import {
   HiArrowSmLeft,
   HiOutlineUser,
@@ -235,13 +235,14 @@ export default function ForApproval({
 
 export const getServerSideProps: GetServerSideProps = withSession(
   async (context: GetServerSidePropsContext) => {
+    console.log(context.query.prfid);
     try {
       const employee = await getEmployeeDetailsFromHr(context);
 
       const profile = await getEmployeeProfile(employee.userId);
 
       // get prf details
-      const prfDetails = await getPrfById(`${context.query.id}`, context);
+      const prfDetails = await getPrfById(`${context.query.prfid}`, context);
 
       // return the result
       console.log(prfDetails);
