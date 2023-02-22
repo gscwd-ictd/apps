@@ -246,7 +246,7 @@ export const OtpModal: FunctionComponent<OtpProps> = ({
           </section>
           <button
             disabled={isSubmitLoading == true ? true : false}
-            className={`${wiggleEffect && 'animate-wiggle'}  ${
+            className={`${wiggleEffect && 'animate-shake'}  ${
               isSubmitLoading == true ? 'cursor-not-allowed' : ''
             }  text-white w-full h-10 transition-all rounded my-2 hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
               wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
