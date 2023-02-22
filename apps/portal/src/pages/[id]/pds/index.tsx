@@ -1,4 +1,4 @@
-import { Button } from '@ericsison/ui-lib';
+import { Button } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import {
@@ -60,17 +60,17 @@ export default function Pds({
           >
             {tab === 2 && (
               <div className="w-[12rem]">
-                <Button full>Updated selected</Button>
+                <Button>Updated selected</Button>
               </div>
             )}
           </ContentHeader>
           <ContentBody>
             <>
-              <div className="w-full flex">
+              <div className="flex w-full">
                 <div className="w-[58rem]">
                   <PdsTabs tab={tab} userId={userId} />
                 </div>
-                <div className="w-full invisible">TEST</div>
+                <div className="invisible w-full">TEST</div>
               </div>
             </>
           </ContentBody>
