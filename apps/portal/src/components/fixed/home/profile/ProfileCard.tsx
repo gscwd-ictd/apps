@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 interface Props {
   firstName: string;
   lastName: string;
@@ -17,7 +18,7 @@ export const ProfileCard: React.FC<Props> = ({
     <div className="h-3/5 w-100 border-blue-800 shadow bg-white flex gap-1 flex-col justify-center items-center text-center rounded p-5 mr-5">
       <img
         className="rounded-full border border-stone-100 shadow w-2/4"
-        src={photoUrl_temp}
+        src={photoUrl ? photoUrl : photoUrl_temp}
         alt={'sample'}
       ></img>
       <label className="text-xl font-medium text-stone-900 pt-2">
