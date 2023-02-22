@@ -16,9 +16,9 @@ import { LearningDevelopment } from '../../../../types/data/lnd.type';
 import { lndType } from '../../../../../utils/constants/constants';
 import { LearningDevelopmentAlert } from './LNDAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
-import { EditButton } from 'components/fixed/buttons/Edit';
 import { isEmpty } from 'lodash';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const LearningNDevt = (): JSX.Element => {
   // set learning and development array, employee object state from pds store

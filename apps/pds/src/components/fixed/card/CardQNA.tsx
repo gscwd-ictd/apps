@@ -12,7 +12,7 @@ type LabelAnswerProps = {
   details1: any;
   details2?: any;
   cols?: number;
-  children: React.ReactNode | React.ReactNode[];
+  children?: React.ReactNode | React.ReactNode[];
 };
 
 export const CardQuestion = ({ cols = 4, children, mainQuestion }: QuestionCardProps): JSX.Element => {
@@ -21,7 +21,7 @@ export const CardQuestion = ({ cols = 4, children, mainQuestion }: QuestionCardP
       <div
         className={`grid grid-cols-${cols} mb-0 rounded-3xl border  bg-white p-5 shadow-sm shadow-slate-200 hover:bg-indigo-100 peer-hover:bg-indigo-100 `}
       >
-        <div className="peer col-span-full bg-inherit p-5 hover:bg-inherit ">
+        <div className="p-5 peer col-span-full bg-inherit hover:bg-inherit ">
           {mainQuestion ? <div className={`col-span-2   text-slate-600 `}>{mainQuestion}</div> : null}
           {children}
         </div>

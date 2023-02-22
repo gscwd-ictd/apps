@@ -18,8 +18,8 @@ import schema from '../../../../schema/WorkExp';
 import { apptStatus, govtApptStatus, govtService } from '../../../../../utils/constants/constants';
 import { WorkExperienceAlert } from './WorkExperienceAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const WorkExp = (): JSX.Element => {
   // set work experience array, employee object state from pds context

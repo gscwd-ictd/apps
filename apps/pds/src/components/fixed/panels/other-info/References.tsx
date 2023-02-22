@@ -15,9 +15,9 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import { Reference } from '../../../../types/data/supporting-info.type';
 import { ReferencesAlert } from './ReferencesAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 // yup validation schema
 const schema = yup.object().shape({

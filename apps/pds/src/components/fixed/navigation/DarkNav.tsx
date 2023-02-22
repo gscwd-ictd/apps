@@ -1,10 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React from 'react';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { useTabStore } from 'store/tab.store';
-import { FormWizard } from 'components/modular/custom/FormWizard';
 import { tabs, tabsHasPds } from '../../../../utils/constants/tabs';
-import { HiDocumentChartBar } from 'react-icons/hi2';
+import { useTabStore } from '../../../store/tab.store';
+import { FormWizard } from '../../modular/custom/FormWizard';
 
 export default function DarkNav() {
   const employee = useEmployeeStore((state) => state.employeeDetails);
@@ -31,7 +30,7 @@ export default function DarkNav() {
                   <div className="flex md:block">
                     <div className="flex items-baseline">
                       {/* <HiDocumentChartBar size={30} /> */}
-                      <span className="shrink-0 select-none  font-medium uppercase  tracking-wide text-gray-700  drop-shadow-xl sm:text-sm md:text-4xl">
+                      <span className="font-medium tracking-wide text-gray-700 uppercase select-none shrink-0 drop-shadow-xl sm:text-sm md:text-4xl">
                         Personal Data Sheet
                       </span>
                     </div>

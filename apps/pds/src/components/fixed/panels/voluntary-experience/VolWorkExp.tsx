@@ -14,10 +14,10 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import schema from '../../../../schema/VolWork';
 import { VoluntaryWork } from '../../../../types/data/vol-work.type';
 import { VoluntaryWorkAlert } from './VoluntaryWorkAlert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const VolWorkExp = (): JSX.Element => {
   // set voluntary work array, employee object state from pds context

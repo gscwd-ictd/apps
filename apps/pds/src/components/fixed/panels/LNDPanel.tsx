@@ -1,7 +1,8 @@
-import { NotificationContext } from 'context/NotificationContext';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { useContext } from 'react';
-import { useEmployeeStore } from 'store/employee.store';
-import { usePdsStore } from 'store/pds.store';
 import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
 import { useTabStore } from '../../../store/tab.store';
 import { Page } from '../../modular/pages/Page';
@@ -50,15 +51,11 @@ export default function LNDPanel(): JSX.Element {
   return (
     <>
       <HeadContainer title="PDS - Learning & Dev't" />
-      <Page
-        title="Learning & Development"
-        subtitle=""
-        children={
-          <>
-            <LearningNDevt />
-          </>
-        }
-      />
+      <Page title="Learning & Development" subtitle="">
+        <>
+          <LearningNDevt />
+        </>
+      </Page>
       <PrevButton action={onPrev} type="button" />
 
       <NextButton action={onSubmit} type="button" />

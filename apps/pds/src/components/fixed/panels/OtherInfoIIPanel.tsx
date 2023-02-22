@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Page } from '../../modular/pages/Page';
 import { SupportingDetails } from './other-info/SupportingDetails';
 import { OIGovtID } from './other-info/GovernmentIssuedId';
@@ -12,10 +13,10 @@ import schema from '../../../schema/OtherInfoII';
 import { usePdsStore } from '../../../store/pds.store';
 import { useTabStore } from '../../../store/tab.store';
 import { HeadContainer } from '../head/Head';
-import { useEmployeeStore } from 'store/employee.store';
 import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
-import { NotificationContext } from 'context/NotificationContext';
 import { Toast } from '../toast/Toast';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 
 export default function OtherInfoIIPanel(): JSX.Element {
   // call references array from pds context
@@ -77,21 +78,17 @@ export default function OtherInfoIIPanel(): JSX.Element {
   return (
     <>
       <HeadContainer title="PDS - Supporting Information" />
-      <Page
-        title="Other Information II"
-        subtitle=""
-        children={
-          <>
-            <FormProvider {...methods} key="otherInfoII">
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="otherInfoII">
-                <SupportingDetails />
-                <OIReferences />
-                <OIGovtID />
-              </form>
-            </FormProvider>
-          </>
-        }
-      />
+      <Page title="Other Information II" subtitle="">
+        <>
+          <FormProvider {...methods} key="otherInfoII">
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="otherInfoII">
+              <SupportingDetails />
+              <OIReferences />
+              <OIGovtID />
+            </form>
+          </FormProvider>
+        </>
+      </Page>
       <PrevButton action={onPrev} type="button" />
       {hasPds ? (
         <>

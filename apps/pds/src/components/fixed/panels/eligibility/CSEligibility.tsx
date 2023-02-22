@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
@@ -15,9 +15,9 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import schema from '../../../../schema/Eligibility';
 import { EligibilityAlert } from './EligibilityAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const CSEligibility = (): JSX.Element => {
   // initialize useref and assign it to examDateToRef

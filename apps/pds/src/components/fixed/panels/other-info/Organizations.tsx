@@ -14,9 +14,9 @@ import schema from '../../../../schema/Organizations';
 import { Organization } from '../../../../types/data/other-info.type';
 import { OrganizationsAlert } from './OrganizationsAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const OIOrgs = (): JSX.Element => {
   // set organization array, employee object state from pds store

@@ -1,10 +1,11 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Card } from '../../../modular/cards/Card';
 import { useFormContext } from 'react-hook-form';
 import { FloatingLabelInputRF } from '../../../modular/inputs/FloatingLabelInputRF';
 import { ParentForm } from '../../../../types/data/family.type';
 import { usePdsStore } from '../../../../store/pds.store';
-import { useEmployeeStore } from 'store/employee.store';
 import { MotherAlert } from './MotherAlert';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 
 export const MotherInfo = (): JSX.Element => {
   // set parents state from pds context
@@ -42,11 +43,11 @@ export const MotherInfo = (): JSX.Element => {
         subtitle="Write your mother's maiden name (the name when she was single or before marriage). Write 'N/A' if not applicable"
       >
         <>
-          <div className="-mt-16 flex w-full justify-end pb-10">
+          <div className="flex justify-end w-full pb-10 -mt-16">
             <MotherAlert setInitialValues={setInitialValues} />
           </div>
-          <div className="xs:block mt-7 gap-4 lg:flex lg:grid-cols-2">
-            <div className="col-span-1 mb-7 w-full">
+          <div className="gap-4 xs:block mt-7 lg:flex lg:grid-cols-2">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelInputRF
                 id="motherlastname"
                 placeholder="Surname"
@@ -63,7 +64,7 @@ export const MotherInfo = (): JSX.Element => {
                 muted={hasPds && motherOnEdit ? false : hasPds && !motherOnEdit ? true : !hasPds && false}
               />
             </div>
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelInputRF
                 id="motherfirstname"
                 placeholder="First Name"
@@ -81,7 +82,7 @@ export const MotherInfo = (): JSX.Element => {
               />
             </div>
           </div>
-          <div className="xs:block gap-4 lg:flex lg:grid-cols-2">
+          <div className="gap-4 xs:block lg:flex lg:grid-cols-2">
             <div className="col-span-1 mb-7 lg:w-[50%] lg:pr-2">
               <FloatingLabelInputRF
                 id="mothermiddlename"

@@ -13,9 +13,9 @@ import { useTabStore } from '../../../store/tab.store';
 import { usePdsStore } from '../../../store/pds.store';
 import { HeadContainer } from '../head/Head';
 import { Toast } from '../toast/Toast';
-import { NotificationContext } from 'context/NotificationContext';
 import { useEffect } from 'react';
 import { trimmer } from '../../../../utils/functions/trimmer';
+import { NotificationContext } from '../../../context/NotificationContext';
 
 export const BasicInfoPanel = (): JSX.Element => {
   const personalInfo = usePdsStore((state) => state.personalInfo);
@@ -173,21 +173,17 @@ export const BasicInfoPanel = (): JSX.Element => {
       <HeadContainer title="PDS - Basic Information" />
 
       {/* Basic Info Page */}
-      <Page
-        title="Basic Information"
-        subtitle=""
-        children={
-          <>
-            <FormProvider {...methods} key="basicInfo">
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="basicInfo">
-                <PersonalInfoBI />
-                <GovernmentIDsBI />
-                <AddressBI />
-              </form>
-            </FormProvider>
-          </>
-        }
-      />
+      <Page title="Basic Information" subtitle="">
+        <>
+          <FormProvider {...methods} key="basicInfo">
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="basicInfo">
+              <PersonalInfoBI />
+              <GovernmentIDsBI />
+              <AddressBI />
+            </form>
+          </FormProvider>
+        </>
+      </Page>
       {/* NEXT BUTTON */}
 
       <NextButton formId="basicInfo" />

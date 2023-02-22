@@ -1,17 +1,18 @@
-import { Alert, NotificationController, useNotification } from '@ericsison-dev/my-ui';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { Alert } from '@gscwd-apps/oneui';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { usePdsStore } from 'apps/pds/src/store/pds.store';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import axios from 'axios';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
-import { Toast } from 'components/fixed/toast/Toast';
-import { Button } from 'components/modular/buttons/Button';
-import { NotificationContext } from 'context/NotificationContext';
 import { useContext, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
-import { useEmployeeStore } from 'store/employee.store';
-import { usePdsStore } from 'store/pds.store';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
+import { Button } from '../../../modular/buttons/Button';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { Toast } from '../../toast/Toast';
 import { AssignCoursesToUpdate } from './utils/functions';
 
 type GraduateAlertProps = {
@@ -87,7 +88,7 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
           <AlertDesc>Do you want to update your Graduate Education? This action is irreversible. </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
-          <div className="w-full rounded border border-gray-300">
+          <div className="w-full border border-gray-300 rounded">
             <Button variant="light" onClick={() => setAlertUpdateIsOpen(false)} className="hover:bg-gray-300">
               No
             </Button>
@@ -103,7 +104,7 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
           <AlertDesc>Are you sure you want to cancel the changes that you have made to your Graduate Education?</AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
-          <div className="w-full rounded border border-gray-300">
+          <div className="w-full border border-gray-300 rounded">
             <Button variant="light" onClick={() => setAlertCancelIsOpen(false)} className="hover:bg-gray-300">
               No
             </Button>
@@ -128,7 +129,7 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
                         viewBox="0 0 24 24"
                         strokeWidth="2"
                         stroke="currentColor"
-                        className="h-6 w-6"
+                        className="w-6 h-6"
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
                       </svg>
