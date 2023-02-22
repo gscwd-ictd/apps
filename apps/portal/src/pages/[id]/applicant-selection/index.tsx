@@ -1,4 +1,4 @@
-import { Alert, Button, Modal } from '@ericsison/ui-lib';
+import { Alert, Button, Modal } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import {
   GetServerSideProps,
@@ -161,27 +161,27 @@ export default function AppPosAppointment({
         open={modal.isOpen}
         setOpen={openModal}
         size={modal.page === 2 ? 'xl' : 'lg'}
+        steady
       >
-        <Modal.Header withCloseBtn onClose={closeModal}>
-          <Modal.Title>
-            <h3 className="font-semibold text-xl text-gray-700">
-              <div className="px-5">
-                {modal.page === 1
-                  ? 'Select a publication'
-                  : modal.page === 2 && 'Select Applicants'}
-              </div>
-            </h3>
-          </Modal.Title>
+        <Modal.Header>
+          <h3 className="text-xl font-semibold text-gray-700">
+            <div className="px-5">
+              {modal.page === 1
+                ? 'Select a publication'
+                : modal.page === 2 && 'Select Applicants'}
+            </div>
+          </h3>
         </Modal.Header>
+
         <Modal.Body>
           {/* <Button onClick={() => console.log(selectedApplicants)}>Log Selected Applicants</Button> */}
           <AppSelectionModalController page={modal.page} />
         </Modal.Body>
-        <Modal.Footer alignEnd>
+        <Modal.Footer>
           <div className="flex gap-2">
             {modal.page !== 4 ? (
               <div className="w-[6rem]">
-                <Button full variant="white" onClick={modalCancel}>
+                <Button variant="info" onClick={modalCancel}>
                   {modal.page === 1 ? 'Close' : 'Cancel'}
                 </Button>
               </div>
@@ -189,9 +189,8 @@ export default function AppPosAppointment({
             {modal.page !== 1 && modal.page !== 3 && (
               <div className="min-w-[6rem] max-w-auto">
                 <Button
-                  full
                   onClick={modalAction}
-                  disable={
+                  disabled={
                     modal.page === 2 &&
                     !(selectedApplicants.length === 0) &&
                     modal.page === 2 &&
@@ -221,8 +220,7 @@ export default function AppPosAppointment({
             {alert.page === 1 && (
               <div className="w-[5rem]">
                 <Button
-                  full
-                  variant="white"
+                  variant="info"
                   onClick={() => setAlert({ ...alert, isOpen: false })}
                 >
                   No
@@ -230,7 +228,7 @@ export default function AppPosAppointment({
               </div>
             )}
             <div className="min-w-[5rem] max-w-auto">
-              <Button full onClick={alertAction}>
+              <Button onClick={alertAction}>
                 {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
               </Button>
             </div>
@@ -256,7 +254,7 @@ export default function AppPosAppointment({
               <SpinnerDotted
                 speed={70}
                 thickness={70}
-                className="w-full flex h-full transition-all "
+                className="flex w-full h-full transition-all "
                 color="slateblue"
                 size={100}
               />
@@ -264,7 +262,7 @@ export default function AppPosAppointment({
           ) : (
             <ContentBody>
               <>
-                <div className="w-full flex">
+                <div className="flex w-full">
                   <div className="w-[58rem]">
                     <AppSelectionTabs tab={tab} />
                   </div>
