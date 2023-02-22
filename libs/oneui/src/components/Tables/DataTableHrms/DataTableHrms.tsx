@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useMemo } from 'react';
+import { FunctionComponent, useState, useMemo, useEffect } from 'react';
 import { tableHeaderStyles } from './DataTableHrms.styles';
 import {
   ColumnDef,
@@ -10,6 +10,7 @@ import {
   Row,
   SortingState,
   useReactTable,
+  FilterFn,
 } from '@tanstack/react-table';
 // import { Pagination } from '../Pagination';
 
@@ -21,12 +22,6 @@ export type TablePropsHrms<T> = {
   onRowClick?: (row: Row<T>) => void;
 };
 
-// export type VisibilityState = Record<string, boolean>
-
-// export type VisibilityTableState = {
-//   columnVisibility: VisibilityState
-// }
-
 export const DataTableHrms = <T extends object>({
   data,
   columns,
@@ -36,7 +31,7 @@ export const DataTableHrms = <T extends object>({
 }: TablePropsHrms<T>) => {
   // set state for sorting the table
   const [sorting, setSorting] = useState<SortingState>([]);
-  // const [columnVisibility, setColumnVisibility] = useState({})
+  const [globalFilter, setGlobalFilter] = useState('');
 
   // set table columns
   const tableColumns = useMemo(() => columns, [columns]);
@@ -48,16 +43,64 @@ export const DataTableHrms = <T extends object>({
   const table = useReactTable({
     columns: tableColumns,
     data: tableData,
-    state: { sorting, columnVisibility },
+    // filterFns: {
+    //   fuzzy: fuzzyFilter,
+    // },
+    state: { sorting, columnVisibility, globalFilter },
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+
+    onGlobalFilterChange: setGlobalFilter,
+    // globalFilterFn: fuzzyFilter,
   });
+
+  function DebouncedInput({
+    value: initialValue,
+    onChange,
+    debounce = 500,
+    ...props
+  }: {
+    value: string | number;
+    onChange: (value: string | number) => void;
+    debounce?: number;
+  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+    const [value, setValue] = useState(initialValue);
+
+    useEffect(() => {
+      setValue(initialValue);
+    }, [initialValue]);
+
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        onChange(value);
+      }, debounce);
+
+      return () => clearTimeout(timeout);
+    }, [value]);
+
+    return (
+      <input
+        {...props}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    );
+  }
 
   return (
     <div className="bg-white rounded-md overflow-y-auto h-full w-full flex flex-col">
+      <div>
+        <DebouncedInput
+          value={globalFilter ?? ''}
+          onChange={(value) => setGlobalFilter(String(value))}
+          className="rounded-full border border-gray-300 bg-white px-4 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50 focus-visible:outline-none w-60"
+          placeholder="Search all columns..."
+        />
+      </div>
+
       <table className="w-full text-left table-auto whitespace-no-wrap bg-white flex-1">
         <thead className="text-sm text-gray-600 sticky top-0 bg-white border-b z-30">
           {table.getHeaderGroups().map((group) => {
@@ -65,7 +108,11 @@ export const DataTableHrms = <T extends object>({
               <tr key={group.id}>
                 {group.headers.map((header) => {
                   return (
-                    <th key={header.id} scope="col" className="py-4 px-6">
+                    <th
+                      key={header.id}
+                      scope="col"
+                      className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border-blueGray-100 py-3 border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                    >
                       {header.isPlaceholder ? null : (
                         <div
                           {...{
@@ -102,7 +149,10 @@ export const DataTableHrms = <T extends object>({
                 >
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <td key={cell.id} className="py-3 px-6 border-gray-100">
+                      <td
+                        key={cell.id}
+                        className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -119,7 +169,79 @@ export const DataTableHrms = <T extends object>({
         )}
       </table>
 
-      {/* {paginate && <Pagination table={table} />} */}
+      {paginate ? (
+        <div className="flex items-center justify-end border-t border-gray-200 bg-white px-4 py-3 sm:px-6 space-x-3">
+          {/* Next and Previous button */}
+          <div className="flex flex-1 justify-between sm:hidden">
+            <button
+              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              // onClick={() => previousPage()}
+              // disabled={!canPreviousPage}
+            >
+              {'Previous'}
+            </button>
+            <button
+              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              // onClick={() => nextPage()}
+              // disabled={!canNextPage}
+            >
+              {'Next'}
+            </button>
+          </div>
+
+          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-end">
+            <div>
+              <nav
+                className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+                aria-label="Pagination"
+              >
+                <button
+                  className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  <i className="bx bxs-chevron-left"></i>
+                  {'Previous'}
+                </button>
+                <button
+                  className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  {'Next'}
+                  <i className="bx bxs-chevron-right"></i>
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* Page number */}
+          <div className="hidden sm:flex text-xs text-gray-700">
+            <span className="pr-1">Page</span>
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of{' '}
+              {table.getPageCount()}
+            </strong>{' '}
+          </div>
+
+          {/* Paginate size */}
+          <div className="hidden sm:flex text-gray-700">
+            <select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value));
+              }}
+              className="rounded-md border border-gray-300 font-medium text-gray-500 text-xs"
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
