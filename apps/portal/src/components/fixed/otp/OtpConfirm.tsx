@@ -1,6 +1,10 @@
-import { confirmOtpSms } from '../../../http-requests/sms-requests';
+import { confirmOtpSms } from '../../../utils/helpers/http-requests/sms-requests';
 
-export async function confirmOtpCode(otpCode: string, id: any, employeeId: string) {
+export async function confirmOtpCode(
+  otpCode: string,
+  id: any,
+  employeeId: string
+) {
   //check first if otp field is not empty
   if (otpCode === null || !otpCode || otpCode === '') {
     return {
@@ -21,7 +25,7 @@ export async function confirmOtpCode(otpCode: string, id: any, employeeId: strin
         errorMessage: 'No code sent yet',
       };
     } else {
-      let otpTokenLocal: any = localStorage.getItem(`prfOtpToken_${id}`);
+      const otpTokenLocal: string = localStorage.getItem(`prfOtpToken_${id}`);
       const data = await confirmOtpSms(otpTokenLocal, otpCode);
       if (data) {
         if (data.status && data.status === 200) {
@@ -37,9 +41,9 @@ export async function confirmOtpCode(otpCode: string, id: any, employeeId: strin
               errorMessage: '',
             };
           } catch (error: any) {
-            console.log(error);
+            // console.log(error);
             if (error.response.data) {
-              let errorData = error.response.data;
+              const errorData = error.response.data;
               return {
                 otpComplete: false,
                 otpFieldError: true,
@@ -48,7 +52,7 @@ export async function confirmOtpCode(otpCode: string, id: any, employeeId: strin
                 errorMessage: errorData,
               };
             } else {
-              let errorData = 'Server Error';
+              const errorData = 'Server Error';
               return {
                 otpComplete: false,
                 otpFieldError: true,
@@ -60,7 +64,7 @@ export async function confirmOtpCode(otpCode: string, id: any, employeeId: strin
           }
         } else {
           if (data.status) {
-            let errorData = `Error Code ${data.status}`;
+            const errorData = `Error Code ${data.status}`;
             return {
               otpComplete: false,
               otpFieldError: true,
@@ -69,7 +73,7 @@ export async function confirmOtpCode(otpCode: string, id: any, employeeId: strin
               errorMessage: errorData,
             };
           } else {
-            let errorData = `Server Error`;
+            const errorData = `Server Error`;
             return {
               otpComplete: false,
               otpFieldError: true,
