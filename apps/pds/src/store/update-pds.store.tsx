@@ -1,18 +1,24 @@
-import { EducationInfo } from 'types/data/education.type';
-import { Eligibility } from 'types/data/eligibility.type';
-import { Child } from 'types/data/family.type';
-import { LearningDevelopment } from 'types/data/lnd.type';
-import { Organization, Recognition, Skill } from 'types/data/other-info.type';
-import { Reference } from 'types/data/supporting-info.type';
-import { VoluntaryWork } from 'types/data/vol-work.type';
-import { WorkExperience } from 'types/data/work.type';
+import Reference from 'yup/lib/Reference';
 import create from 'zustand';
+import { EducationInfo } from '../types/data/education.type';
+import { Eligibility } from '../types/data/eligibility.type';
+import { Child } from '../types/data/family.type';
+import { LearningDevelopment } from '../types/data/lnd.type';
+import {
+  Skill,
+  Recognition,
+  Organization,
+} from '../types/data/other-info.type';
+import { VoluntaryWork } from '../types/data/vol-work.type';
+import { WorkExperience } from '../types/data/work.type';
 
 export type UpdatePdsState = {
   allowPersonalInfoSave: boolean;
   setAllowPersonalInfoSave: (allowPersonalInfoSave: boolean) => void;
   allowGovernmentIssuedIdSave: boolean;
-  setAllowGovernmentIssuedIdSave: (allowGovernmentIssuedIdSave: boolean) => void;
+  setAllowGovernmentIssuedIdSave: (
+    allowGovernmentIssuedIdSave: boolean
+  ) => void;
   allowElementarySave: boolean;
   setAllowElementarySave: (allowElementarySave: boolean) => void;
   allowSecondarySave: boolean;
@@ -30,7 +36,9 @@ export type UpdatePdsState = {
   deletedChildren: Array<Child>;
   setDeletedChildren: (deletedChildren: Array<Child>) => void;
   deletedVocationalEducs: Array<EducationInfo>;
-  setDeletedVocationalEducs: (deletedVocationalEducs: Array<EducationInfo>) => void;
+  setDeletedVocationalEducs: (
+    deletedVocationalEducs: Array<EducationInfo>
+  ) => void;
   deletedCollegeEducs: Array<EducationInfo>;
   setDeletedCollegeEducs: (deletedCollegeEducs: Array<EducationInfo>) => void;
   deletedGraduateEducs: Array<EducationInfo>;
@@ -38,9 +46,13 @@ export type UpdatePdsState = {
   deletedEligibilities: Array<Eligibility>;
   setDeletedEligibilities: (deletedEligibilities: Array<Eligibility>) => void;
   deletedWorkExperiences: Array<WorkExperience>;
-  setDeletedWorkExperiences: (deletedWorkExperiences: Array<WorkExperience>) => void;
+  setDeletedWorkExperiences: (
+    deletedWorkExperiences: Array<WorkExperience>
+  ) => void;
   deletedLearningDevelopment: Array<LearningDevelopment>;
-  setDeletedLearningDevelopment: (deletedLearningDevelopment: Array<LearningDevelopment>) => void;
+  setDeletedLearningDevelopment: (
+    deletedLearningDevelopment: Array<LearningDevelopment>
+  ) => void;
   deletedVolWork: Array<VoluntaryWork>;
   setDeletedVolWork: (deletedVolWork: Array<VoluntaryWork>) => void;
   deletedSkills: Array<Skill>;
@@ -207,10 +219,14 @@ export const useUpdatePdsStore = create<UpdatePdsState>((set) => ({
   setDeletedEligibilities: (deletedEligibilities: Array<Eligibility>) => {
     set((state) => ({ ...state, deletedEligibilities }));
   },
-  setDeletedLearningDevelopment: (deletedLearningDevelopment: Array<LearningDevelopment>) => {
+  setDeletedLearningDevelopment: (
+    deletedLearningDevelopment: Array<LearningDevelopment>
+  ) => {
     set((state) => ({ ...state, deletedLearningDevelopment }));
   },
-  setDeletedWorkExperiences: (deletedWorkExperiences: Array<WorkExperience>) => {
+  setDeletedWorkExperiences: (
+    deletedWorkExperiences: Array<WorkExperience>
+  ) => {
     set((state) => ({ ...state, deletedWorkExperiences }));
   },
   setDeletedVolWork: (deletedVolWork: Array<VoluntaryWork>) => {
