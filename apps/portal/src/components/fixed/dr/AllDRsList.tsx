@@ -9,23 +9,21 @@ type AllDRsListProps = {
 
 export const AllDRsList = ({ type }: AllDRsListProps): JSX.Element => {
   // get all related state from dr context
-  const allDRCPool = useDrStore((state) => state.allDRCPool)
+  const allDRCPool = useDrStore((state) => state.allDRCPool);
 
-  const checkedDRCs = useDrStore((state) => state.checkedDRCs)
+  const checkedDRCs = useDrStore((state) => state.checkedDRCs);
 
-  const filteredDRCs = useDrStore((state) => state.filteredDRCs)
+  const filteredDRCs = useDrStore((state) => state.filteredDRCs);
 
-  const setFilteredDRCs = useDrStore((state) => state.setFilteredDRCs)
+  const setFilteredDRCs = useDrStore((state) => state.setFilteredDRCs);
 
-  const setAllDRCPool = useDrStore((state) => state.setAllDRCPool)
+  const setAllDRCPool = useDrStore((state) => state.setAllDRCPool);
 
-  const setSelectedDRCs = useDrStore((state) => state.setSelectedDRCs)
+  const setSelectedDRCs = useDrStore((state) => state.setSelectedDRCs);
 
-  const setCheckedDRCs = useDrStore((state) => state.setCheckedDRCs)
+  const setCheckedDRCs = useDrStore((state) => state.setCheckedDRCs);
 
-  const setError = useDrStore((state) => state.setError)
-
-
+  const setError = useDrStore((state) => state.setError);
 
   const onSelect = (sequenceNo: number | undefined) => {
     // copy the current state of drs
@@ -41,7 +39,7 @@ export const AllDRsList = ({ type }: AllDRsListProps): JSX.Element => {
       }
     });
 
-    let tempCheckedDRs: Array<DutyResponsibility> = [];
+    const tempCheckedDRs: Array<DutyResponsibility> = [];
 
     // loop to push to temporary array where state is true
     updatedDRs.map((dr) => {
@@ -49,14 +47,16 @@ export const AllDRsList = ({ type }: AllDRsListProps): JSX.Element => {
     });
 
     // set selected core drs state depending on type prop
-    if (type === 'core') setCheckedDRCs({ ...checkedDRCs, core: tempCheckedDRs });
-    else if (type === 'support') setCheckedDRCs({ ...checkedDRCs, support: tempCheckedDRs });
+    if (type === 'core')
+      setCheckedDRCs({ ...checkedDRCs, core: tempCheckedDRs });
+    else if (type === 'support')
+      setCheckedDRCs({ ...checkedDRCs, support: tempCheckedDRs });
 
     // set drs state
     //! Removed recently
     setAllDRCPool(updatedDRs);
 
-    setFilteredDRCs(updatedDRs)
+    setFilteredDRCs(updatedDRs);
 
     // select this dr if it is checked
     // addToCheckedDRs();
@@ -74,7 +74,9 @@ export const AllDRsList = ({ type }: AllDRsListProps): JSX.Element => {
                 className="flex cursor-pointer items-center justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
               >
                 <div>
-                  <p className="font-medium text-gray-600 truncate w-[24rem]">{dr.description}</p>
+                  <p className="font-medium text-gray-600 truncate w-[24rem]">
+                    {dr.description}
+                  </p>
                 </div>
                 <input
                   checked={dr.state ? true : false}

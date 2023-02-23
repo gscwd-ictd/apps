@@ -8,18 +8,24 @@ type SelectPositionsProps = {
   allPositions: Array<Position>;
 };
 
-export const DRModalSelectPositions = ({ allPositions }: SelectPositionsProps): JSX.Element => {
+export const DRModalSelectPositions = ({
+  allPositions,
+}: SelectPositionsProps): JSX.Element => {
   const filteredPositions = useDrStore((state) => state.filteredPositions);
   const searchValue = useDrStore((state) => state.searchValue);
   const setDrcPoolIsEmpty = useDrStore((state) => state.setDrcPoolIsEmpty);
   const setDRCIsLoaded = useDrStore((state) => state.setDRCisLoaded);
   const setOriginalPool = useDrStore((state) => state.setOriginalPool);
   // const setAction = useDrStore((state) => state.setAction);
-  const setFilteredPositions = useDrStore((state) => state.setFilteredPositions);
+  const setFilteredPositions = useDrStore(
+    (state) => state.setFilteredPositions
+  );
   const setSearchValue = useDrStore((state) => state.setSearchValue);
 
   // initialize ref for search input
-  const searchRef = useRef(null) as unknown as MutableRefObject<HTMLInputElement>;
+  const searchRef = useRef(
+    null
+  ) as unknown as MutableRefObject<HTMLInputElement>;
 
   // set focus whenever filtered positions change
   useEffect(() => searchRef.current.focus(), [filteredPositions]);
@@ -29,7 +35,7 @@ export const DRModalSelectPositions = ({ allPositions }: SelectPositionsProps): 
     const value = event.currentTarget.value;
 
     // create an array that will contain the search results
-    var filteredResult: Array<Position> = [];
+    const filteredResult: Array<Position> = [];
 
     // loop through positions array and filter according to position title
     allPositions.filter((position: Position) => {
@@ -78,7 +84,8 @@ export const DRModalSelectPositions = ({ allPositions }: SelectPositionsProps): 
         <section>
           <div className="flex justify-end px-3 mb-1 text-sm">
             <p className="text-gray-600">
-              {allPositions.length} pending {allPositions.length < 1 ? 'position' : 'positions'}
+              {allPositions.length} pending{' '}
+              {allPositions.length < 1 ? 'position' : 'positions'}
             </p>
           </div>
           <div className="relative px-3 mt-2 mb-5">
@@ -93,7 +100,10 @@ export const DRModalSelectPositions = ({ allPositions }: SelectPositionsProps): 
             />
             {searchValue !== '' ? (
               <>
-                <button className="absolute -right-0 mr-7 focus:outline-none" onClick={onClearSearch}>
+                <button
+                  className="absolute -right-0 mr-7 focus:outline-none"
+                  onClick={onClearSearch}
+                >
                   <HiXCircle className="w-6 h-6 mt-3 transition-colors ease-in-out text-slate-300 hover:text-slate-400" />
                 </button>
               </>
@@ -103,7 +113,7 @@ export const DRModalSelectPositions = ({ allPositions }: SelectPositionsProps): 
           <div className="h-[28rem] overflow-y-scroll">
             {filteredPositions.length === 0 ? (
               <div className="flex justify-center h-full pt-5 text-center">
-                <h5 className="text-2xl font-medium text-gray-300">No results found for "{searchValue}"</h5>
+                <h5 className="text-2xl font-medium text-gray-300">{`No results found for '${searchValue}'`}</h5>
               </div>
             ) : (
               <AllDRPositionsList />

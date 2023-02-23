@@ -31,8 +31,7 @@ export default function Messages({
   pendingAcknowledgements,
   id,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const route =
-    'http://192.168.137.249:4003/api/vacant-position-postings/psb/acknowledge-schedule/';
+  const route = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/acknowledge-schedule/`;
 
   // const [vppId, setVppId] = useState<string>();
   // const [employeeId, setEmployeeId] = useState<string>(employee.employmentDetails.employeeId);

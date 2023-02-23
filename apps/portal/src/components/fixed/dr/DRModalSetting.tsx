@@ -1,63 +1,68 @@
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { HiPuzzle } from 'react-icons/hi';
 import useSWR from 'swr';
-import { fetchWithToken } from '../../../../utils/hoc/fetcher';
+
 import { useDrStore } from '../../../store/dr.store';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { DutyResponsibility, DutiesResponsibilities, Competency } from '../../../types/dr.type';
+import {
+  DutyResponsibility,
+  DutiesResponsibilities,
+  Competency,
+} from '../../../types/dr.type';
 import { Button } from '../../modular/common/forms/Button';
 import LoadingVisual from '../loading/LoadingVisual';
 import { DRModalLoading } from './DRModalLoading';
 import { SelectedCoreDRs } from './SelectedCoreDRs';
 import { SelectedSupportDRs } from './SelectedSupportDRs';
 
-
-
 export const DRModalSetting = (): JSX.Element => {
   // get all related data from dr context
 
-  const selectedPosition = useDrStore((state) => state.selectedPosition)
+  const selectedPosition = useDrStore((state) => state.selectedPosition);
 
-  const drcPoolIsFilled = useDrStore((state) => state.drcPoolIsFilled)
+  const drcPoolIsFilled = useDrStore((state) => state.drcPoolIsFilled);
 
-  const DRCIsLoaded = useDrStore((state) => state.DRCIsLoaded)
+  const DRCIsLoaded = useDrStore((state) => state.DRCIsLoaded);
 
-  const poolInitialLoad = useDrStore((state) => state.poolInitialLoad)
+  const poolInitialLoad = useDrStore((state) => state.poolInitialLoad);
 
-  const originalPool = useDrStore((state) => state.originalPool)
+  const originalPool = useDrStore((state) => state.originalPool);
 
-  const allDRCPool = useDrStore((state) => state.allDRCPool)
+  const allDRCPool = useDrStore((state) => state.allDRCPool);
 
-  const selectedDRCs = useDrStore((state) => state.selectedDRCs)
+  const selectedDRCs = useDrStore((state) => state.selectedDRCs);
 
-  const modal = useDrStore((state) => state.modal)
+  const modal = useDrStore((state) => state.modal);
 
-  const setModal = useDrStore((state) => state.setModal)
+  const setModal = useDrStore((state) => state.setModal);
 
-  const setFilteredDRCs = useDrStore((state) => state.setFilteredDRCs)
+  const setFilteredDRCs = useDrStore((state) => state.setFilteredDRCs);
 
-  const setAllDRCPool = useDrStore((state) => state.setAllDRCPool)
+  const setAllDRCPool = useDrStore((state) => state.setAllDRCPool);
 
-  const setOriginalPool = useDrStore((state) => state.setOriginalPool)
+  const setOriginalPool = useDrStore((state) => state.setOriginalPool);
 
-  const setDRCIsLoaded = useDrStore((state) => state.setDRCisLoaded)
+  const setDRCIsLoaded = useDrStore((state) => state.setDRCisLoaded);
 
-  const setDrcPoolIsFilled = useDrStore((state) => state.setDrcPoolIsFilled)
+  const setDrcPoolIsFilled = useDrStore((state) => state.setDrcPoolIsFilled);
 
-  const setSelectedDRCsOnLoad = useDrStore((state) => state.setSelectedDRCsOnLoad)
+  const setSelectedDRCsOnLoad = useDrStore(
+    (state) => state.setSelectedDRCsOnLoad
+  );
 
-  const setPoolInitialLoad = useDrStore((state) => state.setPoolInitialLoad)
+  const setPoolInitialLoad = useDrStore((state) => state.setPoolInitialLoad);
 
-  const setSelectedDRCs = useDrStore((state) => state.setSelectedDRCs)
+  const setSelectedDRCs = useDrStore((state) => state.setSelectedDRCs);
 
-  const setSelectedDRCType = useDrStore((state) => state.setSelectedDRCType)
+  const setSelectedDRCType = useDrStore((state) => state.setSelectedDRCType);
 
-  const employee = useEmployeeStore(state => state.employeeDetails)
+  const employee = useEmployeeStore((state) => state.employeeDetails);
 
-  const selectedDRCtype = useDrStore((state) => state.selectedDRCType)
+  const selectedDRCtype = useDrStore((state) => state.selectedDRCType);
 
-  const action = useDrStore((state) => state.action)
+  const action = useDrStore((state) => state.action);
 
   // generate this for caching
   const random = useRef(Date.now());
@@ -93,31 +98,40 @@ export const DRModalSetting = (): JSX.Element => {
 
   const getOriginalPool = (drPool: any, fetchedDRCs: any) => {
     // add existing DRCs and unsettled DRCs
-    let tempOrigPool: any = [...drPool]; // temporary original pool
+    const tempOrigPool: any = [...drPool]; // temporary original pool
 
-    tempOrigPool.sort((a: DutyResponsibility, b: DutyResponsibility) => a.description!.localeCompare(b.description!));
+    tempOrigPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+      a.description!.localeCompare(b.description!)
+    );
 
     if (fetchedDRCs && fetchedDRCs.core.length > 0) {
       fetchedDRCs.core.map((dr: DutyResponsibility) => {
-        tempOrigPool.push((({ competency, percentage, state, onEdit, ...rest }) => rest)(dr));
+        tempOrigPool.push(
+          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
+        );
       });
     }
 
     if (fetchedDRCs && fetchedDRCs.support.length > 0) {
       fetchedDRCs.support.map((dr: DutyResponsibility) => {
-        tempOrigPool.push((({ competency, percentage, state, onEdit, ...rest }) => rest)(dr));
+        tempOrigPool.push(
+          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
+        );
       });
     }
 
     // sort and assign to temporary original pool
-    const pool = tempOrigPool.sort((a: DutyResponsibility, b: DutyResponsibility) => a.description!.localeCompare(b.description!));
+    const pool = tempOrigPool.sort(
+      (a: DutyResponsibility, b: DutyResponsibility) =>
+        a.description!.localeCompare(b.description!)
+    );
 
     return pool;
   };
 
   const getOgdrIds = async (drcs: DutiesResponsibilities) => {
-    let coreIdList: Array<string> = [];
-    let supportIdList: Array<string> = [];
+    const coreIdList: Array<string> = [];
+    const supportIdList: Array<string> = [];
     drcs.core.map((dr: DutyResponsibility) => {
       if (dr.ogdrId) coreIdList.push(dr.ogdrId);
     });
@@ -130,11 +144,17 @@ export const DRModalSetting = (): JSX.Element => {
   // this sets the all dr pool
   useEffect(() => {
     if (DRCIsLoaded === true) {
-      if (action === 'update' && allDRCPool.length === 0 && poolInitialLoad === false) {
+      if (
+        action === 'update' &&
+        allDRCPool.length === 0 &&
+        poolInitialLoad === false
+      ) {
         const pool = [...getPool];
 
         pool
-          .sort((a: DutyResponsibility, b: DutyResponsibility) => a.description!.localeCompare(b.description!))
+          .sort((a: DutyResponsibility, b: DutyResponsibility) =>
+            a.description!.localeCompare(b.description!)
+          )
           .map((dr: DutyResponsibility, index: number) => {
             dr.sequenceNo = index;
             dr.state = false;
@@ -159,7 +179,11 @@ export const DRModalSetting = (): JSX.Element => {
   useEffect(() => {
     // && drPoolIsEmpty === false
     if (!isEmpty(getPool) && drcPoolIsFilled === false && action === 'create') {
-      var newDRs = [...getPool.sort((a: DutyResponsibility, b: DutyResponsibility) => a.description!.localeCompare(b.description!))];
+      const newDRs = [
+        ...getPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+          a.description!.localeCompare(b.description!)
+        ),
+      ];
 
       // console.log('Get Pool HERE: ', getPool)
 
@@ -213,11 +237,15 @@ export const DRModalSetting = (): JSX.Element => {
       const supportDRCs = [...getDRCs.support];
 
       // sort core DRCs
-      var sortedCoreDRCs = coreDRCs.sort((a: DutyResponsibility, b: DutyResponsibility) => a.description!.localeCompare(b.description!));
+      const sortedCoreDRCs = coreDRCs.sort(
+        (a: DutyResponsibility, b: DutyResponsibility) =>
+          a.description!.localeCompare(b.description!)
+      );
 
       // copy existing support DRCs
-      var sortedSupportDRCs = supportDRCs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-        a.description!.localeCompare(b.description!)
+      const sortedSupportDRCs = supportDRCs.sort(
+        (a: DutyResponsibility, b: DutyResponsibility) =>
+          a.description!.localeCompare(b.description!)
       );
 
       sortedCoreDRCs.map((dr: DutyResponsibility, index: number) => {
@@ -247,9 +275,16 @@ export const DRModalSetting = (): JSX.Element => {
       });
 
       // set selected drs
-      setSelectedDRCs({ ...selectedDRCs, core: sortedCoreDRCs, support: sortedSupportDRCs });
+      setSelectedDRCs({
+        ...selectedDRCs,
+        core: sortedCoreDRCs,
+        support: sortedSupportDRCs,
+      });
 
-      setSelectedDRCsOnLoad({ core: sortedCoreDRCs, support: sortedSupportDRCs });
+      setSelectedDRCsOnLoad({
+        core: sortedCoreDRCs,
+        support: sortedSupportDRCs,
+      });
 
       // get original pool
       const pool = getOriginalPool(getPool, getDRCs);
@@ -282,8 +317,12 @@ export const DRModalSetting = (): JSX.Element => {
   return (
     <div className="h-auto px-5 rounded">
       <div className="flex flex-col pt-2 mb-8 font-semibold text-gray-500">
-        <span className="text-xl text-slate-500">{selectedPosition.positionTitle}</span>
-        <span className="text-sm font-normal">{selectedPosition.itemNumber}</span>
+        <span className="text-xl text-slate-500">
+          {selectedPosition.positionTitle}
+        </span>
+        <span className="text-sm font-normal">
+          {selectedPosition.itemNumber}
+        </span>
         <div className="flex flex-col mt-5">
           <section>
             <div className="flex items-end justify-between ">
@@ -295,7 +334,11 @@ export const DRModalSetting = (): JSX.Element => {
                 <LoadingVisual size={5} />
               ) : (
                 <Button
-                  btnLabel={allDRCPool.length === 0 ? 'No core duties available in pool, please contact HR to add more duties' : '+ Add Core'}
+                  btnLabel={
+                    allDRCPool.length === 0
+                      ? 'No core duties available in pool, please contact HR to add more duties'
+                      : '+ Add Core'
+                  }
                   btnVariant="white"
                   // light
                   className="min-w-[16rem] border-none text-indigo-600 "
@@ -309,13 +352,18 @@ export const DRModalSetting = (): JSX.Element => {
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected core duties & responsibilities</h1> */}
                 {isLoading ? (
-                  <div className="flex w-full h-full justify-center place-items-center">{<LoadingVisual size={12} />} </div>
+                  <div className="flex w-full h-full justify-center place-items-center">
+                    {<LoadingVisual size={12} />}{' '}
+                  </div>
                 ) : (
                   <>
                     {selectedDRCs.core.length === 0 ? (
                       <>
                         <div className="flex items-center justify-center h-full">
-                          <h1 className="text-2xl font-normal text-gray-300">No selected core duties, responsibilities, & competencies</h1>
+                          <h1 className="text-2xl font-normal text-gray-300">
+                            No selected core duties, responsibilities, &
+                            competencies
+                          </h1>
                         </div>
                       </>
                     ) : (
@@ -338,7 +386,11 @@ export const DRModalSetting = (): JSX.Element => {
                 <LoadingVisual size={5} />
               ) : (
                 <Button
-                  btnLabel={allDRCPool.length === 0 ? 'No support duties available in pool, please contact HR to add more duties' : '+ Add Support'}
+                  btnLabel={
+                    allDRCPool.length === 0
+                      ? 'No support duties available in pool, please contact HR to add more duties'
+                      : '+ Add Support'
+                  }
                   btnVariant="white"
                   isDisabled={allDRCPool.length === 0 ? true : false}
                   className="min-w-[16rem] border-none text-indigo-600"
@@ -351,14 +403,17 @@ export const DRModalSetting = (): JSX.Element => {
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected support duties & responsibilities</h1> */}
                 {isLoading ? (
-                  <div className="flex w-full h-full justify-center place-items-center">{<LoadingVisual size={12} />} </div>
+                  <div className="flex w-full h-full justify-center place-items-center">
+                    {<LoadingVisual size={12} />}{' '}
+                  </div>
                 ) : (
                   <>
                     {selectedDRCs.support.length === 0 ? (
                       <>
                         <div className="flex items-center justify-center h-full">
                           <h1 className="text-2xl font-normal text-gray-300">
-                            No selected support duties, responsibilities, & competencies
+                            No selected support duties, responsibilities, &
+                            competencies
                           </h1>
                         </div>
                       </>
