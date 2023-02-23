@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { EmployeeDetails } from '../types/data/employee.type';
 
 export type EmployeeState = {

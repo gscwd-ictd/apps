@@ -1,5 +1,4 @@
-import { m } from 'framer-motion';
-import create from 'zustand';
+import { create } from 'zustand';
 import {
   PERSONAL_INFO,
   GOVERNMENT_ID,
@@ -18,13 +17,25 @@ import {
   IND_PWD_SOLO,
 } from '../../utils/constants/pds';
 import { Address } from '../types/data/address.type';
-import { PersonalInfo, GovernmentIssuedIds } from '../types/data/basic-info.type';
+import {
+  PersonalInfo,
+  GovernmentIssuedIds,
+} from '../types/data/basic-info.type';
 import { EducationInfo } from '../types/data/education.type';
 import { Eligibility, EligibilityState } from '../types/data/eligibility.type';
 import { Spouse, Child, Parent } from '../types/data/family.type';
 import { LearningDevelopment, LNDState } from '../types/data/lnd.type';
-import { Organization, OtherInfoState, Recognition, Skill } from '../types/data/other-info.type';
-import { BasicInfoState, EducationState, FamilyState } from '../types/data/store.type';
+import {
+  Organization,
+  OtherInfoState,
+  Recognition,
+  Skill,
+} from '../types/data/other-info.type';
+import {
+  BasicInfoState,
+  EducationState,
+  FamilyState,
+} from '../types/data/store.type';
 import {
   CandidateResigned,
   Convicted,
@@ -115,7 +126,9 @@ export type PDSState = BasicInfoState & //* Basic Information
     checkboxAddress: boolean;
     setCheckboxAddress: (checkboxAddress: boolean) => void;
     checkboxAddressInitialState: boolean;
-    setCheckboxAddressInitialState: (checkboxAddressInitialState: boolean) => void;
+    setCheckboxAddressInitialState: (
+      checkboxAddressInitialState: boolean
+    ) => void;
     initialPdsState: Pds;
     setInitialPdsState: (initialPdsState: Pds) => void;
   };
@@ -268,7 +281,9 @@ export const usePdsStore = create<PDSState>((set) => ({
   setImmigrant: (immigrant: Immigrant) => {
     set((state) => ({ ...state, immigrant }));
   },
-  setIndigenousPwdSoloParent: (indigenousPwdSoloParent: IndigenousPwdSoloParent) => {
+  setIndigenousPwdSoloParent: (
+    indigenousPwdSoloParent: IndigenousPwdSoloParent
+  ) => {
     set((state) => ({ ...state, indigenousPwdSoloParent }));
   },
   setReferences: (references: Array<Reference>) => {
