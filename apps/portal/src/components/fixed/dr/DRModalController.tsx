@@ -1,6 +1,7 @@
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { createContext, useEffect } from 'react';
 import useSWR from 'swr';
-import { fetchWithToken } from '../../../../utils/hoc/fetcher';
+
 import { useDrStore } from '../../../store/dr.store';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { Position } from '../../../types/position.type';
@@ -17,17 +18,21 @@ type DRModalControllerProps = {
 
 export const ModalInitialLoadState = createContext(false);
 
-export const DRModalController = ({ action, page }: DRModalControllerProps): JSX.Element => {
-
+export const DRModalController = ({
+  action,
+  page,
+}: DRModalControllerProps): JSX.Element => {
   const setAllPositions = useDrStore((state) => state.setAllPositions);
 
-  const setFilteredPositions = useDrStore((state) => state.setFilteredPositions);
+  const setFilteredPositions = useDrStore(
+    (state) => state.setFilteredPositions
+  );
 
   const allPositions = useDrStore((state) => state.allPositions);
 
   const selectedDRCType = useDrStore((state) => state.selectedDRCType);
 
-  const employee = useEmployeeStore(state => state.employeeDetails)
+  const employee = useEmployeeStore((state) => state.employeeDetails);
 
   // url for querying position details from HRIS
   const prodUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}`;
@@ -39,7 +44,11 @@ export const DRModalController = ({ action, page }: DRModalControllerProps): JSX
   useEffect(() => {
     if (data) {
       // copy positions from the query result
-      var newPositions = [...data.sort((a: Position, b: Position) => a.positionTitle.localeCompare(b.positionTitle))];
+      const newPositions = [
+        ...data.sort((a: Position, b: Position) =>
+          a.positionTitle.localeCompare(b.positionTitle)
+        ),
+      ];
 
       setAllPositions(newPositions);
 

@@ -1,4 +1,4 @@
-import { HiCheckCircle } from "react-icons/hi";
+import { HiCheckCircle } from 'react-icons/hi';
 
 export const DRAlertSuccess = () => {
   return (
@@ -9,8 +9,8 @@ export const DRAlertSuccess = () => {
           <div className="text-3xl font-semibold text-indigo-800">Success</div>
         </div>
         <div className="bg-inherit text-md font-light mt-2">
-          Your duties, responsibilities, and competencies have been successfully submitted. We've updated the position's duties,
-          responsibilities, and competencies.
+          {`Your duties, responsibilities, and competencies have been successfully submitted. We've updated the position's duties,
+          responsibilities, and competencies.`}
         </div>
       </div>
     </>

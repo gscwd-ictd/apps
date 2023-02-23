@@ -24,33 +24,35 @@ export const TableConfirmation = ({ array }: TableConfirmationProps) => {
       }
       tableBody={
         <>
-          <TableBody
-            children={
-              <>
-                {array.map((dr: DutyResponsibility, index: number) => {
-                  return (
-                    <tr key={index}>
-                      <td className="flex items-center py-3 bg-slate-200 border border-slate-100 rounded-md my-1 text-sm">
-                        <div className="w-[5%] flex justify-center">
-                          {' '}
-                          <HiCheck size={20} fill="#7b42f5" />
+          <TableBody>
+            <>
+              {array.map((dr: DutyResponsibility, index: number) => {
+                return (
+                  <tr key={index}>
+                    <td className="flex items-center py-3 bg-slate-200 border border-slate-100 rounded-md my-1 text-sm">
+                      <div className="w-[5%] flex justify-center">
+                        {' '}
+                        <HiCheck size={20} fill="#7b42f5" />
+                      </div>
+                      <div className="w-[40%] ">
+                        <p className="w-full pr-1"> {dr.description}</p>
+                      </div>
+                      <div className="w-[5%]">{dr.competency.code}</div>
+                      <div className="w-[20%]">{dr.competency.name}</div>
+                      <div className="w-[15%] flex justify-center">
+                        {dr.competency.level}
+                      </div>
+                      <div className="flex flex-row items-center justify-center w-[15%]">
+                        <div className="bg-indigo-200 px-5 rounded">
+                          {dr.percentage}%
                         </div>
-                        <div className="w-[40%] ">
-                          <p className="w-full pr-1"> {dr.description}</p>
-                        </div>
-                        <div className="w-[5%]">{dr.competency.code}</div>
-                        <div className="w-[20%]">{dr.competency.name}</div>
-                        <div className="w-[15%] flex justify-center">{dr.competency.level}</div>
-                        <div className="flex flex-row items-center justify-center w-[15%]">
-                          <div className="bg-indigo-200 px-5 rounded">{dr.percentage}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </>
-            }
-          />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </>
+          </TableBody>
         </>
       }
     />

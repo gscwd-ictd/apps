@@ -57,16 +57,20 @@ export const SelectedDRCard = (): JSX.Element => {
     }
   };
 
-  const handlePercentage = (event: FormEvent<HTMLInputElement>, drPercentageIndex: number) => {
+  const handlePercentage = (
+    event: FormEvent<HTMLInputElement>,
+    drPercentageIndex: number
+  ) => {
     if (selectedDRCType === 'core') {
       // create a copy of selected core drs
-      let updatedCoreDRs = [...checkedDRCs.core];
+      const updatedCoreDRs = [...checkedDRCs.core];
 
       // loop through the copy of selected core drs
       updatedCoreDRs.map((dr: DutyResponsibility, index: number) => {
         // check if core dr percentage index is the current index
         if (index === drPercentageIndex) {
-          if (event.currentTarget.valueAsNumber >= 0) dr.percentage = event.currentTarget.valueAsNumber;
+          if (event.currentTarget.valueAsNumber >= 0)
+            dr.percentage = event.currentTarget.valueAsNumber;
           else dr.percentage = 0;
         }
         //! Recently added
@@ -78,13 +82,14 @@ export const SelectedDRCard = (): JSX.Element => {
     }
     if (selectedDRCType === 'support') {
       // create a copy of selected core drs
-      let updatedSupportDRs = [...checkedDRCs.support];
+      const updatedSupportDRs = [...checkedDRCs.support];
 
       // loop through the copy of selected core drs
       updatedSupportDRs.map((dr: DutyResponsibility, index: number) => {
         // check if core dr percentage index is the current index
         if (index === drPercentageIndex) {
-          if (event.currentTarget.valueAsNumber >= 0) dr.percentage = event.currentTarget.valueAsNumber;
+          if (event.currentTarget.valueAsNumber >= 0)
+            dr.percentage = event.currentTarget.valueAsNumber;
           else dr.percentage = 0;
         }
         //! Recently added
@@ -102,7 +107,10 @@ export const SelectedDRCard = (): JSX.Element => {
         <>
           {checkedDRCs.core.map((dr: DutyResponsibility, index: number) => {
             return (
-              <div className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100" key={index}>
+              <div
+                className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100"
+                key={index}
+              >
                 <div className="flex items-center gap-5">
                   <div className="flex items-center justify-center w-12 h-10 rounded bg-indigo-50">
                     <HiClipboardList className="w-6 h-6 text-indigo-500" />
@@ -123,7 +131,9 @@ export const SelectedDRCard = (): JSX.Element => {
                 <div className="flex flex-row items-center mt-5 mb-2">
                   <CompetencyDropdown index={index} />
                   <label className="w-full p-2 border-2 border-gray-200 outline-none">
-                    {dr.competency.pcplId ? `${dr.competency.code} | ${dr.competency.name} | ${dr.competency.level}` : 'No competency selected...'}
+                    {dr.competency.pcplId
+                      ? `${dr.competency.code} | ${dr.competency.name} | ${dr.competency.level}`
+                      : 'No competency selected...'}
                   </label>
                 </div>
 
@@ -139,8 +149,6 @@ export const SelectedDRCard = (): JSX.Element => {
                     placeholder="Input percentage..."
                   />
                 </div>
-
-
               </div>
             );
           })}
@@ -149,7 +157,10 @@ export const SelectedDRCard = (): JSX.Element => {
         <>
           {checkedDRCs.support.map((dr: DutyResponsibility, index: number) => {
             return (
-              <div className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100" key={index}>
+              <div
+                className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100"
+                key={index}
+              >
                 <div className="flex items-center gap-5">
                   <div className="flex items-center justify-center w-12 h-10 rounded bg-indigo-50">
                     <HiClipboardList className="w-6 h-6 text-indigo-500" />
@@ -182,7 +193,9 @@ export const SelectedDRCard = (): JSX.Element => {
                 <div className="flex flex-row items-center mt-5 mb-2">
                   <CompetencyDropdown index={index} />
                   <label className="w-full p-2 border-2 border-gray-200 outline-none">
-                    {dr.competency.pcplId ? dr.competency.code : 'Add Competency...'}
+                    {dr.competency.pcplId
+                      ? dr.competency.code
+                      : 'Add Competency...'}
                   </label>
                 </div>
               </div>
