@@ -1,5 +1,5 @@
 import Reference from 'yup/lib/Reference';
-import create from 'zustand';
+import { create } from 'zustand';
 import { EducationInfo } from '../types/data/education.type';
 import { Eligibility } from '../types/data/eligibility.type';
 import { Child } from '../types/data/family.type';

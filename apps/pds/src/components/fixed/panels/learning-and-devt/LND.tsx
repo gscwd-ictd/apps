@@ -526,23 +526,10 @@ export const LearningNDevt = (): JSX.Element => {
                                           action={() =>
                                             onEdit(training, trainingIdx)
                                           }
-                                          disabled={
-                                            learningDevelopmentOnEdit
-                                              ? false
-                                              : true
-                                          }
                                         />
                                       </div>
                                       <div className="w-8 ">
                                         <DeleteButton
-                                          muted={
-                                            hasPds && learningDevelopmentOnEdit
-                                              ? false
-                                              : hasPds &&
-                                                !learningDevelopmentOnEdit
-                                              ? true
-                                              : !hasPds && false
-                                          }
                                           action={() =>
                                             openRemoveActionModal(
                                               trainingIdx,
