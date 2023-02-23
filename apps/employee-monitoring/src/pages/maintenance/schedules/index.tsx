@@ -451,7 +451,7 @@ export default function Index() {
                                 <input
                                   type="checkbox"
                                   id={day.label}
-                               
+
                                 />
                               </td>
                             );
