@@ -19,7 +19,7 @@ export type Props = {
 export type ModalProps = Props & {
   open: boolean;
   setOpen: (state: boolean) => void;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
   steady?: boolean;
   fixedHeight?: boolean;
 };

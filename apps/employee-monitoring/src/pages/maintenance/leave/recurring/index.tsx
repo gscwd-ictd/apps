@@ -64,8 +64,6 @@ export default function Index() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-
   return (
     <div className="min-h-[100%] w-full">
       <Modal
