@@ -1,7 +1,4 @@
 import { useEffect } from 'react';
-import useSWR from 'swr';
-import { fetchWithSession } from '../../../utils/hoc/fetcher';
-import { useEmployeeStore } from '../../../store/employee.store';
 import { AllLeavesListTab } from './AllLeavesListTab';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 

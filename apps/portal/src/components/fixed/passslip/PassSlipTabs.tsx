@@ -1,9 +1,4 @@
-import {
-  HiOutlineTag,
-  HiCheckCircle,
-  HiOutlineCheckCircle,
-  HiCheck,
-} from 'react-icons/hi';
+import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import { TabHeader } from '../tab/TabHeader';
 

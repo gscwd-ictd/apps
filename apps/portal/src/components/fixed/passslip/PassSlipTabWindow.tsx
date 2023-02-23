@@ -1,7 +1,4 @@
 import { useEffect } from 'react';
-import useSWR from 'swr';
-import { fetchWithSession } from '../../../utils/hoc/fetcher';
-import { useEmployeeStore } from '../../../store/employee.store';
 import { AllPassSlipListTab } from './AllPassSlipListTab';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 
@@ -12,15 +9,6 @@ type PassSlipTabWindowProps = {
 export const PassSlipTabWindow = ({
   employeeId,
 }: PassSlipTabWindowProps): JSX.Element => {
-  // const pendingUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/publications/${employeeId}/pending`;
-  // const fulfilledUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/publications/${employeeId}/selected`;
-  // const { data: pendingPublications } = useSWR(pendingUrl, fetchWithSession);
-
-  // const { data: fulfilledPublications } = useSWR(
-  //   fulfilledUrl,
-  //   fetchWithSession
-  // );
-
   const pendingPassSlips = [
     {
       id: '5',
@@ -97,7 +85,7 @@ export const PassSlipTabWindow = ({
   useEffect(() => {
     setPendingPassSlipList(pendingPassSlips);
     setFulfilledPassSlipList(fulfilledPassSlips);
-  },[])
+  }, []);
 
   return (
     <>
