@@ -1,5 +1,5 @@
 import { useLeaveStore } from '../../../../src/store/leave.store';
-import { HiOutlineTag, HiCheckCircle, HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
+import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 import { TabHeader } from '../tab/TabHeader';
 
 type LeavesTabsProps = {
@@ -39,7 +39,9 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             title="Completed Leave Applications"
             icon={<HiCheck size={26} />}
             subtitle="Show all fulfilled Leave applications"
-            notificationCount={fulfilledLeaveList ? fulfilledLeaveList.length : 0}
+            notificationCount={
+              fulfilledLeaveList ? fulfilledLeaveList.length : 0
+            }
             className="bg-gray-500"
           />
         </ul>
