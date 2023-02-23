@@ -18,8 +18,8 @@ import { Button, ListDef, Select } from '@gscwd-apps/oneui';
 import { format } from 'date-fns';
 import { HiOutlineSearch } from 'react-icons/hi';
 import Link from 'next/link';
-import { DtrDateSelect } from 'apps/portal/src/components/fixed/dtr/DtrDateSelect';
-import { useDtrStore } from 'apps/portal/src/store/dtr.store';
+import { DtrDateSelect } from '../../../../src/components/fixed/dtr/DtrDateSelect';
+import { useDtrStore } from '../../../../src/store/dtr.store';
 import { DtrTable } from '../../../../src/components/fixed/dtr/DtrTable';
 
 export default function DailyTimeRecord({
@@ -62,7 +62,7 @@ export default function DailyTimeRecord({
                 title="Daily Time Record"
                 subtitle="View schedules, time in and time out"
               >
-                <DtrDateSelect/>
+                <DtrDateSelect />
               </ContentHeader>
 
               <ContentBody>
@@ -77,7 +77,7 @@ export default function DailyTimeRecord({
                     />
                   </div>
                 ) : (
-                    <DtrTable employeeDetails={employeeDetails} />  
+                  <DtrTable employeeDetails={employeeDetails} />
                 )}
               </ContentBody>
             </div>

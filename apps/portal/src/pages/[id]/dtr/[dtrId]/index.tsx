@@ -8,11 +8,9 @@ import { getUserDetails, withSession } from '../../../../utils/helpers/session';
 import React from 'react';
 import DtrPdf from '../../../../../src/components/fixed/dtr/DtrPdf';
 
-export default function PassSlipPage( {
+export default function PassSlipPage({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-   
-
   return (
     employeeDetails && (
       <>
@@ -20,6 +18,7 @@ export default function PassSlipPage( {
           <title>Employee DTR</title>
         </Head>
         <DtrPdf />
+        test
       </>
     )
   );

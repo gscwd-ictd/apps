@@ -12,7 +12,17 @@ type TabHeaderProps = {
   className?: string;
 };
 
-export const TabHeader: FC<TabHeaderProps> = ({ tab, title, href, tabIndex, subtitle, icon, notificationCount, className, onClick }) => {
+export const TabHeader: FC<TabHeaderProps> = ({
+  tab,
+  title,
+  href,
+  tabIndex,
+  subtitle,
+  icon,
+  notificationCount,
+  className,
+  onClick,
+}) => {
   return (
     <>
       <a
@@ -22,11 +32,22 @@ export const TabHeader: FC<TabHeaderProps> = ({ tab, title, href, tabIndex, subt
         className={`${
           tab === tabIndex && 'bg-slate-200'
         } border-b border-gray-200 cursor-pointer rounded-xl rounded-tr-none rounded-bl-none pt-1 hover:drop-shadow-lg  transition-all ease-in-out hover:scale-105 h-[5rem] bg-white items-center flex justify-start mr-6`}
+        rel="noreferrer"
       >
-        <div className={`${icon ? 'visible' : 'invisible'} flex justify-center w-[10%]`}>{icon}</div>
+        <div
+          className={`${
+            icon ? 'visible' : 'invisible'
+          } flex justify-center w-[10%]`}
+        >
+          {icon}
+        </div>
         <div className="flex flex-col w-[80%]">
-          <p className="text-xl  font-normal transition-colors ease-in-out select-none text-black">{title}</p>
-          <p className="text-sm  font-normal transition-colors ease-in-out select-none ">{subtitle}</p>
+          <p className="text-xl  font-normal transition-colors ease-in-out select-none text-black">
+            {title}
+          </p>
+          <p className="text-sm  font-normal transition-colors ease-in-out select-none ">
+            {subtitle}
+          </p>
         </div>
         <div className="w-[10%] px-4">
           <div
