@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
 import { SelectListRF } from '../../../modular/select/SelectListRF';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DeleteButton } from '../../buttons/Delete';
@@ -16,30 +20,42 @@ import { LearningDevelopment } from '../../../../types/data/lnd.type';
 import { lndType } from '../../../../../utils/constants/constants';
 import { LearningDevelopmentAlert } from './LNDAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
-import { EditButton } from 'components/fixed/buttons/Edit';
 import { isEmpty } from 'lodash';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const LearningNDevt = (): JSX.Element => {
   // set learning and development array, employee object state from pds store
   const learningDevelopment = usePdsStore((state) => state.learningDevelopment);
-  const learningDevelopmentOnEdit = usePdsStore((state) => state.learningDevelopmentOnEdit);
+  const learningDevelopmentOnEdit = usePdsStore(
+    (state) => state.learningDevelopmentOnEdit
+  );
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const hasPds = useEmployeeStore((state) => state.hasPds);
-  const setLearningDevelopment = usePdsStore((state) => state.setLearningDevelopment);
+  const setLearningDevelopment = usePdsStore(
+    (state) => state.setLearningDevelopment
+  );
   const employee = useEmployeeStore((state) => state.employeeDetails);
-  const deletedLearningDevelopment = useUpdatePdsStore((state) => state.deletedLearningDevelopment);
+  const deletedLearningDevelopment = useUpdatePdsStore(
+    (state) => state.deletedLearningDevelopment
+  );
   const [addLndIsOpen, setAddLndIsOpen] = useState<boolean>(false); // open add modal state
   const [removeLndIsOpen, setRemoveLndIsOpen] = useState<boolean>(false); // open remove modal state
   const [lndToRemove, setLndToRemove] = useState<number>(-1); // learning and development to remove state
-  const [removedLnd, setRemovedLnd] = useState<LearningDevelopment>({} as LearningDevelopment);
-  const [lndForEdit, setLndForEdit] = useState<LearningDevelopment>({} as LearningDevelopment);
+  const [removedLnd, setRemovedLnd] = useState<LearningDevelopment>(
+    {} as LearningDevelopment
+  );
+  const [lndForEdit, setLndForEdit] = useState<LearningDevelopment>(
+    {} as LearningDevelopment
+  );
   const [action, setAction] = useState<string>('');
   const [indexForEdit, setIndexForEdit] = useState<number>(-1);
   const allowDeleteLnd = useUpdatePdsStore((state) => state.allowDeleteLnd);
   const allowEditLnd = useUpdatePdsStore((state) => state.allowEditLnd);
   const allowAddLnd = useUpdatePdsStore((state) => state.allowAddLnd);
-  const setAllowDeleteLnd = useUpdatePdsStore((state) => state.setAllowDeleteLnd);
+  const setAllowDeleteLnd = useUpdatePdsStore(
+    (state) => state.setAllowDeleteLnd
+  );
 
   // initialize react hook form and set default values, mode is set to on change
   const {
@@ -77,8 +93,13 @@ export const LearningNDevt = (): JSX.Element => {
       // check if inclusive date is valid
       const updatedLnd = [...learningDevelopment];
       updatedLnd.push(training);
-      const sortedUpdatedTraining = [...updatedLnd].sort((firstItem, secondItem) =>
-        firstItem.to! > secondItem.to! ? -1 : secondItem.to! > firstItem.to! ? 1 : 0
+      const sortedUpdatedTraining = [...updatedLnd].sort(
+        (firstItem, secondItem) =>
+          firstItem.to! > secondItem.to!
+            ? -1
+            : secondItem.to! > firstItem.to!
+            ? 1
+            : 0
       );
       setLearningDevelopment(sortedUpdatedTraining);
       reset();
@@ -86,25 +107,32 @@ export const LearningNDevt = (): JSX.Element => {
     } else if (action === 'update') {
       e.preventDefault();
       const updatedLnd = [...learningDevelopment];
-      const newUpdatedLnd = updatedLnd.map((previousLnd: LearningDevelopment, lndIdx: number) => {
-        if (lndIdx === indexForEdit) {
-          return {
-            ...previousLnd,
-            _id: training._id,
-            conductedBy: training.conductedBy,
-            employeeId: training.employeeId,
-            from: training.from,
-            numberOfHours: training.numberOfHours,
-            title: training.title,
-            to: training.to,
-            type: training.type,
-          };
-        }
+      const newUpdatedLnd = updatedLnd.map(
+        (previousLnd: LearningDevelopment, lndIdx: number) => {
+          if (lndIdx === indexForEdit) {
+            return {
+              ...previousLnd,
+              _id: training._id,
+              conductedBy: training.conductedBy,
+              employeeId: training.employeeId,
+              from: training.from,
+              numberOfHours: training.numberOfHours,
+              title: training.title,
+              to: training.to,
+              type: training.type,
+            };
+          }
 
-        return previousLnd;
-      });
-      const sortedUpdatedTraining = [...newUpdatedLnd].sort((firstItem, secondItem) =>
-        firstItem.to! > secondItem.to! ? -1 : secondItem.to! > firstItem.to! ? 1 : 0
+          return previousLnd;
+        }
+      );
+      const sortedUpdatedTraining = [...newUpdatedLnd].sort(
+        (firstItem, secondItem) =>
+          firstItem.to! > secondItem.to!
+            ? -1
+            : secondItem.to! > firstItem.to!
+            ? 1
+            : 0
       );
       setLearningDevelopment(sortedUpdatedTraining);
       setLndForEdit({} as LearningDevelopment);
@@ -175,16 +203,29 @@ export const LearningNDevt = (): JSX.Element => {
       <Card title="Learning & Development" subtitle="">
         <>
           <div className="flex flex-col items-end justify-end w-full pb-4 -mt-10">
-            {allowEditLnd || allowDeleteLnd || allowAddLnd ? <LearningDevelopmentAlert setInitialValues={setInitialValues} /> : null}
+            {allowEditLnd || allowDeleteLnd || allowAddLnd ? (
+              <LearningDevelopmentAlert setInitialValues={setInitialValues} />
+            ) : null}
           </div>
 
           <div
             className={`flex flex-col items-end justify-end pt-6 ${
-              learningDevelopmentOnEdit ? 'visible  mt-6' : !hasPds ? 'visible -mt-6 pb-6 pr-6' : 'hidden'
+              learningDevelopmentOnEdit
+                ? 'visible  mt-6'
+                : !hasPds
+                ? 'visible -mt-6 pb-6 pr-6'
+                : 'hidden'
             }`}
           >
             {allowAddLnd ? (
-              <Button btnLabel="Add Learning & Development" type="button" variant="theme" shadow onClick={openModal} className="xs:w-full lg:w-72" />
+              <Button
+                btnLabel="Add Learning & Development"
+                type="button"
+                variant="theme"
+                shadow
+                onClick={openModal}
+                className="xs:w-full lg:w-72"
+              />
             ) : null}
           </div>
 
@@ -192,9 +233,11 @@ export const LearningNDevt = (): JSX.Element => {
             title="Learning & Development"
             subtitle={
               <>
-                Start from the most recent L&D/training program and include only the relevant L&D/training taken for the last five (5) years for
-                Division Chief/Executive/Managerial positions <br></br> Please fill-out all required fields ( <span className="text-red-700">*</span>{' '}
-                )
+                Start from the most recent L&D/training program and include only
+                the relevant L&D/training taken for the last five (5) years for
+                Division Chief/Executive/Managerial positions <br></br> Please
+                fill-out all required fields ({' '}
+                <span className="text-red-700">*</span> )
               </>
             }
             formId="lnd"
@@ -206,7 +249,13 @@ export const LearningNDevt = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="xxxxl"
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -315,7 +364,14 @@ export const LearningNDevt = (): JSX.Element => {
             <Alert.Description>
               <div className="flex gap-2">
                 <div className="w-[25%] text-red-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-20 h-20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-20 h-20"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -323,16 +379,26 @@ export const LearningNDevt = (): JSX.Element => {
                     />
                   </svg>
                 </div>
-                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
+                <p className="w-[75%] px-4">
+                  Are you sure you want to remove this? This action cannot be
+                  undone.{' '}
+                </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
                 {' '}
-                <Button variant="light" onClick={() => setRemoveLndIsOpen(false)} className="hover:bg-gray-200 active:bg-gray-200">
+                <Button
+                  variant="light"
+                  onClick={() => setRemoveLndIsOpen(false)}
+                  className="hover:bg-gray-200 active:bg-gray-200"
+                >
                   No
                 </Button>
-                <Button variant="theme" onClick={() => handleRemoveTraining(lndToRemove)}>
+                <Button
+                  variant="theme"
+                  onClick={() => handleRemoveTraining(lndToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -346,81 +412,154 @@ export const LearningNDevt = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Title" headerWidth="w-[25%]" className="pl-4" />
+                    <TableHeader
+                      label="Title"
+                      headerWidth="w-[25%]"
+                      className="pl-4"
+                    />
                     <TableHeader label="Conducted By" headerWidth="w-[25%]" />
                     <TableHeader label="Type" headerWidth="w-[10%]" />
                     <TableHeader label="Date Start" headerWidth="w-[10%]" />
                     <TableHeader label="Date End" headerWidth="w-[10%]" />
-                    <TableHeader label="Number of Hours" headerWidth="w-[10%]" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
+                    <TableHeader
+                      label="Number of Hours"
+                      headerWidth="w-[10%]"
+                    />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
                   <tbody>
-                    {learningDevelopment.map((training: LearningDevelopment, trainingIdx: number) => {
-                      return (
-                        <tr
-                          key={trainingIdx}
-                          className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
-                        >
-                          <TableDimension isText={true} label={training.title} className="px-4" />
-                          <TableDimension isText={true} label={training.conductedBy} className="px-1 select-none" />
-                          <TableDimension isText={true} className="px-1" label={training.type} />
-                          <TableDimension isText={true} className="px-1" label={training.from} />
-                          <TableDimension isText={true} className="px-1" label={training.to} />
-                          <TableDimension isText={true} className="px-1" label={training.numberOfHours} />
-                          <TableDimension
-                            isText={false}
-                            className="px-2 text-center select-none"
-                            tableDimension={
-                              <>
-                                {!isEmpty(training._id) ? (
-                                  <div className="flex justify-center gap-4">
-                                    {allowEditLnd ? (
+                    {learningDevelopment.map(
+                      (training: LearningDevelopment, trainingIdx: number) => {
+                        return (
+                          <tr
+                            key={trainingIdx}
+                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                          >
+                            <TableDimension
+                              isText={true}
+                              label={training.title}
+                              className="px-4"
+                            />
+                            <TableDimension
+                              isText={true}
+                              label={training.conductedBy}
+                              className="px-1 select-none"
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={training.type}
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={training.from}
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={training.to}
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={training.numberOfHours}
+                            />
+                            <TableDimension
+                              isText={false}
+                              className="px-2 text-center select-none"
+                              tableDimension={
+                                <>
+                                  {!isEmpty(training._id) ? (
+                                    <div className="flex justify-center gap-4">
+                                      {allowEditLnd ? (
+                                        <div className="w-8">
+                                          <EditButton
+                                            action={() =>
+                                              onEdit(training, trainingIdx)
+                                            }
+                                            disabled={
+                                              learningDevelopmentOnEdit
+                                                ? false
+                                                : true
+                                            }
+                                          />
+                                        </div>
+                                      ) : null}
+                                      {allowDeleteLnd ? (
+                                        <div className="w-8 ">
+                                          <DeleteButton
+                                            muted={
+                                              hasPds &&
+                                              learningDevelopmentOnEdit
+                                                ? false
+                                                : hasPds &&
+                                                  !learningDevelopmentOnEdit
+                                                ? true
+                                                : !hasPds && false
+                                            }
+                                            action={() =>
+                                              openRemoveActionModal(
+                                                trainingIdx,
+                                                training
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      ) : null}
+                                      {!allowEditLnd && !allowDeleteLnd ? (
+                                        <div className="flex justify-center w-full">
+                                          -
+                                        </div>
+                                      ) : null}
+                                    </div>
+                                  ) : isEmpty(training._id) ? (
+                                    <div className="flex justify-center gap-4">
                                       <div className="w-8">
                                         <EditButton
-                                          action={() => onEdit(training, trainingIdx)}
-                                          disabled={learningDevelopmentOnEdit ? false : true}
+                                          action={() =>
+                                            onEdit(training, trainingIdx)
+                                          }
+                                          disabled={
+                                            learningDevelopmentOnEdit
+                                              ? false
+                                              : true
+                                          }
                                         />
                                       </div>
-                                    ) : null}
-                                    {allowDeleteLnd ? (
                                       <div className="w-8 ">
                                         <DeleteButton
                                           muted={
                                             hasPds && learningDevelopmentOnEdit
                                               ? false
-                                              : hasPds && !learningDevelopmentOnEdit
+                                              : hasPds &&
+                                                !learningDevelopmentOnEdit
                                               ? true
                                               : !hasPds && false
                                           }
-                                          action={() => openRemoveActionModal(trainingIdx, training)}
+                                          action={() =>
+                                            openRemoveActionModal(
+                                              trainingIdx,
+                                              training
+                                            )
+                                          }
                                         />
                                       </div>
-                                    ) : null}
-                                    {!allowEditLnd && !allowDeleteLnd ? <div className="flex justify-center w-full">-</div> : null}
-                                  </div>
-                                ) : isEmpty(training._id) ? (
-                                  <div className="flex justify-center gap-4">
-                                    <div className="w-8">
-                                      <EditButton action={() => onEdit(training, trainingIdx)} disabled={learningDevelopmentOnEdit ? false : true} />
                                     </div>
-                                    <div className="w-8 ">
-                                      <DeleteButton
-                                        muted={
-                                          hasPds && learningDevelopmentOnEdit ? false : hasPds && !learningDevelopmentOnEdit ? true : !hasPds && false
-                                        }
-                                        action={() => openRemoveActionModal(trainingIdx, training)}
-                                      />
-                                    </div>
-                                  </div>
-                                ) : null}
-                              </>
-                            }
-                          />
-                        </tr>
-                      );
-                    })}
+                                  ) : null}
+                                </>
+                              }
+                            />
+                          </tr>
+                        );
+                      }
+                    )}
                   </tbody>
                 }
               />

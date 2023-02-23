@@ -13,9 +13,9 @@ import { useTabStore } from '../../../store/tab.store';
 import { usePdsStore } from '../../../store/pds.store';
 import { HeadContainer } from '../head/Head';
 import { Toast } from '../toast/Toast';
-import { NotificationContext } from 'context/NotificationContext';
 import { useEffect } from 'react';
 import { trimmer } from '../../../../utils/functions/trimmer';
+import { NotificationContext } from '../../../context/NotificationContext';
 
 export const BasicInfoPanel = (): JSX.Element => {
   const personalInfo = usePdsStore((state) => state.personalInfo);
@@ -24,16 +24,34 @@ export const BasicInfoPanel = (): JSX.Element => {
   const personalInfoOnEdit = usePdsStore((state) => state.personalInfoOnEdit);
   const residentialAddress = usePdsStore((state) => state.residentialAddress); // residential and permanent address object from pds store
   const governmentIssuedIds = usePdsStore((state) => state.governmentIssuedIds);
-  const permanentAddressOnEdit = usePdsStore((state) => state.permanentAddressOnEdit);
-  const residentialAddressOnEdit = usePdsStore((state) => state.residentialAddressOnEdit);
-  const governmentIssuedIdsOnEdit = usePdsStore((state) => state.governmentIssuedIdsOnEdit);
+  const permanentAddressOnEdit = usePdsStore(
+    (state) => state.permanentAddressOnEdit
+  );
+  const residentialAddressOnEdit = usePdsStore(
+    (state) => state.residentialAddressOnEdit
+  );
+  const governmentIssuedIdsOnEdit = usePdsStore(
+    (state) => state.governmentIssuedIdsOnEdit
+  );
   const handleNextTab = useTabStore((state) => state.handleNextTab);
   const setPersonalInfo = usePdsStore((state) => state.setPersonalInfo);
   const setPermanentAddress = usePdsStore((state) => state.setPermanentAddress);
-  const setResidentialAddress = usePdsStore((state) => state.setResidentialAddress);
-  const setGovernmentIssuedIds = usePdsStore((state) => state.setGovernmentIssuedIds);
-  const { setResAddrError, setPermaAddrError, permaAddrRef, permaAddrError, resAddrError, resAddrRef, shake, setShake } =
-    useContext<ErrorState>(ErrorContext); // set address error and reference from error context
+  const setResidentialAddress = usePdsStore(
+    (state) => state.setResidentialAddress
+  );
+  const setGovernmentIssuedIds = usePdsStore(
+    (state) => state.setGovernmentIssuedIds
+  );
+  const {
+    setResAddrError,
+    setPermaAddrError,
+    permaAddrRef,
+    permaAddrError,
+    resAddrError,
+    resAddrRef,
+    shake,
+    setShake,
+  } = useContext<ErrorState>(ErrorContext); // set address error and reference from error context
   const { notify } = useContext(NotificationContext);
 
   // assign the useform hook to 'methods', set the resolver to yup resolver schema, mode is set to onchange
@@ -41,8 +59,12 @@ export const BasicInfoPanel = (): JSX.Element => {
 
   const addNotification = () => {
     const notification = notify.custom(
-      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
-        Cannot proceed to the next tab. Either undo or update your changes to proceed.
+      <Toast
+        variant="error"
+        dismissAction={() => notify.dismiss(notification.id)}
+      >
+        Cannot proceed to the next tab. Either undo or update your changes to
+        proceed.
       </Toast>
     );
   };
@@ -86,7 +108,12 @@ export const BasicInfoPanel = (): JSX.Element => {
       subdivision: trimmer(permanentAddress.subdivision),
     });
 
-    if (!personalInfoOnEdit && !governmentIssuedIdsOnEdit && !residentialAddressOnEdit && !permanentAddressOnEdit) {
+    if (
+      !personalInfoOnEdit &&
+      !governmentIssuedIdsOnEdit &&
+      !residentialAddressOnEdit &&
+      !permanentAddressOnEdit
+    ) {
       /**
        *  if any of the listed residential address fields are empty
        *  it sets the error to true
@@ -152,7 +179,12 @@ export const BasicInfoPanel = (): JSX.Element => {
         handleNextTab(selectedTab);
         // localStorage.setItem('')
       }
-    } else if (personalInfoOnEdit || governmentIssuedIdsOnEdit || residentialAddressOnEdit || permanentAddressOnEdit) {
+    } else if (
+      personalInfoOnEdit ||
+      governmentIssuedIdsOnEdit ||
+      residentialAddressOnEdit ||
+      permanentAddressOnEdit
+    ) {
       // setAlertInfoIsOpen(true);
       addNotification();
     }
@@ -173,21 +205,17 @@ export const BasicInfoPanel = (): JSX.Element => {
       <HeadContainer title="PDS - Basic Information" />
 
       {/* Basic Info Page */}
-      <Page
-        title="Basic Information"
-        subtitle=""
-        children={
-          <>
-            <FormProvider {...methods} key="basicInfo">
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="basicInfo">
-                <PersonalInfoBI />
-                <GovernmentIDsBI />
-                <AddressBI />
-              </form>
-            </FormProvider>
-          </>
-        }
-      />
+      <Page title="Basic Information" subtitle="">
+        <>
+          <FormProvider {...methods} key="basicInfo">
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="basicInfo">
+              <PersonalInfoBI />
+              <GovernmentIDsBI />
+              <AddressBI />
+            </form>
+          </FormProvider>
+        </>
+      </Page>
       {/* NEXT BUTTON */}
 
       <NextButton formId="basicInfo" />

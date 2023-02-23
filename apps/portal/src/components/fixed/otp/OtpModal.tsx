@@ -50,7 +50,7 @@ export const OtpModal: FunctionComponent<OtpProps> = ({
   });
 
   useEffect(() => {
-    if (localStorage.getItem(`prfOtpEndTime_${router.query.id}`)) {
+    if (localStorage.getItem(`prfOtpEndTime_${router.query.prfid}`)) {
       setCountingDown(true);
       setIsSendOtpLoading(true);
     } else {
@@ -66,7 +66,7 @@ export const OtpModal: FunctionComponent<OtpProps> = ({
   //COMPUTATION OF TIME REMAINING FOR OTP - GET FROM COMPONENT
   useEffect(() => {
     const interval = setInterval(async () => {
-      const data = getCountDown(router.query.id, countingDown); //start countdown
+      const data = getCountDown(router.query.prfid, countingDown); //start countdown
       if (data) {
         setMinutes(data.minutes);
         setSeconds(data.seconds);
@@ -97,7 +97,7 @@ export const OtpModal: FunctionComponent<OtpProps> = ({
   async function handleSendCode() {
     setIsOtpSending(true); //shows blue circle animation also
     setOtpFieldError(false);
-    const data = await requestOtpCode(mobile, router.query.id);
+    const data = await requestOtpCode(mobile, router.query.prfid);
     if (data) {
       setOtpFieldError(data.otpFieldError);
       setIsSubmitLoading(data.isSubmitLoading);
@@ -124,9 +124,14 @@ export const OtpModal: FunctionComponent<OtpProps> = ({
 
   useEffect(() => {
     if (otpComplete) {
-      approvePrf(`${router.query.id}`, PrfStatus.APPROVED, employeeId, remarks);
-      localStorage.removeItem(`prfOtpToken_${router.query.id}`);
-      localStorage.removeItem(`prfOtpEndTime_${router.query.id}`);
+      approvePrf(
+        `${router.query.prfid}`,
+        PrfStatus.APPROVED,
+        employeeId,
+        remarks
+      );
+      localStorage.removeItem(`prfOtpToken_${router.query.prfid}`);
+      localStorage.removeItem(`prfOtpEndTime_${router.query.prfid}`);
     } else {
       //nothing to do
     }
@@ -137,17 +142,13 @@ export const OtpModal: FunctionComponent<OtpProps> = ({
     e.preventDefault();
     setIsSubmitLoading(true);
 
-    const data = await confirmOtpCode(otpCode, router.query.id, '');
+    const data = await confirmOtpCode(otpCode, router.query.prfid, '');
     if (data) {
       setOtpFieldError(data.otpFieldError);
       setIsSubmitLoading(data.isSubmitLoading);
       setWiggleEffect(data.wiggleEffect);
       setErrorMessage(data.errorMessage);
       setOtpComplete(data.otpComplete);
-
-      // approvePrf(`${router.query.id}`, PrfStatus.APPROVED, employeeId, remarks);
-      // localStorage.removeItem(`prfOtpToken_${router.query.id}`);
-      // localStorage.removeItem(`prfOtpEndTime_${router.query.id}`);
     } else {
       setOtpFieldError(true);
       setIsSubmitLoading(false);

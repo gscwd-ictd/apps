@@ -4,7 +4,11 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DeleteButton } from '../../buttons/Delete';
@@ -14,9 +18,9 @@ import schema from '../../../../schema/Organizations';
 import { Organization } from '../../../../types/data/other-info.type';
 import { OrganizationsAlert } from './OrganizationsAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const OIOrgs = (): JSX.Element => {
   // set organization array, employee object state from pds store
@@ -29,14 +33,26 @@ export const OIOrgs = (): JSX.Element => {
   const [addOrgIsOpen, setAddOrgIsOpen] = useState<boolean>(false); // open add modal state
   const [removeOrgIsOpen, setRemoveOrgIsOpen] = useState<boolean>(false); // open remove modal state
   const [orgToRemove, setOrgToRemove] = useState<number>(-1); // organization to remove state
-  const [removedOrganization, setRemovedOrganization] = useState<Organization>({} as Organization);
-  const deletedOrganizations = useUpdatePdsStore((state) => state.deletedOrganizations);
-  const [orgForEdit, setOrgForEdit] = useState<Organization>({} as Organization);
+  const [removedOrganization, setRemovedOrganization] = useState<Organization>(
+    {} as Organization
+  );
+  const deletedOrganizations = useUpdatePdsStore(
+    (state) => state.deletedOrganizations
+  );
+  const [orgForEdit, setOrgForEdit] = useState<Organization>(
+    {} as Organization
+  );
   const [action, setAction] = useState<string>('');
   const [indexForEdit, setIndexForEdit] = useState<number>(-1);
-  const allowAddOrganization = useUpdatePdsStore((state) => state.allowAddOrganization);
-  const allowEditOrganization = useUpdatePdsStore((state) => state.allowEditOrganization);
-  const allowDeleteOrganization = useUpdatePdsStore((state) => state.allowDeleteOrganization);
+  const allowAddOrganization = useUpdatePdsStore(
+    (state) => state.allowAddOrganization
+  );
+  const allowEditOrganization = useUpdatePdsStore(
+    (state) => state.allowEditOrganization
+  );
+  const allowDeleteOrganization = useUpdatePdsStore(
+    (state) => state.allowDeleteOrganization
+  );
 
   // initialize react hook form and set default values, mode is set to on change
   const {
@@ -49,7 +65,12 @@ export const OIOrgs = (): JSX.Element => {
   } = useForm<Organization>({
     mode: 'onChange',
     resolver: yupResolver(schema),
-    defaultValues: { _id: '', employeeId: employee.employmentDetails.userId, organization: '', isEdited: false },
+    defaultValues: {
+      _id: '',
+      employeeId: employee.employmentDetails.userId,
+      organization: '',
+      isEdited: false,
+    },
   });
 
   // set initial values
@@ -72,12 +93,20 @@ export const OIOrgs = (): JSX.Element => {
     // update action
     else if (action === 'update') {
       const updatedOrgs: Array<Organization> = [...organizations];
-      const newUpdatedOrgs = updatedOrgs.map((previousOrg: Organization, orgIdx: number) => {
-        if (orgIdx === indexForEdit) {
-          return { ...previousOrg, _id: org._id, employeeId: org.employeeId, organization: org.organization, isEdited: true };
+      const newUpdatedOrgs = updatedOrgs.map(
+        (previousOrg: Organization, orgIdx: number) => {
+          if (orgIdx === indexForEdit) {
+            return {
+              ...previousOrg,
+              _id: org._id,
+              employeeId: org.employeeId,
+              organization: org.organization,
+              isEdited: true,
+            };
+          }
+          return previousOrg;
         }
-        return previousOrg;
-      });
+      );
 
       setOrganizations(newUpdatedOrgs);
       setOrgForEdit({} as Organization);
@@ -123,7 +152,10 @@ export const OIOrgs = (): JSX.Element => {
   };
 
   // open remove action modal
-  const openRemoveActionModal = (orgIdx: number, organization: Organization) => {
+  const openRemoveActionModal = (
+    orgIdx: number,
+    organization: Organization
+  ) => {
     setRemoveOrgIsOpen(true);
     setOrgToRemove(orgIdx);
     setRemovedOrganization(organization);
@@ -133,7 +165,8 @@ export const OIOrgs = (): JSX.Element => {
   const handleRemoveTitle = (orgIdx: number) => {
     const updatedOrgs = [...organizations];
     updatedOrgs.splice(orgIdx, 1);
-    if (!isEmpty(removedOrganization._id)) deletedOrganizations.push(removedOrganization);
+    if (!isEmpty(removedOrganization._id))
+      deletedOrganizations.push(removedOrganization);
     setOrganizations(updatedOrgs);
     setRemoveOrgIsOpen(false);
   };
@@ -143,15 +176,28 @@ export const OIOrgs = (): JSX.Element => {
       <Card title="Memberships in Organizations" subtitle="">
         <>
           <div className="flex flex-col items-end justify-end w-full pb-4 -mt-10">
-            {allowEditOrganization || allowDeleteOrganization ? <OrganizationsAlert setInitialValues={setInitialValues} /> : null}
+            {allowEditOrganization || allowDeleteOrganization ? (
+              <OrganizationsAlert setInitialValues={setInitialValues} />
+            ) : null}
           </div>
           <div
             className={`flex flex-col items-end justify-end pt-6 ${
-              organizationsOnEdit ? 'visible  mt-6' : !hasPds ? 'visible -mt-6 pb-6 pr-6' : 'hidden'
+              organizationsOnEdit
+                ? 'visible  mt-6'
+                : !hasPds
+                ? 'visible -mt-6 pb-6 pr-6'
+                : 'hidden'
             }`}
           >
             {allowAddOrganization ? (
-              <Button btnLabel="Add Membership" variant="theme" shadow type="button" className="sm:w-full md:w-72 lg:w-72" onClick={openModal} />
+              <Button
+                btnLabel="Add Membership"
+                variant="theme"
+                shadow
+                type="button"
+                className="sm:w-full md:w-72 lg:w-72"
+                onClick={openModal}
+              />
             ) : null}
           </div>
 
@@ -159,7 +205,8 @@ export const OIOrgs = (): JSX.Element => {
             title="Membership in Organization"
             subtitle={
               <>
-                Please fill-out all required fields ( <span className="text-red-700">*</span> )
+                Please fill-out all required fields ({' '}
+                <span className="text-red-700">*</span> )
               </>
             }
             formId="organizations"
@@ -171,7 +218,13 @@ export const OIOrgs = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="lg"
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -184,7 +237,9 @@ export const OIOrgs = (): JSX.Element => {
                       labelIsRequired
                       placeholder="Write in Full"
                       type="text"
-                      controller={{ ...register('organization', { required: true }) }}
+                      controller={{
+                        ...register('organization', { required: true }),
+                      }}
                       withLabel={true}
                       isError={errors.organization ? true : false}
                       errorMessage={errors.organization?.message}
@@ -198,7 +253,14 @@ export const OIOrgs = (): JSX.Element => {
             <Alert.Description>
               <div className="flex gap-2">
                 <div className="w-[25%] text-red-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-20 h-20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-20 h-20"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -206,16 +268,26 @@ export const OIOrgs = (): JSX.Element => {
                     />
                   </svg>
                 </div>
-                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
+                <p className="w-[75%] px-4">
+                  Are you sure you want to remove this? This action cannot be
+                  undone.{' '}
+                </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
                 {' '}
-                <Button variant="light" onClick={() => setRemoveOrgIsOpen(false)} className="hover:bg-gray-200 active:bg-gray-200">
+                <Button
+                  variant="light"
+                  onClick={() => setRemoveOrgIsOpen(false)}
+                  className="hover:bg-gray-200 active:bg-gray-200"
+                >
                   No
                 </Button>
-                <Button variant="theme" onClick={() => handleRemoveTitle(orgToRemove)}>
+                <Button
+                  variant="theme"
+                  onClick={() => handleRemoveTitle(orgToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -231,46 +303,77 @@ export const OIOrgs = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Title" headerWidth="w-[85%]" className="px-28" textSize="sm" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" textSize="sm" alignment="center" />
+                    <TableHeader
+                      label="Title"
+                      headerWidth="w-[85%]"
+                      className="px-28"
+                      textSize="sm"
+                    />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      textSize="sm"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
                   <>
                     <tbody>
-                      {organizations.map((org: Organization, orgIdx: number) => {
-                        return (
-                          <tr
-                            key={orgIdx}
-                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
-                          >
-                            <TableDimension isText={true} label={org.organization} className="px-28" textSize="lg" />
-                            <TableDimension
-                              isText={false}
-                              className="px-2 text-center select-none"
-                              tableDimension={
-                                <>
-                                  <div className="flex justify-center gap-4">
-                                    <div className="w-8">
-                                      <EditButton
-                                        disabled={hasPds && organizationsOnEdit ? false : hasPds && !organizationsOnEdit ? true : !hasPds && false}
-                                        action={() => onEdit(org, orgIdx)}
-                                      />
-                                    </div>
+                      {organizations.map(
+                        (org: Organization, orgIdx: number) => {
+                          return (
+                            <tr
+                              key={orgIdx}
+                              className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                            >
+                              <TableDimension
+                                isText={true}
+                                label={org.organization}
+                                className="px-28"
+                                textSize="lg"
+                              />
+                              <TableDimension
+                                isText={false}
+                                className="px-2 text-center select-none"
+                                tableDimension={
+                                  <>
+                                    <div className="flex justify-center gap-4">
+                                      <div className="w-8">
+                                        <EditButton
+                                          disabled={
+                                            hasPds && organizationsOnEdit
+                                              ? false
+                                              : hasPds && !organizationsOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
+                                          action={() => onEdit(org, orgIdx)}
+                                        />
+                                      </div>
 
-                                    <div className="w-8">
-                                      <DeleteButton
-                                        muted={hasPds && organizationsOnEdit ? false : hasPds && !organizationsOnEdit ? true : !hasPds && false}
-                                        action={() => openRemoveActionModal(orgIdx, org)}
-                                      />
+                                      <div className="w-8">
+                                        <DeleteButton
+                                          muted={
+                                            hasPds && organizationsOnEdit
+                                              ? false
+                                              : hasPds && !organizationsOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
+                                          action={() =>
+                                            openRemoveActionModal(orgIdx, org)
+                                          }
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </>
-                              }
-                            />
-                          </tr>
-                        );
-                      })}
+                                  </>
+                                }
+                              />
+                            </tr>
+                          );
+                        }
+                      )}
                     </tbody>
                   </>
                 }

@@ -1,8 +1,8 @@
-import { NotificationActions } from "@ericsison-dev/my-ui";
-import { createContext } from "react";
+import { NotificationActions } from '@gscwd-apps/oneui';
+import { createContext } from 'react';
 
 type NotifContextState = {
-    notify: NotificationActions;
-}
+  notify: NotificationActions;
+};
 
-export const NotificationContext = createContext({} as NotifContextState)
+export const NotificationContext = createContext({} as NotifContextState);

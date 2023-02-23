@@ -4,7 +4,11 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -14,12 +18,11 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import { Child } from '../../../../types/data/family.type';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
 import { ChildrenAlert } from './ChildrenAlert';
-import { DeleteButton } from 'components/fixed/buttons/Delete';
-import { useUpdatePdsStore } from 'store/update-pds.store';
-import { EditButton } from 'components/fixed/buttons/Edit';
 import { isEmpty } from 'lodash';
-import { DeleteSVG } from 'components/fixed/svg/Delete';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { DeleteButton } from '../../buttons/Delete';
+import { EditButton } from '../../buttons/Edit';
 
 export const ChildrenInfo = (): JSX.Element => {
   // set children or children array, employee object from pds context
@@ -38,8 +41,12 @@ export const ChildrenInfo = (): JSX.Element => {
   const [removedChild, setRemovedChild] = useState<Child>({} as Child);
   const [childForEdit, setChildForEdit] = useState<Child>({} as Child);
   const [childIndexForEdit, setChildIndexForEdit] = useState<number>(-1);
-  const allowDeleteChildren = useUpdatePdsStore((state) => state.allowDeleteChildren);
-  const allowEditChildren = useUpdatePdsStore((state) => state.allowEditChildren);
+  const allowDeleteChildren = useUpdatePdsStore(
+    (state) => state.allowDeleteChildren
+  );
+  const allowEditChildren = useUpdatePdsStore(
+    (state) => state.allowEditChildren
+  );
   const setChildren = usePdsStore((state) => state.setChildren);
 
   // yup validation schema
@@ -83,7 +90,11 @@ export const ChildrenInfo = (): JSX.Element => {
       newChildren.push(child);
       // sort
       const sortedNewChildren = [...newChildren].sort((firstItem, secondItem) =>
-        firstItem.birthDate > secondItem.birthDate ? 1 : secondItem.birthDate > firstItem.birthDate ? -1 : 0
+        firstItem.birthDate > secondItem.birthDate
+          ? 1
+          : secondItem.birthDate > firstItem.birthDate
+          ? -1
+          : 0
       );
       setChildren(sortedNewChildren);
       reset();
@@ -94,15 +105,28 @@ export const ChildrenInfo = (): JSX.Element => {
     else if (action === 'update') {
       e.preventDefault();
       const updatedChildren = [...children];
-      const newUpdatedChildren = updatedChildren.map((previousChild: Child, childIdx: number) => {
-        if (childIdx === childIndexForEdit) {
-          return { ...previousChild, _id: child._id, birthDate: child.birthDate, childName: child.childName, employeeId: child.employeeId };
+      const newUpdatedChildren = updatedChildren.map(
+        (previousChild: Child, childIdx: number) => {
+          if (childIdx === childIndexForEdit) {
+            return {
+              ...previousChild,
+              _id: child._id,
+              birthDate: child.birthDate,
+              childName: child.childName,
+              employeeId: child.employeeId,
+            };
+          }
+          return previousChild;
         }
-        return previousChild;
-      });
+      );
 
-      const sortedUpdatedChildren = [...newUpdatedChildren].sort((firstItem, secondItem) =>
-        firstItem.birthDate > secondItem.birthDate ? -1 : secondItem.birthDate > firstItem.birthDate ? 1 : 0
+      const sortedUpdatedChildren = [...newUpdatedChildren].sort(
+        (firstItem, secondItem) =>
+          firstItem.birthDate > secondItem.birthDate
+            ? -1
+            : secondItem.birthDate > firstItem.birthDate
+            ? 1
+            : 0
       );
       setChildren(sortedUpdatedChildren);
       setChildForEdit({} as Child);
@@ -179,8 +203,22 @@ export const ChildrenInfo = (): JSX.Element => {
           </div>
         }
       >
-        <div className={`flex flex-col items-end justify-end ${childrenOnEdit ? 'visible' : !hasPds ? 'visible lg:-mt-6 lg:pb-6' : 'hidden'}`}>
-          <Button btnLabel="Add Children" variant="theme" onClick={openModal} type="button" className="xs:w-full sm:w-full lg:w-56" />
+        <div
+          className={`flex flex-col items-end justify-end ${
+            childrenOnEdit
+              ? 'visible'
+              : !hasPds
+              ? 'visible lg:-mt-6 lg:pb-6'
+              : 'hidden'
+          }`}
+        >
+          <Button
+            btnLabel="Add Children"
+            variant="theme"
+            onClick={openModal}
+            type="button"
+            className="xs:w-full sm:w-full lg:w-56"
+          />
         </div>
         <>
           <Modal
@@ -188,7 +226,8 @@ export const ChildrenInfo = (): JSX.Element => {
             title={`Child's Information`}
             subtitle={
               <>
-                Please fill-out all required fields ( <span className="text-red-700">*</span> )
+                Please fill-out all required fields ({' '}
+                <span className="text-red-700">*</span> )
               </>
             }
             isOpen={addChildIsOpen}
@@ -198,7 +237,13 @@ export const ChildrenInfo = (): JSX.Element => {
             isStatic={true}
             action={onSubmit}
             onClose={closeModal}
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             verticalCenter
             modalChildren={
@@ -216,8 +261,14 @@ export const ChildrenInfo = (): JSX.Element => {
                       placeholder="First name and surname"
                       type="text"
                       labelIsRequired
-                      controller={{ ...register('childName', { required: true }) }}
-                      isError={errors.childName && errors.childName.message ? true : false}
+                      controller={{
+                        ...register('childName', { required: true }),
+                      }}
+                      isError={
+                        errors.childName && errors.childName.message
+                          ? true
+                          : false
+                      }
                       errorMessage={errors.childName?.message}
                     />
                   </div>
@@ -233,7 +284,9 @@ export const ChildrenInfo = (): JSX.Element => {
                     helpContent="Provide the child's birthdate"
                     type="date"
                     labelIsRequired
-                    controller={{ ...register('birthDate', { required: true }) }}
+                    controller={{
+                      ...register('birthDate', { required: true }),
+                    }}
                     isError={errors.birthDate ? true : false}
                     errorMessage={errors.birthDate?.message}
                   />
@@ -248,11 +301,18 @@ export const ChildrenInfo = (): JSX.Element => {
             <Alert.Footer>
               <div className="flex w-full gap-4">
                 <div className="w-full border border-gray-300 rounded">
-                  <Button variant="light" onClick={() => setRemoveChildIsOpen(false)} className="hover:bg-gray-300 active:bg-gray-200">
+                  <Button
+                    variant="light"
+                    onClick={() => setRemoveChildIsOpen(false)}
+                    className="hover:bg-gray-300 active:bg-gray-200"
+                  >
                     No
                   </Button>
                 </div>
-                <Button variant="danger" onClick={() => handleRemoveChild(childToRemove)}>
+                <Button
+                  variant="danger"
+                  onClick={() => handleRemoveChild(childToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -266,9 +326,21 @@ export const ChildrenInfo = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Full Name" headerWidth="w-[45%]" className="select-none pl-14" />
-                    <TableHeader label="Birthday" headerWidth="w-[40%]" alignment="left" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
+                    <TableHeader
+                      label="Full Name"
+                      headerWidth="w-[45%]"
+                      className="select-none pl-14"
+                    />
+                    <TableHeader
+                      label="Birthday"
+                      headerWidth="w-[40%]"
+                      alignment="left"
+                    />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
@@ -276,14 +348,22 @@ export const ChildrenInfo = (): JSX.Element => {
                     {children.map((child, childIdx) => {
                       const { birthDate, childName, _id } = child;
                       return (
-                        <tr key={childIdx} className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-300">
+                        <tr
+                          key={childIdx}
+                          className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-300"
+                        >
                           <TableDimension
                             isText={false}
                             tableDimension={
                               <>
                                 <div className="flex items-center px-2">
                                   <div className="flex-shrink-0 w-10 h-10">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-auto h-auto pl-1" viewBox="0 0 24 24" fill="indigo">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="w-auto h-auto pl-1"
+                                      viewBox="0 0 24 24"
+                                      fill="indigo"
+                                    >
                                       <path
                                         fillRule="evenodd"
                                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
@@ -292,13 +372,19 @@ export const ChildrenInfo = (): JSX.Element => {
                                     </svg>
                                   </div>
 
-                                  <div className="pl-2 text-sm font-normal text-gray-900 break-words select-none max-w-fit ">{childName}</div>
+                                  <div className="pl-2 text-sm font-normal text-gray-900 break-words select-none max-w-fit ">
+                                    {childName}
+                                  </div>
                                 </div>
                               </>
                             }
                           />
 
-                          <TableDimension isText={true} label={birthDate} className="text-left select-none " />
+                          <TableDimension
+                            isText={true}
+                            label={birthDate}
+                            className="text-left select-none "
+                          />
                           <TableDimension
                             isText={false}
                             className="px-2 text-center select-none"
@@ -310,21 +396,45 @@ export const ChildrenInfo = (): JSX.Element => {
                                       {allowEditChildren ? (
                                         <div className="w-8">
                                           <EditButton
-                                            action={() => onEdit(child, childIdx)}
-                                            disabled={hasPds && childrenOnEdit ? false : hasPds && !childrenOnEdit ? true : !hasPds && false}
+                                            action={() =>
+                                              onEdit(child, childIdx)
+                                            }
+                                            disabled={
+                                              hasPds && childrenOnEdit
+                                                ? false
+                                                : hasPds && !childrenOnEdit
+                                                ? true
+                                                : !hasPds && false
+                                            }
                                           />
                                         </div>
                                       ) : null}
                                       {allowDeleteChildren ? (
                                         <div className="w-8">
                                           <DeleteButton
-                                            action={() => openRemoveActionModal(childIdx, child)}
-                                            muted={hasPds && childrenOnEdit ? false : hasPds && !childrenOnEdit ? true : !hasPds && false}
+                                            action={() =>
+                                              openRemoveActionModal(
+                                                childIdx,
+                                                child
+                                              )
+                                            }
+                                            muted={
+                                              hasPds && childrenOnEdit
+                                                ? false
+                                                : hasPds && !childrenOnEdit
+                                                ? true
+                                                : !hasPds && false
+                                            }
                                           />
                                         </div>
                                       ) : null}
 
-                                      {!allowEditChildren && !allowDeleteChildren ? <div className="flex justify-center w-full">-</div> : null}
+                                      {!allowEditChildren &&
+                                      !allowDeleteChildren ? (
+                                        <div className="flex justify-center w-full">
+                                          -
+                                        </div>
+                                      ) : null}
                                     </div>
                                   </>
                                 ) : isEmpty(child._id) ? (
@@ -333,14 +443,31 @@ export const ChildrenInfo = (): JSX.Element => {
                                       <div className="w-8">
                                         <EditButton
                                           action={() => onEdit(child, childIdx)}
-                                          disabled={hasPds && childrenOnEdit ? false : hasPds && !childrenOnEdit ? true : !hasPds && false}
+                                          disabled={
+                                            hasPds && childrenOnEdit
+                                              ? false
+                                              : hasPds && !childrenOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
                                         />
                                       </div>
 
                                       <div className="w-8">
                                         <DeleteButton
-                                          action={() => openRemoveActionModal(childIdx, child)}
-                                          muted={hasPds && childrenOnEdit ? false : hasPds && !childrenOnEdit ? true : !hasPds && false}
+                                          action={() =>
+                                            openRemoveActionModal(
+                                              childIdx,
+                                              child
+                                            )
+                                          }
+                                          muted={
+                                            hasPds && childrenOnEdit
+                                              ? false
+                                              : hasPds && !childrenOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
                                         />
                                       </div>
                                     </div>

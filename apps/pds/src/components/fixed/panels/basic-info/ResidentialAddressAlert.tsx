@@ -1,16 +1,17 @@
-import { Alert } from '@ericsison-dev/my-ui';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { Alert } from '@gscwd-apps/oneui';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import axios from 'axios';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
-import { Toast } from 'components/fixed/toast/Toast';
-import { Button } from 'components/modular/buttons/Button';
-import { NotificationContext } from 'context/NotificationContext';
 import { useContext, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
-import { useEmployeeStore } from 'store/employee.store';
-import { usePdsStore } from 'store/pds.store';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
+import { Button } from '../../../modular/buttons/Button';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { Toast } from '../../toast/Toast';
 
 type ResidentialAddressAlertProps = {
   setInitialValues: () => void;
@@ -21,12 +22,18 @@ type Return = {
   duo: boolean;
 };
 
-export const ResidentialAddressAlert = ({ setInitialValues }: ResidentialAddressAlertProps): JSX.Element => {
+export const ResidentialAddressAlert = ({
+  setInitialValues,
+}: ResidentialAddressAlertProps): JSX.Element => {
   const [alertUpdateIsOpen, setAlertUpdateIsOpen] = useState<boolean>(false);
   const [alertCancelIsOpen, setAlertCancelIsOpen] = useState<boolean>(false);
   const hasPds = useEmployeeStore((state) => state.hasPds);
-  const residentialAddressOnEdit = usePdsStore((state) => state.residentialAddressOnEdit);
-  const setResidentialAddressOnEdit = usePdsStore((state) => state.setResidentialAddressOnEdit);
+  const residentialAddressOnEdit = usePdsStore(
+    (state) => state.residentialAddressOnEdit
+  );
+  const setResidentialAddressOnEdit = usePdsStore(
+    (state) => state.setResidentialAddressOnEdit
+  );
   const { notify } = useContext(NotificationContext);
   const checkboxAddress = usePdsStore((state) => state.checkboxAddress);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
@@ -36,7 +43,10 @@ export const ResidentialAddressAlert = ({ setInitialValues }: ResidentialAddress
 
   const addNotification = (action: Actions, bothAddressesUpdated: boolean) => {
     const notification = notify.custom(
-      <Toast variant={action} dismissAction={() => notify.dismiss(notification.id)}>
+      <Toast
+        variant={action}
+        dismissAction={() => notify.dismiss(notification.id)}
+      >
         {action === 'success' && bothAddressesUpdated === false
           ? 'Residential Address Updated!'
           : action === 'success' && bothAddressesUpdated
@@ -58,14 +68,24 @@ export const ResidentialAddressAlert = ({ setInitialValues }: ResidentialAddress
         rest
       );
       if (status === 200) {
-        setInitialPdsState({ ...initialPdsState, residentialAddress: pds.residentialAddress, permanentAddress: pds.permanentAddress });
+        setInitialPdsState({
+          ...initialPdsState,
+          residentialAddress: pds.residentialAddress,
+          permanentAddress: pds.permanentAddress,
+        });
         return { actions: Actions.SUCCESS, duo: true };
       } else return { actions: Actions.ERROR, duo: false };
     } else if (checkboxAddress === false) {
-      const { status } = await axios.put(`${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/basic/residential-address/${employeeDetails.user._id}`, rest);
+      const { status } = await axios.put(
+        `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/basic/residential-address/${employeeDetails.user._id}`,
+        rest
+      );
 
       if (status === 200) {
-        setInitialPdsState({ ...initialPdsState, residentialAddress: pds.residentialAddress });
+        setInitialPdsState({
+          ...initialPdsState,
+          residentialAddress: pds.residentialAddress,
+        });
         return { actions: Actions.SUCCESS, duo: false };
       } else return { actions: Actions.ERROR, duo: false };
     } else return { actions: Actions.ERROR, duo: false };
@@ -91,15 +111,23 @@ export const ResidentialAddressAlert = ({ setInitialValues }: ResidentialAddress
         <Alert.Description>
           {checkboxAddress ? (
             <AlertDesc>
-              Do you want to update your Residential Address? This will update both of your addresses since the checkbox same address is ticked.
+              Do you want to update your Residential Address? This will update
+              both of your addresses since the checkbox same address is ticked.
             </AlertDesc>
           ) : (
-            <AlertDesc>Do you want to update your Residential Address? This action is irreversible.</AlertDesc>
+            <AlertDesc>
+              Do you want to update your Residential Address? This action is
+              irreversible.
+            </AlertDesc>
           )}
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertUpdateIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertUpdateIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -111,11 +139,18 @@ export const ResidentialAddressAlert = ({ setInitialValues }: ResidentialAddress
 
       <Alert open={alertCancelIsOpen} setOpen={setAlertCancelIsOpen}>
         <Alert.Description>
-          <AlertDesc>Are you sure you want to cancel the changes that you have made to your Residential Address?</AlertDesc>
+          <AlertDesc>
+            Are you sure you want to cancel the changes that you have made to
+            your Residential Address?
+          </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertCancelIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertCancelIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -130,7 +165,13 @@ export const ResidentialAddressAlert = ({ setInitialValues }: ResidentialAddress
           {residentialAddressOnEdit && (
             <>
               <div className="flex ">
-                <Button onClick={() => setAlertCancelIsOpen(true)} btnLabel="" variant="light" type="button" className="ring-0 focus:ring-0">
+                <Button
+                  onClick={() => setAlertCancelIsOpen(true)}
+                  btnLabel=""
+                  variant="light"
+                  type="button"
+                  className="ring-0 focus:ring-0"
+                >
                   <div className="flex items-center text-gray-400 hover:text-gray-600">
                     <div>
                       <svg
@@ -141,7 +182,11 @@ export const ResidentialAddressAlert = ({ setInitialValues }: ResidentialAddress
                         stroke="currentColor"
                         className="h-6 w-6"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                        />
                       </svg>
                     </div>
                     <span>Undo</span>

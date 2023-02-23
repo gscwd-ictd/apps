@@ -27,3 +27,21 @@
     transform: translate3d(4px, 0, 0);
   }
 }
+
+/* blue loading circle in the login page */
+#blueloading {
+  animation: blueloading 1s infinite linear;
+  transform-origin: center;
+  transform-box: fill-box;
+  /* fill: rgb(14, 94, 243); */
+}
+
+/* loading circle animation for OTP modal */
+@keyframes blueloading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

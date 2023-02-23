@@ -1,43 +1,55 @@
-import { Alert, NotificationController, useNotification } from '@ericsison-dev/my-ui';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { Alert } from '@gscwd-apps/oneui';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { usePdsStore } from 'apps/pds/src/store/pds.store';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import axios from 'axios';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
-import { Toast } from 'components/fixed/toast/Toast';
-import { Button } from 'components/modular/buttons/Button';
-import { NotificationContext } from 'context/NotificationContext';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
-import { useEmployeeStore } from 'store/employee.store';
-import { usePdsStore } from 'store/pds.store';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { trimmer } from '../../../../../utils/functions/trimmer';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
+import { Button } from '../../../modular/buttons/Button';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { Toast } from '../../toast/Toast';
 
 type PersonalInfoAlertProps = {
   setInitialValues: () => void;
 };
 
-export const PersonalInfoAlert = ({ setInitialValues }: PersonalInfoAlertProps): JSX.Element => {
+export const PersonalInfoAlert = ({
+  setInitialValues,
+}: PersonalInfoAlertProps): JSX.Element => {
   const [alertUpdateIsOpen, setAlertUpdateIsOpen] = useState<boolean>(false);
   const [alertCancelIsOpen, setAlertCancelIsOpen] = useState<boolean>(false);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const personalInfoOnEdit = usePdsStore((state) => state.personalInfoOnEdit);
   const personalInfo = usePdsStore((state) => state.personalInfo);
   const setPersonalInfo = usePdsStore((state) => state.setPersonalInfo);
-  const setPersonalInfoOnEdit = usePdsStore((state) => state.setPersonalInfoOnEdit);
+  const setPersonalInfoOnEdit = usePdsStore(
+    (state) => state.setPersonalInfoOnEdit
+  );
   const pds = getPds(usePdsStore((state) => state));
   const { notify } = useContext(NotificationContext);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
-  const allowPersonalInfoSave = useUpdatePdsStore((state) => state.allowPersonalInfoSave);
-  const setAllowPersonalInfoSave = useUpdatePdsStore((state) => state.setAllowPersonalInfoSave);
+  const allowPersonalInfoSave = useUpdatePdsStore(
+    (state) => state.allowPersonalInfoSave
+  );
+  const setAllowPersonalInfoSave = useUpdatePdsStore(
+    (state) => state.setAllowPersonalInfoSave
+  );
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
-      <Toast variant={action} dismissAction={() => notify.dismiss(notification.id)}>
+      <Toast
+        variant={action}
+        dismissAction={() => notify.dismiss(notification.id)}
+      >
         {action === 'success'
           ? 'Personal Information Updated!'
           : action === 'info'
@@ -50,14 +62,24 @@ export const PersonalInfoAlert = ({ setInitialValues }: PersonalInfoAlertProps):
   };
 
   const trimValues = async () => {
-    setPersonalInfo({ ...personalInfo, birthPlace: trimmer(personalInfo.birthPlace), email: trimmer(personalInfo.email) });
+    setPersonalInfo({
+      ...personalInfo,
+      birthPlace: trimmer(personalInfo.birthPlace),
+      email: trimmer(personalInfo.email),
+    });
   };
 
   const updateSection = async (): Promise<Actions> => {
     try {
       await trimValues();
-      await axios.put(`${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/basic/personal-info/${employeeDetails.user._id}`, pds.personalInfo);
-      setInitialPdsState({ ...initialPdsState, personalInfo: pds.personalInfo });
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/basic/personal-info/${employeeDetails.user._id}`,
+        pds.personalInfo
+      );
+      setInitialPdsState({
+        ...initialPdsState,
+        personalInfo: pds.personalInfo,
+      });
       return Actions.SUCCESS;
     } catch (error) {
       return Actions.ERROR;
@@ -107,11 +129,18 @@ export const PersonalInfoAlert = ({ setInitialValues }: PersonalInfoAlertProps):
     <>
       <Alert open={alertUpdateIsOpen} setOpen={setAlertUpdateIsOpen}>
         <Alert.Description>
-          <AlertDesc>Do you want to update your Personal Information? This action is irreversible.</AlertDesc>
+          <AlertDesc>
+            Do you want to update your Personal Information? This action is
+            irreversible.
+          </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertUpdateIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertUpdateIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -123,11 +152,18 @@ export const PersonalInfoAlert = ({ setInitialValues }: PersonalInfoAlertProps):
 
       <Alert open={alertCancelIsOpen} setOpen={setAlertCancelIsOpen}>
         <Alert.Description>
-          <AlertDesc>Are you sure you want to cancel the changes that you have made to your Personal Information?</AlertDesc>
+          <AlertDesc>
+            Are you sure you want to cancel the changes that you have made to
+            your Personal Information?
+          </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertCancelIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertCancelIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -142,7 +178,13 @@ export const PersonalInfoAlert = ({ setInitialValues }: PersonalInfoAlertProps):
           {personalInfoOnEdit && (
             <>
               <div className="flex ">
-                <Button onClick={() => setAlertCancelIsOpen(true)} btnLabel="" variant="light" type="button" className="ring-0 focus:ring-0">
+                <Button
+                  onClick={() => setAlertCancelIsOpen(true)}
+                  btnLabel=""
+                  variant="light"
+                  type="button"
+                  className="ring-0 focus:ring-0"
+                >
                   <div className="flex items-center text-gray-400 hover:text-gray-600">
                     <div>
                       <svg
@@ -153,7 +195,11 @@ export const PersonalInfoAlert = ({ setInitialValues }: PersonalInfoAlertProps):
                         stroke="currentColor"
                         className="h-6 w-6"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                        />
                       </svg>
                     </div>
                     <span>Undo</span>

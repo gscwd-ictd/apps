@@ -4,7 +4,11 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DeleteButton } from '../../buttons/Delete';
@@ -14,9 +18,9 @@ import schema from '../../../../schema/Recognitions';
 import { Recognition } from '../../../../types/data/other-info.type';
 import { RecognitionsAlert } from './RecogsAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const OIRecogs = (): JSX.Element => {
   // set recognition array, employee object state from pds context
@@ -29,10 +33,18 @@ export const OIRecogs = (): JSX.Element => {
   const [addRecogIsOpen, setAddRecogIsOpen] = useState<boolean>(false); // add modal state
   const [removeRecogIsOpen, setRemoveRecogIsOpen] = useState<boolean>(false); // remove recognition modal state
   const [recogToRemove, setRecogToRemove] = useState<number>(-1); // recognition to remove state
-  const [removedRecognition, setRemovedRecognition] = useState<Recognition>({} as Recognition);
-  const setDeletedRecognitions = useUpdatePdsStore((state) => state.setDeletedRecognitions);
-  const deletedRecognitions = useUpdatePdsStore((state) => state.deletedRecognitions);
-  const [recogForEdit, setRecogForEdit] = useState<Recognition>({} as Recognition);
+  const [removedRecognition, setRemovedRecognition] = useState<Recognition>(
+    {} as Recognition
+  );
+  const setDeletedRecognitions = useUpdatePdsStore(
+    (state) => state.setDeletedRecognitions
+  );
+  const deletedRecognitions = useUpdatePdsStore(
+    (state) => state.deletedRecognitions
+  );
+  const [recogForEdit, setRecogForEdit] = useState<Recognition>(
+    {} as Recognition
+  );
   const [action, setAction] = useState<string>('');
   const [indexForEdit, setIndexForEdit] = useState<number>(-1);
   const allowAddRecog = useUpdatePdsStore((state) => state.allowAddRecog);
@@ -50,7 +62,12 @@ export const OIRecogs = (): JSX.Element => {
   } = useForm<Recognition>({
     mode: 'onChange',
     resolver: yupResolver(schema),
-    defaultValues: { _id: '', employeeId: employee.employmentDetails.userId, recognition: '', isEdited: false },
+    defaultValues: {
+      _id: '',
+      employeeId: employee.employmentDetails.userId,
+      recognition: '',
+      isEdited: false,
+    },
   });
 
   // set initial values
@@ -74,12 +91,20 @@ export const OIRecogs = (): JSX.Element => {
     // update action
     else if (action === 'update') {
       const updatedRecogs: Array<Recognition> = [...recognitions];
-      const newUpdatedRecogs = updatedRecogs.map((previousRecog: Recognition, recogIdx: number) => {
-        if (recogIdx === indexForEdit) {
-          return { ...previousRecog, _id: recog._id, employeeId: recog.employeeId, recognition: recog.recognition, isEdited: true };
+      const newUpdatedRecogs = updatedRecogs.map(
+        (previousRecog: Recognition, recogIdx: number) => {
+          if (recogIdx === indexForEdit) {
+            return {
+              ...previousRecog,
+              _id: recog._id,
+              employeeId: recog.employeeId,
+              recognition: recog.recognition,
+              isEdited: true,
+            };
+          }
+          return previousRecog;
         }
-        return previousRecog;
-      });
+      );
 
       setRecognitions(newUpdatedRecogs);
       setRecogForEdit({} as Recognition);
@@ -125,7 +150,10 @@ export const OIRecogs = (): JSX.Element => {
   };
 
   // remove action modal
-  const openRemoveActionModal = (recogIdx: number, recognition: Recognition) => {
+  const openRemoveActionModal = (
+    recogIdx: number,
+    recognition: Recognition
+  ) => {
     setRemoveRecogIsOpen(true);
     setRecogToRemove(recogIdx);
     setRemovedRecognition(recognition);
@@ -135,7 +163,8 @@ export const OIRecogs = (): JSX.Element => {
   const handleRemoveTitle = (recogIdx: number) => {
     const updatedRecogs = [...recognitions];
     updatedRecogs.splice(recogIdx, 1);
-    if (!isEmpty(removedRecognition._id)) deletedRecognitions.push(removedRecognition);
+    if (!isEmpty(removedRecognition._id))
+      deletedRecognitions.push(removedRecognition);
     setRecognitions(updatedRecogs);
     setRemoveRecogIsOpen(false);
   };
@@ -145,12 +174,18 @@ export const OIRecogs = (): JSX.Element => {
       <Card title="Non-academic Distinctions & Recognitions" subtitle="">
         <>
           <div className="flex flex-col items-end justify-end w-full pb-4 -mt-10">
-            {allowAddRecog || allowEditRecog || allowDeleteRecog ? <RecognitionsAlert setInitialValues={setInitialValues} /> : null}
+            {allowAddRecog || allowEditRecog || allowDeleteRecog ? (
+              <RecognitionsAlert setInitialValues={setInitialValues} />
+            ) : null}
           </div>
 
           <div
             className={`flex flex-col items-end justify-end pt-6 ${
-              recognitionsOnEdit ? 'visible  mt-6' : !hasPds ? 'visible -mt-6 pb-6 pr-6' : 'hidden'
+              recognitionsOnEdit
+                ? 'visible  mt-6'
+                : !hasPds
+                ? 'visible -mt-6 pb-6 pr-6'
+                : 'hidden'
             }`}
           >
             {allowAddRecog ? (
@@ -169,7 +204,8 @@ export const OIRecogs = (): JSX.Element => {
             title="Non-academic Distinction & Recognition"
             subtitle={
               <>
-                Please fill-out all required fields ( <span className="text-red-700">*</span> )
+                Please fill-out all required fields ({' '}
+                <span className="text-red-700">*</span> )
               </>
             }
             formId="recogs"
@@ -181,7 +217,13 @@ export const OIRecogs = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="lg"
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -194,9 +236,15 @@ export const OIRecogs = (): JSX.Element => {
                       labelIsRequired
                       placeholder="Write in Full"
                       type="text"
-                      controller={{ ...register('recognition', { required: true }) }}
+                      controller={{
+                        ...register('recognition', { required: true }),
+                      }}
                       withLabel={true}
-                      isError={errors.recognition && errors.recognition.message ? true : false}
+                      isError={
+                        errors.recognition && errors.recognition.message
+                          ? true
+                          : false
+                      }
                       errorMessage={errors.recognition?.message}
                     />
                   </div>
@@ -208,7 +256,14 @@ export const OIRecogs = (): JSX.Element => {
             <Alert.Description>
               <div className="flex gap-2">
                 <div className="w-[25%] text-red-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-20 h-20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-20 h-20"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -216,16 +271,26 @@ export const OIRecogs = (): JSX.Element => {
                     />
                   </svg>
                 </div>
-                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
+                <p className="w-[75%] px-4">
+                  Are you sure you want to remove this? This action cannot be
+                  undone.{' '}
+                </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
                 {' '}
-                <Button variant="light" onClick={() => setRemoveRecogIsOpen(false)} className="hover:bg-gray-200 active:bg-gray-200">
+                <Button
+                  variant="light"
+                  onClick={() => setRemoveRecogIsOpen(false)}
+                  className="hover:bg-gray-200 active:bg-gray-200"
+                >
                   No
                 </Button>
-                <Button variant="theme" onClick={() => handleRemoveTitle(recogToRemove)}>
+                <Button
+                  variant="theme"
+                  onClick={() => handleRemoveTitle(recogToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -241,67 +306,129 @@ export const OIRecogs = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Title" headerWidth="w-[85%]" className="px-28" textSize="sm" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" textSize="sm" alignment="center" />
+                    <TableHeader
+                      label="Title"
+                      headerWidth="w-[85%]"
+                      className="px-28"
+                      textSize="sm"
+                    />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      textSize="sm"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
                   <>
                     <tbody>
-                      {recognitions.map((recog: Recognition, recogIdx: number) => {
-                        return (
-                          <tr
-                            key={recogIdx}
-                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
-                          >
-                            <TableDimension isText={true} label={recog.recognition} className="px-28" textSize="lg" />
-                            <TableDimension
-                              isText={false}
-                              className="px-2 text-center select-none"
-                              tableDimension={
-                                <>
-                                  {!isEmpty(recog._id) ? (
-                                    <div className="flex justify-center gap-4">
-                                      {allowEditRecog ? (
+                      {recognitions.map(
+                        (recog: Recognition, recogIdx: number) => {
+                          return (
+                            <tr
+                              key={recogIdx}
+                              className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                            >
+                              <TableDimension
+                                isText={true}
+                                label={recog.recognition}
+                                className="px-28"
+                                textSize="lg"
+                              />
+                              <TableDimension
+                                isText={false}
+                                className="px-2 text-center select-none"
+                                tableDimension={
+                                  <>
+                                    {!isEmpty(recog._id) ? (
+                                      <div className="flex justify-center gap-4">
+                                        {allowEditRecog ? (
+                                          <div className="w-8">
+                                            <EditButton
+                                              disabled={
+                                                hasPds && recognitionsOnEdit
+                                                  ? false
+                                                  : hasPds &&
+                                                    !recognitionsOnEdit
+                                                  ? true
+                                                  : !hasPds && false
+                                              }
+                                              action={() =>
+                                                onEdit(recog, recogIdx)
+                                              }
+                                            />
+                                          </div>
+                                        ) : null}
+                                        {allowDeleteRecog ? (
+                                          <div className="w-8">
+                                            <DeleteButton
+                                              muted={
+                                                hasPds && recognitionsOnEdit
+                                                  ? false
+                                                  : hasPds &&
+                                                    !recognitionsOnEdit
+                                                  ? true
+                                                  : !hasPds && false
+                                              }
+                                              action={() =>
+                                                openRemoveActionModal(
+                                                  recogIdx,
+                                                  recog
+                                                )
+                                              }
+                                            />
+                                          </div>
+                                        ) : null}
+                                        {!allowEditRecog &&
+                                        !allowDeleteRecog ? (
+                                          <div className="flex justify-center w-full">
+                                            -
+                                          </div>
+                                        ) : null}
+                                      </div>
+                                    ) : isEmpty(recog._id) ? (
+                                      <div className="flex justify-center gap-4">
                                         <div className="w-8">
                                           <EditButton
-                                            disabled={hasPds && recognitionsOnEdit ? false : hasPds && !recognitionsOnEdit ? true : !hasPds && false}
-                                            action={() => onEdit(recog, recogIdx)}
+                                            disabled={
+                                              hasPds && recognitionsOnEdit
+                                                ? false
+                                                : hasPds && !recognitionsOnEdit
+                                                ? true
+                                                : !hasPds && false
+                                            }
+                                            action={() =>
+                                              onEdit(recog, recogIdx)
+                                            }
                                           />
                                         </div>
-                                      ) : null}
-                                      {allowDeleteRecog ? (
                                         <div className="w-8">
                                           <DeleteButton
-                                            muted={hasPds && recognitionsOnEdit ? false : hasPds && !recognitionsOnEdit ? true : !hasPds && false}
-                                            action={() => openRemoveActionModal(recogIdx, recog)}
+                                            muted={
+                                              hasPds && recognitionsOnEdit
+                                                ? false
+                                                : hasPds && !recognitionsOnEdit
+                                                ? true
+                                                : !hasPds && false
+                                            }
+                                            action={() =>
+                                              openRemoveActionModal(
+                                                recogIdx,
+                                                recog
+                                              )
+                                            }
                                           />
                                         </div>
-                                      ) : null}
-                                      {!allowEditRecog && !allowDeleteRecog ? <div className="flex justify-center w-full">-</div> : null}
-                                    </div>
-                                  ) : isEmpty(recog._id) ? (
-                                    <div className="flex justify-center gap-4">
-                                      <div className="w-8">
-                                        <EditButton
-                                          disabled={hasPds && recognitionsOnEdit ? false : hasPds && !recognitionsOnEdit ? true : !hasPds && false}
-                                          action={() => onEdit(recog, recogIdx)}
-                                        />
                                       </div>
-                                      <div className="w-8">
-                                        <DeleteButton
-                                          muted={hasPds && recognitionsOnEdit ? false : hasPds && !recognitionsOnEdit ? true : !hasPds && false}
-                                          action={() => openRemoveActionModal(recogIdx, recog)}
-                                        />
-                                      </div>
-                                    </div>
-                                  ) : null}
-                                </>
-                              }
-                            />
-                          </tr>
-                        );
-                      })}
+                                    ) : null}
+                                  </>
+                                }
+                              />
+                            </tr>
+                          );
+                        }
+                      )}
                     </tbody>
                   </>
                 }

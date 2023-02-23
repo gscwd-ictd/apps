@@ -1,50 +1,70 @@
-import { Alert } from '@ericsison-dev/my-ui';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { Alert } from '@gscwd-apps/oneui';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { usePdsStore } from 'apps/pds/src/store/pds.store';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import axios from 'axios';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
-import { Toast } from 'components/fixed/toast/Toast';
-import { Button } from 'components/modular/buttons/Button';
-import { NotificationContext } from 'context/NotificationContext';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
-import { useEmployeeStore } from 'store/employee.store';
-import { usePdsStore } from 'store/pds.store';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
+import { Button } from '../../../modular/buttons/Button';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { Toast } from '../../toast/Toast';
 
 type SupportingInfoAlertProps = {
   setInitialValues: () => void;
 };
 
-export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertProps): JSX.Element => {
+export const SupportingInfoAlert = ({
+  setInitialValues,
+}: SupportingInfoAlertProps): JSX.Element => {
   const [alertUpdateIsOpen, setAlertUpdateIsOpen] = useState<boolean>(false);
   const [alertCancelIsOpen, setAlertCancelIsOpen] = useState<boolean>(false);
 
-  const deletedReferences = useUpdatePdsStore((state) => state.deletedReferences);
+  const deletedReferences = useUpdatePdsStore(
+    (state) => state.deletedReferences
+  );
   const officeRelation = usePdsStore((state) => state.officeRelation);
   const guiltyCharged = usePdsStore((state) => state.guiltyCharged);
   const convicted = usePdsStore((state) => state.convicted);
   const separatedService = usePdsStore((state) => state.separatedService);
   const candidateResigned = usePdsStore((state) => state.candidateResigned);
   const immigrant = usePdsStore((state) => state.immigrant);
-  const indigenousPwdSoloParent = usePdsStore((state) => state.indigenousPwdSoloParent);
-  const supportingInfoOnEdit = usePdsStore((state) => state.supportingInfoOnEdit);
+  const indigenousPwdSoloParent = usePdsStore(
+    (state) => state.indigenousPwdSoloParent
+  );
+  const supportingInfoOnEdit = usePdsStore(
+    (state) => state.supportingInfoOnEdit
+  );
   const pds = getPds(usePdsStore((state) => state));
   const hasPds = useEmployeeStore((state) => state.hasPds);
-  const allowQuestionsSave = useUpdatePdsStore((state) => state.allowQuestionsSave);
-  const setAllowQuestionsSave = useUpdatePdsStore((state) => state.setAllowQuestionsSave);
-  const setSupportingInfoOnEdit = usePdsStore((state) => state.setSupportingInfoOnEdit);
+  const allowQuestionsSave = useUpdatePdsStore(
+    (state) => state.allowQuestionsSave
+  );
+  const setAllowQuestionsSave = useUpdatePdsStore(
+    (state) => state.setAllowQuestionsSave
+  );
+  const setSupportingInfoOnEdit = usePdsStore(
+    (state) => state.setSupportingInfoOnEdit
+  );
   const { notify } = useContext(NotificationContext);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const setOfficeRelation = usePdsStore((state) => state.setOfficeRelation);
   const setGuiltyCharged = usePdsStore((state) => state.setGuiltyCharged);
   const setConvicted = usePdsStore((state) => state.setConvicted);
   const setSeparatedService = usePdsStore((state) => state.setSeparatedService);
-  const setCandidateResigned = usePdsStore((state) => state.setCandidateResigned);
+  const setCandidateResigned = usePdsStore(
+    (state) => state.setCandidateResigned
+  );
   const setImmigrant = usePdsStore((state) => state.setImmigrant);
-  const setIndigenousPwdSoloParent = usePdsStore((state) => state.setIndigenousPwdSoloParent);
+  const setIndigenousPwdSoloParent = usePdsStore(
+    (state) => state.setIndigenousPwdSoloParent
+  );
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const references = usePdsStore((state) => state.references);
@@ -52,7 +72,10 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
-      <Toast variant={action} dismissAction={() => notify.dismiss(notification.id)}>
+      <Toast
+        variant={action}
+        dismissAction={() => notify.dismiss(notification.id)}
+      >
         {action === 'success'
           ? 'Questions Updated!'
           : action === 'info'
@@ -66,15 +89,18 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
 
   const updateSection = async () => {
     try {
-      const { data } = await axios.put(`${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/supporting-details`, {
-        officeRelation,
-        guiltyCharged,
-        convicted,
-        candidateResigned,
-        immigrant,
-        indigenousPwdSoloParent,
-        separatedService,
-      });
+      const { data } = await axios.put(
+        `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/supporting-details`,
+        {
+          officeRelation,
+          guiltyCharged,
+          convicted,
+          candidateResigned,
+          immigrant,
+          indigenousPwdSoloParent,
+          separatedService,
+        }
+      );
 
       // update the state of the object
       setOfficeRelation(data.officeRelation);
@@ -121,14 +147,19 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
     // office relation
     if (
       supportingInfoOnEdit &&
-      (officeRelation.withinThirdDegree === true || officeRelation.withinFourthDegree === true) &&
+      (officeRelation.withinThirdDegree === true ||
+        officeRelation.withinFourthDegree === true) &&
       isEmpty(officeRelation.details)
     ) {
       setAllowQuestionsSave(false);
     }
 
     // guilty
-    if (supportingInfoOnEdit && guiltyCharged.isGuilty === true && isEmpty(guiltyCharged.guiltyDetails)) {
+    if (
+      supportingInfoOnEdit &&
+      guiltyCharged.isGuilty === true &&
+      isEmpty(guiltyCharged.guiltyDetails)
+    ) {
       setAllowQuestionsSave(false);
     }
 
@@ -136,48 +167,83 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
     if (
       supportingInfoOnEdit &&
       guiltyCharged.isCharged === true &&
-      isEmpty(guiltyCharged.chargedDateFiled && isEmpty(guiltyCharged.chargedCaseStatus))
+      isEmpty(
+        guiltyCharged.chargedDateFiled &&
+          isEmpty(guiltyCharged.chargedCaseStatus)
+      )
     ) {
       setAllowQuestionsSave(false);
     }
 
     // convicted
-    if (supportingInfoOnEdit && convicted.isConvicted === true && isEmpty(convicted.details)) {
+    if (
+      supportingInfoOnEdit &&
+      convicted.isConvicted === true &&
+      isEmpty(convicted.details)
+    ) {
       setAllowQuestionsSave(false);
     }
 
     // separated
-    if (supportingInfoOnEdit && separatedService.isSeparated === true && isEmpty(separatedService.details)) {
+    if (
+      supportingInfoOnEdit &&
+      separatedService.isSeparated === true &&
+      isEmpty(separatedService.details)
+    ) {
       setAllowQuestionsSave(false);
     }
 
     // candidate
-    if (supportingInfoOnEdit && candidateResigned.isCandidate === true && isEmpty(candidateResigned.candidateDetails)) {
+    if (
+      supportingInfoOnEdit &&
+      candidateResigned.isCandidate === true &&
+      isEmpty(candidateResigned.candidateDetails)
+    ) {
       setAllowQuestionsSave(false);
     }
 
     // resigned
-    if (supportingInfoOnEdit && candidateResigned.isResigned === true && isEmpty(candidateResigned.resignedDetails)) {
+    if (
+      supportingInfoOnEdit &&
+      candidateResigned.isResigned === true &&
+      isEmpty(candidateResigned.resignedDetails)
+    ) {
       setAllowQuestionsSave(false);
     }
 
     // immigrant
-    if (supportingInfoOnEdit && immigrant.isImmigrant === true && isEmpty(immigrant.details)) {
+    if (
+      supportingInfoOnEdit &&
+      immigrant.isImmigrant === true &&
+      isEmpty(immigrant.details)
+    ) {
       setAllowQuestionsSave(false);
     }
 
     // indigenous
-    if (supportingInfoOnEdit && indigenousPwdSoloParent.isIndigenousMember === true && isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)) {
+    if (
+      supportingInfoOnEdit &&
+      indigenousPwdSoloParent.isIndigenousMember === true &&
+      isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)
+    ) {
       setAllowQuestionsSave(false);
     }
 
     // pwd
-    if (supportingInfoOnEdit && indigenousPwdSoloParent.isPwd === true && isEmpty(indigenousPwdSoloParent.pwdIdNumber)) {
+    if (
+      supportingInfoOnEdit &&
+      indigenousPwdSoloParent.isPwd === true &&
+      isEmpty(indigenousPwdSoloParent.pwdIdNumber)
+    ) {
       setAllowQuestionsSave(false);
     }
 
     // solo parent
-    if (supportingInfoOnEdit && indigenousPwdSoloParent.isSoloParent === true && isEmpty(indigenousPwdSoloParent.soloParentIdNumber)) {
+    if (
+      supportingInfoOnEdit &&
+      indigenousPwdSoloParent.isSoloParent === true &&
+      isEmpty(indigenousPwdSoloParent.soloParentIdNumber)
+    ) {
       setAllowQuestionsSave(false);
     }
 
@@ -185,45 +251,79 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
     if (
       supportingInfoOnEdit === true &&
       // office relation
-      (((officeRelation.withinFourthDegree === true || officeRelation.withinThirdDegree === true) && !isEmpty(officeRelation.details)) ||
-        (officeRelation.withinFourthDegree === false && officeRelation.withinThirdDegree === false)) &&
+      (((officeRelation.withinFourthDegree === true ||
+        officeRelation.withinThirdDegree === true) &&
+        !isEmpty(officeRelation.details)) ||
+        (officeRelation.withinFourthDegree === false &&
+          officeRelation.withinThirdDegree === false)) &&
       // is guilty
-      ((guiltyCharged.isGuilty === true && !isEmpty(guiltyCharged.guiltyDetails)) || guiltyCharged.isGuilty === false) &&
+      ((guiltyCharged.isGuilty === true &&
+        !isEmpty(guiltyCharged.guiltyDetails)) ||
+        guiltyCharged.isGuilty === false) &&
       // is charged
-      ((guiltyCharged.isCharged === true && !isEmpty(guiltyCharged.chargedCaseStatus) && !isEmpty(guiltyCharged.chargedDateFiled)) ||
+      ((guiltyCharged.isCharged === true &&
+        !isEmpty(guiltyCharged.chargedCaseStatus) &&
+        !isEmpty(guiltyCharged.chargedDateFiled)) ||
         guiltyCharged.isCharged === false) &&
       // is convicted
-      ((convicted.isConvicted === true && !isEmpty(convicted.details)) || convicted.isConvicted === false) &&
+      ((convicted.isConvicted === true && !isEmpty(convicted.details)) ||
+        convicted.isConvicted === false) &&
       // is separated from service
-      ((separatedService.isSeparated === true && !isEmpty(separatedService.details)) || separatedService.isSeparated === false) &&
+      ((separatedService.isSeparated === true &&
+        !isEmpty(separatedService.details)) ||
+        separatedService.isSeparated === false) &&
       // is candidate
-      ((candidateResigned.isCandidate === true && !isEmpty(candidateResigned.candidateDetails)) || candidateResigned.isCandidate === false) &&
+      ((candidateResigned.isCandidate === true &&
+        !isEmpty(candidateResigned.candidateDetails)) ||
+        candidateResigned.isCandidate === false) &&
       // is resigned
-      ((candidateResigned.isResigned === true && !isEmpty(candidateResigned.resignedDetails)) || candidateResigned.isResigned === false) &&
+      ((candidateResigned.isResigned === true &&
+        !isEmpty(candidateResigned.resignedDetails)) ||
+        candidateResigned.isResigned === false) &&
       // is immigrant
-      ((immigrant.isImmigrant === true && !isEmpty(immigrant.details)) || immigrant.isImmigrant === false) &&
+      ((immigrant.isImmigrant === true && !isEmpty(immigrant.details)) ||
+        immigrant.isImmigrant === false) &&
       // is indigenous
-      ((indigenousPwdSoloParent.isIndigenousMember === true && !isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)) ||
+      ((indigenousPwdSoloParent.isIndigenousMember === true &&
+        !isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)) ||
         indigenousPwdSoloParent.isIndigenousMember === false) &&
       // is pwd
-      ((indigenousPwdSoloParent.isPwd === true && !isEmpty(indigenousPwdSoloParent.pwdIdNumber)) || indigenousPwdSoloParent.isPwd === false) &&
+      ((indigenousPwdSoloParent.isPwd === true &&
+        !isEmpty(indigenousPwdSoloParent.pwdIdNumber)) ||
+        indigenousPwdSoloParent.isPwd === false) &&
       // is solo parent
-      ((indigenousPwdSoloParent.isSoloParent === true && !isEmpty(indigenousPwdSoloParent.soloParentIdNumber)) ||
+      ((indigenousPwdSoloParent.isSoloParent === true &&
+        !isEmpty(indigenousPwdSoloParent.soloParentIdNumber)) ||
         indigenousPwdSoloParent.isSoloParent === false)
     ) {
       setAllowQuestionsSave(true);
     }
-  }, [supportingInfoOnEdit, , guiltyCharged, convicted, separatedService, candidateResigned, immigrant, indigenousPwdSoloParent]);
+  }, [
+    supportingInfoOnEdit,
+    officeRelation,
+    guiltyCharged,
+    convicted,
+    separatedService,
+    candidateResigned,
+    immigrant,
+    indigenousPwdSoloParent,
+  ]);
 
   return (
     <>
       <Alert open={alertUpdateIsOpen} setOpen={setAlertUpdateIsOpen}>
         <Alert.Description>
-          <AlertDesc>Do you want to update your Questions? This action is irreversible.</AlertDesc>
+          <AlertDesc>
+            Do you want to update your Questions? This action is irreversible.
+          </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertUpdateIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertUpdateIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -235,11 +335,18 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
 
       <Alert open={alertCancelIsOpen} setOpen={setAlertCancelIsOpen}>
         <Alert.Description>
-          <AlertDesc>Are you sure you want to cancel the changes that you have made to your Questions?</AlertDesc>
+          <AlertDesc>
+            Are you sure you want to cancel the changes that you have made to
+            your Questions?
+          </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertCancelIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertCancelIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -254,7 +361,13 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
           {supportingInfoOnEdit && (
             <>
               <div className="flex ">
-                <Button onClick={() => setAlertCancelIsOpen(true)} btnLabel="" variant="light" type="button" className="ring-0 focus:ring-0">
+                <Button
+                  onClick={() => setAlertCancelIsOpen(true)}
+                  btnLabel=""
+                  variant="light"
+                  type="button"
+                  className="ring-0 focus:ring-0"
+                >
                   <div className="flex items-center text-gray-400 hover:text-gray-600">
                     <div>
                       <svg
@@ -265,7 +378,11 @@ export const SupportingInfoAlert = ({ setInitialValues }: SupportingInfoAlertPro
                         stroke="currentColor"
                         className="h-6 w-6"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                        />
                       </svg>
                     </div>
 
