@@ -7,8 +7,16 @@ import { UserRole } from '../enums/userRoles';
 export const setModules = async (userDetails: EmployeeDetails) => {
   let allowed: Array<Card> = [];
   if (isEqual(userDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE)) {
-    allowed = Modules.filter((card) => card.destination === 'pds' || card.destination === 'psb');
-  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER)) {
+    allowed = Modules.filter(
+      (card) =>
+        card.destination === 'pds' ||
+        card.destination === 'leaves' ||
+        card.destination === 'dtr' ||
+        card.destination === 'pass-slip'
+    );
+  } else if (
+    isEqual(userDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER)
+  ) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'dnr' ||
@@ -21,7 +29,9 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pass-slip' ||
         card.destination === 'approvals'
     );
-  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER)) {
+  } else if (
+    isEqual(userDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER)
+  ) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'dnr' ||
@@ -34,7 +44,12 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pass-slip' ||
         card.destination === 'approvals'
     );
-  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER)) {
+  } else if (
+    isEqual(
+      userDetails.employmentDetails.userRole,
+      UserRole.ASSISTANT_GENERAL_MANAGER
+    )
+  ) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'dnr' ||
@@ -47,7 +62,9 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pass-slip' ||
         card.destination === 'approvals'
     );
-  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER)) {
+  } else if (
+    isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER)
+  ) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'dnr' ||
@@ -61,7 +78,9 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pass-slip' ||
         card.destination === 'approvals'
     );
-  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.BOARD_MEMBER)) {
+  } else if (
+    isEqual(userDetails.employmentDetails.userRole, UserRole.BOARD_MEMBER)
+  ) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'dnr' ||
