@@ -1,5 +1,5 @@
 import { NotificationActions } from '@gscwd-apps/oneui';
-import create from 'zustand';
+import { create } from 'zustand';
 
 export type NotificationState = {
   notify: NotificationActions;

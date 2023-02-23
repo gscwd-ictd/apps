@@ -305,7 +305,6 @@ export const WorkExp = (): JSX.Element => {
               className="xs:w-full sm:w-full lg:w-72"
             />
           ) : null}
-          '
         </div>
         <>
           <Modal
@@ -678,22 +677,12 @@ export const WorkExp = (): JSX.Element => {
                                         <div className="w-8">
                                           <EditButton
                                             action={() => onEdit(work, workIdx)}
-                                            disabled={
-                                              workExperienceOnEdit
-                                                ? false
-                                                : true
-                                            }
                                           />
                                         </div>
                                         <div className="w-8">
                                           <DeleteButton
                                             action={() =>
                                               openRemoveActionModal(workIdx)
-                                            }
-                                            muted={
-                                              workExperienceOnEdit
-                                                ? false
-                                                : true
                                             }
                                           />
                                         </div>
