@@ -8,7 +8,8 @@
     "test": "nx test",
     "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0",
     "portal": "nx serve portal --port 3102 --hostname 0.0.0.0",
-    "pds": "nx serve pds --port 3105 --hostname 0.0.0.0"
+    "pds": "nx serve pds --port 3105 --hostname 0.0.0.0",
+    "pdsv2": "nx serve pdsv2 --port 3105 --hostname 0.0.0.0"
   },
   "private": true,
   "dependencies": {
@@ -70,6 +71,7 @@
     "@types/react-dom": "18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
+    "autoprefixer": "^10.4.13",
     "babel-jest": "28.1.1",
     "classnames": "^2.3.2",
     "cypress": "^11.0.0",
@@ -84,10 +86,11 @@
     "jest": "28.1.1",
     "jest-environment-jsdom": "28.1.1",
     "nx": "15.2.1",
+    "postcss": "^8.4.21",
     "prettier": "^2.6.2",
     "react-merge-refs": "^2.0.1",
     "react-test-renderer": "18.2.0",
-    "tailwindcss": "^3.2.4",
+    "tailwindcss": "^3.2.7",
     "ts-jest": "28.0.5",
     "ts-node": "10.9.1",
     "typescript": "~4.8.2"
