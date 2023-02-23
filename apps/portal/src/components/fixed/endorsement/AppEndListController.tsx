@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import useSWR from 'swr';
-import { fetchWithSession } from '../../../../utils/hoc/fetcher';
+import { fetchWithSession } from '../../../../src/utils/hoc/fetcher';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import LoadingVisual from '../loading/LoadingVisual';
@@ -14,13 +14,14 @@ type AppEndListControllerProps = {
   page: number;
 };
 
-
-
 export const AppEndModalController = ({ page }: AppEndListControllerProps) => {
-
-  const setPublicationList = useAppEndStore((state) => state.setPublicationList)
-  const setFilteredPublicationList = useAppEndStore((state) => state.setFilteredPublicationList)
-  const employee = useEmployeeStore(state => state.employeeDetails)
+  const setPublicationList = useAppEndStore(
+    (state) => state.setPublicationList
+  );
+  const setFilteredPublicationList = useAppEndStore(
+    (state) => state.setFilteredPublicationList
+  );
+  const employee = useEmployeeStore((state) => state.employeeDetails);
 
   const publicationUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/publications/${employee.employmentDetails.userId}`;
 
