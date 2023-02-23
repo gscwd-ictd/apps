@@ -5,7 +5,11 @@ import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
 import { SelectListRF } from '../../../modular/select/SelectListRF';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CheckboxRF } from '../../../modular/inputs/CheckboxRF';
@@ -15,37 +19,60 @@ import { usePdsStore } from '../../../../store/pds.store';
 import { useEmployeeStore } from '../../../../store/employee.store';
 import { WorkExperience } from '../../../../types/data/work.type';
 import schema from '../../../../schema/WorkExp';
-import { apptStatus, govtApptStatus, govtService } from '../../../../../utils/constants/constants';
+import {
+  apptStatus,
+  govtApptStatus,
+  govtService,
+} from '../../../../../utils/constants/constants';
 import { WorkExperienceAlert } from './WorkExperienceAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const WorkExp = (): JSX.Element => {
   // set work experience array, employee object state from pds context
   const workExperience = usePdsStore((state) => state.workExperience);
-  const workExperienceOnEdit = usePdsStore((state) => state.workExperienceOnEdit);
+  const workExperienceOnEdit = usePdsStore(
+    (state) => state.workExperienceOnEdit
+  );
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employee = useEmployeeStore((state) => state.employeeDetails);
   const [addWorkExpIsOpen, setAddWorkExpIsOpen] = useState<boolean>(false); // open add modal state
-  const [removeWorkExpIsOpen, setRemoveWorkExpIsOpen] = useState<boolean>(false); // remove work modal state
+  const [removeWorkExpIsOpen, setRemoveWorkExpIsOpen] =
+    useState<boolean>(false); // remove work modal state
   const [workExpToRemove, setWorkExpToRemove] = useState<number>(-1); // work experience to remove state (number)
-  const deletedWorkExperiences = useUpdatePdsStore((state) => state.deletedWorkExperiences);
-  const [removedWorkExp, setRemovedWorkExp] = useState<WorkExperience>({} as WorkExperience);
-  const [workForEdit, setWorkForEdit] = useState<WorkExperience>({} as WorkExperience);
+  const deletedWorkExperiences = useUpdatePdsStore(
+    (state) => state.deletedWorkExperiences
+  );
+  const [removedWorkExp, setRemovedWorkExp] = useState<WorkExperience>(
+    {} as WorkExperience
+  );
+  const [workForEdit, setWorkForEdit] = useState<WorkExperience>(
+    {} as WorkExperience
+  );
   const [isPresentWorkMuted, setIsPresentWorkMuted] = useState<boolean>(false);
   const [action, setAction] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [workIndexForEdit, setWorkIndexForEdit] = useState<number>(-1);
-  const allowAddWorkExperience = useUpdatePdsStore((state) => state.allowAddWorkExperience);
-  const allowEditWorkExperience = useUpdatePdsStore((state) => state.allowEditWorkExperience);
-  const allowDeleteWorkExperience = useUpdatePdsStore((state) => state.allowDeleteWorkExperience);
+  const allowAddWorkExperience = useUpdatePdsStore(
+    (state) => state.allowAddWorkExperience
+  );
+  const allowEditWorkExperience = useUpdatePdsStore(
+    (state) => state.allowEditWorkExperience
+  );
+  const allowDeleteWorkExperience = useUpdatePdsStore(
+    (state) => state.allowDeleteWorkExperience
+  );
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-  const setAllowEditWorkExperience = useUpdatePdsStore((state) => state.setAllowEditWorkExperience);
+  const setAllowEditWorkExperience = useUpdatePdsStore(
+    (state) => state.setAllowEditWorkExperience
+  );
   const setWorkExperience = usePdsStore((state) => state.setWorkExperience);
-  const setWorkExperienceOnEdit = usePdsStore((state) => state.setWorkExperienceOnEdit);
+  const setWorkExperienceOnEdit = usePdsStore(
+    (state) => state.setWorkExperienceOnEdit
+  );
 
   // initialize react hook form and set default values, mode is on change
   const {
@@ -85,56 +112,70 @@ export const WorkExp = (): JSX.Element => {
   };
 
   // fire submit button
-  const onSubmit: SubmitHandler<any> = handleSubmit((workExp: WorkExperience, e: any) => {
-    if (action === 'create') {
-      e.preventDefault();
-      const updatedWorkExp = [...workExperience];
-      updatedWorkExp.push(workExp);
-      const sortedUpdatedWorkExp = [...updatedWorkExp].sort((firstItem, secondItem) =>
-        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
-      );
+  const onSubmit: SubmitHandler<any> = handleSubmit(
+    (workExp: WorkExperience, e: any) => {
+      if (action === 'create') {
+        e.preventDefault();
+        const updatedWorkExp = [...workExperience];
+        updatedWorkExp.push(workExp);
+        const sortedUpdatedWorkExp = [...updatedWorkExp].sort(
+          (firstItem, secondItem) =>
+            firstItem.from! > secondItem.from!
+              ? -1
+              : secondItem.from! > firstItem.from!
+              ? 1
+              : 0
+        );
 
-      setWorkExperience(sortedUpdatedWorkExp);
-      reset();
-      setAddWorkExpIsOpen(false);
-      setAction('');
-    } else if (action === 'update') {
-      e.preventDefault();
-      const updatedWorkExp = [...workExperience];
+        setWorkExperience(sortedUpdatedWorkExp);
+        reset();
+        setAddWorkExpIsOpen(false);
+        setAction('');
+      } else if (action === 'update') {
+        e.preventDefault();
+        const updatedWorkExp = [...workExperience];
 
-      const newUpdatedWorkExp = updatedWorkExp.map((previousWorkExp: WorkExperience, prevWorkIdx: number) => {
-        if (prevWorkIdx === workIndexForEdit) {
-          return {
-            ...previousWorkExp,
-            _id: workExp._id,
-            appointmentStatus: workExp.appointmentStatus,
-            companyName: workExp.companyName,
-            from: workExp.from,
-            to: workExp.to,
-            monthlySalary: workExp.monthlySalary,
-            positionTitle: workExp.positionTitle,
-            salaryGrade: workExp.salaryGrade,
-            employeeId: workExp.employeeId,
-            isGovernmentService: workExp.isGovernmentService,
-            isPresentWork: workExp.isGovernmentService,
-            isEdited: workExp.isEdited,
-          };
-        }
+        const newUpdatedWorkExp = updatedWorkExp.map(
+          (previousWorkExp: WorkExperience, prevWorkIdx: number) => {
+            if (prevWorkIdx === workIndexForEdit) {
+              return {
+                ...previousWorkExp,
+                _id: workExp._id,
+                appointmentStatus: workExp.appointmentStatus,
+                companyName: workExp.companyName,
+                from: workExp.from,
+                to: workExp.to,
+                monthlySalary: workExp.monthlySalary,
+                positionTitle: workExp.positionTitle,
+                salaryGrade: workExp.salaryGrade,
+                employeeId: workExp.employeeId,
+                isGovernmentService: workExp.isGovernmentService,
+                isPresentWork: workExp.isGovernmentService,
+                isEdited: workExp.isEdited,
+              };
+            }
 
-        return previousWorkExp;
-      });
-      const sortedUpdatedWorkExp = [...newUpdatedWorkExp].sort((firstItem, secondItem) =>
-        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
-      );
-      setWorkExperience(sortedUpdatedWorkExp);
-      setWorkForEdit({} as WorkExperience);
-      setWorkIndexForEdit(-1);
-      reset();
-      setWorkForEdit({} as WorkExperience);
-      setAddWorkExpIsOpen(false);
-      setAction('');
+            return previousWorkExp;
+          }
+        );
+        const sortedUpdatedWorkExp = [...newUpdatedWorkExp].sort(
+          (firstItem, secondItem) =>
+            firstItem.from! > secondItem.from!
+              ? -1
+              : secondItem.from! > firstItem.from!
+              ? 1
+              : 0
+        );
+        setWorkExperience(sortedUpdatedWorkExp);
+        setWorkForEdit({} as WorkExperience);
+        setWorkIndexForEdit(-1);
+        reset();
+        setWorkForEdit({} as WorkExperience);
+        setAddWorkExpIsOpen(false);
+        setAction('');
+      }
     }
-  });
+  );
 
   // open add modal state
   const openModal = () => {
@@ -173,7 +214,8 @@ export const WorkExp = (): JSX.Element => {
   const handleRemoveWork = (workIdx: number) => {
     const updatedWorkExp = [...workExperience];
     updatedWorkExp.splice(workIdx, 1);
-    if (!isEmpty(removedWorkExp._id)) deletedWorkExperiences.push(removedWorkExp);
+    if (!isEmpty(removedWorkExp._id))
+      deletedWorkExperiences.push(removedWorkExp);
     setWorkExperience(updatedWorkExp);
     setRemoveWorkExpIsOpen(false);
   };
@@ -226,7 +268,8 @@ export const WorkExp = (): JSX.Element => {
   }, [isLoaded]);
 
   useEffect(() => {
-    if (!allowDeleteWorkExperience && !allowDeleteWorkExperience) setAllowEditWorkExperience(false);
+    if (!allowDeleteWorkExperience && !allowDeleteWorkExperience)
+      setAllowEditWorkExperience(false);
     else setAllowEditWorkExperience(true);
   }, []);
 
@@ -237,13 +280,30 @@ export const WorkExp = (): JSX.Element => {
         subtitle=""
         remarks={
           <div className="flex flex-col items-end justify-end w-full">
-            {allowEditWorkExperience ? <WorkExperienceAlert setInitialValues={setInitialValues} /> : null}
+            {allowEditWorkExperience ? (
+              <WorkExperienceAlert setInitialValues={setInitialValues} />
+            ) : null}
           </div>
         }
       >
-        <div className={`flex flex-col items-end justify-end ${workExperienceOnEdit ? 'visible' : !hasPds ? 'visible lg:-mt-6 lg:pb-6' : 'hidden'}`}>
+        <div
+          className={`flex flex-col items-end justify-end ${
+            workExperienceOnEdit
+              ? 'visible'
+              : !hasPds
+              ? 'visible lg:-mt-6 lg:pb-6'
+              : 'hidden'
+          }`}
+        >
           {allowAddWorkExperience ? (
-            <Button btnLabel="Add Work Experience" type="button" variant="theme" shadow onClick={openModal} className="xs:w-full sm:w-full lg:w-72" />
+            <Button
+              btnLabel="Add Work Experience"
+              type="button"
+              variant="theme"
+              shadow
+              onClick={openModal}
+              className="xs:w-full sm:w-full lg:w-72"
+            />
           ) : null}
           '
         </div>
@@ -252,9 +312,12 @@ export const WorkExp = (): JSX.Element => {
             title="Work Experience"
             subtitle={
               <>
-                Include private employment. Start from your recent work. Description of duties should be indicated in the attached Work Experience
-                sheet. Indicate FULL position titles and COMPLETE NAME of department / agency / office / company. <br></br> Please fill-out all
-                required fields ( <span className="text-red-700">*</span> )
+                Include private employment. Start from your recent work.
+                Description of duties should be indicated in the attached Work
+                Experience sheet. Indicate FULL position titles and COMPLETE
+                NAME of department / agency / office / company. <br></br> Please
+                fill-out all required fields ({' '}
+                <span className="text-red-700">*</span> )
               </>
             }
             formId="workexp"
@@ -266,7 +329,13 @@ export const WorkExp = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="xxxxl"
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -279,7 +348,9 @@ export const WorkExp = (): JSX.Element => {
                       placeholder="Write in Full. Do not abbreviate."
                       type="text"
                       labelIsRequired
-                      controller={{ ...register('positionTitle', { required: true }) }}
+                      controller={{
+                        ...register('positionTitle', { required: true }),
+                      }}
                       withLabel={true}
                       isError={errors.positionTitle ? true : false}
                       errorMessage={errors.positionTitle?.message}
@@ -320,7 +391,12 @@ export const WorkExp = (): JSX.Element => {
 
                     <div className="w-full col-span-1 sm:block">
                       <div className="justify-end xs:flex sm:-mt-6 sm:flex md:-mt-6 md:flex lg:-mt-6 lg:flex">
-                        <CheckboxRF id="ispresentwork" name="ispresentwork" label="Present Work?" controller={{ ...register('isPresentWork') }} />
+                        <CheckboxRF
+                          id="ispresentwork"
+                          name="ispresentwork"
+                          label="Present Work?"
+                          controller={{ ...register('isPresentWork') }}
+                        />
                       </div>
 
                       <div>
@@ -379,11 +455,17 @@ export const WorkExp = (): JSX.Element => {
                         id="workexpsalarygrade"
                         name="workexpsalarygrade"
                         label="Salary/Job/Pay Grade"
-                        placeholder={getIsGovtService.toString() === 'true' ? 'Format 00-0' : 'Leave blank if not applicable'}
+                        placeholder={
+                          getIsGovtService.toString() === 'true'
+                            ? 'Format 00-0'
+                            : 'Leave blank if not applicable'
+                        }
                         type="text"
                         className="placeholder:text-sm"
                         // muted={!watch('isGovernmentService')}
-                        labelIsRequired={getIsGovtService.toString() === 'true' ? true : false}
+                        labelIsRequired={
+                          getIsGovtService.toString() === 'true' ? true : false
+                        }
                         withHelpButton
                         helpContent="Salary grade and step increment is stated in the format “00-0” (e.g. 24-2 for salary grade 24, step increment 2). e.g. 09-4"
                         controller={{ ...register('salaryGrade') }}
@@ -395,7 +477,11 @@ export const WorkExp = (): JSX.Element => {
                     <div className="w-full col-span-1 mb-10">
                       <SelectListRF
                         id="workexpapptstat"
-                        selectList={getIsGovtService.toString() === 'true' ? govtApptStatus : apptStatus}
+                        selectList={
+                          getIsGovtService.toString() === 'true'
+                            ? govtApptStatus
+                            : apptStatus
+                        }
                         defaultOption=""
                         withLabel
                         variant="simple"
@@ -417,7 +503,14 @@ export const WorkExp = (): JSX.Element => {
             <Alert.Description>
               <div className="flex gap-2">
                 <div className="w-[25%] text-red-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-20 h-20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-20 h-20"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -425,15 +518,25 @@ export const WorkExp = (): JSX.Element => {
                     />
                   </svg>
                 </div>
-                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
+                <p className="w-[75%] px-4">
+                  Are you sure you want to remove this? This action cannot be
+                  undone.{' '}
+                </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
-                <Button variant="light" onClick={() => setRemoveWorkExpIsOpen(false)} className="hover:bg-gray-200 active:bg-gray-200">
+                <Button
+                  variant="light"
+                  onClick={() => setRemoveWorkExpIsOpen(false)}
+                  className="hover:bg-gray-200 active:bg-gray-200"
+                >
                   No
                 </Button>
-                <Button variant="theme" onClick={() => handleRemoveWork(workExpToRemove)}>
+                <Button
+                  variant="theme"
+                  onClick={() => handleRemoveWork(workExpToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -447,80 +550,163 @@ export const WorkExp = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Position Title" headerWidth="w-[15%]" className="pl-4" />
+                    <TableHeader
+                      label="Position Title"
+                      headerWidth="w-[15%]"
+                      className="pl-4"
+                    />
                     <TableHeader label="Company Name" headerWidth="w-[25%]" />
                     <TableHeader label="Inclusive Date" headerWidth="w-[10%]" />
                     <TableHeader label="Monthly Salary" headerWidth="w-[5%]" />
                     <TableHeader label="Salary Grade" headerWidth="w-[10%]" />
-                    <TableHeader label="Appointment Status" headerWidth="w-[10%]" />
+                    <TableHeader
+                      label="Appointment Status"
+                      headerWidth="w-[10%]"
+                    />
                     <TableHeader label="Gov't Service?" headerWidth="w-[10%]" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
                   <tbody>
-                    {workExperience.map((work: WorkExperience, workIdx: number) => {
-                      return (
-                        <tr key={workIdx} className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all">
-                          <TableDimension isText={true} label={work.positionTitle} className="px-4" />
-                          <TableDimension isText={true} label={work.companyName} className="px-1 select-none" />
-                          <TableDimension
-                            isText={true}
-                            isPeriod={true}
-                            label={work.from}
-                            periodLabel1={work.from}
-                            periodLabel2={work.to}
-                            className="break-words"
-                          />
-                          <TableDimension isText={true} className="px-1" label={work.monthlySalary} />
-                          <TableDimension isText={true} className="px-1" label={work.salaryGrade ? work.salaryGrade : 'N/A'} />
-                          <TableDimension isText={true} className="px-1" label={work.appointmentStatus} />
-                          <TableDimension isText={true} className="px-1" label={work.isGovernmentService.toString() === 'true' ? 'YES' : 'NO'} />
-                          <TableDimension
-                            isText={false}
-                            className="px-2 text-center select-none"
-                            tableDimension={
-                              <>
-                                <div className="flex justify-center gap-4">
-                                  {
-                                    // include this in logic if you want to target "is working currently"
-                                    /*       isEmpty(initialPdsState.workExperience.find((initWork) => work._id === initWork._id)?.to)*/
-                                  }
-                                  {!isEmpty(work._id) ? (
-                                    <>
-                                      {allowEditWorkExperience ? (
-                                        <div className="w-8">
-                                          <EditButton action={() => onEdit(work, workIdx)} disabled={workExperienceOnEdit ? false : true} />{' '}
-                                        </div>
-                                      ) : null}
+                    {workExperience.map(
+                      (work: WorkExperience, workIdx: number) => {
+                        return (
+                          <tr
+                            key={workIdx}
+                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                          >
+                            <TableDimension
+                              isText={true}
+                              label={work.positionTitle}
+                              className="px-4"
+                            />
+                            <TableDimension
+                              isText={true}
+                              label={work.companyName}
+                              className="px-1 select-none"
+                            />
+                            <TableDimension
+                              isText={true}
+                              isPeriod={true}
+                              label={work.from}
+                              periodLabel1={work.from}
+                              periodLabel2={work.to}
+                              className="break-words"
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={work.monthlySalary}
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={
+                                work.salaryGrade ? work.salaryGrade : 'N/A'
+                              }
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={work.appointmentStatus}
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={
+                                work.isGovernmentService.toString() === 'true'
+                                  ? 'YES'
+                                  : 'NO'
+                              }
+                            />
+                            <TableDimension
+                              isText={false}
+                              className="px-2 text-center select-none"
+                              tableDimension={
+                                <>
+                                  <div className="flex justify-center gap-4">
+                                    {
+                                      // include this in logic if you want to target "is working currently"
+                                      /*       isEmpty(initialPdsState.workExperience.find((initWork) => work._id === initWork._id)?.to)*/
+                                    }
+                                    {!isEmpty(work._id) ? (
+                                      <>
+                                        {allowEditWorkExperience ? (
+                                          <div className="w-8">
+                                            <EditButton
+                                              action={() =>
+                                                onEdit(work, workIdx)
+                                              }
+                                              disabled={
+                                                workExperienceOnEdit
+                                                  ? false
+                                                  : true
+                                              }
+                                            />{' '}
+                                          </div>
+                                        ) : null}
 
-                                      {allowDeleteWorkExperience ? (
-                                        <div className="w-8">
-                                          <DeleteButton action={() => openRemoveActionModal(workIdx)} muted={workExperienceOnEdit ? false : true} />
-                                        </div>
-                                      ) : null}
+                                        {allowDeleteWorkExperience ? (
+                                          <div className="w-8">
+                                            <DeleteButton
+                                              action={() =>
+                                                openRemoveActionModal(workIdx)
+                                              }
+                                              muted={
+                                                workExperienceOnEdit
+                                                  ? false
+                                                  : true
+                                              }
+                                            />
+                                          </div>
+                                        ) : null}
 
-                                      {!allowEditWorkExperience && !allowDeleteWorkExperience ? (
-                                        <div className="flex justify-center w-full">-</div>
-                                      ) : null}
-                                    </>
-                                  ) : isEmpty(work._id) ? (
-                                    <>
-                                      <div className="w-8">
-                                        <EditButton action={() => onEdit(work, workIdx)} disabled={workExperienceOnEdit ? false : true} />
-                                      </div>
-                                      <div className="w-8">
-                                        <DeleteButton action={() => openRemoveActionModal(workIdx)} muted={workExperienceOnEdit ? false : true} />
-                                      </div>
-                                    </>
-                                  ) : null}
-                                </div>
-                              </>
-                            }
-                          />
-                        </tr>
-                      );
-                    })}
+                                        {!allowEditWorkExperience &&
+                                        !allowDeleteWorkExperience ? (
+                                          <div className="flex justify-center w-full">
+                                            -
+                                          </div>
+                                        ) : null}
+                                      </>
+                                    ) : isEmpty(work._id) ? (
+                                      <>
+                                        <div className="w-8">
+                                          <EditButton
+                                            action={() => onEdit(work, workIdx)}
+                                            disabled={
+                                              workExperienceOnEdit
+                                                ? false
+                                                : true
+                                            }
+                                          />
+                                        </div>
+                                        <div className="w-8">
+                                          <DeleteButton
+                                            action={() =>
+                                              openRemoveActionModal(workIdx)
+                                            }
+                                            muted={
+                                              workExperienceOnEdit
+                                                ? false
+                                                : true
+                                            }
+                                          />
+                                        </div>
+                                      </>
+                                    ) : null}
+                                  </div>
+                                </>
+                              }
+                            />
+                          </tr>
+                        );
+                      }
+                    )}
                   </tbody>
                 }
               />

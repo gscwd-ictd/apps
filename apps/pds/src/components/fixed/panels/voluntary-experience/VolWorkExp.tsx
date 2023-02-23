@@ -4,7 +4,11 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { CheckboxRF } from '../../../modular/inputs/CheckboxRF';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,10 +18,10 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import schema from '../../../../schema/VolWork';
 import { VoluntaryWork } from '../../../../types/data/vol-work.type';
 import { VoluntaryWorkAlert } from './VoluntaryWorkAlert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const VolWorkExp = (): JSX.Element => {
   // set voluntary work array, employee object state from pds context
@@ -28,16 +32,23 @@ export const VolWorkExp = (): JSX.Element => {
   const setVoluntaryWork = usePdsStore((state) => state.setVoluntaryWork);
   const employee = useEmployeeStore((state) => state.employeeDetails);
   const [addVolWorkIsOpen, setAddVolWorkIsOpen] = useState<boolean>(false); // open add modal
-  const [removeVolWorkIsOpen, setRemoveVolWorkIsOpen] = useState<boolean>(false); // remove voluntary work state
+  const [removeVolWorkIsOpen, setRemoveVolWorkIsOpen] =
+    useState<boolean>(false); // remove voluntary work state
   const [volWorkToRemove, setVolWorkToRemove] = useState<number>(-1); // voluntary work to remove (number)
-  const [removedVolWork, setRemovedVolWork] = useState<VoluntaryWork>({} as VoluntaryWork);
+  const [removedVolWork, setRemovedVolWork] = useState<VoluntaryWork>(
+    {} as VoluntaryWork
+  );
   const deletedVolWork = useUpdatePdsStore((state) => state.deletedVolWork);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [indexForEdit, setIndexForEdit] = useState<number>(-1);
-  const [volForEdit, setVolForEdit] = useState<VoluntaryWork>({} as VoluntaryWork);
+  const [volForEdit, setVolForEdit] = useState<VoluntaryWork>(
+    {} as VoluntaryWork
+  );
   const [action, setAction] = useState<string>('');
   const allowEditVolWork = useUpdatePdsStore((state) => state.allowEditVolWork);
-  const allowDeleteVolWork = useUpdatePdsStore((state) => state.allowDeleteVolWork);
+  const allowDeleteVolWork = useUpdatePdsStore(
+    (state) => state.allowDeleteVolWork
+  );
 
   // initialize react hook form and set default values, mode is set to on change
   const {
@@ -82,8 +93,13 @@ export const VolWorkExp = (): JSX.Element => {
     if (action === 'create') {
       const createdVolWorks = [...voluntaryWork];
       createdVolWorks.push(work);
-      const sortedUpdatedVolWorks = [...createdVolWorks].sort((firstItem, secondItem) =>
-        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
+      const sortedUpdatedVolWorks = [...createdVolWorks].sort(
+        (firstItem, secondItem) =>
+          firstItem.from! > secondItem.from!
+            ? -1
+            : secondItem.from! > firstItem.from!
+            ? 1
+            : 0
       );
       setVoluntaryWork(sortedUpdatedVolWorks);
       reset();
@@ -93,27 +109,34 @@ export const VolWorkExp = (): JSX.Element => {
     // update action
     else if (action === 'update') {
       const updatedVolWorks: Array<VoluntaryWork> = [...voluntaryWork];
-      const newUpdatedVolWorks = updatedVolWorks.map((previousVolWorks: VoluntaryWork, volWorkIdx: number) => {
-        if (volWorkIdx === indexForEdit) {
-          return {
-            ...previousVolWorks,
-            _id: work._id,
-            employeeId: work.employeeId,
-            from: work.from,
-            isCurrentlyVol: work.isCurrentlyVol,
-            numberOfHours: work.numberOfHours,
-            organizationName: work.organizationName,
-            position: work.position,
-            to: work.to,
-            isEdited: true,
-          };
+      const newUpdatedVolWorks = updatedVolWorks.map(
+        (previousVolWorks: VoluntaryWork, volWorkIdx: number) => {
+          if (volWorkIdx === indexForEdit) {
+            return {
+              ...previousVolWorks,
+              _id: work._id,
+              employeeId: work.employeeId,
+              from: work.from,
+              isCurrentlyVol: work.isCurrentlyVol,
+              numberOfHours: work.numberOfHours,
+              organizationName: work.organizationName,
+              position: work.position,
+              to: work.to,
+              isEdited: true,
+            };
+          }
+
+          return previousVolWorks;
         }
+      );
 
-        return previousVolWorks;
-      });
-
-      const sortedUpdatedVolWorks = [...newUpdatedVolWorks].sort((firstItem, secondItem) =>
-        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
+      const sortedUpdatedVolWorks = [...newUpdatedVolWorks].sort(
+        (firstItem, secondItem) =>
+          firstItem.from! > secondItem.from!
+            ? -1
+            : secondItem.from! > firstItem.from!
+            ? 1
+            : 0
       );
       setVoluntaryWork(sortedUpdatedVolWorks);
       setVolForEdit({} as VoluntaryWork);
@@ -165,7 +188,10 @@ export const VolWorkExp = (): JSX.Element => {
   };
 
   // remove action modal
-  const openRemoveActionModal = (volWorkIdx: number, volWork: VoluntaryWork) => {
+  const openRemoveActionModal = (
+    volWorkIdx: number,
+    volWork: VoluntaryWork
+  ) => {
     setRemoveVolWorkIsOpen(true);
     setVolWorkToRemove(volWorkIdx);
     setRemovedVolWork(volWork);
@@ -194,7 +220,8 @@ export const VolWorkExp = (): JSX.Element => {
   useEffect(() => {
     if (isLoaded === true) {
       setTimeout(() => {
-        if (isEmpty(volForEdit.to) || volForEdit.to === null) setValue('isCurrentlyVol', true);
+        if (isEmpty(volForEdit.to) || volForEdit.to === null)
+          setValue('isCurrentlyVol', true);
         setIsLoaded(false);
       }, 100);
     }
@@ -211,8 +238,23 @@ export const VolWorkExp = (): JSX.Element => {
           </div>
         }
       >
-        <div className={`flex flex-col items-end justify-end ${voluntaryWorkOnEdit ? 'visible' : !hasPds ? 'visible lg:-mt-6 lg:pb-6' : 'hidden'}`}>
-          <Button btnLabel="Add Voluntary Work" type="button" variant="theme" shadow onClick={openModal} className="xs:w-full sm:w-full lg:w-72" />
+        <div
+          className={`flex flex-col items-end justify-end ${
+            voluntaryWorkOnEdit
+              ? 'visible'
+              : !hasPds
+              ? 'visible lg:-mt-6 lg:pb-6'
+              : 'hidden'
+          }`}
+        >
+          <Button
+            btnLabel="Add Voluntary Work"
+            type="button"
+            variant="theme"
+            shadow
+            onClick={openModal}
+            className="xs:w-full sm:w-full lg:w-72"
+          />
         </div>
 
         <>
@@ -220,7 +262,8 @@ export const VolWorkExp = (): JSX.Element => {
             title="Voluntary Work Experience"
             subtitle={
               <>
-                Involvment in Civic/Non-Government /People/Voluntary Organizations <br></br> Please fill-out all required fields ({' '}
+                Involvment in Civic/Non-Government /People/Voluntary
+                Organizations <br></br> Please fill-out all required fields ({' '}
                 <span className="text-red-700">*</span> )
               </>
             }
@@ -233,7 +276,13 @@ export const VolWorkExp = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="xxxxl"
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -246,7 +295,9 @@ export const VolWorkExp = (): JSX.Element => {
                       placeholder="Write in Full. Do not abbreviate."
                       type="text"
                       labelIsRequired
-                      controller={{ ...register('organizationName', { required: true }) }}
+                      controller={{
+                        ...register('organizationName', { required: true }),
+                      }}
                       withLabel={true}
                       isError={errors.organizationName ? true : false}
                       errorMessage={errors.organizationName?.message}
@@ -261,7 +312,9 @@ export const VolWorkExp = (): JSX.Element => {
                       placeholder="Write in Full."
                       type="text"
                       labelIsRequired
-                      controller={{ ...register('position', { required: true }) }}
+                      controller={{
+                        ...register('position', { required: true }),
+                      }}
                       withLabel={true}
                       isError={errors.position ? true : false}
                       errorMessage={errors.position?.message}
@@ -315,13 +368,22 @@ export const VolWorkExp = (): JSX.Element => {
                       id="volworkhours"
                       name="volworkhours"
                       label="Number of Hours"
-                      placeholder={getIsCurrentlyVol === false ? 'Total number of hours' : 'Not Applicable'}
+                      placeholder={
+                        getIsCurrentlyVol === false
+                          ? 'Total number of hours'
+                          : 'Not Applicable'
+                      }
                       withHelpButton
                       helpContent="Indicate the number of hours of voluntary work rendered."
                       type="number"
                       muted={getIsCurrentlyVol}
                       labelIsRequired={!getIsCurrentlyVol}
-                      controller={{ ...register('numberOfHours', { required: true, min: 1 }) }}
+                      controller={{
+                        ...register('numberOfHours', {
+                          required: true,
+                          min: 1,
+                        }),
+                      }}
                       withLabel={true}
                       isError={errors.numberOfHours ? true : false}
                       errorMessage={errors.numberOfHours?.message}
@@ -335,7 +397,14 @@ export const VolWorkExp = (): JSX.Element => {
             <Alert.Description>
               <div className="flex gap-2">
                 <div className="w-[25%] text-red-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-20 h-20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-20 h-20"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -343,15 +412,25 @@ export const VolWorkExp = (): JSX.Element => {
                     />
                   </svg>
                 </div>
-                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
+                <p className="w-[75%] px-4">
+                  Are you sure you want to remove this? This action cannot be
+                  undone.{' '}
+                </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
-                <Button variant="light" onClick={() => setRemoveVolWorkIsOpen(false)} className="hover:bg-gray-200 active:bg-gray-200">
+                <Button
+                  variant="light"
+                  onClick={() => setRemoveVolWorkIsOpen(false)}
+                  className="hover:bg-gray-200 active:bg-gray-200"
+                >
                   No
                 </Button>
-                <Button variant="theme" onClick={() => handleRemoveWork(volWorkToRemove)}>
+                <Button
+                  variant="theme"
+                  onClick={() => handleRemoveWork(volWorkToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -365,56 +444,105 @@ export const VolWorkExp = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Organization Name" headerWidth="w-[25%]" className="pl-4" />
+                    <TableHeader
+                      label="Organization Name"
+                      headerWidth="w-[25%]"
+                      className="pl-4"
+                    />
                     <TableHeader label="Position" headerWidth="w-[25%]" />
                     <TableHeader label="Date Start" headerWidth="w-[10%]" />
                     <TableHeader label="Date End" headerWidth="w-[10%]" />
-                    <TableHeader label="Number of Hours" headerWidth="w-[10%]" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
+                    <TableHeader
+                      label="Number of Hours"
+                      headerWidth="w-[10%]"
+                    />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
                   <tbody>
-                    {voluntaryWork.map((work: VoluntaryWork, workIdx: number) => {
-                      return (
-                        <tr
-                          key={workIdx}
-                          className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all "
-                        >
-                          <TableDimension isText={true} label={work.organizationName} className="px-4 " />
-                          <TableDimension isText={true} label={work.position} className="px-1 select-none" />
-                          <TableDimension isText={true} className="px-1" label={work.from} />
-                          <TableDimension isText={true} className="px-1" label={work.to ? work.to : 'Ongoing'} />
-                          <TableDimension isText={true} className="px-1" label={work.numberOfHours ? work.numberOfHours : 'N/A'} />
-                          <TableDimension
-                            isText={false}
-                            className="px-2 text-center select-none"
-                            tableDimension={
-                              <>
-                                <div className="flex justify-center gap-4">
-                                  {allowEditVolWork ? (
-                                    <div className="w-8">
-                                      <EditButton
-                                        disabled={hasPds && voluntaryWorkOnEdit ? false : hasPds && !voluntaryWorkOnEdit ? true : !hasPds && false}
-                                        action={() => onEdit(work, workIdx)}
-                                      />
-                                    </div>
-                                  ) : null}
-                                  {allowDeleteVolWork ? (
-                                    <div className="w-8">
-                                      <DeleteButton
-                                        muted={hasPds && voluntaryWorkOnEdit ? false : hasPds && !voluntaryWorkOnEdit ? true : !hasPds && false}
-                                        action={() => openRemoveActionModal(workIdx, work)}
-                                      />
-                                    </div>
-                                  ) : null}
-                                </div>
-                              </>
-                            }
-                          />
-                        </tr>
-                      );
-                    })}
+                    {voluntaryWork.map(
+                      (work: VoluntaryWork, workIdx: number) => {
+                        return (
+                          <tr
+                            key={workIdx}
+                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all "
+                          >
+                            <TableDimension
+                              isText={true}
+                              label={work.organizationName}
+                              className="px-4 "
+                            />
+                            <TableDimension
+                              isText={true}
+                              label={work.position}
+                              className="px-1 select-none"
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={work.from}
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={work.to ? work.to : 'Ongoing'}
+                            />
+                            <TableDimension
+                              isText={true}
+                              className="px-1"
+                              label={
+                                work.numberOfHours ? work.numberOfHours : 'N/A'
+                              }
+                            />
+                            <TableDimension
+                              isText={false}
+                              className="px-2 text-center select-none"
+                              tableDimension={
+                                <>
+                                  <div className="flex justify-center gap-4">
+                                    {allowEditVolWork ? (
+                                      <div className="w-8">
+                                        <EditButton
+                                          disabled={
+                                            hasPds && voluntaryWorkOnEdit
+                                              ? false
+                                              : hasPds && !voluntaryWorkOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
+                                          action={() => onEdit(work, workIdx)}
+                                        />
+                                      </div>
+                                    ) : null}
+                                    {allowDeleteVolWork ? (
+                                      <div className="w-8">
+                                        <DeleteButton
+                                          muted={
+                                            hasPds && voluntaryWorkOnEdit
+                                              ? false
+                                              : hasPds && !voluntaryWorkOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
+                                          action={() =>
+                                            openRemoveActionModal(workIdx, work)
+                                          }
+                                        />
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                </>
+                              }
+                            />
+                          </tr>
+                        );
+                      }
+                    )}
                   </tbody>
                 }
               />

@@ -1,7 +1,8 @@
-import { NotificationContext } from 'context/NotificationContext';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { useContext } from 'react';
-import { useEmployeeStore } from 'store/employee.store';
-import { usePdsStore } from 'store/pds.store';
 import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
 import { useTabStore } from '../../../store/tab.store';
 import { Page } from '../../modular/pages/Page';
@@ -26,21 +27,34 @@ export default function OtherInfoPanel(): JSX.Element {
 
   // fire when next button is clicked
   const onSubmit = () => {
-    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit) handleNextTab(selectedTab);
-    else if (hasPds && (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit)) addNotification(TabActions.NEXT);
+    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit)
+      handleNextTab(selectedTab);
+    else if (
+      hasPds &&
+      (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit)
+    )
+      addNotification(TabActions.NEXT);
     else if (!hasPds) handleNextTab(selectedTab);
   };
 
   // prev button
   const onPrev = () => {
-    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit) handlePrevTab(selectedTab);
-    else if (hasPds && (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit)) addNotification(TabActions.PREVIOUS);
+    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit)
+      handlePrevTab(selectedTab);
+    else if (
+      hasPds &&
+      (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit)
+    )
+      addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
+      <Toast
+        variant="error"
+        dismissAction={() => notify.dismiss(notification.id)}
+      >
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -54,17 +68,13 @@ export default function OtherInfoPanel(): JSX.Element {
   return (
     <>
       <HeadContainer title="PDS - Other Information" />
-      <Page
-        title="Other Information I"
-        subtitle=""
-        children={
-          <>
-            <OISkills />
-            <OIRecogs />
-            <OIOrgs />
-          </>
-        }
-      />
+      <Page title="Other Information I" subtitle="">
+        <>
+          <OISkills />
+          <OIRecogs />
+          <OIOrgs />
+        </>
+      </Page>
       <PrevButton action={onPrev} type="button" />
 
       <NextButton action={onSubmit} type="button" />

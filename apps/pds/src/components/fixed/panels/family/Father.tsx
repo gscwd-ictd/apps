@@ -1,10 +1,11 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Card } from '../../../modular/cards/Card';
 import { useFormContext } from 'react-hook-form';
 import { FloatingLabelInputRF } from '../../../modular/inputs/FloatingLabelInputRF';
 import { ParentForm } from '../../../../types/data/family.type';
 import { usePdsStore } from '../../../../store/pds.store';
-import { useEmployeeStore } from 'store/employee.store';
 import { FatherAlert } from './FatherAlert';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 
 export const FatherInfo = (): JSX.Element => {
   // set parents state from pds store
@@ -39,7 +40,10 @@ export const FatherInfo = (): JSX.Element => {
 
   return (
     <>
-      <Card title="Father's Information" subtitle="Write your father's information. Write 'N/A' if not applicable.">
+      <Card
+        title="Father's Information"
+        subtitle="Write your father's information. Write 'N/A' if not applicable."
+      >
         <>
           <div className="-mt-16 flex w-full justify-end pb-10">
             <FatherAlert setInitialValues={setInitialValues} />
@@ -55,12 +59,22 @@ export const FatherInfo = (): JSX.Element => {
                 controller={{
                   ...register('fatherLName', {
                     value: parents.fatherLastName,
-                    onChange: (e) => setParents({ ...parents, fatherLastName: e.target.value }),
+                    onChange: (e) =>
+                      setParents({
+                        ...parents,
+                        fatherLastName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.fatherLName ? true : false}
                 errorMessage={errors.fatherLName?.message}
-                muted={hasPds && fatherOnEdit ? false : hasPds && !fatherOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && fatherOnEdit
+                    ? false
+                    : hasPds && !fatherOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
             <div className="col-span-1 mb-7 w-full">
@@ -72,12 +86,22 @@ export const FatherInfo = (): JSX.Element => {
                 controller={{
                   ...register('fatherFName', {
                     value: parents.fatherFirstName,
-                    onChange: (e) => setParents({ ...parents, fatherFirstName: e.target.value }),
+                    onChange: (e) =>
+                      setParents({
+                        ...parents,
+                        fatherFirstName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.fatherFName ? true : false}
                 errorMessage={errors.fatherFName?.message}
-                muted={hasPds && fatherOnEdit ? false : hasPds && !fatherOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && fatherOnEdit
+                    ? false
+                    : hasPds && !fatherOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>
@@ -92,12 +116,22 @@ export const FatherInfo = (): JSX.Element => {
                 controller={{
                   ...register('fatherMName', {
                     value: parents.fatherMiddleName,
-                    onChange: (e) => setParents({ ...parents, fatherMiddleName: e.target.value }),
+                    onChange: (e) =>
+                      setParents({
+                        ...parents,
+                        fatherMiddleName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.fatherMName ? true : false}
                 errorMessage={errors.fatherMName?.message}
-                muted={hasPds && fatherOnEdit ? false : hasPds && !fatherOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && fatherOnEdit
+                    ? false
+                    : hasPds && !fatherOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
             <div className="col-span-1 w-full ">
@@ -109,12 +143,22 @@ export const FatherInfo = (): JSX.Element => {
                 controller={{
                   ...register('fatherNameExt', {
                     value: parents.fatherNameExtension,
-                    onChange: (e) => setParents({ ...parents, fatherNameExtension: e.target.value }),
+                    onChange: (e) =>
+                      setParents({
+                        ...parents,
+                        fatherNameExtension: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.fatherNameExt ? true : false}
                 errorMessage={errors.fatherNameExt?.message}
-                muted={hasPds && fatherOnEdit ? false : hasPds && !fatherOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && fatherOnEdit
+                    ? false
+                    : hasPds && !fatherOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>

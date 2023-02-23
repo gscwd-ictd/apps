@@ -27,14 +27,19 @@ export const PermanentAddressBI = (): JSX.Element => {
   const checkboxAddress = usePdsStore((state) => state.checkboxAddress);
   const permanentAddress = usePdsStore((state) => state.permanentAddress);
   const residentialAddress = usePdsStore((state) => state.residentialAddress);
-  const permanentAddressOnEdit = usePdsStore((state) => state.permanentAddressOnEdit);
-  const checkboxAddressInitialState = usePdsStore((state) => state.checkboxAddressInitialState);
+  const permanentAddressOnEdit = usePdsStore(
+    (state) => state.permanentAddressOnEdit
+  );
+  const checkboxAddressInitialState = usePdsStore(
+    (state) => state.checkboxAddressInitialState
+  );
   const setCheckboxAddress = usePdsStore((state) => state.setCheckboxAddress);
   const setPermanentAddress = usePdsStore((state) => state.setPermanentAddress);
   const [resetFields, setResetFields] = useState<boolean>(false);
 
   // set address error from error context
-  const { permaAddrError, setPermaAddrError, permaAddrRef, shake, setShake } = useContext(ErrorContext);
+  const { permaAddrError, setPermaAddrError, permaAddrRef, shake, setShake } =
+    useContext(ErrorContext);
 
   const onProvinceChange = (e: any) => {
     setPermanentAddress({ ...permanentAddress, province: e.target.value });
@@ -116,7 +121,10 @@ export const PermanentAddressBI = (): JSX.Element => {
 
   // assigns the employee id on page load
   useEffect(() => {
-    setPermanentAddress({ ...permanentAddress, employeeId: employee.employmentDetails.userId });
+    setPermanentAddress({
+      ...permanentAddress,
+      employeeId: employee.employmentDetails.userId,
+    });
   }, []);
 
   useEffect(() => {
@@ -165,9 +173,19 @@ export const PermanentAddressBI = (): JSX.Element => {
             id="checkboxSameAddr"
             checked={checkboxAddress}
             label="Same as Residential Address"
-            className={hasPds && !permanentAddressOnEdit ? 'cursor-not-allowed' : 'hover:text-indigo-800'}
+            className={
+              hasPds && !permanentAddressOnEdit
+                ? 'cursor-not-allowed'
+                : 'hover:text-indigo-800'
+            }
             onChange={checkboxSameAddrListener}
-            disabled={hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false}
+            disabled={
+              hasPds && permanentAddressOnEdit
+                ? false
+                : hasPds && !permanentAddressOnEdit
+                ? true
+                : !hasPds && false
+            }
           />
         }
       >
@@ -180,7 +198,9 @@ export const PermanentAddressBI = (): JSX.Element => {
               onAnimationEnd={() => setShake(false)}
               // onAnimationEnd={() => setPermaAddrError(!permaAddrError)}
             >
-              <p className="w-full px-10 text-center uppercase not-italic text-white ">Incomplete Address</p>
+              <p className="w-full px-10 text-center uppercase not-italic text-white ">
+                Incomplete Address
+              </p>
             </div>
           ) : (
             <></>
@@ -199,8 +219,20 @@ export const PermanentAddressBI = (): JSX.Element => {
                 value={permanentAddress.houseNumber}
                 placeholder="House or Block or Lot No."
                 type="text"
-                muted={checkboxAddress || (hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false)}
-                onChange={(e) => setPermanentAddress({ ...permanentAddress, houseNumber: e.target.value })}
+                muted={
+                  checkboxAddress ||
+                  (hasPds && permanentAddressOnEdit
+                    ? false
+                    : hasPds && !permanentAddressOnEdit
+                    ? true
+                    : !hasPds && false)
+                }
+                onChange={(e) =>
+                  setPermanentAddress({
+                    ...permanentAddress,
+                    houseNumber: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="col-span-1 mb-7 w-full">
@@ -212,8 +244,20 @@ export const PermanentAddressBI = (): JSX.Element => {
                 value={permanentAddress.street}
                 placeholder="Street"
                 type="text"
-                muted={checkboxAddress || (hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false)}
-                onChange={(e) => setPermanentAddress({ ...permanentAddress, street: e.target.value })}
+                muted={
+                  checkboxAddress ||
+                  (hasPds && permanentAddressOnEdit
+                    ? false
+                    : hasPds && !permanentAddressOnEdit
+                    ? true
+                    : !hasPds && false)
+                }
+                onChange={(e) =>
+                  setPermanentAddress({
+                    ...permanentAddress,
+                    street: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="col-span-1 mb-7 w-full">
@@ -225,8 +269,20 @@ export const PermanentAddressBI = (): JSX.Element => {
                 value={permanentAddress.subdivision}
                 placeholder="Subdivision or Village"
                 type="text"
-                muted={checkboxAddress || (hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false)}
-                onChange={(e) => setPermanentAddress({ ...permanentAddress, subdivision: e.target.value })}
+                muted={
+                  checkboxAddress ||
+                  (hasPds && permanentAddressOnEdit
+                    ? false
+                    : hasPds && !permanentAddressOnEdit
+                    ? true
+                    : !hasPds && false)
+                }
+                onChange={(e) =>
+                  setPermanentAddress({
+                    ...permanentAddress,
+                    subdivision: e.target.value,
+                  })
+                }
               />
             </div>
           </div>
@@ -239,7 +295,14 @@ export const PermanentAddressBI = (): JSX.Element => {
                 codeVariable={permanentAddress}
                 value={permanentAddress.province}
                 innerRef={permaProvRef}
-                muted={checkboxAddress || (hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false)}
+                muted={
+                  checkboxAddress ||
+                  (hasPds && permanentAddressOnEdit
+                    ? false
+                    : hasPds && !permanentAddressOnEdit
+                    ? true
+                    : !hasPds && false)
+                }
                 dispatchCodeVariable={setPermanentAddress}
               />
             </div>
@@ -247,11 +310,23 @@ export const PermanentAddressBI = (): JSX.Element => {
               <SelectCity
                 id="permaCityCode"
                 isRequired
-                onChange={(e) => setPermanentAddress({ ...permanentAddress, city: e.target.value })}
+                onChange={(e) =>
+                  setPermanentAddress({
+                    ...permanentAddress,
+                    city: e.target.value,
+                  })
+                }
                 value={permanentAddress.city}
                 codeVariable={permanentAddress}
                 innerRef={permaCityRef}
-                muted={checkboxAddress || (hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false)}
+                muted={
+                  checkboxAddress ||
+                  (hasPds && permanentAddressOnEdit
+                    ? false
+                    : hasPds && !permanentAddressOnEdit
+                    ? true
+                    : !hasPds && false)
+                }
                 dispatchCodeVariable={setPermanentAddress}
               />
             </div>
@@ -261,10 +336,22 @@ export const PermanentAddressBI = (): JSX.Element => {
                 id="permaBrgyCode"
                 isRequired
                 value={permanentAddress.barangay}
-                onChange={(e) => setPermanentAddress({ ...permanentAddress, barangay: e.target.value })}
+                onChange={(e) =>
+                  setPermanentAddress({
+                    ...permanentAddress,
+                    barangay: e.target.value,
+                  })
+                }
                 codeVariable={permanentAddress}
                 innerRef={permaBrgyRef}
-                muted={checkboxAddress || (hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false)}
+                muted={
+                  checkboxAddress ||
+                  (hasPds && permanentAddressOnEdit
+                    ? false
+                    : hasPds && !permanentAddressOnEdit
+                    ? true
+                    : !hasPds && false)
+                }
                 dispatchCodeVariable={setPermanentAddress}
               />
             </div>
@@ -279,10 +366,22 @@ export const PermanentAddressBI = (): JSX.Element => {
               minLength={4}
               maxLength={4}
               placeholder="ZIP Code"
-              muted={checkboxAddress || (hasPds && permanentAddressOnEdit ? false : hasPds && !permanentAddressOnEdit ? true : !hasPds && false)}
+              muted={
+                checkboxAddress ||
+                (hasPds && permanentAddressOnEdit
+                  ? false
+                  : hasPds && !permanentAddressOnEdit
+                  ? true
+                  : !hasPds && false)
+              }
               value={permanentAddress.zipCode}
               type="text"
-              onChange={(e) => setPermanentAddress({ ...permanentAddress, zipCode: e.target.value.replace(/\D/, '') })}
+              onChange={(e) =>
+                setPermanentAddress({
+                  ...permanentAddress,
+                  zipCode: e.target.value.replace(/\D/, ''),
+                })
+              }
               className="sm:col-span-3 md:col-span-3 lg:col-span-1"
             />
           </div>

@@ -1,10 +1,11 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Card } from '../../../modular/cards/Card';
 import { useFormContext } from 'react-hook-form';
 import { FloatingLabelInputRF } from '../../../modular/inputs/FloatingLabelInputRF';
 import { ParentForm } from '../../../../types/data/family.type';
 import { usePdsStore } from '../../../../store/pds.store';
-import { useEmployeeStore } from 'store/employee.store';
 import { MotherAlert } from './MotherAlert';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 
 export const MotherInfo = (): JSX.Element => {
   // set parents state from pds context
@@ -55,12 +56,22 @@ export const MotherInfo = (): JSX.Element => {
                 controller={{
                   ...register('motherLName', {
                     value: parents.motherLastName,
-                    onChange: (e) => setParents({ ...parents, motherLastName: e.target.value }),
+                    onChange: (e) =>
+                      setParents({
+                        ...parents,
+                        motherLastName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.motherLName ? true : false}
                 errorMessage={errors.motherLName?.message}
-                muted={hasPds && motherOnEdit ? false : hasPds && !motherOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && motherOnEdit
+                    ? false
+                    : hasPds && !motherOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
             <div className="col-span-1 mb-7 w-full">
@@ -72,12 +83,22 @@ export const MotherInfo = (): JSX.Element => {
                 controller={{
                   ...register('motherFName', {
                     value: parents.motherFirstName,
-                    onChange: (e) => setParents({ ...parents, motherFirstName: e.target.value }),
+                    onChange: (e) =>
+                      setParents({
+                        ...parents,
+                        motherFirstName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.motherFName ? true : false}
                 errorMessage={errors.motherFName?.message}
-                muted={hasPds && motherOnEdit ? false : hasPds && !motherOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && motherOnEdit
+                    ? false
+                    : hasPds && !motherOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>
@@ -91,12 +112,22 @@ export const MotherInfo = (): JSX.Element => {
                 controller={{
                   ...register('motherMName', {
                     value: parents.motherMiddleName,
-                    onChange: (e) => setParents({ ...parents, motherMiddleName: e.target.value }),
+                    onChange: (e) =>
+                      setParents({
+                        ...parents,
+                        motherMiddleName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.motherMName ? true : false}
                 errorMessage={errors.motherMName?.message}
-                muted={hasPds && motherOnEdit ? false : hasPds && !motherOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && motherOnEdit
+                    ? false
+                    : hasPds && !motherOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>
