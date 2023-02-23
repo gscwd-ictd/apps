@@ -1,24 +1,27 @@
-import { Alert, NotificationController, useNotification } from '@ericsison-dev/my-ui';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { Alert } from '@gscwd-apps/oneui';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { usePdsStore } from 'apps/pds/src/store/pds.store';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import axios from 'axios';
-import { AlertDesc } from 'components/fixed/alerts/AlertDesc';
-import { Toast } from 'components/fixed/toast/Toast';
-import { Button } from 'components/modular/buttons/Button';
-import { NotificationContext } from 'context/NotificationContext';
 import { useContext, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
-import { useEmployeeStore } from 'store/employee.store';
-import { usePdsStore } from 'store/pds.store';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
+import { Button } from '../../../modular/buttons/Button';
+import { AlertDesc } from '../../alerts/AlertDesc';
+import { Toast } from '../../toast/Toast';
 import { AssignCoursesToUpdate } from './utils/functions';
 
 type GraduateAlertProps = {
   setInitialValues: () => void;
 };
 
-export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Element => {
+export const GraduateAlert = ({
+  setInitialValues,
+}: GraduateAlertProps): JSX.Element => {
   const [alertUpdateIsOpen, setAlertUpdateIsOpen] = useState<boolean>(false);
   const [alertCancelIsOpen, setAlertCancelIsOpen] = useState<boolean>(false);
   const hasPds = useEmployeeStore((state) => state.hasPds);
@@ -26,16 +29,23 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
   const setGraduateOnEdit = usePdsStore((state) => state.setGraduateOnEdit);
   const { notify } = useContext(NotificationContext);
   const pds = getPds(usePdsStore((state) => state));
-  const deletedGraduateEducs = useUpdatePdsStore((state) => state.deletedGraduateEducs);
+  const deletedGraduateEducs = useUpdatePdsStore(
+    (state) => state.deletedGraduateEducs
+  );
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-  const setDeletedGraduateEducs = useUpdatePdsStore((state) => state.setDeletedGraduateEducs);
+  const setDeletedGraduateEducs = useUpdatePdsStore(
+    (state) => state.setDeletedGraduateEducs
+  );
   const setGraduate = usePdsStore((state) => state.setGraduate);
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
-      <Toast variant={action} dismissAction={() => notify.dismiss(notification.id)}>
+      <Toast
+        variant={action}
+        dismissAction={() => notify.dismiss(notification.id)}
+      >
         {action === 'success'
           ? 'Graduate Education Updated!'
           : action === 'info'
@@ -50,11 +60,14 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
   const updateSection = async () => {
     const allGraduateCourses = await AssignCoursesToUpdate(pds.graduate);
     try {
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/education/graduate/${employeeDetails.user._id}`, {
-        add: allGraduateCourses.add,
-        update: allGraduateCourses.update,
-        delete: deletedGraduateEducs,
-      });
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/education/graduate/${employeeDetails.user._id}`,
+        {
+          add: allGraduateCourses.add,
+          update: allGraduateCourses.update,
+          delete: deletedGraduateEducs,
+        }
+      );
       setGraduate(data);
       setInitialPdsState({ ...initialPdsState, graduate: data });
       setDeletedGraduateEducs([]);
@@ -84,11 +97,18 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
     <>
       <Alert open={alertUpdateIsOpen} setOpen={setAlertUpdateIsOpen}>
         <Alert.Description>
-          <AlertDesc>Do you want to update your Graduate Education? This action is irreversible. </AlertDesc>
+          <AlertDesc>
+            Do you want to update your Graduate Education? This action is
+            irreversible.{' '}
+          </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertUpdateIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertUpdateIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -100,11 +120,18 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
 
       <Alert open={alertCancelIsOpen} setOpen={setAlertCancelIsOpen}>
         <Alert.Description>
-          <AlertDesc>Are you sure you want to cancel the changes that you have made to your Graduate Education?</AlertDesc>
+          <AlertDesc>
+            Are you sure you want to cancel the changes that you have made to
+            your Graduate Education?
+          </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="w-full rounded border border-gray-300">
-            <Button variant="light" onClick={() => setAlertCancelIsOpen(false)} className="hover:bg-gray-300">
+            <Button
+              variant="light"
+              onClick={() => setAlertCancelIsOpen(false)}
+              className="hover:bg-gray-300"
+            >
               No
             </Button>
           </div>
@@ -119,7 +146,13 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
           {graduateOnEdit && (
             <>
               <div className="flex ">
-                <Button onClick={() => setAlertCancelIsOpen(true)} btnLabel="" variant="light" type="button" className="ring-0 focus:ring-0">
+                <Button
+                  onClick={() => setAlertCancelIsOpen(true)}
+                  btnLabel=""
+                  variant="light"
+                  type="button"
+                  className="ring-0 focus:ring-0"
+                >
                   <div className="flex items-center text-gray-400 hover:text-gray-600">
                     <div>
                       <svg
@@ -130,7 +163,11 @@ export const GraduateAlert = ({ setInitialValues }: GraduateAlertProps): JSX.Ele
                         stroke="currentColor"
                         className="h-6 w-6"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                        />
                       </svg>
                     </div>
                     <span>Undo</span>

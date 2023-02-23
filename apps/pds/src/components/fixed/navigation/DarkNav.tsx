@@ -1,10 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React from 'react';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { useTabStore } from 'store/tab.store';
-import { FormWizard } from 'components/modular/custom/FormWizard';
 import { tabs, tabsHasPds } from '../../../../utils/constants/tabs';
-import { HiDocumentChartBar } from 'react-icons/hi2';
+import { FormWizard } from '../../modular/custom/FormWizard';
+import { useTabStore } from '../../../store/tab.store';
 
 export default function DarkNav() {
   const employee = useEmployeeStore((state) => state.employeeDetails);
@@ -16,7 +15,8 @@ export default function DarkNav() {
   const user = {
     name: `${employee.profile.firstName} ${employee.profile.lastName}`,
     email: 'example@gscwd.com',
-    imageUrl: 'https://cdn.icon-icons.com/icons2/2506/PNG/512/user_icon_150670.png',
+    imageUrl:
+      'https://cdn.icon-icons.com/icons2/2506/PNG/512/user_icon_150670.png',
   };
 
   return (

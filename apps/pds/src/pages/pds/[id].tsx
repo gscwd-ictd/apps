@@ -1,37 +1,51 @@
-import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import { useEffect, useState } from 'react';
 import { NavTab } from '../../components/fixed/tabs/NavTab';
 import { useEmployeeStore } from '../../store/employee.store';
-import { Pds, usePdsStore } from '../../store/pds.store';
+import { usePdsStore } from '../../store/pds.store';
 import { isEmpty, isEqual } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { pdsToSubmit } from '../../../utils/helpers/pds.helper';
-import { useTabStore } from 'store/tab.store';
 import { tabs, tabsHasPds } from '../../../utils/constants/tabs';
 import axios from 'axios';
+import { useTabStore } from '../../store/tab.store';
 
 dayjs.extend(utc);
 
-export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Dashboard({
+  employee,
+  pdsDetails,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const setHasPds = useEmployeeStore((state) => state.setHasPds);
-  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
+  const setEmployeeDetails = useEmployeeStore(
+    (state) => state.setEmployeeDetails
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLoadingEmployeeData, setIsLoadingEmployeeData] = useState<boolean>(false);
+  const [isLoadingEmployeeData, setIsLoadingEmployeeData] =
+    useState<boolean>(false);
   const [isLoadingPdsData, setIsLoadingPdsData] = useState<boolean>(false);
   const { employmentDetails, profile, user } = employeeDetails;
   const pds = pdsToSubmit(usePdsStore((state) => state));
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
-  const setCheckboxAddressInitialState = usePdsStore((state) => state.setCheckboxAddressInitialState);
+  const setCheckboxAddressInitialState = usePdsStore(
+    (state) => state.setCheckboxAddressInitialState
+  );
   const numberOfTabs = useTabStore((state) => state.numberOfTabs);
   const setNumberOfTabs = useTabStore((state) => state.setNumberOfTabs);
   const background = useTabStore((state) => state.background);
-  const permanentAddressOnEdit = usePdsStore((state) => state.permanentAddressOnEdit);
+  const permanentAddressOnEdit = usePdsStore(
+    (state) => state.permanentAddressOnEdit
+  );
 
   const {
     personalInfo,
@@ -145,7 +159,9 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
       lastName: profile.lastName,
       firstName: profile.firstName,
       middleName: isEmpty(profile.middleName) ? 'N/A' : profile.middleName,
-      nameExtension: isEmpty(profile.nameExtension) ? 'N/A' : profile.nameExtension,
+      nameExtension: isEmpty(profile.nameExtension)
+        ? 'N/A'
+        : profile.nameExtension,
       birthDate: profile.birthDate,
       sex: profile.sex,
       email: user.email,
@@ -161,7 +177,9 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
         lastName: profile.lastName,
         firstName: profile.firstName,
         middleName: isEmpty(profile.middleName) ? 'N/A' : profile.middleName,
-        nameExtension: isEmpty(profile.nameExtension) ? 'N/A' : profile.nameExtension,
+        nameExtension: isEmpty(profile.nameExtension)
+          ? 'N/A'
+          : profile.nameExtension,
         birthDate: profile.birthDate,
         sex: profile.sex,
         email: user.email,
@@ -364,7 +382,11 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
   // set the checkbox to true if residential address and permanent address is the same
   useEffect(() => {
     if (isLoading === false) {
-      if (hasPds && !permanentAddressOnEdit && isEqual(residentialAddress, permanentAddress)) {
+      if (
+        hasPds &&
+        !permanentAddressOnEdit &&
+        isEqual(residentialAddress, permanentAddress)
+      ) {
         setCheckboxAddressInitialState(true);
         setTimeout(() => {
           setCheckboxAddress(true);
@@ -381,7 +403,13 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
             <>
               <div className="flex items-center justify-center w-full h-screen">
                 {/* <LoadingIndicator /> */}
-                <SpinnerDotted speed={150} thickness={120} color="indigo" size={100} className="flex w-full h-full transition-all animate-pulse " />
+                <SpinnerDotted
+                  speed={150}
+                  thickness={120}
+                  color="indigo"
+                  size={100}
+                  className="flex w-full h-full transition-all animate-pulse "
+                />
               </div>
             </>
           ) : (
@@ -395,13 +423,17 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(async (context: GetServerSidePropsContext) => {
-  const employee = getUserDetails();
-  try {
-    const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`);
+export const getServerSideProps: GetServerSideProps = withSession(
+  async (context: GetServerSidePropsContext) => {
+    const employee = getUserDetails();
+    try {
+      const applicantPds = await axios.get(
+        `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
+      );
 
-    return { props: { employee, pdsDetails: applicantPds.data } };
-  } catch (error) {
-    return { props: { employee, pdsDetails: {} } };
+      return { props: { employee, pdsDetails: applicantPds.data } };
+    } catch (error) {
+      return { props: { employee, pdsDetails: {} } };
+    }
   }
-});
+);

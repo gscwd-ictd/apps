@@ -1,4 +1,5 @@
-import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import React, { useContext, useEffect } from 'react';
 import { Page } from '../../modular/pages/Page';
 import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
@@ -14,14 +15,17 @@ import { usePdsStore } from '../../../store/pds.store';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { HeadContainer } from '../head/Head';
 import { Toast } from '../toast/Toast';
-import { NotificationContext } from 'context/NotificationContext';
 import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
 import { trimmer } from '../../../../utils/functions/trimmer';
 import { isEmpty } from 'lodash';
+import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 
 export default function FamilyBgPanel(): JSX.Element {
   // set parents object state, employee object, and pds object from the pds store
-  const { parents, setParents } = usePdsStore((state) => ({ parents: state.parents, setParents: state.setParents }));
+  const { parents, setParents } = usePdsStore((state) => ({
+    parents: state.parents,
+    setParents: state.setParents,
+  }));
   const employee = useEmployeeStore((state) => state.employeeDetails);
   // set tab state from tab store
   const spouse = usePdsStore((state) => state.spouse);
@@ -44,7 +48,10 @@ export default function FamilyBgPanel(): JSX.Element {
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
+      <Toast
+        variant="error"
+        dismissAction={() => notify.dismiss(notification.id)}
+      >
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -62,7 +69,9 @@ export default function FamilyBgPanel(): JSX.Element {
       lastName: trimmer(spouse.lastName),
       firstName: trimmer(spouse.firstName),
       middleName: trimmer(spouse.middleName),
-      nameExtension: spouse.nameExtension ? trimmer(spouse.nameExtension) : undefined,
+      nameExtension: spouse.nameExtension
+        ? trimmer(spouse.nameExtension)
+        : undefined,
       employer: trimmer(spouse.employer),
       businessAddress: trimmer(spouse.businessAddress),
       telephoneNumber: trimmer(spouse.telephoneNumber),
@@ -75,14 +84,17 @@ export default function FamilyBgPanel(): JSX.Element {
       fatherLastName: trimmer(parents.fatherLastName),
       fatherFirstName: trimmer(parents.fatherFirstName),
       fatherMiddleName: trimmer(parents.fatherMiddleName),
-      fatherNameExtension: !isEmpty(parents.fatherNameExtension) ? trimmer(parents.fatherNameExtension) : 'N/A',
+      fatherNameExtension: !isEmpty(parents.fatherNameExtension)
+        ? trimmer(parents.fatherNameExtension)
+        : 'N/A',
       motherLastName: trimmer(parents.motherLastName),
       motherFirstName: trimmer(parents.motherFirstName),
       // motherMaidenName: trimmer(parents.motherMaidenName!),
       motherMiddleName: trimmer(parents.motherMiddleName),
     });
 
-    if (!spouseOnEdit && !fatherOnEdit && !motherOnEdit && !childrenOnEdit) handleNextTab(selectedTab);
+    if (!spouseOnEdit && !fatherOnEdit && !motherOnEdit && !childrenOnEdit)
+      handleNextTab(selectedTab);
     else if (spouseOnEdit || fatherOnEdit || motherOnEdit || childrenOnEdit) {
       addNotification(TabActions.PREVIOUS);
     }
@@ -90,33 +102,44 @@ export default function FamilyBgPanel(): JSX.Element {
 
   // prev button
   const onPrev = () => {
-    if (hasPds && !spouseOnEdit && !fatherOnEdit && !motherOnEdit && !childrenOnEdit) handlePrevTab(selectedTab);
-    else if (hasPds && (spouseOnEdit || fatherOnEdit || motherOnEdit || childrenOnEdit)) addNotification(TabActions.PREVIOUS);
+    if (
+      hasPds &&
+      !spouseOnEdit &&
+      !fatherOnEdit &&
+      !motherOnEdit &&
+      !childrenOnEdit
+    )
+      handlePrevTab(selectedTab);
+    else if (
+      hasPds &&
+      (spouseOnEdit || fatherOnEdit || motherOnEdit || childrenOnEdit)
+    )
+      addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };
 
   // assigns the employee id on page load
-  useEffect(() => setParents({ ...parents, employeeId: employee.employmentDetails.userId }), []);
+  useEffect(
+    () =>
+      setParents({ ...parents, employeeId: employee.employmentDetails.userId }),
+    []
+  );
 
   return (
     <>
       <HeadContainer title="PDS - Family Information" />
-      <Page
-        title="Family Information"
-        subtitle=""
-        children={
-          <>
-            <FormProvider {...methods} key="familyInfo">
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="familyInfo">
-                <SpouseInfo />
-                <FatherInfo />
-                <MotherInfo />
-                <ChildrenInfo />
-              </form>
-            </FormProvider>
-          </>
-        }
-      />
+      <Page title="Family Information" subtitle="">
+        <>
+          <FormProvider {...methods} key="familyInfo">
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="familyInfo">
+              <SpouseInfo />
+              <FatherInfo />
+              <MotherInfo />
+              <ChildrenInfo />
+            </form>
+          </FormProvider>
+        </>
+      </Page>
       <PrevButton action={onPrev} type="button" />
       <NextButton formId="familyInfo" />
     </>

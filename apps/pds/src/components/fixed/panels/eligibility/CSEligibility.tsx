@@ -4,7 +4,11 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CheckboxRF } from '../../../modular/inputs/CheckboxRF';
@@ -15,9 +19,9 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import schema from '../../../../schema/Eligibility';
 import { EligibilityAlert } from './EligibilityAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 export const CSEligibility = (): JSX.Element => {
   // initialize useref and assign it to examDateToRef
@@ -31,14 +35,24 @@ export const CSEligibility = (): JSX.Element => {
   const eligibilityOnEdit = usePdsStore((state) => state.eligibilityOnEdit);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
-  const deletedEligibilities = useUpdatePdsStore((state) => state.deletedEligibilities);
-  const [removedElig, setRemovedElig] = useState<Eligibility>({} as Eligibility);
+  const deletedEligibilities = useUpdatePdsStore(
+    (state) => state.deletedEligibilities
+  );
+  const [removedElig, setRemovedElig] = useState<Eligibility>(
+    {} as Eligibility
+  );
   const [action, setAction] = useState<string>('');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [indexForEdit, setIndexForEdit] = useState<number>(-1);
-  const [eligForEdit, setEligForEdit] = useState<Eligibility>({} as Eligibility);
-  const allowEditEligibility = useUpdatePdsStore((state) => state.allowEditEligibility);
-  const allowDeleteEligibility = useUpdatePdsStore((state) => state.allowDeleteEligibility);
+  const [eligForEdit, setEligForEdit] = useState<Eligibility>(
+    {} as Eligibility
+  );
+  const allowEditEligibility = useUpdatePdsStore(
+    (state) => state.allowEditEligibility
+  );
+  const allowDeleteEligibility = useUpdatePdsStore(
+    (state) => state.allowDeleteEligibility
+  );
   const setEligibility = usePdsStore((state) => state.setEligibility);
 
   // initialize react hook form and set default values, mode is set to on change
@@ -90,7 +104,11 @@ export const CSEligibility = (): JSX.Element => {
       const updatedElig = [...eligibility];
       updatedElig.push(elig);
       const sortedUpdatedElig = [...updatedElig].sort((firstItem, secondItem) =>
-        firstItem.examDate.from! > secondItem.examDate.from! ? -1 : secondItem.examDate.from! > firstItem.examDate.from! ? 1 : 0
+        firstItem.examDate.from! > secondItem.examDate.from!
+          ? -1
+          : secondItem.examDate.from! > firstItem.examDate.from!
+          ? 1
+          : 0
       );
       setEligibility(sortedUpdatedElig);
       reset();
@@ -100,29 +118,36 @@ export const CSEligibility = (): JSX.Element => {
     // update action
     else if (action === 'update') {
       const updatedEligs: Array<Eligibility> = [...eligibility];
-      const newUpdatedEligs = updatedEligs.map((previousElig: Eligibility, eligIdx: number) => {
-        if (eligIdx === indexForEdit) {
-          return {
-            ...previousElig,
-            _id: elig._id,
-            employeeId: elig.employeeId,
-            examDate: { from: elig.examDateFrom!, to: elig.examDateTo! },
-            examDateFrom: elig.examDateFrom,
-            examDateTo: elig.examDateTo,
-            examPlace: elig.examPlace,
-            isOneDayOfExam: elig.isOneDayOfExam,
-            licenseNumber: elig.licenseNumber,
-            name: elig.name,
-            rating: elig.rating,
-            validity: elig.validity,
-            isEdited: true,
-          };
-        }
+      const newUpdatedEligs = updatedEligs.map(
+        (previousElig: Eligibility, eligIdx: number) => {
+          if (eligIdx === indexForEdit) {
+            return {
+              ...previousElig,
+              _id: elig._id,
+              employeeId: elig.employeeId,
+              examDate: { from: elig.examDateFrom!, to: elig.examDateTo! },
+              examDateFrom: elig.examDateFrom,
+              examDateTo: elig.examDateTo,
+              examPlace: elig.examPlace,
+              isOneDayOfExam: elig.isOneDayOfExam,
+              licenseNumber: elig.licenseNumber,
+              name: elig.name,
+              rating: elig.rating,
+              validity: elig.validity,
+              isEdited: true,
+            };
+          }
 
-        return previousElig;
-      });
-      const sortedUpdatedElig = [...newUpdatedEligs].sort((firstItem, secondItem) =>
-        firstItem.examDate.from! > secondItem.examDate.from! ? -1 : secondItem.examDate.from! > firstItem.examDate.from! ? 1 : 0
+          return previousElig;
+        }
+      );
+      const sortedUpdatedElig = [...newUpdatedEligs].sort(
+        (firstItem, secondItem) =>
+          firstItem.examDate.from! > secondItem.examDate.from!
+            ? -1
+            : secondItem.examDate.from! > firstItem.examDate.from!
+            ? 1
+            : 0
       );
       setEligibility(sortedUpdatedElig);
       setEligForEdit({} as Eligibility);
@@ -219,16 +244,32 @@ export const CSEligibility = (): JSX.Element => {
           </div>
         }
       >
-        <div className={`flex flex-col items-end justify-end ${eligibilityOnEdit ? '  visible' : !hasPds ? 'visible lg:-mt-6 lg:pb-6' : 'hidden'}`}>
-          <Button btnLabel="Add Eligibility" type="button" variant="theme" onClick={openModal} className="xs:w-full sm:w-full lg:w-72" />
+        <div
+          className={`flex flex-col items-end justify-end ${
+            eligibilityOnEdit
+              ? '  visible'
+              : !hasPds
+              ? 'visible lg:-mt-6 lg:pb-6'
+              : 'hidden'
+          }`}
+        >
+          <Button
+            btnLabel="Add Eligibility"
+            type="button"
+            variant="theme"
+            onClick={openModal}
+            className="xs:w-full sm:w-full lg:w-72"
+          />
         </div>
         <>
           <Modal
             title="Eligibility"
             subtitle={
               <>
-                CAREER SERVICE/ RA 1080 (BOARD/ BAR) UNDER SPECIAL LAWS/ CES/ CSEE BARANGAY ELIGIBILITY / DRIVER'S LICENSE <br></br> Please fill-out
-                all required fields ( <span className="text-red-700">*</span> )
+                CAREER SERVICE/ RA 1080 (BOARD/ BAR) UNDER SPECIAL LAWS/ CES/
+                CSEE BARANGAY ELIGIBILITY / DRIVER'S LICENSE <br></br> Please
+                fill-out all required fields ({' '}
+                <span className="text-red-700">*</span> )
               </>
             }
             formId="eligibility"
@@ -240,7 +281,13 @@ export const CSEligibility = (): JSX.Element => {
             isStatic={false}
             verticalCenter
             modalSize="xxxxxl"
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -286,7 +333,9 @@ export const CSEligibility = (): JSX.Element => {
                         placeholder=""
                         type="date"
                         labelIsRequired
-                        controller={{ ...register('examDateFrom', { required: true }) }}
+                        controller={{
+                          ...register('examDateFrom', { required: true }),
+                        }}
                         withLabel={true}
                         isError={errors.examDateFrom ? true : false}
                         errorMessage={errors.examDateFrom?.message}
@@ -307,7 +356,9 @@ export const CSEligibility = (): JSX.Element => {
                         label="To"
                         innerRef={examDateToRef}
                         className="cursor-pointer"
-                        placeholder={getIsOneDayOfExam === true ? 'Same Day' : ''}
+                        placeholder={
+                          getIsOneDayOfExam === true ? 'Same Day' : ''
+                        }
                         labelIsRequired={!getIsOneDayOfExam}
                         type="date"
                         controller={{ ...register('examDateTo') }}
@@ -328,7 +379,9 @@ export const CSEligibility = (): JSX.Element => {
                         placeholder="Write in Full. Do not leave blank"
                         type="text"
                         labelIsRequired
-                        controller={{ ...register('examPlace', { required: true }) }}
+                        controller={{
+                          ...register('examPlace', { required: true }),
+                        }}
                         withLabel={true}
                         isError={errors.examPlace ? true : false}
                         errorMessage={errors.examPlace?.message}
@@ -343,7 +396,9 @@ export const CSEligibility = (): JSX.Element => {
                         type="number"
                         withHelpButton
                         helpContent="Specify the license number if eligibility is under R.A. 1080"
-                        controller={{ ...register('licenseNumber', { required: false }) }}
+                        controller={{
+                          ...register('licenseNumber', { required: false }),
+                        }}
                         withLabel={true}
                         isError={errors.licenseNumber ? true : false}
                         errorMessage={errors.licenseNumber?.message}
@@ -360,7 +415,9 @@ export const CSEligibility = (): JSX.Element => {
                       label="Date of Validity (Leave blank if not applicable)"
                       placeholder="Leave blank if not applicable"
                       type="date"
-                      controller={{ ...register('validity', { required: false }) }}
+                      controller={{
+                        ...register('validity', { required: false }),
+                      }}
                       withLabel={true}
                       isError={errors.validity ? true : false}
                       errorMessage={errors.validity?.message}
@@ -374,7 +431,14 @@ export const CSEligibility = (): JSX.Element => {
             <Alert.Description>
               <div className="flex gap-2">
                 <div className="w-[25%] text-red-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-20 h-20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-20 h-20"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -383,15 +447,25 @@ export const CSEligibility = (): JSX.Element => {
                   </svg>
                 </div>
 
-                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
+                <p className="w-[75%] px-4">
+                  Are you sure you want to remove this? This action cannot be
+                  undone.{' '}
+                </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
-                <Button variant="light" onClick={() => setRemoveEligIsOpen(false)} className="hover:bg-gray-200 active:bg-gray-200">
+                <Button
+                  variant="light"
+                  onClick={() => setRemoveEligIsOpen(false)}
+                  className="hover:bg-gray-200 active:bg-gray-200"
+                >
                   No
                 </Button>
-                <Button variant="theme" onClick={() => handleRemoveElig(eligToRemove)}>
+                <Button
+                  variant="theme"
+                  onClick={() => handleRemoveElig(eligToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -405,22 +479,47 @@ export const CSEligibility = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Eligibility Name" headerWidth="w-[25%]" className="pl-4" />
+                    <TableHeader
+                      label="Eligibility Name"
+                      headerWidth="w-[25%]"
+                      className="pl-4"
+                    />
                     <TableHeader label="Rating" headerWidth="w-[10%]" />
                     <TableHeader label="Date of Exam" headerWidth="w-[10%]" />
-                    <TableHeader label="Place of Examination" headerWidth="w-[20%]" />
+                    <TableHeader
+                      label="Place of Examination"
+                      headerWidth="w-[20%]"
+                    />
                     <TableHeader label="License Number" headerWidth="w-[10%]" />
-                    <TableHeader label="Date of Validity" headerWidth="w-[10%]" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
+                    <TableHeader
+                      label="Date of Validity"
+                      headerWidth="w-[10%]"
+                    />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
                   <tbody>
                     {eligibility.map((elig: Eligibility, eligIdx: number) => {
                       return (
-                        <tr key={eligIdx} className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all">
-                          <TableDimension isText={true} label={elig.name} className="px-4" />
-                          <TableDimension isText={true} label={elig.rating ? elig.rating : 'N/A'} className="px-1 select-none" />
+                        <tr
+                          key={eligIdx}
+                          className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                        >
+                          <TableDimension
+                            isText={true}
+                            label={elig.name}
+                            className="px-4"
+                          />
+                          <TableDimension
+                            isText={true}
+                            label={elig.rating ? elig.rating : 'N/A'}
+                            className="px-1 select-none"
+                          />
                           <TableDimension
                             isText={true}
                             isPeriod={elig.examDate.to === null ? false : true}
@@ -430,9 +529,23 @@ export const CSEligibility = (): JSX.Element => {
                             showPeriodIfNull={false}
                             className="break-words"
                           />
-                          <TableDimension isText={true} className="px-1" label={elig.examPlace} />
-                          <TableDimension isText={true} className="px-1" label={elig.licenseNumber ? elig.licenseNumber : 'N/A'} />
-                          <TableDimension isText={true} className="px-1" label={elig.validity ? elig.validity : 'N/A'} />
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={elig.examPlace}
+                          />
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={
+                              elig.licenseNumber ? elig.licenseNumber : 'N/A'
+                            }
+                          />
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={elig.validity ? elig.validity : 'N/A'}
+                          />
                           <TableDimension
                             isText={false}
                             className="px-2 text-center select-none"
@@ -441,14 +554,28 @@ export const CSEligibility = (): JSX.Element => {
                                 <div className="flex justify-center gap-4">
                                   {allowEditEligibility ? (
                                     <div className="w-8">
-                                      <EditButton action={() => onEdit(elig, eligIdx)} type="button" disabled={eligibilityOnEdit ? false : true} />
+                                      <EditButton
+                                        action={() => onEdit(elig, eligIdx)}
+                                        type="button"
+                                        disabled={
+                                          eligibilityOnEdit ? false : true
+                                        }
+                                      />
                                     </div>
                                   ) : null}
                                   {allowDeleteEligibility ? (
                                     <div className="w-8">
                                       <DeleteButton
-                                        muted={hasPds && eligibilityOnEdit ? false : hasPds && !eligibilityOnEdit ? true : !hasPds && false}
-                                        action={() => openRemoveActionModal(eligIdx, elig)}
+                                        muted={
+                                          hasPds && eligibilityOnEdit
+                                            ? false
+                                            : hasPds && !eligibilityOnEdit
+                                            ? true
+                                            : !hasPds && false
+                                        }
+                                        action={() =>
+                                          openRemoveActionModal(eligIdx, elig)
+                                        }
                                       />
                                     </div>
                                   ) : null}

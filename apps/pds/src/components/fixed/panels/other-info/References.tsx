@@ -4,7 +4,11 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
+import {
+  Table,
+  TableDimension,
+  TableHeader,
+} from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -15,14 +19,18 @@ import { useEmployeeStore } from '../../../../store/employee.store';
 import { Reference } from '../../../../types/data/supporting-info.type';
 import { ReferencesAlert } from './ReferencesAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
-import { useUpdatePdsStore } from 'store/update-pds.store';
 import { isEmpty } from 'lodash';
-import { EditButton } from 'components/fixed/buttons/Edit';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { EditButton } from '../../buttons/Edit';
 
 // yup validation schema
 const schema = yup.object().shape({
   name: yup.string().required('Please enter a name').trim().label('This'),
-  address: yup.string().required('Please enter an address').trim().label('This'),
+  address: yup
+    .string()
+    .required('Please enter an address')
+    .trim()
+    .label('This'),
   telephoneNumber: yup
     .string()
     .trim()
@@ -43,10 +51,15 @@ export const OIReferences = (): JSX.Element => {
   const referencesOnEdit = usePdsStore((state) => state.referencesOnEdit);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
-  const [removedReference, setRemovedReference] = useState<Reference>({} as Reference);
-  const deletedReferences = useUpdatePdsStore((state) => state.deletedReferences);
+  const [removedReference, setRemovedReference] = useState<Reference>(
+    {} as Reference
+  );
+  const deletedReferences = useUpdatePdsStore(
+    (state) => state.deletedReferences
+  );
   // set reference error state, references ref variable from references error context
-  const { refError, setRefError, refRef, shake, setShake } = useContext(RefErrorContext);
+  const { refError, setRefError, refRef, shake, setShake } =
+    useContext(RefErrorContext);
 
   const [addRefIsOpen, setAddRefIsOpen] = useState<boolean>(false); // add reference modal state
 
@@ -59,9 +72,15 @@ export const OIReferences = (): JSX.Element => {
   const [refForEdit, setRefForEdit] = useState<Reference>({} as Reference);
   const [action, setAction] = useState<string>('');
   const [indexForEdit, setIndexForEdit] = useState<number>(-1);
-  const allowAddReference = useUpdatePdsStore((state) => state.allowAddReference);
-  const allowEditReference = useUpdatePdsStore((state) => state.allowEditReference);
-  const allowDeleteReference = useUpdatePdsStore((state) => state.allowDeleteReference);
+  const allowAddReference = useUpdatePdsStore(
+    (state) => state.allowAddReference
+  );
+  const allowEditReference = useUpdatePdsStore(
+    (state) => state.allowEditReference
+  );
+  const allowDeleteReference = useUpdatePdsStore(
+    (state) => state.allowDeleteReference
+  );
 
   // initialize react hook form and set default values, mode is set to on change
   const {
@@ -74,7 +93,14 @@ export const OIReferences = (): JSX.Element => {
   } = useForm<Reference>({
     mode: 'onChange',
     resolver: yupResolver(schema),
-    defaultValues: { _id: '', employeeId: employee.employmentDetails.userId, name: '', address: '', telephoneNumber: '', isEdited: false },
+    defaultValues: {
+      _id: '',
+      employeeId: employee.employmentDetails.userId,
+      name: '',
+      address: '',
+      telephoneNumber: '',
+      isEdited: false,
+    },
   });
 
   const setInitialValues = () => {
@@ -97,20 +123,22 @@ export const OIReferences = (): JSX.Element => {
     // update action
     else if (action === 'update') {
       const updatedRefs: Array<Reference> = [...references];
-      const newUpdatedRefs = updatedRefs.map((previousRef: Reference, refIdx: number) => {
-        if (refIdx === indexForEdit) {
-          return {
-            ...previousRef,
-            _id: ref._id,
-            address: ref.address,
-            employeeId: ref.employeeId,
-            name: ref.name,
-            telephoneNumber: ref.telephoneNumber,
-            isEdited: true,
-          };
+      const newUpdatedRefs = updatedRefs.map(
+        (previousRef: Reference, refIdx: number) => {
+          if (refIdx === indexForEdit) {
+            return {
+              ...previousRef,
+              _id: ref._id,
+              address: ref.address,
+              employeeId: ref.employeeId,
+              name: ref.name,
+              telephoneNumber: ref.telephoneNumber,
+              isEdited: true,
+            };
+          }
+          return previousRef;
         }
-        return previousRef;
-      });
+      );
 
       setReferences(newUpdatedRefs);
       setRefForEdit({} as Reference);
@@ -168,14 +196,17 @@ export const OIReferences = (): JSX.Element => {
   const handleRemoveTitle = (refIdx: number) => {
     const updatedRefs = [...references];
     updatedRefs.splice(refIdx, 1);
-    if (!isEmpty(removedReference._id)) deletedReferences.push(removedReference);
+    if (!isEmpty(removedReference._id))
+      deletedReferences.push(removedReference);
     setReferences(updatedRefs);
     setRemoveRefIsOpen(false);
   };
 
   // disable button if length of array is equal to 3
   useEffect(() => {
-    references.length < 3 ? setIsBtnRefDisabled(false) : setIsBtnRefDisabled(true);
+    references.length < 3
+      ? setIsBtnRefDisabled(false)
+      : setIsBtnRefDisabled(true);
   }, [references]);
 
   // set reference error to false if length of array is equal to 3
@@ -194,9 +225,21 @@ export const OIReferences = (): JSX.Element => {
           </div>
         }
       >
-        <div className={`flex flex-col items-end justify-end ${referencesOnEdit ? '  visible' : !hasPds ? 'visible lg:-mt-6 lg:pb-6' : 'hidden'}`}>
+        <div
+          className={`flex flex-col items-end justify-end ${
+            referencesOnEdit
+              ? '  visible'
+              : !hasPds
+              ? 'visible lg:-mt-6 lg:pb-6'
+              : 'hidden'
+          }`}
+        >
           <Button
-            btnLabel={references.length < 3 ? `Add Character Reference` : `Cannot Add more`}
+            btnLabel={
+              references.length < 3
+                ? `Add Character Reference`
+                : `Cannot Add more`
+            }
             variant="theme"
             type="button"
             className="sm:w-full lg:w-60"
@@ -206,8 +249,15 @@ export const OIReferences = (): JSX.Element => {
         </div>
         <>
           {refError ? (
-            <div className={`${shake && 'animate'} rounded-md bg-red-500`} onAnimationEnd={() => setShake(false)} tabIndex={1} ref={refRef}>
-              <p className="w-full px-10 not-italic text-center text-white uppercase ">Incomplete References</p>
+            <div
+              className={`${shake && 'animate'} rounded-md bg-red-500`}
+              onAnimationEnd={() => setShake(false)}
+              tabIndex={1}
+              ref={refRef}
+            >
+              <p className="w-full px-10 not-italic text-center text-white uppercase ">
+                Incomplete References
+              </p>
             </div>
           ) : (
             <></>
@@ -217,8 +267,10 @@ export const OIReferences = (): JSX.Element => {
             title="References"
             subtitle={
               <>
-                Indicate the FULL name of references with the format SURNAME, FIRST NAME MI, their addresses and respective telephone numbers.{' '}
-                <br></br>Please fill-out all required fields ( <span className="text-red-700">*</span> )
+                Indicate the FULL name of references with the format SURNAME,
+                FIRST NAME MI, their addresses and respective telephone numbers.{' '}
+                <br></br>Please fill-out all required fields ({' '}
+                <span className="text-red-700">*</span> )
               </>
             }
             formId="references"
@@ -230,7 +282,13 @@ export const OIReferences = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="xxl"
-            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
+            actionLabel={
+              action === 'create'
+                ? 'Submit'
+                : action === 'update'
+                ? 'Update'
+                : ''
+            }
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -292,7 +350,14 @@ export const OIReferences = (): JSX.Element => {
             <Alert.Description>
               <div className="flex gap-2">
                 <div className="w-[25%] text-red-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-20 h-20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-20 h-20"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -301,15 +366,25 @@ export const OIReferences = (): JSX.Element => {
                   </svg>
                 </div>
 
-                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
+                <p className="w-[75%] px-4">
+                  Are you sure you want to remove this? This action cannot be
+                  undone.{' '}
+                </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
-                <Button variant="light" onClick={() => setRemoveRefIsOpen(false)} className="hover:bg-gray-200 active:bg-gray-200">
+                <Button
+                  variant="light"
+                  onClick={() => setRemoveRefIsOpen(false)}
+                  className="hover:bg-gray-200 active:bg-gray-200"
+                >
                   No
                 </Button>
-                <Button variant="theme" onClick={() => handleRemoveTitle(refToRemove)}>
+                <Button
+                  variant="theme"
+                  onClick={() => handleRemoveTitle(refToRemove)}
+                >
                   Yes
                 </Button>
               </div>
@@ -325,10 +400,21 @@ export const OIReferences = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Full Name" headerWidth="w-[25%]" className="pl-4" />
+                    <TableHeader
+                      label="Full Name"
+                      headerWidth="w-[25%]"
+                      className="pl-4"
+                    />
                     <TableHeader label="Address" headerWidth="w-[35%]" />
-                    <TableHeader label="Telephone or Mobile Number" headerWidth="w-[25%]" />
-                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
+                    <TableHeader
+                      label="Telephone or Mobile Number"
+                      headerWidth="w-[25%]"
+                    />
+                    <TableHeader
+                      label="Actions"
+                      headerWidth="w-[15%]"
+                      alignment="center"
+                    />
                   </>
                 }
                 tableBody={
@@ -337,10 +423,23 @@ export const OIReferences = (): JSX.Element => {
                       {references &&
                         references.map((ref: Reference, refIdx: number) => {
                           return (
-                            <tr key={refIdx} className={`odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200`}>
-                              <TableDimension isText={true} label={ref.name} className="pl-4" />
-                              <TableDimension isText={true} label={ref.address} />
-                              <TableDimension isText={true} label={ref.telephoneNumber} />
+                            <tr
+                              key={refIdx}
+                              className={`odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200`}
+                            >
+                              <TableDimension
+                                isText={true}
+                                label={ref.name}
+                                className="pl-4"
+                              />
+                              <TableDimension
+                                isText={true}
+                                label={ref.address}
+                              />
+                              <TableDimension
+                                isText={true}
+                                label={ref.telephoneNumber}
+                              />
                               <TableDimension
                                 isText={false}
                                 className="px-2 text-center select-none"
@@ -349,14 +448,28 @@ export const OIReferences = (): JSX.Element => {
                                     <div className="flex justify-center gap-4">
                                       <div className="w-8">
                                         <EditButton
-                                          disabled={hasPds && referencesOnEdit ? false : hasPds && !referencesOnEdit ? true : !hasPds && false}
+                                          disabled={
+                                            hasPds && referencesOnEdit
+                                              ? false
+                                              : hasPds && !referencesOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
                                           action={() => onEdit(ref, refIdx)}
                                         />
                                       </div>
                                       <div className="w-8">
                                         <DeleteButton
-                                          action={() => openRemoveActionModal(refIdx, ref)}
-                                          muted={hasPds && referencesOnEdit ? false : hasPds && !referencesOnEdit ? true : !hasPds && false}
+                                          action={() =>
+                                            openRemoveActionModal(refIdx, ref)
+                                          }
+                                          muted={
+                                            hasPds && referencesOnEdit
+                                              ? false
+                                              : hasPds && !referencesOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
                                         />
                                       </div>
                                     </div>
