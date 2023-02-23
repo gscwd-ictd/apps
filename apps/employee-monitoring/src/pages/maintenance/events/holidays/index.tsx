@@ -49,7 +49,8 @@ const columns = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('holidayTypes', {
-    header: () => 'Visits',
+    header: () => 'Type',
+    cell: (info) => (<span>{info.getValue()}</span>)
   }),
 ];
 
