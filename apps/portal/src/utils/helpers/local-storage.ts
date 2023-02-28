@@ -1,5 +1,5 @@
-import { EmployeeDetails } from '../../src/types/employee.type';
-import { useNameInitials } from '../hooks/useNameInitials';
+import { EmployeeDetails } from '../../types/employee.type';
+import { UseNameInitials } from '../hooks/useNameInitials';
 
 export function setLocalStorage(userDetails: EmployeeDetails) {
   if (typeof window !== undefined) {
@@ -17,7 +17,10 @@ export function setLocalStorage(userDetails: EmployeeDetails) {
         fullName: `${userDetails.profile.firstName} ${userDetails.profile.lastName}`,
 
         // generate name initials
-        initials: useNameInitials(userDetails.profile.firstName, userDetails.profile.lastName),
+        initials: UseNameInitials(
+          userDetails.profile.firstName,
+          userDetails.profile.lastName
+        ),
       })
     );
   }

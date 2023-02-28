@@ -1,4 +1,7 @@
-export const useNameInitials = (firstName: string, lastName: string): string => {
+export const UseNameInitials = (
+  firstName: string,
+  lastName: string
+): string => {
   // get the first letter of the first name
   const fNameInitial = firstName.split('')[0].toUpperCase();
 
@@ -16,5 +19,5 @@ export const useInitialsFromFullName = (fullName: string) => {
   // set lastname initial to second array
   const lastName = fullName.split(' ')[1];
 
-  return useNameInitials(firstName, lastName);
+  return UseNameInitials(firstName, lastName);
 };
