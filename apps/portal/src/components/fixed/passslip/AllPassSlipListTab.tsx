@@ -1,9 +1,12 @@
 import { usePassSlipStore } from '../../../store/passslip.store';
 import dayjs from 'dayjs';
-import { PassSlip } from '../../../../src/types/passslip.type';
+import {
+  PassSlip,
+  SelectedPassSlip,
+} from '../../../../src/types/passslip.type';
 
 type AllPassSlipListTabProps = {
-  passslips: Array<PassSlip>;
+  passslips: Array<SelectedPassSlip>;
   tab: number;
 };
 
@@ -25,7 +28,7 @@ export const AllPassSlipListTab = ({
 
   const setAction = usePassSlipStore((state) => state.setAction);
 
-  const onSelect = (passslip: PassSlip) => {
+  const onSelect = (passslip: SelectedPassSlip) => {
     setSelectedPassSlip(passslip);
     setSelectedPassSlipId(passslip.id);
     if (tab === 1) {
@@ -45,7 +48,7 @@ export const AllPassSlipListTab = ({
     <>
       {passslips && passslips.length > 0 ? (
         <ul className="mt-4">
-          {passslips.map((item: PassSlip, index: number) => {
+          {passslips.map((item: SelectedPassSlip, index: number) => {
             return (
               <li
                 key={index}
@@ -58,13 +61,13 @@ export const AllPassSlipListTab = ({
                   </h1>
                   {/* <p className="text-md text-gray-500"></p> */}
                   <p className="text-sm text-gray-500">
-                    Estimated Hours: {item.estimatedHours}
+                    Estimated Hours: {item.estimateHours}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Purpose: {item.purpose}
+                    Purpose: {item.purposeDestination}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Fulfilled on {dayjs(item.date).format('MMMM d, YYYY')}
+                    Date: {dayjs(item.dateOfApplication).format('MMMM d, YYYY')}
                   </p>
                 </div>
               </li>

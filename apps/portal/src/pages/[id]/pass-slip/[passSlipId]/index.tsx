@@ -8,6 +8,7 @@ import { getUserDetails, withSession } from '../../../../utils/helpers/session';
 import { usePassSlipStore } from '../../../../store/passslip.store';
 import React from 'react';
 import { PassSlipPdf } from '../../../../components/fixed/passslip/PassSlipPdf';
+import { employeeDummy } from '../../../../../src/types/employee.type';
 
 export default function PassSlipPage({
   employeeDetails,
@@ -28,10 +29,18 @@ export default function PassSlipPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDetails } };
+};
+
+// export const getServerSideProps: GetServerSideProps = withSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
+
+//     return { props: { employeeDetails } };
+//   }
+// );
