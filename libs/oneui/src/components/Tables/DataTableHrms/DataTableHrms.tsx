@@ -142,7 +142,7 @@ export const DataTableHrms = <T extends object>({
           </thead>
 
           {/* start of table body */}
-          {data.length !== 0 ? (
+          {data && data.length !== 0 ? (
             <tbody>
               {table.getRowModel().rows.map((row) => {
                 return (
@@ -179,7 +179,7 @@ export const DataTableHrms = <T extends object>({
           )}
         </table>
 
-        {paginate ? (
+        {data && paginate ? (
           <div className="flex items-center justify-end border-t border-gray-200 bg-white px-4 py-3 sm:px-6 space-x-3">
             {/* Next and Previous button */}
             <div className="flex flex-1 justify-between sm:hidden">

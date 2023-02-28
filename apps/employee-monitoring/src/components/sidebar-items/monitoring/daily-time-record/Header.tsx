@@ -1,6 +1,6 @@
 import { SearchBox } from 'apps/employee-monitoring/src/components/inputs/SearchBox';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
-import fetcher from 'apps/employee-monitoring/src/utils/fetcher/Fetcher';
+import fetcherHRIS from '../../../../utils/fetcher/FetcherHris';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Assignment } from 'libs/utils/src/lib/types/employee.type';
@@ -13,10 +13,7 @@ export const DailyTimeRecordPageHeader = (): JSX.Element => {
   );
   const [assignments, setAssignments] = useState<Array<Assignment>>([]);
 
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/organization/mixed`,
-    fetcher
-  );
+  const { data } = useSWR(`organization/mixed`, fetcherHRIS);
 
   useEffect(() => {
     if (data) {
