@@ -25,6 +25,8 @@ import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { employeeDummy } from '../../../../src/types/employee.type';
+import { applyPassSlip } from '../../../../src/utils/helpers/passslip-requests';
 
 export default function PassSlip({
   employeeDetails,
@@ -55,6 +57,15 @@ export default function PassSlip({
   );
   // set state for employee store
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
+  const dateOfApplication = usePassSlipStore(
+    (state) => state.dateOfApplication
+  );
+  const natureOfBusiness = usePassSlipStore((state) => state.natureOfBusiness);
+  const estimateHours = usePassSlipStore((state) => state.estimateHours);
+  const purposeDestination = usePassSlipStore(
+    (state) => state.purposeDestination
+  );
+  const obTransportation = usePassSlipStore((state) => state.obTransportation);
 
   // open the modal
   const openModal = () => {
@@ -85,12 +96,19 @@ export default function PassSlip({
     }
   }, [isLoading, setIsLoading]);
 
-  //modal action button
-  // const modalAction = () => (
-  //   <PDFViewer>
-  //     {/* <PassSlipPdf /> */}
-  //   </PDFViewer>
-  // );
+  // modal action button
+  const modalAction = async () => {
+    if (action === 'Apply') {
+      const data = applyPassSlip(
+        employeeDetail.employmentDetails.userId,
+        dateOfApplication,
+        natureOfBusiness,
+        estimateHours,
+        purposeDestination,
+        obTransportation
+      );
+    }
+  };
 
   return (
     <>
@@ -139,6 +157,7 @@ export default function PassSlip({
                     size={'md'}
                     loading={false}
                     className={`${modal.page != 3 ? '' : 'hidden'}`}
+                    onClick={modalAction}
                   >
                     {action}
                   </Button>
@@ -203,10 +222,18 @@ export default function PassSlip({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDetails } };
+};
+
+// export const getServerSideProps: GetServerSideProps = withSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
+
+//     return { props: { employeeDetails } };
+//   }
+// );

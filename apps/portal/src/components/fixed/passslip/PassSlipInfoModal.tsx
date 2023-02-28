@@ -12,7 +12,7 @@ export default function PassSlipInfoModal() {
           <div className="w-full pb-2 flex gap-2 justify-start items-center">
             <span className="text-slate-500 text-xl font-medium">Date:</span>
             <div className="border-slate-300 text-slate-500 border px-4 text-lg">
-              {selectedPassSlip.date}
+              {selectedPassSlip.dateOfApplication}
             </div>
           </div>
           <div className="flex gap-2">
@@ -40,7 +40,7 @@ export default function PassSlipInfoModal() {
                   'text-slate-500 rounded text-lg border-slate-300 border px-4'
                 }
               >
-                {selectedPassSlip.modeOfTransportation}
+                {selectedPassSlip.obTransportation}
               </div>
             </div>
 
@@ -49,7 +49,7 @@ export default function PassSlipInfoModal() {
                 Estimated Hours:
               </span>
               <div className="border-slate-300 border px-4 text-slate-500 text-lg">
-                {selectedPassSlip.estimatedHours}
+                {selectedPassSlip.estimateHours}
               </div>
             </div>
             <label className={'text-slate-500 text-xl font-medium'}>
@@ -59,7 +59,7 @@ export default function PassSlipInfoModal() {
               className={
                 'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
               }
-              value={selectedPassSlip.purpose}
+              value={selectedPassSlip.purposeDestination}
               rows={5}
               disabled={true}
             ></textarea>
