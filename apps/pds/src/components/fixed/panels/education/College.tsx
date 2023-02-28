@@ -650,19 +650,11 @@ export const College = (): JSX.Element => {
                                       <EditButton
                                         action={() => onEdit(course, courseIdx)}
                                         type="button"
-                                        disabled={collegeOnEdit ? false : true}
                                       />
                                     </div>
 
                                     <div className="w-8">
                                       <DeleteButton
-                                        muted={
-                                          hasPds && collegeOnEdit
-                                            ? false
-                                            : hasPds && !collegeOnEdit
-                                            ? true
-                                            : !hasPds && false
-                                        }
                                         action={() =>
                                           openRemoveActionModal(
                                             courseIdx,

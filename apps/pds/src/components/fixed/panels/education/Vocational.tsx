@@ -640,21 +640,11 @@ export const Vocational = (): JSX.Element => {
                                             onEdit(course, courseIdx)
                                           }
                                           type="button"
-                                          disabled={
-                                            vocationalOnEdit ? false : true
-                                          }
                                         />
                                       </div>
 
                                       <div className="w-8">
                                         <DeleteButton
-                                          muted={
-                                            hasPds && vocationalOnEdit
-                                              ? false
-                                              : hasPds && !vocationalOnEdit
-                                              ? true
-                                              : !hasPds && false
-                                          }
                                           action={() =>
                                             openRemoveActionModal(
                                               courseIdx,
