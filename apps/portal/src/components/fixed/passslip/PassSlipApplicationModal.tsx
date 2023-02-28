@@ -1,3 +1,4 @@
+import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import axios from 'axios';
 import {
   GetServerSideProps,
@@ -10,23 +11,83 @@ import { withSession } from '../../../utils/helpers/session';
 
 // export default function Messages({ pendingAcknowledgements, id }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function PassSlipApplicationModal() {
-  const [natureOfBusiness, setNatureOfBusiness] = useState<string>('');
-  const [transportation, setTransportation] = useState<string>();
-  const [purpose, setPurpose] = useState<string>();
-  const [natureOfBusinessName, setNatureOfBusinessName] = useState<string>();
+  const passSlipEmployeeId = usePassSlipStore(
+    (state) => state.passSlipEmployeeId
+  );
 
-  // useEffect(() => {
-  //   console.log(natureOfBusiness);
-  // }, [natureOfBusiness]);
+  const setDateOfApplication = usePassSlipStore(
+    (state) => state.setDateOfApplication
+  );
+
+  const setNatureOfBusiness = usePassSlipStore(
+    (state) => state.setNatureOfBusiness
+  );
+
+  const setEstimateHours = usePassSlipStore((state) => state.setEstimateHours);
+
+  const setPurposeDestination = usePassSlipStore(
+    (state) => state.setPurposeDestination
+  );
+
+  const setObTransportation = usePassSlipStore(
+    (state) => state.setObTransportation
+  );
 
   const handleNatureOfBusiness = (e: string) => {
+    if (e !== 'Official Business') {
+      setObTransportation(null);
+    }
     setNatureOfBusiness(e);
-    setPurpose('');
+    setPurposeDestination('');
   };
 
   const handlePurposeDetails = (e: string) => {
-    setPurpose(e);
+    setPurposeDestination(e);
   };
+
+  const handleHours = (e: number) => {
+    if (natureOfBusiness === 'Half Day' || natureOfBusiness === 'Undertime') {
+      setEstimateHours(null);
+    } else {
+      setEstimateHours(e);
+    }
+  };
+
+  const handleDate = (e: string) => {
+    setDateOfApplication(e);
+  };
+
+  const dateOfApplication = usePassSlipStore(
+    (state) => state.dateOfApplication
+  );
+  const natureOfBusiness = usePassSlipStore((state) => state.natureOfBusiness);
+  const estimateHours = usePassSlipStore((state) => state.estimateHours);
+  const purposeDestination = usePassSlipStore(
+    (state) => state.purposeDestination
+  );
+  const obTransportation = usePassSlipStore((state) => state.obTransportation);
+
+  useEffect(() => {
+    if (natureOfBusiness === 'Half Day' || natureOfBusiness === 'Undertime') {
+      setEstimateHours(0);
+    }
+  }, [natureOfBusiness, setEstimateHours]);
+
+  useEffect(() => {
+    console.log(
+      dateOfApplication,
+      estimateHours,
+      purposeDestination,
+      natureOfBusiness,
+      obTransportation
+    );
+  }, [
+    dateOfApplication,
+    estimateHours,
+    purposeDestination,
+    natureOfBusiness,
+    obTransportation,
+  ]);
 
   return (
     <>
@@ -38,6 +99,7 @@ export default function PassSlipApplicationModal() {
             <input
               type="date"
               className="border-slate-300 text-slate-500"
+              onChange={(e) => handleDate(e.target.value as unknown as string)}
             ></input>
           </div>
           <label className="pt-2 text-slate-500 text-xl font-medium">
@@ -59,15 +121,15 @@ export default function PassSlipApplicationModal() {
               <option value="Undertime">Undertime</option>
               <option value="Official Business">Official Business</option>
             </select>
-            <div
+            {/* <div
               className={`${
-                natureOfBusinessName
+                natureOfBusiness
                   ? 'flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1'
                   : 'hidden'
               }`}
             >
-              <span className="font-bold">{natureOfBusinessName}</span>
-            </div>
+              <span className="font-bold">{natureOfBusiness}</span>
+            </div> */}
           </div>
           <div
             className={`${
@@ -91,15 +153,17 @@ export default function PassSlipApplicationModal() {
                   : 'hidden'
               }`}
               onChange={(e) =>
-                setTransportation(e.target.value as unknown as string)
+                setObTransportation(e.target.value as unknown as string)
               }
             >
               <option value="transportation" disabled>
                 Select Mode of Transportation
               </option>
-              <option value="office">Office Vehicle</option>
-              <option value="private">Private/Personal Vehicle</option>
-              <option value="public">Public Vehicle</option>
+              <option value="Office Vehicle">Office Vehicle</option>
+              <option value="Private/Personal Vehicle">
+                Private/Personal Vehicle
+              </option>
+              <option value="Public Vehicle">Public Vehicle</option>
             </select>
 
             <div className="w-full flex gap-2 justify-start items-center">
@@ -108,7 +172,22 @@ export default function PassSlipApplicationModal() {
               </span>
               <input
                 type="number"
+                value={
+                  natureOfBusiness === 'Half Day' ||
+                  natureOfBusiness === 'Undertime'
+                    ? 0
+                    : estimateHours
+                }
+                disabled={
+                  natureOfBusiness === 'Half Day' ||
+                  natureOfBusiness === 'Undertime'
+                    ? true
+                    : false
+                }
                 className="border-slate-300 text-slate-500"
+                onChange={(e) =>
+                  handleHours(e.target.value as unknown as number)
+                }
               ></input>
             </div>
             <label
@@ -129,7 +208,7 @@ export default function PassSlipApplicationModal() {
                   ? 'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
                   : 'hidden'
               }`}
-              value={purpose}
+              value={purposeDestination}
               rows={3}
               placeholder={`Enter Purpose of Pass Slip`}
             ></textarea>

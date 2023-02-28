@@ -9,60 +9,17 @@ type PassSlipTabWindowProps = {
 export const PassSlipTabWindow = ({
   employeeId,
 }: PassSlipTabWindowProps): JSX.Element => {
-  const pendingPassSlips = [
-    {
-      id: '5',
-      date: '1/20/2023',
-      natureOfBusiness: 'Personal Business',
-      estimatedHours: 1,
-      purpose: 'Find myself',
-      modeOfTransportation: null,
-    },
-  ];
+  const pendingPassSlips = [];
 
-  const fulfilledPassSlips = [
-    {
-      id: '1',
-      date: '1/15/2023',
-      natureOfBusiness: 'Personal Business',
-      estimatedHours: 1,
-      purpose: 'Find my Nissan Almera',
-      modeOfTransportation: null,
-    },
-    {
-      id: '2',
-      date: '1/16/2023',
-      natureOfBusiness: 'Official Business',
-      estimatedHours: 3,
-      purpose:
-        'Fighting and hostilities over the weekend killed and injured civilians, while critical facilities, including several hospitals, were damaged on both sides of the frontline.On Saturday evening, dozens of civilians were reportedly killed or injured during an attack on a hospital in Novoaidar in the part of the Luhansk region currently under military control of the Russian Federation.Earlier during the same day, another health facility was reportedly hit in areas under Russian control in the Kherson region.On Sunday, attacks were reported in Kherson city and other parts of the region that are under Ukrainian control. Health workers were reportedly injured when the Kherson Clinical Hospital was hit. Other civilians were killed or injured and civilian infrastructure, including homes and a school, were damaged.',
-      modeOfTransportation: 'Office Vehicle',
-    },
-    {
-      id: '42',
-      date: '1/16/2023',
-      natureOfBusiness: 'Official Business',
-      estimatedHours: 3,
-      purpose: 'Find my Nissan Almera',
-      modeOfTransportation: 'Office Vehicle',
-    },
-    {
-      id: '332',
-      date: '1/16/2023',
-      natureOfBusiness: 'Official Business',
-      estimatedHours: 3,
-      purpose: 'Find my Nissan Almera',
-      modeOfTransportation: 'Office Vehicle',
-    },
-    {
-      id: '266',
-      date: '1/16/2023',
-      natureOfBusiness: 'Official Business',
-      estimatedHours: 3,
-      purpose: 'Find my Nissan Almera',
-      modeOfTransportation: 'Office Vehicle',
-    },
-  ];
+  const fulfilledPassSlips = [];
+
+  const passSlipEmployeeId = usePassSlipStore(
+    (state) => state.passSlipEmployeeId
+  );
+
+  const setPassSlipEmployeeId = usePassSlipStore(
+    (state) => state.setPassSlipEmployeeId
+  );
 
   const pendingPassSlipList = usePassSlipStore(
     (state) => state.pendingPassSlipList
@@ -85,6 +42,7 @@ export const PassSlipTabWindow = ({
   useEffect(() => {
     setPendingPassSlipList(pendingPassSlips);
     setFulfilledPassSlipList(fulfilledPassSlips);
+    setPassSlipEmployeeId(employeeId);
   }, []);
 
   return (

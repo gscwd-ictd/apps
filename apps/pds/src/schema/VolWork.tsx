@@ -3,8 +3,16 @@ import * as yup from 'yup';
 
 // yup validation schema
 const schema = yup.object().shape({
-  organizationName: yup.string().required('Please enter an organization name').trim().label('This'),
-  position: yup.string().required('Please enter a position title').trim().label('This'),
+  organizationName: yup
+    .string()
+    .required('Please enter an organization name')
+    .trim()
+    .label('This'),
+  position: yup
+    .string()
+    .required('Please enter a position title')
+    .trim()
+    .label('This'),
   from: yup
     .string()
     .required('Please enter a valid date')
@@ -45,10 +53,10 @@ const schema = yup.object().shape({
     then: yup.number().notRequired().nullable(true).label('This'),
     otherwise: yup
       .number()
-      .min(1)
-      .required()
+      .notRequired()
+      .nullable(true)
       .transform((v, o) => (o === '' ? null : v))
-      .typeError('Please enter a valid number of hours')
+      // .typeError('Please enter a valid number of hours')
       .label('This'),
   }),
 });
