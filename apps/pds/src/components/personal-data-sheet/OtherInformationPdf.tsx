@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
-import { Skill, Recognition, Organization } from '../../types/data/other-info.type';
+import {
+  Skill,
+  Recognition,
+  Organization,
+} from '../../types/data/other-info.type';
+import { constant } from 'lodash';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -79,14 +84,21 @@ type OtherInformationPdfProps = {
   organizations: Array<Organization>;
 };
 
-export const OtherInformationPdf = ({ skills, recognitions, organizations }: OtherInformationPdfProps): JSX.Element => {
+export const OtherInformationPdf = ({
+  skills,
+  recognitions,
+  organizations,
+}: OtherInformationPdfProps): JSX.Element => {
   const [emptySkillRows, setEmptySkillRows] = useState(7);
   const [emptyRecognitionRows, setEmptyRecognitionRows] = useState(7);
   const [emptyOrgRows, setEmptyOrgRows] = useState(7);
 
   const renderSpecialSkillRows = () => {
-    var content = skills.slice(0, 7).map((skill, index) => (
-      <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={index}>
+    const content = skills.slice(0, 7).map((skill, index) => (
+      <View
+        style={[styles.inputValue, styles.borderRight, styles.borderTop]}
+        key={index}
+      >
         <Text style={[styles.verticalCenter]} wrap={false}>
           {skill.skill}
         </Text>
@@ -97,12 +109,15 @@ export const OtherInformationPdf = ({ skills, recognitions, organizations }: Oth
   };
 
   const renderEmptySpecialSkillRows = () => {
-    let content = [];
+    const content = [];
     const rowToRender = emptySkillRows - skills.length;
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={i}>
+        <View
+          style={[styles.inputValue, styles.borderRight, styles.borderTop]}
+          key={i}
+        >
           <Text style={[styles.verticalCenter]}>N/A</Text>
         </View>
       );
@@ -112,8 +127,11 @@ export const OtherInformationPdf = ({ skills, recognitions, organizations }: Oth
   };
 
   const renderRecognitionRows = () => {
-    var content = recognitions.slice(0, 7).map((recognition, index) => (
-      <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={index}>
+    const content = recognitions.slice(0, 7).map((recognition, index) => (
+      <View
+        style={[styles.inputValue, styles.borderRight, styles.borderTop]}
+        key={index}
+      >
         <Text style={[styles.verticalCenter]} wrap={false}>
           {recognition.recognition}
         </Text>
@@ -124,12 +142,15 @@ export const OtherInformationPdf = ({ skills, recognitions, organizations }: Oth
   };
 
   const renderEmptyRecognitionRows = () => {
-    let content = [];
+    const content = [];
     const rowToRender = emptyRecognitionRows - recognitions.length;
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={i}>
+        <View
+          style={[styles.inputValue, styles.borderRight, styles.borderTop]}
+          key={i}
+        >
           <Text style={[styles.verticalCenter]}>N/A</Text>
         </View>
       );
@@ -139,7 +160,7 @@ export const OtherInformationPdf = ({ skills, recognitions, organizations }: Oth
   };
 
   const renderMembershipRows = () => {
-    var content = organizations.slice(0, 7).map((org, index) => (
+    const content = organizations.slice(0, 7).map((org, index) => (
       <View style={[styles.inputValue, styles.borderTop]} key={index}>
         <Text style={[styles.verticalCenter]} wrap={false}>
           {org.organization}
@@ -151,7 +172,7 @@ export const OtherInformationPdf = ({ skills, recognitions, organizations }: Oth
   };
 
   const renderEmptyMembershipRows = () => {
-    let content = [];
+    const content = [];
     const rowToRender = emptyOrgRows - organizations.length;
 
     for (let i = 0; i < rowToRender; i++) {
@@ -172,18 +193,45 @@ export const OtherInformationPdf = ({ skills, recognitions, organizations }: Oth
       </View>
 
       {/* Header */}
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+      >
         {/* Special SKills */}
-        <View style={[styles.inputKey, styles.borderRight, styles.w17_2, { flexDirection: 'row' }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.borderRight,
+            styles.w17_2,
+            { flexDirection: 'row' },
+          ]}
+        >
           <Text style={[styles.verticalCenter]}>31.</Text>
-          <Text style={[styles.verticalCenter, { paddingLeft: 2 }]}>SPECIAL SKILLS and HOBBIES</Text>
+          <Text style={[styles.verticalCenter, { paddingLeft: 2 }]}>
+            SPECIAL SKILLS and HOBBIES
+          </Text>
         </View>
 
         {/* Non-Academic Distinctions */}
-        <View style={[styles.inputKey, styles.borderRight, styles.w59, { flexDirection: 'row' }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.borderRight,
+            styles.w59,
+            { flexDirection: 'row' },
+          ]}
+        >
           <Text style={[styles.verticalCenter]}>32.</Text>
 
-          <View style={[styles.w100, styles.verticalCenter, styles.horizontalCenter]}>
+          <View
+            style={[
+              styles.w100,
+              styles.verticalCenter,
+              styles.horizontalCenter,
+            ]}
+          >
             <Text>NON-ACADEMIC DISTINCTIONS / RECOGNITION</Text>
             <Text>(Write in full)</Text>
           </View>
@@ -193,7 +241,13 @@ export const OtherInformationPdf = ({ skills, recognitions, organizations }: Oth
         <View style={[styles.inputKey, styles.w23_8, { flexDirection: 'row' }]}>
           <Text style={[styles.verticalCenter]}>33.</Text>
 
-          <View style={[styles.w100, styles.verticalCenter, styles.horizontalCenter]}>
+          <View
+            style={[
+              styles.w100,
+              styles.verticalCenter,
+              styles.horizontalCenter,
+            ]}
+          >
             <Text>MEMBERSHIP IN ASSOCIATION / ORGANIZATION</Text>
             <Text>(Write in full)</Text>
           </View>

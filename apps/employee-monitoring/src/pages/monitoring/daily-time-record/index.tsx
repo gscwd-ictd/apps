@@ -5,7 +5,7 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import React, { useEffect, useState } from 'react';
 import { EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import useSWR from 'swr';
-import fetcherHRIS from '../../../utils/fetcher/FetcherHris';
+import fetcherHRIS from '../../../utils/fetcher/FetcherHRIS';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';

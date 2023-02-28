@@ -1,6 +1,6 @@
 import { SearchBox } from 'apps/employee-monitoring/src/components/inputs/SearchBox';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
-import fetcherHRIS from '../../../../utils/fetcher/FetcherHris';
+import fetcherHRIS from '../../../../utils/fetcher/FetcherHRIS';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Assignment } from 'libs/utils/src/lib/types/employee.type';

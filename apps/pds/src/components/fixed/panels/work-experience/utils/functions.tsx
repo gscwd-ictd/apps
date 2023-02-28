@@ -1,9 +1,11 @@
 import { isEmpty } from 'lodash';
-import { WorkExperience } from 'types/data/work.type';
+import { WorkExperience } from '../../../../../types/data/work.type';
 
-export async function AssignWorkExperiencesForUpdate(workExperiences: Array<WorkExperience>) {
-  let add: Array<WorkExperience> = [];
-  let update: Array<WorkExperience> = [];
+export async function AssignWorkExperiencesForUpdate(
+  workExperiences: Array<WorkExperience>
+) {
+  const add: Array<WorkExperience> = [];
+  const update: Array<WorkExperience> = [];
 
   // add
   workExperiences.length > 0 &&
