@@ -12,8 +12,8 @@ type BreadCrumbsProps = {
 };
 
 export const BreadCrumbs: FunctionComponent<BreadCrumbsProps> = ({
-  crumbs = [],
   title,
+  crumbs = [{ layerNo: 1, layerText: title, path: '' }],
 }) => {
   return (
     <div className="flex justify-between w-full h-16 px-5 bg-inherit ">
