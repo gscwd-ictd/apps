@@ -28,6 +28,7 @@ export const CSEligibility = (): JSX.Element => {
   const examDateToRef = useRef<any>(null);
   // set eligiblity array, employee object state
   const eligibility = usePdsStore((state) => state.eligibility);
+
   const employee = useEmployeeStore((state) => state.employeeDetails);
   const [addEligIsOpen, setAddEligIsOpen] = useState<boolean>(false); // set add modal state
   const [removeEligIsOpen, setRemoveEligIsOpen] = useState<boolean>(false); // set remove action modal state
@@ -393,7 +394,7 @@ export const CSEligibility = (): JSX.Element => {
                         name="eligLicensenumber"
                         label="License Number"
                         placeholder="Leave blank if not applicable."
-                        type="number"
+                        type="text"
                         withHelpButton
                         helpContent="Specify the license number if eligibility is under R.A. 1080"
                         controller={{
@@ -551,35 +552,54 @@ export const CSEligibility = (): JSX.Element => {
                             className="px-2 text-center select-none"
                             tableDimension={
                               <>
-                                <div className="flex justify-center gap-4">
-                                  {allowEditEligibility ? (
+                                {!isEmpty(elig._id) ? (
+                                  <div className="flex justify-center gap-4">
+                                    {allowEditEligibility ? (
+                                      <div className="w-8">
+                                        <EditButton
+                                          action={() => onEdit(elig, eligIdx)}
+                                          type="button"
+                                          disabled={
+                                            eligibilityOnEdit ? false : true
+                                          }
+                                        />
+                                      </div>
+                                    ) : null}
+
+                                    {allowDeleteEligibility ? (
+                                      <div className="w-8">
+                                        <DeleteButton
+                                          muted={
+                                            hasPds && eligibilityOnEdit
+                                              ? false
+                                              : hasPds && !eligibilityOnEdit
+                                              ? true
+                                              : !hasPds && false
+                                          }
+                                          action={() =>
+                                            openRemoveActionModal(eligIdx, elig)
+                                          }
+                                        />
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                ) : isEmpty(elig._id) ? (
+                                  <div className="flex justify-center gap-4">
                                     <div className="w-8">
                                       <EditButton
                                         action={() => onEdit(elig, eligIdx)}
                                         type="button"
-                                        disabled={
-                                          eligibilityOnEdit ? false : true
-                                        }
                                       />
                                     </div>
-                                  ) : null}
-                                  {allowDeleteEligibility ? (
                                     <div className="w-8">
                                       <DeleteButton
-                                        muted={
-                                          hasPds && eligibilityOnEdit
-                                            ? false
-                                            : hasPds && !eligibilityOnEdit
-                                            ? true
-                                            : !hasPds && false
-                                        }
                                         action={() =>
                                           openRemoveActionModal(eligIdx, elig)
                                         }
                                       />
                                     </div>
-                                  ) : null}
-                                </div>
+                                  </div>
+                                ) : null}
                               </>
                             }
                           />

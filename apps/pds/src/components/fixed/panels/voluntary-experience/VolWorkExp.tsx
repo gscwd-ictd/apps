@@ -74,12 +74,15 @@ export const VolWorkExp = (): JSX.Element => {
       numberOfHours: null,
       employeeId: employee.employmentDetails.userId,
       isEdited: false,
+      isHoursApplicable: true,
     },
   });
 
   const getIsCurrentlyVol = getValues('isCurrentlyVol'); // assign getvalues is currently volunteering
   const watchIsCurrentlyVol = watch('isCurrentlyVol'); // assign watch is currently volunteering
 
+  const getIsHoursApplicable = getValues('isHoursApplicable');
+  const watchIsHoursApplicable = watch('isHoursApplicable');
   // set initial values
   const setInitialValues = () => {
     setVoluntaryWork(initialPdsState.voluntaryWork);
@@ -504,38 +507,65 @@ export const VolWorkExp = (): JSX.Element => {
                               className="px-2 text-center select-none"
                               tableDimension={
                                 <>
-                                  <div className="flex justify-center gap-4">
-                                    {allowEditVolWork ? (
-                                      <div className="w-8">
-                                        <EditButton
-                                          disabled={
-                                            hasPds && voluntaryWorkOnEdit
-                                              ? false
-                                              : hasPds && !voluntaryWorkOnEdit
-                                              ? true
-                                              : !hasPds && false
-                                          }
-                                          action={() => onEdit(work, workIdx)}
-                                        />
-                                      </div>
-                                    ) : null}
-                                    {allowDeleteVolWork ? (
-                                      <div className="w-8">
-                                        <DeleteButton
-                                          muted={
-                                            hasPds && voluntaryWorkOnEdit
-                                              ? false
-                                              : hasPds && !voluntaryWorkOnEdit
-                                              ? true
-                                              : !hasPds && false
-                                          }
-                                          action={() =>
-                                            openRemoveActionModal(workIdx, work)
-                                          }
-                                        />
-                                      </div>
-                                    ) : null}
-                                  </div>
+                                  {!isEmpty(work._id) ? (
+                                    <div className="flex justify-center gap-4">
+                                      {/* EDIT VOL WORK */}
+                                      {allowEditVolWork ? (
+                                        <div className="w-8">
+                                          <EditButton
+                                            disabled={
+                                              hasPds && voluntaryWorkOnEdit
+                                                ? false
+                                                : hasPds && !voluntaryWorkOnEdit
+                                                ? true
+                                                : !hasPds && false
+                                            }
+                                            action={() => onEdit(work, workIdx)}
+                                          />
+                                        </div>
+                                      ) : null}
+                                      {/* DELETE VOL WORK */}
+                                      {allowDeleteVolWork ? (
+                                        <div className="w-8">
+                                          <DeleteButton
+                                            muted={
+                                              hasPds && voluntaryWorkOnEdit
+                                                ? false
+                                                : hasPds && !voluntaryWorkOnEdit
+                                                ? true
+                                                : !hasPds && false
+                                            }
+                                            action={() =>
+                                              openRemoveActionModal(
+                                                workIdx,
+                                                work
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      ) : isEmpty(work._id) ? (
+                                        <div className="flex justify-center gap-4">
+                                          <div className="w-8">
+                                            <EditButton
+                                              action={() =>
+                                                onEdit(work, workIdx)
+                                              }
+                                            />
+                                          </div>
+                                          <div className="w-8">
+                                            <DeleteButton
+                                              action={() =>
+                                                openRemoveActionModal(
+                                                  workIdx,
+                                                  work
+                                                )
+                                              }
+                                            />
+                                          </div>
+                                        </div>
+                                      ) : null}
+                                    </div>
+                                  ) : null}
                                 </>
                               }
                             />

@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Button,
-  DataTableHrms,
-  LoadingSpinner,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { Button, DataTableHrms } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
@@ -14,10 +9,13 @@ import fetcherHRIS from '../../../utils/fetcher/FetcherHris';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
-import { isEmpty } from 'lodash';
+import axios from 'axios';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-export default function Index() {
-  const [employees, setEmployees] = useState<Array<EmployeeRowData>>([]);
+export default function Index({
+  employees,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [allEmployees, setAllEmployees] = useState<Array<EmployeeRowData>>([]);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const selectedAssignment = useDtrStore((state) => state.selectedAssignment);
 
@@ -25,7 +23,7 @@ export default function Index() {
     {} as EmployeeRowData
   );
 
-  const { data, error, isLoading } = useSWR(`/employees`, fetcherHRIS);
+  const { data } = useSWR(`/employees`, fetcherHRIS);
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -59,12 +57,12 @@ export default function Index() {
 
   // define table columns
   const columnHelper = createColumnHelper<EmployeeRowData>();
+
   const columns = [
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('fullName', {
-      enableColumnFilter: false,
       header: () => 'Full Name',
       cell: (info) => info.getValue(),
     }),
@@ -103,10 +101,10 @@ export default function Index() {
     );
   };
 
-  // fetch employees, transform and set to state
   useEffect(() => {
-    if (data && !isEmpty(data.data)) {
-      const employeesDetails: Array<EmployeeRowData> = data.data.map(
+    if (employees) {
+      // console.log(employees);
+      const employeesDetails: Array<EmployeeRowData> = employees.map(
         (employeeDetails) => {
           const { employmentDetails, personalDetails } = employeeDetails;
 
@@ -119,13 +117,14 @@ export default function Index() {
         }
       );
 
-      setEmployees(employeesDetails);
+      setAllEmployees(employeesDetails);
+      // console.log(employeesDetails);
     }
-  }, [data]);
+  }, []);
 
   return (
     <>
-      <div className="min-h-[100%] min-w-full px-4">
+      <div className="min-h-[100%] min-w-full">
         <BreadCrumbs
           title="Daily Time Record"
           crumbs={[
@@ -137,36 +136,46 @@ export default function Index() {
           ]}
         />
 
-        {/* Error toast notification */}
-        {!isEmpty(error) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={error.errorMessage}
-          />
-        ) : null}
+        <div className="mx-5">
+          <Card>
+            {/** Top Card */}
+            <div className="flex flex-col flex-wrap ">
+              {/* <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                  onClick={openAddActionModal}
+                >
+                  <i className="bx bxs-plus-square"></i>&nbsp; Add Holiday
+                </button>
+              </div> */}
 
-        <Card>
-          {/** Top Card */}
-          <div className="flex flex-row flex-wrap ">
-            {isLoading ? (
-              <LoadingSpinner />
-            ) : (
-              <>
-                <ToastNotification
-                  toastType="success"
-                  notifMessage="Daily Time Records found"
-                />
-                <DataTableHrms
-                  data={employees}
-                  columns={columns}
-                  columnVisibility={columnVisibility}
-                  paginate
-                />
-              </>
-            )}
-          </div>
-        </Card>
+              <DataTableHrms
+                data={allEmployees}
+                columns={columns}
+                columnVisibility={columnVisibility}
+                paginate
+              />
+
+              {/* <DailyTimeRecordPageHeader /> */}
+
+              {/* <DailyTimeRecordPageFooter /> */}
+            </div>
+          </Card>
+        </div>
       </div>
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees`
+    );
+
+    return { props: { employees: response.data } };
+  } catch (error) {
+    return { props: { employees: [] } };
+  }
+};

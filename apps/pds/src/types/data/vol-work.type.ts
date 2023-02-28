@@ -8,6 +8,7 @@ export type VoluntaryWork = {
   employeeId?: string;
   isCurrentlyVol?: boolean;
   isEdited?: boolean;
+  isHoursApplicable?: boolean;
 };
 
 export type VolWorkState = {

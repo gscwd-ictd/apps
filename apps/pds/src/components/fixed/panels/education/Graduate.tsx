@@ -646,21 +646,11 @@ export const Graduate = (): JSX.Element => {
                                             onEdit(course, courseIdx)
                                           }
                                           type="button"
-                                          disabled={
-                                            graduateOnEdit ? false : true
-                                          }
                                         />
                                       </div>
 
                                       <div className="w-8">
                                         <DeleteButton
-                                          muted={
-                                            hasPds && graduateOnEdit
-                                              ? false
-                                              : hasPds && !graduateOnEdit
-                                              ? true
-                                              : !hasPds && false
-                                          }
                                           action={() =>
                                             openRemoveActionModal(
                                               courseIdx,

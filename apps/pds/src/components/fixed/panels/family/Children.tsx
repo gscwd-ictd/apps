@@ -443,13 +443,6 @@ export const ChildrenInfo = (): JSX.Element => {
                                       <div className="w-8">
                                         <EditButton
                                           action={() => onEdit(child, childIdx)}
-                                          disabled={
-                                            hasPds && childrenOnEdit
-                                              ? false
-                                              : hasPds && !childrenOnEdit
-                                              ? true
-                                              : !hasPds && false
-                                          }
                                         />
                                       </div>
 
@@ -460,13 +453,6 @@ export const ChildrenInfo = (): JSX.Element => {
                                               childIdx,
                                               child
                                             )
-                                          }
-                                          muted={
-                                            hasPds && childrenOnEdit
-                                              ? false
-                                              : hasPds && !childrenOnEdit
-                                              ? true
-                                              : !hasPds && false
                                           }
                                         />
                                       </div>
