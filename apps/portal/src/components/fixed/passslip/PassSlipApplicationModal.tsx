@@ -34,6 +34,9 @@ export default function PassSlipApplicationModal() {
   );
 
   const handleNatureOfBusiness = (e: string) => {
+    if (e !== 'Official Business') {
+      setObTransportation(null);
+    }
     setNatureOfBusiness(e);
     setPurposeDestination('');
   };
@@ -43,8 +46,8 @@ export default function PassSlipApplicationModal() {
   };
 
   const handleHours = (e: number) => {
-    if (e < 1) {
-      setEstimateHours(1);
+    if (natureOfBusiness === 'Half Day' || natureOfBusiness === 'Undertime') {
+      setEstimateHours(null);
     } else {
       setEstimateHours(e);
     }
@@ -65,8 +68,26 @@ export default function PassSlipApplicationModal() {
   const obTransportation = usePassSlipStore((state) => state.obTransportation);
 
   useEffect(() => {
-    console.log(dateOfApplication, estimateHours, purposeDestination);
-  }, [dateOfApplication, estimateHours, purposeDestination]);
+    if (natureOfBusiness === 'Half Day' || natureOfBusiness === 'Undertime') {
+      setEstimateHours(0);
+    }
+  }, [natureOfBusiness, setEstimateHours]);
+
+  useEffect(() => {
+    console.log(
+      dateOfApplication,
+      estimateHours,
+      purposeDestination,
+      natureOfBusiness,
+      obTransportation
+    );
+  }, [
+    dateOfApplication,
+    estimateHours,
+    purposeDestination,
+    natureOfBusiness,
+    obTransportation,
+  ]);
 
   return (
     <>
@@ -138,9 +159,11 @@ export default function PassSlipApplicationModal() {
               <option value="transportation" disabled>
                 Select Mode of Transportation
               </option>
-              <option value="office">Office Vehicle</option>
-              <option value="private">Private/Personal Vehicle</option>
-              <option value="public">Public Vehicle</option>
+              <option value="Office Vehicle">Office Vehicle</option>
+              <option value="Private/Personal Vehicle">
+                Private/Personal Vehicle
+              </option>
+              <option value="Public Vehicle">Public Vehicle</option>
             </select>
 
             <div className="w-full flex gap-2 justify-start items-center">
@@ -149,6 +172,18 @@ export default function PassSlipApplicationModal() {
               </span>
               <input
                 type="number"
+                value={
+                  natureOfBusiness === 'Half Day' ||
+                  natureOfBusiness === 'Undertime'
+                    ? 0
+                    : estimateHours
+                }
+                disabled={
+                  natureOfBusiness === 'Half Day' ||
+                  natureOfBusiness === 'Undertime'
+                    ? true
+                    : false
+                }
                 className="border-slate-300 text-slate-500"
                 onChange={(e) =>
                   handleHours(e.target.value as unknown as number)

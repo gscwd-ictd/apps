@@ -14,17 +14,24 @@ export const applyPassSlip = async (
   purposeDestination: string,
   obTransportation: string
 ) => {
-  const { data } = await axios.post(`${url}/v1/pass-slip`, {
-    employeeId,
-    dateOfApplication,
-    natureOfBusiness,
-    estimateHours,
-    purposeDestination,
-    isCancelled: false,
-    obTransportation,
-  });
-
-  return data;
+  try {
+    // const { data } = await axios.post(`${url}/v1/pass-slip`, {
+    const { data } = await axios.post(
+      `http://192.168.99.124:4104/api/v1/pass-slip`,
+      {
+        employeeId,
+        dateOfApplication,
+        natureOfBusiness,
+        estimateHours,
+        purposeDestination,
+        isCancelled: false,
+        obTransportation,
+      }
+    );
+    return data;
+  } catch (error) {
+    return { error };
+  }
 };
 
 export const getForApprovalPrfs = async (employeeId: string) => {

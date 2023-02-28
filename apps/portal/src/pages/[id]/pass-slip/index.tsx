@@ -27,6 +27,9 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { applyPassSlip } from '../../../../src/utils/helpers/passslip-requests';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { isEmpty } from 'lodash';
 
 export default function PassSlip({
   employeeDetails,
@@ -67,11 +70,34 @@ export default function PassSlip({
   );
   const obTransportation = usePassSlipStore((state) => state.obTransportation);
 
+  const setDateOfApplication = usePassSlipStore(
+    (state) => state.setDateOfApplication
+  );
+
+  const setNatureOfBusiness = usePassSlipStore(
+    (state) => state.setNatureOfBusiness
+  );
+
+  const setEstimateHours = usePassSlipStore((state) => state.setEstimateHours);
+
+  const setPurposeDestination = usePassSlipStore(
+    (state) => state.setPurposeDestination
+  );
+
+  const setObTransportation = usePassSlipStore(
+    (state) => state.setObTransportation
+  );
+
   // open the modal
   const openModal = () => {
     if (!modal.isOpen) {
       setAction('Apply');
       setModal({ ...modal, page: 1, isOpen: true });
+      setNatureOfBusiness('');
+      setEstimateHours(1);
+      setPurposeDestination('');
+      setObTransportation('');
+      setDateOfApplication('');
     }
   };
 
@@ -97,22 +123,70 @@ export default function PassSlip({
   }, [isLoading, setIsLoading]);
 
   // modal action button
-  const modalAction = async () => {
+  const modalAction = async (e) => {
+    e.preventDefault();
     if (action === 'Apply') {
-      const data = applyPassSlip(
-        employeeDetail.employmentDetails.userId,
-        dateOfApplication,
-        natureOfBusiness,
-        estimateHours,
-        purposeDestination,
-        obTransportation
-      );
+      if (isEmpty(dateOfApplication)) {
+        toast.error('Please enter date');
+      } else if (isEmpty(natureOfBusiness)) {
+        toast.error('Please select Nature of Business');
+      } else if (isEmpty(estimateHours)) {
+        toast.error('Please enter number of hours');
+      } else if (
+        estimateHours <= 0 &&
+        natureOfBusiness == 'Personal Business'
+      ) {
+        toast.error('Please enter a valid number of hours');
+      } else if (
+        estimateHours <= 0 &&
+        natureOfBusiness == 'Official Business'
+      ) {
+        toast.error('Please enter a valid number of hours');
+      } else if (isEmpty(purposeDestination)) {
+        toast.error('Please enter purpose or destination');
+      } else if (
+        natureOfBusiness === 'Official Business' &&
+        isEmpty(obTransportation)
+      ) {
+        toast.error('Please select mode of transportation');
+      } else {
+        const data = applyPassSlip(
+          employeeDetail.employmentDetails.userId,
+          dateOfApplication,
+          natureOfBusiness,
+          estimateHours,
+          purposeDestination,
+          obTransportation
+        );
+        if (data) {
+          modalCancel();
+          toast.success('Pass Slip Application Successful!');
+
+          console.log(data);
+        } else {
+          console.log(data);
+          toast.error('Error');
+        }
+      }
     }
   };
 
   return (
     <>
       <>
+        <ToastContainer
+          className={'uppercase text-xs'}
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <EmployeeProvider employeeData={employee}>
           <Head>
             <title>Employee Pass Slips</title>
@@ -135,7 +209,9 @@ export default function PassSlip({
               </h3>
             </Modal.Header>
             <Modal.Body>
-              <PassSlipModalController page={modal.page} />
+              <form id="passSlipForm">
+                <PassSlipModalController page={modal.page} />
+              </form>
             </Modal.Body>
             <Modal.Footer>
               <div className="flex justify-end gap-2">
@@ -157,7 +233,9 @@ export default function PassSlip({
                     size={'md'}
                     loading={false}
                     className={`${modal.page != 3 ? '' : 'hidden'}`}
-                    onClick={modalAction}
+                    onClick={(e) => modalAction(e)}
+                    form="passSlipForm"
+                    type={`${modal.page == 1 ? 'submit' : 'button'}`}
                   >
                     {action}
                   </Button>
