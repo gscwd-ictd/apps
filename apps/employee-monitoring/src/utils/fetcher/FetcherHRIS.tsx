@@ -10,6 +10,11 @@ const axiosApi = axios.create({
   withCredentials: true,
 });
 
+axiosApi.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(error)
+);
+
 axiosApi.interceptors.response.use((response) => response);
 
 const fetcherHRIS = async (url: string, config: AxiosRequestConfig) =>

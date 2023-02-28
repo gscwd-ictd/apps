@@ -10,13 +10,14 @@ const axiosApi = axios.create({
   withCredentials: true,
 });
 
+axiosApi.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(error)
+);
+
 axiosApi.interceptors.response.use((response) => response);
 
 const fetcherEMS = async (url: string, config: AxiosRequestConfig) =>
-  await axiosApi
-    .get(url, config)
-    .then((res) => res)
-    .catch((error) => error);
-// const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  await axiosApi.get(url, config).then((res) => res);
 
 export default fetcherEMS;

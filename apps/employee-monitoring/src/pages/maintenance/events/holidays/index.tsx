@@ -1,19 +1,26 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useEffect, useState } from 'react';
+import fetcherEMS from '../../../../../src/utils/fetcher/FetcherEMS';
+import { isEmpty } from 'lodash';
+import useSWR from 'swr';
+
 import { Holiday } from '../../../../utils/types/holiday.type';
 import { HolidayRowData } from '../../../../utils/types/table-row-types/maintenance/holiday-row.type';
+
 import { createColumnHelper } from '@tanstack/react-table';
-import { DataTableHrms } from '@gscwd-apps/oneui';
+import {
+  DataTableHrms,
+  LoadingSpinner,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { Card } from '../../../../components/cards/Card';
 import { BreadCrumbs } from '../../../../components/navigations/BreadCrumbs';
-import { useState } from 'react';
-import axios from 'axios';
 import AddHolidayModal from '../../../../components/modal/maintenance/events/holidays/AddHolidayModal';
 import EditHolidayModal from '../../../../components/modal/maintenance/events/holidays/EditHolidayModal';
 import DeleteHolidayModal from '../../../../components/modal/maintenance/events/holidays/DeleteHolidayModal';
 
-const Index = ({
-  holidays,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Index = () => {
+  const [holidays, setHolidays] = useState<Array<Holiday>>([]);
+
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<HolidayRowData>(
     {} as HolidayRowData
@@ -109,29 +116,47 @@ const Index = ({
     );
   };
 
+  // fetch data for list of holidays
+  const { data, error, isLoading } = useSWR('/holidays', fetcherEMS);
+
+  useEffect(() => {
+    if (!isEmpty(data)) {
+      setHolidays(data.data);
+    }
+  }, [data]);
+
   return (
     <div className="min-h-[100%] min-w-full px-4">
       <BreadCrumbs title="Holidays" />
 
-      <Card>
-        <div className="flex flex-row flex-wrap">
-          <div className="table-actions-wrapper flex order-2 justify-end w-1/2">
-            <button
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-              onClick={openAddActionModal}
-            >
-              <i className="bx bxs-plus-square"></i>&nbsp; Add Holiday
-            </button>
-          </div>
+      {/* Notification error */}
+      {!isEmpty(error) ? (
+        <ToastNotification toastType="error" notifMessage={error.message} />
+      ) : null}
 
-          <DataTableHrms
-            data={holidays}
-            columns={columns}
-            columnVisibility={columnVisibility}
-            paginate
-          />
-        </div>
+      <Card>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div className="flex flex-row flex-wrap">
+            <div className="table-actions-wrapper flex order-2 justify-end w-1/2">
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                onClick={openAddActionModal}
+              >
+                <i className="bx bxs-plus-square"></i>&nbsp; Add Holiday
+              </button>
+            </div>
+
+            <DataTableHrms
+              data={holidays}
+              columns={columns}
+              columnVisibility={columnVisibility}
+              paginate
+            />
+          </div>
+        )}
       </Card>
 
       {/* Add modal */}
@@ -160,16 +185,16 @@ const Index = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_DOMAIN}/holidays`
-    );
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   try {
+//     const response = await axios.get(
+//       `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_DOMAIN}/holidays`
+//     );
 
-    return { props: { holidays: response.data } };
-  } catch (error) {
-    return { props: { holidays: [] } };
-  }
-};
+//     return { props: { holidays: response.data } };
+//   } catch (error) {
+//     return { props: { holidays: [] } };
+//   }
+// };
 
 export default Index;
