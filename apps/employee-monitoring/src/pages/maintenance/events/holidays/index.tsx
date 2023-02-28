@@ -1,21 +1,20 @@
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Holiday } from '../../../../utils/types/holiday.type';
 import { HolidayRowData } from '../../../../utils/types/table-row-types/maintenance/holiday-row.type';
-import { HolidayTypes } from '../../../../utils/enum/holiday-types.enum';
 import { createColumnHelper } from '@tanstack/react-table';
-import { DataTableHrms, Modal } from '@gscwd-apps/oneui';
+import { DataTableHrms } from '@gscwd-apps/oneui';
 import { Card } from '../../../../components/cards/Card';
 import { BreadCrumbs } from '../../../../components/navigations/BreadCrumbs';
 import { useState } from 'react';
 import axios from 'axios';
+import AddHolidayModal from '../../../../components/modal/maintenance/events/holidays/AddHolidayModal';
+import EditHolidayModal from '../../../../components/modal/maintenance/events/holidays/EditHolidayModal';
+import DeleteHolidayModal from '../../../../components/modal/maintenance/events/holidays/DeleteHolidayModal';
 
 const Index = ({
   holidays,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<HolidayRowData>(
     {} as HolidayRowData
   );
@@ -136,92 +135,27 @@ const Index = ({
       </Card>
 
       {/* Add modal */}
-      <Modal open={addModalIsOpen} setOpen={setAddModalIsOpen} steady size="md">
-        <Modal.Header withCloseBtn>
-          <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600"></span>
-            <button
-              type="button"
-              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              onClick={closeAddActionModal}
-            >
-              <i className="bx bx-x"></i>
-              <span className="sr-only">Close modal</span>
-            </button>
-          </div>
-        </Modal.Header>
-        <Modal.Body>INSERT FORM HERE</Modal.Body>
-      </Modal>
+      <AddHolidayModal
+        modalState={addModalIsOpen}
+        setModalState={setAddModalIsOpen}
+        closeModalAction={closeAddActionModal}
+      />
 
       {/* Edit modal */}
-      <Modal
-        open={editModalIsOpen}
-        setOpen={setEditModalIsOpen}
-        steady
-        size="sm"
-      >
-        <Modal.Header withCloseBtn>
-          <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600"></span>
-            <button
-              type="button"
-              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              onClick={closeEditActionModal}
-            >
-              <i className="bx bx-x"></i>
-              <span className="sr-only">Close modal</span>
-            </button>
-          </div>
-        </Modal.Header>
-        <Modal.Body>{JSON.stringify(currentRowData)}</Modal.Body>
-      </Modal>
+      <EditHolidayModal
+        modalState={editModalIsOpen}
+        setModalState={setEditModalIsOpen}
+        closeModalAction={closeEditActionModal}
+        rowData={currentRowData}
+      />
 
       {/* Delete modal */}
-      <Modal
-        open={deleteModalIsOpen}
-        setOpen={setDeleteModalIsOpen}
-        steady
-        size="xs"
-      >
-        <Modal.Header withCloseBtn>
-          <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600"></span>
-            <button
-              type="button"
-              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              onClick={closeDeleteActionModal}
-            >
-              <i className="bx bx-x"></i>
-              <span className="sr-only">Close modal</span>
-            </button>
-          </div>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="text-sm text-center">
-            Are you sure you want to delete entry{' '}
-            {JSON.stringify(currentRowData.name)}
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700"
-              // onClick={() => openEditActionModal(rowData)}
-            >
-              Confirm
-            </button>
-
-            <button
-              type="button"
-              className="text-white bg-red-700 hover:bg-blue-800 focus:outline-none focus:ring-red-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"
-              onClick={closeDeleteActionModal}
-            >
-              Cancel
-            </button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+      <DeleteHolidayModal
+        modalState={deleteModalIsOpen}
+        setModalState={setDeleteModalIsOpen}
+        closeModalAction={closeDeleteActionModal}
+        rowData={currentRowData}
+      />
     </div>
   );
 };
