@@ -3,7 +3,7 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { HolidayRowData } from '../../../../../utils/types/table-row-types/maintenance/holiday-row.type';
-import useSWR from 'swr';
+import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 type AddModalProps = {
   modalState: boolean;
@@ -26,6 +26,8 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
   setModalState,
   closeModalAction,
 }) => {
+  // const [first, setfirst] = useState(second)
+
   // React hook form
   const {
     setValue,
@@ -43,9 +45,11 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
     },
   });
 
-  const onSubmit: SubmitHandler<HolidayRowData> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<HolidayRowData> = (data) => {
+    const response = postEmpMonitoring('/holidays', data);
 
-  // const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_DOMAIN}/holidays`, fetcher)
+    console.log(response);
+  };
 
   return (
     <Modal open={modalState} setOpen={setModalState} steady size="sm">

@@ -7,7 +7,7 @@ import { DailyTimeRecordPageHeader } from 'apps/employee-monitoring/src/componen
 import React, { useEffect, useState } from 'react';
 import { EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import useSWR from 'swr';
-import fetcher from 'apps/employee-monitoring/src/utils/fetcher/Fetcher';
+import fetcherHRIS from '../../../utils/fetcher/FetcherHris';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { isEmpty } from 'lodash';
 
@@ -16,10 +16,7 @@ export default function Index() {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const selectedAssignment = useDtrStore((state) => state.selectedAssignment);
 
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees`,
-    fetcher
-  );
+  const { data } = useSWR(`/employees`, fetcherHRIS);
 
   // when edit action is clicked
   const editAction = async (employee: EmployeeProfile, idx: number) => {
