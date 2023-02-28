@@ -4,6 +4,8 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
 import { EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
+import useSWR from 'swr';
+import fetcherHRIS from '../../../utils/fetcher/FetcherHris';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
@@ -16,9 +18,12 @@ export default function Index({
   const [allEmployees, setAllEmployees] = useState<Array<EmployeeRowData>>([]);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const selectedAssignment = useDtrStore((state) => state.selectedAssignment);
+
   const [currentRowData, setCurrentRowData] = useState<EmployeeRowData>(
     {} as EmployeeRowData
   );
+
+  const { data } = useSWR(`/employees`, fetcherHRIS);
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
