@@ -1,9 +1,9 @@
+import { EducationInfo } from '../../../../../types/data/education.type';
 import { isEmpty } from 'lodash';
-import { EducationInfo } from 'types/data/education.type';
 
 export async function AssignCoursesToUpdate(course: Array<EducationInfo>) {
-  let add: Array<EducationInfo> = [];
-  let update: Array<EducationInfo> = [];
+  const add: Array<EducationInfo> = [];
+  const update: Array<EducationInfo> = [];
 
   // add
   course.length > 0 &&
@@ -17,9 +17,21 @@ export async function AssignCoursesToUpdate(course: Array<EducationInfo>) {
       if (!isEmpty(voc._id) && voc.isEdited === true) update.push(voc);
     });
 
-  add.sort((firstItem, secondItem) => (firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0));
+  add.sort((firstItem, secondItem) =>
+    firstItem.from! > secondItem.from!
+      ? -1
+      : secondItem.from! > firstItem.from!
+      ? 1
+      : 0
+  );
 
-  update.sort((firstItem, secondItem) => (firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0));
+  update.sort((firstItem, secondItem) =>
+    firstItem.from! > secondItem.from!
+      ? -1
+      : secondItem.from! > firstItem.from!
+      ? 1
+      : 0
+  );
 
   return { add, update };
 }

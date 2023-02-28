@@ -76,21 +76,50 @@ type VoluntaryWorkPdfProps = {
   voluntaryWork: Array<VoluntaryWork>;
 };
 
-export const VoluntaryWorkPdf = ({ formatDate, voluntaryWork }: VoluntaryWorkPdfProps): JSX.Element => {
+export const VoluntaryWorkPdf = ({
+  formatDate,
+  voluntaryWork,
+}: VoluntaryWorkPdfProps): JSX.Element => {
   const [emptyVoluntaryWorkRows, setEmptyVoluntaryWorkRows] = useState(7);
 
   const renderVoluntaryWorkRows = () => {
-    var content = voluntaryWork.slice(0, 7).map((work, index) => (
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+    const content = voluntaryWork.slice(0, 7).map((work, index) => (
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+        key={index}
+      >
         {/* Name & Address of Org */}
-        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2, { flexDirection: 'row' }]}>
+        <View
+          style={[
+            styles.inputValue,
+            styles.borderRight,
+            styles.horizontalCenter,
+            styles.w46_2,
+            { flexDirection: 'row' },
+          ]}
+        >
           <Text>{work.organizationName || 'N/A'}</Text>
         </View>
 
         {/* Inclusive Dates */}
-        <View style={[styles.horizontalCenter, styles.borderRight, styles.inputValue, styles.w18, { padding: '0', flexDirection: 'row' }]}>
-          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(work.from) || 'N/A'}</Text>
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View
+            style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
+          >
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+              {formatDate(work.from) || 'N/A'}
+            </Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
             <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -100,14 +129,28 @@ export const VoluntaryWorkPdf = ({ formatDate, voluntaryWork }: VoluntaryWorkPdf
         </View>
 
         {/* Hours */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{work.numberOfHours || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Position */}
-        <View style={[styles.inputValue, styles.horizontalCenter, styles.w29_8, { padding: 0 }]}>
+        <View
+          style={[
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w29_8,
+            { padding: 0 },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{work.position || 'N/A'}</Text>
           </View>
@@ -119,21 +162,47 @@ export const VoluntaryWorkPdf = ({ formatDate, voluntaryWork }: VoluntaryWorkPdf
   };
 
   const renderEmptyVoluntaryWorkRows = () => {
-    let content = [];
+    const content = [];
     const rowToRender = emptyVoluntaryWorkRows - voluntaryWork.length;
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={i}>
+        <View
+          style={[
+            styles.borderTop,
+            { flexDirection: 'row', alignItems: 'stretch' },
+          ]}
+          key={i}
+        >
           {/* Name & Address of Org */}
-          <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2, { flexDirection: 'row' }]}>
+          <View
+            style={[
+              styles.inputValue,
+              styles.borderRight,
+              styles.horizontalCenter,
+              styles.w46_2,
+              { flexDirection: 'row' },
+            ]}
+          >
             <Text>N/A</Text>
           </View>
 
           {/* Inclusive Dates */}
-          <View style={[styles.horizontalCenter, styles.borderRight, styles.inputValue, styles.w18, { padding: '0', flexDirection: 'row' }]}>
-            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>N/A</Text>
+          <View
+            style={[
+              styles.horizontalCenter,
+              styles.borderRight,
+              styles.inputValue,
+              styles.w18,
+              { padding: '0', flexDirection: 'row' },
+            ]}
+          >
+            <View
+              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
+            >
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+                N/A
+              </Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -143,14 +212,28 @@ export const VoluntaryWorkPdf = ({ formatDate, voluntaryWork }: VoluntaryWorkPdf
           </View>
 
           {/* Hours */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w6,
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Position */}
-          <View style={[styles.inputValue, styles.horizontalCenter, styles.w29_8, { padding: 0 }]}>
+          <View
+            style={[
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w29_8,
+              { padding: 0 },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -165,30 +248,64 @@ export const VoluntaryWorkPdf = ({ formatDate, voluntaryWork }: VoluntaryWorkPdf
   return (
     <View>
       <View style={[styles.sectionTitleContainer]}>
-        <Text style={styles.sectionTitleText}>VI. VOLUNTARY WORK OR INVOLVEMENT IN CIVIC / NON-GOVERNMENT / PEOPLE / VOLUNTARY ORGANIZATION/S</Text>
+        <Text style={styles.sectionTitleText}>
+          VI. VOLUNTARY WORK OR INVOLVEMENT IN CIVIC / NON-GOVERNMENT / PEOPLE /
+          VOLUNTARY ORGANIZATION/S
+        </Text>
       </View>
 
       {/* Voluntary Work header */}
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+      >
         {/* Name & Address of Org */}
-        <View style={[styles.inputKey, styles.borderRight, styles.horizontalCenter, styles.w46_2, { flexDirection: 'row' }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.borderRight,
+            styles.horizontalCenter,
+            styles.w46_2,
+            { flexDirection: 'row' },
+          ]}
+        >
           <Text style={[styles.verticalCenter]}>29.</Text>
-          <View style={[styles.verticalCenter, styles.horizontalCenter, { padding: '3 10', width: '100%' }]}>
+          <View
+            style={[
+              styles.verticalCenter,
+              styles.horizontalCenter,
+              { padding: '3 10', width: '100%' },
+            ]}
+          >
             <Text>NAME & ADDRESS OF ORGANIZATION</Text>
             <Text>(Write in full)</Text>
           </View>
         </View>
 
         {/* Inclusive Dates */}
-        <View style={[styles.horizontalCenter, styles.borderRight, styles.inputKey, styles.w18, { padding: '0' }]}>
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputKey,
+            styles.w18,
+            { padding: '0' },
+          ]}
+        >
           <View style={[styles.w100, { textAlign: 'center', padding: '4' }]}>
             <Text>INCLUSIVE DATES</Text>
             <Text>(mm/dd/yyyy)</Text>
           </View>
 
           <View style={[styles.borderTop, { flexDirection: 'row' }]}>
-            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>From</Text>
+            <View
+              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
+            >
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+                From
+              </Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -199,14 +316,28 @@ export const VoluntaryWorkPdf = ({ formatDate, voluntaryWork }: VoluntaryWorkPdf
         </View>
 
         {/* Hours */}
-        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w6]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w6,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text style={{ fontSize: 5.7 }}>NUMBER OF HOURS</Text>
           </View>
         </View>
 
         {/* Position */}
-        <View style={[styles.inputKey, styles.horizontalCenter, styles.w29_8, { padding: 0 }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w29_8,
+            { padding: 0 },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>POSITION / NATURE OF WORK</Text>
           </View>
@@ -219,7 +350,9 @@ export const VoluntaryWorkPdf = ({ formatDate, voluntaryWork }: VoluntaryWorkPdf
 
       <View style={[styles.borderTop]}>
         <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>
-          <Text style={styles.warningText}>(Continue on separate sheet if necessary)</Text>
+          <Text style={styles.warningText}>
+            (Continue on separate sheet if necessary)
+          </Text>
         </View>
       </View>
     </View>

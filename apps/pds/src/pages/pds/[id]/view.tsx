@@ -1,11 +1,18 @@
 import Head from 'next/head';
-import { NextPage, GetServerSideProps, InferGetServerSidePropsType, GetServerSidePropsContext } from 'next';
+import {
+  NextPage,
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  GetServerSidePropsContext,
+} from 'next';
 import dayjs from 'dayjs';
 import { PdsDocument } from '../../../components/personal-data-sheet/PdsDocument';
 import { isEmpty } from 'lodash';
 import axios from 'axios';
 
-const PersonalDataSheetPdf: NextPage = ({ applicantPds }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const PersonalDataSheetPdf: NextPage = ({
+  applicantPds,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const formatDate = (assignedDate: string) => {
     if (!isEmpty(assignedDate)) {
       const date = new Date(assignedDate);
@@ -26,7 +33,9 @@ const PersonalDataSheetPdf: NextPage = ({ applicantPds }: InferGetServerSideProp
           {isEmpty(applicantPds) ? (
             <>
               <div className="flex flex-col">
-                <p className="text-3xl">Personal Data Sheet is not yet filled out</p>
+                <p className="text-3xl">
+                  Personal Data Sheet is not yet filled out
+                </p>
                 <div className="flex justify-items-center"></div>
               </div>
             </>
@@ -41,9 +50,13 @@ const PersonalDataSheetPdf: NextPage = ({ applicantPds }: InferGetServerSideProp
 
 export default PersonalDataSheetPdf;
 
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   try {
-    const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`);
+    const applicantPds = await axios.get(
+      `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
+    );
     console.log(applicantPds.data);
     return {
       props: {
