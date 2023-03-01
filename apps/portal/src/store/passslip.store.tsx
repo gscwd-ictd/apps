@@ -1,7 +1,11 @@
 import create from 'zustand';
 import { AlertState } from '../types/alert.type';
 import { ErrorState, ModalState } from '../types/modal.type';
-import { PassSlip, SelectedPassSlip } from '../types/passslip.type';
+import {
+  PassSlip,
+  PassSlipContents,
+  SelectedPassSlip,
+} from '../types/passslip.type';
 
 export const PassSlipDetails: PassSlip = {
   employeeId: '',
@@ -37,25 +41,25 @@ export type PassSlipState = {
   setError: (error: ErrorState) => void;
   selectedPassSlipId: string;
   setSelectedPassSlipId: (value: string) => void;
-  selectedPassSlip: SelectedPassSlip;
-  setSelectedPassSlip: (PassSlip: SelectedPassSlip) => void;
-  passSlipList: Array<SelectedPassSlip>;
-  setPassSlipList: (PassSlips: Array<SelectedPassSlip>) => void;
-  filteredPassSlipList: Array<SelectedPassSlip>;
-  setFilteredPassSlipList: (PassSlips: Array<SelectedPassSlip>) => void;
+  selectedPassSlip: PassSlipContents;
+  setSelectedPassSlip: (PassSlip: PassSlipContents) => void;
+  passSlipList: SelectedPassSlip;
+  setPassSlipList: (PassSlips: SelectedPassSlip) => void;
+  filteredPassSlipList: SelectedPassSlip;
+  setFilteredPassSlipList: (PassSlips: SelectedPassSlip) => void;
   pendingIsLoaded: boolean;
   setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
   fulfilledIsLoaded: boolean;
   setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
-  pendingPassSlipList: Array<SelectedPassSlip>;
+  pendingPassSlipList: Array<PassSlipContents>;
   setPendingPassSlipList: (
-    pendingPassSlipList: Array<SelectedPassSlip>
+    pendingPassSlipList: Array<PassSlipContents>
   ) => void;
-  fulfilledPassSlipList: Array<SelectedPassSlip>;
+  fulfilledPassSlipList: Array<PassSlipContents>;
   setFulfilledPassSlipList: (
-    fulfilledPassSlipList: Array<SelectedPassSlip>
+    fulfilledPassSlipList: Array<PassSlipContents>
   ) => void;
   tab: number;
   setTab: (tab: number) => void;
@@ -69,9 +73,9 @@ export const usePassSlipStore = create<PassSlipState>((set) => ({
   action: '',
   error: { isError: false, errorMessage: '' },
   selectedPassSlipId: '',
-  selectedPassSlip: {} as SelectedPassSlip,
-  passSlipList: [],
-  filteredPassSlipList: [],
+  selectedPassSlip: {} as PassSlipContents,
+  passSlipList: {} as SelectedPassSlip,
+  filteredPassSlipList: {} as SelectedPassSlip,
   pendingIsLoaded: false,
   fulfilledIsLoaded: false,
   isLoading: false,
@@ -82,7 +86,7 @@ export const usePassSlipStore = create<PassSlipState>((set) => ({
   dateOfApplication: '',
 
   natureOfBusiness: '',
-  estimateHours: 0,
+  estimateHours: null,
 
   purposeDestination: '',
   obTransportation: '',
@@ -124,15 +128,15 @@ export const usePassSlipStore = create<PassSlipState>((set) => ({
   setSelectedPassSlipId: (selectedPassSlipId: string) => {
     set((state) => ({ ...state, selectedPassSlipId }));
   },
-  setSelectedPassSlip: (selectedPassSlip: SelectedPassSlip) => {
+  setSelectedPassSlip: (selectedPassSlip: PassSlipContents) => {
     set((state) => ({ ...state, selectedPassSlip }));
   },
 
-  setPassSlipList: (PassSlipList: Array<SelectedPassSlip>) => {
+  setPassSlipList: (PassSlipList: SelectedPassSlip) => {
     set((state) => ({ ...state, PassSlipList }));
   },
 
-  setFilteredPassSlipList: (filteredPassSlipList: Array<SelectedPassSlip>) => {
+  setFilteredPassSlipList: (filteredPassSlipList: SelectedPassSlip) => {
     set((state) => ({ ...state, filteredPassSlipList }));
   },
   setPendingIsLoaded: (pendingIsLoaded: boolean) => {
@@ -144,11 +148,11 @@ export const usePassSlipStore = create<PassSlipState>((set) => ({
   setIsLoading: (isLoading: boolean) => {
     set((state) => ({ ...state, isLoading }));
   },
-  setPendingPassSlipList: (pendingPassSlipList: Array<SelectedPassSlip>) => {
+  setPendingPassSlipList: (pendingPassSlipList: Array<PassSlipContents>) => {
     set((state) => ({ ...state, pendingPassSlipList }));
   },
   setFulfilledPassSlipList: (
-    fulfilledPassSlipList: Array<SelectedPassSlip>
+    fulfilledPassSlipList: Array<PassSlipContents>
   ) => {
     set((state) => ({ ...state, fulfilledPassSlipList }));
   },

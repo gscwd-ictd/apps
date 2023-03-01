@@ -3,7 +3,7 @@ import { usePassSlipStore } from '../../../store/passslip.store';
 // export default function Messages({ pendingAcknowledgements, id }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function PassSlipInfoModal() {
   const selectedPassSlip = usePassSlipStore((state) => state.selectedPassSlip);
-  console.log(selectedPassSlip);
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2 ">

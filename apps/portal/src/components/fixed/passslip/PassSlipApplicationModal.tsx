@@ -1,24 +1,16 @@
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
-import axios from 'axios';
+
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
 import { useEffect, useState } from 'react';
-import { HiMail } from 'react-icons/hi';
+
 import { withSession } from '../../../utils/helpers/session';
 
 // export default function Messages({ pendingAcknowledgements, id }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function PassSlipApplicationModal() {
-  const passSlipEmployeeId = usePassSlipStore(
-    (state) => state.passSlipEmployeeId
-  );
-
-  const setDateOfApplication = usePassSlipStore(
-    (state) => state.setDateOfApplication
-  );
-
   const setNatureOfBusiness = usePassSlipStore(
     (state) => state.setNatureOfBusiness
   );
@@ -53,41 +45,19 @@ export default function PassSlipApplicationModal() {
     }
   };
 
-  const handleDate = (e: string) => {
-    setDateOfApplication(e);
-  };
-
   const dateOfApplication = usePassSlipStore(
     (state) => state.dateOfApplication
   );
   const natureOfBusiness = usePassSlipStore((state) => state.natureOfBusiness);
-  const estimateHours = usePassSlipStore((state) => state.estimateHours);
   const purposeDestination = usePassSlipStore(
     (state) => state.purposeDestination
   );
-  const obTransportation = usePassSlipStore((state) => state.obTransportation);
 
   useEffect(() => {
     if (natureOfBusiness === 'Half Day' || natureOfBusiness === 'Undertime') {
       setEstimateHours(0);
     }
   }, [natureOfBusiness, setEstimateHours]);
-
-  useEffect(() => {
-    console.log(
-      dateOfApplication,
-      estimateHours,
-      purposeDestination,
-      natureOfBusiness,
-      obTransportation
-    );
-  }, [
-    dateOfApplication,
-    estimateHours,
-    purposeDestination,
-    natureOfBusiness,
-    obTransportation,
-  ]);
 
   return (
     <>
@@ -96,11 +66,9 @@ export default function PassSlipApplicationModal() {
           {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
           <div className="w-full pb-4 flex gap-2 justify-start items-center">
             <span className="text-slate-500 text-xl font-medium">Date</span>
-            <input
-              type="date"
-              className="border-slate-300 text-slate-500"
-              onChange={(e) => handleDate(e.target.value as unknown as string)}
-            ></input>
+            <div className="border-slate-300 border text-slate-500 p-2">
+              {dateOfApplication}
+            </div>
           </div>
           <label className="pt-2 text-slate-500 text-xl font-medium">
             Select Nature of Business:
@@ -176,7 +144,7 @@ export default function PassSlipApplicationModal() {
                   natureOfBusiness === 'Half Day' ||
                   natureOfBusiness === 'Undertime'
                     ? 0
-                    : estimateHours
+                    : null
                 }
                 disabled={
                   natureOfBusiness === 'Half Day' ||

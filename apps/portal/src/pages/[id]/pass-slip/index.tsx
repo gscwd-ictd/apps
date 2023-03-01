@@ -26,13 +26,18 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { employeeDummy } from '../../../../src/types/employee.type';
-import { applyPassSlip } from '../../../../src/utils/helpers/passslip-requests';
+import {
+  applyPassSlip,
+  getEmployeePassSlips,
+} from '../../../../src/utils/helpers/passslip-requests';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isEmpty } from 'lodash';
+import { format } from 'date-fns';
 
 export default function PassSlip({
   employeeDetails,
+  employeePassSlips,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
@@ -63,6 +68,8 @@ export default function PassSlip({
   const dateOfApplication = usePassSlipStore(
     (state) => state.dateOfApplication
   );
+  const today = new Date();
+  const dateToday = format(today, 'yyyy-MM-dd');
   const natureOfBusiness = usePassSlipStore((state) => state.natureOfBusiness);
   const estimateHours = usePassSlipStore((state) => state.estimateHours);
   const purposeDestination = usePassSlipStore(
@@ -97,7 +104,7 @@ export default function PassSlip({
       setEstimateHours(1);
       setPurposeDestination('');
       setObTransportation('');
-      setDateOfApplication('');
+      setDateOfApplication(`${dateToday}`);
     }
   };
 
@@ -130,7 +137,11 @@ export default function PassSlip({
         toast.error('Please enter date');
       } else if (isEmpty(natureOfBusiness)) {
         toast.error('Please select Nature of Business');
-      } else if (isEmpty(estimateHours)) {
+      } else if (
+        isEmpty(estimateHours) &&
+        natureOfBusiness != 'Undertime' &&
+        natureOfBusiness != 'Half Day'
+      ) {
         toast.error('Please enter number of hours');
       } else if (
         estimateHours <= 0 &&
@@ -286,6 +297,7 @@ export default function PassSlip({
                       <div className="w-full">
                         <PassSlipTabWindow
                           employeeId={employeeDetails.employmentDetails.userId}
+                          employeePassSlips={employeePassSlips}
                         />
                       </div>
                     </div>
@@ -305,7 +317,11 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
+  const employeePassSlips = await getEmployeePassSlips(
+    employeeDetails.user._id
+  );
+  console.log(employeePassSlips);
+  return { props: { employeeDetails, employeePassSlips } };
 };
 
 // export const getServerSideProps: GetServerSideProps = withSession(
