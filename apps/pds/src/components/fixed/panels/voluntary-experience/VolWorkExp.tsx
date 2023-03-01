@@ -300,7 +300,7 @@ export const VolWorkExp = (): JSX.Element => {
                       type="text"
                       labelIsRequired
                       controller={{
-                        ...register('organizationName', { required: true }),
+                        ...register('organizationName'),
                       }}
                       withLabel={true}
                       isError={errors.organizationName ? true : false}
@@ -317,7 +317,7 @@ export const VolWorkExp = (): JSX.Element => {
                       type="text"
                       labelIsRequired
                       controller={{
-                        ...register('position', { required: true }),
+                        ...register('position'),
                       }}
                       withLabel={true}
                       isError={errors.position ? true : false}
@@ -335,7 +335,7 @@ export const VolWorkExp = (): JSX.Element => {
                         type="date"
                         className="cursor-pointer"
                         labelIsRequired
-                        controller={{ ...register('from', { required: true }) }}
+                        controller={{ ...register('from') }}
                         withLabel={true}
                         isError={errors.from ? true : false}
                         errorMessage={errors.from?.message}
@@ -374,19 +374,19 @@ export const VolWorkExp = (): JSX.Element => {
                       label="Number of Hours"
                       placeholder={
                         getIsCurrentlyVol === false
-                          ? 'Total number of hours'
+                          ? 'Total number of hours / Leave blank if not applicable'
                           : 'Not Applicable'
                       }
                       withHelpButton
                       helpContent="Indicate the number of hours of voluntary work rendered."
                       type="number"
                       muted={getIsCurrentlyVol}
-                      labelIsRequired={!getIsCurrentlyVol}
+                      isError={errors.numberOfHours ? true : false}
+                      errorMessage={errors.numberOfHours?.message}
+                      withLabel
                       controller={{
                         ...register('numberOfHours'),
                       }}
-                      isError={errors.numberOfHours ? true : false}
-                      errorMessage={errors.numberOfHours?.message}
                     />
                   </div>
                 </div>
