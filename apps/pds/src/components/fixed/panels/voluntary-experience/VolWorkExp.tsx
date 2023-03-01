@@ -74,15 +74,15 @@ export const VolWorkExp = (): JSX.Element => {
       numberOfHours: null,
       employeeId: employee.employmentDetails.userId,
       isEdited: false,
-      isHoursApplicable: true,
+      // isHoursApplicable: true,
     },
   });
 
   const getIsCurrentlyVol = getValues('isCurrentlyVol'); // assign getvalues is currently volunteering
   const watchIsCurrentlyVol = watch('isCurrentlyVol'); // assign watch is currently volunteering
 
-  const getIsHoursApplicable = getValues('isHoursApplicable');
-  const watchIsHoursApplicable = watch('isHoursApplicable');
+  // const getIsHoursApplicable = getValues('isHoursApplicable');
+  // const watchIsHoursApplicable = watch('isHoursApplicable');
   // set initial values
   const setInitialValues = () => {
     setVoluntaryWork(initialPdsState.voluntaryWork);
@@ -90,6 +90,7 @@ export const VolWorkExp = (): JSX.Element => {
 
   // fire submit button
   const onSubmit = handleSubmit((work: VoluntaryWork, e: any) => {
+    console.log(work);
     e.preventDefault();
     if (work.to === '') work.to = null;
     // create action
@@ -299,7 +300,7 @@ export const VolWorkExp = (): JSX.Element => {
                       type="text"
                       labelIsRequired
                       controller={{
-                        ...register('organizationName', { required: true }),
+                        ...register('organizationName'),
                       }}
                       withLabel={true}
                       isError={errors.organizationName ? true : false}
@@ -316,7 +317,7 @@ export const VolWorkExp = (): JSX.Element => {
                       type="text"
                       labelIsRequired
                       controller={{
-                        ...register('position', { required: true }),
+                        ...register('position'),
                       }}
                       withLabel={true}
                       isError={errors.position ? true : false}
@@ -334,7 +335,7 @@ export const VolWorkExp = (): JSX.Element => {
                         type="date"
                         className="cursor-pointer"
                         labelIsRequired
-                        controller={{ ...register('from', { required: true }) }}
+                        controller={{ ...register('from') }}
                         withLabel={true}
                         isError={errors.from ? true : false}
                         errorMessage={errors.from?.message}
@@ -373,23 +374,19 @@ export const VolWorkExp = (): JSX.Element => {
                       label="Number of Hours"
                       placeholder={
                         getIsCurrentlyVol === false
-                          ? 'Total number of hours'
+                          ? 'Total number of hours / Leave blank if not applicable'
                           : 'Not Applicable'
                       }
                       withHelpButton
                       helpContent="Indicate the number of hours of voluntary work rendered."
                       type="number"
                       muted={getIsCurrentlyVol}
-                      labelIsRequired={!getIsCurrentlyVol}
-                      controller={{
-                        ...register('numberOfHours', {
-                          required: true,
-                          min: 1,
-                        }),
-                      }}
-                      withLabel={true}
                       isError={errors.numberOfHours ? true : false}
                       errorMessage={errors.numberOfHours?.message}
+                      withLabel
+                      controller={{
+                        ...register('numberOfHours'),
+                      }}
                     />
                   </div>
                 </div>
