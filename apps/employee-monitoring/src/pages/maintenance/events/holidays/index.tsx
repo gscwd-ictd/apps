@@ -117,7 +117,15 @@ const Index = () => {
   };
 
   // fetch data for list of holidays
-  const { data, error, isLoading } = useSWR('/holidays', fetcherEMS);
+  const { data, error, isLoading } = useSWR('/holidays', fetcherEMS, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      // Only retry up to 10 times.
+      if (retryCount >= 3) return;
+
+      // Retry after 5 seconds.
+      setTimeout(() => revalidate({ retryCount }), 10000);
+    },
+  });
 
   useEffect(() => {
     if (!isEmpty(data)) {
@@ -184,17 +192,5 @@ const Index = () => {
     </div>
   );
 };
-
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   try {
-//     const response = await axios.get(
-//       `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_DOMAIN}/holidays`
-//     );
-
-//     return { props: { holidays: response.data } };
-//   } catch (error) {
-//     return { props: { holidays: [] } };
-//   }
-// };
 
 export default Index;

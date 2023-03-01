@@ -3,7 +3,7 @@ import { usePassSlipStore } from '../../../store/passslip.store';
 // export default function Messages({ pendingAcknowledgements, id }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function PassSlipInfoModal() {
   const selectedPassSlip = usePassSlipStore((state) => state.selectedPassSlip);
-  console.log(selectedPassSlip);
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2 ">
@@ -60,9 +60,17 @@ export default function PassSlipInfoModal() {
                 'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
               }
               value={selectedPassSlip.purposeDestination}
-              rows={5}
+              rows={4}
               disabled={true}
             ></textarea>
+            <div className="w-full flex gap-2 justify-start items-center">
+              <span className="text-slate-500 text-xl font-medium">
+                Status:
+              </span>
+              <div className="border-slate-300 border px-4 text-slate-500 text-lg">
+                {selectedPassSlip.status}
+              </div>
+            </div>
           </div>
         </div>
       </div>

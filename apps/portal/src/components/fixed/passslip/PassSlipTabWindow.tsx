@@ -1,21 +1,20 @@
 import { useEffect } from 'react';
 import { AllPassSlipListTab } from './AllPassSlipListTab';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
+import { SelectedPassSlip } from '../../../../src/types/passslip.type';
 
 type PassSlipTabWindowProps = {
   employeeId: string;
+  employeePassSlips: SelectedPassSlip;
 };
 
 export const PassSlipTabWindow = ({
   employeeId,
+  employeePassSlips,
 }: PassSlipTabWindowProps): JSX.Element => {
-  const pendingPassSlips = [];
-
-  const fulfilledPassSlips = [];
-
-  const passSlipEmployeeId = usePassSlipStore(
-    (state) => state.passSlipEmployeeId
-  );
+  // useEffect(() => {
+  //   const pendingPassSlips = getPendingPassSlip(employeeId);
+  // }, []);
 
   const setPassSlipEmployeeId = usePassSlipStore(
     (state) => state.setPassSlipEmployeeId
@@ -40,8 +39,8 @@ export const PassSlipTabWindow = ({
   const tab = usePassSlipStore((state) => state.tab);
 
   useEffect(() => {
-    setPendingPassSlipList(pendingPassSlips);
-    setFulfilledPassSlipList(fulfilledPassSlips);
+    setPendingPassSlipList(employeePassSlips.ongoing);
+    setFulfilledPassSlipList(employeePassSlips.completed);
     setPassSlipEmployeeId(employeeId);
   }, []);
 

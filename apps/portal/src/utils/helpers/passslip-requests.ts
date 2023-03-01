@@ -34,6 +34,18 @@ export const applyPassSlip = async (
   }
 };
 
+export const getEmployeePassSlips = async (employeeId: string) => {
+  try {
+    // const { data } = await axios.post(`${url}/v1/pass-slip`, {
+    const { data } = await axios.get(
+      `http://192.168.99.124:4104/api/v1/pass-slip/${employeeId}`
+    );
+    return data;
+  } catch (error) {
+    return { error };
+  }
+};
+
 export const getForApprovalPrfs = async (employeeId: string) => {
   const { data } = await axios.get(`${url}/prf-trail/employee/${employeeId}`);
 

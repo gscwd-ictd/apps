@@ -9,6 +9,11 @@ export type PassSlip = {
 };
 
 export type SelectedPassSlip = {
+  completed: Array<PassSlipContents>;
+  ongoing: Array<PassSlipContents>;
+};
+
+export type PassSlipContents = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -24,4 +29,21 @@ export type SelectedPassSlip = {
   supervisorName: string;
   supervisorId: string;
   status: string;
+};
+
+export type CompletedPassSlipContents = {
+  employeeName: string;
+  supervisorName: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  id: string;
+  employeeId: string;
+  supervisorId: string;
+  status: string;
+  natureOfBusiness: string;
+  obTransportation: string;
+  estimateHours: string;
+  purposeDestination: string;
+  isCancelled: boolean;
 };

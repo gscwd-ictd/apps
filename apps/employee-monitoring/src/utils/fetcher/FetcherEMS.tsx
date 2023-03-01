@@ -12,8 +12,6 @@ axiosApi.interceptors.response.use(
   (error) => Promise.reject(error)
 );
 
-axiosApi.interceptors.response.use((response) => response);
-
 const fetcherEMS = async (url: string, config: AxiosRequestConfig) =>
   await axiosApi.get(url, config).then((res) => res);
 
