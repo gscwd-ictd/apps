@@ -7,7 +7,6 @@ import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import axios from 'axios';
 import { useContext, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
-import { HiArrowUturnLeft } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
@@ -87,7 +86,7 @@ export const LearningDevelopmentAlert = ({
 
   const alertCancelAction = () => {
     setInitialValues();
-    setLearningDevelopmentOnEdit!(false);
+    setLearningDevelopmentOnEdit(false);
     setAlertCancelIsOpen(false);
     addNotification(Actions.INFO);
     setDeletedLearningDevelopment([]);
@@ -95,7 +94,7 @@ export const LearningDevelopmentAlert = ({
 
   const alertUpdateAction = async () => {
     setAlertUpdateIsOpen(false);
-    setLearningDevelopmentOnEdit!(false);
+    setLearningDevelopmentOnEdit(false);
     addNotification(await updateSection());
   };
 
@@ -109,7 +108,7 @@ export const LearningDevelopmentAlert = ({
           </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
-          <div className="w-full rounded border border-gray-300">
+          <div className="w-full border border-gray-300 rounded">
             <Button
               variant="light"
               onClick={() => setAlertUpdateIsOpen(false)}
@@ -132,7 +131,7 @@ export const LearningDevelopmentAlert = ({
           </AlertDesc>
         </Alert.Description>
         <Alert.Footer alignEnd>
-          <div className="w-full rounded border border-gray-300">
+          <div className="w-full border border-gray-300 rounded">
             <Button
               variant="light"
               onClick={() => setAlertCancelIsOpen(false)}
@@ -167,7 +166,7 @@ export const LearningDevelopmentAlert = ({
                         viewBox="0 0 24 24"
                         strokeWidth="2"
                         stroke="currentColor"
-                        className="h-6 w-6"
+                        className="w-6 h-6"
                       >
                         <path
                           strokeLinecap="round"
