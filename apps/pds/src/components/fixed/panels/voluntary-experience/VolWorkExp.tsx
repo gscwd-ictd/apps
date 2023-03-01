@@ -74,15 +74,15 @@ export const VolWorkExp = (): JSX.Element => {
       numberOfHours: null,
       employeeId: employee.employmentDetails.userId,
       isEdited: false,
-      isHoursApplicable: true,
+      // isHoursApplicable: true,
     },
   });
 
   const getIsCurrentlyVol = getValues('isCurrentlyVol'); // assign getvalues is currently volunteering
   const watchIsCurrentlyVol = watch('isCurrentlyVol'); // assign watch is currently volunteering
 
-  const getIsHoursApplicable = getValues('isHoursApplicable');
-  const watchIsHoursApplicable = watch('isHoursApplicable');
+  // const getIsHoursApplicable = getValues('isHoursApplicable');
+  // const watchIsHoursApplicable = watch('isHoursApplicable');
   // set initial values
   const setInitialValues = () => {
     setVoluntaryWork(initialPdsState.voluntaryWork);
@@ -90,6 +90,7 @@ export const VolWorkExp = (): JSX.Element => {
 
   // fire submit button
   const onSubmit = handleSubmit((work: VoluntaryWork, e: any) => {
+    console.log(work);
     e.preventDefault();
     if (work.to === '') work.to = null;
     // create action
@@ -382,12 +383,8 @@ export const VolWorkExp = (): JSX.Element => {
                       muted={getIsCurrentlyVol}
                       labelIsRequired={!getIsCurrentlyVol}
                       controller={{
-                        ...register('numberOfHours', {
-                          required: true,
-                          min: 1,
-                        }),
+                        ...register('numberOfHours'),
                       }}
-                      withLabel={true}
                       isError={errors.numberOfHours ? true : false}
                       errorMessage={errors.numberOfHours?.message}
                     />

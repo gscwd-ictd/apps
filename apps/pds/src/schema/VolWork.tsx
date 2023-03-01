@@ -40,7 +40,7 @@ const schema = yup.object().shape({
           params: {},
           message: 'Should not be less than date from.',
           test: function (value) {
-            return value! >= this.parent.from;
+            return value >= this.parent.from;
           },
         }),
     })
@@ -56,7 +56,6 @@ const schema = yup.object().shape({
       .notRequired()
       .nullable(true)
       .transform((v, o) => (o === '' ? null : v))
-      // .typeError('Please enter a valid number of hours')
       .label('This'),
   }),
 });
