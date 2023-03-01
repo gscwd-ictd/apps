@@ -4,6 +4,8 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { tabs, tabsHasPds } from '../../../../utils/constants/tabs';
 import { FormWizard } from '../../modular/custom/FormWizard';
 import { useTabStore } from '../../../store/tab.store';
+import Image from 'next/image';
+import gscwdlogo from '../../../../public/assets/img/gscwdlogo.png';
 
 export default function DarkNav() {
   const employee = useEmployeeStore((state) => state.employeeDetails);
@@ -28,10 +30,23 @@ export default function DarkNav() {
               {/** 2*/}
               <div className="col-span-1 flex w-full justify-center  py-[0.2rem]">
                 <div className="flex items-center">
-                  <div className="flex md:block">
+                  <div className="flex items-center gap-2">
+                    {/** IMAGE */}
+                    <div className="flex ">
+                      <div className="flex-shrink-0">
+                        <Image
+                          src={gscwdlogo}
+                          priority
+                          width={48}
+                          height={48}
+                          alt="General Santos City Water District"
+                        />
+                      </div>
+                      <div className="hidden md:block"></div>
+                    </div>
                     <div className="flex items-baseline">
                       {/* <HiDocumentChartBar size={30} /> */}
-                      <span className="shrink-0 select-none  font-medium uppercase  tracking-wide text-gray-700  drop-shadow-xl sm:text-sm md:text-4xl">
+                      <span className="font-medium tracking-wide text-gray-700 uppercase select-none shrink-0 drop-shadow-xl sm:text-sm md:text-4xl">
                         Personal Data Sheet
                       </span>
                     </div>
@@ -41,7 +56,9 @@ export default function DarkNav() {
               {/**2 */}
             </div>
           </section>
-          <nav className={`z-50 grid w-full justify-center pt-1 ${background}`}>
+          <nav
+            className={`z-50 grid w-full justify-center pt-1  ${background}`}
+          >
             {/* START OF TABS HERE */}
 
             <div className="justify-center overflow-x-auto">
