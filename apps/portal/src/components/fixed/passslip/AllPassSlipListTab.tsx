@@ -59,17 +59,17 @@ export const AllPassSlipListTab = ({
                   <h1 className="font-medium text-xl text-gray-600">
                     {item.natureOfBusiness}
                   </h1>
-                  {/* <p className="text-md text-gray-500"></p> */}
-                  <p className="text-sm text-gray-500">
-                    Estimated Hours: {item.estimateHours}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Purpose: {item.purposeDestination}
-                  </p>
                   <p className="text-sm text-gray-500">
                     Date: {dayjs(item.dateOfApplication).format('MMMM d, YYYY')}
                   </p>
-                  <p className="text-sm text-indigo-500">
+                  <p className="text-xs text-gray-500">
+                    Estimated Hours: {item.estimateHours}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Purpose: {item.purposeDestination}
+                  </p>
+
+                  <p className="text-xs text-indigo-500">
                     Status: {item.status}
                   </p>
                 </div>

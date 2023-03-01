@@ -140,7 +140,7 @@ export default function PassSlipApplicationModal() {
               </span>
               <input
                 type="number"
-                value={
+                defaultValue={
                   natureOfBusiness === 'Half Day' ||
                   natureOfBusiness === 'Undertime'
                     ? 0

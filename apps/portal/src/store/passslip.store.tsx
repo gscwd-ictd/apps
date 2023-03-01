@@ -132,8 +132,8 @@ export const usePassSlipStore = create<PassSlipState>((set) => ({
     set((state) => ({ ...state, selectedPassSlip }));
   },
 
-  setPassSlipList: (PassSlipList: SelectedPassSlip) => {
-    set((state) => ({ ...state, PassSlipList }));
+  setPassSlipList: (passSlipList: SelectedPassSlip) => {
+    set((state) => ({ ...state, passSlipList }));
   },
 
   setFilteredPassSlipList: (filteredPassSlipList: SelectedPassSlip) => {

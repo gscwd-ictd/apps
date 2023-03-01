@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { HiDocumentAdd, HiX } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -15,7 +15,11 @@ import {
 // import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-
+import useSWR from 'swr';
+import {
+  fetchWithSession,
+  fetchWithToken,
+} from '../../../../src/utils/hoc/fetcher';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
@@ -37,7 +41,6 @@ import { format } from 'date-fns';
 
 export default function PassSlip({
   employeeDetails,
-  employeePassSlips,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
@@ -95,6 +98,22 @@ export default function PassSlip({
     (state) => state.setObTransportation
   );
 
+  const passSlipList = usePassSlipStore((state) => state.passSlipList);
+
+  const setPassSlipList = usePassSlipStore((state) => state.setPassSlipList);
+  const passSlipUrl = `http://192.168.99.124:4104/api/v1/pass-slip/${employeeDetails.employmentDetails.userId}`;
+
+  const random = useRef(Date.now());
+
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+  const { data } = useSWR(passSlipUrl, fetchWithToken);
+
+  useEffect(() => {
+    if (!isEmpty(data)) {
+      setPassSlipList(data);
+    }
+  }, [data]);
+
   // open the modal
   const openModal = () => {
     if (!modal.isOpen) {
@@ -118,8 +137,14 @@ export default function PassSlip({
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
     setIsLoading(true);
-    console.log(employeeDetails);
-  }, [employeeDetails, setEmployeeDetails, setIsLoading]);
+    setPassSlipList(passSlipList);
+  }, [
+    employeeDetails,
+    passSlipList,
+    setEmployeeDetails,
+    setIsLoading,
+    setPassSlipList,
+  ]);
 
   useEffect(() => {
     if (isLoading) {
@@ -172,8 +197,6 @@ export default function PassSlip({
         if (data) {
           modalCancel();
           toast.success('Pass Slip Application Successful!');
-
-          console.log(data);
         } else {
           console.log(data);
           toast.error('Error');
@@ -297,7 +320,7 @@ export default function PassSlip({
                       <div className="w-full">
                         <PassSlipTabWindow
                           employeeId={employeeDetails.employmentDetails.userId}
-                          employeePassSlips={employeePassSlips}
+                          employeePassSlips={passSlipList}
                         />
                       </div>
                     </div>
@@ -317,11 +340,10 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const employeeDetails = employeeDummy;
 
-  const employeePassSlips = await getEmployeePassSlips(
-    employeeDetails.user._id
-  );
-  console.log(employeePassSlips);
-  return { props: { employeeDetails, employeePassSlips } };
+  // const employeePassSlips = await getEmployeePassSlips(
+  //   employeeDetails.user._id
+  // );
+  return { props: { employeeDetails } };
 };
 
 // export const getServerSideProps: GetServerSideProps = withSession(
