@@ -93,6 +93,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Leave Benefits"
             className="text-xs"
+            selected={pathname === Paths[2] ? true : false}
             icon={
               <>
                 <i className="text-2xl bx bxs-plane-alt"></i>
@@ -105,6 +106,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Overtime"
             className="text-xs"
+            selected={pathname === Paths[5] ? true : false}
             icon={
               <>
                 <i className="text-2xl bx bx-timer"></i>
@@ -117,6 +119,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Pass Slip"
             className="text-xs"
+            selected={pathname === Paths[6] ? true : false}
             icon={
               <>
                 <i className="text-2xl bx bxs-file-export"></i>
@@ -129,6 +132,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Trainings & Seminars"
             path={Paths[4]}
+            selected={pathname === Paths[4] ? true : false}
             className="text-xs"
             icon={
               <>
@@ -140,7 +144,8 @@ export const SideNavigation = () => {
           {/** Monitoring Travel Order */}
           <Sidebar.Item
             display="Travel Orders"
-            path=""
+            selected={pathname === Paths[3] ? true : false}
+            path={Paths[3]}
             className="text-xs"
             icon={
               <>
@@ -165,7 +170,45 @@ export const SideNavigation = () => {
             display="Schedules"
             className="text-xs"
             icon={<i className="text-2xl bx bx-calendar-edit"></i>}
-            path={Paths[15]}
+            path=""
+            hasSubItem
+            subItems={
+              <>
+                <Sidebar.Item
+                  display="Office"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[15] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-2xl bx bxs-buildings"></i>
+                    </>
+                  }
+                  path={Paths[15]}
+                />
+                <Sidebar.Item
+                  display="Field"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[16] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-2xl bx bxs-leaf"></i>
+                    </>
+                  }
+                  path={Paths[16]}
+                />
+                <Sidebar.Item
+                  display="Station"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[17] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-2xl bx bxs-factory"></i>
+                    </>
+                  }
+                  path={Paths[16]}
+                />
+              </>
+            }
           />
 
           {/**Maintenance LEAVE CREDITS */}
