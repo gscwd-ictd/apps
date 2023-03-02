@@ -1,10 +1,17 @@
-import { Modal, ToastNotification } from '@gscwd-apps/oneui';
+import {
+  Modal,
+  ToastNotification,
+  AlertNotification,
+  LoadingSpinner,
+} from '@gscwd-apps/oneui';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { HolidayRowData } from '../../../../../utils/types/table-row-types/maintenance/holiday-row.type';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { isEmpty } from 'lodash';
+import { useSWRConfig } from 'swr';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 type AddModalProps = {
   modalState: boolean;
@@ -30,6 +37,7 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorPostMessage, setErrorPostMessage] = useState<string>('');
   const [responsePost, setResponsePost] = useState<object>({});
+  const { mutate } = useSWRConfig();
 
   // React hook form
   const {
@@ -48,18 +56,25 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
     },
   });
 
-  const onSubmit: SubmitHandler<HolidayRowData> = async (data) => {
-    const { error, result } = await postEmpMonitoring('/holidays', data);
-
+  const onSubmit: SubmitHandler<HolidayRowData> = (data: HolidayRowData) => {
     // set loading to true
     setIsLoading(true);
+
+    handlePostResult(data);
+
+    // empty the state to remove previous value
+    setErrorPostMessage('');
+
+    // empty the state to remove previous value
+    setResponsePost({});
+  };
+
+  const handlePostResult = async (data: HolidayRowData) => {
+    const { error, result } = await postEmpMonitoring('/holidays', data);
 
     if (error) {
       // request is done so set loading to false
       setIsLoading(false);
-
-      // empty the state to remove previous value
-      setResponsePost(result);
 
       // set value for error message
       setErrorPostMessage(result);
@@ -67,26 +82,30 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
       // request is done so set loading to false
       setIsLoading(false);
 
-      // empty the state to remove previous value
-      setErrorPostMessage('');
-
       // set value from returned response
       setResponsePost(result);
+      mutate('/holidays');
+
+      reset();
+      closeModalAction();
     }
   };
 
   return (
     <>
-      {/* Notification */}
+      {/* Notifications */}
       {!isEmpty(errorPostMessage) ? (
-        <ToastNotification toastType="error" notifMessage={errorPostMessage} />
+        <>
+          {console.log(errorPostMessage)}
+          <ToastNotification
+            toastType="error"
+            notifMessage={errorPostMessage}
+          />
+        </>
       ) : null}
 
       {!isEmpty(responsePost) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Successfully added"
-        />
+        <ToastNotification toastType="success" notifMessage="Sending Request" />
       ) : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
@@ -105,6 +124,16 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           <div>
+            {/* Notifications */}
+            {isLoading ? (
+              <AlertNotification
+                logo={<LoadingSpinner size="xs" />}
+                alertType="info"
+                notifMessage="Submitting request"
+                dismissible={true}
+              />
+            ) : null}
+
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* Holiday name input */}
               <div className="mb-6">

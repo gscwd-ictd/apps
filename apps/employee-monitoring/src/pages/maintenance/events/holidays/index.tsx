@@ -85,7 +85,7 @@ const Index = () => {
     } else if (holidayType === 'special') {
       return (
         <span className="bg-blue-100 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-500">
-          Special/Non-Working
+          Special
         </span>
       );
     } else {
@@ -118,13 +118,7 @@ const Index = () => {
 
   // fetch data for list of holidays
   const { data, error, isLoading } = useSWR('/holidays', fetcherEMS, {
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 10 times.
-      if (retryCount >= 3) return;
-
-      // Retry after 5 seconds.
-      setTimeout(() => revalidate({ retryCount }), 10000);
-    },
+    shouldRetryOnError: false,
   });
 
   useEffect(() => {
@@ -144,7 +138,7 @@ const Index = () => {
 
       <Card>
         {isLoading ? (
-          <LoadingSpinner />
+          <LoadingSpinner size="lg" />
         ) : (
           <div className="flex flex-row flex-wrap">
             <div className="table-actions-wrapper flex order-2 justify-end w-1/2">
