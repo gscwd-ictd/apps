@@ -123,7 +123,7 @@ export const DataTableHrms = <T extends object>({
   paginate,
   showGlobalFilter = false,
   columnVisibility,
-  filterFn = filterFns.fuzzy,
+  filterFn = filterFns.contains,
   onRowClick,
 }: TablePropsHrms<T>) => {
   // set state for sorting the table
