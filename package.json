@@ -23,6 +23,7 @@
     "@nrwl/next": "15.2.1",
     "@react-pdf/renderer": "^3.1.5",
     "@storybook/react": "^6.5.16",
+    "@tanstack/match-sorter-utils": "^8.7.6",
     "@tanstack/react-table": "^8.7.4",
     "@types/lodash": "^4.14.191",
     "@types/uuid": "^9.0.0",
