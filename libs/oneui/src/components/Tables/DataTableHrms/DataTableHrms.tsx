@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { FunctionComponent, useState, useMemo, useEffect } from 'react';
 import { tableHeaderStyles } from './DataTableHrms.styles';
+import { rankItem, rankings } from '@tanstack/match-sorter-utils';
+import type { RankingInfo } from '@tanstack/match-sorter-utils';
 import {
   ColumnDef,
   flexRender,
@@ -15,19 +18,112 @@ import {
 import React from 'react';
 // import { Pagination } from '../Pagination';
 
-export type TablePropsHrms<T> = {
+export const DebouncedInput = ({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number;
+  onChange: (value: string | number) => void;
+  debounce?: number;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) => {
+  const [value, setValue] = useState(initialValue);
+
+  // setValue if any initialValue changes
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  // debounce
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value);
+    }, debounce);
+
+    return () => clearTimeout(timeout);
+    // onChange(value);
+  }, [value, onChange, debounce]);
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.currentTarget.value)}
+    />
+  );
+};
+
+// most of table work acceptably well with this function
+const fuzzy = <TData extends Record<string, any> = {}>(
+  row: Row<TData>,
+  columnId: string,
+  filterValue: string | number,
+  addMeta: (item: RankingInfo) => void
+) => {
+  const itemRank = rankItem(row.getValue(columnId), filterValue as string, {
+    threshold: rankings.MATCHES,
+  });
+  addMeta(itemRank);
+  return itemRank.passed;
+};
+
+//  if the value is falsy, then the columnFilters state entry for that filter will removed from that array.
+// https://github.com/KevinVandy/material-react-table/discussions/223#discussioncomment-4249221
+fuzzy.autoRemove = (val: any) => !val;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+const contains = <TData extends Record<string, any> = {}>(
+  row: Row<TData>,
+  id: string,
+  filterValue: string | number
+) =>
+  row
+    .getValue<string | number>(id)
+    .toString()
+    .toLowerCase()
+    .trim()
+    .includes(filterValue.toString().toLowerCase().trim());
+
+contains.autoRemove = (val: any) => !val;
+
+const startsWith = <TData extends Record<string, any> = {}>(
+  row: Row<TData>,
+  id: string,
+  filterValue: string | number
+) =>
+  row
+    .getValue<string | number>(id)
+    .toString()
+    .toLowerCase()
+    .trim()
+    .startsWith(filterValue.toString().toLowerCase().trim());
+
+startsWith.autoRemove = (val: any) => !val;
+
+export const filterFns = {
+  fuzzy,
+  contains,
+  startsWith,
+};
+
+export type TablePropsHrms<T extends object> = {
   data: Array<T>;
   columns: Array<ColumnDef<T, unknown>>;
   paginate?: boolean;
   columnVisibility?: Record<string, boolean>;
   onRowClick?: (row: Row<T>) => void;
+  showGlobalFilter?: boolean;
+  filterFn?: FilterFn<T>;
 };
 
 export const DataTableHrms = <T extends object>({
   data,
   columns,
   paginate,
+  showGlobalFilter = false,
   columnVisibility,
+  filterFn = filterFns.fuzzy,
   onRowClick,
 }: TablePropsHrms<T>) => {
   // set state for sorting the table
@@ -42,69 +138,35 @@ export const DataTableHrms = <T extends object>({
 
   // initialize table settings
   const table = useReactTable({
-    columns: tableColumns,
     data: tableData,
-    // filterFns: {
-    //   fuzzy: fuzzyFilter,
-    // },
+    columns: tableColumns,
     state: { sorting, columnVisibility, globalFilter },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-
     onGlobalFilterChange: setGlobalFilter,
-    // globalFilterFn: fuzzyFilter,
+
+    globalFilterFn: filterFn,
   });
 
-  function DebouncedInput({
-    value: initialValue,
-    onChange,
-    debounce = 500,
-    ...props
-  }: {
-    value: string | number;
-    onChange: (value: string | number) => void;
-    debounce?: number;
-  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-    const [value, setValue] = useState(initialValue);
-
-    useEffect(() => {
-      setValue(initialValue);
-    }, [initialValue]);
-
-    useEffect(() => {
-      const timeout = setTimeout(() => {
-        onChange(value);
-      }, debounce);
-
-      return () => clearTimeout(timeout);
-    }, [value]);
-
-    return (
-      <input
-        {...props}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-    );
-  }
-
   return (
-    <React.Fragment>
-      <div className="search-box-wrapper order-1 w-1/2">
-        <DebouncedInput
-          value={globalFilter ?? ''}
-          onChange={(value) => setGlobalFilter(String(value))}
-          className="rounded-full border border-gray-300 bg-white px-4 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50 focus-visible:outline-none w-60"
-          placeholder="Search all columns..."
-        />
+    <>
+      <div className="order-1 w-1/2 search-box-wrapper">
+        {showGlobalFilter ? (
+          <DebouncedInput
+            value={globalFilter ?? ''}
+            onChange={(value) => setGlobalFilter(String(value))}
+            className="px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-full hover:bg-gray-50 focus-visible:outline-none w-60"
+            placeholder="Search all columns..."
+          />
+        ) : null}
       </div>
 
-      <div className="bg-white rounded-md overflow-y-auto h-full w-full flex flex-col order-3">
-        <table className="w-full text-left table-auto whitespace-no-wrap bg-white flex-1">
-          <thead className="text-sm text-gray-600 sticky top-0 bg-white border-b z-30">
+      <div className="flex flex-col order-3 w-full h-full overflow-y-auto bg-white rounded-md">
+        <table className="flex-1 w-full text-left whitespace-no-wrap bg-white table-auto">
+          <thead className="sticky top-0 z-30 text-sm text-gray-600 bg-white border-b">
             {table.getHeaderGroups().map((group) => {
               return (
                 <tr key={group.id}>
@@ -113,7 +175,7 @@ export const DataTableHrms = <T extends object>({
                       <th
                         key={header.id}
                         scope="col"
-                        className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border-blueGray-100 py-3 border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                        className="px-6 py-3 font-semibold text-left align-middle border-l-0 border-r-0 bg-blueGray-50 text-blueGray-500 border-blueGray-100 whitespace-nowrap"
                       >
                         {header.isPlaceholder ? null : (
                           <div
@@ -149,13 +211,13 @@ export const DataTableHrms = <T extends object>({
                   <tr
                     key={row.id}
                     onClick={onRowClick ? () => onRowClick(row) : () => null}
-                    className="odd:bg-slate-50 hover:bg-slate-100 cursor-pointer"
+                    className="cursor-pointer odd:bg-slate-50 hover:bg-slate-100"
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
                         <td
                           key={cell.id}
-                          className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                          className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -171,7 +233,7 @@ export const DataTableHrms = <T extends object>({
           ) : (
             <tbody>
               <tr>
-                <td colSpan={columns.length} className="text-center text-xs">
+                <td colSpan={columns.length} className="text-xs text-center">
                   No records found
                 </td>
               </tr>
@@ -180,18 +242,18 @@ export const DataTableHrms = <T extends object>({
         </table>
 
         {data && paginate ? (
-          <div className="flex items-center justify-end border-t border-gray-200 bg-white px-4 py-3 sm:px-6 space-x-3">
+          <div className="flex items-center justify-end px-4 py-3 space-x-3 bg-white border-t border-gray-200 sm:px-6">
             {/* Next and Previous button */}
-            <div className="flex flex-1 justify-between sm:hidden">
+            <div className="flex justify-between flex-1 sm:hidden">
               <button
-                className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                 // onClick={() => previousPage()}
                 // disabled={!canPreviousPage}
               >
                 {'Previous'}
               </button>
               <button
-                className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                 // onClick={() => nextPage()}
                 // disabled={!canNextPage}
               >
@@ -202,11 +264,11 @@ export const DataTableHrms = <T extends object>({
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-end">
               <div>
                 <nav
-                  className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+                  className="inline-flex -space-x-px rounded-md shadow-sm isolate"
                   aria-label="Pagination"
                 >
                   <button
-                    className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 focus:z-20"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -214,7 +276,7 @@ export const DataTableHrms = <T extends object>({
                     {'Previous'}
                   </button>
                   <button
-                    className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 focus:z-20"
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                   >
@@ -226,7 +288,7 @@ export const DataTableHrms = <T extends object>({
             </div>
 
             {/* Page number */}
-            <div className="hidden sm:flex text-xs text-gray-700">
+            <div className="hidden text-xs text-gray-700 sm:flex">
               <span className="pr-1">Page</span>
               <strong>
                 {table.getState().pagination.pageIndex + 1} of{' '}
@@ -235,13 +297,13 @@ export const DataTableHrms = <T extends object>({
             </div>
 
             {/* Paginate size */}
-            <div className="hidden sm:flex text-gray-700">
+            <div className="hidden text-gray-700 sm:flex">
               <select
                 value={table.getState().pagination.pageSize}
                 onChange={(e) => {
                   table.setPageSize(Number(e.target.value));
                 }}
-                className="rounded-md border border-gray-300 font-medium text-gray-500 text-xs"
+                className="text-xs font-medium text-gray-500 border border-gray-300 rounded-md"
               >
                 {[10, 20, 30, 40, 50].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
@@ -253,7 +315,7 @@ export const DataTableHrms = <T extends object>({
           </div>
         ) : null}
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

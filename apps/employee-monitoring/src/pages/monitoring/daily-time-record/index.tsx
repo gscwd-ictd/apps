@@ -155,6 +155,7 @@ export default function Index({
                 columns={columns}
                 columnVisibility={columnVisibility}
                 paginate
+                showGlobalFilter
               />
 
               {/* <DailyTimeRecordPageHeader /> */}
