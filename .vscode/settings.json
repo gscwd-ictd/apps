@@ -5,6 +5,7 @@
     "oneui",
     "pagenumber",
     "sched",
-    "tanstack"
+    "tanstack",
+    "Zustand"
   ]
 }
