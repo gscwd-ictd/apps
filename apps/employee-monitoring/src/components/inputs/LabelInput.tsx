@@ -8,7 +8,7 @@ type LabelInputProps = {
   isError?: boolean;
   errorMessage?: string;
   controller?: object;
-  muted?: boolean;
+  disabled?: boolean;
 };
 
 export const LabelInput: FunctionComponent<
@@ -21,7 +21,7 @@ export const LabelInput: FunctionComponent<
   isError = false,
   errorMessage,
   controller,
-  muted = false,
+  disabled = false,
   ...props
 }) => {
   return (
@@ -32,10 +32,10 @@ export const LabelInput: FunctionComponent<
       <input
         {...props}
         id={id}
-        readOnly={muted}
-        disabled={muted}
+        readOnly={disabled}
+        disabled={disabled}
         {...controller}
-        className={`rounded border  focus:border-blue-500 border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4 ${className}`}
+        className={`rounded border disabled:hover:cursor-not-allowed focus:border-blue-500 border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4 ${className}`}
         placeholder={placeholder}
       />
     </div>

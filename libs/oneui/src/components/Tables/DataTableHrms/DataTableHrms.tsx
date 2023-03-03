@@ -129,6 +129,8 @@ export const DataTableHrms = <T extends object>({
   // set state for sorting the table
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [grouping, setGrouping] = useState([]);
 
   // set table columns
   const tableColumns = useMemo(() => columns, [columns]);
@@ -140,7 +142,7 @@ export const DataTableHrms = <T extends object>({
   const table = useReactTable({
     data: tableData,
     columns: tableColumns,
-    state: { sorting, columnVisibility, globalFilter },
+    state: { sorting, columnVisibility, globalFilter, columnFilters, grouping },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -175,7 +177,7 @@ export const DataTableHrms = <T extends object>({
                       <th
                         key={header.id}
                         scope="col"
-                        className="px-6 py-3 font-semibold text-left align-middle border-l-0 border-r-0 bg-blueGray-50 text-blueGray-500 border-blueGray-100 whitespace-nowrap"
+                        className="px-6 py-3 text-xs font-semibold text-left text-black align-middle border-l-0 border-r-0 bg-blueGray-50 text-blueGray-500 border-blueGray-100 whitespace-nowrap"
                       >
                         {header.isPlaceholder ? null : (
                           <div

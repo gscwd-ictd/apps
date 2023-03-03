@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, DataTableHrms, Modal } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { SchedulesPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/schedules/Footer';
@@ -20,6 +20,8 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { capitalizer } from 'apps/employee-monitoring/src/utils/functions/capitalizer';
+import { createColumnHelper } from '@tanstack/react-table';
+import AddOfficeSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/office/AddOfficeSchedModal';
 
 const listOfSchedules: Array<Schedule> = [
   {
@@ -74,7 +76,7 @@ export default function Index() {
   const action = useScheduleStore((state) => state.action);
   const setAction = useScheduleStore((state) => state.setAction);
   const [withLunch, setWithLunch] = useState<boolean>(true);
-  const [scheduleForEdit, setScheduleForEdit] = useState<Schedule>(
+  const [currentRowData, setCurrentRowData] = useState<Schedule>(
     {} as Schedule
   );
   const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
@@ -86,6 +88,36 @@ export default function Index() {
 
   const schedules = useScheduleStore((state) => state.schedules);
   const setSchedules = useScheduleStore((state) => state.setSchedules);
+
+  // Add modal function
+  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
+  const openAddActionModal = () => setAddModalIsOpen(true);
+  const closeAddActionModal = () => setAddModalIsOpen(false);
+
+  // Edit modal function
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+  const openEditActionModal = (rowData: Schedule) => {
+    setEditModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeEditActionModal = () => setEditModalIsOpen(false);
+
+  // Delete modal function
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+  const openDeleteActionModal = (rowData: Schedule) => {
+    setDeleteModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
+
+  // when edit action is clicked
+  // const editAction = async (employee: Schedule, idx: number) => {
+  //   // setAction(ModalActions.UPDATE);/
+  //   // setScheduleForEdit(sched);
+  //   // setSelectedRestDays(await transformRestDays(sched.restDays));
+  //   // loadNewDefaultValues(sched);
+  //   setModalIsOpen(true);
+  // };
 
   const {
     setValue,
@@ -130,7 +162,7 @@ export default function Index() {
   // when edit action is clicked
   const editAction = async (sched: Schedule, idx: number) => {
     setAction(ModalActions.UPDATE);
-    setScheduleForEdit(sched);
+    setCurrentRowData(sched);
     setSelectedRestDays(await transformRestDays(sched.restDays));
     loadNewDefaultValues(sched);
     setModalIsOpen(true);
@@ -161,6 +193,119 @@ export default function Index() {
     reset();
     setSelectedRestDays([]);
     setWithLunch(true);
+  };
+
+  // define table columns
+  const columnHelper = createColumnHelper<Schedule>();
+
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('name', {
+      enableSorting: false,
+      header: () => 'Schedule Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('category', {
+      enableSorting: false,
+      header: () => 'Category',
+      cell: (info) => renderCategoryType(info.getValue()),
+    }),
+    columnHelper.accessor('timeIn', {
+      enableSorting: false,
+      header: () => 'Time In',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('timeOut', {
+      enableSorting: false,
+      header: () => 'Time Out',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('lunchIn', {
+      enableSorting: false,
+      header: () => 'Lunch In',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('lunchOut', {
+      enableSorting: false,
+      header: () => 'Lunch Out',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('shift', {
+      enableSorting: false,
+      header: () => 'Shift',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('restDays', {
+      enableSorting: false,
+      header: () => 'Rest Day',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.display({
+      header: () => 'Actions',
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
+
+  // Define visibility of columns
+  const columnVisibility = { id: false };
+
+  // Render badge pill design
+  const renderCategoryType = (categoryType: Categories) => {
+    if (categoryType === Categories.REGULAR) {
+      return (
+        <span className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
+          Regular
+        </span>
+      );
+    } else if (categoryType === Categories.FLEXIBLE) {
+      return (
+        <span className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
+          Flexible
+        </span>
+      );
+    } else if (categoryType === Categories.OPERATOR1) {
+      return (
+        <span className="bg-green-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
+          OPERATOR A
+        </span>
+      );
+    } else {
+      return;
+    }
+  };
+
+  // Render row actions in the table component
+  const renderRowActions = (rowData: Schedule) => {
+    return (
+      <>
+        <button
+          type="button"
+          className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+          onClick={() => openEditActionModal(rowData)}
+        >
+          <i className="bx bx-edit-alt"></i>
+        </button>
+
+        <button
+          type="button"
+          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          // onClick={() => openDeleteActionModal(rowData)}
+        >
+          <i className="bx bxs-user-plus"></i>
+        </button>
+
+        <button
+          type="button"
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          onClick={() => openDeleteActionModal(rowData)}
+        >
+          <i className="bx bx-trash-alt"></i>
+        </button>
+      </>
+    );
   };
 
   //! this must be replaced with fetch
@@ -204,327 +349,34 @@ export default function Index() {
           ]}
         />
 
-        <Modal open={modalIsOpen} setOpen={setModalIsOpen} steady size="xl">
-          <Modal.Header>
-            <div className="flex justify-between w-full">
-              <span className="text-2xl text-gray-600">
-                {action === ModalActions.CREATE
-                  ? 'New Schedule'
-                  : action === ModalActions.UPDATE
-                  ? 'Edit'
-                  : ''}
-              </span>
-              <button
-                className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
-                type="button"
-                onClick={closeAction}
-              >
-                x
-              </button>
-            </div>
-          </Modal.Header>
-          <hr />
-          <Modal.Body>
-            <div className="w-full mt-5">
-              <div className="flex flex-col w-full gap-5">
-                {/** name */}
-                <LabelInput
-                  id={'scheduleName'}
-                  label={'Schedule Name'}
-                  controller={{ ...register('name') }}
-                  onChange={(e) =>
-                    setScheduleForEdit({
-                      ...scheduleForEdit,
-                      name: e.target.value,
-                    })
-                  }
-                  isError={errors.name ? true : false}
-                  errorMessage={errors.name?.message}
-                />
+        <AddOfficeSchedModal
+          modalState={addModalIsOpen}
+          setModalState={setAddModalIsOpen}
+          closeModalAction={closeAddActionModal}
+        />
 
-                {/** Shift */}
-                <SelectListRF
-                  id="scheduleCategory"
-                  selectList={categorySelection}
-                  controller={{ ...register('category') }}
-                  label="Category"
-                />
-
-                {/** Time in */}
-                <LabelInput
-                  id={'scheduleTimeIn'}
-                  type="time"
-                  label={'Time In'}
-                  onChange={(e) =>
-                    setScheduleForEdit({
-                      ...scheduleForEdit,
-                      timeIn: e.target.value,
-                    })
-                  }
-                  controller={{ ...register('timeIn') }}
-                  isError={errors.timeIn ? true : false}
-                  errorMessage={errors.timeIn?.message}
-                />
-
-                {/** Time Out */}
-                <LabelInput
-                  id={'scheduleTimeOut'}
-                  type="time"
-                  label={'Time Out'}
-                  onChange={(e) =>
-                    setScheduleForEdit({
-                      ...scheduleForEdit,
-                      timeOut: e.target.value,
-                    })
-                  }
-                  controller={{ ...register('timeOut') }}
-                  isError={errors.timeOut ? true : false}
-                  errorMessage={errors.timeOut?.message}
-                />
-
-                {/** With Lunch */}
-                <div className="flex gap-2 text-start">
-                  <Toggle
-                    labelPosition="top"
-                    enabled={withLunch}
-                    setEnabled={setWithLunch}
-                    label={'With Lunch In & Out:'}
-                  />
-                  <div
-                    className={`text-xs ${
-                      withLunch ? 'text-blue-400' : 'text-gray-400'
-                    }`}
-                  >
-                    {withLunch ? (
-                      <button
-                        onClick={() => setWithLunch((prev) => !prev)}
-                        className="underline"
-                      >
-                        <span>Yes</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setWithLunch((prev) => !prev)}
-                        className="underline"
-                      >
-                        <span>No</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/** Lunch In */}
-                {watch('withLunch') === true ? (
-                  <LabelInput
-                    id={'scheduleLunchIn'}
-                    type="time"
-                    label={'Lunch In'}
-                    onChange={(e) =>
-                      setScheduleForEdit({
-                        ...scheduleForEdit,
-                        lunchIn: e.target.value,
-                      })
-                    }
-                    controller={{ ...register('lunchIn') }}
-                    isError={errors.lunchIn ? true : false}
-                    errorMessage={errors.lunchIn?.message}
-                  />
-                ) : null}
-
-                {/** Lunch Out */}
-                {watch('withLunch') === true ? (
-                  <LabelInput
-                    id={'scheduleLunchOut'}
-                    type="time"
-                    label={'Lunch Out'}
-                    onChange={(e) =>
-                      setScheduleForEdit({
-                        ...scheduleForEdit,
-                        lunchOut: e.target.value,
-                      })
-                    }
-                    controller={{ ...register('lunchOut') }}
-                    isError={errors.lunchOut ? true : false}
-                    errorMessage={errors.lunchOut?.message}
-                  />
-                ) : null}
-
-                {/** Shift */}
-                <SelectListRF
-                  id="scheduleShift"
-                  selectList={shiftSelection}
-                  controller={{ ...register('shift') }}
-                  label="Shift"
-                />
-
-                {/** Rest Day */}
-                <div className="flex flex-col w-full min-h-[2.25rem]">
-                  <MySelectList
-                    id="scheduleRestDays"
-                    label="Rest Day(s)"
-                    multiple
-                    options={listOfRestDays}
-                    onChange={(o) => setSelectedRestDays(o)}
-                    value={selectedRestDays}
-                  />
-                </div>
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <div className="flex justify-end w-full">
-              <Button variant="info">
-                <span className="text-xs font-normal">
-                  {action === ModalActions.CREATE
-                    ? 'Add'
-                    : action === ModalActions.UPDATE
-                    ? 'Update'
-                    : ''}
-                </span>
-              </Button>
-            </div>
-          </Modal.Footer>
-        </Modal>
         <Can I="access" this="maintenance_schedules">
           <div className="mx-5">
-            <Card title={''}>
+            <Card>
               {/** Top Card */}
-              <div className="flex flex-col w-full h-full">
-                <SchedulesPageHeader />
-                <div className="w-full px-5 mt-5">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-xs border-b-2 text-slate-700">
-                        <th className="font-semibold w-[1/9] text-left ">
-                          Schedule Name
-                        </th>
-
-                        <th className="font-semibold w-[1/9] text-left ">
-                          Category
-                        </th>
-
-                        <th className="font-semibold w-[1/9] text-left">
-                          Time In
-                        </th>
-                        <th className="font-semibold w-[1/9] text-left">
-                          Time Out
-                        </th>
-                        <th className="font-semibold w-[1/9] text-left">
-                          Lunch In
-                        </th>
-                        <th className="font-semibold w-[1/9] text-left">
-                          Lunch Out
-                        </th>
-                        <th className="font-semibold w-[1/9] text-left">
-                          Shift
-                        </th>
-                        <th className="font-semibold w-[1/9] text-left">
-                          Rest Day
-                        </th>
-
-                        <th className="font-semibold w-[1/9] text-center">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide">
-                      {schedules &&
-                        schedules.map((sched, index) => {
-                          return (
-                            <React.Fragment key={index}>
-                              <tr className="h-[4rem] text-gray-700">
-                                <td className="w-[1/9] text-xs ">
-                                  {sched.name}
-                                </td>
-
-                                <td className="w-[1/9] text-xs ">
-                                  {transformCategory(sched.category)}
-                                </td>
-
-                                <td className="w-[1/9] text-xs">
-                                  {sched.timeIn}
-                                </td>
-
-                                <td className="w-[1/9] text-xs">
-                                  {sched.timeOut}
-                                </td>
-                                <td className="w-[1/9] text-xs">
-                                  {sched.lunchIn ? sched.lunchIn : 'N/A'}
-                                </td>
-                                <td className="w-[1/9] text-xs">
-                                  {sched.lunchOut ? sched.lunchOut : 'N/A'}
-                                </td>
-                                <td className="w-[1/9] text-xs">
-                                  {capitalizer(sched.shift)}
-                                </td>
-                                <td className="w-[1/9] text-xs ">
-                                  {sched.restDays
-                                    .sort((a, b) => (a > b ? 1 : -1))
-                                    .map((day, index) => {
-                                      return (
-                                        <React.Fragment key={index}>
-                                          {day === 0
-                                            ? 'Sunday'
-                                            : day === 1
-                                            ? 'Monday'
-                                            : day === 2
-                                            ? 'Tuesday'
-                                            : day === 3
-                                            ? 'Wednesday'
-                                            : day === 4
-                                            ? 'Thursday'
-                                            : day === 5
-                                            ? 'Friday'
-                                            : day === 6
-                                            ? 'Saturday'
-                                            : null}
-                                          {index + 1 < sched.restDays.length
-                                            ? ', '
-                                            : ''}
-                                        </React.Fragment>
-                                      );
-                                    })}
-                                </td>
-                                <td className="w-[1/9]">
-                                  <div className="flex w-full gap-2 text-center">
-                                    <Button
-                                      variant="info"
-                                      onClick={() => editAction(sched, index)}
-                                    >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="w-4 h-4"
-                                      >
-                                        <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
-                                        <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
-                                      </svg>
-                                    </Button>
-                                    <Button variant="danger">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="w-4 h-4"
-                                      >
-                                        <path
-                                          fillRule="evenodd"
-                                          d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                                          clipRule="evenodd"
-                                        />
-                                      </svg>
-                                    </Button>
-                                  </div>
-                                </td>
-                              </tr>
-                            </React.Fragment>
-                          );
-                        })}
-                    </tbody>
-                  </table>
+              <div className="flex flex-row flex-wrap">
+                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                  <button
+                    type="button"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                    onClick={openAddActionModal}
+                  >
+                    <i className="bx bxs-plus-square"></i>&nbsp; Add Schedule
+                  </button>
                 </div>
-                <SchedulesPageFooter />
+
+                <DataTableHrms
+                  data={schedules}
+                  columns={columns}
+                  columnVisibility={columnVisibility}
+                  paginate
+                  showGlobalFilter
+                />
               </div>
             </Card>
           </div>

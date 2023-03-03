@@ -141,7 +141,7 @@ const Index = () => {
           <LoadingSpinner size="lg" />
         ) : (
           <div className="flex flex-row flex-wrap">
-            <div className="table-actions-wrapper flex order-2 justify-end w-1/2">
+            <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
               <button
                 type="button"
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"

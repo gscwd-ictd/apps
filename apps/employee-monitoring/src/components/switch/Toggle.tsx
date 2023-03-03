@@ -5,6 +5,7 @@ type ToggleProps = {
   setEnabled: (enabled: boolean) => void;
   label: JSX.Element | string;
   labelPosition?: 'left' | 'right' | 'top' | 'bottom';
+  disabled?: boolean;
 };
 
 export default function Toggle({
@@ -12,6 +13,7 @@ export default function Toggle({
   setEnabled,
   label,
   labelPosition = 'right',
+  disabled = false,
 }: ToggleProps) {
   return (
     <Switch.Group>
@@ -31,6 +33,7 @@ export default function Toggle({
         <Switch
           checked={enabled}
           onChange={setEnabled}
+          disabled={disabled}
           className={`${
             enabled ? 'bg-blue-400 ' : 'hover:bg-blue-100 bg-gray-200'
           } relative inline-flex  h-6 w-11 items-center gap-2 rounded-full`}

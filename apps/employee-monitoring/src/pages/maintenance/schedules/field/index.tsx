@@ -209,6 +209,7 @@ export default function Index() {
             </div>
           </Modal.Header>
           <hr />
+
           <Modal.Body>
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">

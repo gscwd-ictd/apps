@@ -63,14 +63,17 @@ export default function Index({
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('fullName', {
+      enableSorting: false,
       header: () => 'Full Name',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('positionTitle', {
+      enableSorting: false,
       header: () => 'Position Title',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('assignment.name', {
+      enableSorting: false,
       header: () => 'Assignment',
       cell: (info) => info.getValue(),
     }),
@@ -94,7 +97,10 @@ export default function Index({
             className="text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700"
             onClick={() => openEditActionModal(rowData)}
           >
-            <span className="text-xs">View DTR</span>
+            <div className="flex gap-1">
+              <i className="bx bxs-show"></i>
+              <span className="text-xs">View DTR</span>
+            </div>
           </button>
         </div>
       </>
@@ -118,7 +124,6 @@ export default function Index({
       );
 
       setAllEmployees(employeesDetails);
-      // console.log(employeesDetails);
     }
   }, []);
 
@@ -140,16 +145,6 @@ export default function Index({
           <Card>
             {/** Top Card */}
             <div className="flex flex-col flex-wrap ">
-              {/* <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                <button
-                  type="button"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                  onClick={openAddActionModal}
-                >
-                  <i className="bx bxs-plus-square"></i>&nbsp; Add Holiday
-                </button>
-              </div> */}
-
               <DataTableHrms
                 data={allEmployees}
                 columns={columns}
@@ -157,10 +152,6 @@ export default function Index({
                 paginate
                 showGlobalFilter
               />
-
-              {/* <DailyTimeRecordPageHeader /> */}
-
-              {/* <DailyTimeRecordPageFooter /> */}
             </div>
           </Card>
         </div>
