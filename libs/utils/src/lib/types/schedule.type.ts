@@ -15,10 +15,10 @@ type ScheduleWithoutLunch = {
 
 export type Schedule = {
   id?: string;
-  category: Categories;
+  category: Categories | null;
   name: string;
   timeIn: string;
   timeOut: string;
-  shift: ScheduleShifts;
+  shift: ScheduleShifts | null;
   restDays: Array<number>;
 } & (ScheduleWithLunch | ScheduleWithoutLunch);

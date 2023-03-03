@@ -23,6 +23,7 @@ type SelectProps = {
   options: SelectOption[];
   label: string;
   id: string;
+  disabled?: boolean;
 } & (SingleSelectProps | MultipleSelectProps);
 
 export function MySelectList({
@@ -31,6 +32,7 @@ export function MySelectList({
   onChange,
   id,
   label,
+  disabled = false,
   options,
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -113,7 +115,7 @@ export function MySelectList({
         onBlur={() => setIsOpen(false)}
         onClick={() => setIsOpen((prev) => !prev)}
         tabIndex={0}
-        className="flex hover:cursor-pointer relative w-full border border-gray-300/90 rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border-blue-300"
+        className="flex hover:cursor-pointer relative w-full border border-gray-300/90 rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
       >
         <span className="text-xs text-gray-700 ">
           {multiple
