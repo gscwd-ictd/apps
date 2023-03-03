@@ -10,8 +10,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { HolidayRowData } from '../../../../../utils/types/table-row-types/maintenance/holiday-row.type';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { isEmpty } from 'lodash';
-import { useSWRConfig } from 'swr';
-import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 type AddModalProps = {
   modalState: boolean;
@@ -37,17 +35,9 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorPostMessage, setErrorPostMessage] = useState<string>('');
   const [responsePost, setResponsePost] = useState<object>({});
-  const { mutate } = useSWRConfig();
 
   // React hook form
-  const {
-    setValue,
-    watch,
-    reset,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<HolidayRowData>({
+  const { reset, register, handleSubmit } = useForm<HolidayRowData>({
     mode: 'onChange',
     defaultValues: {
       name: '',
@@ -84,7 +74,6 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
 
       // set value from returned response
       setResponsePost(result);
-      mutate('/holidays');
 
       reset();
       closeModalAction();

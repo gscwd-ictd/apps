@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import fetcherEMS from '../../../../../src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
+import { useHolidaysStore } from '../../../../../src/store/holidays.store';
 
 import { Holiday } from '../../../../utils/types/holiday.type';
 import { HolidayRowData } from '../../../../utils/types/table-row-types/maintenance/holiday-row.type';
@@ -19,7 +21,7 @@ import EditHolidayModal from '../../../../components/modal/maintenance/events/ho
 import DeleteHolidayModal from '../../../../components/modal/maintenance/events/holidays/DeleteHolidayModal';
 
 const Index = () => {
-  const [holidays, setHolidays] = useState<Array<Holiday>>([]);
+  // const [holidays, setHolidays] = useState<Array<Holiday>>([]);
 
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<HolidayRowData>(
@@ -117,27 +119,61 @@ const Index = () => {
   };
 
   // fetch data for list of holidays
-  const { data, error, isLoading } = useSWR('/holidays', fetcherEMS, {
+  const {
+    data: swrHolidays,
+    error: swrError,
+    isLoading: swrIsLoading,
+  } = useSWR('/holidays', fetcherEMS, {
     shouldRetryOnError: false,
   });
 
+  // Zustand initialization
+  const {
+    Holidays,
+    IsLoading,
+    Error,
+    GetHolidays,
+    GetHolidaysSuccess,
+    GetHolidaysFail,
+  } = useHolidaysStore((state) => ({
+    Holidays: state.holidays,
+    IsLoading: state.loading.loadingHolidays,
+    Error: state.error.errorHolidays,
+    GetHolidays: state.getHolidays,
+    GetHolidaysSuccess: state.getHolidaysSuccess,
+    GetHolidaysFail: state.getHolidaysFail,
+  }));
+
+  // Initial zustand state update
   useEffect(() => {
-    if (!isEmpty(data)) {
-      setHolidays(data.data);
+    if (swrIsLoading) {
+      GetHolidays(swrIsLoading);
     }
-  }, [data]);
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrHolidays)) {
+      // setHolidays(data.data);
+      GetHolidaysSuccess(swrIsLoading, swrHolidays.data);
+    }
+
+    if (!isEmpty(swrError)) {
+      GetHolidaysFail(swrIsLoading, swrError);
+    }
+  }, [swrHolidays, swrError]);
 
   return (
     <div className="min-h-[100%] min-w-full px-4">
       <BreadCrumbs title="Holidays" />
 
       {/* Notification error */}
-      {!isEmpty(error) ? (
-        <ToastNotification toastType="error" notifMessage={error.message} />
+      {!isEmpty(Error) ? (
+        <ToastNotification toastType="error" notifMessage={Error} />
       ) : null}
 
       <Card>
-        {isLoading ? (
+        {IsLoading ? (
           <LoadingSpinner size="lg" />
         ) : (
           <div className="flex flex-row flex-wrap">
@@ -152,7 +188,7 @@ const Index = () => {
             </div>
 
             <DataTableHrms
-              data={holidays}
+              data={Holidays}
               columns={columns}
               columnVisibility={columnVisibility}
               paginate
