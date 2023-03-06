@@ -8,51 +8,61 @@ export default function PassSlipInfoModal() {
     <>
       <div className="w-full h-full flex flex-col gap-2 ">
         <div className="w-full flex flex-col gap-2 p-4 rounded">
-          {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
-          <div className="w-full pb-2 flex gap-2 justify-start items-center">
-            <span className="text-slate-500 text-xl font-medium">Date:</span>
-            <div className="border-slate-300 text-slate-500 border px-4 text-lg">
+          <div className="w-full flex gap-2 justify-start items-center">
+            <span className="text-slate-500 text-lg font-medium">Date:</span>
+            <div className="text-slate-500 text-lg">
               {selectedPassSlip.dateOfApplication}
             </div>
           </div>
-          <div className="flex gap-2">
-            <label className="text-slate-500 text-xl font-medium">
-              Select Nature of Business:
+
+          <div className="flex gap-2 justify-between items-center">
+            <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+              Nature of Business:
             </label>
-            <div className="text-slate-500 rounded text-lg border-slate-300 border px-4">
-              {selectedPassSlip.natureOfBusiness}
+
+            <div className="w-96">
+              <label className="text-slate-500 h-12 w-96  text-lg ">
+                {selectedPassSlip.natureOfBusiness}
+              </label>
             </div>
           </div>
 
-          <div className={'flex flex-col gap-4 '}>
-            <div
+          <div className="flex gap-3 justify-between items-center">
+            <label
               className={`${
                 selectedPassSlip.natureOfBusiness === 'Official Business'
-                  ? 'flex gap-2 '
+                  ? 'text-slate-500 text-lg whitespace-nowrap font-medium'
                   : 'hidden'
               }`}
             >
-              <label className={'text-slate-500 text-xl font-medium'}>
-                Select Mode of Transportation:
-              </label>
-              <div
-                className={
-                  'text-slate-500 rounded text-lg border-slate-300 border px-4'
-                }
-              >
+              Mode of Transportation:
+            </label>
+            <div className="w-96">
+              <label className="text-slate-500 h-12 w-96  text-lg ">
                 {selectedPassSlip.obTransportation}
-              </div>
+              </label>
             </div>
-
-            <div className="w-full flex gap-2 justify-start items-center">
-              <span className="text-slate-500 text-xl font-medium">
+          </div>
+          <div
+            className={` flex flex-col gap-2
+            `}
+          >
+            <div className="flex gap-2 justify-between items-center">
+              <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                 Estimated Hours:
-              </span>
-              <div className="border-slate-300 border px-4 text-slate-500 text-lg">
-                {selectedPassSlip.estimateHours}
+              </label>
+              <div className="w-96">
+                <label className="text-slate-500 h-12 w-96  text-lg ">
+                  {selectedPassSlip.estimateHours}
+                </label>
               </div>
             </div>
-            <label className={'text-slate-500 text-xl font-medium'}>
+          </div>
+          <div
+            className={`flex flex-col gap-2
+            `}
+          >
+            <label className="text-slate-500 text-lg font-medium">
               Purpose/Desination:
             </label>
             <textarea
@@ -63,14 +73,6 @@ export default function PassSlipInfoModal() {
               rows={4}
               disabled={true}
             ></textarea>
-            <div className="w-full flex gap-2 justify-start items-center">
-              <span className="text-slate-500 text-xl font-medium">
-                Status:
-              </span>
-              <div className="border-slate-300 border px-4 text-slate-500 text-lg">
-                {selectedPassSlip.status}
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HiDocumentAdd, HiX } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -21,7 +21,7 @@ import {
   fetchWithToken,
 } from '../../../../src/utils/hoc/fetcher';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
 import { PassSlipTabWindow } from '../../../../src/components/fixed/passslip/PassSlipTabWindow';
 import { PassSlipModalController } from '../../../../src/components/fixed/passslip/PassSlipListController';
@@ -71,6 +71,7 @@ export default function PassSlip({
   const dateOfApplication = usePassSlipStore(
     (state) => state.dateOfApplication
   );
+  const [applicationSuccess, setApplicationSuccess] = useState<boolean>(false);
   const today = new Date();
   const dateToday = format(today, 'yyyy-MM-dd');
   const natureOfBusiness = usePassSlipStore((state) => state.natureOfBusiness);
@@ -98,25 +99,13 @@ export default function PassSlip({
     (state) => state.setObTransportation
   );
 
+  // const [resetPassSlipList, setResetPassSlipList] = useState<boolean>(false);
   const passSlipList = usePassSlipStore((state) => state.passSlipList);
-
-  const setPassSlipList = usePassSlipStore((state) => state.setPassSlipList);
-  const passSlipUrl = `http://192.168.99.124:4104/api/v1/pass-slip/${employeeDetails.employmentDetails.userId}`;
-
-  const random = useRef(Date.now());
-
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
-  const { data } = useSWR(passSlipUrl, fetchWithToken);
-
-  useEffect(() => {
-    if (!isEmpty(data)) {
-      setPassSlipList(data);
-    }
-  }, [data]);
 
   // open the modal
   const openModal = () => {
     if (!modal.isOpen) {
+      setApplicationSuccess(false);
       setAction('Apply');
       setModal({ ...modal, page: 1, isOpen: true });
       setNatureOfBusiness('');
@@ -137,13 +126,13 @@ export default function PassSlip({
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
     setIsLoading(true);
-    setPassSlipList(passSlipList);
+    // setPassSlipList(passSlipList);
   }, [
     employeeDetails,
     passSlipList,
     setEmployeeDetails,
     setIsLoading,
-    setPassSlipList,
+    // setPassSlipList,
   ]);
 
   useEffect(() => {
@@ -196,7 +185,7 @@ export default function PassSlip({
         );
         if (data) {
           modalCancel();
-          toast.success('Pass Slip Application Successful!');
+          setApplicationSuccess(true);
         } else {
           console.log(data);
           toast.error('Error');
@@ -221,6 +210,13 @@ export default function PassSlip({
           pauseOnHover
           theme="light"
         />
+        {applicationSuccess ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application."
+          />
+        ) : null}
+
         <EmployeeProvider employeeData={employee}>
           <Head>
             <title>Employee Pass Slips</title>
@@ -228,7 +224,7 @@ export default function PassSlip({
 
           <SideNav />
 
-          <Modal size={'xl'} open={modal.isOpen} setOpen={openModal}>
+          <Modal size={'lg'} open={modal.isOpen} setOpen={openModal}>
             <Modal.Header>
               <h3 className="font-semibold text-2xl text-gray-700">
                 <div className="px-5 flex justify-between">

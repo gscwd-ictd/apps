@@ -63,105 +63,109 @@ export default function PassSlipApplicationModal() {
     <>
       <div className="w-full h-full flex flex-col gap-2 ">
         <div className="w-full flex flex-col gap-2 p-4 rounded">
-          {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
-          <div className="w-full pb-4 flex gap-2 justify-start items-center">
-            <span className="text-slate-500 text-xl font-medium">Date</span>
-            <div className="border-slate-300 border text-slate-500 p-2">
-              {dateOfApplication}
+          <div className="w-full flex gap-2 justify-start items-center">
+            <span className="text-slate-500 text-lg font-medium">Date:</span>
+            <div className="text-slate-500 text-lg">{dateOfApplication}</div>
+          </div>
+
+          <div className="flex gap-2 justify-between items-center">
+            <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+              Select Nature of Business:
+            </label>
+
+            <div className="w-96">
+              <select
+                value={natureOfBusiness}
+                className="text-slate-500 h-12 w-96 rounded text-lg border-slate-300"
+                onChange={(e) =>
+                  handleNatureOfBusiness(e.target.value as unknown as string)
+                }
+              >
+                <option value="" disabled>
+                  Select Nature of Business
+                </option>
+                <option value="Personal Business">Personal Business</option>
+                <option value="Half Day">Half Day</option>
+                <option value="Undertime">Undertime</option>
+                <option value="Official Business">Official Business</option>
+              </select>
             </div>
           </div>
-          <label className="pt-2 text-slate-500 text-xl font-medium">
-            Select Nature of Business:
-          </label>
-          <div>
-            <select
-              value={natureOfBusiness}
-              className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
-              onChange={(e) =>
-                handleNatureOfBusiness(e.target.value as unknown as string)
-              }
-            >
-              <option value="" disabled>
-                Select Nature of Business
-              </option>
-              <option value="Personal Business">Personal Business</option>
-              <option value="Half Day">Half Day</option>
-              <option value="Undertime">Undertime</option>
-              <option value="Official Business">Official Business</option>
-            </select>
-            {/* <div
-              className={`${
-                natureOfBusiness
-                  ? 'flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1'
-                  : 'hidden'
-              }`}
-            >
-              <span className="font-bold">{natureOfBusiness}</span>
-            </div> */}
-          </div>
-          <div
-            className={`${
-              natureOfBusiness ? 'pt-2 flex flex-col gap-4 ' : 'hidden'
-            }`}
-          >
+
+          <div className="flex gap-3 justify-between items-center">
             <label
               className={`${
                 natureOfBusiness === 'Official Business'
-                  ? '-mb-2 text-slate-500 text-xl font-medium'
+                  ? 'text-slate-500 text-lg whitespace-nowrap font-medium'
                   : 'hidden'
               }`}
             >
               Select Mode of Transportation:
             </label>
-            <select
-              defaultValue="transportation"
-              className={`${
-                natureOfBusiness === 'Official Business'
-                  ? 'text-slate-500 w-full h-16 rounded text-lg border-slate-300'
-                  : 'hidden'
-              }`}
-              onChange={(e) =>
-                setObTransportation(e.target.value as unknown as string)
-              }
-            >
-              <option value="transportation" disabled>
-                Select Mode of Transportation
-              </option>
-              <option value="Office Vehicle">Office Vehicle</option>
-              <option value="Private/Personal Vehicle">
-                Private/Personal Vehicle
-              </option>
-              <option value="Public Vehicle">Public Vehicle</option>
-            </select>
-
-            <div className="w-full flex gap-2 justify-start items-center">
-              <span className="text-slate-500 text-xl font-medium">
-                Estimated Hours:
-              </span>
-              <input
-                type="number"
-                defaultValue={
-                  natureOfBusiness === 'Half Day' ||
-                  natureOfBusiness === 'Undertime'
-                    ? 0
-                    : null
-                }
-                disabled={
-                  natureOfBusiness === 'Half Day' ||
-                  natureOfBusiness === 'Undertime'
-                    ? true
-                    : false
-                }
-                className="border-slate-300 text-slate-500"
+            <div className="w-96">
+              <select
+                defaultValue="transportation"
+                className={`${
+                  natureOfBusiness === 'Official Business'
+                    ? 'text-slate-500 h-12 w-96 rounded text-lg border-slate-300'
+                    : 'hidden'
+                }`}
                 onChange={(e) =>
-                  handleHours(e.target.value as unknown as number)
+                  setObTransportation(e.target.value as unknown as string)
                 }
-              ></input>
+              >
+                <option value="transportation" disabled>
+                  Select Mode of Transportation
+                </option>
+                <option value="Office Vehicle">Office Vehicle</option>
+                <option value="Private/Personal Vehicle">
+                  Private/Personal Vehicle
+                </option>
+                <option value="Public Vehicle">Public Vehicle</option>
+              </select>
             </div>
+          </div>
+          <div
+            className={`${
+              natureOfBusiness ? ' flex flex-col gap-2' : 'hidden'
+            }`}
+          >
+            <div className="flex gap-2 justify-between items-center">
+              <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                Estimated Hours:
+              </label>
+              <div className="w-96">
+                <input
+                  type="number"
+                  defaultValue={
+                    natureOfBusiness === 'Half Day' ||
+                    natureOfBusiness === 'Undertime'
+                      ? 0
+                      : null
+                  }
+                  disabled={
+                    natureOfBusiness === 'Half Day' ||
+                    natureOfBusiness === 'Undertime'
+                      ? true
+                      : false
+                  }
+                  className="border-slate-300 text-slate-500 h-10 w-96"
+                  onChange={(e) =>
+                    handleHours(e.target.value as unknown as number)
+                  }
+                ></input>
+              </div>
+            </div>
+          </div>
+          <div
+            className={`${
+              natureOfBusiness ? ' flex flex-col gap-2' : 'hidden'
+            }`}
+          >
             <label
               className={`${
                 natureOfBusiness
-                  ? 'text-slate-500 text-xl font-medium'
+                  ? 'text-slate-500 text-lg font-medium'
                   : 'hidden'
               }`}
             >
