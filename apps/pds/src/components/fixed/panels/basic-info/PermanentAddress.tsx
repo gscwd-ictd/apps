@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useContext, useEffect, useRef, useState } from 'react';
 import { FloatingLabelTextField } from '../../../modular/inputs/FloatingLabelTextField';
 import { Card } from '../../../modular/cards/Card';
@@ -167,7 +168,7 @@ export const PermanentAddressBI = (): JSX.Element => {
     <>
       <Card
         title="Permanent Address"
-        subtitle="Write the address where you are permanently residing."
+        subtitle="Write the address where you are permanently residing. Write N/A if not applicable"
         remarks={
           <Checkbox
             id="checkboxSameAddr"
@@ -198,19 +199,19 @@ export const PermanentAddressBI = (): JSX.Element => {
               onAnimationEnd={() => setShake(false)}
               // onAnimationEnd={() => setPermaAddrError(!permaAddrError)}
             >
-              <p className="w-full px-10 text-center uppercase not-italic text-white ">
+              <p className="w-full px-10 not-italic text-center text-white uppercase ">
                 Incomplete Address
               </p>
             </div>
           ) : (
             <></>
           )}
-          <div className="flex w-full justify-end">
+          <div className="flex justify-end w-full">
             <PermanentAddressAlert setInitialValues={setInitialValues} />
           </div>
 
-          <div className="mt-7 gap-4 sm:block md:block lg:flex lg:grid-cols-3">
-            <div className="col-span-1 mb-7 w-full">
+          <div className="gap-4 mt-7 sm:block md:block lg:flex lg:grid-cols-3">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelTextField
                 id="permahouseno"
                 name="permahouseno"
@@ -235,7 +236,7 @@ export const PermanentAddressBI = (): JSX.Element => {
                 }
               />
             </div>
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelTextField
                 id="permastreet"
                 innerRef={permaStreetRef}
@@ -260,7 +261,7 @@ export const PermanentAddressBI = (): JSX.Element => {
                 }
               />
             </div>
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelTextField
                 id="permasubd"
                 innerRef={permaSubdRef}
@@ -287,7 +288,7 @@ export const PermanentAddressBI = (): JSX.Element => {
             </div>
           </div>
           <div className="gap-4 sm:block md:block lg:flex lg:grid-cols-3">
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <SelectProvince
                 id="permaProvCode"
                 isRequired
@@ -306,7 +307,7 @@ export const PermanentAddressBI = (): JSX.Element => {
                 dispatchCodeVariable={setPermanentAddress}
               />
             </div>
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <SelectCity
                 id="permaCityCode"
                 isRequired
@@ -331,7 +332,7 @@ export const PermanentAddressBI = (): JSX.Element => {
               />
             </div>
 
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <SelectBrgy
                 id="permaBrgyCode"
                 isRequired
@@ -357,7 +358,7 @@ export const PermanentAddressBI = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="xs:block gap-4 sm:grid sm:grid-cols-3">
+          <div className="gap-4 xs:block sm:grid sm:grid-cols-3">
             <FloatingLabelTextField
               id="permazipcode"
               name="permazipcode"

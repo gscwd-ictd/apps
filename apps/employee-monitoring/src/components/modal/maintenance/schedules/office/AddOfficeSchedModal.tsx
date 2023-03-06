@@ -58,7 +58,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     mode: 'onChange',
     defaultValues: {
       id: '',
-      category: null,
+      scheduleType: null,
       timeIn: '',
       timeOut: '',
       withLunch: true,
@@ -157,7 +157,9 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                 <SelectListRF
                   id="scheduleCategory"
                   selectList={categorySelection}
-                  controller={{ ...register('category', { required: true }) }}
+                  controller={{
+                    ...register('scheduleType', { required: true }),
+                  }}
                   label="Category"
                   disabled={isLoading ? true : false}
                 />

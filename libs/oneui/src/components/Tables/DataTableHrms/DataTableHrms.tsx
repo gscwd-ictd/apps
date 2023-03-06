@@ -11,6 +11,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   Row,
+  AccessorFn,
   SortingState,
   useReactTable,
   FilterFn,
@@ -115,6 +116,7 @@ export type TablePropsHrms<T extends object> = {
   onRowClick?: (row: Row<T>) => void;
   showGlobalFilter?: boolean;
   filterFn?: FilterFn<T>;
+  accessorFn?: AccessorFn<T>;
 };
 
 export const DataTableHrms = <T extends object>({

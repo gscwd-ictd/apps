@@ -29,7 +29,7 @@ const PersonalDataSheetPdf: NextPage = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="flex h-full w-full justify-center">
+        <div className="flex justify-center w-full h-full">
           {isEmpty(applicantPds) ? (
             <>
               <div className="flex flex-col">

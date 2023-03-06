@@ -192,7 +192,7 @@ export const SideNavigation = () => {
                   selected={pathname === Paths[16] ? true : false}
                   icon={
                     <>
-                      <i className="text-2xl bx bxs-leaf"></i>
+                      <i className="text-2xl bx bxs-hard-hat"></i>
                     </>
                   }
                   path={Paths[16]}
