@@ -195,52 +195,44 @@ export default function SubmitPanel(): JSX.Element {
         </Alert.Footer>
       </Alert>
       {/* Submit Page */}
-      <Page
-        title=""
-        subtitle=""
-        children={
-          <>
-            <Card title="" subtitle="" className="mx-[18%]  px-[5%] ">
-              <div className="flex h-[7rem] gap-2">
-                <div className="w-[15%]">
-                  <HiExclamationCircle
-                    color="orange"
-                    className="w-full h-full"
-                  />
-                </div>
-                <div className="flex w-[85%] flex-col justify-between">
-                  <p className="pt-3 text-2xl font-medium">Information</p>
-                  <p className="pb-2 mt-2 font-light">
-                    Any misrepresentation made in the Personal Data Sheet and
-                    the Work Experience Sheet shall cause the filing of
-                    administrative or criminal case(s) against the person
-                    concerned.
-                  </p>
-                </div>
+      <Page title="" subtitle="">
+        <>
+          <Card title="" subtitle="" className="mx-[18%]  px-[5%] ">
+            <div className="flex h-[7rem] gap-2">
+              <div className="w-[15%]">
+                <HiExclamationCircle color="orange" className="w-full h-full" />
               </div>
-            </Card>
-            {/* PDS Submit Button */}
-            <div className="mx-[18%] my-10 flex flex-col">
-              <button
-                className={`${
-                  isLoading
-                    ? `cursor-progress bg-indigo-400`
-                    : `  bg-indigo-500 transition-colors hover:bg-indigo-600 hover:shadow-xl hover:shadow-indigo-200 focus:outline-none focus:ring focus:ring-indigo-300 active:bg-indigo-700`
-                } w-full rounded-md border border-violet-200 px-5 py-4  text-white shadow-lg shadow-indigo-200 transition-all hover:scale-105`}
-                onClick={() => setAlertConfirmation(true)}
-                disabled={isDisabled ? true : false}
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <span className="text-sm font-medium uppercase">
-                    {isLoading ? 'Processing' : 'Submit PDS'}
-                  </span>
-                  {isLoading && <LoadingIndicator size={5} />}
-                </span>
-              </button>
+              <div className="flex w-[85%] flex-col justify-between">
+                <p className="pt-3 text-2xl font-medium">Information</p>
+                <p className="pb-2 mt-2 font-light">
+                  Any misrepresentation made in the Personal Data Sheet and the
+                  Work Experience Sheet shall cause the filing of administrative
+                  or criminal case(s) against the person concerned.
+                </p>
+              </div>
             </div>
-          </>
-        }
-      />
+          </Card>
+          {/* PDS Submit Button */}
+          <div className="mx-[18%] my-10 flex flex-col">
+            <button
+              className={`${
+                isLoading
+                  ? `cursor-progress bg-indigo-400`
+                  : `  bg-indigo-500 transition-colors hover:bg-indigo-600 hover:shadow-xl hover:shadow-indigo-200 focus:outline-none focus:ring focus:ring-indigo-300 active:bg-indigo-700`
+              } w-full rounded-md border border-violet-200 px-5 py-4  text-white shadow-lg shadow-indigo-200 transition-all hover:scale-105`}
+              onClick={() => setAlertConfirmation(true)}
+              disabled={isDisabled ? true : false}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <span className="text-sm font-medium uppercase">
+                  {isLoading ? 'Processing' : 'Submit PDS'}
+                </span>
+                {isLoading && <LoadingIndicator size={5} />}
+              </span>
+            </button>
+          </div>
+        </>
+      </Page>
       {/* PREV BUTTON */}
       <PrevButton action={() => handlePrevTab(selectedTab)} type="button" />
     </>

@@ -111,7 +111,7 @@ const Item: FunctionComponent<ItemProps> = ({
                 {icon}
               </span>
               {!isCollapsed && (
-                <div className="flex w-[90%] text-left justify-between gap-28 place-items-center">
+                <div className="flex justify-between w-full text-left place-items-center">
                   <motion.span
                     initial={{ opacity: 0, x: -100 }}
                     animate={{ opacity: 1, x: 0 }}

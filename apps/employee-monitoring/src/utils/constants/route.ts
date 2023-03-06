@@ -14,5 +14,7 @@ export const Paths = [
   '/maintenance/events/trainings-and-seminars', // 12
   '/maintenance/overtime', // 13
   '/maintenance/pass-slip', // 14
-  '/maintenance/schedules', // 15
+  '/maintenance/schedules/office', // 15
+  '/maintenance/schedules/field', // 16
+  '/maintenance/schedules/pumping-station', // 17
 ];

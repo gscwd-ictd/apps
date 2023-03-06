@@ -20,10 +20,10 @@ export const SideNavigation = () => {
   return (
     <Sidebar className="relative w-full">
       <Sidebar.Header>
-        <div className="z-50 flex items-center justify-center w-full py-5 text-white">
+        <div className="z-50 flex items-center justify-center w-full gap-2 py-5 text-white">
           <section className="">
-            <div className="w-7 h-7">
-              <svg
+            <div className="text-sky-200/90">
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="skyblue"
@@ -34,7 +34,8 @@ export const SideNavigation = () => {
                   d="M1 2.75A.75.75 0 011.75 2h16.5a.75.75 0 010 1.5H18v8.75A2.75 2.75 0 0115.25 15h-1.072l.798 3.06a.75.75 0 01-1.452.38L13.41 18H6.59l-.114.44a.75.75 0 01-1.452-.38L5.823 15H4.75A2.75 2.75 0 012 12.25V3.5h-.25A.75.75 0 011 2.75zM7.373 15l-.391 1.5h6.037l-.392-1.5H7.373zm7.49-8.931a.75.75 0 01-.175 1.046 19.326 19.326 0 00-3.398 3.098.75.75 0 01-1.097.04L8.5 8.561l-2.22 2.22A.75.75 0 115.22 9.72l2.75-2.75a.75.75 0 011.06 0l1.664 1.663a20.786 20.786 0 013.122-2.74.75.75 0 011.046.176z"
                   clipRule="evenodd"
                 />
-              </svg>
+              </svg> */}
+              <i className="text-4xl bx bxs-network-chart"></i>
             </div>
           </section>
 
@@ -93,6 +94,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Leave Benefits"
             className="text-xs"
+            selected={pathname === Paths[2] ? true : false}
             icon={
               <>
                 <i className="text-2xl bx bxs-plane-alt"></i>
@@ -105,6 +107,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Overtime"
             className="text-xs"
+            selected={pathname === Paths[5] ? true : false}
             icon={
               <>
                 <i className="text-2xl bx bx-timer"></i>
@@ -117,6 +120,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Pass Slip"
             className="text-xs"
+            selected={pathname === Paths[6] ? true : false}
             icon={
               <>
                 <i className="text-2xl bx bxs-file-export"></i>
@@ -129,6 +133,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Trainings & Seminars"
             path={Paths[4]}
+            selected={pathname === Paths[4] ? true : false}
             className="text-xs"
             icon={
               <>
@@ -140,7 +145,8 @@ export const SideNavigation = () => {
           {/** Monitoring Travel Order */}
           <Sidebar.Item
             display="Travel Orders"
-            path=""
+            selected={pathname === Paths[3] ? true : false}
+            path={Paths[3]}
             className="text-xs"
             icon={
               <>
@@ -165,7 +171,45 @@ export const SideNavigation = () => {
             display="Schedules"
             className="text-xs"
             icon={<i className="text-2xl bx bx-calendar-edit"></i>}
-            path={Paths[15]}
+            path=""
+            hasSubItem
+            subItems={
+              <>
+                <Sidebar.Item
+                  display="Office"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[15] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-2xl bx bxs-buildings"></i>
+                    </>
+                  }
+                  path={Paths[15]}
+                />
+                <Sidebar.Item
+                  display="Field"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[16] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-2xl bx bxs-leaf"></i>
+                    </>
+                  }
+                  path={Paths[16]}
+                />
+                <Sidebar.Item
+                  display="Station"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[17] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-2xl bx bxs-factory"></i>
+                    </>
+                  }
+                  path={Paths[16]}
+                />
+              </>
+            }
           />
 
           {/**Maintenance LEAVE CREDITS */}

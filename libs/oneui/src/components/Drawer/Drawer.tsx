@@ -1,7 +1,13 @@
 import { Dialog } from '@headlessui/react';
 import { AnimatePresence, m, domAnimation, LazyMotion } from 'framer-motion';
 import { FunctionComponent, ReactNode } from 'react';
-import { bodyClass, childrenContainer, overlayClass, panelClass, panelContainerClass } from './Drawer.styles';
+import {
+  bodyClass,
+  childrenContainer,
+  overlayClass,
+  panelClass,
+  panelContainerClass,
+} from './Drawer.styles';
 
 type Props = {
   className?: string;
@@ -20,19 +26,29 @@ type DrawerComposition = {
   Footer: typeof Footer;
 };
 
-export const Drawer: FunctionComponent<DrawerProps> & DrawerComposition = (props) => {
+export const Drawer: FunctionComponent<DrawerProps> & DrawerComposition = (
+  props
+) => {
   const { children, open, setOpen } = props;
 
   return (
     <LazyMotion features={domAnimation}>
       <AnimatePresence>
         {open && (
-          <Dialog as="div" open={open} onClose={() => setOpen(false)} className="relative z-40">
+          <Dialog
+            as="div"
+            open={open}
+            onClose={() => setOpen(false)}
+            className="relative z-40"
+          >
             <Dialog.Overlay
               as={m.div}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.15, ease: 'easeInOut' } }}
+              exit={{
+                opacity: 0,
+                transition: { duration: 0.15, ease: 'easeInOut' },
+              }}
               className={overlayClass()}
               aria-hidden="true"
             />
