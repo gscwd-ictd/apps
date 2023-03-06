@@ -1,32 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, DataTableHrms, Modal } from '@gscwd-apps/oneui';
+import { DataTableHrms } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { SchedulesPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/schedules/Footer';
-import { SchedulesPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/schedules/Header';
 import { Schedule } from '../../../../../../../libs/utils/src/lib/types/schedule.type';
 import React, { useEffect, useState } from 'react';
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
-import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { useForm } from 'react-hook-form';
-import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
-import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { SelectOption } from '../../../../../../../libs/utils/src/lib/types/select.type';
 import { listOfRestDays } from '../../../../../../../libs/utils/src/lib/constants/rest-days.const';
-import Toggle from 'apps/employee-monitoring/src/components/switch/Toggle';
 import { isEmpty } from 'lodash';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
-import { capitalizer } from 'apps/employee-monitoring/src/utils/functions/capitalizer';
 import { createColumnHelper } from '@tanstack/react-table';
+import useSWR from 'swr';
 import AddOfficeSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/office/AddOfficeSchedModal';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import { convertToTime } from 'apps/employee-monitoring/src/utils/functions/convertToTime';
+import { renderShiftType } from 'apps/employee-monitoring/src/utils/functions/renderShiftType';
+import { renderScheduleType } from 'apps/employee-monitoring/src/utils/functions/renderScheduleType';
+import { renderRestDays } from 'apps/employee-monitoring/src/utils/functions/renderRestDays';
 
 const listOfSchedules: Array<Schedule> = [
   {
     name: 'Regular Time Clock',
-    category: Categories.REGULAR,
+    scheduleType: Categories.REGULAR,
     timeIn: '08:00',
     timeOut: '05:00',
     lunchIn: '12:00',
@@ -37,7 +36,7 @@ const listOfSchedules: Array<Schedule> = [
   },
   {
     name: 'Flexible Time Clock A',
-    category: Categories.FLEXIBLE,
+    scheduleType: Categories.FLEXIBLE,
     timeIn: '07:00',
     timeOut: '04:00',
     withLunch: true,
@@ -48,7 +47,7 @@ const listOfSchedules: Array<Schedule> = [
   },
   {
     name: 'Flexible Time Clock B',
-    category: Categories.FLEXIBLE,
+    scheduleType: Categories.FLEXIBLE,
     timeIn: '06:00',
     timeOut: '03:00',
     withLunch: true,
@@ -89,6 +88,11 @@ export default function Index() {
   const schedules = useScheduleStore((state) => state.schedules);
   const setSchedules = useScheduleStore((state) => state.setSchedules);
 
+  const { data } = useSWR(
+    `http://192.168.99.124:4104/api/v1/schedule/`,
+    fetcherEMS
+  );
+
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);
@@ -110,15 +114,6 @@ export default function Index() {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  // when edit action is clicked
-  // const editAction = async (employee: Schedule, idx: number) => {
-  //   // setAction(ModalActions.UPDATE);/
-  //   // setScheduleForEdit(sched);
-  //   // setSelectedRestDays(await transformRestDays(sched.restDays));
-  //   // loadNewDefaultValues(sched);
-  //   setModalIsOpen(true);
-  // };
-
   const {
     setValue,
     watch,
@@ -129,7 +124,7 @@ export default function Index() {
     mode: 'onChange',
     defaultValues: {
       id: '',
-      category: Categories.REGULAR,
+      scheduleType: Categories.REGULAR,
       timeIn: '',
       timeOut: '',
       withLunch: true,
@@ -142,9 +137,18 @@ export default function Index() {
   });
 
   // transforms the array of numbers(rest days) to array of key value pair
-  const transformRestDays = async (restDays: Array<number>) => {
+  const transformRestDays = (restDays: Array<number>) => {
     const tempRestDays = restDays.map((day: number) => {
-      return { ...listOfRestDays.find((tempDay) => tempDay.value === day) };
+      return listOfRestDays.find((tempDay) => tempDay.value === day);
+    });
+    return tempRestDays;
+    // .sort((a, b) => (a.value > b.value ? 1 : -1));
+  };
+
+  // transforms the array of numbers(rest days) to array of key value pair
+  const transformRestDaysLabel = (restDays: Array<number>) => {
+    const tempRestDays = restDays.map((day: number) => {
+      return listOfRestDays.find((tempDay) => tempDay.value === day).label;
     });
     return tempRestDays;
     // .sort((a, b) => (a.value > b.value ? 1 : -1));
@@ -163,7 +167,7 @@ export default function Index() {
   const editAction = async (sched: Schedule, idx: number) => {
     setAction(ModalActions.UPDATE);
     setCurrentRowData(sched);
-    setSelectedRestDays(await transformRestDays(sched.restDays));
+    setSelectedRestDays(transformRestDays(sched.restDays));
     loadNewDefaultValues(sched);
     setModalIsOpen(true);
   };
@@ -172,7 +176,7 @@ export default function Index() {
   const loadNewDefaultValues = (sched: Schedule) => {
     setValue('id', sched.id);
     setValue('name', sched.name);
-    setValue('category', sched.category);
+    setValue('scheduleType', sched.scheduleType);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
     setValue('withLunch', sched.withLunch);
@@ -207,40 +211,47 @@ export default function Index() {
       header: () => 'Schedule Name',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('category', {
+    columnHelper.accessor('scheduleType', {
       enableSorting: false,
       header: () => 'Category',
-      cell: (info) => renderCategoryType(info.getValue()),
+      cell: (info) => renderScheduleType(info.getValue()),
     }),
     columnHelper.accessor('timeIn', {
       enableSorting: false,
       header: () => 'Time In',
-      cell: (info) => info.getValue(),
+      cell: (info) => convertToTime(info.getValue()),
     }),
     columnHelper.accessor('timeOut', {
       enableSorting: false,
       header: () => 'Time Out',
-      cell: (info) => info.getValue(),
+      cell: (info) => convertToTime(info.getValue()),
     }),
     columnHelper.accessor('lunchIn', {
       enableSorting: false,
       header: () => 'Lunch In',
-      cell: (info) => info.getValue(),
+      cell: (info) => convertToTime(info.getValue()),
     }),
     columnHelper.accessor('lunchOut', {
       enableSorting: false,
       header: () => 'Lunch Out',
-      cell: (info) => info.getValue(),
+      cell: (info) => convertToTime(info.getValue()),
     }),
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => info.getValue(),
+      cell: (info) => renderShiftType(info.getValue()),
     }),
     columnHelper.accessor('restDays', {
       enableSorting: false,
       header: () => 'Rest Day',
-      cell: (info) => info.getValue(),
+      cell: (info) =>
+        transformRestDays(info.getValue()).length > 1 ? (
+          renderRestDays(transformRestDaysLabel(info.getValue()))
+        ) : (
+          <span className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
+            No rest day
+          </span>
+        ),
     }),
     columnHelper.display({
       header: () => 'Actions',
@@ -251,31 +262,6 @@ export default function Index() {
 
   // Define visibility of columns
   const columnVisibility = { id: false };
-
-  // Render badge pill design
-  const renderCategoryType = (categoryType: Categories) => {
-    if (categoryType === Categories.REGULAR) {
-      return (
-        <span className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
-          Regular
-        </span>
-      );
-    } else if (categoryType === Categories.FLEXIBLE) {
-      return (
-        <span className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
-          Flexible
-        </span>
-      );
-    } else if (categoryType === Categories.OPERATOR1) {
-      return (
-        <span className="bg-green-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
-          OPERATOR A
-        </span>
-      );
-    } else {
-      return;
-    }
-  };
 
   // Render row actions in the table component
   const renderRowActions = (rowData: Schedule) => {
@@ -308,11 +294,12 @@ export default function Index() {
     );
   };
 
-  //! this must be replaced with fetch
+  // set data to state from useSWR
   useEffect(() => {
-    setSchedules(listOfSchedules);
-    setSelectedRestDays([]);
-  }, []);
+    if (!isEmpty(data)) {
+      setSchedules(data.data);
+    }
+  }, [data]);
 
   // set it to null
   useEffect(() => {
