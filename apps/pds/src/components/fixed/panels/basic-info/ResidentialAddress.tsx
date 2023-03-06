@@ -17,12 +17,17 @@ export const ResidentialAddressBI = (): JSX.Element => {
 
   // set residential address object, employee object state from pds context
   const residentialAddress = usePdsStore((state) => state.residentialAddress);
-  const residentialAddressOnEdit = usePdsStore((state) => state.residentialAddressOnEdit);
+  const residentialAddressOnEdit = usePdsStore(
+    (state) => state.residentialAddressOnEdit
+  );
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const employee = useEmployeeStore((state) => state.employeeDetails);
-  const { resAddrError, setResAddrError, resAddrRef, shake, setShake } = useContext(ErrorContext); // set address error from error context
-  const setResidentialAddress = usePdsStore((state) => state.setResidentialAddress);
+  const { resAddrError, setResAddrError, resAddrRef, shake, setShake } =
+    useContext(ErrorContext); // set address error from error context
+  const setResidentialAddress = usePdsStore(
+    (state) => state.setResidentialAddress
+  );
   const [resetFields, setResetFields] = useState<boolean>(false);
 
   // on change province
@@ -49,11 +54,24 @@ export const ResidentialAddressBI = (): JSX.Element => {
   };
 
   const setFields = async () => {
-    setResidentialAddress({ ...residentialAddress, city: '', cityCode: '', barangay: '', brgyCode: '' });
+    setResidentialAddress({
+      ...residentialAddress,
+      city: '',
+      cityCode: '',
+      barangay: '',
+      brgyCode: '',
+    });
   };
 
   // assign employee id on page load
-  useEffect(() => setResidentialAddress({ ...residentialAddress, employeeId: employee.employmentDetails.userId }), []);
+  useEffect(
+    () =>
+      setResidentialAddress({
+        ...residentialAddress,
+        employeeId: employee.employmentDetails.userId,
+      }),
+    []
+  );
 
   useEffect(() => {
     if (resetFields) {
@@ -97,21 +115,31 @@ export const ResidentialAddressBI = (): JSX.Element => {
 
   return (
     <>
-      <Card title="Residential Address" subtitle="Write the address where you are currently residing.">
+      <Card
+        title="Residential Address"
+        subtitle="Write the address where you are currently residing. Write N/A if not applicable"
+      >
         <>
           {resAddrError ? (
-            <div className={`rounded-sm bg-red-500 ${shake && 'animate'}`} onAnimationEnd={() => setShake(false)} tabIndex={1} ref={resAddrRef}>
-              <p className="w-full px-10 text-center uppercase not-italic text-white  ">Incomplete Address</p>
+            <div
+              className={`rounded-sm bg-red-500 ${shake && 'animate'}`}
+              onAnimationEnd={() => setShake(false)}
+              tabIndex={1}
+              ref={resAddrRef}
+            >
+              <p className="w-full px-10 not-italic text-center text-white uppercase ">
+                Incomplete Address
+              </p>
             </div>
           ) : (
             <></>
           )}
-          <div className="-mt-16 flex w-full justify-end pb-10">
+          <div className="flex justify-end w-full pb-10 -mt-16">
             <ResidentialAddressAlert setInitialValues={setInitialValues} />
           </div>
 
-          <div className="mt-7 gap-4 sm:block md:block lg:flex lg:grid-cols-3">
-            <div className="col-span-1 mb-7 w-full">
+          <div className="gap-4 mt-7 sm:block md:block lg:flex lg:grid-cols-3">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelTextField
                 id="resHouseNumber"
                 name="resHouseNumber"
@@ -119,88 +147,160 @@ export const ResidentialAddressBI = (): JSX.Element => {
                 isRequired
                 value={residentialAddress.houseNumber}
                 type="text"
-                muted={hasPds && residentialAddressOnEdit ? false : hasPds && !residentialAddressOnEdit ? true : !hasPds && false}
-                onChange={(e) => setResidentialAddress({ ...residentialAddress, houseNumber: e.target.value })}
+                muted={
+                  hasPds && residentialAddressOnEdit
+                    ? false
+                    : hasPds && !residentialAddressOnEdit
+                    ? true
+                    : !hasPds && false
+                }
+                onChange={(e) =>
+                  setResidentialAddress({
+                    ...residentialAddress,
+                    houseNumber: e.target.value,
+                  })
+                }
               />
             </div>
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelTextField
                 id="resstreet"
                 name="resstreet"
                 placeholder="Street"
                 isRequired
                 type="text"
-                muted={hasPds && residentialAddressOnEdit ? false : hasPds && !residentialAddressOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && residentialAddressOnEdit
+                    ? false
+                    : hasPds && !residentialAddressOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 value={residentialAddress.street}
-                onChange={(e) => setResidentialAddress({ ...residentialAddress, street: e.target.value })}
+                onChange={(e) =>
+                  setResidentialAddress({
+                    ...residentialAddress,
+                    street: e.target.value,
+                  })
+                }
               />
             </div>
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <FloatingLabelTextField
                 id="ressubd"
                 name="ressubd"
                 isRequired
                 placeholder="Subdivision or Village"
                 value={residentialAddress.subdivision}
-                muted={hasPds && residentialAddressOnEdit ? false : hasPds && !residentialAddressOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && residentialAddressOnEdit
+                    ? false
+                    : hasPds && !residentialAddressOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 type="text"
-                onChange={(e) => setResidentialAddress({ ...residentialAddress, subdivision: e.target.value })}
+                onChange={(e) =>
+                  setResidentialAddress({
+                    ...residentialAddress,
+                    subdivision: e.target.value,
+                  })
+                }
               />
             </div>
           </div>
 
           <div className="gap-4 sm:block lg:flex lg:grid-cols-2">
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <SelectProvince
                 id="resProvCode"
                 onChange={onProvinceChange}
                 isRequired
                 value={residentialAddress.province}
                 innerRef={provRef}
-                muted={hasPds && residentialAddressOnEdit ? false : hasPds && !residentialAddressOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && residentialAddressOnEdit
+                    ? false
+                    : hasPds && !residentialAddressOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 codeVariable={residentialAddress}
                 dispatchCodeVariable={setResidentialAddress}
               />
             </div>
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <SelectCity
                 id="resCityCode"
-                onChange={(e) => setResidentialAddress({ ...residentialAddress, city: e.target.value })}
+                onChange={(e) =>
+                  setResidentialAddress({
+                    ...residentialAddress,
+                    city: e.target.value,
+                  })
+                }
                 innerRef={cityRef}
                 isRequired
-                muted={hasPds && residentialAddressOnEdit ? false : hasPds && !residentialAddressOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && residentialAddressOnEdit
+                    ? false
+                    : hasPds && !residentialAddressOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 value={residentialAddress.city}
                 codeVariable={residentialAddress}
                 dispatchCodeVariable={setResidentialAddress}
               />
             </div>
 
-            <div className="col-span-1 mb-7 w-full">
+            <div className="w-full col-span-1 mb-7">
               <SelectBrgy
                 id="resBrgyCode"
                 isRequired
                 value={residentialAddress.barangay}
                 innerRef={brgyRef}
-                muted={hasPds && residentialAddressOnEdit ? false : hasPds && !residentialAddressOnEdit ? true : !hasPds && false}
-                onChange={(e) => setResidentialAddress({ ...residentialAddress, barangay: e.target.value })}
+                muted={
+                  hasPds && residentialAddressOnEdit
+                    ? false
+                    : hasPds && !residentialAddressOnEdit
+                    ? true
+                    : !hasPds && false
+                }
+                onChange={(e) =>
+                  setResidentialAddress({
+                    ...residentialAddress,
+                    barangay: e.target.value,
+                  })
+                }
                 codeVariable={residentialAddress}
                 dispatchCodeVariable={setResidentialAddress}
               />
             </div>
           </div>
 
-          <div className="xs:block gap-4 sm:grid sm:grid-cols-3">
+          <div className="gap-4 xs:block sm:grid sm:grid-cols-3">
             <FloatingLabelTextField
               id="resZipCode"
               name="resZipCode"
               isRequired
               minLength={4}
               maxLength={4}
-              muted={hasPds && residentialAddressOnEdit ? false : hasPds && !residentialAddressOnEdit ? true : !hasPds && false}
+              muted={
+                hasPds && residentialAddressOnEdit
+                  ? false
+                  : hasPds && !residentialAddressOnEdit
+                  ? true
+                  : !hasPds && false
+              }
               placeholder="ZIP Code"
               type="text"
               value={residentialAddress.zipCode}
-              onChange={(e) => setResidentialAddress({ ...residentialAddress, zipCode: e.target.value.replace(/\D/g, '') })}
+              onChange={(e) =>
+                setResidentialAddress({
+                  ...residentialAddress,
+                  zipCode: e.target.value.replace(/\D/g, ''),
+                })
+              }
               className="sm:col-span-3 md:col-span-3 lg:col-span-1"
             />
           </div>

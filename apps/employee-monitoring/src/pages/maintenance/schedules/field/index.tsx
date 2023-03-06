@@ -24,7 +24,7 @@ import { capitalizer } from 'apps/employee-monitoring/src/utils/functions/capita
 const listOfSchedules: Array<Schedule> = [
   {
     name: 'Field Time Clock A',
-    category: Categories.REGULAR,
+    scheduleType: Categories.REGULAR,
     timeIn: '08:00',
     timeOut: '05:00',
     withLunch: false,
@@ -35,7 +35,7 @@ const listOfSchedules: Array<Schedule> = [
   },
   {
     name: 'Field Time Clock B',
-    category: Categories.REGULAR,
+    scheduleType: Categories.REGULAR,
     timeIn: '05:00',
     timeOut: '02:00',
     withLunch: false,
@@ -86,7 +86,7 @@ export default function Index() {
     mode: 'onChange',
     defaultValues: {
       id: '',
-      category: Categories.REGULAR,
+      scheduleType: Categories.REGULAR,
       timeIn: '',
       timeOut: '',
       withLunch: false,
@@ -127,7 +127,7 @@ export default function Index() {
   const loadNewDefaultValues = (sched: Schedule) => {
     setValue('id', sched.id);
     setValue('name', sched.name);
-    setValue('category', sched.category);
+    setValue('scheduleType', sched.scheduleType);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
     setValue('withLunch', false);
@@ -232,7 +232,7 @@ export default function Index() {
                 <SelectListRF
                   id="scheduleCategory"
                   selectList={categorySelection}
-                  controller={{ ...register('category') }}
+                  controller={{ ...register('scheduleType') }}
                   label="Category"
                 />
 
@@ -424,7 +424,7 @@ export default function Index() {
                                 </td>
 
                                 <td className="w-[1/9] text-xs ">
-                                  {transformCategory(sched.category)}
+                                  {transformCategory(sched.scheduleType)}
                                 </td>
 
                                 <td className="w-[1/9] text-xs">

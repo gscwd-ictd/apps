@@ -15,7 +15,7 @@ type ScheduleWithoutLunch = {
 
 export type Schedule = {
   id?: string;
-  category: Categories | null;
+  scheduleType: Categories | null;
   name: string;
   timeIn: string;
   timeOut: string;

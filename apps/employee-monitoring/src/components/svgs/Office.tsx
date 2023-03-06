@@ -3,8 +3,6 @@ export const OfficeSVG = () => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       data-name="Layer 1"
-      width="full"
-      height="full"
       viewBox="0 0 774.13137 669.89848"
       className="p-2"
       xmlnsXlink="http://www.w3.org/1999/xlink"
