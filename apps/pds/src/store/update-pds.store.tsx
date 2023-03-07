@@ -172,8 +172,8 @@ export const useUpdatePdsStore = create<UpdatePdsState>((set) => ({
   allowEditVolWork: true,
   allowDeleteVolWork: true,
   allowAddLnd: true, //! REMOVE THIS LATER
-  allowDeleteLnd: false,
-  allowEditLnd: false,
+  allowDeleteLnd: true,
+  allowEditLnd: true,
   allowAddSkill: true,
   allowEditSkill: true,
   allowDeleteSkill: true,

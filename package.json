@@ -9,7 +9,9 @@
     "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0",
     "ems:prod": "nx serve employee-monitoring --prod --port 3109 --hostname 0.0.0.0",
     "portal": "nx serve portal --port 3102 --hostname 0.0.0.0",
-    "pds": "nx serve pds --port 3105 --hostname 0.0.0.0"
+    "pds": "nx serve pds --port 3105 --hostname 0.0.0.0",
+    "build portal": "nx portal",
+    "build pds": "nx pds"
   },
   "private": true,
   "dependencies": {

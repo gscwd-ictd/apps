@@ -4,9 +4,12 @@ import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { ElemEducation } from 'apps/pds/src/types/data/family.type';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -32,13 +35,9 @@ export const ElementaryAlert = ({
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-  const allowElementarySave = useUpdatePdsStore(
-    (state) => state.allowElementarySave
-  );
-  const setAllowElementarySave = useUpdatePdsStore(
-    (state) => state.setAllowElementarySave
-  );
   const elementary = usePdsStore((state) => state.elementary);
+  const setElementary = usePdsStore((state) => state.setElementary);
+  const { trigger } = useFormContext<ElemEducation>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -57,10 +56,38 @@ export const ElementaryAlert = ({
     );
   };
 
+  const trimValues = async () => {
+    setElementary({
+      ...elementary,
+      schoolName: trimmer(elementary.schoolName),
+      awards: trimmer(elementary.awards),
+    });
+  };
+
+  // fires the submit update button with validation
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      [
+        'elemFrom',
+        'elemTo',
+        'elemSchoolName',
+        'elemDegree',
+        'elemUnits',
+        'elemAwards',
+        'elemYearGraduated',
+      ],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
+  };
+
   const updateSection = async () => {
     const { isGraduated, isOngoing, ...rest } = pds.elementary;
 
     try {
+      await trimValues();
       await axios.put(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/education/elementary/${employeeDetails.user._id}`,
         rest
@@ -75,45 +102,16 @@ export const ElementaryAlert = ({
   const alertCancelAction = () => {
     setInitialValues();
     addNotification(Actions.INFO);
-    setElementaryOnEdit!(false);
+    setElementaryOnEdit(false);
     setAlertCancelIsOpen(false);
   };
 
   const alertUpdateAction = async () => {
     setAlertUpdateIsOpen(false);
-    setElementaryOnEdit!(false);
+    setElementaryOnEdit(false);
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
-
-  useEffect(() => {
-    if (
-      elementaryOnEdit &&
-      (isEmpty(elementary.schoolName) ||
-        isEmpty(elementary.degree) ||
-        isEmpty(elementary.from) ||
-        isEmpty(elementary.to) ||
-        isEmpty(elementary.units) ||
-        isEmpty(elementary.awards))
-    ) {
-      setAllowElementarySave(false);
-    }
-
-    if (
-      elementaryOnEdit &&
-      !isEmpty(elementary.schoolName) &&
-      !isEmpty(elementary.degree) &&
-      !isEmpty(elementary.from!.toString()) &&
-      !isEmpty(elementary.to!.toString()) &&
-      elementary.from! < elementary.to! &&
-      elementary.from?.toString().length === 4 &&
-      elementary.to?.toString().length === 4 &&
-      !isEmpty(elementary.units) &&
-      !isEmpty(elementary.awards)
-    ) {
-      setAllowElementarySave(true);
-    }
-  }, [elementaryOnEdit, elementary]);
 
   return (
     <>
@@ -196,12 +194,11 @@ export const ElementaryAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"
                   className="ring-0 hover:bg-white focus:ring-0"
-                  muted={allowElementarySave ? false : true}
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">
                     <IoIosSave size={20} />

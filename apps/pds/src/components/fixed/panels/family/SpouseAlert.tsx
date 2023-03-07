@@ -3,10 +3,11 @@ import { Alert } from '@gscwd-apps/oneui';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
-import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { SpouseForm } from 'apps/pds/src/types/data/family.type';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -33,10 +34,9 @@ export const SpouseAlert = ({
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const spouse = usePdsStore((state) => state.spouse);
-  const allowSpouseSave = useUpdatePdsStore((state) => state.allowSpouseSave);
-  const setAllowSpouseSave = useUpdatePdsStore(
-    (state) => state.setAllowSpouseSave
-  );
+  const setSpouse = usePdsStore((state) => state.setSpouse);
+
+  const { trigger } = useFormContext<SpouseForm>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -55,9 +55,43 @@ export const SpouseAlert = ({
     );
   };
 
+  const trimValues = async () => {
+    setSpouse({
+      ...spouse,
+      lastName: trimmer(spouse.lastName),
+      firstName: trimmer(spouse.firstName),
+      middleName: trimmer(spouse.middleName),
+      nameExtension: trimmer(spouse.nameExtension),
+      employer: trimmer(spouse.employer),
+      businessAddress: trimmer(spouse.businessAddress),
+      telephoneNumber: trimmer(spouse.telephoneNumber),
+      occupation: trimmer(spouse.occupation),
+    });
+  };
+
+  // triggers validation upon firing submit update
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      [
+        'spouseLName',
+        'spouseFName',
+        'spouseMName',
+        'spouseNameExt',
+        'spouseBusAddr',
+        'spouseEmpBusName',
+        'spouseTelNo',
+        'spouseOccupation',
+      ],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
+  };
+
   const updateSection = async (): Promise<Actions> => {
-    // await...
     try {
+      await trimValues();
       await axios.put(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/family/spouse/${employeeDetails.user._id}`,
         pds.spouse
@@ -73,46 +107,16 @@ export const SpouseAlert = ({
   const alertCancelAction = () => {
     setInitialValues();
     addNotification(Actions.INFO);
-    setSpouseOnEdit!(false);
+    setSpouseOnEdit(false);
     setAlertCancelIsOpen(false);
   };
 
   const alertUpdateAction = async () => {
     setAlertUpdateIsOpen(false);
-    setSpouseOnEdit!(false);
+    setSpouseOnEdit(false);
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
-
-  useEffect(() => {
-    if (
-      spouseOnEdit &&
-      (isEmpty(spouse.lastName) ||
-        isEmpty(spouse.firstName) ||
-        isEmpty(spouse.middleName) ||
-        isEmpty(spouse.nameExtension) ||
-        isEmpty(spouse.employer) ||
-        isEmpty(spouse.businessAddress) ||
-        isEmpty(spouse.telephoneNumber) ||
-        isEmpty(spouse.occupation))
-    ) {
-      setAllowSpouseSave(false);
-    }
-
-    if (
-      spouseOnEdit &&
-      isEmpty(spouse.lastName) &&
-      isEmpty(spouse.firstName) &&
-      isEmpty(spouse.middleName) &&
-      isEmpty(spouse.nameExtension) &&
-      isEmpty(spouse.employer) &&
-      isEmpty(spouse.businessAddress) &&
-      isEmpty(spouse.telephoneNumber) &&
-      isEmpty(spouse.occupation)
-    ) {
-      setAllowSpouseSave(true);
-    }
-  }, [spouseOnEdit, spouse]);
 
   return (
     <>
@@ -195,11 +199,10 @@ export const SpouseAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"
-                  muted={allowSpouseSave ? false : true}
                   className="ring-0 hover:bg-white focus:ring-0"
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">

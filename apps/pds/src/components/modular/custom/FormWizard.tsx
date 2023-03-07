@@ -21,13 +21,20 @@ type FormNodeProps = {
   width?: number;
   index: number;
   selected: boolean;
+  onClick?: any;
   // setSelected: Dispatch<SetStateAction<boolean>>
   isDone?: boolean;
   startingIndex?: boolean;
   endingIndex?: boolean;
 };
 
-export const FormWizard: FunctionComponent<FormWizardProps> = ({ selectedTab, setSelectedTab, onClick, tabsLength, tabs }) => {
+export const FormWizard: FunctionComponent<FormWizardProps> = ({
+  selectedTab,
+  setSelectedTab,
+  onClick,
+  tabsLength,
+  tabs,
+}) => {
   return (
     <>
       <div className="flex">
@@ -56,6 +63,7 @@ export const FormNode: FunctionComponent<FormNodeProps> = ({
   nodeText,
   index,
   width = 28,
+  onClick,
   selected = false,
   startingIndex = false,
   endingIndex = false,
@@ -65,14 +73,19 @@ export const FormNode: FunctionComponent<FormNodeProps> = ({
     <>
       <div>
         <main className={`flex flex-col `}>
-          <div className={`flex items-center sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}>
+          <div
+            className={`flex items-center sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}
+          >
             <section
-              className={`z-0 h-[0.25rem] w-[80%]  ${isDone || selected ? `bg-indigo-700` : `bg-gray-300`}   border-indigo-400 ${
+              className={`z-0 h-[0.25rem] w-[80%]  ${
+                isDone || selected ? `bg-indigo-700` : `bg-gray-300`
+              }   border-indigo-400 ${
                 startingIndex ? `invisible` : `visible`
               } `}
             />
             <button
               tabIndex={-1}
+              onClick={onClick}
               className={`z-20 -mx-2 h-[1rem] w-[1rem] select-none  hover:cursor-default sm:h-[1rem] sm:w-[1rem] lg:h-[2rem] lg:w-[2rem]  ${
                 selected
                   ? `border-indigo-300 bg-indigo-400  `
@@ -90,9 +103,15 @@ export const FormNode: FunctionComponent<FormNodeProps> = ({
               </span>
             </button>
 
-            <section className={`z-10 h-[0.25rem] w-[80%]  ${isDone ? `bg-indigo-700` : `bg-gray-300`} ${endingIndex ? `invisible` : `visible`}  `} />
+            <section
+              className={`z-10 h-[0.25rem] w-[80%]  ${
+                isDone ? `bg-indigo-700` : `bg-gray-300`
+              } ${endingIndex ? `invisible` : `visible`}  `}
+            />
           </div>
-          <div className={`flex justify-center pb-1 sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}>
+          <div
+            className={`flex justify-center pb-1 sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}
+          >
             <p className="w-[80%] select-none truncate px-1 text-center text-xs font-light text-black sm:w-full sm:whitespace-nowrap  lg:w-[80%] lg:whitespace-normal">
               {title}
             </p>

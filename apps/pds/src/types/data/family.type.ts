@@ -13,6 +13,16 @@ export type SpouseForm = {
   spouseOccupation: string;
 };
 
+export type ElemEducation = {
+  elemSchoolName: string;
+  elemDegree: string;
+  elemFrom: number;
+  elemTo: number;
+  elemUnits: string;
+  elemAwards: string;
+  elemYearGraduated: number | null;
+};
+
 export type ParentForm = {
   fatherFName: string;
   fatherMName: string;

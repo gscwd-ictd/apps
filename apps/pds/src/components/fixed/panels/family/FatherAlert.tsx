@@ -3,12 +3,12 @@ import { Alert } from '@gscwd-apps/oneui';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
-import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { ParentForm } from 'apps/pds/src/types/data/family.type';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
-import { HiArrowUturnLeft } from 'react-icons/hi2';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
@@ -32,12 +32,11 @@ export const FatherAlert = ({
   const pds = getPds(usePdsStore((state) => state));
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const parents = usePdsStore((state) => state.parents);
-  const allowFatherSave = useUpdatePdsStore((state) => state.allowFatherSave);
+  const setParents = usePdsStore((state) => state.setParents);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
-  const setAllowFatherSave = useUpdatePdsStore(
-    (state) => state.setAllowFatherSave
-  );
+
+  const { trigger } = useFormContext<ParentForm>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -56,10 +55,33 @@ export const FatherAlert = ({
     );
   };
 
+  // trim object
+  const trimValues = async () => {
+    setParents({
+      ...parents,
+      fatherFirstName: trimmer(parents.fatherFirstName),
+      fatherLastName: trimmer(parents.fatherLastName),
+      fatherMiddleName: trimmer(parents.fatherMiddleName),
+      fatherNameExtension: trimmer(parents.fatherNameExtension),
+    });
+  };
+
+  // triggers validation upon firing submit update
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      ['fatherFName', 'fatherLName', 'fatherMName', 'fatherNameExt'],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
+  };
+
   const updateSection = async () => {
     const { motherFirstName, motherLastName, motherMiddleName, ...rest } =
       pds.parents;
     try {
+      await trimValues();
       await axios.put(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/family/parents/${employeeDetails.user._id}/father`,
         rest
@@ -92,30 +114,6 @@ export const FatherAlert = ({
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
-
-  useEffect(() => {
-    // disallow if empty
-    if (
-      fatherOnEdit &&
-      (isEmpty(parents.fatherLastName) ||
-        isEmpty(parents.fatherMiddleName) ||
-        isEmpty(parents.fatherFirstName) ||
-        isEmpty(parents.fatherNameExtension))
-    ) {
-      setAllowFatherSave(false);
-    }
-
-    // allow  if all values are not empty
-    if (
-      fatherOnEdit &&
-      !isEmpty(parents.fatherLastName) &&
-      !isEmpty(parents.fatherFirstName) &&
-      !isEmpty(parents.fatherMiddleName) &&
-      !isEmpty(parents.fatherNameExtension)
-    ) {
-      setAllowFatherSave(true);
-    }
-  }, [fatherOnEdit, parents]);
 
   return (
     <>
@@ -198,11 +196,10 @@ export const FatherAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"
-                  muted={allowFatherSave ? false : true}
                   className="ring-0 hover:bg-white focus:ring-0"
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">

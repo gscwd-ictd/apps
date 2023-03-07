@@ -7,6 +7,7 @@ import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -14,6 +15,8 @@ import { getPds } from '../../../../../utils/helpers/pds.helper';
 import { Button } from '../../../modular/buttons/Button';
 import { AlertDesc } from '../../alerts/AlertDesc';
 import { Toast } from '../../toast/Toast';
+import { SecEducation } from '../../../../types/data/education.type';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 
 type SecondaryAlertProps = {
   setInitialValues: () => void;
@@ -32,13 +35,9 @@ export const SecondaryAlert = ({
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-  const allowSecondarySave = useUpdatePdsStore(
-    (state) => state.allowSecondarySave
-  );
-  const setAllowSecondarySave = useUpdatePdsStore(
-    (state) => state.setAllowSecondarySave
-  );
   const secondary = usePdsStore((state) => state.secondary);
+  const setSecondary = usePdsStore((state) => state.setSecondary);
+  const { trigger } = useFormContext<SecEducation>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -57,9 +56,39 @@ export const SecondaryAlert = ({
     );
   };
 
+  // trim values
+  const trimValues = async () => {
+    setSecondary({
+      ...secondary,
+      schoolName: trimmer(secondary.schoolName),
+      awards: trimmer(secondary.awards),
+    });
+  };
+
+  // fires submit update button with validation
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      [
+        'secSchoolName',
+        'secDegree',
+        'secFrom',
+        'secTo',
+        'secUnits',
+        'secYearGraduated',
+        'secAwards',
+      ],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
+  };
+
+  // update
   const updateSection = async () => {
     const { isGraduated, isOngoing, ...rest } = pds.secondary;
     try {
+      await trimValues();
       await axios.put(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/education/secondary/${employeeDetails.user._id}`,
         rest
@@ -84,34 +113,6 @@ export const SecondaryAlert = ({
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
-
-  useEffect(() => {
-    if (
-      secondaryOnEdit &&
-      (isEmpty(secondary.schoolName) ||
-        isEmpty(secondary.degree) ||
-        isEmpty(secondary.from) ||
-        isEmpty(secondary.to) ||
-        isEmpty(secondary.units) ||
-        isEmpty(secondary.awards))
-    ) {
-      setAllowSecondarySave(false);
-    }
-    if (
-      secondaryOnEdit &&
-      !isEmpty(secondary.schoolName) &&
-      !isEmpty(secondary.degree) &&
-      !isEmpty(secondary.from!.toString()) &&
-      !isEmpty(secondary.to!.toString()) &&
-      secondary.from! < secondary.to! &&
-      secondary.from?.toString().length === 4 &&
-      secondary.to?.toString().length === 4 &&
-      !isEmpty(secondary.units) &&
-      !isEmpty(secondary.awards)
-    ) {
-      setAllowSecondarySave(true);
-    }
-  }, [secondaryOnEdit, secondary]);
 
   return (
     <>
@@ -194,11 +195,10 @@ export const SecondaryAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"
-                  muted={allowSecondarySave ? false : true}
                   className="ring-0 hover:bg-white focus:ring-0"
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">
