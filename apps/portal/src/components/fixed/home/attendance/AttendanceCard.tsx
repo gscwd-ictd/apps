@@ -22,19 +22,23 @@ export const AttendanceCard: React.FC<Props> = ({
       <div className="flex flex-row justify-around items-center">
         <div className="flex flex-col justify-center items-center">
           <label className="text-xl font-bold text-slate-700">TIME IN</label>
-          <label className="text-md text-red-600">{timeIn}</label>
+          {/* <label className="text-md text-red-600">{timeIn}</label> */}
+          <label className="text-md text-green-600">-</label>
         </div>
         <div className="flex flex-col justify-center items-center">
           <label className="text-xl font-bold text-slate-700">LUNCH OUT</label>
-          <label className="text-md text-green-600">{lunchOut}</label>
+          {/* <label className="text-md text-green-600">{lunchOut}</label> */}
+          <label className="text-md text-green-600">-</label>
         </div>
         <div className="flex flex-col justify-center items-center">
           <label className="text-xl font-bold text-slate-700">LUNCH IN</label>
-          <label className="text-md text-green-600">{lunchIn}</label>
+          {/* <label className="text-md text-green-600">{lunchIn}</label> */}
+          <label className="text-md text-green-600">-</label>
         </div>
         <div className="flex flex-col justify-center items-center">
           <label className="text-xl font-bold text-slate-700">TIME OUT</label>
-          <label className="text-md text-green-600">{timeOut}</label>
+          {/* <label className="text-md text-green-600">{timeOut}</label> */}
+          <label className="text-md text-green-600">-</label>
         </div>
       </div>
     </div>

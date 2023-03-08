@@ -14,33 +14,33 @@ export const AllPassSlipListTab = ({
   passslips,
   tab,
 }: AllPassSlipListTabProps) => {
-  const modal = usePassSlipStore((state) => state.modal);
+  // const modal = usePassSlipStore((state) => state.modal);
 
   const setSelectedPassSlip = usePassSlipStore(
     (state) => state.setSelectedPassSlip
   );
 
-  const setModal = usePassSlipStore((state) => state.setModal);
+  // const setModal = usePassSlipStore((state) => state.setModal);
 
   const setSelectedPassSlipId = usePassSlipStore(
     (state) => state.setSelectedPassSlipId
   );
 
-  const setAction = usePassSlipStore((state) => state.setAction);
+  // const setAction = usePassSlipStore((state) => state.setAction);
 
   const onSelect = (passslip) => {
     setSelectedPassSlip(passslip);
     setSelectedPassSlipId(passslip.id);
     if (tab === 1) {
-      if (!modal.isOpen) {
-        setAction('Cancel Pass Slip');
-        setModal({ ...modal, page: 2, isOpen: true });
-      }
+      // if (!modal.isOpen) {
+      //   setAction('Cancel Pass Slip');
+      //   setModal({ ...modal, page: 2, isOpen: true });
+      // }
     } else if (tab === 2) {
-      if (!modal.isOpen) {
-        setAction('View');
-        setModal({ ...modal, page: 3, isOpen: true });
-      }
+      // if (!modal.isOpen) {
+      //   setAction('Print');
+      //   setModal({ ...modal, page: 3, isOpen: true });
+      // }
     }
   };
 
@@ -60,7 +60,8 @@ export const AllPassSlipListTab = ({
                     {item.natureOfBusiness}
                   </h1>
                   <p className="text-sm text-gray-500">
-                    Date: {dayjs(item.dateOfApplication).format('MMMM d, YYYY')}
+                    Date:{' '}
+                    {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>
                   <p className="text-xs text-gray-500">
                     Estimated Hours: {item.estimateHours}

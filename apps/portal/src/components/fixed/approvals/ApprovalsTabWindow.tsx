@@ -253,9 +253,9 @@ export const ApprovalsTabWindow = ({
   );
 
   useEffect(() => {
-    setPendingPassSlipList(pendingPassSlipsApprovals);
-    setApprovedPassSlipList(approvedPassSlipsApprovals);
-    setDisapprovedPassSlipList(diapprovedPassSlipsApprovals);
+    // setPendingPassSlipList(pendingPassSlipsApprovals);
+    // setApprovedPassSlipList(approvedPassSlipsApprovals);
+    // setDisapprovedPassSlipList(diapprovedPassSlipsApprovals);
 
     setPendingLeaveList(pendingLeaveApprovals);
     setApprovedLeaveList(approvedLeaveApprovals);

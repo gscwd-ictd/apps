@@ -15,7 +15,7 @@ export const ProfileCard: React.FC<Props> = ({
 }) => {
   const photoUrl_temp = '/profile.jpg';
   return (
-    <div className="h-3/5 w-100 border-blue-800 shadow bg-white flex gap-1 flex-col justify-center items-center text-center rounded p-5 mr-5">
+    <div className="h-1/2 w-100 border-blue-800 shadow bg-white flex gap-1 flex-col justify-center items-center text-center rounded p-5 mr-5">
       <img
         className="rounded-full border border-stone-100 shadow w-2/4"
         src={photoUrl ? photoUrl : photoUrl_temp}

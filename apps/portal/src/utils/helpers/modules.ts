@@ -8,11 +8,11 @@ export const setModules = async (userDetails: EmployeeDetails) => {
   let allowed: Array<Card> = [];
   if (isEqual(userDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE)) {
     allowed = Modules.filter(
-      (card) =>
-        card.destination === 'pds' ||
-        card.destination === 'leaves' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip'
+      (card) => card.destination === 'pds'
+      // ||
+      // card.destination === 'leaves' ||
+      // card.destination === 'dtr' ||
+      // card.destination === 'pass-slip'
     );
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER)
@@ -23,11 +23,12 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'prf' ||
         card.destination === 'endorsement' ||
         card.destination === 'pds' ||
-        card.destination === 'psb' ||
-        card.destination === 'leaves' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'approvals'
+        card.destination === 'psb'
+      // ||
+      // card.destination === 'leaves' ||
+      // card.destination === 'dtr' ||
+      // card.destination === 'pass-slip' ||
+      // card.destination === 'approvals'
     );
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER)
@@ -38,11 +39,12 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'prf' ||
         card.destination === 'endorsement' ||
         card.destination === 'pds' ||
-        card.destination === 'psb' ||
-        card.destination === 'leaves' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'approvals'
+        card.destination === 'psb'
+      // ||
+      // card.destination === 'leaves' ||
+      // card.destination === 'dtr' ||
+      // card.destination === 'pass-slip' ||
+      // card.destination === 'approvals'
     );
   } else if (
     isEqual(
@@ -56,11 +58,12 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'prf' ||
         card.destination === 'endorsement' ||
         card.destination === 'pds' ||
-        card.destination === 'psb' ||
-        card.destination === 'leaves' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'approvals'
+        card.destination === 'psb'
+      // ||
+      // card.destination === 'leaves' ||
+      // card.destination === 'dtr' ||
+      // card.destination === 'pass-slip' ||
+      // card.destination === 'approvals'
     );
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER)
@@ -72,11 +75,12 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'endorsement' ||
         card.destination === 'selection' ||
         card.destination === 'pds' ||
-        card.destination === 'psb' ||
-        card.destination === 'leaves' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'approvals'
+        card.destination === 'psb'
+      // ||
+      // card.destination === 'leaves' ||
+      // card.destination === 'dtr' ||
+      // card.destination === 'pass-slip' ||
+      // card.destination === 'approvals'
     );
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.BOARD_MEMBER)
@@ -88,11 +92,12 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'endorsement' ||
         card.destination === 'selection' ||
         card.destination === 'pds' ||
-        card.destination === 'psb' ||
-        card.destination === 'leaves' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'approvals'
+        card.destination === 'psb'
+      // ||
+      // card.destination === 'leaves' ||
+      // card.destination === 'dtr' ||
+      // card.destination === 'pass-slip' ||
+      // card.destination === 'approvals'
     );
   }
   return allowed;
