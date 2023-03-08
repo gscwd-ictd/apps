@@ -431,9 +431,28 @@ export const getServerSideProps: GetServerSideProps = withSession(
         `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
       );
 
-      return { props: { employee, pdsDetails: applicantPds.data } };
+      if (
+        applicantPds.status === 200 &&
+        employee.employmentDetails.userId === context.params?.id
+      ) {
+        return { props: { employee, pdsDetails: applicantPds.data } };
+      } else if (
+        applicantPds.status === 200 &&
+        employee.employmentDetails.userId !== context.params?.id
+      ) {
+        return {
+          props: {},
+          redirect: { destination: '/401', permanent: false },
+        };
+      }
     } catch (error) {
-      return { props: { employee, pdsDetails: {} } };
+      return {
+        props: {},
+        redirect: {
+          destination: `/404`,
+          permanent: false,
+        },
+      };
     }
   }
 );

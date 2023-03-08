@@ -1,17 +1,21 @@
-import axios from 'axios'
-import { ServerResponse } from 'http'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import { EmployeeDetails } from '../../src/types/data/employee.type'
+import axios from 'axios';
+import { ServerResponse } from 'http';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { EmployeeDetails } from '../../src/types/data/employee.type';
 
-var userDetails = {} as EmployeeDetails
+let userDetails = {} as EmployeeDetails;
 
-const setUserDetails = ({ user, profile, employmentDetails }: EmployeeDetails) => {
-  userDetails = { user, profile, employmentDetails }
+const setUserDetails = ({
+  user,
+  profile,
+  employmentDetails,
+}: EmployeeDetails) => {
+  userDetails = { user, profile, employmentDetails };
 
-  return userDetails
-}
+  return userDetails;
+};
 
-export const getUserDetails = () => userDetails
+export const getUserDetails = () => userDetails;
 
 /**
  * Require authentication via session cookies to protect page routes.
@@ -27,20 +31,26 @@ export function withSession(serverSideProps: GetServerSideProps) {
           permanent: false,
           destination: `${process.env.NEXT_PUBLIC_PORTAL_FE_URL}/login`,
         },
-      }
+      };
     } else {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
-        withCredentials: true,
-        headers: { Cookie: `${context?.req.headers.cookie}` },
-      })
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
+        {
+          withCredentials: true,
+          headers: { Cookie: `${context?.req.headers.cookie}` },
+        }
+      );
 
-      setUserDetails(data)
+      setUserDetails(data);
 
-      return await serverSideProps(context)
+      return await serverSideProps(context);
     }
-  }
+  };
 }
 
 export function invalidateSession(response: ServerResponse) {
-  response.setHeader('Set-Cookie', 'ssid=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+  response.setHeader(
+    'Set-Cookie',
+    'ssid=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+  );
 }

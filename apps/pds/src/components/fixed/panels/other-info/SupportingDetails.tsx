@@ -322,7 +322,7 @@ export const SupportingDetails = (): JSX.Element => {
       <Card
         title="Questions"
         subtitle=""
-        className="mx-[5%] px-[3%]"
+        className="mx-[10%] px-[3%]"
         titleClassName="w-full mt-5 pl-5 text-2xl"
         remarks={
           <div className="flex flex-col items-end justify-end w-full">
@@ -1026,8 +1026,8 @@ export const SupportingDetails = (): JSX.Element => {
                       ? false
                       : true
                   }
-                  isError={errors.candidateDetails ? true : false}
-                  errorMessage={errors.candidateDetails?.message}
+                  isError={errors.resignedDetails ? true : false}
+                  errorMessage={errors.resignedDetails?.message}
                   muted={
                     hasPds && supportingInfoOnEdit === false
                       ? true

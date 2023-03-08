@@ -23,10 +23,9 @@ export const NextButton = ({
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-10 h-10 hover:animate-pulse hover:stroke-indigo-800"
+              className="w-10 h-10 hover:animate-pulse stroke-indigo-600 hover:stroke-indigo-800"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="gray"
               strokeWidth="2"
             >
               <path
@@ -36,7 +35,7 @@ export const NextButton = ({
               />
             </svg>
           </button>
-          <span className="text-sm font-medium text-gray-700 select-none">
+          <span className="text-md font-medium text-indigo-800 select-none">
             Next
           </span>
         </div>

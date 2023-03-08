@@ -1,14 +1,13 @@
-import create from "zustand"
+import { create } from 'zustand';
 
 type PdsState = {
-    tab: number
-    setTab: (tab: number) => void
-}
-
+  tab: number;
+  setTab: (tab: number) => void;
+};
 
 export const usePdsStore = create<PdsState>((set) => ({
-    tab: 1,
-    setTab: (tab: number) => {
-        set((state) => ({ ...state, tab }))
-    }
-}))
+  tab: 1,
+  setTab: (tab: number) => {
+    set((state) => ({ ...state, tab }));
+  },
+}));
