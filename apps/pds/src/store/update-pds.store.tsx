@@ -19,6 +19,12 @@ export type UpdatePdsState = {
   setAllowGovernmentIssuedIdSave: (
     allowGovernmentIssuedIdSave: boolean
   ) => void;
+  allowResidentialAddressSave: boolean;
+  setAllowResidentialAddressSave: (
+    allowResidentialAddressSave: boolean
+  ) => void;
+  allowPermanentAddressSave: boolean;
+  setAllowPermanentAddressSave: (allowPermanentAddressSave: boolean) => void;
   allowElementarySave: boolean;
   setAllowElementarySave: (allowElementarySave: boolean) => void;
   allowSecondarySave: boolean;
@@ -143,6 +149,8 @@ export const useUpdatePdsStore = create<UpdatePdsState>((set) => ({
   allowSpouseSave: true,
   allowGovernmentIdsSave: true,
   allowQuestionsSave: true,
+  allowResidentialAddressSave: true,
+  allowPermanentAddressSave: true,
   deletedChildren: [],
   deletedVocationalEducs: [],
   deletedCollegeEducs: [],
@@ -189,6 +197,12 @@ export const useUpdatePdsStore = create<UpdatePdsState>((set) => ({
   allowManageWorkExperience: true,
   allowEditOfficeRelation: true,
   allowEditSupportingInfo: true,
+  setAllowResidentialAddressSave: (allowResidentialAddressSave: boolean) => {
+    set((state) => ({ ...state, allowResidentialAddressSave }));
+  },
+  setAllowPermanentAddressSave: (allowPermanentAddressSave: boolean) => {
+    set((state) => ({ ...state, allowPermanentAddressSave }));
+  },
   setAllowGovernmentIssuedIdSave: (allowGovernmentIssuedIdSave: boolean) => {
     set((state) => ({ ...state, allowGovernmentIssuedIdSave }));
   },

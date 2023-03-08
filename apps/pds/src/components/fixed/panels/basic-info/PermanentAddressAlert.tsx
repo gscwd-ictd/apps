@@ -3,8 +3,11 @@ import { Alert } from '@gscwd-apps/oneui';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 import axios from 'axios';
-import { useContext, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { useContext, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -34,6 +37,14 @@ export const PermanentAddressAlert = ({
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const allowPermanentAddressSave = useUpdatePdsStore(
+    (state) => state.allowPermanentAddressSave
+  );
+  const setAllowPermanentAddressSave = useUpdatePdsStore(
+    (state) => state.setAllowPermanentAddressSave
+  );
+  const permanentAddress = usePdsStore((state) => state.permanentAddress);
+  const setPermanentAddress = usePdsStore((state) => state.setPermanentAddress);
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -56,6 +67,7 @@ export const PermanentAddressAlert = ({
     const { provCode, cityCode, brgyCode, ...rest } = pds.permanentAddress;
 
     try {
+      await trimValues();
       await axios.put(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/basic/permanent-address/${employeeDetails.user._id}`,
         rest
@@ -68,6 +80,15 @@ export const PermanentAddressAlert = ({
     } catch (error) {
       return Actions.ERROR;
     }
+  };
+
+  const trimValues = async () => {
+    setPermanentAddress({
+      ...permanentAddress,
+      houseNumber: trimmer(permanentAddress.houseNumber),
+      street: trimmer(permanentAddress.street),
+      subdivision: trimmer(permanentAddress.subdivision),
+    });
   };
 
   const alertCancelAction = () => {
@@ -83,6 +104,28 @@ export const PermanentAddressAlert = ({
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
+
+  useEffect(() => {
+    if (
+      isEmpty(permanentAddress.houseNumber) ||
+      isEmpty(permanentAddress.street) ||
+      isEmpty(permanentAddress.subdivision) ||
+      isEmpty(permanentAddress.province) ||
+      isEmpty(permanentAddress.city) ||
+      isEmpty(permanentAddress.barangay)
+    ) {
+      setAllowPermanentAddressSave(false);
+    } else if (
+      !isEmpty(permanentAddress.houseNumber) &&
+      !isEmpty(permanentAddress.street) &&
+      !isEmpty(permanentAddress.subdivision) &&
+      !isEmpty(permanentAddress.province) &&
+      !isEmpty(permanentAddress.city) &&
+      !isEmpty(permanentAddress.barangay)
+    ) {
+      setAllowPermanentAddressSave(true);
+    }
+  }, [permanentAddress]);
 
   return (
     <>
@@ -170,6 +213,7 @@ export const PermanentAddressAlert = ({
                   variant="light"
                   type="button"
                   className="ring-0 hover:bg-white focus:ring-0"
+                  muted={allowPermanentAddressSave ? false : true}
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">
                     <IoIosSave size={20} />
