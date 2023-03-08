@@ -38,166 +38,171 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isEmpty } from 'lodash';
 import { format } from 'date-fns';
+import PassSlipApplicationModal from '../../../../src/components/fixed/passslip/PassSlipApplicationModal';
 
 export default function PassSlip({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
-  // get state for the modal
-  const modal = usePassSlipStore((state) => state.modal);
+  const {
+    isGetPassSlipLoading,
+    setIsGetPassSlipLoading,
+    viewPassSlipModal,
+    setViewPassSlipModal,
+    applyPassSlipModalIsOpen,
+    setApplyPassSlipModalIsOpen,
+    pendingPassSlipList,
+    setPendingPassSlipList,
+    fulfilledPassSlipList,
+    setFulfilledPassSlipList,
+    tab,
+    setTab,
+    passSlipToSubmit,
+    setEmployeeId,
+    setDateOfApplication,
+    setNatureOfBusiness,
+    setEstimateHours,
+    setPurposeDestination,
+    setIsCancelled,
+    setObTransportation,
+  } = usePassSlipStore((state) => ({
+    isGetPassSlipLoading: state.isGetPassSlipLoading,
+    setIsGetPassSlipLoading: state.setIsGetPassSlipLoading,
+    viewPassSlipModal: state.viewPassSlipModal,
+    setViewPassSlipModal: state.setViewPassSlipModal,
+    applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
+    setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
+    pendingPassSlipList: state.pendingPassSlipList,
+    setPendingPassSlipList: state.setPendingPassSlipList,
+    fulfilledPassSlipList: state.fulfilledPassSlipList,
+    setFulfilledPassSlipList: state.setFulfilledPassSlipList,
+    tab: state.tab,
+    setTab: state.setTab,
+    passSlipToSubmit: state.passSlipToSubmit,
+    setEmployeeId: state.setEmployeeId,
+    setDateOfApplication: state.setDateOfApplication,
+    setNatureOfBusiness: state.setNatureOfBusiness,
+    setEstimateHours: state.setEstimateHours,
+    setPurposeDestination: state.setPurposeDestination,
+    setIsCancelled: state.setIsCancelled,
+    setObTransportation: state.setObTransportation,
+  }));
 
-  // get loading state from store
-  const isLoading = usePassSlipStore((state) => state.isLoading);
+  // // get state for the modal
+  // const modal = usePassSlipStore((state) => state.modal);
 
-  // set tab state
-  const tab = usePassSlipStore((state) => state.tab);
+  // // get loading state from store
+  // const isLoading = usePassSlipStore((state) => state.isLoading);
 
-  // set loading state from store
-  const setIsLoading = usePassSlipStore((state) => state.setIsLoading);
-
-  // set state for the modal
-  const setModal = usePassSlipStore((state) => state.setModal);
-
-  const setAction = usePassSlipStore((state) => state.setAction);
-  const action = usePassSlipStore((state) => state.action);
+  // const setAction = usePassSlipStore((state) => state.setAction);
+  // const action = usePassSlipStore((state) => state.action);
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
     (state) => state.setEmployeeDetails
   );
-  // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
-  const dateOfApplication = usePassSlipStore(
-    (state) => state.dateOfApplication
-  );
-  const [applicationSuccess, setApplicationSuccess] = useState<boolean>(false);
+
+  // const [applicationSuccess, setApplicationSuccess] = useState<boolean>(false);
   const today = new Date();
   const dateToday = format(today, 'yyyy-MM-dd');
-  const natureOfBusiness = usePassSlipStore((state) => state.natureOfBusiness);
-  const estimateHours = usePassSlipStore((state) => state.estimateHours);
-  const purposeDestination = usePassSlipStore(
-    (state) => state.purposeDestination
-  );
-  const obTransportation = usePassSlipStore((state) => state.obTransportation);
-
-  const setDateOfApplication = usePassSlipStore(
-    (state) => state.setDateOfApplication
-  );
-
-  const setNatureOfBusiness = usePassSlipStore(
-    (state) => state.setNatureOfBusiness
-  );
-
-  const setEstimateHours = usePassSlipStore((state) => state.setEstimateHours);
-
-  const setPurposeDestination = usePassSlipStore(
-    (state) => state.setPurposeDestination
-  );
-
-  const setObTransportation = usePassSlipStore(
-    (state) => state.setObTransportation
-  );
 
   // const [resetPassSlipList, setResetPassSlipList] = useState<boolean>(false);
   const passSlipList = usePassSlipStore((state) => state.passSlipList);
 
   // open the modal
-  const openModal = () => {
-    if (!modal.isOpen) {
-      setApplicationSuccess(false);
-      setAction('Apply');
-      setModal({ ...modal, page: 1, isOpen: true });
+  const openApplyPassSlipModal = () => {
+    if (!applyPassSlipModalIsOpen) {
       setNatureOfBusiness('');
       setEstimateHours(1);
       setPurposeDestination('');
       setObTransportation('');
       setDateOfApplication(`${dateToday}`);
+      setApplyPassSlipModalIsOpen(true);
     }
   };
 
-  // cancel action for modal
-  const modalCancel = async () => {
-    setModal({ ...modal, isOpen: false });
-    setIsLoading(true);
+  // cancel action for Pass Slip Application Modal
+  const closeApplyPassSlipModal = async () => {
+    setApplyPassSlipModalIsOpen(false);
+    setIsGetPassSlipLoading(true);
   };
 
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
-    setIsLoading(true);
-    // setPassSlipList(passSlipList);
+    setIsGetPassSlipLoading(true);
   }, [
     employeeDetails,
     passSlipList,
     setEmployeeDetails,
-    setIsLoading,
-    // setPassSlipList,
+    isGetPassSlipLoading,
+    setIsGetPassSlipLoading,
   ]);
 
   useEffect(() => {
-    if (isLoading) {
+    if (isGetPassSlipLoading) {
       setTimeout(() => {
-        setIsLoading(false);
+        setIsGetPassSlipLoading(false);
       }, 500);
     }
-  }, [isLoading, setIsLoading]);
+  }, [isGetPassSlipLoading, setIsGetPassSlipLoading]);
 
   // modal action button
   const modalAction = async (e) => {
-    e.preventDefault();
-    if (action === 'Apply') {
-      if (isEmpty(dateOfApplication)) {
-        toast.error('Please enter date');
-      } else if (isEmpty(natureOfBusiness)) {
-        toast.error('Please select Nature of Business');
-      } else if (
-        isEmpty(estimateHours) &&
-        natureOfBusiness != 'Undertime' &&
-        natureOfBusiness != 'Half Day'
-      ) {
-        toast.error('Please enter number of hours');
-      } else if (
-        estimateHours <= 0 &&
-        natureOfBusiness == 'Personal Business'
-      ) {
-        toast.error('Please enter a valid number of hours');
-      } else if (
-        estimateHours <= 0 &&
-        natureOfBusiness == 'Official Business'
-      ) {
-        toast.error('Please enter a valid number of hours');
-      } else if (isEmpty(purposeDestination)) {
-        toast.error('Please enter purpose or destination');
-      } else if (
-        natureOfBusiness === 'Official Business' &&
-        isEmpty(obTransportation)
-      ) {
-        toast.error('Please select mode of transportation');
-      } else {
-        const data = applyPassSlip(
-          employeeDetail.employmentDetails.userId,
-          dateOfApplication,
-          natureOfBusiness,
-          estimateHours,
-          purposeDestination,
-          obTransportation
-        );
-        if (data) {
-          modalCancel();
-          setApplicationSuccess(true);
-        } else {
-          console.log(data);
-          toast.error('Error');
-        }
-      }
-    }
+    // e.preventDefault();
+    // if (action === 'Apply') {
+    //   if (isEmpty(dateOfApplication)) {
+    //     toast.error('Please enter date');
+    //   } else if (isEmpty(natureOfBusiness)) {
+    //     toast.error('Please select Nature of Business');
+    //   } else if (
+    //     isEmpty(estimateHours) &&
+    //     natureOfBusiness != 'Undertime' &&
+    //     natureOfBusiness != 'Half Day'
+    //   ) {
+    //     toast.error('Please enter number of hours');
+    //   } else if (
+    //     estimateHours <= 0 &&
+    //     natureOfBusiness == 'Personal Business'
+    //   ) {
+    //     toast.error('Please enter a valid number of hours');
+    //   } else if (
+    //     estimateHours <= 0 &&
+    //     natureOfBusiness == 'Official Business'
+    //   ) {
+    //     toast.error('Please enter a valid number of hours');
+    //   } else if (isEmpty(purposeDestination)) {
+    //     toast.error('Please enter purpose or destination');
+    //   } else if (
+    //     natureOfBusiness === 'Official Business' &&
+    //     isEmpty(obTransportation)
+    //   ) {
+    //     toast.error('Please select mode of transportation');
+    //   } else {
+    //     const data = applyPassSlip(
+    //       employeeDetail.employmentDetails.userId,
+    //       dateOfApplication,
+    //       natureOfBusiness,
+    //       estimateHours,
+    //       purposeDestination,
+    //       obTransportation
+    //     );
+    //     if (data) {
+    //       modalCancel();
+    //       setApplicationSuccess(true);
+    //     } else {
+    //       console.log(data);
+    //       toast.error('Error');
+    //     }
+    //   }
+    // }
   };
 
   return (
     <>
       <>
-        <ToastContainer
+        {/* <ToastContainer
           className={'uppercase text-xs'}
           position="top-right"
           autoClose={3000}
@@ -209,13 +214,13 @@ export default function PassSlip({
           draggable
           pauseOnHover
           theme="light"
-        />
-        {applicationSuccess ? (
+        /> */}
+        {/* {applicationSuccess ? (
           <ToastNotification
             toastType="success"
             notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application."
           />
-        ) : null}
+        ) : null} */}
 
         <EmployeeProvider employeeData={employee}>
           <Head>
@@ -224,65 +229,12 @@ export default function PassSlip({
 
           <SideNav />
 
-          <Modal size={'lg'} open={modal.isOpen} setOpen={openModal}>
-            <Modal.Header>
-              <h3 className="font-semibold text-2xl text-gray-700">
-                <div className="px-5 flex justify-between">
-                  <span>Pass Slip Authorization</span>
-                  <button
-                    className="hover:bg-slate-100 px-1 rounded-full"
-                    onClick={modalCancel}
-                  >
-                    <HiX />
-                  </button>
-                </div>
-              </h3>
-            </Modal.Header>
-            <Modal.Body>
-              <form id="passSlipForm">
-                <PassSlipModalController page={modal.page} />
-              </form>
-            </Modal.Body>
-            <Modal.Footer>
-              <div className="flex justify-end gap-2">
-                {/* <div className="flex flex-row">
-                  <Button
-                    variant={'primary'}
-                    size={'md'}
-                    loading={false}
-                    onClick={modalCancel}
-                    className="w-16"
-                  >
-                    {'Exit'}
-                  </Button>
-                </div> */}
-
-                <div className="min-w-[6rem] max-w-auto">
-                  <Button
-                    variant={'primary'}
-                    size={'md'}
-                    loading={false}
-                    className={`${modal.page != 3 ? '' : 'hidden'}`}
-                    onClick={(e) => modalAction(e)}
-                    form="passSlipForm"
-                    type={`${modal.page == 1 ? 'submit' : 'button'}`}
-                  >
-                    {action}
-                  </Button>
-
-                  <Link
-                    href={`/${router.query.id}/pass-slip/${employeeDetail.employmentDetails.userId}`}
-                    target={'_blank'}
-                    className={`${modal.page == 3 ? '' : 'hidden'}`}
-                  >
-                    <Button variant={'primary'} size={'md'} loading={false}>
-                      View
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </Modal.Footer>
-          </Modal>
+          {/* Pass Slip Application Modal */}
+          <PassSlipApplicationModal
+            modalState={applyPassSlipModalIsOpen}
+            setModalState={setApplyPassSlipModalIsOpen}
+            closeModalAction={closeApplyPassSlipModal}
+          />
 
           <MainContainer>
             <div className="w-full h-full px-32">
@@ -290,13 +242,13 @@ export default function PassSlip({
                 title="Employee Pass Slips"
                 subtitle="Apply for pass slip"
               >
-                <Button onClick={openModal}>
+                <Button onClick={openApplyPassSlipModal}>
                   <div className="flex items-center w-full gap-2">
                     <HiDocumentAdd /> Apply Pass Slip
                   </div>
                 </Button>
               </ContentHeader>
-              {isLoading ? (
+              {isGetPassSlipLoading ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}
