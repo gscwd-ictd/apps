@@ -48,8 +48,7 @@ export default function PassSlip({
   const {
     isGetPassSlipLoading,
     setIsGetPassSlipLoading,
-    viewPassSlipModal,
-    setViewPassSlipModal,
+
     applyPassSlipModalIsOpen,
     setApplyPassSlipModalIsOpen,
     pendingPassSlipList,
@@ -69,8 +68,7 @@ export default function PassSlip({
   } = usePassSlipStore((state) => ({
     isGetPassSlipLoading: state.isGetPassSlipLoading,
     setIsGetPassSlipLoading: state.setIsGetPassSlipLoading,
-    viewPassSlipModal: state.viewPassSlipModal,
-    setViewPassSlipModal: state.setViewPassSlipModal,
+
     applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
     pendingPassSlipList: state.pendingPassSlipList,
