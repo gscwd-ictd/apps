@@ -1,4 +1,3 @@
-import Reference from 'yup/lib/Reference';
 import { create } from 'zustand';
 import { EducationInfo } from '../types/data/education.type';
 import { Eligibility } from '../types/data/eligibility.type';
@@ -9,6 +8,7 @@ import {
   Recognition,
   Organization,
 } from '../types/data/other-info.type';
+import { Reference } from '../types/data/supporting-info.type';
 import { VoluntaryWork } from '../types/data/vol-work.type';
 import { WorkExperience } from '../types/data/work.type';
 
