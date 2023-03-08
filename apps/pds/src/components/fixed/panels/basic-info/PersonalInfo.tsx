@@ -27,7 +27,6 @@ export const PersonalInfoBI = (): JSX.Element => {
   const personalInfo = usePdsStore((state) => state.personalInfo);
   const personalInfoOnEdit = usePdsStore((state) => state.personalInfoOnEdit);
   const hasPds = useEmployeeStore((state) => state.hasPds);
-  const employee = useEmployeeStore((state) => state.employeeDetails);
   const [countryList, setCountryList] = useState<Array<any>>([]); // set country list
   const setPersonalInfo = usePdsStore((state) => state.setPersonalInfo);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
@@ -139,6 +138,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }),
                 }}
                 muted={hasPds ? true : false}
+                // muted={true}
                 isError={errors.lastName ? true : false}
                 errorMessage={errors.lastName?.message}
               />
@@ -161,6 +161,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }),
                 }}
                 muted={hasPds ? true : false}
+                // muted={true}
                 isError={errors.firstName ? true : false}
                 errorMessage={errors.firstName?.message}
               />
@@ -187,6 +188,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }),
                 }}
                 muted={hasPds ? true : false}
+                // muted={true}
                 isError={errors.middleName ? true : false}
                 errorMessage={errors.middleName?.message}
               />

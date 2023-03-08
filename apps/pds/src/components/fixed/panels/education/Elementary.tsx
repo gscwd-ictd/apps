@@ -1,3 +1,5 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { ElemEducation } from 'apps/pds/src/types/data/family.type';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { units } from '../../../../../utils/constants/constants';
@@ -16,16 +18,6 @@ const degree = [{ label: 'Primary Education', value: 'Primary Education' }];
 /**
  * @units Initializes the array of label and value objects in the Units input
  */
-
-type ElemEducation = {
-  elemSchoolName: string;
-  elemDegree: string;
-  elemFrom: number;
-  elemTo: number;
-  elemUnits: string;
-  elemAwards: string;
-  elemYearGraduated: number | null;
-};
 
 export const Elementary = (): JSX.Element => {
   // pulls the elementary object from the pds store
@@ -78,11 +70,21 @@ export const Elementary = (): JSX.Element => {
     }
   }, [watchElemUnits, watch('elemTo')]);
 
-  useEffect(() => setElementary({ ...elementary, employeeId: employee.employmentDetails.userId }), []);
+  useEffect(
+    () =>
+      setElementary({
+        ...elementary,
+        employeeId: employee.employmentDetails.userId,
+      }),
+    []
+  );
 
   return (
     <>
-      <Card title="Elementary" subtitle="Write your elementary education information. Write 'N/A' if not applicable.">
+      <Card
+        title="Elementary"
+        subtitle="Write your elementary education information. Write 'N/A' if not applicable."
+      >
         <>
           <div className="-mt-16 flex w-full justify-end pb-10">
             <ElementaryAlert setInitialValues={setInitialValues} />
@@ -97,13 +99,25 @@ export const Elementary = (): JSX.Element => {
                 isRequired
                 controller={{
                   ...register('elemSchoolName', {
-                    value: elementary.schoolName ? elementary.schoolName.trim() : '',
-                    onChange: (e) => setElementary({ ...elementary, schoolName: e.target.value }),
+                    value: elementary.schoolName
+                      ? elementary.schoolName.trim()
+                      : '',
+                    onChange: (e) =>
+                      setElementary({
+                        ...elementary,
+                        schoolName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.elemSchoolName ? true : false}
                 errorMessage={errors.elemSchoolName?.message}
-                muted={hasPds && elementaryOnEdit ? false : hasPds && !elementaryOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && elementaryOnEdit
+                    ? false
+                    : hasPds && !elementaryOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
 
@@ -117,12 +131,19 @@ export const Elementary = (): JSX.Element => {
                 controller={{
                   ...register('elemDegree', {
                     value: elementary.degree ? elementary.degree : '',
-                    onChange: (e) => setElementary({ ...elementary, degree: e.target.value }),
+                    onChange: (e) =>
+                      setElementary({ ...elementary, degree: e.target.value }),
                   }),
                 }}
                 isError={errors.elemDegree ? true : false}
                 errorMessage={errors.elemDegree?.message}
-                muted={hasPds && elementaryOnEdit ? false : hasPds && !elementaryOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && elementaryOnEdit
+                    ? false
+                    : hasPds && !elementaryOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>
@@ -139,12 +160,19 @@ export const Elementary = (): JSX.Element => {
                   controller={{
                     ...register('elemFrom', {
                       value: elementary.from ? elementary.from : undefined,
-                      onChange: (e) => setElementary({ ...elementary, from: e.target.value }),
+                      onChange: (e) =>
+                        setElementary({ ...elementary, from: e.target.value }),
                     }),
                   }}
                   isError={errors.elemFrom ? true : false}
                   errorMessage={errors.elemFrom?.message}
-                  muted={hasPds && elementaryOnEdit ? false : hasPds && !elementaryOnEdit ? true : !hasPds && false}
+                  muted={
+                    hasPds && elementaryOnEdit
+                      ? false
+                      : hasPds && !elementaryOnEdit
+                      ? true
+                      : !hasPds && false
+                  }
                 />
               </div>
 
@@ -158,12 +186,19 @@ export const Elementary = (): JSX.Element => {
                   controller={{
                     ...register('elemTo', {
                       value: elementary.to ? elementary.to : undefined,
-                      onChange: (e) => setElementary({ ...elementary, to: e.target.value }),
+                      onChange: (e) =>
+                        setElementary({ ...elementary, to: e.target.value }),
                     }),
                   }}
                   isError={errors.elemTo ? true : false}
                   errorMessage={errors.elemTo?.message}
-                  muted={hasPds && elementaryOnEdit ? false : hasPds && !elementaryOnEdit ? true : !hasPds && false}
+                  muted={
+                    hasPds && elementaryOnEdit
+                      ? false
+                      : hasPds && !elementaryOnEdit
+                      ? true
+                      : !hasPds && false
+                  }
                 />
               </div>
             </div>
@@ -178,14 +213,21 @@ export const Elementary = (): JSX.Element => {
                 controller={{
                   ...register('elemUnits', {
                     value: elementary.units ? elementary.units : '',
-                    onChange: (e) => setElementary({ ...elementary, units: e.target.value }),
+                    onChange: (e) =>
+                      setElementary({ ...elementary, units: e.target.value }),
                   }),
                 }}
                 selectList={units}
                 defaultOption={'Highest level'}
                 isError={errors.elemUnits ? true : false}
                 errorMessage={errors.elemUnits?.message}
-                muted={hasPds && elementaryOnEdit ? false : hasPds && !elementaryOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && elementaryOnEdit
+                    ? false
+                    : hasPds && !elementaryOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>
@@ -200,8 +242,14 @@ export const Elementary = (): JSX.Element => {
                 type="number"
                 controller={{
                   ...register('elemYearGraduated', {
-                    value: elementary.yearGraduated ? elementary.yearGraduated : null,
-                    onChange: (e) => setElementary({ ...elementary, yearGraduated: e.target.value }),
+                    value: elementary.yearGraduated
+                      ? elementary.yearGraduated
+                      : null,
+                    onChange: (e) =>
+                      setElementary({
+                        ...elementary,
+                        yearGraduated: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.elemYearGraduated ? true : false}
@@ -218,12 +266,19 @@ export const Elementary = (): JSX.Element => {
                 controller={{
                   ...register('elemAwards', {
                     value: elementary.awards ? elementary.awards.trim() : '',
-                    onChange: (e) => setElementary({ ...elementary, awards: e.target.value }),
+                    onChange: (e) =>
+                      setElementary({ ...elementary, awards: e.target.value }),
                   }),
                 }}
                 isError={errors.elemAwards ? true : false}
                 errorMessage={errors.elemAwards?.message}
-                muted={hasPds && elementaryOnEdit ? false : hasPds && !elementaryOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && elementaryOnEdit
+                    ? false
+                    : hasPds && !elementaryOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>
