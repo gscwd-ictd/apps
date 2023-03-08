@@ -19,6 +19,7 @@ import { trimmer } from '../../../../utils/functions/trimmer';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
+import { isEmpty } from 'lodash';
 
 // yup validation schema
 
@@ -62,17 +63,19 @@ export const EducationalBgPanel = (): JSX.Element => {
   const onSubmit: SubmitHandler<any> = () => {
     setElementary({
       ...elementary,
-      schoolName: trimmer(elementary.schoolName!),
-      degree: trimmer(elementary.degree!),
-      awards: trimmer(elementary.awards!),
+      schoolName: trimmer(elementary.schoolName),
+      degree: trimmer(elementary.degree),
+      awards: trimmer(elementary.awards),
     });
 
-    setSecondary({
-      ...secondary,
-      schoolName: trimmer(secondary.schoolName!),
-      degree: trimmer(secondary.degree!),
-      awards: trimmer(secondary.awards!),
-    });
+    if (!isEmpty(secondary.schoolName)) {
+      setSecondary({
+        ...secondary,
+        schoolName: trimmer(secondary.schoolName),
+        degree: trimmer(secondary.degree),
+        awards: trimmer(secondary.awards),
+      });
+    }
 
     if (
       (hasPds &&

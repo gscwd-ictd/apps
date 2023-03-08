@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
 import { LeaveApplication } from '../types/leave.type';
 import { ErrorState, ModalState } from '../types/modal.type';

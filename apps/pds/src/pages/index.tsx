@@ -18,11 +18,17 @@ export const getServerSideProps: GetServerSideProps = withSession(
   async (context: GetServerSidePropsContext) => {
     const employee = getUserDetails();
     try {
-      const applicantPds = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
+      await axios.get(
+        `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${employee.employmentDetails.userId}`
       );
 
-      return { props: { employee, pdsDetails: applicantPds.data } };
+      return {
+        props: {},
+        redirect: {
+          destination: `/pds/${employee.employmentDetails.userId}`,
+          permanent: false,
+        },
+      };
     } catch (error) {
       return {
         props: {},

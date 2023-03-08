@@ -32,7 +32,10 @@ const schema = yup.object().shape({
   isGuilty: yup.number().required().label('This'),
   guiltyDetails: yup.string().when('isGuilty', {
     is: 1,
-    then: yup.string().nullable(false).required('Please provide administrative offense details'),
+    then: yup
+      .string()
+      .nullable(false)
+      .required('Please provide administrative offense details'),
     otherwise: yup.string().nullable(true).notRequired(),
   }),
   isCharged: yup.number().required().label('This'),
@@ -60,6 +63,12 @@ const schema = yup.object().shape({
   }),
   isCandidate: yup.number().required().label('This'),
   candidateDetails: yup.string().when('isCandidate', {
+    is: 1,
+    then: yup.string().nullable(false).required('Please provide details'),
+    otherwise: yup.string().nullable(true).notRequired(),
+  }),
+  isResigned: yup.number().required().label('This'),
+  resignedDetails: yup.string().when('isResigned', {
     is: 1,
     then: yup.string().nullable(false).required('Please provide details'),
     otherwise: yup.string().nullable(true).notRequired(),
