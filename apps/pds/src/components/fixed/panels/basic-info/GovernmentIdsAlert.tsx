@@ -112,32 +112,6 @@ export const GovernmentIdsAlert = ({
     addNotification(getUpdate);
   };
 
-  useEffect(() => {
-    if (
-      governmentIssuedIdsOnEdit &&
-      (isEmpty(governmentIssuedIds.gsisNumber) ||
-        isEmpty(governmentIssuedIds.pagibigNumber) ||
-        isEmpty(governmentIssuedIds.philhealthNumber) ||
-        isEmpty(governmentIssuedIds.sssNumber) ||
-        isEmpty(governmentIssuedIds.tinNumber) ||
-        isEmpty(governmentIssuedIds.agencyNumber))
-    ) {
-      setAllowGovernmentIdsSave(false);
-    }
-
-    if (
-      governmentIssuedIdsOnEdit &&
-      !isEmpty(governmentIssuedIds.gsisNumber) &&
-      !isEmpty(governmentIssuedIds.pagibigNumber) &&
-      !isEmpty(governmentIssuedIds.philhealthNumber) &&
-      !isEmpty(governmentIssuedIds.sssNumber) &&
-      !isEmpty(governmentIssuedIds.tinNumber) &&
-      !isEmpty(governmentIssuedIds.agencyNumber)
-    ) {
-      setAllowGovernmentIdsSave(true);
-    }
-  }, [governmentIssuedIdsOnEdit, governmentIssuedIds]);
-
   return (
     <>
       <Alert open={alertUpdateIsOpen} setOpen={setAlertUpdateIsOpen}>
