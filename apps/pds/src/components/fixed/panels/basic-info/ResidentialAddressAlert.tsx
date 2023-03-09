@@ -3,8 +3,11 @@ import { Alert } from '@gscwd-apps/oneui';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
+import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 import axios from 'axios';
-import { useContext, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { useContext, useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -38,8 +41,18 @@ export const ResidentialAddressAlert = ({
   const checkboxAddress = usePdsStore((state) => state.checkboxAddress);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const pds = getPds(usePdsStore((state) => state));
+  const allowResidentialAddressSave = useUpdatePdsStore(
+    (state) => state.allowResidentialAddressSave
+  );
+  const setAllowResidentialAddressSave = useUpdatePdsStore(
+    (state) => state.setAllowResidentialAddressSave
+  );
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const residentialAddress = usePdsStore((state) => state.residentialAddress);
+  const setResidentialAddress = usePdsStore(
+    (state) => state.setResidentialAddress
+  );
 
   const addNotification = (action: Actions, bothAddressesUpdated: boolean) => {
     const notification = notify.custom(
@@ -62,6 +75,7 @@ export const ResidentialAddressAlert = ({
 
   const updateSection = async (): Promise<Return> => {
     const { provCode, cityCode, brgyCode, ...rest } = pds.residentialAddress;
+    await trimValues();
     if (checkboxAddress === true) {
       const { status } = await axios.put(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/basic/residential-address/${employeeDetails.user._id}/same-permanent`,
@@ -91,6 +105,15 @@ export const ResidentialAddressAlert = ({
     } else return { actions: Actions.ERROR, duo: false };
   };
 
+  const trimValues = async () => {
+    setResidentialAddress({
+      ...residentialAddress,
+      houseNumber: trimmer(residentialAddress.houseNumber),
+      street: trimmer(residentialAddress.street),
+      subdivision: trimmer(residentialAddress.subdivision),
+    });
+  };
+
   const alertCancelAction = () => {
     setInitialValues();
     addNotification(Actions.INFO, false);
@@ -104,6 +127,28 @@ export const ResidentialAddressAlert = ({
     const getUpdate = await updateSection();
     addNotification(getUpdate.actions, getUpdate.duo);
   };
+
+  useEffect(() => {
+    if (
+      isEmpty(residentialAddress.houseNumber) ||
+      isEmpty(residentialAddress.street) ||
+      isEmpty(residentialAddress.subdivision) ||
+      isEmpty(residentialAddress.province) ||
+      isEmpty(residentialAddress.city) ||
+      isEmpty(residentialAddress.barangay)
+    ) {
+      setAllowResidentialAddressSave(false);
+    } else if (
+      !isEmpty(residentialAddress.houseNumber) &&
+      !isEmpty(residentialAddress.street) &&
+      !isEmpty(residentialAddress.subdivision) &&
+      !isEmpty(residentialAddress.province) &&
+      !isEmpty(residentialAddress.city) &&
+      !isEmpty(residentialAddress.barangay)
+    ) {
+      setAllowResidentialAddressSave(true);
+    }
+  }, [residentialAddress]);
 
   return (
     <>
@@ -198,6 +243,7 @@ export const ResidentialAddressAlert = ({
                   variant="light"
                   type="button"
                   className="ring-0 hover:bg-white focus:ring-0"
+                  muted={allowResidentialAddressSave ? false : true}
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">
                     <IoIosSave size={20} />

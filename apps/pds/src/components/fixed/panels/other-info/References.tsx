@@ -16,12 +16,13 @@ import { RefErrorContext } from '../../../../context/RefErrorContext';
 import { DeleteButton } from '../../buttons/Delete';
 import { usePdsStore } from '../../../../store/pds.store';
 import { useEmployeeStore } from '../../../../store/employee.store';
-import { Reference } from '../../../../types/data/supporting-info.type';
+
 import { ReferencesAlert } from './ReferencesAlert';
 import { Alert } from '../../../../../../../libs/oneui/src/components/Alert';
 import { isEmpty } from 'lodash';
 import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
 import { EditButton } from '../../buttons/Edit';
+import { Reference } from 'apps/pds/src/types/data/supporting-info.type';
 
 // yup validation schema
 const schema = yup.object().shape({

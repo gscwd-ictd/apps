@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Competency } from '../../src/types/dr.type';
+import { Competency } from '../../types/dr.type';
 
 export interface Employee {
   email: string;
@@ -32,7 +32,6 @@ export const COMPETENCY: Competency = {
   pcplId: '',
 };
 
-
 export type Otp = {
   token: string;
   value: number;
@@ -43,5 +42,3 @@ export type OtpCode = {
   otp: Otp;
   setOtp: Dispatch<SetStateAction<Otp>>;
 };
-
-

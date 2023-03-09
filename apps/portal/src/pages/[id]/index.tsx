@@ -88,9 +88,9 @@ export default function Dashboard({
                 {/* 3 PANELS */}
                 <div>
                   <div className="flex flex-row gap-5">
-                    <StatsCard name={'Total Lates'} count={7} />
-                    <StatsCard name={'Total Absents'} count={4} />
-                    <StatsCard name={'Total Leaves'} count={5} />
+                    <StatsCard name={'Total Lates'} count={10} />
+                    <StatsCard name={'Total Absents'} count={10} />
+                    <StatsCard name={'Total Leaves'} count={10} />
                   </div>
                 </div>
                 {/* ATTENDANCE */}

@@ -51,78 +51,119 @@ export default function Carousel() {
     <>
       <div
         ref={sliderRef}
-        className="keen-slider w-full h-full pb-10 rounded-lg shadow bg-gray-100"
+        className="keen-slider w-full h-screen pb-10 rounded-lg shadow bg-gray-100"
       >
         <div className="keen-slider__slide number-slide1 w-screen h-screen">
-          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-4">
+          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              23 MAY a simple celebration this 2020
+              Happy 10 YEARS in SERVICE!
             </label>
             <label className="text-sm text-slate-500 text-justify">
-              It is true. The corona virus pandemic has changed ways of
-              celebrating family, friendships, love and achievements from beer
-              with friends to virtual toast, from cupcake to share to blowing
-              candles on screen, from physical hugs to window kisses. Not that
-              fun. Not that cheerful. For General Santos City Water District,
-              2020 will be empty without honoring its special day. With the
-              theme Rising Beyond, GSCWD decided to meet digitally to celebrate
-              its 33rd anniversary on August 19, commemorating its incredible
-              journey of public service.
+              We wish to greet Engr. Edmund Loquero Badal, a Happy 10 YEARS in
+              SERVICE! Please know that you are an important member of GSCWD and
+              your abilities and contributions will be an important part of our
+              continued success. Thank you for your hardwork and dedication,
+              Engr. Edmund!
             </label>
             <label className="text-right text-sm text-slate-500 cursor-pointer">
-              Read More
+              <a
+                target="blank"
+                href="https://www.facebook.com/photo/?fbid=241314384916833&set=a.109004071481199"
+              >
+                Read More
+              </a>
             </label>
-            <img className="w-full h-auto" src="/image1.jpg"></img>
+            <img className="w-100 h-100" src="/01.jpg"></img>
           </div>
         </div>
         <div className="keen-slider__slide number-slide2 w-screen h-screen">
-          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-4">
+          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              18 MAY GSCWD CONTINUES TO FULFILL ITS RESPONSIBILITY TO THE PUBLIC
+              HEART-SHAPE CHALLENGE
             </label>
             <label className="text-sm text-slate-500 text-justify">
-              As a government entity in the sphere of water industry, General
-              Santos City Water District believes that its role in the community
-              goes beyond water distribution and wastewater services. For over
-              the past years, the District is active in implementing projects
-              and programs that focuses on infrastructure, socio-economic
-              development, environment protection. It can be remembered that the
-              city council commended GSCWD for its remarkable contribution to
-              the vision of the City for its constituents.
+              {`Here's the winners for the WEEK #1 (HEART-SHAPE) CHALLENGE in
+              celebration of the Philippine Heart Month!!! First Place - OTS
+              Group Second Place - Maam Sha et. al Group Third Place - OGM Group
+              Consolation Prize - Other Groups (See Photo posted). Please claim
+              your prizes at the HRD Office. Congratulations!`}
             </label>
             <label className="text-right text-sm text-slate-500 cursor-pointer">
-              Read More
+              <a
+                target="blank"
+                href="https://www.facebook.com/gensanwd/posts/pfbid02FaPz85w8ePrKffXKz3vA4mGdmzDAf3LMx5aE6JDc3Z59r7hKhjnxUPHY4bQyB997l"
+              >
+                Read More
+              </a>
             </label>
-            <img className="w-full h-auto" src="/image2.jpg"></img>
+            <img className="w-100 h-100" src="/02.jpg"></img>
           </div>
         </div>
-        <div className="keen-slider__slide number-slide3 w-screen h-screen">
-          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-4 justify-between">
-            <div className="w-full h-full flex flex-col">
-              <label className="text-lg text-slate-600 uppercase">
-                18 MAY GSCWD CELEBRATES GLOBAL HANDWASHING DAY 2020
-              </label>
-              <label className="text-sm text-slate-500 text-justify">
-                Covid-19 will never stop General Santos City Water District in
-                implementing its hygiene education and sanitation projects. To
-                further promote regular handwashing to contain infectious
-                diseases, handwashing facilities are now installed at some
-                public places in General Santos City. One set of handwashing
-                station was conveniently placed in Bulaong Bus Terminal and two
-                other sets were put up in the entrance and exit of the City
-                Public Market. The project is initiated as part of the
-                District’s celebration of Global Handwashing Day 2020 in
-                partnership with the Local Government of GSC,
-                USAID-Strengthening Urban Resilience for Growth with Equity
-                (SURGE), South Cotabato Filipino-Chinese Chamber Inc. (SCFCCI),
-                General Santos City Chamber of Commerce and Industry Inc.
-                (GSCCCI).
-              </label>
-              <label className="text-right text-sm text-slate-500 cursor-pointer">
+        <div className="keen-slider__slide number-slide1 w-screen h-screen">
+          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
+            <label className="text-lg text-slate-600 uppercase">
+              PURPOSE WEDNESDAYS
+            </label>
+            <label className="text-sm text-slate-500 text-justify">
+              Make this your Wednesday habit this month of March! Maki-isa sa
+              Purple Wednesdays bilang suporta sa karapatan ng mga kababaihan at
+              pagkakapantay-pantay ng kasarian. Just wear anything purple on all
+              Wednesdays of March, especially on the International Women’s Day
+              on March 8...
+            </label>
+            <label className="text-right text-sm text-slate-500 cursor-pointer">
+              <a
+                target="blank"
+                href="https://www.facebook.com/PCWgovph/photos/a.147213871969647/6384355718255400/"
+              >
                 Read More
-              </label>
-            </div>
-            <img className="w-full h-auto" src="/image3.jpg"></img>
+              </a>
+            </label>
+            <img className="w-100 h-100" src="/03.jpg"></img>
+          </div>
+        </div>
+        <div className="keen-slider__slide number-slide1 w-screen h-screen">
+          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
+            <label className="text-lg text-slate-600 uppercase">
+              Webpage for the 2023 National Women’s Month Celebration!
+            </label>
+            <label className="text-sm text-slate-500 text-justify">
+              The 2023 celebration marks a juncture in the advancement of
+              women’s rights as it launches a new recurring theme from this year
+              to 2028: WE for gender equality and inclusive society. It sparks a
+              renewed commitment to the advocacy and banks on the gains achieved
+              during the 2016-2022 theme...
+            </label>
+            <label className="text-right text-sm text-slate-500 cursor-pointer">
+              <a
+                target="blank"
+                href="https://www.facebook.com/PCWgovph/photos/a.147213871969647/6291502884207351/"
+              >
+                Read More
+              </a>
+            </label>
+            <img className="w-100 h-100" src="/04.jpg"></img>
+          </div>
+        </div>
+        <div className="keen-slider__slide number-slide1 w-screen h-screen">
+          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
+            <label className="text-lg text-slate-600 uppercase">
+              2023 NWMC Stickers
+            </label>
+            <label className="text-sm text-slate-500 text-justify">
+              {`Share the National Women’s Month vibes! Use the 2023 NWMC Stickers
+              for Viber and Telegram and tell your girl tribe, “"You are amazing
+              and great!", "You are strong", and "Stand Proud!"...`}
+            </label>
+            <label className="text-right text-sm text-slate-500 cursor-pointer">
+              <a
+                target="blank"
+                href="https://www.facebook.com/PCWgovph/photos/a.147213871969647/6387854251238880/"
+              >
+                Read More
+              </a>
+            </label>
+            <img className="w-100 h-100" src="/05.jpg"></img>
           </div>
         </div>
       </div>
