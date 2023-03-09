@@ -1393,7 +1393,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   return (
     <>
       {isClient && (
-        <PDFViewer width={'100%'} height={760} showToolbar>
+        <PDFViewer width={'100%'} height={'100%'} showToolbar>
           <Document
             author="General Santos City Water District"
             subject="CS Form No. 212. Revised 2017"
