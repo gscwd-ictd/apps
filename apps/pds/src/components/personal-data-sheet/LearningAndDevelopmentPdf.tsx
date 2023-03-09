@@ -80,10 +80,10 @@ export const LearningAndDevelopmentPdf = ({
   formatDate,
   learningDevelopment,
 }: LearningAndDevelopmentPdfProps): JSX.Element => {
-  const [emptyLearningDevRows, setEmptyLearningDevRows] = useState(19);
+  const [emptyLearningDevRows] = useState(18);
 
   const renderLearningDevelopmentRows = () => {
-    const content = learningDevelopment.slice(0, 19).map((training, index) => (
+    const content = learningDevelopment.slice(0, 18).map((training, index) => (
       <View
         style={[
           styles.borderTop,
@@ -402,7 +402,7 @@ export const LearningAndDevelopmentPdf = ({
 
       {renderLearningDevelopmentRows()}
 
-      {learningDevelopment.length < 21 ? (
+      {learningDevelopment.length < 19 ? (
         <>{renderEmptyLearningDevelopmentRows()}</>
       ) : null}
 
