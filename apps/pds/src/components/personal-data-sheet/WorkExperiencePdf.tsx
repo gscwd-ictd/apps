@@ -194,7 +194,9 @@ export const WorkExperiencePdf = ({
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{experience.appointmentStatus || 'N/A'}</Text>
+            <Text style={{ fontSize: 6.2 }}>
+              {experience.appointmentStatus || 'N/A'}
+            </Text>
           </View>
         </View>
 
