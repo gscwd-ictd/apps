@@ -21,7 +21,11 @@ import {
   applyJobPost,
   getWorkExp,
 } from '../../../utils/helpers/http-requests/applicants-requests';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { isEmpty } from 'lodash';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -196,16 +200,16 @@ export default function Vacancies({
             setOpen={() => setModal({ ...modal })}
           >
             <Modal.Header>
-              <div className="px-2 flex justify-between items-start">
+              <div className="flex items-start justify-between px-2">
                 <div className="flex flex-col">
-                  <label className="font-semibold text-2xl text-gray-700">
+                  <label className="text-2xl font-semibold text-gray-700">
                     {messageContent?.positionTitle}
                   </label>
                   <p>{messageContent?.placeOfAssignment}</p>
                 </div>
 
                 <button
-                  className="hover:bg-slate-100 px-1 h-8 text-2xl rounded-full"
+                  className="h-8 px-1 text-2xl rounded-full hover:bg-slate-100"
                   onClick={modalCancel}
                 >
                   <HiX />
@@ -244,7 +248,7 @@ export default function Vacancies({
                     </Button>
                   </div>
                 ) : modal.page === 2 ? (
-                  <div className="flex h-10 justify-between items-center w-full">
+                  <div className="flex items-center justify-between w-full h-10">
                     <div
                       className={`${
                         isApplied || hasApplied
@@ -296,22 +300,22 @@ export default function Vacancies({
                             pwdArray ? '' : 'animate-pulse'
                           } select-none h-full  px-4 transition-all duration-150 bg-slate-200 text-xl flex flex-row justify-center items-center gap-1`}
                         >
-                          <div className="-rotate-12 scale-105 font-medium text-indigo-800 w-4">
+                          <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
                             {pwdArray && pwdArray[0]}
                           </div>
-                          <div className="rotate-6 scale-90 font-bold text-sky-800 w-4">
+                          <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">
                             {pwdArray && pwdArray[1]}
                           </div>
-                          <div className="rotate-45 scale-105 font-light text-red-800 w-4">
+                          <div className="w-4 font-light text-red-800 scale-105 rotate-45">
                             {pwdArray && pwdArray[2]}
                           </div>
-                          <div className="rotate-12 scale-100 font-semibold text-green-800 pr-2 w-4">
+                          <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
                             {pwdArray && pwdArray[3]}
                           </div>
-                          <div className="-rotate-45 scale-90 font-bold text-blue-600 w-4">
+                          <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">
                             {pwdArray && pwdArray[4]}
                           </div>
-                          <div className="-rotate-6 scale-105 font-medium text-stone-800 w-4">
+                          <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">
                             {pwdArray && pwdArray[5]}
                           </div>
                         </div>
@@ -370,7 +374,7 @@ export default function Vacancies({
                         </Button>
                       </div>
 
-                      <div className="flex flex-row justify-end gap-2 w-2/6">
+                      <div className="flex flex-row justify-end w-2/6 gap-2">
                         <Button variant="danger" onClick={getCaptcha}>
                           Generate
                         </Button>
@@ -380,22 +384,22 @@ export default function Vacancies({
                             pwdArray ? '' : 'animate-pulse'
                           } select-none h-full  px-4 transition-all duration-150 bg-slate-200 text-xl flex flex-row justify-center items-center gap-1`}
                         >
-                          <div className="-rotate-12 scale-105 font-medium text-indigo-800 w-4">
+                          <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
                             {pwdArray && pwdArray[0]}
                           </div>
-                          <div className="rotate-6 scale-90 font-bold text-sky-800 w-4">
+                          <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">
                             {pwdArray && pwdArray[1]}
                           </div>
-                          <div className="rotate-45 scale-105 font-light text-red-800 w-4">
+                          <div className="w-4 font-light text-red-800 scale-105 rotate-45">
                             {pwdArray && pwdArray[2]}
                           </div>
-                          <div className="rotate-12 scale-100 font-semibold text-green-800 pr-2 w-4">
+                          <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
                             {pwdArray && pwdArray[3]}
                           </div>
-                          <div className="-rotate-45 scale-90 font-bold text-blue-600 w-4">
+                          <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">
                             {pwdArray && pwdArray[4]}
                           </div>
-                          <div className="-rotate-6 scale-105 font-medium text-stone-800 w-4">
+                          <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">
                             {pwdArray && pwdArray[5]}
                           </div>
                         </div>
@@ -439,8 +443,8 @@ export default function Vacancies({
               pauseOnHover
               theme="light"
             />
-            <div className="w-full h-full flex flex-row pb-10">
-              <div className="w-4/5 h-full pr-20 pl-4 overflow-y-scroll flex flex-col">
+            <div className="flex flex-row w-full h-full pb-10">
+              <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
                 Job Vacancies
                 {data && data.length > 0 ? (
                   data.map((vacancies: VacancyDetails, messageIdx: number) => {
@@ -460,15 +464,15 @@ export default function Vacancies({
                     );
                   })
                 ) : (
-                  <div className="w-full h-full flex flex-col justify-center items-center">
-                    <label className="text-4xl opacity-50 w-full text-center ">
+                  <div className="flex flex-col items-center justify-center w-full h-full">
+                    <label className="w-full text-4xl text-center opacity-50 ">
                       NO VACANCIES
                     </label>
                   </div>
                 )}
               </div>
               {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                <div className="h-full w-full flex flex-col items-center pt-6 mr-4 ml-4 text-gray-700">
+                <div className="flex flex-col items-center w-full h-full pt-6 ml-4 mr-4 text-gray-700">
                   <div
                     className={`${
                       isMessageOpen
@@ -504,7 +508,7 @@ export default function Vacancies({
                   </div>
                 </div>
               ) : (
-                <div className="h-full w-full flex flex-col justify-center items-center pt-6 mr-4 ml-4 text-gray-400 text-4xl">
+                <div className="flex flex-col items-center justify-center w-full h-full pt-6 ml-4 mr-4 text-4xl text-gray-400">
                   NO DATA FOUND
                 </div>
               )}
@@ -517,7 +521,7 @@ export default function Vacancies({
 }
 
 //get list of all posted job positions
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     try {
       const userDetails = getUserDetails(); //get employee details from ssid token - using _id only

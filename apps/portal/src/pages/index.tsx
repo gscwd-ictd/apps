@@ -5,7 +5,11 @@ import {
 } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getUserDetails, withSession } from '../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../utils/helpers/session';
 
 export default function Index() {
   const { notifRef, notify } = useNotification();
@@ -32,19 +36,21 @@ export default function Index() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(async () => {
-  const userDetails = getUserDetails();
-  if (!isEmpty(userDetails.employmentDetails.userId)) {
-    return {
-      props: {},
-      redirect: {
-        destination: `/${userDetails.employmentDetails.userId}`,
-        permanent: false,
-      },
-    };
-  } else
-    return {
-      props: {},
-      redirect: { destination: '/login', permanent: false },
-    };
-});
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async () => {
+    const userDetails = getUserDetails();
+    if (!isEmpty(userDetails.employmentDetails.userId)) {
+      return {
+        props: {},
+        redirect: {
+          destination: `/${userDetails.employmentDetails.userId}`,
+          permanent: false,
+        },
+      };
+    } else
+      return {
+        props: {},
+        redirect: { destination: '/login', permanent: false },
+      };
+  }
+);
