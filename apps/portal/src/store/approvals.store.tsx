@@ -4,15 +4,6 @@ import { LeaveApplication } from '../types/leave.type';
 import { ErrorState, ModalState } from '../types/modal.type';
 import { PassSlip } from '../types/passslip.type';
 
-export const PassSlipDetails: PassSlip = {
-  id: '1',
-  date: '',
-  natureOfBusiness: '',
-  estimatedHours: 0,
-  purpose: '',
-  modeOfTransportation: '',
-};
-
 export type ApprovalState = {
   alert: AlertState;
   setAlert: (alert: AlertState) => void;

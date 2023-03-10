@@ -1,9 +1,6 @@
 import { usePassSlipStore } from '../../../store/passslip.store';
 import dayjs from 'dayjs';
-import {
-  PassSlipContents,
-  SelectedPassSlip,
-} from '../../../../src/types/passslip.type';
+import { PassSlipContents } from '../../../../src/types/passslip.type';
 
 type AllPassSlipListTabProps = {
   passslips: Array<PassSlipContents> | null;
@@ -14,32 +11,35 @@ export const AllPassSlipListTab = ({
   passslips,
   tab,
 }: AllPassSlipListTabProps) => {
-  const modal = usePassSlipStore((state) => state.modal);
-
-  const setSelectedPassSlip = usePassSlipStore(
-    (state) => state.setSelectedPassSlip
-  );
-
-  const setModal = usePassSlipStore((state) => state.setModal);
-
-  const setSelectedPassSlipId = usePassSlipStore(
-    (state) => state.setSelectedPassSlipId
-  );
-
-  const setAction = usePassSlipStore((state) => state.setAction);
+  //zustand initialization to access pass slip store
+  const {
+    pendingPassSlipModalIsOpen,
+    completedPassSlipModalIsOpen,
+    getPassSlip,
+    setGetPassSlip,
+    setPendingPassSlipModalIsOpen,
+    setCompletedPassSlipModalIsOpen,
+  } = usePassSlipStore((state) => ({
+    pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
+    completedPassSlipModalIsOpen: state.completedPassSlipModalIsOpen,
+    getPassSlip: state.getPassSlip,
+    setGetPassSlip: state.setGetPassSlip,
+    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    setCompletedPassSlipModalIsOpen: state.setCompletedPassSlipModalIsOpen,
+  }));
 
   const onSelect = (passslip) => {
-    setSelectedPassSlip(passslip);
-    setSelectedPassSlipId(passslip.id);
+    setGetPassSlip(passslip);
+    //PENDING PASS SLIPS
     if (tab === 1) {
-      if (!modal.isOpen) {
-        setAction('Cancel Pass Slip');
-        setModal({ ...modal, page: 2, isOpen: true });
+      if (!pendingPassSlipModalIsOpen) {
+        setPendingPassSlipModalIsOpen(true);
+        console.log(getPassSlip);
       }
+      //COMPLETED PASS SLIPS
     } else if (tab === 2) {
-      if (!modal.isOpen) {
-        setAction('View');
-        setModal({ ...modal, page: 3, isOpen: true });
+      if (!completedPassSlipModalIsOpen) {
+        setCompletedPassSlipModalIsOpen(true);
       }
     }
   };
@@ -60,7 +60,8 @@ export const AllPassSlipListTab = ({
                     {item.natureOfBusiness}
                   </h1>
                   <p className="text-sm text-gray-500">
-                    Date: {dayjs(item.dateOfApplication).format('MMMM d, YYYY')}
+                    Date:{' '}
+                    {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>
                   <p className="text-xs text-gray-500">
                     Estimated Hours: {item.estimateHours}

@@ -9,7 +9,11 @@ import { useEffect, useState } from 'react';
 import { HiSearch } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { employee } from '../../../utils/constants/data';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { patchData } from '../../../utils/hoc/axios';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { AppSelAlertController } from '../../../components/fixed/selection/AppSelAlertController';
@@ -283,7 +287,7 @@ export default function AppPosAppointment({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
     return { props: { employeeDetails } };

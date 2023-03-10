@@ -207,7 +207,7 @@ export default function ReviewPanel(): JSX.Element {
                         }
                       />
                       <LabelFieldPreview
-                        label="Pagi-ibig No:"
+                        label="Pag-ibig No:"
                         field={
                           governmentIssuedIds.pagibigNumber
                             ? governmentIssuedIds.pagibigNumber

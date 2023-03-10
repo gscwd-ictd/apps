@@ -36,7 +36,7 @@ export const AllApprovalsTab = ({
 
   const onSelectPassSlip = (passslip: PassSlip) => {
     setSelectedPassSlip(passslip);
-    setSelectedPassSlipId(passslip.id);
+    // setSelectedPassSlipId(passslip.id);
     if (tab === 1) {
       // PENDING APPROVAL PASS SLIP
       if (!modal.isOpen) {
@@ -120,13 +120,13 @@ export const AllApprovalsTab = ({
                   </h1>
                   {/* <p className="text-md text-gray-500"></p> */}
                   <p className="text-sm text-gray-500">
-                    Estimated Hours: {item.estimatedHours}
+                    {/* Estimated Hours: {item.estimatedHours} */}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Purpose: {item.purpose}
+                    {/* Purpose: {item.purpose} */}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Fulfilled on {dayjs(item.date).format('MMMM d, YYYY')}
+                    {/* Fulfilled on {dayjs(item.date).format('MMMM d, YYYY')} */}
                   </p>
                 </div>
               </li>

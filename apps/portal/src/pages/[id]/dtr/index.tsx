@@ -11,7 +11,11 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ListDef, Select } from '@gscwd-apps/oneui';
@@ -71,7 +75,7 @@ export default function DailyTimeRecord({
                     <SpinnerDotted
                       speed={70}
                       thickness={70}
-                      className="w-full flex h-full transition-all "
+                      className="flex w-full h-full transition-all "
                       color="slateblue"
                       size={100}
                     />
@@ -88,7 +92,7 @@ export default function DailyTimeRecord({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 

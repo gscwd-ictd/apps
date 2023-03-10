@@ -7,14 +7,11 @@ type PassSlipTabsProps = {
 };
 
 export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
-  const setTab = usePassSlipStore((state) => state.setTab);
-  const pendingPassSlipList = usePassSlipStore(
-    (state) => state.pendingPassSlipList
-  );
-
-  const fulfilledPassSlipList = usePassSlipStore(
-    (state) => state.fulfilledPassSlipList
-  );
+  //zustand initialization to access pass slip store
+  const { passSlips, setTab } = usePassSlipStore((state) => ({
+    passSlips: state.passSlips,
+    setTab: state.setTab,
+  }));
 
   return (
     <>
@@ -30,9 +27,7 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
             title="Pending Pass Slips"
             icon={<HiOutlineCheckCircle size={26} />}
             subtitle="Show all pending Pass Slips you applied for"
-            notificationCount={
-              pendingPassSlipList ? pendingPassSlipList.length : 0
-            }
+            notificationCount={passSlips.onGoing ? passSlips.onGoing.length : 0}
             className="bg-indigo-500"
           />
           <TabHeader
@@ -46,7 +41,7 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
             icon={<HiCheck size={26} />}
             subtitle="Show all fulfilled Pass Slip applications"
             notificationCount={
-              fulfilledPassSlipList ? fulfilledPassSlipList.length : 0
+              passSlips.completed ? passSlips.completed.length : 0
             }
             className="bg-gray-500"
           />

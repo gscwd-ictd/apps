@@ -22,7 +22,8 @@ export const StatsCard: React.FC<Props> = ({ count, name }) => {
           ''
         )}
       </div>
-      <label className="text-7xl text-stone-500">{count}</label>
+      {/* <label className="text-7xl text-stone-500">{count}</label> */}
+      <label className="text-7xl text-stone-500">-</label>
       <label className="text-xs text-stone-500">{name}</label>
 
       <div className="w-full h-3 rounded bg-stone-300">
