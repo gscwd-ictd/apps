@@ -143,16 +143,6 @@ export const PassSlipCompletedModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              {/* <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => modalAction(e)}
-                type="submit"
-              >
-                Cancel Pass Slip
-              </Button> */}
-
               <Link
                 href={`/${router.query.id}/pass-slip/${getPassSlip.id}`}
                 target={'_blank'}
