@@ -241,7 +241,7 @@ export const getServerSideProps: GetServerSideProps = async (
     const portalSsid = getPortalSsid(cookiesArray);
 
     // used if else instead of trycatch
-    if (portalSsid !== null || portalSsid !== '') {
+    if (portalSsid.length > 0) {
       const userDetails = await axios.get(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
         {
