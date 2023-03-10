@@ -1,76 +1,77 @@
 import { useEffect, useRef, useState } from 'react';
 import { AllPassSlipListTab } from './AllPassSlipListTab';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
-import { SelectedPassSlip } from '../../../../src/types/passslip.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 type PassSlipTabWindowProps = {
   employeeId: string;
-  employeePassSlips: SelectedPassSlip;
 };
 
 export const PassSlipTabWindow = ({
   employeeId,
-  employeePassSlips,
 }: PassSlipTabWindowProps): JSX.Element => {
-  // useEffect(() => {
-  //   const pendingPassSlips = getPendingPassSlip(employeeId);
-  // }, []);
+  //zustand initialization to access pass slip store
+  const {
+    tab,
+    passSlips,
+    loading,
+    error,
 
-  const setPassSlipEmployeeId = usePassSlipStore(
-    (state) => state.setPassSlipEmployeeId
-  );
+    getPassSlipList,
+    getPassSlipListSuccess,
+    getPassSlipListFail,
+  } = usePassSlipStore((state) => ({
+    tab: state.tab,
+    passSlips: state.passSlips,
+    loading: state.loading,
+    error: state.error,
 
-  const pendingPassSlipList = usePassSlipStore(
-    (state) => state.pendingPassSlipList
-  );
+    getPassSlipList: state.getPassSlipList,
+    getPassSlipListSuccess: state.getPassSlipListSuccess,
+    getPassSlipListFail: state.getPassSlipListFail,
+  }));
 
-  const fulfilledPassSlipList = usePassSlipStore(
-    (state) => state.fulfilledPassSlipList
-  );
-
-  const setPendingPassSlipList = usePassSlipStore(
-    (state) => state.setPendingPassSlipList
-  );
-
-  const setFulfilledPassSlipList = usePassSlipStore(
-    (state) => state.setFulfilledPassSlipList
-  );
-
-  const tab = usePassSlipStore((state) => state.tab);
-
-  useEffect(() => {
-    setPendingPassSlipList(employeePassSlips.ongoing);
-    setFulfilledPassSlipList(employeePassSlips.completed);
-    setPassSlipEmployeeId(employeeId);
-  }, []);
-
-  const [resetPassSlipList, setResetPassSlipList] = useState<boolean>(false);
-  const passSlipList = usePassSlipStore((state) => state.passSlipList);
-  const setPassSlipList = usePassSlipStore((state) => state.setPassSlipList);
   const passSlipUrl = `http://192.168.99.124:4104/api/v1/pass-slip/${employeeId}`;
-
-  const random = useRef(Date.now());
-
   // use useSWR, provide the URL and fetchWithSession function as a parameter
-  const { data } = useSWR(passSlipUrl, fetchWithToken);
 
+  const {
+    data: swrPassSlips,
+    isLoading: swrIsLoading,
+    error: swrError,
+  } = useSWR(passSlipUrl, fetchWithToken);
+
+  // Initial zustand state update
   useEffect(() => {
-    if (!isEmpty(data)) {
-      setPassSlipList(data);
+    if (swrIsLoading) {
+      getPassSlipList(swrIsLoading);
     }
-  }, [data, resetPassSlipList]);
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPassSlips)) {
+      getPassSlipListSuccess(swrIsLoading, swrPassSlips);
+    }
+
+    if (!isEmpty(swrError)) {
+      getPassSlipListFail(swrIsLoading, swrError);
+    }
+  }, [swrPassSlips, swrError]);
 
   return (
     <>
+      {swrError ? (
+        <ToastNotification toastType="error" notifMessage={swrError} />
+      ) : null}
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
         {tab === 1 && (
-          <AllPassSlipListTab passslips={pendingPassSlipList} tab={tab} />
+          <AllPassSlipListTab passslips={passSlips.onGoing} tab={tab} />
         )}
         {tab === 2 && (
-          <AllPassSlipListTab passslips={fulfilledPassSlipList} tab={tab} />
+          <AllPassSlipListTab passslips={passSlips.completed} tab={tab} />
         )}
       </div>
     </>

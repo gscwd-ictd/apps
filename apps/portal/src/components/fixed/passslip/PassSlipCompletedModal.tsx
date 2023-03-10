@@ -9,18 +9,19 @@ import {
 import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
+import router from 'next/router';
 
-type PassSlipPendingModalProps = {
+type PassSlipCompletedModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-export const PassSlipPendingModal = ({
+export const PassSlipCompletedModal = ({
   modalState,
   setModalState,
   closeModalAction,
-}: PassSlipPendingModalProps) => {
+}: PassSlipCompletedModalProps) => {
   const { getPassSlip } = usePassSlipStore((state) => ({
     getPassSlip: state.getPassSlip,
   }));
@@ -36,7 +37,7 @@ export const PassSlipPendingModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Pending Pass Slip</span>
+              <span>Completed Pass Slip</span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}
@@ -49,11 +50,21 @@ export const PassSlipPendingModal = ({
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              <AlertNotification
-                alertType="warning"
-                notifMessage="Awaiting Supervisor Approval"
-                dismissible={false}
-              />
+              {getPassSlip.status === 'approved' ? (
+                <AlertNotification
+                  alertType="info"
+                  notifMessage="Approved"
+                  dismissible={false}
+                />
+              ) : null}
+
+              {getPassSlip.status === 'disapproved' ? (
+                <AlertNotification
+                  alertType="info"
+                  notifMessage="Disapproved"
+                  dismissible={false}
+                />
+              ) : null}
 
               <div className="flex gap-2 justify-between items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
@@ -132,7 +143,7 @@ export const PassSlipPendingModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Button
+              {/* <Button
                 variant={'primary'}
                 size={'md'}
                 loading={false}
@@ -140,17 +151,16 @@ export const PassSlipPendingModal = ({
                 type="submit"
               >
                 Cancel Pass Slip
-              </Button>
+              </Button> */}
 
-              {/* <Link
-                href={`/${router.query.id}/pass-slip/${employeeDetail.employmentDetails.userId}`}
+              <Link
+                href={`/${router.query.id}/pass-slip/${getPassSlip.id}`}
                 target={'_blank'}
-                className={`${modal.page == 3 ? '' : 'hidden'}`}
               >
                 <Button variant={'primary'} size={'md'} loading={false}>
-                  View
+                  Print
                 </Button>
-              </Link> */}
+              </Link>
             </div>
           </div>
         </Modal.Footer>
@@ -159,4 +169,4 @@ export const PassSlipPendingModal = ({
   );
 };
 
-export default PassSlipPendingModal;
+export default PassSlipCompletedModal;

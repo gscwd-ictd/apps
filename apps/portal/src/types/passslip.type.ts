@@ -2,13 +2,13 @@ export type PassSlip = {
   employeeId: string;
   dateOfApplication: string;
   natureOfBusiness: string;
-  estimateHours: number;
+  estimateHours?: number | null;
   purposeDestination: string;
   isCancelled: boolean;
-  obTransportation: string;
+  obTransportation?: string | null;
 };
 
-export type SelectedPassSlip = {
+export type GetPassSlip = {
   completed: Array<PassSlipContents>;
   ongoing: Array<PassSlipContents>;
 };

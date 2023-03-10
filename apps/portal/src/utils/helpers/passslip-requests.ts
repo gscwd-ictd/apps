@@ -1,34 +1,20 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { GetServerSidePropsContext } from 'next';
+import { PassSlip, PassSlipContents } from '../../types/passslip.type';
 import { CreatedPrf, Position, RequestedPosition } from '../../types/prf.types';
 import { post } from './http-request';
 
 const url = process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL;
 
-export const applyPassSlip = async (
-  employeeId: string,
-  dateOfApplication: string,
-  natureOfBusiness: string,
-  estimateHours: number,
-  purposeDestination: string,
-  obTransportation: string
-) => {
+export const applyPassSlip = async (data: PassSlip) => {
   try {
     // const { data } = await axios.post(`${url}/v1/pass-slip`, {
-    const { data } = await axios.post(
+    const response = await axios.post(
       `http://192.168.99.124:4104/api/v1/pass-slip`,
-      {
-        employeeId,
-        dateOfApplication,
-        natureOfBusiness,
-        estimateHours,
-        purposeDestination,
-        isCancelled: false,
-        obTransportation,
-      }
+      data
     );
-    return data;
+    return response;
   } catch (error) {
     return { error };
   }
