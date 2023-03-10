@@ -3,16 +3,12 @@ import { useEffect } from 'react';
 import { Button } from '../../../components/modular/forms/buttons/Button';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
-import { getEmployeeProfile } from '../../../utils/helpers/http-requests/employee-requests';
-import { getUserDetails } from '../../../utils/helpers/http-requests/user-requests';
 import {
   EmployeeDetailsPrf,
-  employeeDummy,
   EmployeeProfile,
 } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
 import { Roles } from '../../../utils/constants/user-roles';
-import { getEmployee, withSession } from '../../../utils/helpers/with-session';
 import { usePrfStore } from '../../../store/prf.store';
 import { useEmployeeStore } from '../../../store/employee-prf.store';
 import { useUserStore } from '../../../store/user.store';
@@ -27,14 +23,15 @@ import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingP
 import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
 import { TabHeader } from '../../../components/fixed/prf/prf-index/TabHeader';
 import { PrfDetails } from '../../../types/prf.types';
-import router from 'next/router';
-import { HiArrowSmLeft } from 'react-icons/hi';
 import { SideNav } from '../../../../src/components/fixed/nav/SideNav';
 import { MainContainer } from '../../../../src/components/modular/custom/containers/MainContainer';
 import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
 import { SpinnerDotted } from 'spinners-react';
-import { withCookieSession } from 'apps/portal/src/utils/helpers/session';
+import {
+  withCookieSession,
+  getUserDetails,
+} from 'apps/portal/src/utils/helpers/session';
 
 type PrfPageProps = {
   user: User;
@@ -235,7 +232,7 @@ export default function Prf({
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async () => {
-    const employee = getEmployee() as any;
+    const employee = getUserDetails();
     // const employee = employeeDummy;
     // get user details
     //const user = await getUserDetails(employee.userId);
