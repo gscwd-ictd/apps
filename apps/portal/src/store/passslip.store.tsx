@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { GetPassSlip, PassSlipContents } from '../types/passslip.type';
 import { devtools } from 'zustand/middleware';
 

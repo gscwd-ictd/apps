@@ -22,6 +22,7 @@ export const getPrfById = async (
   prfId: string,
   context: GetServerSidePropsContext
 ) => {
+  console.log(prfId);
   const { data } = await axios.get(`${url}/prf/details/${prfId}`, {
     // make sure to make use of session cookie
     withCredentials: true,
