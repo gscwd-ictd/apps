@@ -8,13 +8,8 @@ type PassSlipTabsProps = {
 
 export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
   //zustand initialization to access pass slip store
-  const {
-    passSlips,
-
-    setTab,
-  } = usePassSlipStore((state) => ({
+  const { passSlips, setTab } = usePassSlipStore((state) => ({
     passSlips: state.passSlips,
-
     setTab: state.setTab,
   }));
 
