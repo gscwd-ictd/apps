@@ -34,6 +34,7 @@ import { MainContainer } from '../../../../src/components/modular/custom/contain
 import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
 import { SpinnerDotted } from 'spinners-react';
+import { withCookieSession } from 'apps/portal/src/utils/helpers/session';
 
 type PrfPageProps = {
   user: User;
@@ -205,7 +206,7 @@ export default function Prf({
               <SpinnerDotted
                 speed={70}
                 thickness={70}
-                className="w-full flex h-full transition-all "
+                className="flex w-full h-full transition-all "
                 color="slateblue"
                 size={100}
               />
@@ -213,7 +214,7 @@ export default function Prf({
           ) : (
             <ContentBody>
               <>
-                <div className="w-full flex">
+                <div className="flex w-full">
                   <div className="w-[58rem]">
                     <TabHeader />
                   </div>
@@ -232,42 +233,44 @@ export default function Prf({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(async () => {
-  const employee = getEmployee() as any;
-  // const employee = employeeDummy;
-  // get user details
-  //const user = await getUserDetails(employee.userId);
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async () => {
+    const employee = getEmployee() as any;
+    // const employee = employeeDummy;
+    // get user details
+    //const user = await getUserDetails(employee.userId);
 
-  // get employee profile
-  //const profile = await getEmployeeProfile(user._id);
+    // get employee profile
+    //const profile = await getEmployeeProfile(user._id);
 
-  // get all pending prfs
-  const pendingRequests = await getPendingPrfs(employee.user._id);
+    // get all pending prfs
+    const pendingRequests = await getPendingPrfs(employee.user._id);
 
-  // get all approved prfs
-  const forApproval = await getForApprovalPrfs(employee.user._id);
+    // get all approved prfs
+    const forApproval = await getForApprovalPrfs(employee.user._id);
 
-  // check if user role is rank_and_file
-  if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE) {
-    // if true, the employee is not allowed to access this page
+    // check if user role is rank_and_file
+    if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE) {
+      // if true, the employee is not allowed to access this page
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${employee.profile.firstName.toLowerCase()}.${employee.profile.lastName.toLowerCase()}`,
+        },
+      };
+    }
+
     return {
-      redirect: {
-        permanent: false,
-        destination: `/${employee.profile.firstName.toLowerCase()}.${employee.profile.lastName.toLowerCase()}`,
+      props: {
+        user: employee.user,
+        employee: employee.employmentDetails,
+        profile: employee.profile,
+        pendingRequests,
+        forApproval,
       },
     };
   }
-
-  return {
-    props: {
-      user: employee.user,
-      employee: employee.employmentDetails,
-      profile: employee.profile,
-      pendingRequests,
-      forApproval,
-    },
-  };
-});
+);
 
 // export const getServerSideProps: GetServerSideProps = async () => {
 //   return { props: { user, employee: employeeDetails, profile } };

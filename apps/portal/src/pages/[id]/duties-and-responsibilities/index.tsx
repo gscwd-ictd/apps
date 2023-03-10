@@ -18,7 +18,11 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { Alert, Button, Modal } from '@gscwd-apps/oneui';
 import { SpinnerDotted } from 'spinners-react';
 import { DRAlertController } from '../../../components/fixed/dr/DRAlertController';
@@ -488,7 +492,7 @@ export default function DR({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 

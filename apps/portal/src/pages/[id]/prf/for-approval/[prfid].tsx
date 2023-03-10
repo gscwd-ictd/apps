@@ -34,6 +34,7 @@ import {
   PrfStatus,
 } from '../../../../types/prf.types';
 import { withSession } from '../../../../utils/helpers/with-session';
+import { withCookieSession } from 'apps/portal/src/utils/helpers/session';
 
 type ForApprovalProps = {
   profile: EmployeeProfile;
@@ -67,7 +68,7 @@ export default function ForApproval({
         <Dialog
           as="div"
           onClose={() => setIsOpen(isSubmitLoading ? true : false)}
-          className="fixed z-10 inset-0 overflow-y-auto"
+          className="fixed inset-0 z-10 overflow-y-auto"
         >
           <Transition.Child
             as={Fragment}
@@ -82,7 +83,7 @@ export default function ForApproval({
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center min-h-full p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -92,9 +93,9 @@ export default function ForApproval({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="transform overflow-hidden bg-white text-left align-middle shadow-xl transition-all rounded-xl">
+                <Dialog.Panel className="overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
                   <div className={`w-100 relative bg-white rounded max-w-sm`}>
-                    <Dialog.Title className="bg-indigo-600 h-12 w-full py-8 px-10 flex justify-center items-center text-center text-white font-bold">
+                    <Dialog.Title className="flex items-center justify-center w-full h-12 px-10 py-8 font-bold text-center text-white bg-indigo-600">
                       APPROVE PRF
                     </Dialog.Title>
                     <OtpModal
@@ -111,12 +112,12 @@ export default function ForApproval({
         </Dialog>
       </Transition>
 
-      <div className="w-screen h-screen py-10 px-36 overflow-hidden flex flex-col">
+      <div className="flex flex-col w-screen h-screen py-10 overflow-hidden px-36">
         <button
           className="flex items-center gap-2 text-gray-700 transition-colors ease-in-out hover:text-gray-700"
           onClick={() => router.back()}
         >
-          <HiArrowSmLeft className="h-5 w-5" />
+          <HiArrowSmLeft className="w-5 h-5" />
           <span className="font-medium">Go Back</span>
         </button>
         <header className="flex items-center justify-between">
@@ -129,7 +130,7 @@ export default function ForApproval({
         </header>
 
         <main className="mt-16">
-          <main className="h-full flex">
+          <main className="flex h-full">
             <aside className="shrink-0 w-[20rem]">
               <section className="flex items-center gap-4">
                 <HiOutlineUser className="text-gray-700 shrink-0" />
@@ -155,11 +156,11 @@ export default function ForApproval({
               <section className="flex items-center gap-4">
                 <HiOutlinePencil className="text-gray-700 shrink-0" />
                 {prfDetails.withExam ? (
-                  <p className="text-indigo-500 font-medium">
+                  <p className="font-medium text-indigo-500">
                     Examination is required
                   </p>
                 ) : (
-                  <p className="text-orange-500 font-medium">
+                  <p className="font-medium text-orange-500">
                     No examination required
                   </p>
                 )}
@@ -189,10 +190,10 @@ export default function ForApproval({
                             : 'hover:border-l-red-500'
                         } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
                       >
-                        <section className="space-y-3 w-full">
+                        <section className="w-full space-y-3">
                           <header>
                             <section className="flex items-center justify-between">
-                              <h3 className="font-medium text-gray-600 text-lg">
+                              <h3 className="text-lg font-medium text-gray-600">
                                 {position.positionTitle}
                               </h3>
                               <p className="text-sm text-gray-600">
@@ -233,7 +234,7 @@ export default function ForApproval({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     console.log(context.query.prfid);
     try {

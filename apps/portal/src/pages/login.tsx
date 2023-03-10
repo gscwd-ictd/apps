@@ -14,7 +14,7 @@ import { Alert } from '../components/modular/common/alerts/Alert';
 import { Button } from '../components/modular/common/forms/Button';
 import { Checkbox } from '../components/modular/common/forms/Checkbox';
 import { TextField } from '../components/modular/common/forms/TextField';
-import { invalidateSession } from '../utils/helpers/session';
+import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
 
 type LoginFormInput = {
   email: string;
@@ -139,13 +139,13 @@ export default function Login() {
       <div className="flex flex-col items-center justify-center pt-16 overflow-y-auto drop-shadow-xl">
         <main className="w-[40rem] py-5  flex">
           <div className="w-[25%] bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-slate-300 to-slate-600 rounded-tl-xl rounded-bl-xl ">
-            <div className="text-2xl uppercase tracking-wider h-full text-left place-items-center mt-48 font-medium px-4 text-white drop-shadow-2xl">
+            <div className="h-full px-4 mt-48 text-2xl font-medium tracking-wider text-left text-white uppercase place-items-center drop-shadow-2xl">
               Employee Portal
             </div>
           </div>
           <div className="w-[75%] px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl">
             <header className="mb-8">
-              <h1 className="text-2xl mt-10 font-medium text-gray-700">
+              <h1 className="mt-10 text-2xl font-medium text-gray-700">
                 Sign in
               </h1>
               <p className="text-sm text-gray-500">
@@ -231,7 +231,17 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   // check if session cookie is defined
   if (context.req.headers.cookie !== undefined) {
-    try {
+    // assign context cookie to cookie
+    const cookie = context.req.headers.cookie;
+
+    // assign the splitted cookie to cookies array
+    const cookiesArray = cookie.split(';') as string[];
+
+    // target ssid_portal cookie
+    const portalSsid = getPortalSsid(cookiesArray);
+
+    // used if else instead of trycatch
+    if (portalSsid !== null || portalSsid !== '') {
       const userDetails = await axios.get(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
         {
@@ -239,8 +249,8 @@ export const getServerSideProps: GetServerSideProps = async (
 
           // pass the generated ssid
 
-          headers: { Cookie: `${context.req.headers.cookie}` },
-          // headers: { Cookie: 'test-value' }
+          headers: { Cookie: portalSsid },
+          // headers: { Cookie: `${context.req.headers.cookie}` },
         }
       );
 
@@ -253,17 +263,19 @@ export const getServerSideProps: GetServerSideProps = async (
           permanent: false,
         },
       };
-    } catch (error) {
+    } else {
       // invalidate session if it generated ssid
-      console.log('test');
+
       invalidateSession(context.res);
 
       // redirect to not found page
       return {
-        notFound: true,
+        // notFound: true,
+        props: {},
       };
     }
-  }
-
-  return { props: {} };
+  } else
+    return {
+      props: {},
+    };
 };

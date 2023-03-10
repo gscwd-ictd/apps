@@ -7,7 +7,7 @@ import {
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { HiMail } from 'react-icons/hi';
-import { withSession } from '../../../utils/helpers/session';
+import { withCookieSession, withSession } from '../../../utils/helpers/session';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -101,8 +101,8 @@ export default function Messages({
 
       <SideNav />
       <MainContainer>
-        <div className="w-full h-full flex flex-row pb-10">
-          <div className="w-4/5 h-full pr-20 pl-4 overflow-y-scroll flex flex-col">
+        <div className="flex flex-row w-full h-full pb-10">
+          <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
             Inbox
             {acknowledgements.length > 0 ? (
               acknowledgements
@@ -131,12 +131,12 @@ export default function Messages({
                   );
                 })
             ) : (
-              <div className="w-full h-full flex flex-col justify-center items-center">
+              <div className="flex flex-col items-center justify-center w-full h-full">
                 <label className="text-5xl opacity-50">NO MAIL</label>
               </div>
             )}
           </div>
-          <div className="h-full w-full flex flex-col items-center pt-6 mr-4 ml-4 text-gray-700">
+          <div className="flex flex-col items-center w-full h-full pt-6 ml-4 mr-4 text-gray-700">
             <div
               className={`${
                 isMessageOpen ? 'w-100 p-8 flex flex-col bg-white' : 'hidden'
@@ -163,7 +163,7 @@ export default function Messages({
               <div className="pt-4">
                 {/* <label className="text-gray-700">Enter remarks before submitting response.</label> */}
                 <textarea
-                  className="p-2 w-full h-32 border"
+                  className="w-full h-32 p-2 border"
                   disabled={
                     messageContent?.acknowledgedSchedule ||
                     messageContent?.declinedSchedule
@@ -239,7 +239,7 @@ export default function Messages({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const { data } = await axios.get(
       `http://192.168.137.249:4003/api/vacant-position-postings/psb/schedules/${context.query.id}/unacknowledged`
