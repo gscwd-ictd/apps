@@ -23,7 +23,6 @@ import {
   EmployeeProfile,
 } from '../../../../types/employee.type';
 import { Position, PrfDetails, PrfTrail } from '../../../../types/prf.types';
-import { withSession } from '../../../../utils/helpers/with-session';
 import { withCookieSession } from 'apps/portal/src/utils/helpers/session';
 
 type PrfDocumentProps = {

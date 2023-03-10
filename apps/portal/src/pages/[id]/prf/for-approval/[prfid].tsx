@@ -33,7 +33,6 @@ import {
   PrfDetailsForApproval,
   PrfStatus,
 } from '../../../../types/prf.types';
-import { withSession } from '../../../../utils/helpers/with-session';
 import { withCookieSession } from 'apps/portal/src/utils/helpers/session';
 
 type ForApprovalProps = {
