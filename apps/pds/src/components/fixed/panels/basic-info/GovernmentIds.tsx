@@ -10,10 +10,14 @@ import { GovernmentIdsAlert } from './GovernmentIdsAlert';
 export const GovernmentIDsBI = (): JSX.Element => {
   // set government id object, employee object state from pds context
   const governmentIssuedIds = usePdsStore((state) => state.governmentIssuedIds);
-  const governmentIssuedIdsOnEdit = usePdsStore((state) => state.governmentIssuedIdsOnEdit);
+  const governmentIssuedIdsOnEdit = usePdsStore(
+    (state) => state.governmentIssuedIdsOnEdit
+  );
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employee = useEmployeeStore((state) => state.employeeDetails);
-  const setGovernmentIssuedIds = usePdsStore((state) => state.setGovernmentIssuedIds);
+  const setGovernmentIssuedIds = usePdsStore(
+    (state) => state.setGovernmentIssuedIds
+  );
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
 
   // initialize basic info useform context
@@ -27,19 +31,35 @@ export const GovernmentIDsBI = (): JSX.Element => {
   const setInitialValues = () => {
     clearErrors();
     setValue('gsisNumber', initialPdsState.governmentIssuedIds.gsisNumber);
-    setValue('pagibigNumber', initialPdsState.governmentIssuedIds.pagibigNumber);
-    setValue('philhealthNumber', initialPdsState.governmentIssuedIds.philhealthNumber);
+    setValue(
+      'pagibigNumber',
+      initialPdsState.governmentIssuedIds.pagibigNumber
+    );
+    setValue(
+      'philhealthNumber',
+      initialPdsState.governmentIssuedIds.philhealthNumber
+    );
     setValue('sssNumber', initialPdsState.governmentIssuedIds.sssNumber);
     setValue('tinNumber', initialPdsState.governmentIssuedIds.tinNumber);
     setValue('agencyNumber', initialPdsState.governmentIssuedIds.agencyNumber);
   };
 
   // assign employee id on page load
-  useEffect(() => setGovernmentIssuedIds({ ...governmentIssuedIds, employeeId: employee.employmentDetails.userId }), []);
+  useEffect(
+    () =>
+      setGovernmentIssuedIds({
+        ...governmentIssuedIds,
+        employeeId: employee.employmentDetails.userId,
+      }),
+    []
+  );
 
   return (
     <>
-      <Card title="Government IDs" subtitle="List down your Government IDs">
+      <Card
+        title="Government IDs"
+        subtitle="List down your Government IDs. Write N/A if not applicable"
+      >
         <>
           <div className="flex justify-end w-full pb-10 -mt-16">
             <GovernmentIdsAlert setInitialValues={setInitialValues} />
@@ -52,16 +72,30 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 placeholder="GSIS BP No."
                 type="text"
                 isRequired
-                defaultValue={governmentIssuedIds.gsisNumber ? governmentIssuedIds.gsisNumber : ''}
+                defaultValue={
+                  governmentIssuedIds.gsisNumber
+                    ? governmentIssuedIds.gsisNumber
+                    : ''
+                }
                 maxLength={11}
                 controller={{
                   ...register('gsisNumber', {
                     value: governmentIssuedIds.gsisNumber.trim(),
-                    onChange: (e) => setGovernmentIssuedIds({ ...governmentIssuedIds, gsisNumber: e.target.value }),
+                    onChange: (e) =>
+                      setGovernmentIssuedIds({
+                        ...governmentIssuedIds,
+                        gsisNumber: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.gsisNumber ? true : false}
-                muted={hasPds && governmentIssuedIdsOnEdit ? false : hasPds && !governmentIssuedIdsOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && governmentIssuedIdsOnEdit
+                    ? false
+                    : hasPds && !governmentIssuedIdsOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 errorMessage={errors.gsisNumber?.message}
               />
             </div>
@@ -71,17 +105,31 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 placeholder="PAG-IBIG MID No."
                 type="text"
                 isRequired
-                defaultValue={governmentIssuedIds.pagibigNumber ? governmentIssuedIds.pagibigNumber : ''}
+                defaultValue={
+                  governmentIssuedIds.pagibigNumber
+                    ? governmentIssuedIds.pagibigNumber
+                    : ''
+                }
                 maxLength={14}
                 controller={{
                   ...register('pagibigNumber', {
                     value: governmentIssuedIds.pagibigNumber.trim(),
-                    onChange: (e) => setGovernmentIssuedIds({ ...governmentIssuedIds, pagibigNumber: e.target.value }),
+                    onChange: (e) =>
+                      setGovernmentIssuedIds({
+                        ...governmentIssuedIds,
+                        pagibigNumber: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.pagibigNumber ? true : false}
                 errorMessage={errors.pagibigNumber?.message}
-                muted={hasPds && governmentIssuedIdsOnEdit ? false : hasPds && !governmentIssuedIdsOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && governmentIssuedIdsOnEdit
+                    ? false
+                    : hasPds && !governmentIssuedIdsOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
             <div className="w-full col-span-1 mb-7">
@@ -91,16 +139,30 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 type="text"
                 isRequired
                 maxLength={14}
-                defaultValue={governmentIssuedIds.philhealthNumber ? governmentIssuedIds.philhealthNumber : ''}
+                defaultValue={
+                  governmentIssuedIds.philhealthNumber
+                    ? governmentIssuedIds.philhealthNumber
+                    : ''
+                }
                 controller={{
                   ...register('philhealthNumber', {
                     value: governmentIssuedIds.philhealthNumber.trim(),
-                    onChange: (e) => setGovernmentIssuedIds({ ...governmentIssuedIds, philhealthNumber: e.target.value }),
+                    onChange: (e) =>
+                      setGovernmentIssuedIds({
+                        ...governmentIssuedIds,
+                        philhealthNumber: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.philhealthNumber ? true : false}
                 errorMessage={errors.philhealthNumber?.message}
-                muted={hasPds && governmentIssuedIdsOnEdit ? false : hasPds && !governmentIssuedIdsOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && governmentIssuedIdsOnEdit
+                    ? false
+                    : hasPds && !governmentIssuedIdsOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>
@@ -113,16 +175,30 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 type="text"
                 isRequired
                 maxLength={12}
-                defaultValue={governmentIssuedIds.sssNumber ? governmentIssuedIds.sssNumber.trim() : ''}
+                defaultValue={
+                  governmentIssuedIds.sssNumber
+                    ? governmentIssuedIds.sssNumber.trim()
+                    : ''
+                }
                 controller={{
                   ...register('sssNumber', {
                     value: governmentIssuedIds.sssNumber.trim(),
-                    onChange: (e) => setGovernmentIssuedIds({ ...governmentIssuedIds, sssNumber: e.target.value }),
+                    onChange: (e) =>
+                      setGovernmentIssuedIds({
+                        ...governmentIssuedIds,
+                        sssNumber: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.sssNumber ? true : false}
                 errorMessage={errors.sssNumber?.message}
-                muted={hasPds && governmentIssuedIdsOnEdit ? false : hasPds && !governmentIssuedIdsOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && governmentIssuedIdsOnEdit
+                    ? false
+                    : hasPds && !governmentIssuedIdsOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
 
@@ -133,16 +209,30 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 isRequired
                 type="text"
                 maxLength={15}
-                defaultValue={governmentIssuedIds.tinNumber ? governmentIssuedIds.tinNumber : ''}
+                defaultValue={
+                  governmentIssuedIds.tinNumber
+                    ? governmentIssuedIds.tinNumber
+                    : ''
+                }
                 controller={{
                   ...register('tinNumber', {
                     value: governmentIssuedIds.tinNumber.trim(),
-                    onChange: (e) => setGovernmentIssuedIds({ ...governmentIssuedIds, tinNumber: e.target.value }),
+                    onChange: (e) =>
+                      setGovernmentIssuedIds({
+                        ...governmentIssuedIds,
+                        tinNumber: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.tinNumber ? true : false}
                 errorMessage={errors.tinNumber?.message}
-                muted={hasPds && governmentIssuedIdsOnEdit ? false : hasPds && !governmentIssuedIdsOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && governmentIssuedIdsOnEdit
+                    ? false
+                    : hasPds && !governmentIssuedIdsOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
             <div className="w-full col-span-1">
@@ -151,16 +241,30 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 placeholder="Agency Employee No."
                 isRequired
                 type="text"
-                defaultValue={governmentIssuedIds.agencyNumber ? governmentIssuedIds.agencyNumber : ''}
+                defaultValue={
+                  governmentIssuedIds.agencyNumber
+                    ? governmentIssuedIds.agencyNumber
+                    : ''
+                }
                 controller={{
                   ...register('agencyNumber', {
                     value: governmentIssuedIds.agencyNumber.trim(),
-                    onChange: (e) => setGovernmentIssuedIds({ ...governmentIssuedIds, agencyNumber: e.target.value }),
+                    onChange: (e) =>
+                      setGovernmentIssuedIds({
+                        ...governmentIssuedIds,
+                        agencyNumber: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.agencyNumber ? true : false}
                 errorMessage={errors.agencyNumber?.message}
-                muted={hasPds && governmentIssuedIdsOnEdit ? false : hasPds && !governmentIssuedIdsOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && governmentIssuedIdsOnEdit
+                    ? false
+                    : hasPds && !governmentIssuedIdsOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>

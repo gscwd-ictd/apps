@@ -22,6 +22,12 @@ const PersonalDataSheetPdf: NextPage = ({
     }
   };
 
+  const onClose = () => {
+    window.opener = null;
+    window.open('', '_self');
+    window.close();
+  };
+
   return (
     <>
       <Head>
@@ -29,14 +35,41 @@ const PersonalDataSheetPdf: NextPage = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="flex h-full w-full justify-center">
+        <div className="flex justify-center w-full h-screen">
           {isEmpty(applicantPds) ? (
             <>
-              <div className="flex flex-col">
-                <p className="text-3xl">
-                  Personal Data Sheet is not yet filled out
-                </p>
-                <div className="flex justify-items-center"></div>
+              <div className="min-w-full min-h-[100%] h-full select-none">
+                <div className="flex flex-col items-center justify-center h-full gap-1 ">
+                  {/** 404 */}
+                  <div className="flex items-center text-6xl font-bold text-indigo-400">
+                    <span className="-tracking-tighter">404</span>
+                  </div>
+
+                  {/** Oops  */}
+                  <div className="flex items-center text-3xl font-semibold text-gray-400">
+                    <span className="tracking-tighter">
+                      Personal Data Sheet is not yet filled out
+                    </span>
+                  </div>
+
+                  {/** Never existed  */}
+                  <div className="flex items-center text-lg font-medium ">
+                    <span className="text-gray-700 ">
+                      ...maybe the page you&apos;re looking for is not found or
+                      never existed.
+                    </span>
+                  </div>
+
+                  {/** Button */}
+                  <div className="flex items-center">
+                    <button
+                      className="bg-indigo-400 text-white px-3 py-2 rounded"
+                      onClick={onClose}
+                    >
+                      Click here to close this tab
+                    </button>
+                  </div>
+                </div>
               </div>
             </>
           ) : (
@@ -57,7 +90,7 @@ export const getServerSideProps: GetServerSideProps = async (
     const applicantPds = await axios.get(
       `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
     );
-    console.log(applicantPds.data);
+
     return {
       props: {
         applicantPds: applicantPds.data,

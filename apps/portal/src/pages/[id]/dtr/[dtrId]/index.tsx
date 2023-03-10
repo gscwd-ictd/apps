@@ -4,7 +4,11 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
-import { getUserDetails, withSession } from '../../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../../utils/helpers/session';
 import React from 'react';
 import DtrPdf from '../../../../../src/components/fixed/dtr/DtrPdf';
 
@@ -24,7 +28,7 @@ export default function PassSlipPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 

@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { PrfDetails, Position, ForApprovalPrf } from '../types/prf.types';
 
 export type PrfError = {

@@ -1,12 +1,12 @@
 import { Modal } from '@gscwd-apps/oneui';
 import { FunctionComponent } from 'react';
-import { HolidayRowData } from '../../../../../utils/types/table-row-types/maintenance/holiday-row.type';
+import { Holiday } from '../../../../../../src/utils/types/holiday.type';
 
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: HolidayRowData;
+  rowData: Holiday;
 };
 
 const EditHolidayModal: FunctionComponent<AddModalProps> = ({

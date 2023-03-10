@@ -4,16 +4,18 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
-import { getUserDetails, withSession } from '../../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../../utils/helpers/session';
 import React from 'react';
 import { employeeDummy } from '../../../../types/employee.type';
 import LeavePdf from '../../../../../src/components/fixed/leaves/LeavePdf';
 
-export default function PassSlipPage(    {
+export default function PassSlipPage({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-
-
   return (
     employeeDetails && (
       <>
@@ -26,7 +28,7 @@ export default function PassSlipPage(    {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 

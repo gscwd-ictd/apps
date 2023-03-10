@@ -1,5 +1,5 @@
-import create from 'zustand';
-import { PassSlipContents, GetPassSlip } from '../types/passslip.type';
+import { create } from 'zustand';
+import { GetPassSlip, PassSlipContents } from '../types/passslip.type';
 import { devtools } from 'zustand/middleware';
 
 export type PassSlipState = {

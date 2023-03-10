@@ -4,9 +4,11 @@ import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { GovernmentIssuedIds } from 'apps/pds/src/types/data/basic-info.type';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -43,6 +45,26 @@ export const GovernmentIdsAlert = ({
   const setAllowGovernmentIdsSave = useUpdatePdsStore(
     (state) => state.setAllowGovernmentIdsSave
   );
+  // initialize basic info useform context and use trigger to validate
+  const { trigger } = useFormContext<GovernmentIssuedIds>();
+
+  // triggers a revalidation before firing update button
+  const submitUpdate = async () => {
+    const submit = await trigger(
+      [
+        'agencyNumber',
+        'gsisNumber',
+        'pagibigNumber',
+        'philhealthNumber',
+        'sssNumber',
+        'tinNumber',
+      ],
+      { shouldFocus: true }
+    );
+    if (submit === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
+  };
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -89,32 +111,6 @@ export const GovernmentIdsAlert = ({
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
-
-  useEffect(() => {
-    if (
-      governmentIssuedIdsOnEdit &&
-      (isEmpty(governmentIssuedIds.gsisNumber) ||
-        isEmpty(governmentIssuedIds.pagibigNumber) ||
-        isEmpty(governmentIssuedIds.philhealthNumber) ||
-        isEmpty(governmentIssuedIds.sssNumber) ||
-        isEmpty(governmentIssuedIds.tinNumber) ||
-        isEmpty(governmentIssuedIds.agencyNumber))
-    ) {
-      setAllowGovernmentIdsSave(false);
-    }
-
-    if (
-      governmentIssuedIdsOnEdit &&
-      !isEmpty(governmentIssuedIds.gsisNumber) &&
-      !isEmpty(governmentIssuedIds.pagibigNumber) &&
-      !isEmpty(governmentIssuedIds.philhealthNumber) &&
-      !isEmpty(governmentIssuedIds.sssNumber) &&
-      !isEmpty(governmentIssuedIds.tinNumber) &&
-      !isEmpty(governmentIssuedIds.agencyNumber)
-    ) {
-      setAllowGovernmentIdsSave(true);
-    }
-  }, [governmentIssuedIdsOnEdit, governmentIssuedIds]);
 
   return (
     <>
@@ -197,7 +193,7 @@ export const GovernmentIdsAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"

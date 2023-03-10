@@ -4,9 +4,11 @@ import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { PersonalInfo } from 'apps/pds/src/types/data/basic-info.type';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { trimmer } from '../../../../../utils/functions/trimmer';
@@ -37,12 +39,8 @@ export const PersonalInfoAlert = ({
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
-  const allowPersonalInfoSave = useUpdatePdsStore(
-    (state) => state.allowPersonalInfoSave
-  );
-  const setAllowPersonalInfoSave = useUpdatePdsStore(
-    (state) => state.setAllowPersonalInfoSave
-  );
+
+  const { trigger } = useFormContext<PersonalInfo>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -69,6 +67,35 @@ export const PersonalInfoAlert = ({
     });
   };
 
+  // triggers validation upon firing submit update
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      [
+        'lastName',
+        'firstName',
+        'middleName',
+        'nameExtension',
+        'birthDate',
+        'sex',
+        'birthPlace',
+        'civilStatus',
+        'height',
+        'weight',
+        'bloodType',
+        'citizenship',
+        'citizenshipType',
+        'country',
+        'telephoneNumber',
+        'mobileNumber',
+        'email',
+      ],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
+  };
+
   const updateSection = async (): Promise<Actions> => {
     try {
       await trimValues();
@@ -89,41 +116,15 @@ export const PersonalInfoAlert = ({
   const alertCancelAction = () => {
     setInitialValues();
     addNotification(Actions.INFO);
-    setPersonalInfoOnEdit!(false);
+    setPersonalInfoOnEdit(false);
     setAlertCancelIsOpen(false);
   };
 
   const alertUpdateAction = async () => {
     setAlertUpdateIsOpen(false);
-    setPersonalInfoOnEdit!(false);
+    setPersonalInfoOnEdit(false);
     addNotification(await updateSection());
   };
-
-  useEffect(() => {
-    if (
-      personalInfoOnEdit &&
-      (isEmpty(personalInfo.birthPlace) ||
-        isEmpty(personalInfo.height) ||
-        isEmpty(personalInfo.weight) ||
-        isEmpty(personalInfo.telephoneNumber) ||
-        isEmpty(personalInfo.mobileNumber) ||
-        isEmpty(personalInfo.email))
-    ) {
-      setAllowPersonalInfoSave(false);
-    }
-
-    if (
-      personalInfoOnEdit &&
-      !isEmpty(personalInfo.birthPlace) &&
-      !isEmpty(personalInfo.height) &&
-      !isEmpty(personalInfo.weight) &&
-      !isEmpty(personalInfo.telephoneNumber) &&
-      !isEmpty(personalInfo.mobileNumber) &&
-      !isEmpty(personalInfo.email)
-    ) {
-      setAllowPersonalInfoSave(true);
-    }
-  }, [personalInfoOnEdit, personalInfo]);
 
   return (
     <>
@@ -206,11 +207,10 @@ export const PersonalInfoAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"
-                  muted={allowPersonalInfoSave ? false : true}
                   className="ring-0 hover:bg-white focus:ring-0"
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">

@@ -1,6 +1,6 @@
-import { Pds } from 'store/pds.store';
+import { Pds } from '../../store/pds.store';
 
 export type Data = {
-  formatDate: Function;
+  formatDate: (date: string | Date) => string;
   pds: Pds;
 };

@@ -303,9 +303,7 @@ export const EducationalBackgroundPdf = ({
           style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ textTransform: 'capitalize' }}>
-              {elementary.awards || 'N/A'}
-            </Text>
+            <Text style={{ fontSize: 6.2 }}>{elementary.awards || 'N/A'}</Text>
           </View>
         </View>
       </View>
@@ -392,9 +390,7 @@ export const EducationalBackgroundPdf = ({
           style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ textTransform: 'capitalize' }}>
-              {secondary.awards || 'N/A'}
-            </Text>
+            <Text style={{ fontSize: 6.2 }}>{secondary.awards || 'N/A'}</Text>
           </View>
         </View>
       </View>
@@ -472,7 +468,13 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{vocation.units || 'N/A'}</Text>
+                  <Text>
+                    {vocation.yearGraduated !== null
+                      ? 'GRADUATED'
+                      : vocation.units === '' && vocation.yearGraduated === null
+                      ? 'N/A'
+                      : vocation.units}
+                  </Text>
                 </View>
               </View>
 
@@ -499,7 +501,7 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text style={{ textTransform: 'capitalize' }}>
+                  <Text style={{ fontSize: 6.2 }}>
                     {vocation.awards || 'N/A'}
                   </Text>
                 </View>
@@ -662,7 +664,13 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{college.units || 'N/A'}</Text>
+                  <Text>
+                    {college.yearGraduated !== null
+                      ? 'GRADUATED'
+                      : college.units === '' && college.yearGraduated === null
+                      ? 'N/A'
+                      : college.units}
+                  </Text>
                 </View>
               </View>
 
@@ -689,7 +697,7 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text style={{ textTransform: 'capitalize' }}>
+                  <Text style={{ fontSize: 6.2 }}>
                     {college.awards || 'N/A'}
                   </Text>
                 </View>
@@ -852,7 +860,13 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{graduate.units || 'N/A'}</Text>
+                  <Text>
+                    {graduate.yearGraduated !== null
+                      ? 'GRADUATED'
+                      : graduate.units === '' && graduate.yearGraduated === null
+                      ? 'N/A'
+                      : graduate.units}
+                  </Text>
                 </View>
               </View>
 
@@ -879,7 +893,7 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text style={{ textTransform: 'capitalize' }}>
+                  <Text style={{ fontSize: 6.2 }}>
                     {graduate.awards || 'N/A'}
                   </Text>
                 </View>

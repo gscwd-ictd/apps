@@ -296,7 +296,9 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             </Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{vocation.to || 'N/A'}</Text>
+            <Text style={[styles.verticalCenter]}>
+              {vocation.to || 'PRESENT'}
+            </Text>
           </View>
         </View>
 
@@ -310,7 +312,13 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{vocation.units || 'N/A'}</Text>
+            <Text>
+              {vocation.yearGraduated !== null
+                ? 'GRADUATED'
+                : vocation.units === '' && vocation.yearGraduated === null
+                ? 'N/A'
+                : vocation.units}
+            </Text>
           </View>
         </View>
 
@@ -333,9 +341,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ textTransform: 'capitalize' }}>
-              {vocation.awards || 'N/A'}
-            </Text>
+            <Text style={{ fontSize: 6.2 }}>{vocation.awards || 'N/A'}</Text>
           </View>
         </View>
       </View>
@@ -387,7 +393,9 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             <Text style={[styles.verticalCenter]}>{college.from || 'N/A'}</Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{college.to || 'N/A'}</Text>
+            <Text style={[styles.verticalCenter]}>
+              {college.to || 'PRESENT'}
+            </Text>
           </View>
         </View>
 
@@ -401,7 +409,13 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{college.units || 'N/A'}</Text>
+            <Text>
+              {college.yearGraduated !== null
+                ? 'GRADUATED'
+                : college.units === '' && college.yearGraduated === null
+                ? 'N/A'
+                : college.units}
+            </Text>
           </View>
         </View>
 
@@ -424,9 +438,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ textTransform: 'capitalize' }}>
-              {college.awards || 'N/A'}
-            </Text>
+            <Text style={{ fontSize: 6.2 }}>{college.awards || 'N/A'}</Text>
           </View>
         </View>
       </View>
@@ -480,7 +492,9 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             </Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{graduate.to || 'N/A'}</Text>
+            <Text style={[styles.verticalCenter]}>
+              {graduate.to || 'PRESENT'}
+            </Text>
           </View>
         </View>
 
@@ -494,7 +508,13 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{graduate.units || 'N/A'}</Text>
+            <Text>
+              {graduate.yearGraduated !== null
+                ? 'GRADUATED'
+                : graduate.units === '' && graduate.yearGraduated === null
+                ? 'N/A'
+                : graduate.units}
+            </Text>
           </View>
         </View>
 
@@ -517,9 +537,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ textTransform: 'capitalize' }}>
-              {graduate.awards || 'N/A'}
-            </Text>
+            <Text style={{ fontSize: 6.2 }}>{graduate.awards || 'N/A'}</Text>
           </View>
         </View>
       </View>
@@ -674,7 +692,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             style={[
               styles.verticalCenter,
               styles.horizontalCenter,
-              { width: '100%' },
+              styles.w100,
             ]}
           >
             <Text>{experience.positionTitle || 'N/A'}</Text>
@@ -736,7 +754,9 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{experience.appointmentStatus || 'N/A'}</Text>
+            <Text style={{ fontSize: 6.2 }}>
+              {experience.appointmentStatus || 'N/A'}
+            </Text>
           </View>
         </View>
 
@@ -760,7 +780,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderVoluntaryWorkExtraPage = () => {
-    const content = pds.voluntaryWork.slice(7).map((voluntaryWork, index) => (
+    const content = pds.voluntaryWork.slice(6).map((voluntaryWork, index) => (
       <View
         style={[
           styles.borderTop,
@@ -842,7 +862,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage1 = () => {
     const content = pds.learningDevelopment
-      .slice(19, 56)
+      .slice(18, 55)
       .map((training, index) => (
         <View
           style={[
@@ -940,7 +960,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage2 = () => {
     const content = pds.learningDevelopment
-      .slice(56, 93)
+      .slice(55, 92)
       .map((training, index) => (
         <View
           style={[
@@ -1038,7 +1058,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage3 = () => {
     const content = pds.learningDevelopment
-      .slice(93, 130)
+      .slice(92, 129)
       .map((training, index) => (
         <View
           style={[
@@ -1136,7 +1156,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage4 = () => {
     const content = pds.learningDevelopment
-      .slice(130, 167)
+      .slice(129, 166)
       .map((training, index) => (
         <View
           style={[
@@ -1234,7 +1254,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage5 = () => {
     const content = pds.learningDevelopment
-      .slice(167, 204)
+      .slice(166, 203)
       .map((training, index) => (
         <View
           style={[
@@ -1373,7 +1393,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   return (
     <>
       {isClient && (
-        <PDFViewer width={'100%'} height={760} showToolbar>
+        <PDFViewer width={'100%'} height={'100%'} showToolbar>
           <Document
             author="General Santos City Water District"
             subject="CS Form No. 212. Revised 2017"

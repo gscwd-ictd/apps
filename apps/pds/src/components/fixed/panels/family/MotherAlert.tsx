@@ -4,9 +4,12 @@ import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { ParentForm } from 'apps/pds/src/types/data/family.type';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -33,10 +36,8 @@ export const MotherAlert = ({
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const parents = usePdsStore((state) => state.parents);
-  const allowMotherSave = useUpdatePdsStore((state) => state.allowMotherSave);
-  const setAllowMotherSave = useUpdatePdsStore(
-    (state) => state.setAllowMotherSave
-  );
+  const setParents = usePdsStore((state) => state.setParents);
+  const { trigger } = useFormContext<ParentForm>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -53,6 +54,27 @@ export const MotherAlert = ({
           : null}
       </Toast>
     );
+  };
+
+  // trim object
+  const trimValues = async () => {
+    setParents({
+      ...parents,
+      motherFirstName: trimmer(parents.motherFirstName),
+      motherLastName: trimmer(parents.motherLastName),
+      motherMiddleName: trimmer(parents.motherMiddleName),
+    });
+  };
+
+  //
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      ['motherFName', 'motherLName', 'motherMName'],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
   };
 
   const updateSection = async () => {
@@ -97,28 +119,6 @@ export const MotherAlert = ({
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
-
-  useEffect(() => {
-    if (
-      motherOnEdit &&
-      (isEmpty(parents.motherLastName) ||
-        isEmpty(parents.motherFirstName) ||
-        isEmpty(parents.motherMiddleName) ||
-        isEmpty(parents.motherMaidenName))
-    ) {
-      setAllowMotherSave(false);
-    }
-
-    if (
-      motherOnEdit &&
-      !isEmpty(parents.motherLastName) &&
-      !isEmpty(parents.motherFirstName) &&
-      !isEmpty(parents.motherMiddleName) &&
-      !isEmpty(parents.motherMaidenName)
-    ) {
-      setAllowMotherSave(true);
-    }
-  }, [motherOnEdit, parents]);
 
   return (
     <>
@@ -199,7 +199,7 @@ export const MotherAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"

@@ -24,7 +24,7 @@ import { capitalizer } from 'apps/employee-monitoring/src/utils/functions/capita
 const listOfSchedules: Array<Schedule> = [
   {
     name: 'Regular Time Clock',
-    category: Categories.REGULAR,
+    scheduleType: Categories.REGULAR,
     timeIn: '08:00',
     timeOut: '05:00',
     lunchIn: '12:00',
@@ -35,7 +35,7 @@ const listOfSchedules: Array<Schedule> = [
   },
   {
     name: 'Flexible Time Clock A',
-    category: Categories.FLEXIBLE,
+    scheduleType: Categories.FLEXIBLE,
     timeIn: '07:00',
     timeOut: '04:00',
     withLunch: true,
@@ -46,7 +46,7 @@ const listOfSchedules: Array<Schedule> = [
   },
   {
     name: 'Flexible Time Clock B',
-    category: Categories.FLEXIBLE,
+    scheduleType: Categories.FLEXIBLE,
     timeIn: '06:00',
     timeOut: '03:00',
     withLunch: true,
@@ -57,7 +57,7 @@ const listOfSchedules: Array<Schedule> = [
   },
   {
     name: 'Pumping Station Morning Time Clock',
-    category: Categories.OPERATOR1,
+    scheduleType: Categories.OPERATOR1,
     timeIn: '07:00',
     timeOut: '07:00',
     withLunch: false,
@@ -68,7 +68,7 @@ const listOfSchedules: Array<Schedule> = [
   },
   {
     name: 'Pumping Station Night Time Clock',
-    category: Categories.OPERATOR2,
+    scheduleType: Categories.OPERATOR2,
     timeIn: '19:00',
     timeOut: '07:00',
     withLunch: false,
@@ -119,7 +119,7 @@ export default function Index() {
     mode: 'onChange',
     defaultValues: {
       id: '',
-      category: Categories.REGULAR,
+      scheduleType: Categories.REGULAR,
       timeIn: '',
       timeOut: '',
       withLunch: true,
@@ -141,11 +141,11 @@ export default function Index() {
   };
 
   // transform category string
-  const transformCategory = (category: string) => {
-    if (category === 'regular') return 'Regular';
-    else if (category === 'flexible') return 'Flexible';
-    else if (category === 'operator-am') return 'Operator AM';
-    else if (category === 'operator-pm') return 'Operator PM';
+  const transformCategory = (scheduleType: string) => {
+    if (scheduleType === 'regular') return 'Regular';
+    else if (scheduleType === 'flexible') return 'Flexible';
+    else if (scheduleType === 'operator-am') return 'Operator AM';
+    else if (scheduleType === 'operator-pm') return 'Operator PM';
     else return '';
   };
 
@@ -162,7 +162,7 @@ export default function Index() {
   const loadNewDefaultValues = (sched: Schedule) => {
     setValue('id', sched.id);
     setValue('name', sched.name);
-    setValue('category', sched.category);
+    setValue('scheduleType', sched.scheduleType);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
     setValue('withLunch', sched.withLunch);
@@ -263,7 +263,7 @@ export default function Index() {
                 <SelectListRF
                   id="scheduleCategory"
                   selectList={categorySelection}
-                  controller={{ ...register('category') }}
+                  controller={{ ...register('scheduleType') }}
                   label="Category"
                 />
 
@@ -531,7 +531,7 @@ export default function Index() {
                                 </td>
 
                                 <td className="w-[1/9] text-xs ">
-                                  {transformCategory(sched.category)}
+                                  {transformCategory(sched.scheduleType)}
                                 </td>
 
                                 <td className="w-[1/9] text-xs">

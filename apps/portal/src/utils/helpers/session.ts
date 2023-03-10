@@ -48,9 +48,68 @@ export function withSession(serverSideProps: GetServerSideProps) {
   };
 }
 
+// updated cookie with session
+export function withCookieSession(serverSideProps: GetServerSideProps) {
+  return async (context: GetServerSidePropsContext) => {
+    try {
+      // assign context cookie to cookie
+      const cookie = context.req.headers.cookie;
+
+      // assign the splitted cookie to cookies array
+
+      const cookiesArray = cookie.split(';') as string[];
+      const portalSsid = getPortalSsid(cookiesArray);
+
+      if (portalSsid.length > 0) {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
+          {
+            withCredentials: true,
+            headers: { Cookie: `${portalSsid}` },
+          }
+        );
+
+        setUserDetails(data);
+        return await serverSideProps(context);
+      } else {
+        return {
+          redirect: {
+            permanent: false,
+            destination: '/login',
+          },
+        };
+      }
+    } catch {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/login',
+        },
+      };
+    }
+  };
+}
+
+// target portal ssid
+export function getPortalSsid(cookiesArray: Array<string> | null) {
+  // initialize the ssid array
+  let cookieSsid: Array<string> = [];
+
+  // execute this if there are cookies
+  if (cookiesArray.length > 0) {
+    // filter the cookies array
+    cookieSsid = cookiesArray.filter((cookie) =>
+      cookie.includes('ssid_portal')
+    );
+
+    return cookieSsid;
+  }
+  return cookiesArray;
+}
+
 export function invalidateSession(response: ServerResponse) {
   response.setHeader(
     'Set-Cookie',
-    'ssid=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    'ssid_portal=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
   );
 }

@@ -5,9 +5,11 @@ import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { SupportingDetailsForm } from 'apps/pds/src/types/data/supporting-info.type';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -67,8 +69,7 @@ export const SupportingInfoAlert = ({
   );
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
-  const references = usePdsStore((state) => state.references);
-  const setReferences = usePdsStore((state) => state.setReferences);
+  const { trigger } = useFormContext<SupportingDetailsForm>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -85,6 +86,31 @@ export const SupportingInfoAlert = ({
           : null}
       </Toast>
     );
+  };
+
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      [
+        'offRelDetails',
+        'candidateDetails',
+        'guiltyDetails',
+        'chargedCaseStatus',
+        'separatedDetails',
+        'chargedDateFiled',
+        'candidateDetails',
+        'convictedDetails',
+        'immigrantDetails',
+        'resignedDetails',
+        'pwdIdNumber',
+        'soloParentIdNumber',
+        'separatedDetails',
+        'indigenousMemberDetails',
+      ],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
   };
 
   const updateSection = async () => {
@@ -143,171 +169,171 @@ export const SupportingInfoAlert = ({
   };
 
   // this toggles the muted attribute for the save button during edit/update
-  useEffect(() => {
-    // office relation
-    if (
-      supportingInfoOnEdit &&
-      (officeRelation.withinThirdDegree === true ||
-        officeRelation.withinFourthDegree === true) &&
-      isEmpty(officeRelation.details)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  // useEffect(() => {
+  //   // office relation
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     (officeRelation.withinThirdDegree === true ||
+  //       officeRelation.withinFourthDegree === true) &&
+  //     isEmpty(officeRelation.details)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // guilty
-    if (
-      supportingInfoOnEdit &&
-      guiltyCharged.isGuilty === true &&
-      isEmpty(guiltyCharged.guiltyDetails)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // guilty
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     guiltyCharged.isGuilty === true &&
+  //     isEmpty(guiltyCharged.guiltyDetails)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // charged
-    if (
-      supportingInfoOnEdit &&
-      guiltyCharged.isCharged === true &&
-      isEmpty(
-        guiltyCharged.chargedDateFiled &&
-          isEmpty(guiltyCharged.chargedCaseStatus)
-      )
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // charged
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     guiltyCharged.isCharged === true &&
+  //     isEmpty(
+  //       guiltyCharged.chargedDateFiled &&
+  //         isEmpty(guiltyCharged.chargedCaseStatus)
+  //     )
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // convicted
-    if (
-      supportingInfoOnEdit &&
-      convicted.isConvicted === true &&
-      isEmpty(convicted.details)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // convicted
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     convicted.isConvicted === true &&
+  //     isEmpty(convicted.details)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // separated
-    if (
-      supportingInfoOnEdit &&
-      separatedService.isSeparated === true &&
-      isEmpty(separatedService.details)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // separated
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     separatedService.isSeparated === true &&
+  //     isEmpty(separatedService.details)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // candidate
-    if (
-      supportingInfoOnEdit &&
-      candidateResigned.isCandidate === true &&
-      isEmpty(candidateResigned.candidateDetails)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // candidate
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     candidateResigned.isCandidate === true &&
+  //     isEmpty(candidateResigned.candidateDetails)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // resigned
-    if (
-      supportingInfoOnEdit &&
-      candidateResigned.isResigned === true &&
-      isEmpty(candidateResigned.resignedDetails)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // resigned
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     candidateResigned.isResigned === true &&
+  //     isEmpty(candidateResigned.resignedDetails)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // immigrant
-    if (
-      supportingInfoOnEdit &&
-      immigrant.isImmigrant === true &&
-      isEmpty(immigrant.details)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // immigrant
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     immigrant.isImmigrant === true &&
+  //     isEmpty(immigrant.details)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // indigenous
-    if (
-      supportingInfoOnEdit &&
-      indigenousPwdSoloParent.isIndigenousMember === true &&
-      isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // indigenous
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     indigenousPwdSoloParent.isIndigenousMember === true &&
+  //     isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // pwd
-    if (
-      supportingInfoOnEdit &&
-      indigenousPwdSoloParent.isPwd === true &&
-      isEmpty(indigenousPwdSoloParent.pwdIdNumber)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // pwd
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     indigenousPwdSoloParent.isPwd === true &&
+  //     isEmpty(indigenousPwdSoloParent.pwdIdNumber)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // solo parent
-    if (
-      supportingInfoOnEdit &&
-      indigenousPwdSoloParent.isSoloParent === true &&
-      isEmpty(indigenousPwdSoloParent.soloParentIdNumber)
-    ) {
-      setAllowQuestionsSave(false);
-    }
+  //   // solo parent
+  //   if (
+  //     supportingInfoOnEdit &&
+  //     indigenousPwdSoloParent.isSoloParent === true &&
+  //     isEmpty(indigenousPwdSoloParent.soloParentIdNumber)
+  //   ) {
+  //     setAllowQuestionsSave(false);
+  //   }
 
-    // this would not allow the user to save if the validation is not satisfied
-    if (
-      supportingInfoOnEdit === true &&
-      // office relation
-      (((officeRelation.withinFourthDegree === true ||
-        officeRelation.withinThirdDegree === true) &&
-        !isEmpty(officeRelation.details)) ||
-        (officeRelation.withinFourthDegree === false &&
-          officeRelation.withinThirdDegree === false)) &&
-      // is guilty
-      ((guiltyCharged.isGuilty === true &&
-        !isEmpty(guiltyCharged.guiltyDetails)) ||
-        guiltyCharged.isGuilty === false) &&
-      // is charged
-      ((guiltyCharged.isCharged === true &&
-        !isEmpty(guiltyCharged.chargedCaseStatus) &&
-        !isEmpty(guiltyCharged.chargedDateFiled)) ||
-        guiltyCharged.isCharged === false) &&
-      // is convicted
-      ((convicted.isConvicted === true && !isEmpty(convicted.details)) ||
-        convicted.isConvicted === false) &&
-      // is separated from service
-      ((separatedService.isSeparated === true &&
-        !isEmpty(separatedService.details)) ||
-        separatedService.isSeparated === false) &&
-      // is candidate
-      ((candidateResigned.isCandidate === true &&
-        !isEmpty(candidateResigned.candidateDetails)) ||
-        candidateResigned.isCandidate === false) &&
-      // is resigned
-      ((candidateResigned.isResigned === true &&
-        !isEmpty(candidateResigned.resignedDetails)) ||
-        candidateResigned.isResigned === false) &&
-      // is immigrant
-      ((immigrant.isImmigrant === true && !isEmpty(immigrant.details)) ||
-        immigrant.isImmigrant === false) &&
-      // is indigenous
-      ((indigenousPwdSoloParent.isIndigenousMember === true &&
-        !isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)) ||
-        indigenousPwdSoloParent.isIndigenousMember === false) &&
-      // is pwd
-      ((indigenousPwdSoloParent.isPwd === true &&
-        !isEmpty(indigenousPwdSoloParent.pwdIdNumber)) ||
-        indigenousPwdSoloParent.isPwd === false) &&
-      // is solo parent
-      ((indigenousPwdSoloParent.isSoloParent === true &&
-        !isEmpty(indigenousPwdSoloParent.soloParentIdNumber)) ||
-        indigenousPwdSoloParent.isSoloParent === false)
-    ) {
-      setAllowQuestionsSave(true);
-    }
-  }, [
-    supportingInfoOnEdit,
-    officeRelation,
-    guiltyCharged,
-    convicted,
-    separatedService,
-    candidateResigned,
-    immigrant,
-    indigenousPwdSoloParent,
-  ]);
+  //   // this would not allow the user to save if the validation is not satisfied
+  //   if (
+  //     supportingInfoOnEdit === true &&
+  //     // office relation
+  //     (((officeRelation.withinFourthDegree === true ||
+  //       officeRelation.withinThirdDegree === true) &&
+  //       !isEmpty(officeRelation.details)) ||
+  //       (officeRelation.withinFourthDegree === false &&
+  //         officeRelation.withinThirdDegree === false)) &&
+  //     // is guilty
+  //     ((guiltyCharged.isGuilty === true &&
+  //       !isEmpty(guiltyCharged.guiltyDetails)) ||
+  //       guiltyCharged.isGuilty === false) &&
+  //     // is charged
+  //     ((guiltyCharged.isCharged === true &&
+  //       !isEmpty(guiltyCharged.chargedCaseStatus) &&
+  //       !isEmpty(guiltyCharged.chargedDateFiled)) ||
+  //       guiltyCharged.isCharged === false) &&
+  //     // is convicted
+  //     ((convicted.isConvicted === true && !isEmpty(convicted.details)) ||
+  //       convicted.isConvicted === false) &&
+  //     // is separated from service
+  //     ((separatedService.isSeparated === true &&
+  //       !isEmpty(separatedService.details)) ||
+  //       separatedService.isSeparated === false) &&
+  //     // is candidate
+  //     ((candidateResigned.isCandidate === true &&
+  //       !isEmpty(candidateResigned.candidateDetails)) ||
+  //       candidateResigned.isCandidate === false) &&
+  //     // is resigned
+  //     ((candidateResigned.isResigned === true &&
+  //       !isEmpty(candidateResigned.resignedDetails)) ||
+  //       candidateResigned.isResigned === false) &&
+  //     // is immigrant
+  //     ((immigrant.isImmigrant === true && !isEmpty(immigrant.details)) ||
+  //       immigrant.isImmigrant === false) &&
+  //     // is indigenous
+  //     ((indigenousPwdSoloParent.isIndigenousMember === true &&
+  //       !isEmpty(indigenousPwdSoloParent.indigenousMemberDetails)) ||
+  //       indigenousPwdSoloParent.isIndigenousMember === false) &&
+  //     // is pwd
+  //     ((indigenousPwdSoloParent.isPwd === true &&
+  //       !isEmpty(indigenousPwdSoloParent.pwdIdNumber)) ||
+  //       indigenousPwdSoloParent.isPwd === false) &&
+  //     // is solo parent
+  //     ((indigenousPwdSoloParent.isSoloParent === true &&
+  //       !isEmpty(indigenousPwdSoloParent.soloParentIdNumber)) ||
+  //       indigenousPwdSoloParent.isSoloParent === false)
+  //   ) {
+  //     setAllowQuestionsSave(true);
+  //   }
+  // }, [
+  //   supportingInfoOnEdit,
+  //   officeRelation,
+  //   guiltyCharged,
+  //   convicted,
+  //   separatedService,
+  //   candidateResigned,
+  //   immigrant,
+  //   indigenousPwdSoloParent,
+  // ]);
 
   return (
     <>
@@ -390,11 +416,11 @@ export const SupportingInfoAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"
-                  muted={allowQuestionsSave ? false : true}
+                  // muted={allowQuestionsSave ? false : true}
                   className="ring-0 hover:bg-white focus:ring-0"
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">
