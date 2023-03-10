@@ -31,7 +31,7 @@ import { SpinnerDotted } from 'spinners-react';
 import {
   withCookieSession,
   getUserDetails,
-} from 'apps/portal/src/utils/helpers/session';
+} from '../../../../src/utils/helpers/session';
 
 type PrfPageProps = {
   user: User;
