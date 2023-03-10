@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { withSession } from '../../../utils/helpers/session';
-import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  LoadingSpinner,
+  Modal,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { isEmpty, values } from 'lodash';
 import { applyPassSlip } from '../../../../src/utils/helpers/passslip-requests';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
@@ -45,155 +51,107 @@ export const PassSlipApplicationModal = ({
   const today = new Date();
   const dateToday = format(today, 'yyyy-MM-dd');
 
-  //zustand initialization to access pass slip store
-  const {
-    passSlipToSubmit,
-    setEmployeeId,
-    setDateOfApplication,
-    setNatureOfBusiness,
-    setEstimateHours,
-    setPurposeDestination,
-    setIsCancelled,
-    setObTransportation,
-    applyPassSlipModalIsOpen,
-    setApplyPassSlipModalIsOpen,
-  } = usePassSlipStore((state) => ({
-    passSlipToSubmit: state.passSlipToSubmit,
-    setEmployeeId: state.setEmployeeId,
-    setDateOfApplication: state.setDateOfApplication,
-    setNatureOfBusiness: state.setNatureOfBusiness,
-    setEstimateHours: state.setEstimateHours,
-    setPurposeDestination: state.setPurposeDestination,
-    setIsCancelled: state.setIsCancelled,
-    setObTransportation: state.setObTransportation,
-    applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
-    setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
-  }));
-
   //zustand initialization to access employee store
   const { employeeDetails } = useEmployeeStore((state) => ({
     employeeDetails: state.employeeDetails,
   }));
 
+  //zustand initialization to access pass slip store
+  const { applyPassSlipModalIsOpen, setApplyPassSlipModalIsOpen } =
+    usePassSlipStore((state) => ({
+      applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
+      setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
+    }));
+
   // set state for employee store
-  const [applicationSuccess, setApplicationSuccess] = useState<boolean>(false);
-
-  // modal action button
-  const modalAction = async (e) => {
-    e.preventDefault();
-
-    // if (isEmpty(passSlipToSubmit.natureOfBusiness)) {
-    //   setNatureOfBusinessError(true);
-    // } else if (
-    //   isEmpty(passSlipToSubmit.estimateHours) &&
-    //   passSlipToSubmit.natureOfBusiness != 'Undertime' &&
-    //   passSlipToSubmit.natureOfBusiness != 'Half Day'
-    // ) {
-    //   setEstimateHoursError(true);
-    // } else if (
-    //   passSlipToSubmit.estimateHours <= 0 &&
-    //   passSlipToSubmit.natureOfBusiness == 'Personal Business'
-    // ) {
-    //   setEstimateHoursError(true);
-    // } else if (
-    //   passSlipToSubmit.estimateHours <= 0 &&
-    //   passSlipToSubmit.natureOfBusiness == 'Official Business'
-    // ) {
-    //   setEstimateHoursError(true);
-    // } else if (isEmpty(passSlipToSubmit.purposeDestination)) {
-    //   setPurposeDestinationError(true);
-    // } else if (
-    //   passSlipToSubmit.natureOfBusiness === 'Official Business' &&
-    //   isEmpty(passSlipToSubmit.obTransportation)
-    // ) {
-    //   setObTransportationError(true);
-    // } else {
-    const data = applyPassSlip(
-      employeeDetails.employmentDetails.userId,
-      passSlipToSubmit.dateOfApplication,
-      passSlipToSubmit.natureOfBusiness,
-      passSlipToSubmit.estimateHours,
-      passSlipToSubmit.purposeDestination,
-      passSlipToSubmit.obTransportation
-    );
-    if (data) {
-      setApplyPassSlipModalIsOpen(false);
-      setApplicationSuccess(true);
-    } else {
-      console.log(data);
-    }
-    // }
-  };
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorPostMessage, setErrorPostMessage] = useState<string>('');
+  const [responsePost, setResponsePost] = useState<object>({});
+  const [empId, setEmpId] = useState<string>(
+    employeeDetails.employmentDetails.assignment.id
+  );
 
   // React hook form
-  const { reset, register, handleSubmit, watch } = useForm<PassSlip>({
+  const { reset, register, handleSubmit, watch, setValue } = useForm<PassSlip>({
     mode: 'onChange',
     defaultValues: {
-      employeeId: employeeDetails.employmentDetails.userId,
-      dateOfApplication: '',
+      employeeId: '',
+      dateOfApplication: dateToday,
       natureOfBusiness: '',
-      estimateHours: null,
+      estimateHours: 0,
       purposeDestination: '',
       isCancelled: false,
       obTransportation: '',
     },
   });
 
-  const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
-    console.log(data);
-    const passSlipData = applyPassSlip(
-      employeeDetails.employmentDetails.userId,
-      passSlipToSubmit.dateOfApplication,
-      passSlipToSubmit.natureOfBusiness,
-      passSlipToSubmit.estimateHours,
-      passSlipToSubmit.purposeDestination,
-      passSlipToSubmit.obTransportation
-    );
-    if (passSlipData) {
-      setApplyPassSlipModalIsOpen(false);
-      setApplicationSuccess(true);
-    } else {
-      console.log(data);
+  useEffect(() => {
+    if (
+      watch('natureOfBusiness') === 'Half Day' ||
+      watch('natureOfBusiness') === 'Undertime'
+    ) {
+      setValue('estimateHours', 0);
     }
 
-    // // set loading to true
-    // setIsLoading(true);
+    if (watch('natureOfBusiness') !== 'Official Business') {
+      setValue('obTransportation', null);
+    }
+    setValue('employeeId', employeeDetails.employmentDetails.userId);
+  }, [watch('natureOfBusiness')]);
 
-    // handlePostResult(data);
+  const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
+    console.log(data);
+    // set loading to true
+    setIsLoading(true);
 
-    // // empty the state to remove previous value
-    // setErrorPostMessage('');
+    handlePostResult(data);
 
-    // // empty the state to remove previous value
-    // setResponsePost({});
+    // empty the state to remove previous value
+    setErrorPostMessage('');
+
+    // empty the state to remove previous value
+    setResponsePost({});
   };
 
   const handlePostResult = async (data: PassSlip) => {
-    const { error, result } = await postPortal('/holidays', data);
+    const { error, result } = await postPortal('/v1/pass-slip', data);
 
-    // if (error) {
-    //   // request is done so set loading to false
-    //   setIsLoading(false);
+    if (error) {
+      // request is done so set loading to false
+      setIsLoading(false);
 
-    //   // set value for error message
-    //   setErrorPostMessage(result);
-    // } else {
-    //   // request is done so set loading to false
-    //   setIsLoading(false);
+      // set value for error message
+      setErrorPostMessage(result);
+      // setErrorPostMessage('Error Submitting Application');
+    } else {
+      // request is done so set loading to false
+      setIsLoading(false);
 
-    //   // set value from returned response
-    //   setResponsePost(result);
+      // set value from returned response
+      setResponsePost(result);
 
-    //   reset();
-    //   closeModalAction();
+      reset();
+      closeModalAction();
+    }
   };
 
   return (
     <>
-      {applicationSuccess ? (
+      {/* Notifications */}
+      {!isEmpty(errorPostMessage) ? (
+        <>
+          {console.log(errorPostMessage)}
+          <ToastNotification
+            toastType="error"
+            notifMessage={errorPostMessage}
+          />
+        </>
+      ) : null}
+
+      {!isEmpty(responsePost) ? (
         <ToastNotification
           toastType="success"
-          notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application."
+          notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
         />
       ) : null}
 
@@ -212,16 +170,23 @@ export const PassSlipApplicationModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <form id="ApplyPassSlipForm">
+          {/* Notifications */}
+          {isLoading ? (
+            <AlertNotification
+              logo={<LoadingSpinner size="xs" />}
+              alertType="info"
+              notifMessage="Submitting request"
+              dismissible={true}
+            />
+          ) : null}
+          <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
                 <div className="w-full flex gap-2 justify-start items-center">
                   <span className="text-slate-500 text-lg font-medium">
                     Date:
                   </span>
-                  <div className="text-slate-500 text-lg">
-                    {passSlipToSubmit.dateOfApplication}
-                  </div>
+                  <div className="text-slate-500 text-lg">{dateToday}</div>
                 </div>
 
                 <div className="flex gap-2 justify-between items-center">
@@ -249,89 +214,87 @@ export const PassSlipApplicationModal = ({
                   </div>
                 </div>
 
-                <div
-                  className={`${
-                    watch('natureOfBusiness') === 'Official Business'
-                      ? 'flex gap-3 justify-between items-center'
-                      : 'hidden'
-                  }`}
-                >
-                  <label className="text-slate-500 text-lg whitespace-nowrap font-medium">
-                    Select Mode of Transportation:
-                    <span className="text-red-600">*</span>
-                  </label>
-                  <div className="w-96">
-                    <select
-                      id="obTransportation"
-                      className="text-slate-500 h-12 w-96 rounded text-lg border-slate-300"
-                      required
-                      {...register('obTransportation')}
-                    >
-                      <option value="" disabled>
-                        Select Mode of Transportation
-                      </option>
-                      {obTransportation.map((item: Item, idx: number) => (
-                        <option value={item.value} key={idx}>
-                          {item.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div
-                  className={`${
-                    watch('natureOfBusiness') ? 'flex flex-col gap-2' : 'hidden'
-                  }`}
-                >
-                  <div className="flex gap-2 justify-between items-center">
-                    <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
-                      Estimated Hours:<span className="text-red-600">*</span>
-                    </label>
-                    <div className="w-96">
-                      <input
-                        type="number"
-                        name="passSlip_estimatedHours"
-                        id="estimateHours"
-                        className="border-slate-300 text-slate-500 h-10 w-96"
-                        placeholder="Enter number of hours "
-                        required
-                        value={
-                          watch('natureOfBusiness') === 'Half Day' ||
-                          watch('natureOfBusiness') === 'Undertime'
-                            ? 0
-                            : null
-                        }
-                        disabled={
-                          watch('natureOfBusiness') === 'Half Day' ||
-                          watch('natureOfBusiness') === 'Undertime'
-                            ? true
-                            : false
-                        }
-                        {...register('estimateHours')}
-                      />
+                {watch('natureOfBusiness') === 'Official Business' ? (
+                  <>
+                    <div className={`flex gap-3 justify-between items-center`}>
+                      <label className="text-slate-500 text-lg whitespace-nowrap font-medium">
+                        Select Mode of Transportation:
+                        <span className="text-red-600">*</span>
+                      </label>
+                      <div className="w-96">
+                        <select
+                          id="obTransportation"
+                          required
+                          className="text-slate-500 h-12 w-96 rounded text-lg border-slate-300"
+                          {...register('obTransportation')}
+                        >
+                          <option value="" disabled>
+                            Select Mode of Transportation
+                          </option>
+                          {obTransportation.map((item: Item, idx: number) => (
+                            <option value={item.value} key={idx}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div
-                  className={`${
-                    watch('natureOfBusiness')
-                      ? ' flex flex-col gap-2'
-                      : 'hidden'
-                  }`}
-                >
-                  <label className="text-slate-500 text-lg font-medium">
-                    Purpose/Desination:<span className="text-red-600">*</span>
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder={`Enter Purpose of Pass Slip`}
-                    name="passSlip_purpose"
-                    id="purposeDestination"
-                    className="resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300"
-                    required
-                    {...register('purposeDestination')}
-                  ></textarea>
-                </div>
+                  </>
+                ) : null}
+
+                {watch('natureOfBusiness') !== 'Half Day' &&
+                watch('natureOfBusiness') !== 'Undertime' &&
+                watch('natureOfBusiness') ? (
+                  <>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex gap-2 justify-between items-center">
+                        <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                          Estimated Hours:
+                          <span className="text-red-600">*</span>
+                        </label>
+                        <div className="w-96">
+                          <input
+                            type="number"
+                            name="passSlip_estimatedHours"
+                            id="estimateHours"
+                            className="border-slate-300 text-slate-500 h-12 text-lg w-96 rounded"
+                            placeholder="Enter number of hours "
+                            required
+                            defaultValue={0}
+                            max="8"
+                            min={
+                              watch('natureOfBusiness') != 'Half Day' &&
+                              watch('natureOfBusiness') != 'Undertime'
+                                ? '1'
+                                : '0'
+                            }
+                            {...register('estimateHours')}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+
+                {watch('natureOfBusiness') ? (
+                  <>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-slate-500 text-lg font-medium">
+                        Purpose/Desination:
+                        <span className="text-red-600">*</span>
+                      </label>
+                      <textarea
+                        rows={3}
+                        placeholder={`Enter Purpose of Pass Slip`}
+                        name="passSlip_purpose"
+                        id="purposeDestination"
+                        className="resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300"
+                        required
+                        {...register('purposeDestination')}
+                      ></textarea>
+                    </div>
+                  </>
+                ) : null}
               </div>
             </div>
           </form>
@@ -346,7 +309,6 @@ export const PassSlipApplicationModal = ({
                 // onClick={(e) => modalAction(e)}
                 form="ApplyPassSlipForm"
                 type="submit"
-                onSubmit={handleSubmit(onSubmit)}
               >
                 Apply Pass Slip
               </Button>
