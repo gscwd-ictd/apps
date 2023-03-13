@@ -26,15 +26,15 @@ export const PassSlipTabWindow = ({
   } = usePassSlipStore((state) => ({
     tab: state.tab,
     passSlips: state.passSlips,
-    loading: state.loading,
-    error: state.error,
+    loading: state.loading.loadingPassSlips,
+    error: state.error.errorPassSlips,
 
     getPassSlipList: state.getPassSlipList,
     getPassSlipListSuccess: state.getPassSlipListSuccess,
     getPassSlipListFail: state.getPassSlipListFail,
   }));
 
-  const passSlipUrl = `http://192.168.99.124:4104/api/v1/pass-slip/${employeeId}`;
+  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/${employeeId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
@@ -52,20 +52,22 @@ export const PassSlipTabWindow = ({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
+    console.log(swrPassSlips);
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
     }
 
     if (!isEmpty(swrError)) {
-      getPassSlipListFail(swrIsLoading, swrError);
+      getPassSlipListFail(swrIsLoading, swrError.message);
     }
   }, [swrPassSlips, swrError]);
 
   return (
     <>
-      {swrError ? (
-        <ToastNotification toastType="error" notifMessage={swrError} />
+      {error ? (
+        <ToastNotification toastType="error" notifMessage={error} />
       ) : null}
+
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
         {tab === 1 && (
           <AllPassSlipListTab passslips={passSlips.onGoing} tab={tab} />

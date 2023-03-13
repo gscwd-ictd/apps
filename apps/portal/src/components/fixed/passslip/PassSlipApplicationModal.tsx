@@ -57,16 +57,31 @@ export const PassSlipApplicationModal = ({
   }));
 
   //zustand initialization to access pass slip store
-  const { applyPassSlipModalIsOpen, setApplyPassSlipModalIsOpen } =
-    usePassSlipStore((state) => ({
-      applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
-      setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
-    }));
+  const {
+    applyPassSlipModalIsOpen,
+    setApplyPassSlipModalIsOpen,
+
+    postResponseApply,
+    loadingResponse,
+    errorResponse,
+
+    postPassSlipList,
+    postPassSlipListSuccess,
+    postPassSlipListFail,
+  } = usePassSlipStore((state) => ({
+    applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
+    setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
+
+    postResponseApply: state.response.postResponseApply,
+    loadingResponse: state.loading.loadingResponse,
+    errorResponse: state.error.errorResponse,
+
+    postPassSlipList: state.postPassSlipList,
+    postPassSlipListSuccess: state.postPassSlipListSuccess,
+    postPassSlipListFail: state.postPassSlipListFail,
+  }));
 
   // set state for employee store
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorPostMessage, setErrorPostMessage] = useState<string>('');
-  const [responsePost, setResponsePost] = useState<object>({});
   const [empId, setEmpId] = useState<string>(
     employeeDetails.employmentDetails.assignment.id
   );
@@ -100,35 +115,36 @@ export const PassSlipApplicationModal = ({
   }, [watch('natureOfBusiness')]);
 
   const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
-    console.log(data);
     // set loading to true
-    setIsLoading(true);
+    // setIsLoading(true);
 
     handlePostResult(data);
+    postPassSlipList();
 
     // empty the state to remove previous value
-    setErrorPostMessage('');
+    // setErrorPostMessage('');
 
     // empty the state to remove previous value
-    setResponsePost({});
+    // setResponsePost({});
   };
 
   const handlePostResult = async (data: PassSlip) => {
-    const { error, result } = await postPortal('/v1/pass-slip', data);
+    const { error, result } = await postPortal('/v1/pass-slipd', data);
 
     if (error) {
       // request is done so set loading to false
-      setIsLoading(false);
-
+      // setIsLoading(false);
       // set value for error message
-      setErrorPostMessage(result);
+      // setErrorPostMessage(result);
       // setErrorPostMessage('Error Submitting Application');
+      postPassSlipListFail(result);
     } else {
       // request is done so set loading to false
-      setIsLoading(false);
+      // setIsLoading(false);
 
       // set value from returned response
-      setResponsePost(result);
+      // setResponsePost(result);
+      postPassSlipListSuccess(result);
 
       reset();
       closeModalAction();
@@ -138,17 +154,14 @@ export const PassSlipApplicationModal = ({
   return (
     <>
       {/* Notifications */}
-      {!isEmpty(errorPostMessage) ? (
+      {!isEmpty(errorResponse) ? (
         <>
-          {console.log(errorPostMessage)}
-          <ToastNotification
-            toastType="error"
-            notifMessage={errorPostMessage}
-          />
+          {console.log(errorResponse)}
+          <ToastNotification toastType="error" notifMessage={errorResponse} />
         </>
       ) : null}
 
-      {!isEmpty(responsePost) ? (
+      {!isEmpty(postResponseApply) ? (
         <ToastNotification
           toastType="success"
           notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
@@ -171,7 +184,7 @@ export const PassSlipApplicationModal = ({
         </Modal.Header>
         <Modal.Body>
           {/* Notifications */}
-          {isLoading ? (
+          {loadingResponse ? (
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"

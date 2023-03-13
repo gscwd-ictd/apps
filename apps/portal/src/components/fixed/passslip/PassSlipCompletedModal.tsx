@@ -9,7 +9,7 @@ import {
 import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -26,10 +26,7 @@ export const PassSlipCompletedModal = ({
     getPassSlip: state.getPassSlip,
   }));
 
-  // modal action button
-  const modalAction = async (e) => {
-    e.preventDefault();
-  };
+  const router = useRouter();
 
   return (
     <>

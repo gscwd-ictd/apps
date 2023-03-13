@@ -31,6 +31,8 @@ export type PassSlipContents = {
   status: string;
 };
 
+export type PassSlipId = Pick<PassSlipContents, 'id'>;
+
 export type CompletedPassSlipContents = {
   employeeName: string;
   supervisorName: string;
