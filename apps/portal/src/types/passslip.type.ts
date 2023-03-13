@@ -8,7 +8,7 @@ export type PassSlip = {
   obTransportation?: string | null;
 };
 
-export type GetPassSlip = {
+export type PassSlipList = {
   completed: Array<PassSlipContents>;
   ongoing: Array<PassSlipContents>;
 };

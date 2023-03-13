@@ -1,9 +1,7 @@
-export type LeaveApplication = {
+export type LeaveContents = {
   id: string;
   office: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
+  name: string;
   dateOfFiling: string | null;
   position: string;
   salary: string;
@@ -14,14 +12,30 @@ export type LeaveApplication = {
     location: string;
     inHospital: boolean;
     outPatient: boolean;
-    illness: string;
-    specialLeaveWomenIllness: string;
+    illness: string | null;
+    specialLeaveWomenIllness: string | null;
     masterDegree: boolean;
     bar: boolean;
     monetization: boolean;
     terminal: boolean;
-    other: string;
+    other: string | null;
   };
   numberOfWorkingDays: string;
-  commutation: string;
+  commutation: string | null;
+};
+
+export type LeaveId = Pick<LeaveContents, 'id'>;
+
+export type Leave = {
+  ongoing: Leave[];
+  id: string;
+  leaveName: string;
+  dateOfFiling: string;
+  leaveDates: Array<string>;
+  status: string;
+};
+
+export type LeaveList = {
+  completed: Array<Leave>;
+  ongoing: Array<Leave>;
 };

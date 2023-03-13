@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import {
-  GetPassSlip,
   PassSlipContents,
   PassSlipId,
+  PassSlipList,
 } from '../types/passslip.type';
 import { devtools } from 'zustand/middleware';
 
@@ -25,11 +25,10 @@ export type PassSlipState = {
     errorResponse: string;
   };
 
-  getPassSlip: PassSlipContents;
+  passSlip: PassSlipContents;
   applyPassSlipModalIsOpen: boolean;
   pendingPassSlipModalIsOpen: boolean;
   completedPassSlipModalIsOpen: boolean;
-  passSlipList: GetPassSlip;
   tab: number;
   isGetPassSlipLoading: boolean;
 
@@ -42,17 +41,18 @@ export type PassSlipState = {
   postPassSlipListFail: (error: string) => void;
 
   setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => void;
-  setPendingPassSlipModalIsOpen: (pendingPassSlipModal: boolean) => void;
-  setCompletedPassSlipModalIsOpen: (completedPassSlipModal: boolean) => void;
+  setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
+  setCompletedPassSlipModalIsOpen: (
+    completedPassSlipModalIsOpen: boolean
+  ) => void;
 
-  setGetPassSlip: (PassSlip: PassSlipContents) => void;
+  getPassSlip: (PassSlip: PassSlipContents) => void;
   setIsGetPassSlipLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
 };
 
 export const usePassSlipStore = create<PassSlipState>()(
   devtools((set) => ({
-    passSlipEmployeeId: '',
     passSlips: {
       onGoing: [],
       completed: [],
@@ -70,33 +70,18 @@ export const usePassSlipStore = create<PassSlipState>()(
       errorResponse: '',
     },
 
-    getPassSlip: {} as PassSlipContents,
-    passSlipList: {} as GetPassSlip,
+    passSlip: {} as PassSlipContents,
 
     //APPLY PASS SLIP MODAL
     applyPassSlipModalIsOpen: false,
-    //PENDING PASS SLIP MODAL
     pendingPassSlipModalIsOpen: false,
-    //COMPLETED PASS SLIP MODAL
     completedPassSlipModalIsOpen: false,
-    //PENDING PASS SLIP LIST
-    pendingPassSlipList: [],
-    //COMPLETED PASS SLIP LIST
-    fulfilledPassSlipList: [],
+
     isGetPassSlipLoading: true,
     tab: 1,
 
     setIsGetPassSlipLoading: (isGetPassSlipLoading: boolean) => {
       set((state) => ({ ...state, isGetPassSlipLoading }));
-    },
-    setPendingPassSlipList: (pendingPassSlipList: Array<PassSlipContents>) => {
-      set((state) => ({ ...state, pendingPassSlipList }));
-    },
-
-    setFulfilledPassSlipList: (
-      fulfilledPassSlipList: Array<PassSlipContents>
-    ) => {
-      set((state) => ({ ...state, fulfilledPassSlipList }));
     },
 
     setTab: (tab: number) => {
@@ -117,12 +102,8 @@ export const usePassSlipStore = create<PassSlipState>()(
       set((state) => ({ ...state, completedPassSlipModalIsOpen }));
     },
 
-    setPassSlipEmployeeId: (passSlipEmployeeId: string) => {
-      set((state) => ({ ...state, passSlipEmployeeId }));
-    },
-
-    setGetPassSlip: (getPassSlip: PassSlipContents) => {
-      set((state) => ({ ...state, getPassSlip }));
+    getPassSlip: (passSlip: PassSlipContents) => {
+      set((state) => ({ ...state, passSlip }));
     },
 
     //GET PASS SLIP ACTIONS
@@ -144,7 +125,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-    getPassSlipListSuccess: (loading: boolean, response: GetPassSlip) => {
+    getPassSlipListSuccess: (loading: boolean, response: PassSlipList) => {
       set((state) => ({
         ...state,
         passSlips: {

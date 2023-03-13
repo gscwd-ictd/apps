@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { withSession } from '../../../utils/helpers/session';
 import {
   AlertNotification,
   Button,
@@ -7,8 +6,7 @@ import {
   Modal,
   ToastNotification,
 } from '@gscwd-apps/oneui';
-import { isEmpty, values } from 'lodash';
-import { applyPassSlip } from '../../../../src/utils/helpers/passslip-requests';
+import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -129,7 +127,7 @@ export const PassSlipApplicationModal = ({
   };
 
   const handlePostResult = async (data: PassSlip) => {
-    const { error, result } = await postPortal('/v1/pass-slipd', data);
+    const { error, result } = await postPortal('/v1/pass-slip', data);
 
     if (error) {
       // request is done so set loading to false

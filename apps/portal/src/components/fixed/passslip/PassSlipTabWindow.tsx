@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { AllPassSlipListTab } from './AllPassSlipListTab';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';

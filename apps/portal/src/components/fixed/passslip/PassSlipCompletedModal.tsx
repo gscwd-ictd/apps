@@ -1,11 +1,4 @@
-import { withSession } from '../../../utils/helpers/session';
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
@@ -22,8 +15,8 @@ export const PassSlipCompletedModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipCompletedModalProps) => {
-  const { getPassSlip } = usePassSlipStore((state) => ({
-    getPassSlip: state.getPassSlip,
+  const { passSlip } = usePassSlipStore((state) => ({
+    passSlip: state.passSlip,
   }));
 
   const router = useRouter();
@@ -47,7 +40,7 @@ export const PassSlipCompletedModal = ({
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {getPassSlip.status === 'approved' ? (
+              {passSlip.status === 'approved' ? (
                 <AlertNotification
                   alertType="info"
                   notifMessage="Approved"
@@ -55,7 +48,7 @@ export const PassSlipCompletedModal = ({
                 />
               ) : null}
 
-              {getPassSlip.status === 'disapproved' ? (
+              {passSlip.status === 'disapproved' ? (
                 <AlertNotification
                   alertType="info"
                   notifMessage="Disapproved"
@@ -70,7 +63,7 @@ export const PassSlipCompletedModal = ({
 
                 <div className="w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {getPassSlip.dateOfApplication}
+                    {passSlip.dateOfApplication}
                   </label>
                 </div>
               </div>
@@ -82,7 +75,7 @@ export const PassSlipCompletedModal = ({
 
                 <div className="w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {getPassSlip.natureOfBusiness}
+                    {passSlip.natureOfBusiness}
                   </label>
                 </div>
               </div>
@@ -90,7 +83,7 @@ export const PassSlipCompletedModal = ({
               <div className="flex gap-3 justify-between items-center">
                 <label
                   className={`${
-                    getPassSlip.natureOfBusiness === 'Official Business'
+                    passSlip.natureOfBusiness === 'Official Business'
                       ? 'text-slate-500 text-lg whitespace-nowrap font-medium'
                       : 'hidden'
                   }`}
@@ -99,7 +92,7 @@ export const PassSlipCompletedModal = ({
                 </label>
                 <div className="w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {getPassSlip.obTransportation}
+                    {passSlip.obTransportation}
                   </label>
                 </div>
               </div>
@@ -113,7 +106,7 @@ export const PassSlipCompletedModal = ({
                   </label>
                   <div className="w-96">
                     <label className="text-slate-500 h-12 w-96  text-lg ">
-                      {getPassSlip.estimateHours}
+                      {passSlip.estimateHours}
                     </label>
                   </div>
                 </div>
@@ -129,7 +122,7 @@ export const PassSlipCompletedModal = ({
                   className={
                     'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
                   }
-                  value={getPassSlip.purposeDestination}
+                  value={passSlip.purposeDestination}
                   rows={4}
                   disabled={true}
                 ></textarea>
@@ -141,7 +134,7 @@ export const PassSlipCompletedModal = ({
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
               <Link
-                href={`/${router.query.id}/pass-slip/${getPassSlip.id}`}
+                href={`/${router.query.id}/pass-slip/${passSlip.id}`}
                 target={'_blank'}
               >
                 <Button variant={'primary'} size={'md'} loading={false}>

@@ -27,22 +27,6 @@ export default function Leaves({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // get state for the modal
-  const modal = useLeaveStore((state) => state.modal);
-
-  // get loading state from store
-  const isLoading = useLeaveStore((state) => state.isLoading);
-
-  // set tab state
-  const tab = useLeaveStore((state) => state.tab);
-
-  // set loading state from store
-  const setIsLoading = useLeaveStore((state) => state.setIsLoading);
-
-  // set state for the modal
-  const setModal = useLeaveStore((state) => state.setModal);
-
-  const action = useLeaveStore((state) => state.action);
-  const setAction = useLeaveStore((state) => state.setAction);
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
@@ -51,10 +35,10 @@ export default function Leaves({
 
   // open the modal
   const openModal = () => {
-    if (!modal.isOpen) {
-      setAction('Apply');
-      setModal({ ...modal, page: 1, isOpen: true });
-    }
+    // if (!modal.isOpen) {
+    //   setAction('Apply');
+    //   setModal({ ...modal, page: 1, isOpen: true });
+    // }
   };
 
   // // close the modal
