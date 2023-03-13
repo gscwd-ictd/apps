@@ -3,10 +3,11 @@ import { Alert } from '@gscwd-apps/oneui';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
-import { useUpdatePdsStore } from 'apps/pds/src/store/update-pds.store';
+import { GovtIssuedIdForm } from 'apps/pds/src/types/data/supporting-info.type';
+import { trimmer } from 'apps/pds/utils/functions/trimmer';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiPencil } from 'react-icons/hi';
 import { IoIosSave } from 'react-icons/io';
 import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
@@ -37,12 +38,11 @@ export const GovernmentIssuedIdAlert = ({
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
   const governmentIssuedId = usePdsStore((state) => state.governmentIssuedId);
-  const allowGovernmentIssuedIdSave = useUpdatePdsStore(
-    (state) => state.allowGovernmentIssuedIdSave
+  const setGovernmentIssuedId = usePdsStore(
+    (state) => state.setGovernmentIssuedId
   );
-  const setAllowGovernmentIssuedIdSave = useUpdatePdsStore(
-    (state) => state.setAllowGovernmentIssuedIdSave
-  );
+
+  const { trigger } = useFormContext<GovtIssuedIdForm>();
 
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
@@ -61,8 +61,27 @@ export const GovernmentIssuedIdAlert = ({
     );
   };
 
+  const trimValues = async () => {
+    setGovernmentIssuedId({
+      ...governmentIssuedId,
+      idNumber: trimmer(governmentIssuedId.idNumber),
+      issuePlace: trimmer(governmentIssuedId.issuePlace),
+    });
+  };
+
+  const submitUpdate = async () => {
+    const isSubmitValid = await trigger(
+      ['govtId', 'govtIdNo', 'issueDate', 'issuePlace'],
+      { shouldFocus: true }
+    );
+    if (isSubmitValid === true) {
+      setAlertUpdateIsOpen(true);
+    } else setAlertUpdateIsOpen(false);
+  };
+
   const updateSection = async (): Promise<Actions> => {
     try {
+      await trimValues();
       await axios.put(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/pds/government-issued-id/${employeeDetails.user._id}`,
         pds.governmentIssuedId
@@ -80,38 +99,16 @@ export const GovernmentIssuedIdAlert = ({
   const alertCancelAction = () => {
     setInitialValues();
     addNotification(Actions.INFO);
-    setGovernmentIssuedIdOnEdit!(false);
+    setGovernmentIssuedIdOnEdit(false);
     setAlertCancelIsOpen(false);
   };
 
   const alertUpdateAction = async () => {
     setAlertUpdateIsOpen(false);
-    setGovernmentIssuedIdOnEdit!(false);
+    setGovernmentIssuedIdOnEdit(false);
     const getUpdate = await updateSection();
     addNotification(getUpdate);
   };
-
-  useEffect(() => {
-    if (
-      governmentIssuedIdOnEdit &&
-      (isEmpty(governmentIssuedId.issuedId) ||
-        isEmpty(governmentIssuedId.idNumber) ||
-        isEmpty(governmentIssuedId.issueDate) ||
-        isEmpty(governmentIssuedId.issuePlace))
-    ) {
-      setAllowGovernmentIssuedIdSave(false);
-    }
-
-    if (
-      governmentIssuedIdOnEdit &&
-      !isEmpty(governmentIssuedId.issuedId) &&
-      !isEmpty(governmentIssuedId.idNumber) &&
-      !isEmpty(governmentIssuedId.issueDate) &&
-      !isEmpty(governmentIssuedId.issuePlace)
-    ) {
-      setAllowGovernmentIssuedIdSave(true);
-    }
-  }, [governmentIssuedIdOnEdit, governmentIssuedId]);
 
   return (
     <>
@@ -194,11 +191,10 @@ export const GovernmentIssuedIdAlert = ({
                   </div>
                 </Button>
                 <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
+                  onClick={submitUpdate}
                   btnLabel=""
                   variant="light"
                   type="button"
-                  muted={allowGovernmentIssuedIdSave ? false : true}
                   className="ring-0 hover:bg-white focus:ring-0"
                 >
                   <div className="flex items-center text-indigo-600 hover:text-indigo-800">
@@ -212,7 +208,7 @@ export const GovernmentIssuedIdAlert = ({
           {!governmentIssuedIdOnEdit && (
             <>
               <Button
-                onClick={() => setGovernmentIssuedIdOnEdit!(true)}
+                onClick={() => setGovernmentIssuedIdOnEdit(true)}
                 btnLabel=""
                 variant="light"
                 type="button"

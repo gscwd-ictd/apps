@@ -7,7 +7,11 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 import { useEffect } from 'react';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { PdsTabs } from '../../../components/fixed/pds/PdsTabs';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -80,7 +84,7 @@ export default function Pds({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const userDetails = getUserDetails();
 

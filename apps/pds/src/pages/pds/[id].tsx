@@ -9,7 +9,11 @@ import { useEmployeeStore } from '../../store/employee.store';
 import { usePdsStore } from '../../store/pds.store';
 import { isEmpty, isEqual } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { pdsToSubmit } from '../../../utils/helpers/pds.helper';
@@ -423,17 +427,41 @@ export default function Dashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employee = getUserDetails();
+
     try {
       const applicantPds = await axios.get(
         `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
       );
 
-      return { props: { employee, pdsDetails: applicantPds.data } };
-    } catch (error) {
-      return { props: { employee, pdsDetails: {} } };
+      if (
+        applicantPds.status === 200 &&
+        employee.employmentDetails.userId === context.params?.id
+      ) {
+        return { props: { employee, pdsDetails: applicantPds.data } };
+      } else if (
+        applicantPds.status === 200 &&
+        employee.employmentDetails.userId !== context.params?.id
+      ) {
+        return {
+          props: {},
+          redirect: { destination: '/404', permanent: false },
+        };
+      } else if (
+        applicantPds.status === 404 &&
+        employee.employmentDetails.userId === context.params?.id
+      ) {
+        return {
+          props: { employee, pdsDetails: applicantPds.data },
+          redirect: { destination: '/401', permanent: false },
+        };
+      }
+    } catch {
+      return {
+        props: { employee, pdsDetails: {} },
+      };
     }
   }
 );

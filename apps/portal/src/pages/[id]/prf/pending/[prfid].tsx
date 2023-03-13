@@ -23,7 +23,7 @@ import {
   EmployeeProfile,
 } from '../../../../types/employee.type';
 import { Position, PrfDetails, PrfTrail } from '../../../../types/prf.types';
-import { withSession } from '../../../../utils/helpers/with-session';
+import { withCookieSession } from '../../../../../src/utils/helpers/session';
 
 type PrfDocumentProps = {
   profile: EmployeeProfile;
@@ -43,12 +43,12 @@ export default function PendingPrf({
     <>
       <PageTitle title={prfDetails.prfNo} />
 
-      <div className="w-screen h-screen py-10 px-36 overflow-hidden flex flex-col">
+      <div className="flex flex-col w-screen h-screen py-10 overflow-hidden px-36">
         <button
           className="flex items-center gap-2 text-gray-700 transition-colors ease-in-out hover:text-gray-700"
           onClick={() => router.back()}
         >
-          <HiArrowSmLeft className="h-5 w-5" />
+          <HiArrowSmLeft className="w-5 h-5" />
           <span className="font-medium">Go Back</span>
         </button>
         <header className="flex items-center justify-between">
@@ -65,7 +65,7 @@ export default function PendingPrf({
         </section>
 
         <main>
-          <main className="h-full flex">
+          <main className="flex h-full">
             <aside className="shrink-0 w-[20rem]">
               <section className="flex items-center gap-4">
                 <HiOutlineUser className="text-gray-700 shrink-0" />
@@ -91,11 +91,11 @@ export default function PendingPrf({
               <section className="flex items-center gap-4">
                 <HiOutlinePencil className="text-gray-700 shrink-0" />
                 {prfDetails.withExam ? (
-                  <p className="text-indigo-500 font-medium">
+                  <p className="font-medium text-indigo-500">
                     Examination is required
                   </p>
                 ) : (
-                  <p className="text-orange-500 font-medium">
+                  <p className="font-medium text-orange-500">
                     No examination required
                   </p>
                 )}
@@ -114,10 +114,10 @@ export default function PendingPrf({
                             : 'hover:border-l-red-500'
                         } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
                       >
-                        <section className="space-y-3 w-full">
+                        <section className="w-full space-y-3">
                           <header>
                             <section className="flex items-center justify-between">
-                              <h3 className="font-medium text-gray-600 text-lg">
+                              <h3 className="text-lg font-medium text-gray-600">
                                 {position.positionTitle}
                               </h3>
                               <p className="text-sm text-gray-600">
@@ -158,7 +158,7 @@ export default function PendingPrf({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     console.log(context.query.prfid);
 

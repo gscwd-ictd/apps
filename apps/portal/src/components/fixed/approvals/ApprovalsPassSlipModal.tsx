@@ -23,7 +23,7 @@ export default function ApprovalPassSlipModal() {
           <div className="w-full pb-2 flex gap-2 justify-start items-center">
             <span className="text-slate-500 text-xl font-medium">Date:</span>
             <div className="border-slate-300 text-slate-500 border px-4 text-lg">
-              {selectedPassSlip.date}
+              {/* {selectedPassSlip.date} */}
             </div>
           </div>
           <div className="flex gap-2">
@@ -51,7 +51,7 @@ export default function ApprovalPassSlipModal() {
                   'text-slate-500 rounded text-lg border-slate-300 border px-4'
                 }
               >
-                {selectedPassSlip.modeOfTransportation}
+                {/* {selectedPassSlip.modeOfTransportation} */}
               </div>
             </div>
 
@@ -60,7 +60,7 @@ export default function ApprovalPassSlipModal() {
                 Estimated Hours:
               </span>
               <div className="border-slate-300 border px-4 text-slate-500 text-lg">
-                {selectedPassSlip.estimatedHours}
+                {/* {selectedPassSlip.estimatedHours} */}
               </div>
             </div>
             <label className={'text-slate-500 text-xl font-medium'}>
@@ -70,7 +70,7 @@ export default function ApprovalPassSlipModal() {
               className={
                 'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
               }
-              value={selectedPassSlip.purpose}
+              // value={selectedPassSlip.purpose}
               rows={4}
               disabled={true}
             ></textarea>

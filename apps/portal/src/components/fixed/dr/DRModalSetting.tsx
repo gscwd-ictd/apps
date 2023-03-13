@@ -78,11 +78,11 @@ export const DRModalSetting = (): JSX.Element => {
 
   // query duties and responsibilities data from HRIS using access token
   // const { data: getPool } = useSWR(`${prodUrl}`, fetchWithToken);
-  const { data: getPool } = useSWR([prodUrl, random], fetchWithToken);
+  const { data: getPool } = useSWR(prodUrl, fetchWithToken);
 
   // query existing duties,responsibilities, and competencies  from HRIS
   // const { data: getDRCs } = useSWR(`${getUrl}`, fetchWithToken);
-  const { data: getDRCs } = useSWR([getUrl, random], fetchWithToken);
+  const { data: getDRCs } = useSWR(getUrl, fetchWithToken);
 
   // fires when core button is clicked
   const onClickCoreBtn = () => {
@@ -101,7 +101,7 @@ export const DRModalSetting = (): JSX.Element => {
     const tempOrigPool: any = [...drPool]; // temporary original pool
 
     tempOrigPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-      a.description!.localeCompare(b.description!)
+      a.description.localeCompare(b.description)
     );
 
     if (fetchedDRCs && fetchedDRCs.core.length > 0) {
@@ -123,7 +123,7 @@ export const DRModalSetting = (): JSX.Element => {
     // sort and assign to temporary original pool
     const pool = tempOrigPool.sort(
       (a: DutyResponsibility, b: DutyResponsibility) =>
-        a.description!.localeCompare(b.description!)
+        a.description.localeCompare(b.description)
     );
 
     return pool;
@@ -153,7 +153,7 @@ export const DRModalSetting = (): JSX.Element => {
 
         pool
           .sort((a: DutyResponsibility, b: DutyResponsibility) =>
-            a.description!.localeCompare(b.description!)
+            a.description.localeCompare(b.description)
           )
           .map((dr: DutyResponsibility, index: number) => {
             dr.sequenceNo = index;
@@ -239,13 +239,13 @@ export const DRModalSetting = (): JSX.Element => {
       // sort core DRCs
       const sortedCoreDRCs = coreDRCs.sort(
         (a: DutyResponsibility, b: DutyResponsibility) =>
-          a.description!.localeCompare(b.description!)
+          a.description.localeCompare(b.description)
       );
 
       // copy existing support DRCs
       const sortedSupportDRCs = supportDRCs.sort(
         (a: DutyResponsibility, b: DutyResponsibility) =>
-          a.description!.localeCompare(b.description!)
+          a.description.localeCompare(b.description)
       );
 
       sortedCoreDRCs.map((dr: DutyResponsibility, index: number) => {
@@ -352,7 +352,7 @@ export const DRModalSetting = (): JSX.Element => {
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected core duties & responsibilities</h1> */}
                 {isLoading ? (
-                  <div className="flex w-full h-full justify-center place-items-center">
+                  <div className="flex justify-center w-full h-full place-items-center">
                     {<LoadingVisual size={12} />}{' '}
                   </div>
                 ) : (
@@ -403,7 +403,7 @@ export const DRModalSetting = (): JSX.Element => {
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected support duties & responsibilities</h1> */}
                 {isLoading ? (
-                  <div className="flex w-full h-full justify-center place-items-center">
+                  <div className="flex justify-center w-full h-full place-items-center">
                     {<LoadingVisual size={12} />}{' '}
                   </div>
                 ) : (

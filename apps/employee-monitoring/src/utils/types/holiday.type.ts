@@ -6,3 +6,5 @@ export type Holiday = {
   holidayDate: string;
   type: string;
 };
+
+export type HolidayId = Pick<Holiday, 'id'>;

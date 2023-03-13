@@ -8,7 +8,11 @@ import { useEffect, useState } from 'react';
 import { SideNav } from '../../components/fixed/nav/SideNav';
 import { MainContainer } from '../../components/modular/custom/containers/MainContainer';
 import { useAllowedModulesStore } from '../../store/allowed-modules.store';
-import { withSession, getUserDetails } from '../../utils/helpers/session';
+import {
+  withSession,
+  getUserDetails,
+  withCookieSession,
+} from '../../utils/helpers/session';
 import { useEmployeeStore } from '../../store/employee.store';
 import { EmployeeDashboard } from '../../components/fixed/dashboard/EmployeeDashboard';
 import { SpinnerDotted } from 'spinners-react';
@@ -63,15 +67,15 @@ export default function Dashboard({
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
-                  className="w-full flex h-full transition-all "
+                  className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
                 />
               </div>
             </>
           ) : (
-            <div className="w-full h-full flex flex-row gap-4 pb-24 overflow-x-hidden">
-              <div className="absolute left-0 top-0 w-full h-full flex justify-center items-center opacity-10 overflow-hidden z-1 pointer-events-none">
+            <div className="flex flex-row w-full h-full gap-4 pb-24 overflow-x-hidden">
+              <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-1">
                 {/* <img className="w-2/4 overflow-hidden" src="/gwdlogo.png"></img> */}
                 <Image
                   src={'/gwdlogo.png'}
@@ -84,13 +88,13 @@ export default function Dashboard({
               <div className="w-2/5 h-full mt-1">
                 <Carousel />
               </div>
-              <div className="w-full h-full z-10 flex flex-col gap-5 mt-1 ">
+              <div className="z-10 flex flex-col w-full h-full gap-5 mt-1 ">
                 {/* 3 PANELS */}
                 <div>
                   <div className="flex flex-row gap-5">
-                    <StatsCard name={'Total Lates'} count={7} />
-                    <StatsCard name={'Total Absents'} count={4} />
-                    <StatsCard name={'Total Leaves'} count={5} />
+                    <StatsCard name={'Total Lates'} count={10} />
+                    <StatsCard name={'Total Absents'} count={10} />
+                    <StatsCard name={'Total Leaves'} count={10} />
                   </div>
                 </div>
                 {/* ATTENDANCE */}
@@ -104,11 +108,11 @@ export default function Dashboard({
                 {/* REMINDERS */}
                 <RemindersCard reminders={''} />
                 {/* CALENDAR */}
-                <div className="w-full h-full shadow rounded-md bg-white flex flex-col p-4 gap-2 mb-2 pb-10">
+                <div className="flex flex-col w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
                   <EmployeeCalendar />
                 </div>
               </div>
-              <div className="w-1/5 h-screen flex flex-col gap-5 z-20 mt-1 mb-20">
+              <div className="z-20 flex flex-col w-1/5 h-screen gap-5 mt-1 mb-20">
                 <ProfileCard
                   firstName={userDetails.profile.firstName}
                   lastName={userDetails.profile.lastName}
@@ -128,7 +132,7 @@ export default function Dashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const userDetails = getUserDetails();
     // console.log(userDetails);

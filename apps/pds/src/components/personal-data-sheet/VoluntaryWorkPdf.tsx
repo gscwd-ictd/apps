@@ -80,10 +80,10 @@ export const VoluntaryWorkPdf = ({
   formatDate,
   voluntaryWork,
 }: VoluntaryWorkPdfProps): JSX.Element => {
-  const [emptyVoluntaryWorkRows, setEmptyVoluntaryWorkRows] = useState(7);
+  const [emptyVoluntaryWorkRows] = useState(6);
 
   const renderVoluntaryWorkRows = () => {
-    const content = voluntaryWork.slice(0, 7).map((work, index) => (
+    const content = voluntaryWork.slice(0, 6).map((work, index) => (
       <View
         style={[
           styles.borderTop,
@@ -346,7 +346,7 @@ export const VoluntaryWorkPdf = ({
 
       {renderVoluntaryWorkRows()}
 
-      {voluntaryWork.length < 28 ? <>{renderEmptyVoluntaryWorkRows()}</> : null}
+      {voluntaryWork.length < 6 ? <>{renderEmptyVoluntaryWorkRows()}</> : null}
 
       <View style={[styles.borderTop]}>
         <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>

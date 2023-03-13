@@ -13,9 +13,9 @@ import { employeeDummy } from '../../../../../src/types/employee.type';
 export default function PassSlipPage({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const selectedPassSlip = usePassSlipStore((state) => state.selectedPassSlip);
+  const getPassSlip = usePassSlipStore((state) => state.getPassSlip);
 
-  console.log(selectedPassSlip);
+  // console.log(getPassSlip);
 
   return (
     employeeDetails && (

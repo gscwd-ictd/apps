@@ -187,7 +187,14 @@ export const PersonalInfoBI = (): JSX.Element => {
                       }),
                   }),
                 }}
-                muted={hasPds ? true : false}
+                // muted={hasPds ? true : false}
+                muted={
+                  hasPds && personalInfoOnEdit
+                    ? false
+                    : hasPds && !personalInfoOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 // muted={true}
                 isError={errors.middleName ? true : false}
                 errorMessage={errors.middleName?.message}
@@ -214,7 +221,14 @@ export const PersonalInfoBI = (): JSX.Element => {
                       }),
                   }),
                 }}
-                muted={hasPds ? true : false}
+                // muted={hasPds ? true : false}
+                muted={
+                  hasPds && personalInfoOnEdit
+                    ? false
+                    : hasPds && !personalInfoOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 isError={errors.nameExtension ? true : false}
                 errorMessage={errors.nameExtension?.message}
               />
@@ -242,7 +256,14 @@ export const PersonalInfoBI = (): JSX.Element => {
                       }),
                   }),
                 }}
-                muted={hasPds ? true : false}
+                // muted={hasPds ? true : false}
+                muted={
+                  hasPds && personalInfoOnEdit
+                    ? false
+                    : hasPds && !personalInfoOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 isError={errors.birthDate ? true : false}
                 errorMessage={errors.birthDate?.message}
               />
@@ -265,7 +286,14 @@ export const PersonalInfoBI = (): JSX.Element => {
                 }}
                 isError={errors.sex ? true : false}
                 errorMessage={errors.sex?.message}
-                muted={hasPds ? true : false}
+                // muted={hasPds ? true : false}
+                muted={
+                  hasPds && personalInfoOnEdit
+                    ? false
+                    : hasPds && !personalInfoOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
           </div>

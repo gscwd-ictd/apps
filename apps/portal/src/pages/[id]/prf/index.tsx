@@ -3,16 +3,12 @@ import { useEffect } from 'react';
 import { Button } from '../../../components/modular/forms/buttons/Button';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
-import { getEmployeeProfile } from '../../../utils/helpers/http-requests/employee-requests';
-import { getUserDetails } from '../../../utils/helpers/http-requests/user-requests';
 import {
   EmployeeDetailsPrf,
-  employeeDummy,
   EmployeeProfile,
 } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
 import { Roles } from '../../../utils/constants/user-roles';
-import { getEmployee, withSession } from '../../../utils/helpers/with-session';
 import { usePrfStore } from '../../../store/prf.store';
 import { useEmployeeStore } from '../../../store/employee-prf.store';
 import { useUserStore } from '../../../store/user.store';
@@ -27,13 +23,15 @@ import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingP
 import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
 import { TabHeader } from '../../../components/fixed/prf/prf-index/TabHeader';
 import { PrfDetails } from '../../../types/prf.types';
-import router from 'next/router';
-import { HiArrowSmLeft } from 'react-icons/hi';
 import { SideNav } from '../../../../src/components/fixed/nav/SideNav';
 import { MainContainer } from '../../../../src/components/modular/custom/containers/MainContainer';
 import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
 import { SpinnerDotted } from 'spinners-react';
+import {
+  withCookieSession,
+  getUserDetails,
+} from '../../../../src/utils/helpers/session';
 
 type PrfPageProps = {
   user: User;
@@ -205,7 +203,7 @@ export default function Prf({
               <SpinnerDotted
                 speed={70}
                 thickness={70}
-                className="w-full flex h-full transition-all "
+                className="flex w-full h-full transition-all "
                 color="slateblue"
                 size={100}
               />
@@ -213,7 +211,7 @@ export default function Prf({
           ) : (
             <ContentBody>
               <>
-                <div className="w-full flex">
+                <div className="flex w-full">
                   <div className="w-[58rem]">
                     <TabHeader />
                   </div>
@@ -232,42 +230,44 @@ export default function Prf({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession(async () => {
-  const employee = getEmployee() as any;
-  // const employee = employeeDummy;
-  // get user details
-  //const user = await getUserDetails(employee.userId);
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async () => {
+    const employee = getUserDetails();
+    // const employee = employeeDummy;
+    // get user details
+    //const user = await getUserDetails(employee.userId);
 
-  // get employee profile
-  //const profile = await getEmployeeProfile(user._id);
+    // get employee profile
+    //const profile = await getEmployeeProfile(user._id);
 
-  // get all pending prfs
-  const pendingRequests = await getPendingPrfs(employee.user._id);
+    // get all pending prfs
+    const pendingRequests = await getPendingPrfs(employee.user._id);
 
-  // get all approved prfs
-  const forApproval = await getForApprovalPrfs(employee.user._id);
+    // get all approved prfs
+    const forApproval = await getForApprovalPrfs(employee.user._id);
 
-  // check if user role is rank_and_file
-  if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE) {
-    // if true, the employee is not allowed to access this page
+    // check if user role is rank_and_file
+    if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE) {
+      // if true, the employee is not allowed to access this page
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${employee.profile.firstName.toLowerCase()}.${employee.profile.lastName.toLowerCase()}`,
+        },
+      };
+    }
+
     return {
-      redirect: {
-        permanent: false,
-        destination: `/${employee.profile.firstName.toLowerCase()}.${employee.profile.lastName.toLowerCase()}`,
+      props: {
+        user: employee.user,
+        employee: employee.employmentDetails,
+        profile: employee.profile,
+        pendingRequests,
+        forApproval,
       },
     };
   }
-
-  return {
-    props: {
-      user: employee.user,
-      employee: employee.employmentDetails,
-      profile: employee.profile,
-      pendingRequests,
-      forApproval,
-    },
-  };
-});
+);
 
 // export const getServerSideProps: GetServerSideProps = async () => {
 //   return { props: { user, employee: employeeDetails, profile } };
