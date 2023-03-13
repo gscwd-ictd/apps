@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { HiDocumentAdd, HiX } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -13,23 +13,21 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 // import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+// import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
-import {
-  fetchWithSession,
-  fetchWithToken,
-} from '../../../../src/utils/hoc/fetcher';
+// import {
+//   fetchWithSession,
+//   fetchWithToken,
+// } from '../../../../src/utils/hoc/fetcher';
 import { SpinnerDotted } from 'spinners-react';
 import { Button } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
 import { PassSlipTabWindow } from '../../../../src/components/fixed/passslip/PassSlipTabWindow';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import React from 'react';
-import { useRouter } from 'next/router';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
-import { format } from 'date-fns';
 import PassSlipApplicationModal from '../../../../src/components/fixed/passslip/PassSlipApplicationModal';
 import PassSlipPendingModal from '../../../../src/components/fixed/passslip/PassSlipPendingModal';
 import PassSlipCompletedModal from '../../../../src/components/fixed/passslip/PassSlipCompletedModal';
@@ -37,8 +35,6 @@ import PassSlipCompletedModal from '../../../../src/components/fixed/passslip/Pa
 export default function PassSlip({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const router = useRouter();
-
   const {
     tab,
     isGetPassSlipLoading,
@@ -46,7 +42,6 @@ export default function PassSlip({
     pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen,
 
-    setTab,
     setIsGetPassSlipLoading,
     setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen,
@@ -58,7 +53,6 @@ export default function PassSlip({
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen: state.completedPassSlipModalIsOpen,
 
-    setTab: state.setTab,
     setIsGetPassSlipLoading: state.setIsGetPassSlipLoading,
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,

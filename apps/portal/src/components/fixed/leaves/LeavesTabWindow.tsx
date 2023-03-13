@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 import { AllLeavesListTab } from './AllLeavesListTab';
 import { useLeaveStore } from '../../../../src/store/leave.store';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
+import useSWR from 'swr';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 type LeavesTabWindowProps = {
   employeeId: string;
@@ -9,122 +13,63 @@ type LeavesTabWindowProps = {
 export const LeavesTabWindow = ({
   employeeId,
 }: LeavesTabWindowProps): JSX.Element => {
-  const pendingLeave = [
-    {
-      id: '23232',
-      office: 'Information Communication & Technology',
-      firstName: 'Ricardo',
-      middleName: 'Raval',
-      lastName: 'Narvaiza',
-      dateOfFiling: '1-22-2023',
-      position: 'Clerk Processor C',
-      salary: 'P 999,000.00',
-      typeOfLeave: 'Vacation Leave',
-      detailsOfLeave: {
-        withinThePhilippines: true,
-        abroad: false,
-        location: 'General Santos City',
-        inHospital: false,
-        outPatient: false,
-        illness: '',
-        specialLeaveWomenIllness: '',
-        sick: '',
-        masterDegree: false,
-        bar: false,
-        monetization: false,
-        terminal: false,
-        other: '',
-      },
-      numberOfWorkingDays: '1, 2, 3',
-      commutation: 'Not Requested',
-    },
-  ];
+  //zustand initialization to access pass slip store
+  const {
+    tab,
+    leaves,
+    loading,
+    error,
 
-  const fulfilledLeave = [
-    {
-      id: '1234',
-      office: 'Information Communication & Technology',
-      firstName: 'Ricardo',
-      middleName: 'Raval',
-      lastName: 'Narvaiza',
-      dateOfFiling: '1-10-2023',
-      position: 'Clerk Processor C',
-      salary: 'P 999,000.00',
-      typeOfLeave: 'Vacation Leave',
-      detailsOfLeave: {
-        withinThePhilippines: true,
-        abroad: false,
-        location: 'General Santos City',
-        inHospital: false,
-        outPatient: false,
-        illness: '',
-        specialLeaveWomenIllness: '',
-        sick: '',
-        masterDegree: false,
-        bar: false,
-        monetization: false,
-        terminal: false,
-        other: 'Renew motor vehicle',
-      },
-      numberOfWorkingDays: '1, 2',
-      commutation: 'Not Requested',
-    },
-    {
-      id: '66767',
-      office: 'Information Communication & Technology',
-      firstName: 'Ricardo',
-      middleName: 'Raval',
-      lastName: 'Narvaiza',
-      dateOfFiling: '1-26-2023',
-      position: 'Clerk Processor C',
-      salary: 'P 999,000.00',
-      typeOfLeave: 'Vacation Leave',
-      detailsOfLeave: {
-        withinThePhilippines: false,
-        abroad: true,
-        location: 'USA',
-        inHospital: false,
-        outPatient: false,
-        illness: '',
-        specialLeaveWomenIllness: '',
-        sick: '',
-        masterDegree: false,
-        bar: false,
-        monetization: false,
-        terminal: false,
-        other: '',
-      },
-      numberOfWorkingDays: '1, 2',
-      commutation: 'Not Requested',
-    },
-  ];
+    getLeaveList,
+    getLeaveListSuccess,
+    getLeaveListFail,
+  } = useLeaveStore((state) => ({
+    tab: state.tab,
+    leaves: state.leaves,
+    loading: state.loading.loadingLeaves,
+    error: state.error.errorLeaves,
 
-  const pendingLeaveList = useLeaveStore((state) => state.pendingLeaveList);
+    getLeaveList: state.getLeaveList,
+    getLeaveListSuccess: state.getLeaveListSuccess,
+    getLeaveListFail: state.getLeaveListFail,
+  }));
 
-  const fulfilledLeaveList = useLeaveStore((state) => state.fulfilledLeaveList);
+  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/${employeeId}`;
 
-  const setPendingLeaveList = useLeaveStore(
-    (state) => state.setPendingLeaveList
-  );
+  const {
+    data: swrLeaves,
+    isLoading: swrIsLoading,
+    error: swrError,
+  } = useSWR(leaveUrl, fetchWithToken);
 
-  const setFulfilledLeaveList = useLeaveStore(
-    (state) => state.setFulfilledLeaveList
-  );
-
-  const tab = useLeaveStore((state) => state.tab);
-
+  // Initial zustand state update
   useEffect(() => {
-    setPendingLeaveList(pendingLeave);
-    setFulfilledLeaveList(fulfilledLeave);
-  }, []);
+    if (swrIsLoading) {
+      getLeaveList(swrIsLoading);
+    }
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    console.log(swrLeaves);
+    if (!isEmpty(swrLeaves)) {
+      getLeaveListSuccess(swrIsLoading, swrLeaves);
+    }
+
+    if (!isEmpty(swrError)) {
+      getLeaveListFail(swrIsLoading, swrError.message);
+    }
+  }, [swrLeaves, swrError]);
 
   return (
     <>
+      {error ? (
+        <ToastNotification toastType="error" notifMessage={error} />
+      ) : null}
+
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
-        {tab === 1 && <AllLeavesListTab leaves={pendingLeaveList} tab={tab} />}
-        {tab === 2 && (
-          <AllLeavesListTab leaves={fulfilledLeaveList} tab={tab} />
-        )}
+        {tab === 1 && <AllLeavesListTab leaves={leaves.onGoing} tab={tab} />}
+        {tab === 2 && <AllLeavesListTab leaves={leaves.completed} tab={tab} />}
       </div>
     </>
   );
