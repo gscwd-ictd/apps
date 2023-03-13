@@ -82,16 +82,29 @@ export default function Index() {
     []
   );
 
+  const { Schedules, PostResponse, UpdateResponse, DeleteResponse } =
+    useScheduleStore((state) => ({
+      Schedules: state.schedules,
+      PostResponse: state.schedule.postResponse,
+      UpdateResponse: state.schedule.updateResponse,
+      DeleteResponse: state.schedule.deleteResponse,
+    }));
+
   const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
   const setModalIsOpen = useScheduleStore((state) => state.setModalIsOpen);
 
   const schedules = useScheduleStore((state) => state.schedules);
   const setSchedules = useScheduleStore((state) => state.setSchedules);
 
-  const { data } = useSWR(
-    `http://192.168.99.124:4104/api/v1/schedule/`,
-    fetcherEMS
-  );
+  const {
+    data: swrSchedules,
+    isLoading: swrIsLoading,
+    error: swrIsError,
+    mutate: mutateSchedules,
+  } = useSWR('/schedule/', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -108,33 +121,36 @@ export default function Index() {
 
   // Delete modal function
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+
+  // open delete action
   const openDeleteActionModal = (rowData: Schedule) => {
     setDeleteModalIsOpen(true);
     setCurrentRowData(rowData);
   };
+
+  // close delete action
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  const {
-    setValue,
-    watch,
-    reset,
-    register,
-    formState: { errors },
-  } = useForm<Schedule>({
-    mode: 'onChange',
-    defaultValues: {
-      id: '',
-      scheduleType: Categories.REGULAR,
-      timeIn: '',
-      timeOut: '',
-      withLunch: true,
-      lunchIn: null,
-      lunchOut: null,
-      name: '',
-      restDays: [],
-      shift: ScheduleShifts.MORNING,
-    },
-  });
+  // const {
+  //   setValue,
+  //   watch,
+  //   reset,
+  //   register,
+  //   formState: { errors },
+  // } = useForm<Schedule>({
+  //   mode: 'onChange',
+  //   defaultValues: {
+  //     scheduleType: Categories.REGULAR,
+  //     timeIn: '',
+  //     timeOut: '',
+  //     withLunch: true,
+  //     lunchIn: null,
+  //     lunchOut: null,
+  //     name: '',
+  //     restDays: [],
+  //     shift: ScheduleShifts.MORNING,
+  //   },
+  // });
 
   // transforms the array of numbers(rest days) to array of key value pair
   const transformRestDays = (restDays: Array<number>) => {
@@ -168,35 +184,14 @@ export default function Index() {
     setAction(ModalActions.UPDATE);
     setCurrentRowData(sched);
     setSelectedRestDays(transformRestDays(sched.restDays));
-    loadNewDefaultValues(sched);
+    // loadNewDefaultValues(sched);
     setModalIsOpen(true);
-  };
-
-  // loads the default values, utilizes react hook forms
-  const loadNewDefaultValues = (sched: Schedule) => {
-    setValue('id', sched.id);
-    setValue('name', sched.name);
-    setValue('scheduleType', sched.scheduleType);
-    setValue('timeIn', sched.timeIn);
-    setValue('timeOut', sched.timeOut);
-    setValue('withLunch', sched.withLunch);
-    setWithLunch(sched.withLunch);
-    setValue('lunchIn', sched.lunchIn);
-    setValue('lunchOut', sched.lunchOut);
-    setValue('shift', sched.shift);
   };
 
   // run this when modal is closed
   const closeAction = () => {
     setModalIsOpen(false);
-    resetToDefaultValues();
-  };
-
-  // reset all values
-  const resetToDefaultValues = () => {
-    reset();
-    setSelectedRestDays([]);
-    setWithLunch(true);
+    // resetToDefaultValues();
   };
 
   // define table columns
@@ -226,14 +221,14 @@ export default function Index() {
       header: () => 'Time Out',
       cell: (info) => convertToTime(info.getValue()),
     }),
-    columnHelper.accessor('lunchIn', {
-      enableSorting: false,
-      header: () => 'Lunch In',
-      cell: (info) => convertToTime(info.getValue()),
-    }),
     columnHelper.accessor('lunchOut', {
       enableSorting: false,
       header: () => 'Lunch Out',
+      cell: (info) => convertToTime(info.getValue()),
+    }),
+    columnHelper.accessor('lunchIn', {
+      enableSorting: false,
+      header: () => 'Lunch In',
       cell: (info) => convertToTime(info.getValue()),
     }),
     columnHelper.accessor('shift', {
@@ -296,26 +291,21 @@ export default function Index() {
 
   // set data to state from useSWR
   useEffect(() => {
-    if (!isEmpty(data)) {
-      setSchedules(data.data);
+    if (!isEmpty(swrSchedules)) {
+      setSchedules(swrSchedules.data);
     }
-  }, [data]);
+  }, [swrSchedules]);
 
-  // set it to null
+  // mutate from swr
   useEffect(() => {
-    if (isEmpty(watch('lunchIn'))) setValue('lunchIn', null);
-  }, [watch('lunchIn')]);
-
-  // set it to null
-  useEffect(() => {
-    if (isEmpty(watch('lunchOut'))) setValue('lunchOut', null);
-  }, [watch('lunchOut')]);
-
-  // with lunch in/out listener
-  useEffect(() => {
-    if (withLunch) setValue('withLunch', true);
-    else if (!withLunch) setValue('withLunch', false);
-  }, [withLunch]);
+    if (
+      !isEmpty(PostResponse) ||
+      !isEmpty(UpdateResponse) ||
+      !isEmpty(DeleteResponse)
+    ) {
+      mutateSchedules();
+    }
+  }, [PostResponse, UpdateResponse, DeleteResponse]);
 
   return (
     <>

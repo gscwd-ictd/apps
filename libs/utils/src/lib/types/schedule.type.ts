@@ -22,3 +22,5 @@ export type Schedule = {
   shift: ScheduleShifts | null;
   restDays: Array<number>;
 } & (ScheduleWithLunch | ScheduleWithoutLunch);
+
+export type ScheduleId = Pick<Schedule, 'id'>;
