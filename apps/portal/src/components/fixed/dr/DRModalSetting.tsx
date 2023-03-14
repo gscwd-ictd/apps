@@ -178,44 +178,46 @@ export const DRModalSetting = (): JSX.Element => {
 
   useEffect(() => {
     // && drPoolIsEmpty === false
-    if (!isEmpty(getPool) && drcPoolIsFilled === false && action === 'create') {
-      const newDRs = [
-        ...getPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-          a.description!.localeCompare(b.description!)
-        ),
-      ];
+    if (!isEmpty(getPool)) {
+      if (drcPoolIsFilled === false && action === 'create') {
+        const newDRs = [
+          ...getPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+            a.description!.localeCompare(b.description!)
+          ),
+        ];
 
-      // console.log('Get Pool HERE: ', getPool)
+        // console.log('Get Pool HERE: ', getPool)
 
-      //loop through all drs
-      newDRs.map((dr: DutyResponsibility, index: number) => {
-        // set default state value for dr on select
-        dr.state = false;
+        //loop through all drs
+        newDRs.map((dr: DutyResponsibility, index: number) => {
+          // set default state value for dr on select
+          dr.state = false;
 
-        // set default state value for dr on edit
-        dr.onEdit = false;
+          // set default state value for dr on edit
+          dr.onEdit = false;
 
-        // set default value state of sequenc number
-        dr.sequenceNo = index;
+          // set default value state of sequenc number
+          dr.sequenceNo = index;
 
-        // set default percentage to 0
-        dr.percentage = 0;
+          // set default percentage to 0
+          dr.percentage = 0;
 
-        // set default competency
-        dr.competency = {} as Competency;
-      });
+          // set default competency
+          dr.competency = {} as Competency;
+        });
 
-      // set original pool
-      setOriginalPool(newDRs);
+        // set original pool
+        setOriginalPool(newDRs);
 
-      // set all dr state -> sort alphabetically by description
-      setAllDRCPool(newDRs);
+        // set all dr state -> sort alphabetically by description
+        setAllDRCPool(newDRs);
 
-      // set filtered dr to sorted
-      setFilteredDRCs(newDRs);
+        // set filtered dr to sorted
+        setFilteredDRCs(newDRs);
 
-      // set to true if data is loaded
-      setDrcPoolIsFilled(true);
+        // set to true if data is loaded
+        setDrcPoolIsFilled(true);
+      }
     }
   }, [getPool]);
 
