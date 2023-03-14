@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
+import { devtools } from 'zustand/middleware';
 import {
   Competency,
   DutiesResponsibilities,
@@ -27,11 +28,39 @@ export const DUTIES_RESPONSIBILITIES_COMPETENCIES = {
   deleted: [],
 };
 
+type ResponseDrc = {
+  postResponse: DutyResponsibility;
+  updateResponse: DutyResponsibility;
+};
+
+type ResponsePosition = {
+  postResponse: Position;
+  updateResponse: Position;
+};
+
+type LoadingDrc = {
+  loadingPositions: boolean;
+  loadingPosition: boolean;
+  loadingDrcs: boolean;
+  loadingDrc: boolean;
+};
+
+type ErrorDrc = {
+  errorPositions: string;
+  errorPosition: string;
+  errorDrcs: string;
+  errorDrc: string;
+};
+
 export type FinishedPosition = Position & {
   updatedAt?: string | null;
 };
 
 export type DRCState = {
+  drc: ResponseDrc;
+  position: ResponsePosition;
+  loading: LoadingDrc;
+  errorDrc: ErrorDrc;
   alert: AlertState;
   setAlert: (alert: AlertState) => void;
   modal: ModalState;
@@ -88,9 +117,42 @@ export type DRCState = {
   setFulfilledPositions: (fulfilledPositions: Array<FinishedPosition>) => void;
   tab: number;
   setTab: (tab: number) => void;
+
+  getDrcPool: (loading: boolean) => void;
+  getDrcPoolSuccess: (
+    loading: boolean,
+    response: Array<DutyResponsibility>
+  ) => void;
+  getDrcPoolFail: (loading: boolean, error: string) => void;
+
+  getPositions: (loading: boolean) => void;
+  getPositionsSuccess: (loading: boolean, response: Array<Position>) => void;
+  getPositionsFail: (loading: boolean, error: string) => void;
+
+  emptyResponse: () => void;
 };
 
 export const useDrStore = create<DRCState>((set) => ({
+  drc: {
+    postResponse: {} as DutyResponsibility,
+    updateResponse: {} as DutyResponsibility,
+  },
+  position: {
+    postResponse: {} as Position,
+    updateResponse: {} as Position,
+  },
+  loading: {
+    loadingDrc: false,
+    loadingDrcs: false,
+    loadingPosition: false,
+    loadingPositions: false,
+  },
+  errorDrc: {
+    errorDrc: '',
+    errorDrcs: '',
+    errorPosition: '',
+    errorPositions: '',
+  },
   alert: { isOpen: false, page: 1 },
   modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
   allPositions: [],
@@ -203,4 +265,69 @@ export const useDrStore = create<DRCState>((set) => ({
   setTab: (tab: number) => {
     set((state) => ({ ...state, tab }));
   },
+
+  getPositions: (loading: boolean) =>
+    set((state) => ({
+      ...state,
+      allPositions: [],
+      filteredPositions: [],
+      loading: { ...state.loading, loadingPositions: loading },
+      errorDrcs: { ...state.errorDrc, errorPositions: '' },
+    })),
+
+  getPositionsSuccess: (loading: boolean, response: Array<Position>) =>
+    set((state) => ({
+      ...state,
+      allPositions: response,
+      filteredPositions: response,
+      loading: { ...state.loading, loadingPositions: loading },
+    })),
+
+  getPositionsFail: (loading: boolean, error: string) =>
+    set((state) => ({
+      ...state,
+      loading: { ...state.loading, loadingPositions: loading },
+      errorDrc: { ...state.errorDrc, errorPositions: error },
+    })),
+
+  getDrcPool: (loading: boolean) =>
+    set((state) => ({
+      ...state,
+      originalPool: [],
+      allDRCPool: [],
+      filteredDRCs: [],
+      loading: { ...state.loading, loadingDrcs: loading },
+      errorDrc: { ...state.errorDrc, errorDrcs: '' },
+    })),
+
+  getDrcPoolSuccess: (loading: boolean, response: Array<DutyResponsibility>) =>
+    set((state) => ({
+      ...state,
+      originalPool: response,
+      allDRCPool: response,
+      filteredDRCs: response,
+      drcPoolIsFilled: true,
+      loading: { ...state.loading, loadingDrcs: loading },
+    })),
+
+  getDrcPoolFail: (loading: boolean, error: string) =>
+    set((state) => ({
+      ...state,
+      loading: { ...state.loading, loadingDrcs: loading },
+      errorDrc: { ...state.errorDrc, errorDrcs: error },
+    })),
+
+  emptyResponse: () =>
+    set((state) => ({
+      ...state,
+      position: {
+        ...state.position,
+        postResponse: {} as Position,
+        updateResponse: {} as Position,
+      },
+      drc: {
+        postResponse: {} as DutyResponsibility,
+        updateResponse: {} as DutyResponsibility,
+      },
+    })),
 }));
