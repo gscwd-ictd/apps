@@ -33,6 +33,8 @@ export const DRModalController = ({
   const {
     allPositions,
     selectedDRCType,
+    PostResponse,
+    UpdateResponse,
     GetPositions,
     GetPositionsSucces,
     GetPositionsFail,
@@ -42,6 +44,8 @@ export const DRModalController = ({
     GetPositionsSucces: state.getPositionsSuccess,
     GetPositionsFail: state.getPositionsFail,
     EmptyResponse: state.emptyResponse,
+    PostResponse: state.position.postResponse,
+    UpdateResponse: state.position.updateResponse,
     IsLoading: state.loading.loadingPositions,
     Error: state.errorDrc.errorPositions,
     allPositions: state.allPositions,
@@ -95,6 +99,13 @@ export const DRModalController = ({
       GetPositionsFail(swrIsLoading, swrError);
     }
   }, [swrPositions, swrError]);
+
+  // mutate
+  useEffect(() => {
+    if (!isEmpty(PostResponse) || !isEmpty(UpdateResponse)) {
+      mutatePositions();
+    }
+  }, [PostResponse, UpdateResponse]);
 
   if (!swrPositions)
     return (
