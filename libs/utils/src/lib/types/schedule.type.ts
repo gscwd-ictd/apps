@@ -1,5 +1,5 @@
 import { Categories } from '../enums/category.enum';
-import { ScheduleShifts } from '../enums/schedule.enum';
+import { ScheduleBases, ScheduleShifts } from '../enums/schedule.enum';
 
 type ScheduleWithLunch = {
   withLunch: true;
@@ -21,6 +21,7 @@ export type Schedule = {
   timeOut: string;
   shift: ScheduleShifts | null;
   restDays: Array<number>;
+  scheduleBase: ScheduleBases | null;
 } & (ScheduleWithLunch | ScheduleWithoutLunch);
 
 export type ScheduleId = Pick<Schedule, 'id'>;

@@ -14,7 +14,6 @@ import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/emp
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
-import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
@@ -28,11 +27,13 @@ type AddModalProps = {
 };
 
 const categorySelection: Array<SelectOption> = [
-  { label: 'Regular', value: 'regular' },
-  { label: 'Flexible', value: 'flexible' },
+  { label: 'Regular Office', value: 'regular-office' },
+  { label: 'Flexible Office', value: 'flexible-office' },
+  { label: 'Regular Field', value: 'regular-field' },
+  { label: 'Flexible Field', value: 'flexible-field' },
 ];
 
-const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
+const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -85,10 +86,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
       scheduleType: null,
       timeIn: '',
       timeOut: '',
-      scheduleBase: ScheduleBases.OFFICE,
-      withLunch: true,
-      lunchIn: null,
-      lunchOut: null,
+      scheduleBase: null,
       name: '',
       shift: null,
       restDays: [],
@@ -111,8 +109,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
-    console.log(sched);
-
     // set loading to true
     PostSchedule(true);
 
@@ -141,22 +137,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     }
   };
 
-  // set it to null
-  useEffect(() => {
-    if (isEmpty(watch('lunchIn'))) setValue('lunchIn', null);
-  }, [watch('lunchIn')]);
-
-  // set it to null
-  useEffect(() => {
-    if (isEmpty(watch('lunchOut'))) setValue('lunchOut', null);
-  }, [watch('lunchOut')]);
-
-  // with lunch in/out listener
-  useEffect(() => {
-    if (withLunch) setValue('withLunch', true);
-    else if (!withLunch) setValue('withLunch', false);
-  }, [withLunch]);
-
   // watch
   useEffect(() => {
     setValue('restDays', useRestDayArrayToNumberArray(selectedRestDays));
@@ -175,9 +155,11 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="xl">
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">New Schedule</span>
+            <span className="text-2xl text-gray-600">
+              New Pumping Station Schedule
+            </span>
             <button
-              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
+              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
               onClick={closeModalAction}
             >
@@ -213,15 +195,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                 />
 
                 {/** schedule type */}
-                <SelectListRF
-                  id="scheduleCategory"
-                  selectList={categorySelection}
-                  controller={{
-                    ...register('scheduleType', { required: true }),
-                  }}
-                  label="Category"
-                  disabled={IsLoading ? true : false}
-                />
 
                 {/** Time in */}
                 <LabelInput
@@ -244,68 +217,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   errorMessage={errors.timeOut?.message}
                   disabled={IsLoading ? true : false}
                 />
-
-                {/** With Lunch */}
-                <div className="flex gap-2 text-start">
-                  <Toggle
-                    labelPosition="top"
-                    enabled={withLunch}
-                    setEnabled={setWithLunch}
-                    label={'With Lunch In & Out:'}
-                    disabled={IsLoading ? true : false}
-                  />
-                  <div
-                    className={`text-xs ${
-                      withLunch ? 'text-blue-400' : 'text-gray-400'
-                    }`}
-                  >
-                    {withLunch ? (
-                      <button
-                        onClick={() => setWithLunch((prev) => !prev)}
-                        className="underline"
-                        type="button"
-                        disabled={IsLoading ? true : false}
-                      >
-                        <span>Yes</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setWithLunch((prev) => !prev)}
-                        className="underline"
-                        type="button"
-                        disabled={IsLoading ? true : false}
-                      >
-                        <span>No</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/** Lunch In */}
-                {watch('withLunch') === true ? (
-                  <LabelInput
-                    id={'scheduleLunchIn'}
-                    type="time"
-                    label={'Lunch In'}
-                    controller={{ ...register('lunchIn') }}
-                    isError={errors.lunchIn ? true : false}
-                    errorMessage={errors.lunchIn?.message}
-                    disabled={IsLoading ? true : false}
-                  />
-                ) : null}
-
-                {/** Lunch Out */}
-                {watch('withLunch') === true ? (
-                  <LabelInput
-                    id={'scheduleLunchOut'}
-                    type="time"
-                    label={'Lunch Out'}
-                    controller={{ ...register('lunchOut') }}
-                    isError={errors.lunchOut ? true : false}
-                    errorMessage={errors.lunchOut?.message}
-                    disabled={IsLoading ? true : false}
-                  />
-                ) : null}
 
                 {/** Shift  */}
                 <SelectListRF
@@ -352,4 +263,4 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddOfficeSchedModal;
+export default AddStationSchedModal;

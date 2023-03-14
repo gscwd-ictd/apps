@@ -206,7 +206,7 @@ export const SideNavigation = () => {
                       <i className="text-2xl bx bxs-factory"></i>
                     </>
                   }
-                  path={Paths[16]}
+                  path={Paths[17]}
                 />
               </>
             }

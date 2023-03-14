@@ -1,10 +1,10 @@
-export const renderRestDays = (restDays: Array<string>) => {
+export const useRenderRestDays = (restDays: Array<string>) => {
   const tempRestDays = restDays.map((restDay, index: number) => {
     if (restDay === 'Sunday') {
       return (
         <span
           key={index}
-          className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
         >
           Sunday
         </span>
@@ -22,7 +22,7 @@ export const renderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
         >
           Tuesday
         </span>
@@ -40,7 +40,7 @@ export const renderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
         >
           Thursday
         </span>
@@ -58,7 +58,7 @@ export const renderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
         >
           Saturday
         </span>
