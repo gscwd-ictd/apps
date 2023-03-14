@@ -359,7 +359,7 @@ export default function DR({
         </Modal.Body>
 
         <Modal.Footer>
-          <div className="flex justify-start gap-2">
+          <div className="flex justify-end gap-2">
             <div className="w-[6rem]">
               {modal.page !== 6 && (
                 <Button onClick={cancelDRModal} variant="info">
