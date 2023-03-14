@@ -132,202 +132,207 @@ export type DRCState = {
   emptyResponse: () => void;
 };
 
-export const useDrStore = create<DRCState>((set) => ({
-  drc: {
-    postResponse: {} as DutyResponsibility,
-    updateResponse: {} as DutyResponsibility,
-  },
-  position: {
-    postResponse: {} as Position,
-    updateResponse: {} as Position,
-  },
-  loading: {
-    loadingDrc: false,
-    loadingDrcs: false,
-    loadingPosition: false,
-    loadingPositions: false,
-  },
-  errorDrc: {
-    errorDrc: '',
-    errorDrcs: '',
-    errorPosition: '',
-    errorPositions: '',
-  },
-  alert: { isOpen: false, page: 1 },
-  modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
-  allPositions: [],
-  filteredPositions: [],
-  selectedPosition: {} as Position,
-  searchValue: '',
-  searchDRCValue: '',
-  selectedDRCs: DUTIES_RESPONSIBILITIES,
-  filteredDRCs: [],
-  selectedDRCType: '',
-  originalPool: [],
-  drcsForPosting: DUTIES_RESPONSIBILITIES_LIST,
-  allDRCPool: [],
-  poolInitialLoad: false,
-  checkedDRCs: DUTIES_RESPONSIBILITIES,
-  allCompetencyPool: [],
-  positionHasDRCs: false,
-  isEditted: false,
-  drcPoolIsEmpty: false,
-  drcPoolIsFilled: false,
-  DRCIsLoaded: false,
-  drcdsForUpdating: DUTIES_RESPONSIBILITIES_COMPETENCIES,
-  selectedDRCsOnLoad: DUTIES_RESPONSIBILITIES,
-  error: { isError: false, errorMessage: '' },
-  action: '',
-  pendingPositions: [],
-  fulfilledPositions: [],
-  tab: 1,
-  setAlert: (alert: AlertState) => {
-    set((state) => ({ ...state, alert }));
-  },
-  setModal: (modal: ModalState) => {
-    set((state) => ({ ...state, modal }));
-  },
-  setAllPositions: (allPositions: Array<Position>) => {
-    set((state) => ({ ...state, allPositions }));
-  },
-  setFilteredPositions: (filteredPositions: Array<Position>) => {
-    set((state) => ({ ...state, filteredPositions }));
-  },
-  setSelectedPosition: (selectedPosition: Position) => {
-    set((state) => ({ ...state, selectedPosition }));
-  },
-  setSearchValue: (searchValue: string) => {
-    set((state) => ({ ...state, searchValue }));
-  },
-  setSearchDRCValue: (searchDRCValue: string) => {
-    set((state) => ({ ...state, searchDRCValue }));
-  },
-  setSelectedDRCs: (selectedDRCs: DutiesResponsibilities) => {
-    set((state) => ({ ...state, selectedDRCs }));
-  },
-  setFilteredDRCs: (filteredDRCs: Array<DutyResponsibility>) => {
-    set((state) => ({ ...state, filteredDRCs }));
-  },
-  setSelectedDRCType: (selectedDRCType: string) => {
-    set((state) => ({ ...state, selectedDRCType }));
-  },
-  setOriginalPool: (originalPool: Array<DutyResponsibility>) => {
-    set((state) => ({ ...state, originalPool }));
-  },
-  setDrcsForPosting: (drcsForPosting: DutiesResponsibilitiesList) => {
-    set((state) => ({ ...state, drcsForPosting }));
-  },
-  setAllDRCPool: (allDRCPool: Array<DutyResponsibility>) => {
-    set((state) => ({ ...state, allDRCPool }));
-  },
-  setPoolInitialLoad: (poolInitialLoad: boolean) => {
-    set((state) => ({ ...state, poolInitialLoad }));
-  },
-  setCheckedDRCs: (checkedDRCs: DutiesResponsibilities) => {
-    set((state) => ({ ...state, checkedDRCs }));
-  },
-  setAllCompetencyPool: (allCompetencyPool: Array<Competency>) => {
-    set((state) => ({ ...state, allCompetencyPool }));
-  },
-  setPositionHasDRCs: (positionHasDRCs: boolean) => {
-    set((state) => ({ ...state, positionHasDRCs }));
-  },
-  setIsEditted: (isEditted: boolean) => {
-    set((state) => ({ ...state, isEditted }));
-  },
-  setDrcPoolIsEmpty: (drcPoolIsEmpty: boolean) => {
-    set((state) => ({ ...state, drcPoolIsEmpty }));
-  },
-  setDrcPoolIsFilled: (drcPoolIsFilled: boolean) => {
-    set((state) => ({ ...state, drcPoolIsFilled }));
-  },
-  setDRCisLoaded: (DRCIsLoaded: boolean) => {
-    set((state) => ({ ...state, DRCIsLoaded }));
-  },
-  setDrcdsForUpdating: (drcdsForUpdating: UpdatedDRCD) => {
-    set((state) => ({ ...state, drcdsForUpdating }));
-  },
-  setSelectedDRCsOnLoad: (selectedDRCsOnLoad: DutiesResponsibilities) => {
-    set((state) => ({ ...state, selectedDRCsOnLoad }));
-  },
-  setError: (error: ErrorState) => {
-    set((state) => ({ ...state, error }));
-  },
-  setAction: (action: string) => {
-    set((state) => ({ ...state, action }));
-  },
-  setPendingPositions: (pendingPositions: Array<Position>) => {
-    set((state) => ({ ...state, pendingPositions }));
-  },
-  setFulfilledPositions: (fulfilledPositions: Array<FinishedPosition>) => {
-    set((state) => ({ ...state, fulfilledPositions }));
-  },
-  setTab: (tab: number) => {
-    set((state) => ({ ...state, tab }));
-  },
+export const useDrStore = create<DRCState>()(
+  devtools((set) => ({
+    drc: {
+      postResponse: {} as DutyResponsibility,
+      updateResponse: {} as DutyResponsibility,
+    },
+    position: {
+      postResponse: {} as Position,
+      updateResponse: {} as Position,
+    },
+    loading: {
+      loadingDrc: false,
+      loadingDrcs: false,
+      loadingPosition: false,
+      loadingPositions: false,
+    },
+    errorDrc: {
+      errorDrc: '',
+      errorDrcs: '',
+      errorPosition: '',
+      errorPositions: '',
+    },
+    alert: { isOpen: false, page: 1 },
+    modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
+    allPositions: [],
+    filteredPositions: [],
+    selectedPosition: {} as Position,
+    searchValue: '',
+    searchDRCValue: '',
+    selectedDRCs: DUTIES_RESPONSIBILITIES,
+    filteredDRCs: [],
+    selectedDRCType: '',
+    originalPool: [],
+    drcsForPosting: DUTIES_RESPONSIBILITIES_LIST,
+    allDRCPool: [],
+    poolInitialLoad: false,
+    checkedDRCs: DUTIES_RESPONSIBILITIES,
+    allCompetencyPool: [],
+    positionHasDRCs: false,
+    isEditted: false,
+    drcPoolIsEmpty: false,
+    drcPoolIsFilled: false,
+    DRCIsLoaded: false,
+    drcdsForUpdating: DUTIES_RESPONSIBILITIES_COMPETENCIES,
+    selectedDRCsOnLoad: DUTIES_RESPONSIBILITIES,
+    error: { isError: false, errorMessage: '' },
+    action: '',
+    pendingPositions: [],
+    fulfilledPositions: [],
+    tab: 1,
+    setAlert: (alert: AlertState) => {
+      set((state) => ({ ...state, alert }));
+    },
+    setModal: (modal: ModalState) => {
+      set((state) => ({ ...state, modal }));
+    },
+    setAllPositions: (allPositions: Array<Position>) => {
+      set((state) => ({ ...state, allPositions }));
+    },
+    setFilteredPositions: (filteredPositions: Array<Position>) => {
+      set((state) => ({ ...state, filteredPositions }));
+    },
+    setSelectedPosition: (selectedPosition: Position) => {
+      set((state) => ({ ...state, selectedPosition }));
+    },
+    setSearchValue: (searchValue: string) => {
+      set((state) => ({ ...state, searchValue }));
+    },
+    setSearchDRCValue: (searchDRCValue: string) => {
+      set((state) => ({ ...state, searchDRCValue }));
+    },
+    setSelectedDRCs: (selectedDRCs: DutiesResponsibilities) => {
+      set((state) => ({ ...state, selectedDRCs }));
+    },
+    setFilteredDRCs: (filteredDRCs: Array<DutyResponsibility>) => {
+      set((state) => ({ ...state, filteredDRCs }));
+    },
+    setSelectedDRCType: (selectedDRCType: string) => {
+      set((state) => ({ ...state, selectedDRCType }));
+    },
+    setOriginalPool: (originalPool: Array<DutyResponsibility>) => {
+      set((state) => ({ ...state, originalPool }));
+    },
+    setDrcsForPosting: (drcsForPosting: DutiesResponsibilitiesList) => {
+      set((state) => ({ ...state, drcsForPosting }));
+    },
+    setAllDRCPool: (allDRCPool: Array<DutyResponsibility>) => {
+      set((state) => ({ ...state, allDRCPool }));
+    },
+    setPoolInitialLoad: (poolInitialLoad: boolean) => {
+      set((state) => ({ ...state, poolInitialLoad }));
+    },
+    setCheckedDRCs: (checkedDRCs: DutiesResponsibilities) => {
+      set((state) => ({ ...state, checkedDRCs }));
+    },
+    setAllCompetencyPool: (allCompetencyPool: Array<Competency>) => {
+      set((state) => ({ ...state, allCompetencyPool }));
+    },
+    setPositionHasDRCs: (positionHasDRCs: boolean) => {
+      set((state) => ({ ...state, positionHasDRCs }));
+    },
+    setIsEditted: (isEditted: boolean) => {
+      set((state) => ({ ...state, isEditted }));
+    },
+    setDrcPoolIsEmpty: (drcPoolIsEmpty: boolean) => {
+      set((state) => ({ ...state, drcPoolIsEmpty }));
+    },
+    setDrcPoolIsFilled: (drcPoolIsFilled: boolean) => {
+      set((state) => ({ ...state, drcPoolIsFilled }));
+    },
+    setDRCisLoaded: (DRCIsLoaded: boolean) => {
+      set((state) => ({ ...state, DRCIsLoaded }));
+    },
+    setDrcdsForUpdating: (drcdsForUpdating: UpdatedDRCD) => {
+      set((state) => ({ ...state, drcdsForUpdating }));
+    },
+    setSelectedDRCsOnLoad: (selectedDRCsOnLoad: DutiesResponsibilities) => {
+      set((state) => ({ ...state, selectedDRCsOnLoad }));
+    },
+    setError: (error: ErrorState) => {
+      set((state) => ({ ...state, error }));
+    },
+    setAction: (action: string) => {
+      set((state) => ({ ...state, action }));
+    },
+    setPendingPositions: (pendingPositions: Array<Position>) => {
+      set((state) => ({ ...state, pendingPositions }));
+    },
+    setFulfilledPositions: (fulfilledPositions: Array<FinishedPosition>) => {
+      set((state) => ({ ...state, fulfilledPositions }));
+    },
+    setTab: (tab: number) => {
+      set((state) => ({ ...state, tab }));
+    },
 
-  getPositions: (loading: boolean) =>
-    set((state) => ({
-      ...state,
-      allPositions: [],
-      filteredPositions: [],
-      loading: { ...state.loading, loadingPositions: loading },
-      errorDrcs: { ...state.errorDrc, errorPositions: '' },
-    })),
+    getPositions: (loading: boolean) =>
+      set((state) => ({
+        ...state,
+        allPositions: [],
+        filteredPositions: [],
+        loading: { ...state.loading, loadingPositions: loading },
+        errorDrcs: { ...state.errorDrc, errorPositions: '' },
+      })),
 
-  getPositionsSuccess: (loading: boolean, response: Array<Position>) =>
-    set((state) => ({
-      ...state,
-      allPositions: response,
-      filteredPositions: response,
-      loading: { ...state.loading, loadingPositions: loading },
-    })),
+    getPositionsSuccess: (loading: boolean, response: Array<Position>) =>
+      set((state) => ({
+        ...state,
+        allPositions: response,
+        filteredPositions: response,
+        loading: { ...state.loading, loadingPositions: loading },
+      })),
 
-  getPositionsFail: (loading: boolean, error: string) =>
-    set((state) => ({
-      ...state,
-      loading: { ...state.loading, loadingPositions: loading },
-      errorDrc: { ...state.errorDrc, errorPositions: error },
-    })),
+    getPositionsFail: (loading: boolean, error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositions: loading },
+        errorDrc: { ...state.errorDrc, errorPositions: error },
+      })),
 
-  getDrcPool: (loading: boolean) =>
-    set((state) => ({
-      ...state,
-      originalPool: [],
-      allDRCPool: [],
-      filteredDRCs: [],
-      loading: { ...state.loading, loadingDrcs: loading },
-      errorDrc: { ...state.errorDrc, errorDrcs: '' },
-    })),
+    getDrcPool: (loading: boolean) =>
+      set((state) => ({
+        ...state,
+        originalPool: [],
+        allDRCPool: [],
+        filteredDRCs: [],
+        loading: { ...state.loading, loadingDrcs: loading },
+        errorDrc: { ...state.errorDrc, errorDrcs: '' },
+      })),
 
-  getDrcPoolSuccess: (loading: boolean, response: Array<DutyResponsibility>) =>
-    set((state) => ({
-      ...state,
-      originalPool: response,
-      allDRCPool: response,
-      filteredDRCs: response,
-      drcPoolIsFilled: true,
-      loading: { ...state.loading, loadingDrcs: loading },
-    })),
+    getDrcPoolSuccess: (
+      loading: boolean,
+      response: Array<DutyResponsibility>
+    ) =>
+      set((state) => ({
+        ...state,
+        originalPool: response,
+        allDRCPool: response,
+        filteredDRCs: response,
+        drcPoolIsFilled: true,
+        loading: { ...state.loading, loadingDrcs: loading },
+      })),
 
-  getDrcPoolFail: (loading: boolean, error: string) =>
-    set((state) => ({
-      ...state,
-      loading: { ...state.loading, loadingDrcs: loading },
-      errorDrc: { ...state.errorDrc, errorDrcs: error },
-    })),
+    getDrcPoolFail: (loading: boolean, error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingDrcs: loading },
+        errorDrc: { ...state.errorDrc, errorDrcs: error },
+      })),
 
-  emptyResponse: () =>
-    set((state) => ({
-      ...state,
-      position: {
-        ...state.position,
-        postResponse: {} as Position,
-        updateResponse: {} as Position,
-      },
-      drc: {
-        postResponse: {} as DutyResponsibility,
-        updateResponse: {} as DutyResponsibility,
-      },
-    })),
-}));
+    emptyResponse: () =>
+      set((state) => ({
+        ...state,
+        position: {
+          ...state.position,
+          postResponse: {} as Position,
+          updateResponse: {} as Position,
+        },
+        drc: {
+          postResponse: {} as DutyResponsibility,
+          updateResponse: {} as DutyResponsibility,
+        },
+      })),
+  }))
+);
