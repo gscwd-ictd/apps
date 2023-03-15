@@ -68,7 +68,16 @@ export const AllPassSlipListTab = ({
                   </p>
 
                   <p className="text-xs text-indigo-500">
-                    Status: {item.status}
+                    Status:{' '}
+                    {item.status === 'ongoing'
+                      ? 'Pending'
+                      : item.status === 'approved'
+                      ? 'Approved'
+                      : item.status === 'disapproved'
+                      ? 'Disapproved'
+                      : item.status === 'cancelled'
+                      ? 'Cancelled'
+                      : item.status}
                   </p>
                 </div>
               </li>

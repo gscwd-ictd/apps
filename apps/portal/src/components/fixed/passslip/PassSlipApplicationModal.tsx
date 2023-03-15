@@ -56,9 +56,6 @@ export const PassSlipApplicationModal = ({
 
   //zustand initialization to access pass slip store
   const {
-    applyPassSlipModalIsOpen,
-    setApplyPassSlipModalIsOpen,
-
     postResponseApply,
     loadingResponse,
     errorResponse,
@@ -67,9 +64,6 @@ export const PassSlipApplicationModal = ({
     postPassSlipListSuccess,
     postPassSlipListFail,
   } = usePassSlipStore((state) => ({
-    applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
-    setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
-
     postResponseApply: state.response.postResponseApply,
     loadingResponse: state.loading.loadingResponse,
     errorResponse: state.error.errorResponse,
@@ -80,9 +74,9 @@ export const PassSlipApplicationModal = ({
   }));
 
   // set state for employee store
-  const [empId, setEmpId] = useState<string>(
-    employeeDetails.employmentDetails.assignment.id
-  );
+  // const [empId, setEmpId] = useState<string>(
+  //   employeeDetails.employmentDetails.assignment.id
+  // );
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<PassSlip>({
@@ -113,35 +107,16 @@ export const PassSlipApplicationModal = ({
   }, [watch('natureOfBusiness')]);
 
   const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
-    // set loading to true
-    // setIsLoading(true);
-
     handlePostResult(data);
     postPassSlipList();
-
-    // empty the state to remove previous value
-    // setErrorPostMessage('');
-
-    // empty the state to remove previous value
-    // setResponsePost({});
   };
 
   const handlePostResult = async (data: PassSlip) => {
     const { error, result } = await postPortal('/v1/pass-slip', data);
 
     if (error) {
-      // request is done so set loading to false
-      // setIsLoading(false);
-      // set value for error message
-      // setErrorPostMessage(result);
-      // setErrorPostMessage('Error Submitting Application');
       postPassSlipListFail(result);
     } else {
-      // request is done so set loading to false
-      // setIsLoading(false);
-
-      // set value from returned response
-      // setResponsePost(result);
       postPassSlipListSuccess(result);
 
       reset();

@@ -6,16 +6,16 @@ import {
 } from 'next/types';
 import { getUserDetails, withSession } from '../../../../utils/helpers/session';
 import { usePassSlipStore } from '../../../../store/passslip.store';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PassSlipPdf } from '../../../../components/fixed/passslip/PassSlipPdf';
 import { employeeDummy } from '../../../../../src/types/employee.type';
 
 export default function PassSlipPage({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const getPassSlip = usePassSlipStore((state) => state.getPassSlip);
-
-  // console.log(getPassSlip);
+  const { passSlip } = usePassSlipStore((state) => ({
+    passSlip: state.passSlip,
+  }));
 
   return (
     employeeDetails && (
@@ -23,7 +23,11 @@ export default function PassSlipPage({
         <Head>
           <title>Employee Pass Slips</title>
         </Head>
-        <PassSlipPdf employeeDetails={employeeDetails} />;
+        <PassSlipPdf
+          employeeDetails={employeeDetails}
+          passSlipDetails={passSlip}
+        />
+        ;
       </>
     )
   );

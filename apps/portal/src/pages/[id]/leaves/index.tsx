@@ -19,143 +19,192 @@ import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
 import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
 import { LeavesModalController } from '../../../components/fixed/leaves/LeavesListController';
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import useSWR from 'swr';
+import { isEmpty } from 'lodash';
+import { LeaveApplicationModal } from '../../../../src/components/fixed/leaves/LeaveApplicationModal';
+import { LeavePendingModal } from '../../../../src/components/fixed/leaves/LeavePendingModal';
+import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCompletedModal';
 
 export default function Leaves({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // get state for the modal
+  const {
+    tab,
+    applyLeaveModalIsOpen,
+    pendingLeaveModalIsOpen,
+    completedLeaveModalIsOpen,
+    loading,
+    error,
+    responseApply,
+    responseCancel,
+
+    setApplyLeaveModalIsOpen,
+    setPendingLeaveModalIsOpen,
+    setCompletedLeaveModalIsOpen,
+
+    getLeaveList,
+    getLeaveListSuccess,
+    getLeaveListFail,
+  } = useLeaveStore((state) => ({
+    tab: state.tab,
+    applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
+    pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
+    completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
+
+    loading: state.loading.loadingLeaves,
+    error: state.error.errorLeaves,
+    responseApply: state.response.postResponseApply,
+    responseCancel: state.response.deleteResponseCancel,
+
+    setApplyLeaveModalIsOpen: state.setApplyLeaveModalIsOpen,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
+
+    getLeaveList: state.getLeaveList,
+    getLeaveListSuccess: state.getLeaveListSuccess,
+    getLeaveListFail: state.getLeaveListFail,
+  }));
+
+  // open the modal
+  const openApplyLeaveModal = () => {
+    if (!applyLeaveModalIsOpen) {
+      setApplyLeaveModalIsOpen(true);
+    }
+  };
+
+  // cancel action for Pass Slip Application Modal
+  const closeApplyLeaveModal = async () => {
+    setApplyLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Pass Slip Pending Modal
+  const closePendingLeaveModal = async () => {
+    setPendingLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Pass Slip Completed Modal
+  const closeCompletedLeaveModal = async () => {
+    setCompletedLeaveModalIsOpen(false);
+  };
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
     (state) => state.setEmployeeDetails
   );
 
-  // open the modal
-  const openModal = () => {
-    // if (!modal.isOpen) {
-    //   setAction('Apply');
-    //   setModal({ ...modal, page: 1, isOpen: true });
-    // }
-  };
-
-  // // close the modal
-  // const closeModal = () => {
-  //   setModal({ ...modal, isOpen: false });
-  //   setIsLoading(true);
-  // };
-
-  // // cancel action for modal
-  const modalCancel = async () => {
-    setModal({ ...modal, isOpen: false });
-    setIsLoading(true);
-  };
-
   // set the employee details on page load
   useEffect(() => {
-    setEmployeeDetails(employeeDummy);
-    setIsLoading(true);
-  }, [setEmployeeDetails, setIsLoading]);
+    setEmployeeDetails(employeeDetails);
+  }, [employeeDetails]);
 
+  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/${employeeDetails.employmentDetails.userId}`;
+
+  const {
+    data: swrLeaves,
+    isLoading: swrIsLoading,
+    error: swrError,
+  } = useSWR(leaveUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
   useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
+    if (swrIsLoading) {
+      getLeaveList(swrIsLoading);
     }
-  }, [isLoading, setIsLoading]);
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaves)) {
+      getLeaveListSuccess(swrIsLoading, swrLeaves);
+    }
+
+    if (!isEmpty(swrError)) {
+      getLeaveListFail(swrIsLoading, swrError.message);
+    }
+  }, [swrLeaves, swrError]);
 
   return (
     <>
-      <>
-        <EmployeeProvider employeeData={employee}>
-          <Head>
-            <title>Employee Leaves</title>
-          </Head>
+      {error ? (
+        <ToastNotification toastType="error" notifMessage={error} />
+      ) : null}
 
-          <SideNav />
+      <EmployeeProvider employeeData={employee}>
+        <Head>
+          <title>Employee Leaves</title>
+        </Head>
 
-          <Modal size={'xl'} open={modal.isOpen} setOpen={openModal}>
-            <Modal.Header>
-              <h3 className="font-semibold text-2xl text-gray-700">
-                <div className="px-5 flex justify-between">
-                  <span>Leave Applicattion</span>
-                  <button
-                    className="hover:bg-slate-100 px-1 rounded-full"
-                    onClick={modalCancel}
-                  >
-                    <HiX />
-                  </button>
+        <SideNav />
+
+        {/* Pass Slip Application Modal */}
+        <LeaveApplicationModal
+          modalState={applyLeaveModalIsOpen}
+          setModalState={setApplyLeaveModalIsOpen}
+          closeModalAction={closeApplyLeaveModal}
+        />
+
+        {/* Pass Slip Pending Modal */}
+        <LeavePendingModal
+          modalState={pendingLeaveModalIsOpen}
+          setModalState={setPendingLeaveModalIsOpen}
+          closeModalAction={closePendingLeaveModal}
+        />
+
+        {/* Pass Slip Pending Modal */}
+        <LeaveCompletedModal
+          modalState={completedLeaveModalIsOpen}
+          setModalState={setCompletedLeaveModalIsOpen}
+          closeModalAction={closeCompletedLeaveModal}
+        />
+
+        <MainContainer>
+          <div className="w-full h-full px-32">
+            <ContentHeader
+              title="Employee Leaves"
+              subtitle="Apply for company leave"
+            >
+              <Button onClick={openApplyLeaveModal}>
+                <div className="flex items-center w-full gap-2">
+                  <HiDocumentAdd /> Apply for Leave
                 </div>
-              </h3>
-            </Modal.Header>
-            <Modal.Body>
-              <LeavesModalController page={modal.page} />
-            </Modal.Body>
-            <Modal.Footer>
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant={'primary'}
-                  size={'md'}
-                  loading={false}
-                  onClick={modalCancel}
-                >
-                  {action}
-                </Button>
-
-                {/* <div className="min-w-[6rem] max-w-auto">
-                  <Button variant={'primary'} size={'md'} loading={false}>
-                    {'Apply'}
-                  </Button>
-                </div> */}
+              </Button>
+            </ContentHeader>
+            {loading ? (
+              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+                <SpinnerDotted
+                  speed={70}
+                  thickness={70}
+                  className="w-full flex h-full transition-all "
+                  color="slateblue"
+                  size={100}
+                />
               </div>
-            </Modal.Footer>
-          </Modal>
-
-          <MainContainer>
-            <div className="w-full h-full px-32">
-              <ContentHeader
-                title="Employee Leaves"
-                subtitle="Apply for company leave"
-              >
-                <Button onClick={openModal}>
-                  <div className="flex items-center w-full gap-2">
-                    <HiDocumentAdd /> Apply for Leave
-                  </div>
-                </Button>
-              </ContentHeader>
-              {isLoading ? (
-                <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                  <SpinnerDotted
-                    speed={70}
-                    thickness={70}
-                    className="w-full flex h-full transition-all "
-                    color="slateblue"
-                    size={100}
-                  />
-                </div>
-              ) : (
-                <ContentBody>
-                  <>
-                    <div className="w-full flex">
-                      <div className="w-[58rem]">
-                        <LeavesTabs tab={tab} />
-                      </div>
-                      <div className="w-full">
-                        <LeavesTabWindow
-                          employeeId={employeeDummy.employmentDetails.userId}
-                        />
-                      </div>
+            ) : (
+              <ContentBody>
+                <>
+                  <div className="w-full flex">
+                    <div className="w-[58rem]">
+                      <LeavesTabs tab={tab} />
                     </div>
-                  </>
-                </ContentBody>
-              )}
-            </div>
-          </MainContainer>
-        </EmployeeProvider>
-      </>
+                    <div className="w-full">
+                      <LeavesTabWindow
+                      // employeeId={employeeDummy.employmentDetails.userId}
+                      />
+                    </div>
+                  </div>
+                </>
+              </ContentBody>
+            )}
+          </div>
+        </MainContainer>
+      </EmployeeProvider>
     </>
   );
 }
@@ -163,7 +212,15 @@ export default function Leaves({
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const employeeDetails = getUserDetails();
+  const employeeDetails = employeeDummy;
 
-  return { props: { employeeDummy } };
+  return { props: { employeeDetails } };
 };
+
+// export const getServerSideProps: GetServerSideProps = withSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
+
+//     return { props: { employeeDetails } };
+//   }
+// );

@@ -1,5 +1,11 @@
 import { create } from 'zustand';
-import { Leave, LeaveContents, LeaveId, LeaveList } from '../types/leave.type';
+import {
+  Leave,
+  LeaveContents,
+  LeaveId,
+  LeaveList,
+  LeaveType,
+} from '../types/leave.type';
 import { devtools } from 'zustand/middleware';
 
 export type LeavesState = {
@@ -13,12 +19,15 @@ export type LeavesState = {
   };
   loading: {
     loadingLeaves: boolean;
+    loadingLeaveTypes: boolean;
     loadingResponse: boolean;
   };
   error: {
     errorLeaves: string;
+    errorLeaveTypes: string;
     errorResponse: string;
   };
+  leaveTypes: Array<LeaveType>;
 
   leaveIndividual: LeaveContents;
   applyLeaveModalIsOpen: boolean;
@@ -31,9 +40,13 @@ export type LeavesState = {
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
 
-  postLeaveList: () => void;
-  postLeaveListSuccess: (response: LeaveContents) => void;
-  postLeaveListFail: (error: string) => void;
+  postLeave: () => void;
+  postLeaveSuccess: (response: LeaveContents) => void;
+  postLeaveFail: (error: string) => void;
+
+  getLeaveTypes: (loading: boolean) => void;
+  getLeaveTypesSuccess: (loading: boolean, response) => void;
+  getLeaveTypesFail: (loading: boolean, error: string) => void;
 
   setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -56,12 +69,15 @@ export const useLeaveStore = create<LeavesState>()(
     },
     loading: {
       loadingLeaves: false,
+      loadingLeaveTypes: false,
       loadingResponse: false,
     },
     error: {
       errorLeaves: '',
+      errorLeaveTypes: '',
       errorResponse: '',
     },
+    leaveTypes: [] as Array<LeaveType>,
 
     leaveIndividual: {} as LeaveContents,
 
@@ -145,7 +161,7 @@ export const useLeaveStore = create<LeavesState>()(
     },
 
     //POST LEAVE ACTIONS
-    postLeaveList: () => {
+    postLeave: () => {
       set((state) => ({
         ...state,
         response: {
@@ -162,7 +178,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    postLeaveListSuccess: (response: LeaveContents) => {
+    postLeaveSuccess: (response: LeaveContents) => {
       set((state) => ({
         ...state,
         response: {
@@ -175,7 +191,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    postLeaveListFail: (error: string) => {
+    postLeaveFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -185,6 +201,47 @@ export const useLeaveStore = create<LeavesState>()(
         error: {
           ...state.error,
           errorResponse: error,
+        },
+      }));
+    },
+
+    //GET LEAVE TYPE ACTIONS
+    getLeaveTypes: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveTypes: {
+          ...state.leaveTypes,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaveTypes: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveTypes: '',
+        },
+      }));
+    },
+    getLeaveTypesSuccess: (loading: boolean, response: Array<LeaveType>) => {
+      set((state) => ({
+        ...state,
+        leaveTypes: response,
+        loading: {
+          ...state.loading,
+          loadingLeaveTypes: loading,
+        },
+      }));
+    },
+    getLeaveTypesFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingLeaveTypes: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveTypes: error,
         },
       }));
     },

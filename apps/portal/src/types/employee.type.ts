@@ -65,11 +65,11 @@ export type EmployeeProfile = {
 
 export const employeeDummy: EmployeeDetails = {
   user: {
-    _id: 'a4b8902c-ab61-4008-8945-80e66d891f37',
+    _id: 'b35433c0-b1c6-11ed-a79b-000c29f95a80',
     email: 'ericsison003@gmail.com',
   },
   profile: {
-    _id: 'a4b8902c-ab61-4008-8945-80e66d891f37',
+    _id: 'b35433c0-b1c6-11ed-a79b-000c29f95a80',
     companyId: null,
     firstName: 'Rannie May',
     middleName: 'D',
@@ -82,7 +82,7 @@ export const employeeDummy: EmployeeDetails = {
     photoUrl: '/avatars/avatar4.png',
   },
   employmentDetails: {
-    userId: 'a4b8902c-ab61-4008-8945-80e66d891f37',
+    userId: 'b35433c0-b1c6-11ed-a79b-000c29f95a80',
     companyId: null,
     assignment: {
       id: '928bb2b7-f048-11ec-8d31-c4bde5a04065',

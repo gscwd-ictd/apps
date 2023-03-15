@@ -1,5 +1,9 @@
 import { useRouter } from 'next/router';
-import { Leave, LeaveContents } from '../../../../src/types/leave.type';
+import {
+  Leave,
+  LeaveContents,
+  LeaveId,
+} from '../../../../src/types/leave.type';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 
 type AllLeaveListTabProps = {
@@ -23,8 +27,10 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
     setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
   }));
 
-  const onSelect = (leave: Leave) => {
+  const onSelect = (leave: string) => {
     // getLeaveIndividual(leave);
+
+    // http://192.168.99.124:4104/api/v1/leave-application/details/3123123
     if (tab === 1) {
       if (!pendingLeaveModalIsOpen) {
         setPendingLeaveModalIsOpen(true);
@@ -44,7 +50,7 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
             return (
               <li
                 key={index}
-                // onClick={() => onSelect(leaves)}
+                onClick={() => onSelect(leave.id)}
                 className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
               >
                 <div className=" w-full py-2 px-1 ">
@@ -57,10 +63,19 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                   <p className="text-xs text-gray-500">
                     Working Days: {leave.leaveDates}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    Status: {leave.status}
+
+                  <p className="text-xs text-indigo-500">
+                    Status:{' '}
+                    {leave.status === 'ongoing'
+                      ? 'Pending'
+                      : leave.status === 'approved'
+                      ? 'Approved'
+                      : leave.status === 'disapproved'
+                      ? 'Disapproved'
+                      : leave.status === 'cancelled'
+                      ? 'Cancelled'
+                      : leave.status}
                   </p>
-                  {/* <p className="text-sm text-indigo-500">Fulfilled on {dayjs(item.postingDate).format('MMMM d, YYYY')}</p> */}
                 </div>
               </li>
             );
