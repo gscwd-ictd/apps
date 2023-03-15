@@ -1,4 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { LoadingSpinner } from '@gscwd-apps/oneui';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import { createContext, useEffect } from 'react';
@@ -35,6 +36,8 @@ export const DRModalController = ({
     selectedDRCType,
     PostResponse,
     UpdateResponse,
+    IsLoading,
+    Error,
     GetPositions,
     GetPositionsSucces,
     GetPositionsFail,
@@ -117,7 +120,11 @@ export const DRModalController = ({
   return (
     <div className="max-h-[90%]">
       <>
-        {page === 1 && <DRModalSelectPositions allPositions={allPositions} />}
+        {page === 1 && IsLoading ? (
+          <LoadingSpinner size="lg" />
+        ) : (
+          <DRModalSelectPositions allPositions={allPositions} />
+        )}
         {page === 2 && <DRModalSetting />}
         {page === 3 && <DRModalSelect type={selectedDRCType} />}
         {page === 4 && <DRModalSummary />}

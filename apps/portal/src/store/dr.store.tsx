@@ -129,6 +129,14 @@ export type DRCState = {
   getPositionsSuccess: (loading: boolean, response: Array<Position>) => void;
   getPositionsFail: (loading: boolean, error: string) => void;
 
+  postPosition: (loading: boolean) => void;
+  postPositionSuccess: (loading: boolean, response: Position) => void;
+  postPositionFail: (loading: boolean, error: string) => void;
+
+  updatePosition: (loading: boolean) => void;
+  updatePositionSuccess: (loading: boolean, response: Position) => void;
+  updatePositionFail: (loading: boolean, error: string) => void;
+
   emptyResponse: () => void;
 };
 
@@ -319,6 +327,50 @@ export const useDrStore = create<DRCState>()(
         ...state,
         loading: { ...state.loading, loadingDrcs: loading },
         errorDrc: { ...state.errorDrc, errorDrcs: error },
+      })),
+
+    postPosition: (loading: boolean) =>
+      set((state) => ({
+        ...state,
+        position: { ...state.position, postResponse: {} as Position },
+        loading: { ...state.loading, loadingPosition: loading },
+        errorDrc: { ...state.errorDrc, errorPosition: '' },
+      })),
+
+    postPositionSuccess: (loading: boolean, response: Position) =>
+      set((state) => ({
+        ...state,
+        position: { ...state.position, postResponse: response },
+        loading: { ...state.loading, loadingPosition: loading },
+      })),
+
+    postPositionFail: (loading: boolean, error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPosition: loading },
+        errorDrc: { ...state.errorDrc, errorPosition: error },
+      })),
+
+    updatePosition: (loading: boolean) =>
+      set((state) => ({
+        ...state,
+        position: { ...state.position, updateResponse: {} as Position },
+        loading: { ...state.loading, loadingPosition: loading },
+        errorDrc: { ...state.errorDrc, errorPosition: '' },
+      })),
+
+    updatePositionSuccess: (loading: boolean, response: Position) =>
+      set((state) => ({
+        ...state,
+        position: { ...state.position, updateResponse: response },
+        loading: { ...state.loading, loadingPosition: loading },
+      })),
+
+    updatePositionFail: (loading: boolean, error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPosition: loading },
+        errorDrc: { ...state.errorDrc, errorPosition: error },
       })),
 
     emptyResponse: () =>

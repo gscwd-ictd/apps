@@ -13,7 +13,6 @@ import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.st
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
-import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
@@ -54,19 +53,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     PostScheduleFail: state.postScheduleFail,
   }));
 
-  // load default values
-  //  const loadNewDefaultValues = (sched: Schedule) => {
-  //     setValue('name', sched.name);
-  //    setValue('scheduleType', sched.scheduleType);
-  //    setValue('timeIn', sched.timeIn);
-  //    setValue('timeOut', sched.timeOut);
-  //    setValue('withLunch', sched.withLunch);
-  //    setWithLunch(sched.withLunch);
-  //    setValue('lunchIn', sched.lunchIn);
-  //    setValue('lunchOut', sched.lunchOut);
-  //    setValue('shift', sched.shift);
-  //  };
-
   const [withLunch, setWithLunch] = useState<boolean>(true);
   const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
     []
@@ -97,7 +83,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
 
   // reset all values
   const resetToDefaultValues = () => {
-    reset();
     setSelectedRestDays([]);
     setWithLunch(true);
   };
@@ -111,8 +96,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
-    console.log(sched);
-
     // set loading to true
     PostSchedule(true);
 
@@ -134,9 +117,11 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
 
       // set value from returned response
       PostScheduleSuccess(false, result);
-      //   mutate('/holidays');
 
-      reset();
+      // set default values
+      resetToDefaultValues();
+
+      // call the close modal action
       closeModalAction();
     }
   };
@@ -162,6 +147,12 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     setValue('restDays', useRestDayArrayToNumberArray(selectedRestDays));
   }, [selectedRestDays]);
 
+  // set to defaultValues during open
+  useEffect(() => {
+    reset();
+    resetToDefaultValues();
+  }, [modalState]);
+
   return (
     <>
       {!isEmpty(Error) ? (
@@ -175,9 +166,9 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="xl">
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">New Schedule</span>
+            <span className="text-2xl text-gray-600">New Office Schedule</span>
             <button
-              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
+              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
               onClick={closeModalAction}
             >

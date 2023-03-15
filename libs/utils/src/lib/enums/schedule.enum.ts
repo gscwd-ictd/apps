@@ -4,7 +4,7 @@ export enum ScheduleShifts {
 }
 
 export enum ScheduleBases {
-  OFFICE = 'office',
-  FIELD = 'field',
-  STATION = 'station',
+  OFFICE = 'Office',
+  FIELD = 'Field',
+  PUMPING_STATION = 'Pumping Station',
 }

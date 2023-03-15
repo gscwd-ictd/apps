@@ -42,6 +42,8 @@ export type ScheduleState = {
   deleteScheduleSuccess: (loading: boolean, response: Schedule) => void;
   deleteScheduleFail: (loading: boolean, error: string) => void;
 
+  emptyResponse: () => void;
+
   modalIsOpen: boolean;
   setModalIsOpen: (modalIsOpen: boolean) => void;
   action: ModalActions;
@@ -161,5 +163,16 @@ export const useScheduleStore = create<ScheduleState>()(
     setAction: (action: ModalActions) => {
       set((state) => ({ ...state, action }));
     },
+
+    emptyResponse: () =>
+      set((state) => ({
+        ...state,
+        schedule: {
+          ...state.schedule,
+          postResponse: {} as Schedule,
+          updateResponse: {} as Schedule,
+          deleteResponse: {} as Schedule,
+        },
+      })),
   }))
 );
