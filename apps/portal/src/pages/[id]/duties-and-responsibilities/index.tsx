@@ -5,8 +5,10 @@ import { isEmpty, isEqual } from 'lodash';
 import { HiSearch } from 'react-icons/hi';
 import {
   Competency,
+  DutiesResponsibilitiesList,
   DutyResponsibility,
   DutyResponsibilityList,
+  UpdatedDRCD,
 } from '../../../types/dr.type';
 import { postData, patchData } from '../../../utils/hoc/axios';
 import { DRModalController } from '../../../components/fixed/dr/DRModalController';
@@ -38,7 +40,11 @@ import {
   UpdateDrcPool,
   UpdateFinalDrcs,
 } from '../../../components/fixed/dr/utils/functions';
-import { postHRIS } from 'apps/portal/src/utils/helpers/fetchers/Hris-axios-helper';
+import {
+  patchHRIS,
+  postHRIS,
+} from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
+import { boolean } from 'yup';
 
 export default function DR({
   employeeDetails,
@@ -53,6 +59,9 @@ export default function DR({
     PostPosition,
     PostPositionFail,
     PostPositionSuccess,
+    UpdatePosition,
+    UpdatePositionSuccess,
+    UpdatePositionFail,
   } = useDrStore((state) => ({
     // PostPosition: state.,
     PostPositionResponse: state.position.postResponse,
@@ -60,6 +69,9 @@ export default function DR({
     PostPosition: state.postPosition,
     PostPositionSuccess: state.postPositionSuccess,
     PostPositionFail: state.postPositionFail,
+    UpdatePosition: state.updatePosition,
+    UpdatePositionSuccess: state.updatePositionSuccess,
+    UpdatePositionFail: state.updatePositionFail,
   }));
 
   // get state for all DR pool
@@ -254,9 +266,57 @@ export default function DR({
     }
   };
 
+  const handleUpdateData = async (drcds: {
+    forUpdating: UpdatedDRCD;
+    forPosting: DutiesResponsibilitiesList;
+  }) => {
+    //
+    let isSuccess: { update: boolean; post: boolean } = {
+      update: true,
+      post: true,
+    };
+    // patch
+    if (!isEmpty(drcds.forUpdating)) {
+      const { error } = await patchHRIS(
+        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        drcds.forUpdating
+      );
+
+      // return true if success
+      if (error) {
+        isSuccess = { ...isSuccess, update: false };
+      } else {
+        isSuccess = { ...isSuccess, update: true };
+      }
+    }
+
+    // new drc for the selected position
+    if (!isEmpty(drcds.forPosting)) {
+      const { error } = await postHRIS(
+        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        drcds.forPosting
+      );
+
+      // return true if success
+      if (error) {
+        isSuccess = { ...isSuccess, post: false };
+      } else {
+        isSuccess = { ...isSuccess, post: true };
+      }
+    }
+
+    if (isSuccess.post === false || isSuccess.update === false) {
+      // request is done so set loading to false
+      UpdatePosition(false);
+    }
+  };
+
   const alertAction = async () => {
     if (alert.page === 1) {
       if (action === 'create') {
+        // set loading to true
+        PostPosition(true);
+
         // const finalDRCs = await updateFinalDRs(selectedDRCs);
         const finalDRCs = await UpdateFinalDrcs(selectedDRCs);
 
@@ -271,6 +331,9 @@ export default function DR({
         // handle post for create
         handlePostData(finalDRCs);
       } else if (action === 'update') {
+        // set loading to true
+        UpdatePosition(true);
+
         // const drcds = await assignUpdatedDRCs(selectedDRCs.core, selectedDRCs.support, allDRCPool);
         const drcds = await AssignUpdatedDrcs(
           selectedDRCs.core,
@@ -278,21 +341,24 @@ export default function DR({
           allDRCPool
         );
 
-        // patch
-        if (!isEmpty(drcds.forUpdating)) {
-          await patchData(
-            `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
-            drcds.forUpdating
-          );
-        }
+        // handle update
+        handleUpdateData(drcds);
 
-        // new drc for the selected position
-        if (!isEmpty(drcds.forPosting)) {
-          await postData(
-            `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
-            drcds.forPosting
-          );
-        }
+        // // patch
+        // if (!isEmpty(drcds.forUpdating)) {
+        //   await patchData(
+        //     `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        //     drcds.forUpdating
+        //   );
+        // }
+
+        // // new drc for the selected position
+        // if (!isEmpty(drcds.forPosting)) {
+        //   await postData(
+        //     `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        //     drcds.forPosting
+        //   );
+        // }
       }
 
       setAlert({ ...alert, page: 2 });

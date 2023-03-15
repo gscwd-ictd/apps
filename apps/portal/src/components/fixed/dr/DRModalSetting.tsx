@@ -52,6 +52,14 @@ export const DRModalSetting = (): JSX.Element => {
     (state) => state.setSelectedDRCsOnLoad
   );
 
+  // selector
+  const { PostPosition, PostPositionResponse, UpdatePositionResponse } =
+    useDrStore((state) => ({
+      PostPosition: state.postPosition,
+      PostPositionResponse: state.position.postResponse,
+      UpdatePositionResponse: state.position.updateResponse,
+    }));
+
   const setPoolInitialLoad = useDrStore((state) => state.setPoolInitialLoad);
 
   const setSelectedDRCs = useDrStore((state) => state.setSelectedDRCs);
@@ -78,11 +86,17 @@ export const DRModalSetting = (): JSX.Element => {
 
   // query duties and responsibilities data from HRIS using access token
   // const { data: getPool } = useSWR(`${prodUrl}`, fetchWithToken);
-  const { data: getPool } = useSWR(prodUrl, fetchWithToken);
+  const { data: getPool, mutate: mutateGetPool } = useSWR(
+    prodUrl,
+    fetchWithToken
+  );
 
   // query existing duties,responsibilities, and competencies  from HRIS
   // const { data: getDRCs } = useSWR(`${getUrl}`, fetchWithToken);
-  const { data: getDRCs } = useSWR(getUrl, fetchWithToken);
+  const { data: getDRCs, mutate: mutateGetDRCs } = useSWR(
+    getUrl,
+    fetchWithToken
+  );
 
   // fires when core button is clicked
   const onClickCoreBtn = () => {
@@ -302,6 +316,14 @@ export const DRModalSetting = (): JSX.Element => {
       setIsLoading(false);
     }, 500);
   }, [isLoading]);
+
+  // mutate if post or update is triggered
+  useEffect(() => {
+    if (!isEmpty(PostPositionResponse) || !isEmpty(UpdatePositionResponse)) {
+      mutateGetPool();
+      mutateGetDRCs();
+    }
+  }, [PostPositionResponse, UpdatePositionResponse]);
 
   // when modal is loaded, set dr type to ''
   useEffect(() => {

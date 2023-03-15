@@ -36,8 +36,10 @@ export const DRModalController = ({
     selectedDRCType,
     PostResponse,
     UpdateResponse,
-    IsLoading,
-    Error,
+    IsLoadingPositions,
+    IsLoadingDrcs,
+    ErrorDrcs,
+    ErrorPositions,
     GetPositions,
     GetPositionsSucces,
     GetPositionsFail,
@@ -49,8 +51,10 @@ export const DRModalController = ({
     EmptyResponse: state.emptyResponse,
     PostResponse: state.position.postResponse,
     UpdateResponse: state.position.updateResponse,
-    IsLoading: state.loading.loadingPositions,
-    Error: state.errorDrc.errorPositions,
+    IsLoadingPositions: state.loading.loadingPositions,
+    IsLoadingDrcs: state.loading.loadingDrcs,
+    ErrorPositions: state.errorDrc.errorPositions,
+    ErrorDrcs: state.errorDrc.errorDrcs,
     allPositions: state.allPositions,
     selectedDRCType: state.selectedDRCType,
   }));
@@ -120,12 +124,16 @@ export const DRModalController = ({
   return (
     <div className="max-h-[90%]">
       <>
-        {page === 1 && IsLoading ? (
+        {page === 1 && IsLoadingPositions ? (
           <LoadingSpinner size="lg" />
-        ) : (
+        ) : page === 1 && !IsLoadingPositions ? (
           <DRModalSelectPositions allPositions={allPositions} />
-        )}
-        {page === 2 && <DRModalSetting />}
+        ) : null}
+        {page === 2 && IsLoadingDrcs ? (
+          <LoadingSpinner size="lg" />
+        ) : page === 2 && !IsLoadingDrcs ? (
+          <DRModalSetting />
+        ) : null}
         {page === 3 && <DRModalSelect type={selectedDRCType} />}
         {page === 4 && <DRModalSummary />}
       </>
