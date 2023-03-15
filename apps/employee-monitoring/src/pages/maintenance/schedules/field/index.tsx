@@ -11,14 +11,14 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { createColumnHelper } from '@tanstack/react-table';
 import useSWR from 'swr';
-import AddOfficeSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/office/AddOfficeSchedModal';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { useConvertDayToTime } from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
-import { renderShiftType } from 'apps/employee-monitoring/src/utils/functions/renderShiftType';
+import { useRenderShiftType } from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
 import { useConvertRestDaysToArray } from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
 import { useConvertRestDaysToString } from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
-import { useRenderRestDays } from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import { useRenderScheduleType } from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
+import { useRenderRestDays } from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
+import AddFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/AddFieldSchedModal';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -31,13 +31,27 @@ export default function Index() {
     []
   );
 
-  const { Schedules, PostResponse, UpdateResponse, DeleteResponse } =
-    useScheduleStore((state) => ({
-      Schedules: state.schedules,
-      PostResponse: state.schedule.postResponse,
-      UpdateResponse: state.schedule.updateResponse,
-      DeleteResponse: state.schedule.deleteResponse,
-    }));
+  const {
+    Schedules,
+    PostResponse,
+    UpdateResponse,
+    DeleteResponse,
+    GetSchedules,
+    GetSchedulesSuccess,
+    GetSchedulesFail,
+    EmptyResponse,
+  } = useScheduleStore((state) => ({
+    Schedules: state.schedules,
+    PostResponse: state.schedule.postResponse,
+    UpdateResponse: state.schedule.updateResponse,
+    DeleteResponse: state.schedule.deleteResponse,
+    IsLoading: state.loading.loadingSchedules,
+    Error: state.error.errorSchedules,
+    GetSchedules: state.getSchedules,
+    GetSchedulesSuccess: state.getSchedulesSuccess,
+    GetSchedulesFail: state.getSchedulesFail,
+    EmptyResponse: state.emptyResponse,
+  }));
 
   const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
   const setModalIsOpen = useScheduleStore((state) => state.setModalIsOpen);
@@ -49,9 +63,9 @@ export default function Index() {
   const {
     data: swrSchedules,
     isLoading: swrIsLoading,
-    error: swrIsError,
+    error: swrError,
     mutate: mutateSchedules,
-  } = useSWR('/schedule/', fetcherEMS, {
+  } = useSWR('/schedule?base=Field', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -80,15 +94,6 @@ export default function Index() {
 
   // close delete action
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // transform category string
-  const transformCategory = (category: string) => {
-    if (category === 'regular') return 'Regular';
-    else if (category === 'flexible') return 'Flexible';
-    else if (category === 'operator-am') return 'Operator AM';
-    else if (category === 'operator-pm') return 'Operator PM';
-    else return '';
-  };
 
   // when edit action is clicked
   const editAction = async (sched: Schedule, idx: number) => {
@@ -135,13 +140,13 @@ export default function Index() {
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => renderShiftType(info.getValue()),
+      cell: (info) => useRenderShiftType(info.getValue()),
     }),
     columnHelper.accessor('restDays', {
       enableSorting: false,
       header: () => 'Rest Day',
       cell: (info) =>
-        useConvertRestDaysToArray(info.getValue()).length > 1 ? (
+        useConvertRestDaysToArray(info.getValue()).length > 0 ? (
           useRenderRestDays(useConvertRestDaysToString(info.getValue()))
         ) : (
           <span className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
@@ -190,12 +195,31 @@ export default function Index() {
     );
   };
 
+  // Initial zustand state update
+  useEffect(() => {
+    EmptyResponse();
+    if (swrIsLoading) {
+      GetSchedules(swrIsLoading);
+    }
+  }, [swrIsLoading]);
+
   // set data to state from useSWR
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
       setSchedules(swrSchedules.data);
     }
   }, [swrSchedules]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrSchedules)) {
+      GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
+    }
+
+    if (!isEmpty(swrError)) {
+      GetSchedulesFail(swrIsLoading, swrError);
+    }
+  }, [swrSchedules, swrError]);
 
   // mutate from swr
   useEffect(() => {
@@ -227,7 +251,7 @@ export default function Index() {
           ]}
         />
 
-        <AddOfficeSchedModal
+        <AddFieldSchedModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
           closeModalAction={closeAddActionModal}
