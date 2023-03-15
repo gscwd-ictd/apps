@@ -307,7 +307,7 @@ export const DRModalSetting = (): JSX.Element => {
   useEffect(() => {
     setSelectedDRCType('');
     if (DRCIsLoaded === false && action === 'update') setIsLoading(true);
-  }, []);
+  }, [DRCIsLoaded, action]);
 
   if (!selectedPosition)
     return (

@@ -1,5 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DataTableHrms } from '@gscwd-apps/oneui';
+import {
+  DataTableHrms,
+  LoadingSpinner,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Schedule } from '../../../../../../../libs/utils/src/lib/types/schedule.type';
@@ -36,6 +40,8 @@ export default function Index() {
     PostResponse,
     UpdateResponse,
     DeleteResponse,
+    IsLoading,
+    Error,
     GetSchedules,
     GetSchedulesSuccess,
     GetSchedulesFail,
@@ -203,12 +209,12 @@ export default function Index() {
     }
   }, [swrIsLoading]);
 
-  // set data to state from useSWR
-  useEffect(() => {
-    if (!isEmpty(swrSchedules)) {
-      setSchedules(swrSchedules.data);
-    }
-  }, [swrSchedules]);
+  // // set data to state from useSWR
+  // useEffect(() => {
+  //   if (!isEmpty(swrSchedules)) {
+  //     setSchedules(swrSchedules.data);
+  //   }
+  // }, [swrSchedules]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
@@ -251,6 +257,11 @@ export default function Index() {
           ]}
         />
 
+        {/* Notification error */}
+        {!isEmpty(Error) ? (
+          <ToastNotification toastType="error" notifMessage={Error} />
+        ) : null}
+
         <AddFieldSchedModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
@@ -260,26 +271,29 @@ export default function Index() {
         <Can I="access" this="maintenance_schedules">
           <div className="mx-5">
             <Card>
-              {/** Top Card */}
-              <div className="flex flex-row flex-wrap">
-                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                  <button
-                    type="button"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                    onClick={openAddActionModal}
-                  >
-                    <i className="bx bxs-plus-square"></i>&nbsp; Add Schedule
-                  </button>
-                </div>
+              {IsLoading ? (
+                <LoadingSpinner size="lg" />
+              ) : (
+                <div className="flex flex-row flex-wrap">
+                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                    <button
+                      type="button"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                      onClick={openAddActionModal}
+                    >
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Schedule
+                    </button>
+                  </div>
 
-                <DataTableHrms
-                  data={schedules}
-                  columns={columns}
-                  columnVisibility={columnVisibility}
-                  paginate
-                  showGlobalFilter
-                />
-              </div>
+                  <DataTableHrms
+                    data={schedules}
+                    columns={columns}
+                    columnVisibility={columnVisibility}
+                    paginate
+                    showGlobalFilter
+                  />
+                </div>
+              )}
             </Card>
           </div>
         </Can>
