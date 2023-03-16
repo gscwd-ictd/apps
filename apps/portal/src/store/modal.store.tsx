@@ -14,20 +14,28 @@ type ModalState = {
 
 export type ModalStoreState = {
   modal: ModalState;
+  setModal: (modal: ModalState) => void;
   modalAction: Actions | null;
   setModalAction: (action: Actions) => void;
-  setModalIsOpen: (isOpen: boolean) => void;
+
+  openModal: () => void;
+  closeModal: () => void;
   setModalPage: (page: number) => void;
 };
 
 export const useModalStore = create<ModalStoreState>((set, get) => ({
   modal: { isOpen: false, page: 1 },
+  setModal: (modal: ModalState) => set((state) => ({ ...state, modal })),
   modalAction: null,
   setModalAction: (action: Actions) => {
     set((state) => ({ ...state, action }));
   },
-  setModalIsOpen: (isOpen: boolean) =>
-    set((state) => ({ ...state, ...state.modal, isOpen, page: 1 })),
+  openModal: () =>
+    set((state) => ({ ...state, modal: { isOpen: true, page: 1 } })),
+
+  closeModal: () =>
+    set((state) => ({ ...state, modal: { isOpen: false, page: 1 } })),
+
   setModalPage: (page: number) =>
     set((state) => ({ ...state, modal: { ...state.modal, page } })),
 }));

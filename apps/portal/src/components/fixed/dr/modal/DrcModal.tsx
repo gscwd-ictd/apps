@@ -11,14 +11,23 @@ type AddModalProps = {
 };
 
 const DrcModal: FunctionComponent = () => {
-  const { action, modal, setModalAction, setModalIsOpen, setModalPage } =
-    useModalStore((state) => ({
-      modal: state.modal,
-      action: state.modalAction,
-      setModalIsOpen: state.setModalIsOpen,
-      setModalAction: state.setModalAction,
-      setModalPage: state.setModalPage,
-    }));
+  const {
+    action,
+    modal,
+    setModal,
+    setModalAction,
+    openModal,
+    closeModal,
+    setModalPage,
+  } = useModalStore((state) => ({
+    modal: state.modal,
+    setModal: state.setModal,
+    action: state.modalAction,
+    openModal: state.openModal,
+    closeModal: state.closeModal,
+    setModalAction: state.setModalAction,
+    setModalPage: state.setModalPage,
+  }));
 
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
@@ -26,10 +35,15 @@ const DrcModal: FunctionComponent = () => {
 
   return (
     <>
-      <Modal open={modal.isOpen} setOpen={setModalIsOpen} steady size="xl">
+      <Modal
+        open={modal.isOpen}
+        setOpen={() => setModal({ ...modal })}
+        steady
+        size="xl"
+      >
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <div>
+            <div className="flex">
               <h3 className="text-xl font-semibold text-gray-700">
                 {modal.page === 6
                   ? 'Setting Successful'
@@ -48,7 +62,7 @@ const DrcModal: FunctionComponent = () => {
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              onClick={() => setModalIsOpen(false)}
+              onClick={closeModal}
             >
               <i className="bx bx-x"></i>
               <span className="sr-only">Close modal</span>
