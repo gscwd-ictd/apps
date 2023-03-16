@@ -22,9 +22,9 @@ export default function DutiesResponsibilities() {
   //   employeeDetails,
   // }: InferGetServerSidePropsType<typeof getServerSideProps>
 
-  const { modal, setModalIsOpen } = useModalStore((state) => ({
+  const { modal, openModal } = useModalStore((state) => ({
     modal: state.modal,
-    setModalIsOpen: state.setModalIsOpen,
+    openModal: state.openModal,
   }));
 
   return (
@@ -43,7 +43,7 @@ export default function DutiesResponsibilities() {
             title="Position Duties, Responsibilities, & Competencies"
             subtitle="Set or Update"
           >
-            <Button onClick={() => setModalIsOpen}>
+            <Button onClick={openModal}>
               <div className="flex items-center w-full gap-2">
                 <HiSearch /> Find Position
               </div>
