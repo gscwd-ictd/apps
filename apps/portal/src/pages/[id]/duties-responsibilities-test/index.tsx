@@ -4,6 +4,7 @@ import DrcModal from 'apps/portal/src/components/fixed/dr/modal/DrcModal';
 import { SideNav } from 'apps/portal/src/components/fixed/nav/SideNav';
 import { ContentHeader } from 'apps/portal/src/components/modular/custom/containers/ContentHeader';
 import { MainContainer } from 'apps/portal/src/components/modular/custom/containers/MainContainer';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import {
   getUserDetails,
@@ -15,17 +16,23 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
+import { useEffect } from 'react';
 import { HiSearch } from 'react-icons/hi';
 
-export default function DutiesResponsibilities() {
-  //   {
-  //   employeeDetails,
-  // }: InferGetServerSidePropsType<typeof getServerSideProps>
-
+export default function DutiesResponsibilities({
+  employeeDetails,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { modal, openModal } = useModalStore((state) => ({
     modal: state.modal,
     openModal: state.openModal,
   }));
+
+  const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
+
+  // set employee store
+  useEffect(() => {
+    setEmployee(employeeDetails);
+  }, []);
 
   return (
     <>
@@ -55,10 +62,10 @@ export default function DutiesResponsibilities() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: {} };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);
