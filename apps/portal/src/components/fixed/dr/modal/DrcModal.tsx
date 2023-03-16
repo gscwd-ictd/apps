@@ -3,6 +3,7 @@ import { Button, Modal } from '@gscwd-apps/oneui';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { FunctionComponent } from 'react';
+import { DrcModalController } from './DrcModalController';
 
 type AddModalProps = {
   modalState: boolean;
@@ -18,7 +19,8 @@ const DrcModal: FunctionComponent = () => {
     setModalAction,
     openModal,
     closeModal,
-    setModalPage,
+    nextPage,
+    prevPage,
   } = useModalStore((state) => ({
     modal: state.modal,
     setModal: state.setModal,
@@ -26,7 +28,8 @@ const DrcModal: FunctionComponent = () => {
     openModal: state.openModal,
     closeModal: state.closeModal,
     setModalAction: state.setModalAction,
-    setModalPage: state.setModalPage,
+    nextPage: state.nextPage,
+    prevPage: state.prevPage,
   }));
 
   const { selectedPosition } = usePositionStore((state) => ({
@@ -70,17 +73,12 @@ const DrcModal: FunctionComponent = () => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {modal.isOpen && modal.page === 1 && 'Open and Page is 1'}
-          {modal.isOpen && modal.page === 2 && 'Open and Page is 2'}
+          <DrcModalController />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex gap-2">
-            <Button onClick={() => setModalPage(modal.page - 1)}>
-              Prev Page
-            </Button>
-            <Button onClick={() => setModalPage(modal.page + 1)}>
-              Next Page
-            </Button>
+            <Button onClick={prevPage}>Prev Page</Button>
+            <Button onClick={nextPage}>Next Page</Button>
           </div>
         </Modal.Footer>
       </Modal>
