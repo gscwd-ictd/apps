@@ -5,7 +5,7 @@ import { Position } from 'apps/portal/src/types/position.type';
 import { HiPencilAlt, HiPlusCircle } from 'react-icons/hi';
 import { Button } from '../../../modular/common/forms/Button';
 
-export const AllDRPositionsList = (): JSX.Element => {
+export const DrcAllPositionsList = (): JSX.Element => {
   // get all related state from dr context
   // const { filteredPositions, modal, setSelectedPosition, setModal, setAction } = useContext(DRContext);
 

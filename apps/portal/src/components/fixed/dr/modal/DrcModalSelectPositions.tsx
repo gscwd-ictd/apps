@@ -14,10 +14,10 @@ import { isEmpty } from 'lodash';
 import { DRModalPosLoading } from '../DRModalPosLoading';
 import { Position } from 'apps/portal/src/types/position.type';
 import { HiOutlineSearch, HiXCircle } from 'react-icons/hi';
+import { DrcAllPositionsList } from './DrcAllPositionsList';
 
 export const DrcModalSelectPositions: FunctionComponent = () => {
   const {
-    IsLoading,
     positions,
     filteredPositions,
     filteredValue,
@@ -27,7 +27,6 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
     GetAllPositionsSuccess,
     GetAllPositionsFail,
   } = usePositionStore((state) => ({
-    IsLoading: state.loading,
     positions: state.positions,
     filteredPositions: state.filteredPositions,
     filteredValue: state.filteredValue,
@@ -105,7 +104,11 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
   }, [swrPositions, swrError]);
 
   // set focus whenever filtered positions change
-  useEffect(() => searchRef.current.focus(), [filteredPositions]);
+  useEffect(() => {
+    if (!swrLoading) {
+      searchRef.current.focus();
+    }
+  }, [filteredPositions, swrLoading]);
 
   useEffect(() => {
     if (swrLoading) {
@@ -115,14 +118,14 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
 
   return (
     <>
-      {IsLoading ? (
+      {swrLoading ? (
         <DRModalPosLoading />
       ) : (
         <div className="flex flex-col w-full mb-5">
           <section>
             <div className="flex justify-end px-3 mb-1 text-sm">
               <p className="text-gray-600">
-                {positions.length} pending{' '}
+                {positions.length}{' '}
                 {positions.length < 1 ? 'position' : 'positions'}
               </p>
             </div>
@@ -153,8 +156,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
                   <h5 className="text-2xl font-medium text-gray-300">{`No results found for '${filteredValue}'`}</h5>
                 </div>
               ) : (
-                <></>
-                // <AllDRPositionsList />
+                <DrcAllPositionsList />
               )}
             </div>
           </section>
