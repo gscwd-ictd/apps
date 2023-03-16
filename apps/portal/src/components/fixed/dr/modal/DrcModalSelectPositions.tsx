@@ -95,14 +95,11 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
   // get from use swr
   useEffect(() => {
     if (!isEmpty(swrPositions)) {
-      console.log(swrPositions.data);
-
       // success
       GetAllPositionsSuccess(swrPositions.data);
     }
 
     if (!isEmpty(swrError)) {
-      console.log(swrError);
       GetAllPositionsFail(swrError);
     }
   }, [swrPositions, swrError]);
@@ -149,6 +146,16 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
                   </button>
                 </>
               ) : null}
+            </div>
+            <div className="h-[28rem] overflow-y-scroll">
+              {filteredPositions.length === 0 ? (
+                <div className="flex justify-center h-full pt-5 text-center">
+                  <h5 className="text-2xl font-medium text-gray-300">{`No results found for '${filteredValue}'`}</h5>
+                </div>
+              ) : (
+                <></>
+                // <AllDRPositionsList />
+              )}
             </div>
           </section>
         </div>
