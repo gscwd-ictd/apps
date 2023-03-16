@@ -27,22 +27,18 @@ type PositionState = {
   filteredPositions: Array<Position>;
   unfilledPositions: Array<Position>;
   filledPositions: Array<Position>;
-
-  getFilteredDrcPositions: (loading: boolean) => void;
-  getFilteredDrcPositionsSuccess: (response: Array<Position>) => void;
-  getFilteredDrcPositionsFail: (error: string) => void;
-
-  getUnfilledDrcPositions: (loading: boolean) => void;
-  getUnfilledDrcPositionsSuccess: (response: Array<Position>) => void;
-  getUnfilledDrcPositionsFail: (error: string) => void;
-
-  getFilledDrcPositions: (loading: boolean) => void;
-  getFilledDrcPositionsSuccess: (response: Array<Position>) => void;
-  getFilledDrcPositionsFail: (error: string) => void;
-
   getAllDrcPositions: (loading: boolean) => void;
   getAllDrcPositionsSuccess: (response: Array<Position>) => void;
   getAllDrcPositionsFail: (error: string) => void;
+  getFilteredDrcPositions: (loading: boolean) => void;
+  getFilteredDrcPositionsSuccess: (response: Array<Position>) => void;
+  getFilteredDrcPositionsFail: (error: string) => void;
+  getUnfilledDrcPositions: (loading: boolean) => void;
+  getUnfilledDrcPositionsSuccess: (response: Array<Position>) => void;
+  getUnfilledDrcPositionsFail: (error: string) => void;
+  getFilledDrcPositions: (loading: boolean) => void;
+  getFilledDrcPositionsSuccess: (response: Array<Position>) => void;
+  getFilledDrcPositionsFail: (error: string) => void;
 };
 
 export const usePositionStore = create<PositionState>()(
