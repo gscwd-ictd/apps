@@ -28,6 +28,8 @@ type PositionState = {
   unfilledPositions: Array<Position>;
   filledPositions: Array<Position>;
   selectedPosition: Position;
+  setFilteredValue: (filteredValue: string) => void;
+  setFilteredPositions: (filteredPositions: Array<Position>) => void;
   setSelectedPosition: (selectedPosition: Position) => void;
   getAllDrcPositions: (loading: boolean) => void;
   getAllDrcPositionsSuccess: (response: Array<Position>) => void;
@@ -67,6 +69,12 @@ export const usePositionStore = create<PositionState>()(
     error: { errorPosition: '', errorPositions: '' },
 
     selectedPosition: {} as Position,
+
+    setFilteredPositions: (filteredPositions: Array<Position>) =>
+      set((state) => ({ ...state, filteredPositions })),
+
+    setFilteredValue: (filteredValue: string) =>
+      set((state) => ({ ...state, filteredValue })),
 
     setSelectedPosition: (selectedPosition: Position) =>
       set((state) => ({ ...state, selectedPosition })),
