@@ -44,7 +44,6 @@ import {
   patchHRIS,
   postHRIS,
 } from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
-import { boolean } from 'yup';
 
 export default function DR({
   employeeDetails,
