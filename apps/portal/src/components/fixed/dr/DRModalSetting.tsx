@@ -53,12 +53,19 @@ export const DRModalSetting = (): JSX.Element => {
   );
 
   // selector
-  const { PostPosition, PostPositionResponse, UpdatePositionResponse } =
-    useDrStore((state) => ({
-      PostPosition: state.postPosition,
-      PostPositionResponse: state.position.postResponse,
-      UpdatePositionResponse: state.position.updateResponse,
-    }));
+  const {
+    PostPositionResponse,
+    UpdatePositionResponse,
+    PostPosition,
+    UpdatePositionSuccess,
+    PostPositionSuccess,
+  } = useDrStore((state) => ({
+    PostPosition: state.postPosition,
+    PostPositionSuccess: state.postPositionSuccess,
+    UpdatePositionSuccess: state.updatePositionSuccess,
+    PostPositionResponse: state.position.postResponse,
+    UpdatePositionResponse: state.position.updateResponse,
+  }));
 
   const setPoolInitialLoad = useDrStore((state) => state.setPoolInitialLoad);
 
@@ -324,6 +331,8 @@ export const DRModalSetting = (): JSX.Element => {
       mutateGetDRCs();
     }
   }, [PostPositionResponse, UpdatePositionResponse]);
+
+  // useEffect(()=>{},[])
 
   // when modal is loaded, set dr type to ''
   useEffect(() => {

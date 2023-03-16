@@ -308,6 +308,15 @@ export default function DR({
     if (isSuccess.post === false || isSuccess.update === false) {
       // request is done so set loading to false
       UpdatePosition(false);
+
+      // set value for error message
+      UpdatePositionFail(false, 'Failed');
+    } else if (isSuccess.post === true && isSuccess.update === true) {
+      // request is done so set loading to false
+      UpdatePosition(false);
+
+      // set value from returned response
+      // UpdatePositionSuccess(false, )
     }
   };
 
