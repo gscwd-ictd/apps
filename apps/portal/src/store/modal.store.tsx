@@ -1,31 +1,33 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 import { create } from 'zustand';
-import { ErrorState, ModalState } from '../types/modal.type';
 
-export type CreateModalState = {
-  modal: ModalState;
-  setModal: () => void;
-  action: string;
-  setAction: (action: string) => void;
-  tab: number;
-  setTab: (tab: number) => void;
-  error: ErrorState;
-  setError: (error: ErrorState) => void;
+export enum Actions {
+  CREATE = 'create',
+  UPDATE = 'update',
+}
+
+type ModalState = {
+  isOpen: boolean;
+  page: number;
 };
 
-export const useModalStore = create<CreateModalState>((set) => ({
-  modal: { isOpen: false, page: 1, subtitle: '', title: '' },
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setModal: () => {},
-  action: '',
-  setAction: (action: string) => {
+export type ModalStoreState = {
+  modal: ModalState;
+  modalAction: Actions | null;
+  setModalAction: (action: Actions) => void;
+  setModalIsOpen: (isOpen: boolean) => void;
+  setModalPage: (page: number) => void;
+};
+
+export const useModalStore = create<ModalStoreState>((set, get) => ({
+  modal: { isOpen: false, page: 1 },
+  modalAction: null,
+  setModalAction: (action: Actions) => {
     set((state) => ({ ...state, action }));
   },
-  tab: 1,
-  setTab: (tab: number) => {
-    set((state) => ({ ...state, tab }));
-  },
-  error: {} as ErrorState,
-  setError: (error: ErrorState) => {
-    set((state) => ({ ...state, error }));
-  },
+  setModalIsOpen: (isOpen: boolean) =>
+    set((state) => ({ ...state, ...state.modal, isOpen, page: 1 })),
+  setModalPage: (page: number) =>
+    set((state) => ({ ...state, modal: { ...state.modal, page } })),
 }));
