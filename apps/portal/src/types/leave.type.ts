@@ -7,18 +7,17 @@ export type LeaveContents = {
   salary: string;
   typeOfLeave: string;
   leaveId: string;
-  detailsOfLeave: {
-    inPhilippinesOrAbroad: string; //withinThePhilippines or abroad
-    location: string;
-    hospital: string; //inHospital or outPatient
-    illness: string | null;
-    specialLeaveWomenIllness: string | null;
-    study: string; //mastersDegree, BAR, or Other
-    studyPurpose: string | null; //applicable for Study Other only
-    other: string | null; //monetization, terminal leave
-  };
-  numberOfWorkingDays: string;
-  commutation: string | null;
+  numberOfWorkingDays: Array<string>;
+
+  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
+  location?: string;
+  hospital?: string; //inHospital or outPatient
+  illness?: string | null;
+  specialLeaveWomenIllness?: string | null;
+  study?: string; //mastersDegree, BAR, or Other
+  studyPurpose?: string | null; //applicable for Study Other only
+  other?: string | null; //monetization, terminal leave
+  commutation?: string | null;
 };
 
 export type LeaveId = Pick<LeaveContents, 'id'>;

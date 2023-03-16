@@ -109,7 +109,7 @@ export default function Leaves({
     error: swrError,
   } = useSWR(leaveUrl, fetchWithToken, {
     shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   // Initial zustand state update
