@@ -116,6 +116,10 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
     }
   }, [swrLoading]);
 
+  useEffect(() => {
+    setFilteredValue('');
+  }, []);
+
   return (
     <>
       {swrLoading ? (
@@ -125,8 +129,10 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
           <section>
             <div className="flex justify-end px-3 mb-1 text-sm">
               <p className="text-gray-600">
-                {positions.length}{' '}
-                {positions.length < 1 ? 'position' : 'positions'}
+                {filteredPositions.length}{' '}
+                {filteredPositions.length < 1
+                  ? 'position found'
+                  : 'positions found'}
               </p>
             </div>
             <div className="relative px-3 mt-2 mb-5">

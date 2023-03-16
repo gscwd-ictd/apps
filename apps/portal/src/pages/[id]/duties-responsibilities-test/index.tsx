@@ -22,10 +22,7 @@ import { HiSearch } from 'react-icons/hi';
 export default function DutiesResponsibilities({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { modal, openModal } = useModalStore((state) => ({
-    modal: state.modal,
-    openModal: state.openModal,
-  }));
+  const openModal = useModalStore((state) => state.openModal);
 
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
 
