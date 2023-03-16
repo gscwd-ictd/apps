@@ -12,25 +12,18 @@ type AddModalProps = {
 };
 
 const DrcModal: FunctionComponent = () => {
-  const {
-    action,
-    modal,
-    setModal,
-    setModalAction,
-    openModal,
-    closeModal,
-    nextPage,
-    prevPage,
-  } = useModalStore((state) => ({
-    modal: state.modal,
-    setModal: state.setModal,
-    action: state.modalAction,
-    openModal: state.openModal,
-    closeModal: state.closeModal,
-    setModalAction: state.setModalAction,
-    nextPage: state.nextPage,
-    prevPage: state.prevPage,
-  }));
+  const { modal, setModal, closeModal, nextPage, prevPage } = useModalStore(
+    (state) => ({
+      modal: state.modal,
+      setModal: state.setModal,
+      action: state.modalAction,
+      openModal: state.openModal,
+      closeModal: state.closeModal,
+      setModalAction: state.setModalAction,
+      nextPage: state.nextPage,
+      prevPage: state.prevPage,
+    })
+  );
 
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
@@ -46,7 +39,7 @@ const DrcModal: FunctionComponent = () => {
       >
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <div className="flex">
+            <div>
               <h3 className="text-xl font-semibold text-gray-700">
                 {modal.page === 6
                   ? 'Setting Successful'
