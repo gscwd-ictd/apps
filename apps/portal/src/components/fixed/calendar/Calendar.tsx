@@ -60,7 +60,7 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
   }
 
   useEffect(() => {
-    console.log(selectedDates);
+    // console.log(selectedDates);
     setLeaveDates(selectedDates);
   }, [selectedDates]);
 

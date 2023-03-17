@@ -5,7 +5,10 @@ export type LeaveContents = {
   dateOfFiling: string | null;
   position: string;
   salary: string;
-  typeOfLeave: string;
+  typeOfLeave: {
+    id: string;
+    leaveName: string;
+  };
   leaveId: string;
   numberOfWorkingDays: Array<string>;
 
@@ -44,26 +47,26 @@ export type LeaveList = {
 };
 
 export type VacationLeave = {
-  name: string;
-  withinThePhilippines: boolean;
-  abroad: boolean;
-  location: string;
+  leaveTypeId: string;
+  leaveName: string;
+  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
+  location?: string;
   workingDays: Array<string>;
 };
 
 export type ForcedLeave = {
-  name: string;
-  withinThePhilippines: boolean;
-  abroad: boolean;
-  location: string;
+  leaveTypeId: string;
+  leaveName: string;
+  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
+  location?: string;
   workingDays: Array<string>;
 };
 
 export type SickLeave = {
-  name: string;
-  inHospital: boolean;
-  outPatient: boolean;
-  illness: string;
+  leaveTypeId: string;
+  leaveName: string;
+  hospital?: string; //inHospital / Out patient
+  illness?: string;
   workingDays: Array<string>;
 };
 
