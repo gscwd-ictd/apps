@@ -137,6 +137,7 @@ export const useDnrStore = create<DnrState>()(
         ...state,
         originalPoolOfDnrs: [],
         availableDnrs: [],
+        filteredAvailableDnrs: [],
         loading: { ...state.loading, loadingDnrsOnCreate: loading },
         error: { ...state.error, errorDnrsOnCreate: '' },
       })),
@@ -146,6 +147,7 @@ export const useDnrStore = create<DnrState>()(
         ...state,
         originalPoolOfDnrs: response,
         availableDnrs: response,
+        filteredAvailableDnrs: response,
         loading: { ...state.loading, loadingDnrsOnCreate: false },
       })),
 
