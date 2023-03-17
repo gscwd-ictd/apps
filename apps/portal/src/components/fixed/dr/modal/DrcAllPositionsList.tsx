@@ -45,7 +45,7 @@ export const DrcAllPositionsList = (): JSX.Element => {
               <li
                 key={index}
                 // onClick={() => onSelect(position)}
-                className="flex items-center justify-between p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50 "
+                className="flex items-center justify-between p-5 transition-colors ease-in-out border-b hover:border-l-indigo-500 hover:bg-indigo-50"
               >
                 <div>
                   <h1 className="font-medium text-gray-600">

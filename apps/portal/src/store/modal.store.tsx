@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 export enum Actions {
   CREATE = 'create',
@@ -28,38 +29,40 @@ export type ModalStoreState = {
   setModalPage: (page: number) => void;
 };
 
-export const useModalStore = create<ModalStoreState>((set, get) => ({
-  modal: { isOpen: false, page: 1 },
-  setModal: (modal: ModalState) => set((state) => ({ ...state, modal })),
-  modalAction: null,
-  setModalAction: (action: Actions) => {
-    set((state) => ({ ...state, action }));
-  },
-  openModal: () =>
-    set((state) => ({ ...state, modal: { isOpen: true, page: 1 } })),
+export const useModalStore = create<ModalStoreState>()(
+  devtools((set, get) => ({
+    modal: { isOpen: false, page: 1 },
+    setModal: (modal: ModalState) => set((state) => ({ ...state, modal })),
+    modalAction: null,
+    setModalAction: (action: Actions) => {
+      set((state) => ({ ...state, action }));
+    },
+    openModal: () =>
+      set((state) => ({ ...state, modal: { isOpen: true, page: 1 } })),
 
-  closeModal: () =>
-    set((state) => ({ ...state, modal: { isOpen: false, page: 1 } })),
+    closeModal: () =>
+      set((state) => ({ ...state, modal: { isOpen: false, page: 1 } })),
 
-  setModalPage: (page: number) =>
-    set((state) => ({ ...state, modal: { ...state.modal, page } })),
+    setModalPage: (page: number) =>
+      set((state) => ({ ...state, modal: { ...state.modal, page } })),
 
-  nextPage: () =>
-    set((state) => ({
-      ...state,
-      modal: { ...state.modal, page: get().modal.page + 1 },
-    })),
+    nextPage: () =>
+      set((state) => ({
+        ...state,
+        modal: { ...state.modal, page: get().modal.page + 1 },
+      })),
 
-  action: null,
+    action: null,
 
-  setAction: (action: Actions) => set((state) => ({ ...state, action })),
+    setAction: (action: Actions) => set((state) => ({ ...state, action })),
 
-  prevPage: () =>
-    set((state) => ({
-      ...state,
-      modal: {
-        ...state.modal,
-        page: get().modal.page > 1 ? get().modal.page - 1 : get().modal.page,
-      },
-    })),
-}));
+    prevPage: () =>
+      set((state) => ({
+        ...state,
+        modal: {
+          ...state.modal,
+          page: get().modal.page > 1 ? get().modal.page - 1 : get().modal.page,
+        },
+      })),
+  }))
+);
