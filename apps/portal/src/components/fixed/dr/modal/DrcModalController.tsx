@@ -1,6 +1,7 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { DrcModalSelectPositions } from './DrcModalSelectPositions';
+import { DrcModalSetting } from './DrcModalSetting';
 
 export const DrcModalController = (): JSX.Element => {
   const { modal } = useModalStore((state) => ({ modal: state.modal }));
@@ -11,7 +12,7 @@ export const DrcModalController = (): JSX.Element => {
       <>
         {/* {modal.isOpen && modal.page === 1 && 'Open and Page is 1'} */}
         {page === 1 && <DrcModalSelectPositions />}
-        {modal.isOpen && modal.page === 2 && 'Open and Page is 2'}
+        {page === 2 && <DrcModalSetting />}
       </>
     </div>
   );
