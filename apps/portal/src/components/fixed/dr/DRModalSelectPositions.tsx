@@ -13,6 +13,7 @@ export const DRModalSelectPositions = ({
 }: SelectPositionsProps): JSX.Element => {
   const filteredPositions = useDrStore((state) => state.filteredPositions);
   const searchValue = useDrStore((state) => state.searchValue);
+  const setAllDRCPool = useDrStore((state) => state.setAllDRCPool);
   const setDrcPoolIsEmpty = useDrStore((state) => state.setDrcPoolIsEmpty);
   const setDRCIsLoaded = useDrStore((state) => state.setDRCisLoaded);
   const setOriginalPool = useDrStore((state) => state.setOriginalPool);
@@ -73,6 +74,9 @@ export const DRModalSelectPositions = ({
 
     // set pool is empty to default
     setDrcPoolIsEmpty(false);
+
+    // set drc pool to zero
+    setAllDRCPool([]);
 
     // set original pool to zero
     setOriginalPool([]);

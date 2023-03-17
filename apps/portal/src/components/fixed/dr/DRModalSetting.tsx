@@ -244,77 +244,78 @@ export const DRModalSetting = (): JSX.Element => {
 
   // run this use effect when update is clicked
   useEffect(() => {
-    if (
-      !isEmpty(getDRCs) &&
-      action === 'update' &&
-      DRCIsLoaded === false &&
-      selectedDRCs.core.length === 0 &&
-      selectedDRCs.support.length === 0 &&
-      originalPool.length === 0
-    ) {
-      // console.log('getDRCS HERE:', getDRCs)
-      // copy existing core DRCs
-      const coreDRCs = [...getDRCs.core];
+    if (!isEmpty(getDRCs)) {
+      if (
+        action === 'update' &&
+        DRCIsLoaded === false &&
+        selectedDRCs.core.length === 0 &&
+        selectedDRCs.support.length === 0 &&
+        originalPool.length === 0
+      ) {
+        // console.log('getDRCS HERE:', getDRCs)
+        // copy existing core DRCs
+        const coreDRCs = [...getDRCs.core];
 
-      // copy existing support DRCs
-      const supportDRCs = [...getDRCs.support];
+        // copy existing support DRCs
+        const supportDRCs = [...getDRCs.support];
 
-      // sort core DRCs
-      const sortedCoreDRCs = coreDRCs.sort(
-        (a: DutyResponsibility, b: DutyResponsibility) =>
-          a.description.localeCompare(b.description)
-      );
+        // sort core DRCs
+        const sortedCoreDRCs = coreDRCs.sort(
+          (a: DutyResponsibility, b: DutyResponsibility) =>
+            a.description.localeCompare(b.description)
+        );
 
-      // copy existing support DRCs
-      const sortedSupportDRCs = supportDRCs.sort(
-        (a: DutyResponsibility, b: DutyResponsibility) =>
-          a.description.localeCompare(b.description)
-      );
+        // copy existing support DRCs
+        const sortedSupportDRCs = supportDRCs.sort(
+          (a: DutyResponsibility, b: DutyResponsibility) =>
+            a.description.localeCompare(b.description)
+        );
 
-      sortedCoreDRCs.map((dr: DutyResponsibility, index: number) => {
-        // set state value for dr on select
-        dr.state = true;
+        sortedCoreDRCs.map((dr: DutyResponsibility, index: number) => {
+          // set state value for dr on select
+          dr.state = true;
 
-        // set state value for dr on edit
-        dr.onEdit = false;
+          // set state value for dr on edit
+          dr.onEdit = false;
 
-        // set value state of sequence number
-        dr.sequenceNo = index;
+          // set value state of sequence number
+          dr.sequenceNo = index;
 
-        // dr.percentage = 0;
-      });
+          // dr.percentage = 0;
+        });
 
-      sortedSupportDRCs.map((dr: DutyResponsibility, index: number) => {
-        // set state value for dr on select
-        dr.state = true;
+        sortedSupportDRCs.map((dr: DutyResponsibility, index: number) => {
+          // set state value for dr on select
+          dr.state = true;
 
-        // set state value for dr on edit
-        dr.onEdit = false;
+          // set state value for dr on edit
+          dr.onEdit = false;
 
-        // set value state of sequence number
-        dr.sequenceNo = index;
+          // set value state of sequence number
+          dr.sequenceNo = index;
 
-        // dr.percentage = 0;
-      });
+          // dr.percentage = 0;
+        });
 
-      // set selected drs
-      setSelectedDRCs({
-        ...selectedDRCs,
-        core: sortedCoreDRCs,
-        support: sortedSupportDRCs,
-      });
+        // set selected drs
+        setSelectedDRCs({
+          ...selectedDRCs,
+          core: sortedCoreDRCs,
+          support: sortedSupportDRCs,
+        });
 
-      setSelectedDRCsOnLoad({
-        core: sortedCoreDRCs,
-        support: sortedSupportDRCs,
-      });
+        setSelectedDRCsOnLoad({
+          core: sortedCoreDRCs,
+          support: sortedSupportDRCs,
+        });
 
-      // get original pool
-      const pool = getOriginalPool(getPool, getDRCs);
-      setOriginalPool(pool);
+        // get original pool
+        const pool = getOriginalPool(getPool, getDRCs);
+        setOriginalPool(pool);
 
-      // set DRCIsLoaded to true since data is already fetched
-      setDRCIsLoaded(true);
+        // set DRCIsLoaded to true since data is already fetched
+        setDRCIsLoaded(true);
+      }
     }
   }, [getDRCs]);
 
