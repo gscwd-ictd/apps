@@ -17,6 +17,8 @@ export type ModalStoreState = {
   setModal: (modal: ModalState) => void;
   modalAction: Actions | null;
   setModalAction: (action: Actions) => void;
+  action: Actions | null;
+  setAction: (action: Actions) => void;
 
   nextPage: () => void;
   prevPage: () => void;
@@ -47,6 +49,10 @@ export const useModalStore = create<ModalStoreState>((set, get) => ({
       ...state,
       modal: { ...state.modal, page: get().modal.page + 1 },
     })),
+
+  action: null,
+
+  setAction: (action: Actions) => set((state) => ({ ...state, action })),
 
   prevPage: () =>
     set((state) => ({

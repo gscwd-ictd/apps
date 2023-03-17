@@ -15,6 +15,7 @@ import { DRModalPosLoading } from '../DRModalPosLoading';
 import { Position } from 'apps/portal/src/types/position.type';
 import { HiOutlineSearch, HiXCircle } from 'react-icons/hi';
 import { DrcAllPositionsList } from './DrcAllPositionsList';
+import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 
 export const DrcModalSelectPositions: FunctionComponent = () => {
   const {
@@ -35,6 +36,10 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
     GetAllPositions: state.getAllDrcPositions,
     GetAllPositionsSuccess: state.getAllDrcPositionsSuccess,
     GetAllPositionsFail: state.getAllDrcPositionsFail,
+  }));
+
+  const { poolOfDnrs } = useDnrStore((state) => ({
+    poolOfDnrs: state.originalPoolOfDnrs,
   }));
 
   const employee = useEmployeeStore((state) => state.employeeDetails);
@@ -117,7 +122,10 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
   }, [swrLoading]);
 
   useEffect(() => {
+    // set search value to default
     setFilteredValue('');
+
+    //
   }, []);
 
   return (

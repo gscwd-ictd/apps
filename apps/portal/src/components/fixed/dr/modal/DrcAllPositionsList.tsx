@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { useModalStore } from 'apps/portal/src/store/modal.store';
+import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { Position } from 'apps/portal/src/types/position.type';
 import { HiPencilAlt, HiPlusCircle } from 'react-icons/hi';
@@ -7,7 +7,6 @@ import { Button } from '../../../modular/common/forms/Button';
 
 export const DrcAllPositionsList = (): JSX.Element => {
   // get all related state from dr context
-  // const { filteredPositions, modal, setSelectedPosition, setModal, setAction } = useContext(DRContext);
 
   const filteredPositions = usePositionStore(
     (state) => state.filteredPositions
@@ -19,14 +18,16 @@ export const DrcAllPositionsList = (): JSX.Element => {
     (state) => state.setSelectedPosition
   );
 
-  const setModal = useModalStore((state) => state.setModal);
+  const { setModal, setAction } = useModalStore((state) => ({
+    setModal: state.setModal,
+    setAction: state.setAction,
+  }));
 
-  //   const setAction = useDrStore((state) => state.setAction);
+  // const setAction = useDrStore((state) => state.setAction);
 
-  const onSelect = (position: Position, action: string) => {
+  const onSelect = (position: Position, action: Actions) => {
     // set action whether create or update
-    // setAction(action);
-    // console.log(position)
+    setAction(action);
 
     // set the selected position based on index
     setSelectedPosition(position);
@@ -59,7 +60,7 @@ export const DrcAllPositionsList = (): JSX.Element => {
                       btnLabel="SET"
                       icon={<HiPlusCircle size={20} />}
                       iconPlacement="start"
-                      onClick={() => onSelect(position, 'create')}
+                      onClick={() => onSelect(position, Actions.CREATE)}
                       className="flex justify-center w-28"
                       light
                       shadow
@@ -71,7 +72,7 @@ export const DrcAllPositionsList = (): JSX.Element => {
                       btnLabel="UPDATE"
                       icon={<HiPencilAlt size={20} />}
                       iconPlacement="start"
-                      onClick={() => onSelect(position, 'update')}
+                      onClick={() => onSelect(position, Actions.UPDATE)}
                       className="flex justify-center w-28"
                       shadow
                     />

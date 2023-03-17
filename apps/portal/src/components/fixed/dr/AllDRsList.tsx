@@ -27,7 +27,6 @@ export const AllDRsList = ({ type }: AllDRsListProps): JSX.Element => {
 
   const onSelect = (sequenceNo: number | undefined) => {
     // copy the current state of drs
-    // const updatedDRs = [...allDRCPool];
     const updatedDRs: Array<DutyResponsibility> = [...allDRCPool];
 
     // loop through all core drs

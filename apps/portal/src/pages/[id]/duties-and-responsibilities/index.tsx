@@ -414,17 +414,27 @@ export default function DR({
       itemNumber: '',
       positionTitle: '',
     });
+
     setDrcPoolIsEmpty(false);
     setPoolInitialLoad(false);
+
+    // from getPool --create
     setDrcPoolIsFilled(false);
+
     setFilteredPositions(allPositions);
+
+    // from getPool --create
     setOriginalPool([]);
+
+    // from getPool --create
+    setAllDRCPool([]);
+
     setIsLoading(true);
+
     setSelectedDRCType('');
     setPoolUnselected();
     setDRCisLoaded(false);
     setFilteredDRCs([]);
-    setAllDRCPool([]);
     // setIsLoading(true)
     setSelectedDRCs({ core: [], support: [] });
     setDrcdsForUpdating({ core: [], support: [], deleted: [] });
