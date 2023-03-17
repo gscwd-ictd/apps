@@ -252,7 +252,6 @@ export const DRModalSetting = (): JSX.Element => {
         selectedDRCs.support.length === 0 &&
         originalPool.length === 0
       ) {
-        // console.log('getDRCS HERE:', getDRCs)
         // copy existing core DRCs
         const coreDRCs = [...getDRCs.core];
 
