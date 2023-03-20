@@ -130,13 +130,6 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          console.log(positions);
-        }}
-      >
-        log
-      </button>
       {swrLoading ? (
         <DRModalPosLoading />
       ) : (

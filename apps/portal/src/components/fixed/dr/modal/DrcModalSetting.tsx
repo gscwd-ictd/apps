@@ -276,17 +276,7 @@ export const DrcModalSetting = () => {
         <span className="text-sm font-normal">
           {selectedPosition.itemNumber}
         </span>
-        <button
-          className="px-3 py-2 text-center bg-blue-400"
-          onClick={() => {
-            console.log('Original Pool: ', originalPoolOfDnrs);
-            console.log('Available Dnrs: ', availableDnrs);
-            console.log('Filtered Dnrs: ', filteredAvailableDnrs);
-            console.log('Existing Dnrs', selectedDnrs);
-          }}
-        >
-          <span className="text-white"> Log</span>
-        </button>
+
         {/** HERE */}
         <div className="flex flex-col mt-5">
           <section>
