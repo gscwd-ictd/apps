@@ -67,18 +67,16 @@ export const DrcModalSelect = (): JSX.Element => {
     // set the search value back to default
     setFilteredDnrValue('');
 
-    // set filtered positions back to default
-    // setFilteredDRCs(allDRCPool);
-
     // set filtered dr back to the current core pool
     setFilteredAvailableDnrs(availableDnrs);
   };
 
   useEffect(() => {
-    setFilteredDnrValue('');
-    // setCheckedDRCs({ core: [], support: [] });
+    searchValueRef.current.value = filteredDnrValue;
+  }, [filteredAvailableDnrs]);
 
-    // setFilteredDRCs(allDRCPool);
+  useEffect(() => {
+    setFilteredDnrValue('');
   }, []);
 
   return (

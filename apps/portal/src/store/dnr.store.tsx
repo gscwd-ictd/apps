@@ -1,6 +1,7 @@
 import { DutiesResponsibilities, DutyResponsibility } from '../types/dr.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { Competency } from '../types/competency.type';
 
 export type DutyResponsibilityList = Pick<
   DutyResponsibility,
@@ -86,6 +87,10 @@ export type DnrState = {
   // checked dnrs
   checkedDnrs: DutiesResponsibilities;
 
+  // set default values if cancel button is clicked
+  cancelCheckedDnrsAction: () => void;
+
+  // set checked dnrs
   setCheckedDnrs: (checkedDnrs: DutiesResponsibilities) => void;
 
   // set filtered dnrs
@@ -243,5 +248,19 @@ export const useDnrStore = create<DnrState>()(
         error: { ...state.error, errorExistingDnrs: error },
         existingDnrsIsLoaded: true,
       })),
+
+    cancelCheckedDnrsAction: () => {
+      const tempFilteredAvailableDnrs = get().filteredAvailableDnrs;
+      tempFilteredAvailableDnrs.map((dr: DutyResponsibility) => {
+        dr.state = false;
+        dr.competency = {} as Competency;
+        dr.percentage = 0;
+      });
+      set((state) => ({
+        ...state,
+        checkedDnrs: { core: [], support: [] },
+        filteredAvailableDnrs: tempFilteredAvailableDnrs,
+      }));
+    },
   }))
 );
