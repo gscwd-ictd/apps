@@ -15,6 +15,8 @@ import { HiPuzzle } from 'react-icons/hi';
 import useSWR from 'swr';
 import { Button } from '../../../modular/common/forms/Button';
 import LoadingVisual from '../../loading/LoadingVisual';
+import { SelectedCoreDrcs } from './DrcSelectedCores';
+import { SelectedSupportDrcs } from './DrcSelectedSupports';
 
 export const DrcModalSetting = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -260,6 +262,11 @@ export const DrcModalSetting = () => {
     }
   }, [swrExistingDnrsIsLoading]);
 
+  // set the default values
+  useEffect(() => {
+    setSelectedDrcType(null);
+  }, []);
+
   return (
     <div className="h-auto px-5 rounded">
       <div className="flex flex-col pt-2 mb-8 font-semibold text-gray-500">
@@ -325,7 +332,9 @@ export const DrcModalSetting = () => {
                         </div>
                       </>
                     ) : (
-                      <>{/* <SelectedCoreDRs /> */}</>
+                      <>
+                        <SelectedCoreDrcs />
+                      </>
                     )}
                   </>
                 )}
@@ -374,7 +383,9 @@ export const DrcModalSetting = () => {
                         </div>
                       </>
                     ) : (
-                      <>{/* <SelectedSupportDRs /> */}</>
+                      <>
+                        <SelectedSupportDrcs />
+                      </>
                     )}
                   </>
                 )}
