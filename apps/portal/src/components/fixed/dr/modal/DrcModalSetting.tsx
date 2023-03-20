@@ -4,7 +4,10 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { Competency } from 'apps/portal/src/types/competency.type';
-import { DutyResponsibility } from 'apps/portal/src/types/dr.type';
+import {
+  DutiesResponsibilities,
+  DutyResponsibility,
+} from 'apps/portal/src/types/dr.type';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -27,41 +30,45 @@ export const DrcModalSetting = () => {
   // get from dnr store
   const {
     originalPoolOfDnrs, // get original pool of dnrs
-
     selectedDnrs, // get selected dnrs
-
     availableDnrs, // get available dnrs for selection
-
     filteredAvailableDnrs, // get filtered available dnrs for selection
-
+    availableDnrsIsLoaded, // boolean if available dnrs is loaded
+    existingDnrsIsLoaded, // boolean if existing dnrs is loaded
     setOriginalPoolOfDnrs, // set original pool of dnrs
-
     setAvailableDnrs, // set available dnrs
-
     setFilteredAvailableDnrs, // set filtered available dnrs
-
-    getDnrsOnCreate, // initialize dnr on create
-
-    getDnrsOnCreateSuccess, // success dnrs on create
-
-    getDnrsOnCreateFail, // fail dnrs on create
+    getAvailableDnrs, // initialize dnr on create
+    getAvailableDnrsSuccess, // success dnrs on create
+    getAvailableDnrsFail, // fail dnrs on create
+    getExistingDnrs,
+    getExistingDnrsSuccess,
+    getExistingDnrsFail,
+    setSelectedDnrs, // set the selected dnrs
   } = useDnrStore((state) => ({
     originalPoolOfDnrs: state.originalPoolOfDnrs,
     availableDnrs: state.availableDnrs,
     filteredAvailableDnrs: state.filteredAvailableDnrs,
     selectedDnrs: state.selectedDnrs,
+    selectedDnrsOnLoad: state.selectedDnrsOnLoad,
+    availableDnrsIsLoaded: state.availableDnrsIsLoaded,
+    existingDnrsIsLoaded: state.existingDnrsIsLoaded,
+    setSelectedDnrs: state.setSelectedDnrs,
     setOriginalPoolOfDnrs: state.setOriginalPoolOfDnrs,
     setAvailableDnrs: state.setAvailableDnrs,
     setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
-    getDnrsOnCreate: state.getDnrsOnCreate,
-    getDnrsOnCreateSuccess: state.getDnrsOnCreateSuccess,
-    getDnrsOnCreateFail: state.getDnrsOnCreateFail,
+    getAvailableDnrs: state.getAvailableDnrs,
+    getAvailableDnrsSuccess: state.getAvailableDnrsSuccess,
+    getAvailableDnrsFail: state.getAvailableDnrsFail,
+    getExistingDnrs: state.getExistingDnrs,
+    getExistingDnrsSuccess: state.getExistingDnrsSuccess,
+    getExistingDnrsFail: state.getExistingDnrsFail,
   }));
 
   // get from modal store
   const action = useModalStore((state) => state.action);
 
-  // useSWR
+  // useSWR available dnrs
   const {
     data: swrAvailableDnrs,
     error: swrAvailableDnrsError,
@@ -73,7 +80,7 @@ export const DrcModalSetting = () => {
     { shouldRetryOnError: false }
   );
 
-  // useSWR
+  // useSWR existing dnrs
   const {
     data: swrExistingDnrs,
     error: swrExistingDnrsError,
@@ -85,27 +92,60 @@ export const DrcModalSetting = () => {
     { shouldRetryOnError: false }
   );
 
-  // add existing drns and available dnrs
-  const appendOrigAndExistingDnrs = (availableDnrs: any, existingDnrs: any) => {
-    //
+  // combine available and existing dnrs and returns an array of DutyResponsibility
+  const combineAvailableAndExistingDnrs = (
+    availableDnrs: Array<DutyResponsibility>,
+    existingDnrs: DutiesResponsibilities
+  ) => {
+    // initialize the array
+    const originalPool = [...availableDnrs];
+
+    // map the existing core dnrs
+    if (existingDnrs.core && existingDnrs.core.length > 0) {
+      existingDnrs.core.map((dr: DutyResponsibility) => {
+        originalPool.push(
+          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
+        );
+      });
+    }
+
+    // map the existing support dnrs
+    if (existingDnrs.support && existingDnrs.support.length > 0) {
+      existingDnrs.support.map((dr: DutyResponsibility) => {
+        originalPool.push(
+          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
+        );
+      });
+    }
+    return originalPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+      a.description.localeCompare(b.description)
+    );
   };
 
   // trigger loading if useSWR is called for create
   useEffect(() => {
     if (swrAvailableDnrsIsLoading) {
-      getDnrsOnCreate(swrAvailableDnrsIsLoading);
+      getAvailableDnrs(swrAvailableDnrsIsLoading);
     }
   }, [swrAvailableDnrsIsLoading]);
+
+  // trigger loading if useSWR is called for create
+  useEffect(() => {
+    if (swrExistingDnrsIsLoading) {
+      getExistingDnrs(swrExistingDnrsIsLoading);
+    }
+  }, [swrExistingDnrsIsLoading]);
 
   // trigger loading if useSWR if called for update
   useEffect(() => {
     if (swrExistingDnrsIsLoading) {
-      // getDnrsOnUpdate(swrExistingDnrsIsLoading);
+      // getExistingDnrs(swrExistingDnrsIsLoading);
     }
   }, [swrExistingDnrsIsLoading]);
 
+  // get available dnrs (Pool)
   useEffect(() => {
-    if (!isEmpty(swrAvailableDnrs) && action === Actions.CREATE) {
+    if (!isEmpty(swrAvailableDnrs)) {
       // sort by description
       const poolOfDnrs = [
         ...swrAvailableDnrs.data.sort(
@@ -140,11 +180,81 @@ export const DrcModalSetting = () => {
 
       // set filtered drns to sorted
       // setFilteredAvailableDnrs(poolOfDnrs);
-      getDnrsOnCreateSuccess(poolOfDnrs);
-    } else if (!isEmpty(swrAvailableDnrs) && action === Actions.UPDATE) {
-      //
+      getAvailableDnrsSuccess(poolOfDnrs);
     }
-  }, [swrAvailableDnrs, swrAvailableDnrsError, action]);
+  }, [swrAvailableDnrs, swrAvailableDnrsError, selectedPosition]);
+
+  // get existing dnrs (to remove from existing pool)
+  useEffect(() => {
+    if (
+      !isEmpty(swrExistingDnrs) &&
+      action === Actions.UPDATE &&
+      availableDnrsIsLoaded === true
+    ) {
+      // assign a shallow copy of sorted core drcs
+      const sortedCoreDrcs = [
+        ...swrExistingDnrs.data.core
+
+          // sort the array by description
+          .sort((a: DutyResponsibility, b: DutyResponsibility) =>
+            a.description.localeCompare(b.description)
+          )
+
+          // assign the selected state-wise values to the array
+          .map((dr: DutyResponsibility, index: number) => {
+            // set state value for dr on select
+            dr.state = true;
+
+            // set state value for dr on edit
+            dr.onEdit = false;
+
+            // set value state of sequence number
+            dr.sequenceNo = index;
+          }),
+      ];
+
+      // assign a shallow copy of sorted support drcs
+      const sortedSupportDrcs = [
+        ...swrExistingDnrs.data
+
+          // sort the array by description
+          .sort((a: DutyResponsibility, b: DutyResponsibility) =>
+            a.description.localeCompare(b.description)
+          )
+
+          // assign the selected state-wise values to the array
+          .map((dr: DutyResponsibility, index: number) => {
+            // set state value for dr on select
+            dr.state = true;
+
+            // set state value for dr on edit
+            dr.onEdit = false;
+
+            // set value state of sequence number
+            dr.sequenceNo = index;
+          }),
+      ];
+
+      const existingDnrs: DutiesResponsibilities = {
+        core: sortedCoreDrcs,
+        support: sortedSupportDrcs,
+      };
+
+      // mutate the original pool based on the available and existing dnrs
+      const pool = combineAvailableAndExistingDnrs(availableDnrs, existingDnrs);
+
+      getExistingDnrsSuccess(existingDnrs, pool);
+    } else if (swrExistingDnrsError) {
+      getExistingDnrsFail(swrExistingDnrsError);
+    }
+  }, [
+    swrExistingDnrs,
+    swrExistingDnrsError,
+    action,
+    selectedPosition,
+    availableDnrsIsLoaded,
+    existingDnrsIsLoaded,
+  ]);
 
   return (
     <div className="h-auto px-5 rounded">
@@ -161,16 +271,18 @@ export const DrcModalSetting = () => {
             console.log('Original Pool: ', originalPoolOfDnrs);
             console.log('Available Dnrs: ', availableDnrs);
             console.log('Filtered Dnrs: ', filteredAvailableDnrs);
+            console.log('Existing Dnrs', selectedDnrs);
           }}
         >
-          Log
+          <span className="text-white"> Log</span>
         </button>
         {/** HERE */}
         <div className="flex flex-col mt-5">
           <section>
             <div className="flex items-end justify-between ">
-              <p className="flex w-[22rem] font-normal items-center ">
-                Core Duties & Responsibilities <HiPuzzle />
+              <p className="flex min-w-[22rem] max-w-[30rem] font-normal items-center ">
+                Core Duties, Responsibilities, & Competencies
+                <HiPuzzle />
               </p>
 
               {isLoading ? (
@@ -218,8 +330,8 @@ export const DrcModalSetting = () => {
           </section>
           <section>
             <div className="flex items-end justify-between ">
-              <p className="flex w-[22rem] font-normal items-center ">
-                Support Duties & Responsibilities <HiPuzzle />
+              <p className="flex min-w-[22rem] max-w-[30rem] font-normal items-center ">
+                Support Duties, Responsibilities, & Competencies <HiPuzzle />
               </p>
 
               {isLoading ? (
