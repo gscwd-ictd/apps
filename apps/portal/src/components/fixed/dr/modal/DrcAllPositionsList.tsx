@@ -58,11 +58,11 @@ export const DrcAllPositionsList = (): JSX.Element => {
                   {position.hasDuties === 0 && (
                     <Button
                       btnLabel="SET"
+                      btnVariant="default"
                       icon={<HiPlusCircle size={20} />}
                       iconPlacement="start"
                       onClick={() => onSelect(position, Actions.CREATE)}
                       className="flex justify-center w-28"
-                      light
                       shadow
                     />
                   )}

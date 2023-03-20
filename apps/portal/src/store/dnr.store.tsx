@@ -166,6 +166,7 @@ export const useDnrStore = create<DnrState>()(
         originalPoolOfDnrs: [],
         availableDnrs: [],
         availableDnrsIsLoaded: false,
+        existingDnrsIsLoaded: false,
         filteredAvailableDnrs: [],
         loading: { ...state.loading, loadingAvailableDnrs: loading },
         error: { ...state.error, errorAvailableDnrs: '' },
@@ -176,6 +177,7 @@ export const useDnrStore = create<DnrState>()(
         originalPoolOfDnrs: response,
         availableDnrs: response,
         availableDnrsIsLoaded: true,
+        existingDnrsIsLoaded: false,
         filteredAvailableDnrs: response,
         loading: { ...state.loading, loadingAvailableDnrs: false },
       })),
@@ -183,6 +185,7 @@ export const useDnrStore = create<DnrState>()(
       set((state) => ({
         ...state,
         availableDnrsIsLoaded: true,
+        existingDnrsIsLoaded: false,
         loading: { ...state.loading, loadingAvailableDnrs: false },
         error: { ...state.error, errorAvailableDnrs: error },
       })),
