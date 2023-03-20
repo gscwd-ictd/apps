@@ -1,47 +1,18 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { DutyResponsibility } from 'apps/portal/src/types/dr.type';
-import {
-  FormEvent,
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FormEvent, MutableRefObject, useEffect, useRef } from 'react';
 import { HiOutlineSearch, HiXCircle } from 'react-icons/hi';
 import { UndrawSelecting } from '../../undraw/Selecting';
+import { DrcAllDrcsList } from './DrcAllDrcsList';
 
-type SelectDRProps = {
-  // allDRCPool: Array<DutyResponsibility>;
-  type: string;
-};
-
-export const DrcModalSelect = ({ type }: SelectDRProps): JSX.Element => {
-  // get related state from dr context
-  // const { allDRCPool, searchDRCValue, checkedDRCs, setCheckedDRCs, filteredDRCs, setAllDRCPool, setSearchDRCValue, setFilteredDRCs } = useContext(DRContext);
-
-  // const allDRCPool = useDrStore((state) => state.allDRCPool);
-
-  // const searchDRCValue = useDrStore((state) => state.searchDRCValue);
-
-  // const checkedDRCs = useDrStore((state) => state.checkedDRCs);
-
-  // const setCheckedDRCs = useDrStore((state) => state.setCheckedDRCs);
-
-  // const filteredDRCs = useDrStore((state) => state.filteredDRCs);
-
-  // const setAllDRCPool = useDrStore((state) => state.setAllDRCPool);
-
-  // const setSearchDRCValue = useDrStore((state) => state.setSearchDRCValue);
-
-  // const setFilteredDRCs = useDrStore((state) => state.setFilteredDRCs);
-
+export const DrcModalSelect = (): JSX.Element => {
   const {
     availableDnrs,
     filteredAvailableDnrs,
     filteredDnrValue,
     checkedDnrs,
+    selectedDrcType,
     setAvailableDnrs,
     setFilteredAvailableDnrs,
     setFilteredDnrValue,
@@ -53,6 +24,7 @@ export const DrcModalSelect = ({ type }: SelectDRProps): JSX.Element => {
     setAvailableDnrs: state.setAvailableDnrs,
     setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
     setFilteredDnrValue: state.setFilteredDnrValue,
+    selectedDrcType: state.selectedDrcType,
   }));
 
   // initialize ref for search input
@@ -114,14 +86,16 @@ export const DrcModalSelect = ({ type }: SelectDRProps): JSX.Element => {
       <div className="grid grid-cols-5 mb-5">
         <section className="col-span-2">
           <div className="flex justify-between px-3 mb-1 text-sm">
-            <p className="font-medium text-gray-500 uppercase">{type}</p>
-            {type === 'core' && (
+            <p className="font-medium text-gray-500 uppercase">
+              {selectedDrcType}
+            </p>
+            {selectedDrcType === 'core' && (
               <p className="text-gray-600">
                 {checkedDnrs.core.length} out of {filteredAvailableDnrs.length}{' '}
                 items selected
               </p>
             )}
-            {type === 'support' && (
+            {selectedDrcType === 'support' && (
               <p className="text-gray-600">
                 {checkedDnrs.support.length} out of{' '}
                 {filteredAvailableDnrs.length} items selected
@@ -156,15 +130,14 @@ export const DrcModalSelect = ({ type }: SelectDRProps): JSX.Element => {
                 <h5 className="text-2xl font-medium text-gray-300">{`No results found for '${filteredDnrValue}'`}</h5>
               </div>
             ) : (
-              <></>
-              // <AllPositionsList />
-              // <AllDRsList type={type} />
+              <DrcAllDrcsList />
             )}
           </div>
         </section>
         <section className="col-span-3 max-h-[34rem] bg-slate-50 bg-opacity-50 px-5 pt-5">
-          {(type === 'core' && checkedDnrs.core.length === 0) ||
-          (type === 'support' && checkedDnrs.support.length === 0) ? (
+          {(selectedDrcType === 'core' && checkedDnrs.core.length === 0) ||
+          (selectedDrcType === 'support' &&
+            checkedDnrs.support.length === 0) ? (
             <>
               <div className="flex flex-col items-center justify-center w-full h-full gap-5">
                 <UndrawSelecting width={250} height={250} />
@@ -173,8 +146,9 @@ export const DrcModalSelect = ({ type }: SelectDRProps): JSX.Element => {
                 </h1>
               </div>
             </>
-          ) : (type === 'core' && checkedDnrs.core.length > 0) ||
-            (type === 'support' && checkedDnrs.support.length > 0) ? (
+          ) : (selectedDrcType === 'core' && checkedDnrs.core.length > 0) ||
+            (selectedDrcType === 'support' &&
+              checkedDnrs.support.length > 0) ? (
             <>
               <div className="h-[28rem] w-full overflow-y-scroll px-2 pt-1">
                 {/* <SelectedDRCard /> */}
