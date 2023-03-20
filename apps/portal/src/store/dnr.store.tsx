@@ -23,13 +23,13 @@ export const DUTIES_RESPONSIBILITIES_LIST: DutiesResponsibilitiesList = {
 };
 
 type DnrLoading = {
-  loadingDnrsOnCreate: boolean;
-  loadingDnrsOnUpdate: boolean;
+  loadingAvailableDnrs: boolean;
+  loadingExistingDnrs: boolean;
 };
 
 type DnrError = {
-  errorDnrsOnCreate: string;
-  errorDnrsOnUpdate: string;
+  errorAvailableDnrs: string;
+  errorExistingDnrs: string;
 };
 
 export type DnrState = {
@@ -42,14 +42,14 @@ export type DnrState = {
   // filtered currently available pool for dnrs
   filteredAvailableDnrs: Array<DutyResponsibility>;
 
+  // these are all the selected dnrs on first load when updating
+  selectedDnrsOnLoad: DutiesResponsibilities;
+
   // these are the selected core dnrs on first load when updating
-  initialSelectedCoreDnrs: Array<DutyResponsibility>;
+  selectedCoreDnrsOnLoad: Array<DutyResponsibility>;
 
   // these are the selected support dnrs on first load when updating
-  initialSelectedSupportDnrs: Array<DutyResponsibility>;
-
-  // these are all the selected dnrs on first load when updating
-  initialSelectedDnrs: DutiesResponsibilities;
+  selectedSupportDnrsOnLoad: Array<DutyResponsibility>;
 
   // these are all the selected core and support dnrs
   selectedDnrs: DutiesResponsibilities;
@@ -65,6 +65,12 @@ export type DnrState = {
 
   // error state
   error: DnrError;
+
+  // available dnrs is loaded
+  availableDnrsIsLoaded: boolean;
+
+  // existing dnrs is loaded
+  existingDnrsIsLoaded: boolean;
 
   // set original pool
   setOriginalPoolOfDnrs: (
@@ -85,29 +91,44 @@ export type DnrState = {
   // set to default values, if modal is closed or changed selected position
   setDefaultValues: () => void;
 
-  // get dnrs on create initial action
-  getDnrsOnCreate: (loading: boolean) => void;
+  // get available dnrs initial action
+  getAvailableDnrs: (loading: boolean) => void;
 
-  // get dnrs on create action success
-  getDnrsOnCreateSuccess: (response: Array<DutyResponsibility>) => void;
+  // get available dnrs action success
+  getAvailableDnrsSuccess: (response: Array<DutyResponsibility>) => void;
 
-  // get dnrs on create action fail
-  getDnrsOnCreateFail: (error: string) => void;
+  // get available dnrs fail
+  getAvailableDnrsFail: (error: string) => void;
+
+  // get existing dnrs initial action
+  getExistingDnrs: (loading: boolean) => void;
+
+  // get existing dnrs success
+  getExistingDnrsSuccess: (
+    response: DutiesResponsibilities,
+    pool: Array<DutyResponsibility>
+  ) => void;
+
+  // get existing dnrs fail
+  getExistingDnrsFail: (error: string) => void;
 };
 
 export const useDnrStore = create<DnrState>()(
-  devtools((set) => ({
+  devtools((set, get) => ({
     originalPoolOfDnrs: [],
     availableDnrs: [],
     filteredAvailableDnrs: [],
-    initialSelectedCoreDnrs: [],
-    initialSelectedSupportDnrs: [],
-    initialSelectedDnrs: DUTIES_RESPONSIBILITIES,
+    selectedCoreDnrsOnLoad: [],
+    selectedSupportDnrsOnLoad: [],
+    selectedDnrsOnLoad: DUTIES_RESPONSIBILITIES,
     selectedDnrs: DUTIES_RESPONSIBILITIES,
     selectedCoreDnrs: [],
     selectedSupportDnrs: [],
-    loading: { loadingDnrsOnCreate: false, loadingDnrsOnUpdate: false },
-    error: { errorDnrsOnCreate: '', errorDnrsOnUpdate: '' },
+    availableDnrsIsLoaded: false,
+    existingDnrsIsLoaded: false,
+
+    loading: { loadingAvailableDnrs: false, loadingExistingDnrs: false },
+    error: { errorAvailableDnrs: '', errorExistingDnrs: '' },
 
     setOriginalPoolOfDnrs: (originalPoolOfDnrs: Array<DutyResponsibility>) =>
       set((state) => ({ ...state, originalPoolOfDnrs })),
@@ -132,30 +153,72 @@ export const useDnrStore = create<DnrState>()(
     setSelectedDnrs: (selectedDnrs: DutiesResponsibilities) =>
       set((state) => ({ ...state, selectedDnrs })),
 
-    getDnrsOnCreate: (loading: boolean) =>
+    getAvailableDnrs: (loading: boolean) =>
       set((state) => ({
         ...state,
         originalPoolOfDnrs: [],
         availableDnrs: [],
+        availableDnrsIsLoaded: false,
         filteredAvailableDnrs: [],
-        loading: { ...state.loading, loadingDnrsOnCreate: loading },
-        error: { ...state.error, errorDnrsOnCreate: '' },
+        loading: { ...state.loading, loadingAvailableDnrs: loading },
+        error: { ...state.error, errorAvailableDnrs: '' },
       })),
 
-    getDnrsOnCreateSuccess: (response: Array<DutyResponsibility>) =>
+    getAvailableDnrsSuccess: (response: Array<DutyResponsibility>) =>
       set((state) => ({
         ...state,
         originalPoolOfDnrs: response,
         availableDnrs: response,
+        availableDnrsIsLoaded: true,
         filteredAvailableDnrs: response,
-        loading: { ...state.loading, loadingDnrsOnCreate: false },
+        loading: { ...state.loading, loadingAvailableDnrs: false },
       })),
 
-    getDnrsOnCreateFail: (error: string) =>
+    getAvailableDnrsFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingDnrsOnCreate: false },
-        error: { ...state.error, errorDnrsOnCreate: error },
+        availableDnrsIsLoaded: true,
+        loading: { ...state.loading, loadingAvailableDnrs: false },
+        error: { ...state.error, errorAvailableDnrs: error },
+      })),
+
+    getExistingDnrs: (loading: boolean) =>
+      set((state) => ({
+        ...state,
+        existingDnrsIsLoaded: false,
+        selectedDnrs: DUTIES_RESPONSIBILITIES,
+        selectedCoreDnrs: [],
+        selectedSupportDnrs: [],
+        selectedDnrsOnLoad: DUTIES_RESPONSIBILITIES,
+        selectedCoreDnrsOnLoad: [],
+        selectedSupportDnrsOnLoad: [],
+        loading: { ...state.loading, loadingExistingDnrs: loading },
+        error: { ...state.error, errorExistingDnrs: '' },
+      })),
+
+    getExistingDnrsSuccess: (
+      response: DutiesResponsibilities,
+      pool: Array<DutyResponsibility>
+    ) =>
+      set((state) => ({
+        ...state,
+        selectedDnrs: response,
+        selectedDnrsOnLoad: response,
+        selectedCoreDnrs: response.core,
+        selectedSupportDnrs: response.support,
+        selectedCoreDnrsOnLoad: response.core,
+        selectedSupportDnrsOnLoad: response.support,
+        originalPoolOfDnrs: pool,
+        loading: { ...state.loading, loadingExistingDnrs: false },
+        existingDnrsIsLoaded: true,
+      })),
+
+    getExistingDnrsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingExistingDnrs: false },
+        error: { ...state.error, errorExistingDnrs: error },
+        existingDnrsIsLoaded: true,
       })),
   }))
 );
