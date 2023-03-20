@@ -182,7 +182,7 @@ export default function AppPosAppointment({
           <AppSelectionModalController page={modal.page} />
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex gap-2">
+          <div className="flex justify-end gap-2">
             {modal.page !== 4 ? (
               <div className="w-[6rem]">
                 <Button variant="info" onClick={modalCancel}>

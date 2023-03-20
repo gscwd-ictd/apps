@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   AlertNotification,
   Button,
@@ -31,7 +32,7 @@ const categorySelection: Array<SelectOption> = [
   { label: 'Flexible', value: 'flexible' },
 ];
 
-const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
+const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -71,7 +72,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
       scheduleType: null,
       timeIn: '',
       timeOut: '',
-      scheduleBase: ScheduleBases.OFFICE,
+      scheduleBase: ScheduleBases.FIELD,
       withLunch: true,
       lunchIn: null,
       lunchOut: null,
@@ -166,7 +167,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="xl">
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">New Office Schedule</span>
+            <span className="text-2xl text-gray-600">New Field Schedule</span>
             <button
               className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
@@ -343,4 +344,4 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddOfficeSchedModal;
+export default AddFieldSchedModal;
