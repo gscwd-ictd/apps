@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { useDnrStore } from 'apps/portal/src/store/dnr.store';
+import { DrcTypes, useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
@@ -35,6 +35,7 @@ export const DrcModalSetting = () => {
     filteredAvailableDnrs, // get filtered available dnrs for selection
     availableDnrsIsLoaded, // boolean if available dnrs is loaded
     existingDnrsIsLoaded, // boolean if existing dnrs is loaded
+    selectedDrcType, // type of drc
     setOriginalPoolOfDnrs, // set original pool of dnrs
     setAvailableDnrs, // set available dnrs
     setFilteredAvailableDnrs, // set filtered available dnrs
@@ -45,6 +46,7 @@ export const DrcModalSetting = () => {
     getExistingDnrsSuccess,
     getExistingDnrsFail,
     setSelectedDnrs, // set the selected dnrs
+    setSelectedDrcType, // set the selected drc type
   } = useDnrStore((state) => ({
     originalPoolOfDnrs: state.originalPoolOfDnrs,
     availableDnrs: state.availableDnrs,
@@ -53,9 +55,11 @@ export const DrcModalSetting = () => {
     selectedDnrsOnLoad: state.selectedDnrsOnLoad,
     availableDnrsIsLoaded: state.availableDnrsIsLoaded,
     existingDnrsIsLoaded: state.existingDnrsIsLoaded,
+    selectedDrcType: state.selectedDrcType,
     setSelectedDnrs: state.setSelectedDnrs,
     setOriginalPoolOfDnrs: state.setOriginalPoolOfDnrs,
     setAvailableDnrs: state.setAvailableDnrs,
+    setSelectedDrcType: state.setSelectedDrcType,
     setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
     getAvailableDnrs: state.getAvailableDnrs,
     getAvailableDnrsSuccess: state.getAvailableDnrsSuccess,
@@ -66,7 +70,10 @@ export const DrcModalSetting = () => {
   }));
 
   // get from modal store
-  const action = useModalStore((state) => state.action);
+  const { action, setModalPage } = useModalStore((state) => ({
+    action: state.action,
+    setModalPage: state.setModalPage,
+  }));
 
   // useSWR available dnrs
   const {
@@ -99,7 +106,7 @@ export const DrcModalSetting = () => {
   ) => {
     // initialize the array
     const originalPool = [...availableDnrs];
-    console.log('Existing DNRS on combine: ', existingDnrs);
+
     // map the existing core dnrs
     if (existingDnrs.core && existingDnrs.core.length > 0) {
       existingDnrs.core.map((dr: DutyResponsibility) => {
@@ -120,6 +127,13 @@ export const DrcModalSetting = () => {
     return originalPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
       a.description.localeCompare(b.description)
     );
+  };
+
+  // fires when core button is clicked
+  const openDrcModalSelection = (drcType: DrcTypes) => {
+    setSelectedDrcType(drcType);
+    setModalPage(3);
+    console.log(drcType);
   };
 
   // get available dnrs (Pool)
@@ -287,7 +301,7 @@ export const DrcModalSetting = () => {
                   btnVariant="white"
                   className="min-w-[16rem] border-none text-indigo-600 "
                   isDisabled={availableDnrs.length === 0 ? true : false}
-                  // onClick={onClickCoreBtn}
+                  onClick={() => openDrcModalSelection(DrcTypes.CORE)}
                 />
               )}
             </div>
@@ -336,7 +350,7 @@ export const DrcModalSetting = () => {
                   btnVariant="white"
                   isDisabled={availableDnrs.length === 0 ? true : false}
                   className="min-w-[16rem] border-none text-indigo-600"
-                  // onClick={onClickSupportBtn}
+                  onClick={() => openDrcModalSelection(DrcTypes.SUPPORT)}
                 />
               )}
             </div>
