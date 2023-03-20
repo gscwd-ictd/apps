@@ -80,6 +80,17 @@ export type DnrState = {
   // selected drc type
   selectedDrcType: DrcTypes | null;
 
+  // filtered dnrs
+  filteredDnrValue: string;
+
+  // checked dnrs
+  checkedDnrs: DutiesResponsibilities;
+
+  setCheckedDnrs: (checkedDnrs: DutiesResponsibilities) => void;
+
+  // set filtered dnrs
+  setFilteredDnrValue: (filteredDnrValue: string) => void;
+
   // set original pool
   setOriginalPoolOfDnrs: (
     originalPoolOfDnrs: Array<DutyResponsibility>
@@ -138,6 +149,13 @@ export const useDnrStore = create<DnrState>()(
     availableDnrsIsLoaded: false,
     existingDnrsIsLoaded: false,
     selectedDrcType: null,
+    filteredDnrValue: '',
+    checkedDnrs: DUTIES_RESPONSIBILITIES,
+    setCheckedDnrs: (checkedDnrs: DutiesResponsibilities) =>
+      set((state) => ({ ...state, checkedDnrs })),
+
+    setFilteredDnrValue: (filteredDnrValue: string) =>
+      set((state) => ({ ...state, filteredDnrValue })),
     loading: { loadingAvailableDnrs: false, loadingExistingDnrs: false },
     error: { errorAvailableDnrs: '', errorExistingDnrs: '' },
     setSelectedDrcType: (selectedDrcType: DrcTypes) =>
