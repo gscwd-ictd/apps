@@ -7,6 +7,11 @@ export type DutyResponsibilityList = Pick<
   'odrId' | 'percentage' | 'pcplId'
 >;
 
+export enum DrcTypes {
+  CORE = 'core',
+  SUPPORT = 'support',
+}
+
 export type DutiesResponsibilitiesList = {
   core: Array<DutyResponsibilityList>;
   support: Array<DutyResponsibilityList>;
@@ -72,6 +77,9 @@ export type DnrState = {
   // existing dnrs is loaded
   existingDnrsIsLoaded: boolean;
 
+  // selected drc type
+  selectedDrcType: DrcTypes | null;
+
   // set original pool
   setOriginalPoolOfDnrs: (
     originalPoolOfDnrs: Array<DutyResponsibility>
@@ -84,6 +92,9 @@ export type DnrState = {
   setFilteredAvailableDnrs: (
     filteredAvailableDnrs: Array<DutyResponsibility>
   ) => void;
+
+  // set selected drc type
+  setSelectedDrcType: (selectedDrcType: DrcTypes) => void;
 
   // set selected dnrs
   setSelectedDnrs: (selectedDnrs: DutiesResponsibilities) => void;
@@ -126,13 +137,13 @@ export const useDnrStore = create<DnrState>()(
     selectedSupportDnrs: [],
     availableDnrsIsLoaded: false,
     existingDnrsIsLoaded: false,
-
+    selectedDrcType: null,
     loading: { loadingAvailableDnrs: false, loadingExistingDnrs: false },
     error: { errorAvailableDnrs: '', errorExistingDnrs: '' },
-
+    setSelectedDrcType: (selectedDrcType: DrcTypes) =>
+      set((state) => ({ ...state, selectedDrcType })),
     setOriginalPoolOfDnrs: (originalPoolOfDnrs: Array<DutyResponsibility>) =>
       set((state) => ({ ...state, originalPoolOfDnrs })),
-
     setDefaultValues: () =>
       set((state) => ({
         ...state,
@@ -142,17 +153,13 @@ export const useDnrStore = create<DnrState>()(
         selectedDnrs: DUTIES_RESPONSIBILITIES,
         initialSelectedDnrs: DUTIES_RESPONSIBILITIES,
       })),
-
     setAvailableDnrs: (availableDnrs: Array<DutyResponsibility>) =>
       set((state) => ({ ...state, availableDnrs })),
-
     setFilteredAvailableDnrs: (
       filteredAvailableDnrs: Array<DutyResponsibility>
     ) => set((state) => ({ ...state, filteredAvailableDnrs })),
-
     setSelectedDnrs: (selectedDnrs: DutiesResponsibilities) =>
       set((state) => ({ ...state, selectedDnrs })),
-
     getAvailableDnrs: (loading: boolean) =>
       set((state) => ({
         ...state,
@@ -163,7 +170,6 @@ export const useDnrStore = create<DnrState>()(
         loading: { ...state.loading, loadingAvailableDnrs: loading },
         error: { ...state.error, errorAvailableDnrs: '' },
       })),
-
     getAvailableDnrsSuccess: (response: Array<DutyResponsibility>) =>
       set((state) => ({
         ...state,
@@ -173,7 +179,6 @@ export const useDnrStore = create<DnrState>()(
         filteredAvailableDnrs: response,
         loading: { ...state.loading, loadingAvailableDnrs: false },
       })),
-
     getAvailableDnrsFail: (error: string) =>
       set((state) => ({
         ...state,
@@ -181,7 +186,6 @@ export const useDnrStore = create<DnrState>()(
         loading: { ...state.loading, loadingAvailableDnrs: false },
         error: { ...state.error, errorAvailableDnrs: error },
       })),
-
     getExistingDnrs: (loading: boolean) =>
       set((state) => ({
         ...state,
@@ -195,7 +199,6 @@ export const useDnrStore = create<DnrState>()(
         loading: { ...state.loading, loadingExistingDnrs: loading },
         error: { ...state.error, errorExistingDnrs: '' },
       })),
-
     getExistingDnrsSuccess: (
       response: DutiesResponsibilities,
       pool: Array<DutyResponsibility>
@@ -212,7 +215,6 @@ export const useDnrStore = create<DnrState>()(
         loading: { ...state.loading, loadingExistingDnrs: false },
         existingDnrsIsLoaded: true,
       })),
-
     getExistingDnrsFail: (error: string) =>
       set((state) => ({
         ...state,
