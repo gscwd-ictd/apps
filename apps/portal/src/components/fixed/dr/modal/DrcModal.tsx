@@ -1,23 +1,37 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
+import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { FunctionComponent } from 'react';
 import { DrcModalController } from './DrcModalController';
 
 const DrcModal: FunctionComponent = () => {
-  const { modal, setModal, closeModal, nextPage, prevPage } = useModalStore(
-    (state) => ({
-      modal: state.modal,
-      setModal: state.setModal,
-      action: state.modalAction,
-      openModal: state.openModal,
-      closeModal: state.closeModal,
-      setModalAction: state.setModalAction,
-      nextPage: state.nextPage,
-      prevPage: state.prevPage,
-    })
-  );
+  const {
+    modal,
+    action,
+    setModal,
+    closeModal,
+    nextPage,
+    prevPage,
+    openModal,
+    setModalAction,
+    setModalPage,
+  } = useModalStore((state) => ({
+    modal: state.modal,
+    action: state.modalAction,
+    setModal: state.setModal,
+    setModalPage: state.setModalPage,
+    openModal: state.openModal,
+    closeModal: state.closeModal,
+    setModalAction: state.setModalAction,
+    nextPage: state.nextPage,
+    prevPage: state.prevPage,
+  }));
+
+  const { cancelCheckedDnrsAction } = useDnrStore((state) => ({
+    cancelCheckedDnrsAction: state.cancelCheckedDnrsAction,
+  }));
 
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
@@ -31,7 +45,11 @@ const DrcModal: FunctionComponent = () => {
   const cancelBtn = () => {
     // put your logic here
     if (modal.page === 1) closeModal();
-    else if (modal.page > 1) prevPage();
+    else if (modal.page === 2) prevPage();
+    else if (modal.page === 3) {
+      cancelCheckedDnrsAction();
+      prevPage();
+    }
   };
 
   return (

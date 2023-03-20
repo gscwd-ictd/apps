@@ -11,6 +11,7 @@ export const DrcAllDrcsList = (): JSX.Element => {
     setFilteredAvailableDnrs,
     setAvailableDnrs,
     setCheckedDnrs,
+    setFilteredDnrValue,
   } = useDnrStore((state) => ({
     availableDnrs: state.availableDnrs,
     filteredAvailableDnrs: state.filteredAvailableDnrs,
@@ -19,6 +20,7 @@ export const DrcAllDrcsList = (): JSX.Element => {
     setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
     setAvailableDnrs: state.setAvailableDnrs,
     setCheckedDnrs: state.setCheckedDnrs,
+    setFilteredDnrValue: state.setFilteredDnrValue,
   }));
 
   const onSelect = (sequenceNo: number | undefined) => {
@@ -52,6 +54,8 @@ export const DrcAllDrcsList = (): JSX.Element => {
     setAvailableDnrs(updatedDnrs);
 
     setFilteredAvailableDnrs(updatedDnrs);
+
+    setFilteredDnrValue('');
   };
 
   return (
