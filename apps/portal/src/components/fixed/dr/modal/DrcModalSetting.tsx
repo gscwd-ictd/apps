@@ -99,7 +99,7 @@ export const DrcModalSetting = () => {
   ) => {
     // initialize the array
     const originalPool = [...availableDnrs];
-
+    console.log('Existing DNRS on combine: ', existingDnrs);
     // map the existing core dnrs
     if (existingDnrs.core && existingDnrs.core.length > 0) {
       existingDnrs.core.map((dr: DutyResponsibility) => {
@@ -121,27 +121,6 @@ export const DrcModalSetting = () => {
       a.description.localeCompare(b.description)
     );
   };
-
-  // trigger loading if useSWR is called for create
-  useEffect(() => {
-    if (swrAvailableDnrsIsLoading) {
-      getAvailableDnrs(swrAvailableDnrsIsLoading);
-    }
-  }, [swrAvailableDnrsIsLoading]);
-
-  // trigger loading if useSWR is called for create
-  useEffect(() => {
-    if (swrExistingDnrsIsLoading) {
-      getExistingDnrs(swrExistingDnrsIsLoading);
-    }
-  }, [swrExistingDnrsIsLoading]);
-
-  // trigger loading if useSWR if called for update
-  useEffect(() => {
-    if (swrExistingDnrsIsLoading) {
-      // getExistingDnrs(swrExistingDnrsIsLoading);
-    }
-  }, [swrExistingDnrsIsLoading]);
 
   // get available dnrs (Pool)
   useEffect(() => {
@@ -172,14 +151,6 @@ export const DrcModalSetting = () => {
         dr.competency = {} as Competency;
       });
 
-      // set original pool
-      // setOriginalPoolOfDnrs(poolOfDnrs);
-
-      // set available dnrs
-      // setAvailableDnrs(poolOfDnrs);
-
-      // set filtered drns to sorted
-      // setFilteredAvailableDnrs(poolOfDnrs);
       getAvailableDnrsSuccess(poolOfDnrs);
     }
   }, [swrAvailableDnrs, swrAvailableDnrsError, selectedPosition]);
@@ -189,13 +160,16 @@ export const DrcModalSetting = () => {
     if (
       !isEmpty(swrExistingDnrs) &&
       action === Actions.UPDATE &&
-      availableDnrsIsLoaded === true
+      availableDnrsIsLoaded === true &&
+      existingDnrsIsLoaded === false
     ) {
       // assign a shallow copy of sorted core drcs
-      const sortedCoreDrcs = [
-        ...swrExistingDnrs.data.core
+      const coreDrcs = [...swrExistingDnrs.data.core];
 
-          // sort the array by description
+      // sort and map the core drcs
+      if (coreDrcs && coreDrcs.length > 0) {
+        // sort the array by description
+        coreDrcs
           .sort((a: DutyResponsibility, b: DutyResponsibility) =>
             a.description.localeCompare(b.description)
           )
@@ -210,14 +184,16 @@ export const DrcModalSetting = () => {
 
             // set value state of sequence number
             dr.sequenceNo = index;
-          }),
-      ];
+          });
+      }
 
       // assign a shallow copy of sorted support drcs
-      const sortedSupportDrcs = [
-        ...swrExistingDnrs.data
+      const supportDrcs = [...swrExistingDnrs.data.support];
 
-          // sort the array by description
+      // sort and map the support drcs
+      if (supportDrcs && supportDrcs.length > 0) {
+        // sort the array by description
+        supportDrcs
           .sort((a: DutyResponsibility, b: DutyResponsibility) =>
             a.description.localeCompare(b.description)
           )
@@ -232,12 +208,12 @@ export const DrcModalSetting = () => {
 
             // set value state of sequence number
             dr.sequenceNo = index;
-          }),
-      ];
+          });
+      }
 
       const existingDnrs: DutiesResponsibilities = {
-        core: sortedCoreDrcs,
-        support: sortedSupportDrcs,
+        core: coreDrcs,
+        support: supportDrcs,
       };
 
       // mutate the original pool based on the available and existing dnrs
@@ -255,6 +231,20 @@ export const DrcModalSetting = () => {
     availableDnrsIsLoaded,
     existingDnrsIsLoaded,
   ]);
+
+  // trigger loading if useSWR is called for available dnrs
+  useEffect(() => {
+    if (swrAvailableDnrsIsLoading) {
+      getAvailableDnrs(swrAvailableDnrsIsLoading);
+    }
+  }, [swrAvailableDnrsIsLoading]);
+
+  // trigger loading if useSWR is called for existing dnrs
+  useEffect(() => {
+    if (swrExistingDnrsIsLoading) {
+      getExistingDnrs(swrExistingDnrsIsLoading);
+    }
+  }, [swrExistingDnrsIsLoading]);
 
   return (
     <div className="h-auto px-5 rounded">
