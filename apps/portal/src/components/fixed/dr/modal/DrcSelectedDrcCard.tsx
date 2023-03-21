@@ -180,6 +180,15 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                   </div>
                 </div>
 
+                <div className="flex flex-row items-center mt-5 mb-2">
+                  <CompetencyDropdown index={index} />
+                  <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
+                    {dr.competency.pcplId
+                      ? dr.competency.code
+                      : 'Add Competency...'}
+                  </label>
+                </div>
+
                 <div className="flex items-center mt-5 mb-2">
                   <input
                     type="number"
@@ -190,15 +199,6 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                     value={dr.percentage ? dr.percentage : ''}
                     placeholder="Add percentage"
                   />
-                </div>
-
-                <div className="flex flex-row items-center mt-5 mb-2">
-                  <CompetencyDropdown index={index} />
-                  <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
-                    {dr.competency.pcplId
-                      ? dr.competency.code
-                      : 'Add Competency...'}
-                  </label>
                 </div>
               </div>
             );

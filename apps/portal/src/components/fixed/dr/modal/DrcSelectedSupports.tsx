@@ -174,7 +174,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                   return (
                     <tr
                       key={index}
-                      className="font-light text-gray-600 peer hover:bg-gray-400 hover:text-white "
+                      className="font-light text-gray-600 border-b border-dashed peer hover:bg-gray-400 hover:text-white"
                     >
                       <td className="flex items-start justify-between py-1 text-sm">
                         <div className="flex w-[5%] justify-center">
