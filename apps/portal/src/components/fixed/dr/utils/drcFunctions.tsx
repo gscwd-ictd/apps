@@ -1,4 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { DutyResponsibilityList } from 'apps/portal/src/store/dnr.store';
 import {
   DutiesResponsibilities,
   DutyResponsibility,
@@ -58,4 +59,29 @@ export async function UpdateAvailableDrcs(
     support: tempSupportCheckedDnrs,
     availableDnrs: newAvailableDnrs,
   };
+}
+
+export async function UpdateFinalDrcs(selected: DutiesResponsibilities) {
+  const tempCoreDnrList = selected.core;
+  const tempSupportDnrList = selected.support;
+  const finalCoreDnrList: Array<DutyResponsibilityList> = [];
+  const finalSupportDnrList: Array<DutyResponsibilityList> = [];
+
+  tempCoreDnrList.map((dr: DutyResponsibility) => {
+    finalCoreDnrList.push({
+      odrId: dr.odrId,
+      pcplId: dr.competency.pcplId,
+      percentage: dr.percentage!,
+    });
+  });
+
+  tempSupportDnrList.map((dr: DutyResponsibility) => {
+    finalSupportDnrList.push({
+      odrId: dr.odrId,
+      pcplId: dr.competency.pcplId,
+      percentage: dr.percentage!,
+    });
+  });
+
+  return { core: finalCoreDnrList, support: finalSupportDnrList };
 }
