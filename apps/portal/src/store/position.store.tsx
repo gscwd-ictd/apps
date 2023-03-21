@@ -92,6 +92,7 @@ export const usePositionStore = create<PositionState>()(
       set((state) => ({
         ...state,
         filteredPositions: response,
+
         loading: { ...state.loading, loadingPositions: false },
       })),
 

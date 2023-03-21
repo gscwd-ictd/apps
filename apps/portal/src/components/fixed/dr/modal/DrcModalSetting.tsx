@@ -20,8 +20,9 @@ import { SelectedSupportDrcs } from './DrcSelectedSupports';
 
 export const DrcModalSetting = () => {
   // get from position store
-  const { selectedPosition } = usePositionStore((state) => ({
+  const { selectedPosition, postResponse } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
+    postResponse: state.position.postResponse,
   }));
 
   // get from employee store
@@ -133,7 +134,6 @@ export const DrcModalSetting = () => {
   const openDrcModalSelection = (drcType: DrcTypes) => {
     setSelectedDrcType(drcType);
     setModalPage(3);
-    console.log(drcType);
   };
 
   // get available dnrs (Pool)
@@ -264,6 +264,14 @@ export const DrcModalSetting = () => {
       getExistingDnrs(swrExistingDnrsIsLoading);
     }
   }, [swrExistingDnrsIsLoading]);
+
+  // mutate if response is changed
+  useEffect(() => {
+    if (!isEmpty(postResponse)) {
+      mutateAvailableDnrs();
+      mutateExistingDnrs();
+    }
+  }, [postResponse]);
 
   // set the default values
   useEffect(() => {
