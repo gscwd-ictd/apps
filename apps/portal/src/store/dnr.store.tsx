@@ -2,7 +2,10 @@ import { DutiesResponsibilities, DutyResponsibility } from '../types/dr.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { Competency } from '../types/competency.type';
-import { UpdateAvailableDrcs } from '../components/fixed/dr/utils/drcFunctions';
+import {
+  UpdateAvailableDrcs,
+  UpdateFinalDrcs,
+} from '../components/fixed/dr/utils/drcFunctions';
 
 export type DutyResponsibilityList = Pick<
   DutyResponsibility,
@@ -267,6 +270,7 @@ export const useDnrStore = create<DnrState>()(
         ...state,
         checkedDnrs: { core: [], support: [] },
         filteredAvailableDnrs: tempFilteredAvailableDnrs,
+        loading: { ...state.loading, loadingExistingDnrs: false },
         availableDnrs: tempFilteredAvailableDnrs,
       }));
     },
@@ -275,6 +279,7 @@ export const useDnrStore = create<DnrState>()(
       set((state) => ({
         ...state,
         availableDnrsIsLoaded: false,
+        existingDnrsIsLoaded: false,
         selectedDnrs: DUTIES_RESPONSIBILITIES,
       })),
 

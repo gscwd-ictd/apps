@@ -195,7 +195,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                     minLength={0}
                     maxLength={100}
                     onChange={(event) => handlePercentage(event, index)}
-                    className="w-full py-2 border-2 border-gray-200"
+                    className="w-full py-2 border border-gray-200 rounded "
                     value={dr.percentage ? dr.percentage : ''}
                     placeholder="Add percentage"
                   />

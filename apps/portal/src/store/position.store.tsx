@@ -28,6 +28,9 @@ type PositionState = {
   unfilledPositions: Array<Position>;
   filledPositions: Array<Position>;
   selectedPosition: Position;
+  postPosition: () => void;
+  postPositionSuccess: (response: Position) => void;
+  postPositionFail: (error: string) => void;
   setFilteredValue: (filteredValue: string) => void;
   setFilteredPositions: (filteredPositions: Array<Position>) => void;
   setSelectedPosition: (selectedPosition: Position) => void;
@@ -165,6 +168,26 @@ export const usePositionStore = create<PositionState>()(
         ...state,
         loading: { ...state.loading, loadingPositions: false },
         error: { ...state.error, errorPositions: error },
+      })),
+
+    postPosition: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPosition: true },
+      })),
+
+    postPositionSuccess: (response: Position) =>
+      set((state) => ({
+        ...state,
+        position: { ...state.position, postResponse: response },
+        loading: { ...state.loading, loadingPosition: false },
+      })),
+
+    postPositionFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        error: { ...state.error, errorPosition: error },
+        loading: { ...state.loading, loadingPosition: false },
       })),
   }))
 );

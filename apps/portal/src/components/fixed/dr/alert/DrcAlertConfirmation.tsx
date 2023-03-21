@@ -1,10 +1,19 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Alert, Button } from '@gscwd-apps/oneui';
 import { useAlertConfirmationStore } from 'apps/portal/src/store/alert.store';
+import {
+  DutyResponsibilityList,
+  useDnrStore,
+} from 'apps/portal/src/store/dnr.store';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
+import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { postHRIS } from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
 import { HiExclamationCircle } from 'react-icons/hi';
+import { UpdateFinalDrcs } from '../utils/drcFunctions';
 
 export const DrcAlertConfirmation = () => {
+  // use alert confirmation store
   const { confirmationIsOpen, setConfIsOpen, closeConf, openConf } =
     useAlertConfirmationStore((state) => ({
       confirmationIsOpen: state.isOpen,
@@ -13,10 +22,63 @@ export const DrcAlertConfirmation = () => {
       openConf: state.setOpen,
     }));
 
+  // use dnr store
+  const { selectedDrcType, selectedDnrs } = useDnrStore((state) => ({
+    selectedDnrs: state.selectedDnrs,
+    selectedDrcType: state.selectedDrcType,
+  }));
+
+  // use modal store
   const action = useModalStore((state) => state.action);
 
-  const onSubmitConfirm = () => {
+  // use position store
+  const {
+    selectedPosition,
+    postPosition,
+    postPositionFail,
+    postPositionSuccess,
+  } = usePositionStore((state) => ({
+    selectedPosition: state.selectedPosition,
+    postPosition: state.postPosition,
+    postPositionSuccess: state.postPositionSuccess,
+    postPositionFail: state.postPositionFail,
+  }));
+
+  // use employee store
+  const employee = useEmployeeStore((state) => state.employeeDetails);
+
+  const onSubmitConfirm = async () => {
     closeConf();
+    if (selectedDrcType === 'core') {
+      const drcsForPosting = await UpdateFinalDrcs(selectedDnrs);
+      postPosition();
+      handlePostData(drcsForPosting);
+    }
+  };
+
+  const handlePostData = async (data: {
+    core: Array<DutyResponsibilityList>;
+    support: Array<DutyResponsibilityList>;
+  }) => {
+    // axios request for post
+    const { error, result } = await postHRIS(
+      `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+      {
+        core: data.core,
+        support: data.support,
+      }
+    );
+
+    if (error) {
+      // set value for error message
+      postPositionFail(result);
+    } else {
+      // set value from returned response
+      postPositionSuccess(result);
+
+      // open alert success
+      closeConf();
+    }
   };
 
   return (
@@ -49,15 +111,19 @@ export const DrcAlertConfirmation = () => {
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
-            <div className="w-[5rem]">
-              <Button variant="info" onClick={closeConf}>
-                No
-              </Button>
-            </div>
+            <button
+              onClick={closeConf}
+              className="w-[6rem] px-3 py-2 bg-indigo-400 rounded text-white"
+            >
+              <span>No</span>
+            </button>
 
-            <div className="min-w-[5rem] max-w-auto">
-              <Button onClick={onSubmitConfirm}>Yes</Button>
-            </div>
+            <button
+              onClick={onSubmitConfirm}
+              className="w-[6rem] px-3 py-2 bg-indigo-400 rounded text-white"
+            >
+              <span>Yes</span>
+            </button>
           </div>
         </Alert.Footer>
       </Alert>
