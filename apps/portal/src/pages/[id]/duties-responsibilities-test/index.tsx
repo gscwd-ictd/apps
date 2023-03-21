@@ -1,5 +1,6 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Button } from '@gscwd-apps/oneui';
+import { DrcAlertConfirmation } from 'apps/portal/src/components/fixed/dr/alert/DrcAlertConfirmation';
 import DrcModal from 'apps/portal/src/components/fixed/dr/modal/DrcModal';
 import { SideNav } from 'apps/portal/src/components/fixed/nav/SideNav';
 import { ContentHeader } from 'apps/portal/src/components/modular/custom/containers/ContentHeader';
@@ -40,6 +41,8 @@ export default function DutiesResponsibilities({
       <SideNav />
 
       <DrcModal />
+
+      <DrcAlertConfirmation />
 
       <MainContainer>
         <div className="w-full h-full px-32">
