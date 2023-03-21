@@ -53,15 +53,19 @@ const DrcModal: FunctionComponent = () => {
   }));
 
   // use position store
-  const { selectedPosition } = usePositionStore((state) => ({
-    selectedPosition: state.selectedPosition,
-  }));
+  const { selectedPosition, emptySelectedPosition } = usePositionStore(
+    (state) => ({
+      selectedPosition: state.selectedPosition,
+      emptySelectedPosition: state.emptySelectedPosition,
+    })
+  );
 
   // use alert confirmation store
   const confOpen = useAlertConfirmationStore((state) => state.setOpen);
 
   // close drc modal
   const closeDrcModal = () => {
+    emptySelectedPosition();
     closeModal();
     cancelDrcPage();
   };
@@ -85,6 +89,7 @@ const DrcModal: FunctionComponent = () => {
     // put your logic here
     if (modal.page === 1) closeModal();
     else if (modal.page === 2) {
+      emptySelectedPosition();
       cancelDrcPage();
       prevPage();
     } else if (modal.page === 3) {

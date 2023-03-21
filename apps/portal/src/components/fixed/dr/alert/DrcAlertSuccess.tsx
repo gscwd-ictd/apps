@@ -3,6 +3,7 @@ import { Alert } from '@gscwd-apps/oneui';
 import { useAlertSuccessStore } from 'apps/portal/src/store/alert.store';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
+import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { HiCheckCircle } from 'react-icons/hi';
 
 export const DrcAlertSuccess = () => {
@@ -12,6 +13,11 @@ export const DrcAlertSuccess = () => {
     setClose: state.setClose,
   }));
 
+  // use position store
+  const emptySelectedPosition = usePositionStore(
+    (state) => state.emptySelectedPosition
+  );
+
   // use modal store
   const closeModal = useModalStore((state) => state.closeModal);
 
@@ -19,7 +25,13 @@ export const DrcAlertSuccess = () => {
   const cancelDrcPage = useDnrStore((state) => state.cancelDrcPage);
 
   const closeAlert = () => {
+    emptySelectedPosition();
+
     closeModal();
+
+    // set alert to close
+    setClose();
+
     cancelDrcPage();
   };
 
