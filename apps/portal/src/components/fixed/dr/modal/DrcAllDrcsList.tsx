@@ -70,7 +70,7 @@ export const DrcAllDrcsList = (): JSX.Element => {
                 className="flex cursor-pointer items-center justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
               >
                 <div>
-                  <p className="font-medium text-gray-600 truncate w-[24rem]">
+                  <p className="font-normal text-md text-gray-600 truncate w-[24rem]">
                     {dr.description}
                   </p>
                 </div>

@@ -59,33 +59,33 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   const handleSelectedDefaultCompetency = (index: number, item: Competency) => {
     if (selectedDrcType === 'core') {
       // create a copy of selected core dr
-      const updatedCheckedCoreDRs = [...checkedDnrs.core];
+      const updatedCheckedCoreDnrs = [...checkedDnrs.core];
 
       // set the state to the checked core drs
-      updatedCheckedCoreDRs[index].competency = item;
+      updatedCheckedCoreDnrs[index].competency = item;
 
       // map to change sequence
-      updatedCheckedCoreDRs.map((dr: DutyResponsibility, index: number) => {
+      updatedCheckedCoreDnrs.map((dr: DutyResponsibility, index: number) => {
         dr.sequenceNo = index;
       });
 
       // update the selected core dr state
-      setCheckedDnrs({ ...checkedDnrs, core: updatedCheckedCoreDRs });
+      setCheckedDnrs({ ...checkedDnrs, core: updatedCheckedCoreDnrs });
     }
     if (selectedDrcType === 'support') {
       // create a copy of selected support dr
-      const updatedCheckedSupportDRs = [...checkedDnrs.support];
+      const updatedCheckedSupportDnrs = [...checkedDnrs.support];
 
       // set the state to the checked support drs
-      updatedCheckedSupportDRs[index].competency = item;
+      updatedCheckedSupportDnrs[index].competency = item;
 
       // map to change sequence
-      updatedCheckedSupportDRs.map((dr: DutyResponsibility, index: number) => {
+      updatedCheckedSupportDnrs.map((dr: DutyResponsibility, index: number) => {
         dr.sequenceNo = index;
       });
 
       // update the selected support dr state
-      setCheckedDnrs({ ...checkedDnrs, support: updatedCheckedSupportDRs });
+      setCheckedDnrs({ ...checkedDnrs, support: updatedCheckedSupportDnrs });
     }
   };
 
@@ -110,7 +110,7 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
     <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="h-full px-5 py-2 mr-1 text-gray-700 transition-colors ease-in-out border-2 whitespace-nowrap border-slate-100 bg-slate-100 hover:bg-slate-200 active:bg-slate-300">
+          <Menu.Button className="h-full px-5 py-2 text-gray-700 transition-colors ease-in-out border rounded-l whitespace-nowrap border-slate-200 border-r-none bg-slate-100 hover:bg-slate-200 active:bg-slate-300">
             <p>Select Competency</p>
           </Menu.Button>
         </div>

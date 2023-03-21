@@ -119,7 +119,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                   </div>
                   <div className="flex items-start justify-between w-full">
                     <div>
-                      <h5 className="text-lg">{dr.description}</h5>
+                      <h5 className="font-light text-md">{dr.description}</h5>
                     </div>
                     <div
                       onClick={() => handleRemove(index)}
@@ -132,7 +132,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
 
                 <div className="flex flex-row items-center mt-5 mb-2">
                   <CompetencyDropdown index={index} />
-                  <label className="w-full p-2 border-2 border-gray-200 outline-none">
+                  <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
                     {dr.competency.pcplId
                       ? `${dr.competency.code} | ${dr.competency.name} | ${dr.competency.level}`
                       : 'No competency selected...'}
@@ -146,7 +146,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                     max={100}
                     onWheel={(e) => e.currentTarget.blur()}
                     onChange={(event) => handlePercentage(event, index)}
-                    className="w-full py-2 border-2 border-gray-200"
+                    className="w-full py-2 border border-gray-200 rounded "
                     value={dr.percentage ? dr.percentage : ''}
                     placeholder="Input percentage..."
                   />
@@ -169,7 +169,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                   </div>
                   <div className="flex items-start justify-between w-full">
                     <div>
-                      <h5 className="text-lg">{dr.description}</h5>
+                      <h5 className="font-light text-md">{dr.description}</h5>
                     </div>
                     <div
                       onClick={() => handleRemove(index)}
@@ -194,7 +194,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
 
                 <div className="flex flex-row items-center mt-5 mb-2">
                   <CompetencyDropdown index={index} />
-                  <label className="w-full p-2 border-2 border-gray-200 outline-none">
+                  <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
                     {dr.competency.pcplId
                       ? dr.competency.code
                       : 'Add Competency...'}
