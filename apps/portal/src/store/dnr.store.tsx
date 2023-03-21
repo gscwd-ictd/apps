@@ -2,6 +2,7 @@ import { DutiesResponsibilities, DutyResponsibility } from '../types/dr.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { Competency } from '../types/competency.type';
+import { UpdateAvailableDrcs } from '../components/fixed/dr/utils/drcFunctions';
 
 export type DutyResponsibilityList = Pick<
   DutyResponsibility,
@@ -86,6 +87,9 @@ export type DnrState = {
 
   // checked dnrs
   checkedDnrs: DutiesResponsibilities;
+
+  // add checked dnrs to selected dnrs
+  addCheckedToSelectedDnrs: () => void;
 
   // set default values if cancel button is clicked
   cancelCheckedDnrsAction: () => void;
@@ -269,5 +273,22 @@ export const useDnrStore = create<DnrState>()(
 
     cancelDrcPage: () =>
       set((state) => ({ ...state, availableDnrsIsLoaded: false })),
+
+    addCheckedToSelectedDnrs: async () => {
+      const updatedDnrs = await UpdateAvailableDrcs(
+        get().availableDnrs, // get state of available dnrs
+        get().selectedDnrs, // get state of selected dnrs
+        get().checkedDnrs // get state of checked dnrs
+      );
+
+      set((state) => ({
+        ...state,
+        availableDnrs: updatedDnrs.availableDnrs,
+        filteredAvailableDnrs: updatedDnrs.availableDnrs,
+        selectedDnrs: { core: updatedDnrs.core, support: updatedDnrs.support },
+        checkedDnrs: { core: [], support: [] },
+        selectedDrcType: null,
+      }));
+    },
   }))
 );

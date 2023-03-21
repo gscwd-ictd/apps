@@ -29,17 +29,32 @@ const DrcModal: FunctionComponent = () => {
     prevPage: state.prevPage,
   }));
 
-  const { cancelCheckedDnrsAction, cancelDrcPage } = useDnrStore((state) => ({
-    cancelCheckedDnrsAction: state.cancelCheckedDnrsAction,
-    cancelDrcPage: state.cancelDrcPage,
-  }));
+  const { cancelCheckedDnrsAction, cancelDrcPage, addCheckedToSelectedDnrs } =
+    useDnrStore((state) => ({
+      cancelCheckedDnrsAction: state.cancelCheckedDnrsAction,
+      cancelDrcPage: state.cancelDrcPage,
+      addCheckedToSelectedDnrs: state.addCheckedToSelectedDnrs,
+    }));
 
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
   }));
 
+  // close drc modal
+  const closeDrcModal = () => {
+    closeModal();
+    cancelDrcPage();
+  };
+
+  // confirm action modal
   const actionBtn = () => {
     // put your logic here
+
+    if (modal.page === 2) {
+      //logic for submit here
+    } else if (modal.page === 3) {
+      addCheckedToSelectedDnrs();
+    }
     nextPage();
   };
 
@@ -84,7 +99,7 @@ const DrcModal: FunctionComponent = () => {
             <button
               type="button"
               className="text-gray-400"
-              onClick={closeModal}
+              onClick={closeDrcModal}
             >
               x<span className="sr-only">Close modal</span>
             </button>

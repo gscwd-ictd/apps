@@ -30,7 +30,7 @@ export async function UpdateAvailableDrcs(
 
   // sort
   tempCoreCheckedDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-    a.description!.localeCompare(b.description!)
+    a.description.localeCompare(b.description)
   );
 
   // map and assign new sequence
@@ -45,7 +45,7 @@ export async function UpdateAvailableDrcs(
 
   // sort
   tempSupportCheckedDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-    a.description!.localeCompare(b.description!)
+    a.description.localeCompare(b.description)
   );
 
   // re-index
@@ -53,5 +53,9 @@ export async function UpdateAvailableDrcs(
     dr.sequenceNo = index;
   });
 
-  return { tempCoreCheckedDnrs, tempSupportCheckedDnrs, newAvailableDnrs };
+  return {
+    core: tempCoreCheckedDnrs,
+    support: tempSupportCheckedDnrs,
+    availableDnrs: newAvailableDnrs,
+  };
 }
