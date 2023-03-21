@@ -174,7 +174,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
                 return (
                   <tr
                     key={index}
-                    className="font-light text-gray-600 peer hover:text-white hover:bg-gray-400 "
+                    className="font-light text-gray-600 border-b border-dashed peer hover:text-white hover:bg-gray-400"
                   >
                     <td className="flex items-start justify-between py-1 text-sm ">
                       <div className="flex w-[5%] justify-center">
@@ -196,7 +196,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
                           {dr.description}
                         </p>
                       </div>
-                      <div className="w-[15%] flex gap-1 items-center justify-center ">
+                      <div className="w-[15%] flex gap-1 items-center justify-center text-center ">
                         {dr.competency.code}
                       </div>
                       <div className="w-[15%] flex gap-1 items-center justify-center ">

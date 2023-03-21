@@ -54,8 +54,9 @@ const DrcModal: FunctionComponent = () => {
       //logic for submit here
     } else if (modal.page === 3) {
       addCheckedToSelectedDnrs();
+      setModalPage(2);
     }
-    nextPage();
+    // nextPage();
   };
 
   const cancelBtn = () => {

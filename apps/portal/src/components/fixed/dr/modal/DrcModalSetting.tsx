@@ -297,7 +297,7 @@ export const DrcModalSetting = () => {
                 <Button
                   btnLabel={
                     availableDnrs.length === 0
-                      ? 'No core duties available in pool, please contact HR to add more duties'
+                      ? 'No more duties available in pool, please contact the HR to add more duties'
                       : '+ Add Core'
                   }
                   btnVariant="white"
@@ -348,7 +348,7 @@ export const DrcModalSetting = () => {
                 <Button
                   btnLabel={
                     availableDnrs.length === 0
-                      ? 'No support duties available in pool, please contact HR to add more duties'
+                      ? 'No more duties available in pool, please contact the HR to add more duties'
                       : '+ Add Support'
                   }
                   btnVariant="white"
