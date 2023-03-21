@@ -29,8 +29,9 @@ const DrcModal: FunctionComponent = () => {
     prevPage: state.prevPage,
   }));
 
-  const { cancelCheckedDnrsAction } = useDnrStore((state) => ({
+  const { cancelCheckedDnrsAction, cancelDrcPage } = useDnrStore((state) => ({
     cancelCheckedDnrsAction: state.cancelCheckedDnrsAction,
+    cancelDrcPage: state.cancelDrcPage,
   }));
 
   const { selectedPosition } = usePositionStore((state) => ({
@@ -45,8 +46,10 @@ const DrcModal: FunctionComponent = () => {
   const cancelBtn = () => {
     // put your logic here
     if (modal.page === 1) closeModal();
-    else if (modal.page === 2) prevPage();
-    else if (modal.page === 3) {
+    else if (modal.page === 2) {
+      cancelDrcPage();
+      prevPage();
+    } else if (modal.page === 3) {
       cancelCheckedDnrsAction();
       prevPage();
     }
