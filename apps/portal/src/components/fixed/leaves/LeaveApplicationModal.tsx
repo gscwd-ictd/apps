@@ -59,18 +59,18 @@ const typeOfLeave: Array<SelectOption> = [
 ];
 
 const leaveLocation: Array<SelectOption> = [
-  { label: 'Within the Philippines', value: 'Within the Philippines' },
-  { label: 'Abroad (Specify)', value: 'Abroad (Specify)' },
+  { label: 'Within the Philippines', value: 'Philippines' },
+  { label: 'Abroad (Specify)', value: 'Abroad' },
 ];
 
 const leaveHospital: Array<SelectOption> = [
   {
     label: 'In Hospital (Specify Illness)',
-    value: 'In Hospital (Specify Illness)',
+    value: 'inHospital',
   },
   {
     label: 'Out Patient (Specify Illness)',
-    value: 'Out Patient (Specify Illness)',
+    value: 'outPatient',
   },
 ];
 
@@ -118,7 +118,6 @@ export const LeaveApplicationModal = ({
     postResponseApply,
     loadingResponse,
     errorResponse,
-    leaveTypes,
     errorLeaveTypes,
     leaveDates,
 
@@ -135,7 +134,6 @@ export const LeaveApplicationModal = ({
     postResponseApply: state.response.postResponseApply,
     loadingResponse: state.loading.loadingResponse,
     errorResponse: state.error.errorResponse,
-    leaveTypes: state.leaveTypes,
     errorLeaveTypes: state.error.errorLeaveTypes,
     leaveDates: state.leaveDates,
 
@@ -157,7 +155,6 @@ export const LeaveApplicationModal = ({
   );
 
   const leaveTypeUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-benefits`;
-
   const {
     data: swrLeaveTypes,
     isLoading: swrIsLoading,
@@ -190,136 +187,124 @@ export const LeaveApplicationModal = ({
     useForm<LeaveContents>({
       mode: 'onChange',
       defaultValues: {
-        // name: '',
-        // id: employeeDetails.employmentDetails.userId,
-        // office: '',
-        // dateOfFiling: '',
-        // position: '',
-        // salary: '',
-        typeOfLeave: {
+        // employeeId: employeeDetails.employmentDetails.userId,
+        typeOfLeaveDetails: {
           id: '',
           leaveName: '',
         },
-        // leaveId: '',
-        // numberOfWorkingDays: [],
-        // inPhilippinesOrAbroad: '', //withinThePhilippines or abroad
-        // location: '',
-        // hospital: '', //inHospital or outPatient
-        // illness: '',
-        // specialLeaveWomenIllness: '',
-        // study: '', //mastersDegree, BAR, or Other
-        // studyPurpose: '', //applicable for Study Other only
-        // other: '', //monetization, terminal leave
-        // commutation: '',
       },
     });
+
+  //store json string from leave type selection
+  const [leaveObject, setLeaveObject] = useState<string>('');
+
+  const handleTypeOfLeave = (e: string) => {
+    setLeaveObject(e);
+    const leave = JSON.parse(e) as LeaveType;
+    setValue('typeOfLeaveDetails', leave);
+  };
+
+  useEffect(() => {
+    setValue('leaveApplicationDates', leaveDates);
+  }, [leaveDates]);
+
+  useEffect(() => {
+    setValue('employeeId', employeeDetails.employmentDetails.userId);
+    console.log(leaveObject);
+  }, [leaveObject]);
 
   const onSubmit: SubmitHandler<LeaveContents> = (data: LeaveContents) => {
     let dataToSend;
     if (
-      data.typeOfLeave.leaveName === 'Vacation Leave' ||
-      data.typeOfLeave.leaveName === 'Forced Leave'
+      data.typeOfLeaveDetails.leaveName === 'Vacation Leave' ||
+      data.typeOfLeaveDetails.leaveName === 'Forced Leave'
     ) {
+      if (data.inPhilippinesOrAbroad === 'Philippines') {
+        dataToSend = {
+          leaveBenefitsId: data.typeOfLeaveDetails.id,
+          employeeId: data.employeeId,
+          inPhilippines: data.location,
+          leaveApplicationDates: data.leaveApplicationDates,
+        };
+      } else {
+        dataToSend = {
+          leaveBenefitsId: data.typeOfLeaveDetails.id,
+          employeeId: data.employeeId,
+          abroad: data.location,
+          leaveApplicationDates: data.leaveApplicationDates,
+        };
+      }
+    } else if (data.typeOfLeaveDetails.leaveName === 'Sick Leave') {
+      if (data.hospital === 'inHospital') {
+        dataToSend = {
+          leaveBenefitsId: data.typeOfLeaveDetails.id,
+          employeeId: data.employeeId,
+          inHospital: data.illness,
+          leaveApplicationDates: data.leaveApplicationDates,
+        };
+      } else {
+        dataToSend = {
+          leaveBenefitsId: data.typeOfLeaveDetails.id,
+          employeeId: data.employeeId,
+          outPatient: data.illness,
+          leaveApplicationDates: data.leaveApplicationDates,
+        };
+      }
+    } else if (data.typeOfLeaveDetails.leaveName === 'Study Leave') {
       dataToSend = {
-        id: data.id,
-        typeOfLeave: data.typeOfLeave,
-        leaveId: '',
-        numberOfWorkingDays: data.numberOfWorkingDays,
-        inPhilippinesOrAbroad: data.inPhilippinesOrAbroad, //withinThePhilippines or abroad
-        location: data.location,
-      };
-    } else if (data.typeOfLeave.leaveName === 'Sick Leave') {
-      dataToSend = {
-        id: data.id,
-        typeOfLeave: data.typeOfLeave,
-        leaveId: '',
-        numberOfWorkingDays: data.numberOfWorkingDays,
-        hospital: data.hospital,
-        illness: data.illness,
-      };
-    } else if (data.typeOfLeave.leaveName === 'Study Leave') {
-      dataToSend = {
-        id: data.id,
-        typeOfLeave: data.typeOfLeave,
-        leaveId: '',
-        numberOfWorkingDays: data.numberOfWorkingDays,
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        typeOfLeave: data.typeOfLeaveDetails.leaveName,
+        leaveApplicationDates: data.leaveApplicationDates,
         study: data.study,
         studyPurpose: data.studyPurpose ? data.studyPurpose : null,
       };
     } else if (
-      data.typeOfLeave.leaveName === 'Special Leave Benefits for Women'
+      data.typeOfLeaveDetails.leaveName === 'Special Leave Benefits for Women'
     ) {
       dataToSend = {
-        id: data.id,
-        typeOfLeave: data.typeOfLeave,
-        leaveId: '',
-        numberOfWorkingDays: data.numberOfWorkingDays,
+        leaveBenefitsd: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        typeOfLeave: data.typeOfLeaveDetails.leaveName,
+        leaveApplicationDates: data.leaveApplicationDates,
         specialLeaveWomenIllness: data.specialLeaveWomenIllness,
       };
-    } else if (data.typeOfLeave.leaveName === 'Others') {
+    } else if (data.typeOfLeaveDetails.leaveName === 'Others') {
       dataToSend = {
-        id: data.id,
-        typeOfLeave: data.typeOfLeave,
-        leaveId: '',
-        numberOfWorkingDays: data.numberOfWorkingDays,
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        typeOfLeave: data.typeOfLeaveDetails.leaveName,
+        leaveApplicationDates: data.leaveApplicationDates,
         other: data.other,
         commutation: data.commutation ? data.commutation : null,
       };
     } else {
       dataToSend = {
-        id: data.id,
-        typeOfLeave: data.typeOfLeave,
-        leaveId: '',
-        numberOfWorkingDays: data.numberOfWorkingDays,
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        typeOfLeave: data.typeOfLeaveDetails.leaveName,
+        leaveApplicationDates: data.leaveApplicationDates,
       };
     }
 
-    // handlePostResult(data);
-    // postLeaveList();
-    console.log(data);
+    handlePostResult(dataToSend);
+    postLeave();
+    // console.log(data);
     console.log(dataToSend);
-    console.log(
-      JSON.parse(
-        `{"label":"Vacation Leave","value":"585e4746-e09b-4720-80ba-3f059daa2b5e"}`
-      )
-    );
   };
 
   const handlePostResult = async (data: LeaveContents) => {
-    const { error, result } = await postPortal('/v1/pass-slip', data);
+    const { error, result } = await postPortal('/v1/leave-application', data);
 
     if (error) {
       postLeaveFail(result);
     } else {
       postLeaveSuccess(result);
-
       reset();
+      setLeaveObject('');
       closeModalAction();
     }
   };
-
-  const [leaveObject, setLeaveObject] = useState<LeaveType>();
-
-  useEffect(() => {
-    // if (watch('typeOfLeave.leaveName') === 'Vacation Leave') {
-    //   setValue('leaveId', '585e4746-e09b-4720-80ba-3f059daa2b5e');
-    // }
-    // if (watch('typeOfLeave.leaveName') === 'Sick Leave') {
-    //   setValue('leaveId', 'acdf4218-313c-4abc-a884-13f302b322f5');
-    // }
-    // if (watch('typeOfLeave.leaveName') === 'Forced Leave') {
-    //   setValue('leaveId', '59d3f978-431d-4fbb-8949-19cfd7c5a218');
-    // }
-    // setValue('id', employeeDetails.employmentDetails.userId);
-  }, [watch('typeOfLeave')]);
-
-  useEffect(() => {
-    setValue('numberOfWorkingDays', leaveDates);
-  }, [leaveDates]);
-
-  useEffect(() => {
-    setValue('id', employeeDetails.employmentDetails.userId);
-  }, []);
 
   return (
     <>
@@ -332,6 +317,23 @@ export const LeaveApplicationModal = ({
             notifMessage={`${errorLeaveTypes}: Failed to load Leave Types`}
           />
         </>
+      ) : null}
+
+      {!isEmpty(errorResponse) ? (
+        <>
+          {/* {console.log(errorLeaveTypes)} */}
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorResponse}`}
+          />
+        </>
+      ) : null}
+
+      {!isEmpty(postResponseApply) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Leave Application Successful! Please wait for supervisor's decision on this application"
+        />
       ) : null}
 
       <Modal size={'xl'} open={modalState} setOpen={setModalState}>
@@ -424,81 +426,93 @@ export const LeaveApplicationModal = ({
 
                   <div className="flex gap-2 w-full items-center">
                     <select
-                      id="typeOfLeave"
+                      // id="typeOfLeave"
                       className="text-slate-500 w-full h-14 rounded text-lg border-slate-300"
                       required
                       defaultValue={''}
-                      {...register('typeOfLeave')}
+                      // {...register('typeOfLeave')}
                       // disabled={swrIsLoading ? true : false}
+                      onChange={(e) =>
+                        handleTypeOfLeave(e.target.value as unknown as string)
+                      }
                     >
                       <option value="" disabled>
                         Select Type Of Leave:
                       </option>
                       {
-                        // swrLeaveTypes
-                        typeOfLeave
-                          ? //
-                            // swrLeaveTypes.map((item: LeaveType, idx: number) => (
-                            //   <option value={item.leaveName} key={idx}>
-                            //     {item.leaveName}
+                        // typeOfLeave
+                        swrLeaveTypes
+                          ? swrLeaveTypes.map(
+                              (item: LeaveType, idx: number) => (
+                                <option
+                                  value={`{"id":"${item.id}", "leaveName":"${item.leaveName}"}`}
+                                  key={idx}
+                                >
+                                  {item.leaveName}
+                                </option>
+                              )
+                            )
+                          : // typeOfLeave.map((item: Item, index: number) => (
+                            //   <option
+                            //     value={`{"leaveBenefitsId":"${item.value}", "leaveName":"${item.label}"}`}
+                            //     key={index}
+                            //   >
+                            //     {item.label}
                             //   </option>
                             // ))
-                            typeOfLeave.map((item: Item, index: number) => (
-                              <option
-                                value={JSON.stringify(
-                                  `{"label":"Vacation Leave","value":"585e4746-e09b-4720-80ba-3f059daa2b5e"}`
-                                )}
-                                key={index}
-                              >
-                                {item.label}
-                              </option>
-                            ))
-                          : null
+                            null
                       }
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  {watch('typeOfLeave') ? (
+                  {watch('typeOfLeaveDetails.leaveName') ? (
                     <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">
                       <span className="font-bold">
-                        {watch('typeOfLeave.leaveName')}
+                        {watch('typeOfLeaveDetails.leaveName')}
                       </span>
                       <span>
-                        {watch('typeOfLeave.leaveName') === 'Vacation Leave'
+                        {watch('typeOfLeaveDetails.leaveName') ===
+                        'Vacation Leave'
                           ? 'It shall be filed five(5) days in advance, whenever possible, of the effective date of such leave. Vacation leave within the Phillipines or abroad shall be indicated in the form for purposes of securing travel authority and completing clearance from the money and work accountabilities.'
-                          : watch('typeOfLeave.leaveName') === 'Forced Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Forced Leave'
                           ? 'Annual five-day vacatuin leave shall be forfeited if not taken during the year. In case the scheduled leave has been cancelled in the exigency of the service by the head of agency, it shall no longer be deducted from the accumulated vacation leave. Availment of one (1) day or more Vacation Leave (VL) shall be considered for complying the mandatory/forced leave subject to the conditions under Section 25, Rule XVI of the Omnibus Rules Implementing E.O. No. 292.'
-                          : watch('typeOfLeave.leaveName') === 'Sick Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Sick Leave'
                           ? `It shall be filed immediately upon employee's return from such leave. IF filed in advance or exceeding the five (5) days, application shall be accompanied by a medical certificate. In case medical consultation was not availed of, an affidavit should be executed by an applicant.`
-                          : watch('typeOfLeave.leaveName') === 'Maternity Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Maternity Leave'
                           ? `Proof of pregnancy e.g. ultrasound, doctor's certificate on the expected data of delivery. Accomplished Notice of Allocation of Maternity Leave Credits (CS Form No. 6a), if needed. Seconded female employees shall enjoy maternity leave with full pay in the recipient agency.`
-                          : watch('typeOfLeave.leaveName') === 'Paternity Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Paternity Leave'
                           ? `Proof of child's delivery e.g. birth certificate, medical certificate and marriage contract.`
-                          : watch('typeOfLeave.leaveName') ===
+                          : watch('typeOfLeaveDetails.leaveName') ===
                             'Special Privilege Leave'
                           ? `It shall be filed/approved for at least one (1) week prior to availment, except on emergency cases. Special privilege leave within the Philippines or abroad shall be indicated in the form for purposes of securing travel authority and completing clearance from money and work accountabilities.`
-                          : watch('typeOfLeave.leaveName') ===
+                          : watch('typeOfLeaveDetails.leaveName') ===
                             'Solo Parent Leave'
                           ? `It shall be filed in advance or whenever possible five (5) days before going on such leave with updated Solo Parent Identification Card.`
-                          : watch('typeOfLeave.leaveName') === 'Study Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Study Leave'
                           ? `Shall meet the agency's internal requirements, if any; Contract between the agency head or authorized representative and the employee concerned.`
-                          : watch('typeOfLeave.leaveName') ===
+                          : watch('typeOfLeaveDetails.leaveName') ===
                             '10-Day VAWC Leave'
                           ? `It shall be filed in advance or immediately upon the woman employee's return from such leave. It shall be accompanied by any of the following supporting documents: a. Barangay Protection Order (BPO) obtained from the barangay; b. Temporary/Permanent Protection Order (TPO/PPO) obtained from the court; c. If the protection order is not yet issued by the barangay or the court, a certification issued by the Punong Barangay/Kagawad or Prosecutor or the Clerk of Court that the application for the BPO, TPO, or PPO has been filed with the said office shall be sufficient to support the application for the ten-day leave; or d. In the absence of the BPO/TPO/PPO or the certification, a police report specifying the details of the occurence of violence on the victim and medical certificate may be considered, at the discretion of the immediate supervisor of the woman employee concerned.`
-                          : watch('typeOfLeave.leaveName') ===
+                          : watch('typeOfLeaveDetails.leaveName') ===
                             'Rehabilitation Privilege'
                           ? `Application shall be made within one (1) week from the time of the accident except when a longer period is warranted. Letter request supported by relevant reports such as the police report, if any. Medical certificate on the nature of the injuries, the course of treatment involved, and the need to undergo rest, recuperation, and rehabilitation, as the case may be. Written concurrence of a government physician should be obtained relative to the recommendation for rehabilitation if the attending physician is a private practitioner, praticularly on the duration of the period of rehabilitation.`
-                          : watch('typeOfLeave.leaveName') ===
+                          : watch('typeOfLeaveDetails.leaveName') ===
                             'Special Leave Benefits for Women'
                           ? `The application may be filed in advance, that is, at least five (5) days prior to the scheduled date of the gynecological surgery that will be undergone by the employee. In case of emergency, the application for special leave shall be filed immediately upon employee's return but during confinement the agency shall be notified of said surgery. The application shall be accompanied by a medical certificate filled out by the proper medical authorities, e.g. the attending surgeon accompanied by a clinical summary reflecting the gynecological disorder which shall be addressed or was addressed by the said surgery; the histopathological report; the operative technique used for the surgery; the duration of the surgery including the perioperative period (period of confinement around surgery); as well as the employee's estimate period of recuperation of the same.`
-                          : watch('typeOfLeave.leaveName') ===
+                          : watch('typeOfLeaveDetails.leaveName') ===
                             'Special Emergency (Calamity) Leave'
                           ? `The special emergency leave can be applied for a maximum of five (5) straight working days or staggered basis within thirty (30) days from the actual occurence of the natural calamity/disaster. Said privilege shall be enjoyed once a year, not in every instance of calamity or disaster. The head of office shall take full responsibility for teh grant of special emergency leave and verification of teh employee's eligibility to be granted thereof. Said verification shall include: validation of place of residence based on latest available records of the affected employee; verification that the place of residence is covered in the declaration of calamity area by the proper government agency, and such other proofs as may be necessary.`
-                          : watch('typeOfLeave.leaveName') === 'Adoption Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Adoption Leave'
                           ? `Application for adoption leave shall be filed with an authenticated copy of teh Pre-Adoptive Placement Authority issued by the Department of Scoial Welfare and Development (DSWD).`
-                          : watch('typeOfLeave.leaveName') === 'Others'
+                          : watch('typeOfLeaveDetails.leaveName') === 'Others'
                           ? `For Monetization of Leave Credits, application for monetization of fifthy percent (50%) or more of the accumulated leave credits shall be accompanied by letter request to the head of the agency stating the valid and justifiable reasons. For Terminal Leave, proof of employee's resignation or retirement or separation from the service.`
                           : ``}
                       </span>
@@ -506,7 +520,7 @@ export const LeaveApplicationModal = ({
                   ) : null}
                 </div>
 
-                {watch('typeOfLeave') ? (
+                {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
                     {/* <label className="-mb-2 text-slate-500 text-xl font-medium w-full">
                       Details of Leave:
@@ -514,26 +528,31 @@ export const LeaveApplicationModal = ({
                     <div className="flex flex-row justify-between items-center w-full mt-1">
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="pt-2 text-slate-500 text-xl font-medium">
-                          {watch('typeOfLeave.leaveName') ===
+                          {watch('typeOfLeaveDetails.leaveName') ===
                             'Vacation Leave' ||
-                          watch('typeOfLeave.leaveName') === 'Forced Leave' ||
-                          watch('typeOfLeave.leaveName') ===
+                          watch('typeOfLeaveDetails.leaveName') ===
+                            'Forced Leave' ||
+                          watch('typeOfLeaveDetails.leaveName') ===
                             'Special Privilege Leave'
                             ? 'Location:'
-                            : watch('typeOfLeave.leaveName') === 'Sick Leave'
+                            : watch('typeOfLeaveDetails.leaveName') ===
+                              'Sick Leave'
                             ? 'Hospitalization:'
-                            : watch('typeOfLeave.leaveName') === 'Study Leave'
+                            : watch('typeOfLeaveDetails.leaveName') ===
+                              'Study Leave'
                             ? 'Study:'
-                            : watch('typeOfLeave.leaveName') === 'Others'
+                            : watch('typeOfLeaveDetails.leaveName') === 'Others'
                             ? 'Other Purpose: '
                             : null}
                         </label>
                       </div>
 
                       <div className="flex gap-2 w-full items-center">
-                        {watch('typeOfLeave.leaveName') === 'Vacation Leave' ||
-                        watch('typeOfLeave.leaveName') === 'Forced Leave' ||
-                        watch('typeOfLeave.leaveName') ===
+                        {watch('typeOfLeaveDetails.leaveName') ===
+                          'Vacation Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') ===
+                          'Forced Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') ===
                           'Special Privilege Leave' ? (
                           <>
                             <select
@@ -555,7 +574,8 @@ export const LeaveApplicationModal = ({
                           </>
                         ) : null}
 
-                        {watch('typeOfLeave.leaveName') === 'Sick Leave' ? (
+                        {watch('typeOfLeaveDetails.leaveName') ===
+                        'Sick Leave' ? (
                           <>
                             <select
                               id="hospital"
@@ -576,7 +596,8 @@ export const LeaveApplicationModal = ({
                           </>
                         ) : null}
 
-                        {watch('typeOfLeave.leaveName') === 'Study Leave' ? (
+                        {watch('typeOfLeaveDetails.leaveName') ===
+                        'Study Leave' ? (
                           <>
                             <select
                               id="study"
@@ -597,7 +618,7 @@ export const LeaveApplicationModal = ({
                           </>
                         ) : null}
 
-                        {watch('typeOfLeave.leaveName') === 'Others' ? (
+                        {watch('typeOfLeaveDetails.leaveName') === 'Others' ? (
                           <>
                             <select
                               id="others"
@@ -620,7 +641,7 @@ export const LeaveApplicationModal = ({
                       </div>
                     </div>
 
-                    {watch('typeOfLeave.leaveName') === 'Others' &&
+                    {watch('typeOfLeaveDetails.leaveName') === 'Others' &&
                     watch('other') === 'Monetization of Leave Credits' ? (
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-row justify-between items-center w-full">
@@ -657,42 +678,48 @@ export const LeaveApplicationModal = ({
                       </div>
                     ) : null}
 
-                    {watch('typeOfLeave.leaveName') === 'Vacation Leave' ||
-                    watch('typeOfLeave.leaveName') === 'Forced Leave' ||
-                    watch('typeOfLeave.leaveName') ===
+                    {watch('typeOfLeaveDetails.leaveName') ===
+                      'Vacation Leave' ||
+                    watch('typeOfLeaveDetails.leaveName') === 'Forced Leave' ||
+                    watch('typeOfLeaveDetails.leaveName') ===
                       'Special Privilege Leave' ||
-                    watch('typeOfLeave.leaveName') === 'Sick Leave' ||
-                    watch('typeOfLeave.leaveName') ===
+                    watch('typeOfLeaveDetails.leaveName') === 'Sick Leave' ||
+                    watch('typeOfLeaveDetails.leaveName') ===
                       'Special Leave Benefits for Women' ||
-                    (watch('typeOfLeave.leaveName') === 'Study Leave' &&
+                    (watch('typeOfLeaveDetails.leaveName') === 'Study Leave' &&
                       watch('study') === 'Other') ||
-                    watch('typeOfLeave.leaveName') === 'Forced Leave' ? (
+                    watch('typeOfLeaveDetails.leaveName') === 'Forced Leave' ? (
                       <textarea
-                        {...(watch('typeOfLeave.leaveName') ===
+                        {...(watch('typeOfLeaveDetails.leaveName') ===
                           'Vacation Leave' ||
-                        watch('typeOfLeave.leaveName') === 'Forced Leave'
+                        watch('typeOfLeaveDetails.leaveName') === 'Forced Leave'
                           ? { ...register('location') }
-                          : watch('typeOfLeave.leaveName') === 'Sick Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Sick Leave'
                           ? { ...register('illness') }
-                          : watch('typeOfLeave.leaveName') === 'Study Leave'
+                          : watch('typeOfLeaveDetails.leaveName') ===
+                            'Study Leave'
                           ? { ...register('studyPurpose') }
-                          : watch('typeOfLeave.leaveName') ===
+                          : watch('typeOfLeaveDetails.leaveName') ===
                             'Special Leave Benefits for Women'
                           ? { ...register('specialLeaveWomenIllness') }
                           : null)}
                         required
                         rows={3}
                         placeholder={`${
-                          watch('typeOfLeave.leaveName') === 'Vacation Leave' ||
-                          watch('typeOfLeave.leaveName') === 'Forced Leave' ||
-                          watch('typeOfLeave.leaveName') ===
+                          watch('typeOfLeaveDetails.leaveName') ===
+                            'Vacation Leave' ||
+                          watch('typeOfLeaveDetails.leaveName') ===
+                            'Forced Leave' ||
+                          watch('typeOfLeaveDetails.leaveName') ===
                             'Special Privilege Leave'
                             ? 'Specify Leave Details'
-                            : watch('typeOfLeave.leaveName') === 'Sick Leave' ||
-                              watch('typeOfLeave.leaveName') ===
+                            : watch('typeOfLeaveDetails.leaveName') ===
+                                'Sick Leave' ||
+                              watch('typeOfLeaveDetails.leaveName') ===
                                 'Special Leave Benefits for Women'
                             ? 'Specify Illness'
-                            : watch('typeOfLeave.leaveName') ===
+                            : watch('typeOfLeaveDetails.leaveName') ===
                                 'Study Leave' && watch('study') === 'Other'
                             ? 'Specify Study Leave Purpose'
                             : 'Specify Leave Details'
@@ -703,7 +730,7 @@ export const LeaveApplicationModal = ({
                   </>
                 ) : null}
 
-                {watch('typeOfLeave') ? (
+                {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
                     <label className="pt-2 text-slate-500 text-xl font-medium">
                       Select Leave Dates:

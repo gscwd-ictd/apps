@@ -107,6 +107,7 @@ export default function Leaves({
     data: swrLeaves,
     isLoading: swrIsLoading,
     error: swrError,
+    mutate: mutateLeaves,
   } = useSWR(leaveUrl, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
@@ -123,12 +124,19 @@ export default function Leaves({
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
       getLeaveListSuccess(swrIsLoading, swrLeaves);
+      console.log(swrLeaves);
     }
 
     if (!isEmpty(swrError)) {
       getLeaveListFail(swrIsLoading, swrError.message);
     }
   }, [swrLeaves, swrError]);
+
+  useEffect(() => {
+    if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
+      mutateLeaves();
+    }
+  }, [responseApply, responseCancel]);
 
   return (
     <>

@@ -1,16 +1,8 @@
 export type LeaveContents = {
-  id: string;
-  office: string;
-  name: string;
+  employeeId: string;
   dateOfFiling: string | null;
-  position: string;
-  salary: string;
-  typeOfLeave: {
-    id: string;
-    leaveName: string;
-  };
-  leaveId: string;
-  numberOfWorkingDays: Array<string>;
+  typeOfLeaveDetails: LeaveType;
+  leaveApplicationDates: Array<string>;
 
   inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
   location?: string;
@@ -21,9 +13,10 @@ export type LeaveContents = {
   studyPurpose?: string | null; //applicable for Study Other only
   other?: string | null; //monetization, terminal leave
   commutation?: string | null;
+  forMonetization?: boolean;
 };
 
-export type LeaveId = Pick<LeaveContents, 'id'>;
+export type LeaveId = Pick<LeaveContents, 'employeeId'>;
 
 //for fetching leave types from useSwr
 export type LeaveType = {
