@@ -12,8 +12,8 @@ export const DrcModalSummary = () => {
   return (
     <>
       <div className="flex flex-col w-full px-5 pt-2 mb-5 rounded">
-        <div className="h-[42rem] overflow-y-hidden overflow-x-hidden">
-          <div className="flex justify-between grid-cols-2 text-gray-500">
+        <div className="min-h-[42rem]">
+          <section className="flex justify-between grid-cols-2 text-gray-500">
             <div className="col-span-1">
               <div className="text-xl font-semibold ">
                 {selectedPosition.positionTitle}
@@ -22,53 +22,51 @@ export const DrcModalSummary = () => {
                 {selectedPosition.itemNumber}
               </div>
             </div>
-            <div className="col-span-1">
-              {/* <div className="text-2xl font-normal text-gray-500">Summary</div> */}
-            </div>
-          </div>
-          <div className="text-gray-500">
+          </section>
+          <section className="text-gray-500">
             <p className="flex items-center pb-2 font-normal mt-9 text-md">
-              Core Duties & Responsibilities{' '}
+              Core Duties, Responsibilities, & Competencies
               <HiBadgeCheck size={20} fill="#09800f" />
             </p>
-            <div className="w-full rounded bg-slate-50 h-[14rem] border-2 border-hidden overflow-y-visible overflow-x-hidden">
+            <div className="flex justify-center rounded bg-slate-50 min-h-[14rem]">
               {selectedDnrs.core.length > 0 ? (
-                <>
+                <div className="flex flex-col justify-between w-full">
                   <TableConfirmation array={selectedDnrs.core} />
                   <div className="flex justify-center text-xl">
                     *** Nothing Follows ***
                   </div>
-                </>
+                </div>
               ) : (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center">
                   <h1 className="text-2xl font-normal text-gray-300">
                     No core duties, responsibilities, & competencies
                   </h1>
                 </div>
               )}
             </div>
-
+          </section>
+          <section className="text-gray-500">
             <p className="flex items-center pb-2 font-normal mt-9 text-md">
-              Support Duties & Responsibilities{' '}
+              Support Duties, Responsibilities, & Competencies
               <HiBadgeCheck size={20} fill="#09800f" />
             </p>
-            <div className="w-full rounded bg-slate-50 h-[14rem] border-hidden border-2 overflow-y-visible overflow-x-hidden ">
+            <div className="flex flex-wrap justify-center rounded bg-slate-50 min-h-[14rem]">
               {selectedDnrs.support.length > 0 ? (
-                <>
+                <div className="flex flex-col justify-between w-full">
                   <TableConfirmation array={selectedDnrs.support} />
                   <div className="flex justify-center text-xl">
                     *** Nothing Follows ***
                   </div>
-                </>
+                </div>
               ) : (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center">
                   <h1 className="text-2xl font-normal text-gray-300">
                     No support duties, responsibilities, & competencies
                   </h1>
                 </div>
               )}
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </>

@@ -1,5 +1,6 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
+import { useAlertConfirmationStore } from 'apps/portal/src/store/alert.store';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
@@ -9,6 +10,7 @@ import { CompetencyChecker, DrcChecker } from '../utils/functions';
 import { DrcModalController } from './DrcModalController';
 
 const DrcModal: FunctionComponent = () => {
+  // use modal store
   const {
     modal,
     action,
@@ -31,6 +33,7 @@ const DrcModal: FunctionComponent = () => {
     prevPage: state.prevPage,
   }));
 
+  // use dnr store
   const {
     selectedDnrs,
     selectedDnrsOnLoad,
@@ -49,9 +52,13 @@ const DrcModal: FunctionComponent = () => {
     addCheckedToSelectedDnrs: state.addCheckedToSelectedDnrs,
   }));
 
+  // use position store
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
   }));
+
+  // use alert confirmation store
+  const confOpen = useAlertConfirmationStore((state) => state.setOpen);
 
   // close drc modal
   const closeDrcModal = () => {
@@ -68,6 +75,8 @@ const DrcModal: FunctionComponent = () => {
     } else if (modal.page === 3) {
       addCheckedToSelectedDnrs();
       setModalPage(2);
+    } else if (modal.page === 4) {
+      confOpen();
     }
     // nextPage();
   };
