@@ -272,7 +272,11 @@ export const useDnrStore = create<DnrState>()(
     },
 
     cancelDrcPage: () =>
-      set((state) => ({ ...state, availableDnrsIsLoaded: false })),
+      set((state) => ({
+        ...state,
+        availableDnrsIsLoaded: false,
+        selectedDnrs: DUTIES_RESPONSIBILITIES,
+      })),
 
     addCheckedToSelectedDnrs: async () => {
       const updatedDnrs = await UpdateAvailableDrcs(
@@ -285,6 +289,7 @@ export const useDnrStore = create<DnrState>()(
         ...state,
         availableDnrs: updatedDnrs.availableDnrs,
         filteredAvailableDnrs: updatedDnrs.availableDnrs,
+        loading: { ...state.loading, loadingExistingDnrs: false },
         selectedDnrs: { core: updatedDnrs.core, support: updatedDnrs.support },
         checkedDnrs: { core: [], support: [] },
         selectedDrcType: null,

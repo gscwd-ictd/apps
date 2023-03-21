@@ -3,7 +3,9 @@ import { Button, Modal } from '@gscwd-apps/oneui';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { isEqual } from 'lodash';
 import { FunctionComponent } from 'react';
+import { CompetencyChecker, DrcChecker } from '../utils/functions';
 import { DrcModalController } from './DrcModalController';
 
 const DrcModal: FunctionComponent = () => {
@@ -29,12 +31,23 @@ const DrcModal: FunctionComponent = () => {
     prevPage: state.prevPage,
   }));
 
-  const { cancelCheckedDnrsAction, cancelDrcPage, addCheckedToSelectedDnrs } =
-    useDnrStore((state) => ({
-      cancelCheckedDnrsAction: state.cancelCheckedDnrsAction,
-      cancelDrcPage: state.cancelDrcPage,
-      addCheckedToSelectedDnrs: state.addCheckedToSelectedDnrs,
-    }));
+  const {
+    selectedDnrs,
+    selectedDnrsOnLoad,
+    selectedDrcType,
+    checkedDnrs,
+    cancelCheckedDnrsAction,
+    cancelDrcPage,
+    addCheckedToSelectedDnrs,
+  } = useDnrStore((state) => ({
+    selectedDnrs: state.selectedDnrs,
+    selectedDnrsOnLoad: state.selectedDnrsOnLoad,
+    selectedDrcType: state.selectedDrcType,
+    checkedDnrs: state.checkedDnrs,
+    cancelCheckedDnrsAction: state.cancelCheckedDnrsAction,
+    cancelDrcPage: state.cancelDrcPage,
+    addCheckedToSelectedDnrs: state.addCheckedToSelectedDnrs,
+  }));
 
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
@@ -51,7 +64,7 @@ const DrcModal: FunctionComponent = () => {
     // put your logic here
 
     if (modal.page === 2) {
-      //logic for submit here
+      setModalPage(4);
     } else if (modal.page === 3) {
       addCheckedToSelectedDnrs();
       setModalPage(2);
@@ -68,7 +81,45 @@ const DrcModal: FunctionComponent = () => {
     } else if (modal.page === 3) {
       cancelCheckedDnrsAction();
       prevPage();
-    }
+    } else if (modal.page === 4) setModalPage(2);
+  };
+
+  // validate confirm action button
+  const validateConfirmActionBtn = () => {
+    if (
+      modal.page === 2 &&
+      (DrcChecker(selectedDnrs).noPercentageCounter > 0 ||
+        DrcChecker(selectedDnrs).onEditCounter > 0 ||
+        (selectedDnrs.core.length === 0 && selectedDnrs.support.length === 0) ||
+        (selectedDnrs.core.length > 0 &&
+          (DrcChecker(selectedDnrs).coreTotal < 100 ||
+            DrcChecker(selectedDnrs).coreTotal > 100)) ||
+        DrcChecker(selectedDnrs).noCompetencyCounter > 0 ||
+        (selectedDnrs.support.length > 0 &&
+          (DrcChecker(selectedDnrs).supportTotal < 100 ||
+            DrcChecker(selectedDnrs).supportTotal > 100)) ||
+        isEqual(selectedDnrs, selectedDnrsOnLoad) === true)
+    )
+      return true;
+    else if (
+      modal.page === 3 &&
+      selectedDrcType === 'core' &&
+      (checkedDnrs.core.length === 0 ||
+        (checkedDnrs.core.length > 0 &&
+          CompetencyChecker(checkedDnrs, selectedDrcType)
+            .noCoreCompetencyCounter > 0))
+    )
+      return true;
+    else if (
+      modal.page === 3 &&
+      selectedDrcType === 'support' &&
+      (checkedDnrs.support.length === 0 ||
+        (checkedDnrs.support.length > 0 &&
+          CompetencyChecker(checkedDnrs, selectedDrcType)
+            .noSupportCompetencyCounter > 0))
+    )
+      return true;
+    else return false;
   };
 
   return (
@@ -115,7 +166,9 @@ const DrcModal: FunctionComponent = () => {
               {modal.page === 1 ? 'Close' : 'Cancel'}
             </Button>
             {modal.page !== 1 ? (
-              <Button onClick={actionBtn}>Confirm</Button>
+              <Button onClick={actionBtn} disabled={validateConfirmActionBtn()}>
+                Confirm
+              </Button>
             ) : null}
           </div>
         </Modal.Footer>

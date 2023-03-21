@@ -1,13 +1,13 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { useDnrStore } from 'apps/portal/src/store/dnr.store';
+import { usePositionStore } from 'apps/portal/src/store/position.store';
 import React from 'react';
 import { HiBadgeCheck } from 'react-icons/hi';
-import { useDrStore } from '../../../store/dr.store';
-import { TableConfirmation } from './TableConfirmation';
+import { TableConfirmation } from '../TableConfirmation';
 
-export const DRModalSummary = () => {
-  // get the values from context
-  // const { selectedPosition, selectedDRCs } = useContext(DRContext);
-  const selectedPosition = useDrStore((state) => state.selectedPosition);
-  const selectedDRCs = useDrStore((state) => state.selectedDRCs);
+export const DrcModalSummary = () => {
+  const selectedDnrs = useDnrStore((state) => state.selectedDnrs);
+  const selectedPosition = usePositionStore((state) => state.selectedPosition);
 
   return (
     <>
@@ -32,9 +32,9 @@ export const DRModalSummary = () => {
               <HiBadgeCheck size={20} fill="#09800f" />
             </p>
             <div className="w-full rounded bg-slate-50 h-[14rem] border-2 border-hidden overflow-y-visible overflow-x-hidden">
-              {selectedDRCs.core.length > 0 ? (
+              {selectedDnrs.core.length > 0 ? (
                 <>
-                  <TableConfirmation array={selectedDRCs.core} />
+                  <TableConfirmation array={selectedDnrs.core} />
                   <div className="flex justify-center text-xl">
                     *** Nothing Follows ***
                   </div>
@@ -42,7 +42,7 @@ export const DRModalSummary = () => {
               ) : (
                 <div className="flex items-center justify-center h-full">
                   <h1 className="text-2xl font-normal text-gray-300">
-                    No core duties & responsibilities
+                    No core duties, responsibilities, & competencies
                   </h1>
                 </div>
               )}
@@ -53,9 +53,9 @@ export const DRModalSummary = () => {
               <HiBadgeCheck size={20} fill="#09800f" />
             </p>
             <div className="w-full rounded bg-slate-50 h-[14rem] border-hidden border-2 overflow-y-visible overflow-x-hidden ">
-              {selectedDRCs.support.length > 0 ? (
+              {selectedDnrs.support.length > 0 ? (
                 <>
-                  <TableConfirmation array={selectedDRCs.support} />
+                  <TableConfirmation array={selectedDnrs.support} />
                   <div className="flex justify-center text-xl">
                     *** Nothing Follows ***
                   </div>
@@ -63,7 +63,7 @@ export const DRModalSummary = () => {
               ) : (
                 <div className="flex items-center justify-center h-full">
                   <h1 className="text-2xl font-normal text-gray-300">
-                    No support duties & responsibilities
+                    No support duties, responsibilities, & competencies
                   </h1>
                 </div>
               )}

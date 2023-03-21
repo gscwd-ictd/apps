@@ -19,8 +19,6 @@ import { SelectedCoreDrcs } from './DrcSelectedCores';
 import { SelectedSupportDrcs } from './DrcSelectedSupports';
 
 export const DrcModalSetting = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   // get from position store
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
@@ -291,7 +289,7 @@ export const DrcModalSetting = () => {
                 <HiPuzzle />
               </p>
 
-              {isLoading ? (
+              {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
               ) : (
                 <Button
@@ -311,7 +309,7 @@ export const DrcModalSetting = () => {
             <div className="w-full  mt-2 mb-5 h-[14rem]  bg-slate-50 rounded  overflow-y-scroll overflow-x-hidden">
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected core duties & responsibilities</h1> */}
-                {isLoading ? (
+                {swrExistingDnrsIsLoading ? (
                   <div className="flex justify-center w-full h-full place-items-center">
                     {<LoadingVisual size={12} />}{' '}
                   </div>
@@ -342,7 +340,7 @@ export const DrcModalSetting = () => {
                 Support Duties, Responsibilities, & Competencies <HiPuzzle />
               </p>
 
-              {isLoading ? (
+              {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
               ) : (
                 <Button
@@ -362,7 +360,7 @@ export const DrcModalSetting = () => {
             <div className="w-full mt-2 mb-5 h-[14rem] bg-slate-50 rounded  overflow-y-scroll overflow-x-hidden">
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected support duties & responsibilities</h1> */}
-                {isLoading ? (
+                {swrExistingDnrsIsLoading ? (
                   <div className="flex justify-center w-full h-full place-items-center">
                     {<LoadingVisual size={12} />}{' '}
                   </div>
