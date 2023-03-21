@@ -1,12 +1,15 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Alert, Button } from '@gscwd-apps/oneui';
-import { useAlertConfirmationStore } from 'apps/portal/src/store/alert.store';
+import {
+  useAlertConfirmationStore,
+  useAlertSuccessStore,
+} from 'apps/portal/src/store/alert.store';
 import {
   DutyResponsibilityList,
   useDnrStore,
 } from 'apps/portal/src/store/dnr.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { useModalStore } from 'apps/portal/src/store/modal.store';
+import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { postHRIS } from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
 import { HiExclamationCircle } from 'react-icons/hi';
@@ -31,6 +34,9 @@ export const DrcAlertConfirmation = () => {
   // use modal store
   const action = useModalStore((state) => state.action);
 
+  // use alert success store
+  const openAlertSuccess = useAlertSuccessStore((state) => state.setOpen);
+
   // use position store
   const {
     selectedPosition,
@@ -49,10 +55,23 @@ export const DrcAlertConfirmation = () => {
 
   const onSubmitConfirm = async () => {
     closeConf();
-    if (selectedDrcType === 'core') {
+    if (action === Actions.CREATE) {
       const drcsForPosting = await UpdateFinalDrcs(selectedDnrs);
       postPosition();
-      handlePostData(drcsForPosting);
+      const postDrcs = await handlePostData(drcsForPosting);
+
+      if (postDrcs.error) {
+        // set value for error message
+        postPositionFail(postDrcs.result);
+      } else {
+        // set value from returned response
+        postPositionSuccess(postDrcs.result);
+
+        // open alert success
+
+        openAlertSuccess();
+        closeConf();
+      }
     }
   };
 
@@ -69,16 +88,7 @@ export const DrcAlertConfirmation = () => {
       }
     );
 
-    if (error) {
-      // set value for error message
-      postPositionFail(result);
-    } else {
-      // set value from returned response
-      postPositionSuccess(result);
-
-      // open alert success
-      closeConf();
-    }
+    return { error, result };
   };
 
   return (
