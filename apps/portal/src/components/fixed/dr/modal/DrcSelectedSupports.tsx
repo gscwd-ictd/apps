@@ -1,5 +1,6 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { Competency, DutyResponsibility } from 'apps/portal/src/types/dr.type';
 import {
@@ -15,12 +16,14 @@ export const SelectedSupportDrcs = (): JSX.Element => {
   const {
     selectedDnrs,
     availableDnrs,
+    isLoading,
     filteredAvailableDnrs,
     originalPool,
     setSelectedDnrs,
     setAvailableDnrs,
     setFilteredAvailableDnrs,
   } = useDnrStore((state) => ({
+    isLoading: state.loading.loadingExistingDnrs,
     selectedDnrs: state.selectedDnrs,
     availableDnrs: state.availableDnrs,
     filteredAvailableDnrs: state.filteredAvailableDnrs,
@@ -162,7 +165,10 @@ export const SelectedSupportDrcs = (): JSX.Element => {
         }
         tableBody={
           <>
-            {selectedDnrs &&
+            {isLoading ? (
+              <LoadingSpinner size="lg" />
+            ) : (
+              selectedDnrs &&
               selectedDnrs.support.map(
                 (dr: DutyResponsibility, index: number) => {
                   return (
@@ -244,7 +250,8 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                     </tr>
                   );
                 }
-              )}
+              )
+            )}
           </>
         }
       />
