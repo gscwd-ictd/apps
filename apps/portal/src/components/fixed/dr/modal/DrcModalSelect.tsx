@@ -5,6 +5,7 @@ import { FormEvent, MutableRefObject, useEffect, useRef } from 'react';
 import { HiOutlineSearch, HiXCircle } from 'react-icons/hi';
 import { UndrawSelecting } from '../../undraw/Selecting';
 import { DrcAllDrcsList } from './DrcAllDrcsList';
+import { DrcSelectedDrcCard } from './DrcSelectedDrcCard';
 
 export const DrcModalSelect = (): JSX.Element => {
   const {
@@ -150,6 +151,7 @@ export const DrcModalSelect = (): JSX.Element => {
             <>
               <div className="h-[28rem] w-full overflow-y-scroll px-2 pt-1">
                 {/* <SelectedDRCard /> */}
+                <DrcSelectedDrcCard />
               </div>
             </>
           ) : null}

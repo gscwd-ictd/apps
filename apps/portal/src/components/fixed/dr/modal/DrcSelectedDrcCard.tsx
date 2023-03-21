@@ -5,7 +5,7 @@ import { FormEvent } from 'react';
 import { HiClipboardList, HiOutlineX } from 'react-icons/hi';
 import { CompetencyDropdown } from './CompetencyDropdown';
 
-export const SelectedDRCard = (): JSX.Element => {
+export const DrcSelectedDrcCard = (): JSX.Element => {
   const { checkedDnrs, selectedDrcType, setCheckedDnrs } = useDnrStore(
     (state) => ({
       selectedDrcType: state.selectedDrcType,
