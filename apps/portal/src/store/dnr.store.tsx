@@ -42,6 +42,16 @@ type DnrError = {
   errorExistingDnrs: string;
 };
 
+type ExistingDnrResponse = {
+  postResponse: DutiesResponsibilities;
+  updateResponse: DutiesResponsibilities;
+};
+
+type AvailableDnrResponse = {
+  postResponse: Array<DutyResponsibility>;
+  updateResponse: Array<DutyResponsibility>;
+};
+
 export type DnrState = {
   // the original pool of dnrs per position, this is created for delete  reference and update reference
   originalPoolOfDnrs: Array<DutyResponsibility>;
@@ -148,6 +158,15 @@ export type DnrState = {
 
   // get existing dnrs fail
   getExistingDnrsFail: (error: string) => void;
+
+  // post existing dnrs success
+  postExistingDnrs: () => void;
+
+  //post existing dnrs success
+  postExistingDnrsSuccess: (response: DutiesResponsibilities) => void;
+
+  // post existing dnrs fail
+  postExistingDnrsFail: (error: string) => void;
 };
 
 export const useDnrStore = create<DnrState>()(
@@ -300,5 +319,26 @@ export const useDnrStore = create<DnrState>()(
         selectedDrcType: null,
       }));
     },
+
+    postExistingDnrs: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingExistingDnrs: true },
+        error: { ...state.error, errorExistingDnrs: '' },
+      })),
+
+    postExistingDnrsSuccess: (response: DutiesResponsibilities) =>
+      set((state) => ({
+        ...state,
+
+        selectedDnrs: response,
+      })),
+
+    postExistingDnrsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingExistingDnrs: false },
+        error: { ...state.error, errorExistingDnrs: error },
+      })),
   }))
 );
