@@ -90,6 +90,9 @@ export type DnrState = {
   // set default values if cancel button is clicked
   cancelCheckedDnrsAction: () => void;
 
+  // cancel set duties and responsibilities page
+  cancelDrcPage: () => void;
+
   // set checked dnrs
   setCheckedDnrs: (checkedDnrs: DutiesResponsibilities) => void;
 
@@ -260,7 +263,11 @@ export const useDnrStore = create<DnrState>()(
         ...state,
         checkedDnrs: { core: [], support: [] },
         filteredAvailableDnrs: tempFilteredAvailableDnrs,
+        availableDnrs: tempFilteredAvailableDnrs,
       }));
     },
+
+    cancelDrcPage: () =>
+      set((state) => ({ ...state, availableDnrsIsLoaded: false })),
   }))
 );

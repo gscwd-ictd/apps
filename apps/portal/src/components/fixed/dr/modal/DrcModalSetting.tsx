@@ -140,7 +140,7 @@ export const DrcModalSetting = () => {
 
   // get available dnrs (Pool)
   useEffect(() => {
-    if (!isEmpty(swrAvailableDnrs)) {
+    if (!isEmpty(swrAvailableDnrs) && availableDnrsIsLoaded === false) {
       // sort by description
       const poolOfDnrs = [
         ...swrAvailableDnrs.data.sort(
@@ -169,7 +169,12 @@ export const DrcModalSetting = () => {
 
       getAvailableDnrsSuccess(poolOfDnrs);
     }
-  }, [swrAvailableDnrs, swrAvailableDnrsError, selectedPosition]);
+  }, [
+    swrAvailableDnrs,
+    swrAvailableDnrsError,
+    selectedPosition,
+    availableDnrsIsLoaded,
+  ]);
 
   // get existing dnrs (to remove from existing pool)
   useEffect(() => {

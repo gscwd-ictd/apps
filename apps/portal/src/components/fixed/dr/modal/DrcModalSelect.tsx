@@ -90,14 +90,14 @@ export const DrcModalSelect = (): JSX.Element => {
             </p>
             {selectedDrcType === 'core' && (
               <p className="text-gray-600">
-                {checkedDnrs.core.length} out of {filteredAvailableDnrs.length}{' '}
-                items selected
+                {checkedDnrs.core.length} out of {availableDnrs.length} items
+                selected
               </p>
             )}
             {selectedDrcType === 'support' && (
               <p className="text-gray-600">
-                {checkedDnrs.support.length} out of{' '}
-                {filteredAvailableDnrs.length} items selected
+                {checkedDnrs.support.length} out of {availableDnrs.length} items
+                selected
               </p>
             )}
           </div>
