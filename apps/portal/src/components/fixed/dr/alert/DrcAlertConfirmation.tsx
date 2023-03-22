@@ -71,14 +71,18 @@ export const DrcAlertConfirmation = () => {
       postPosition();
       const postDrcs = await handlePostData(drcsForPosting);
 
-      if (postDrcs.error) {
+      if (postDrcs.error === true) {
         // set value for error message
         postPositionFail(postDrcs.result);
 
         postDrcsFail(postDrcs.result);
+
+        console.log('From confirmation: Fail');
       } else {
         // set value from returned response
         // postPositionSuccess(postDrcs.result);
+
+        console.log('From confirmation: Success');
 
         // post drcs success
         postDrcsSuccess(postDrcs.result);

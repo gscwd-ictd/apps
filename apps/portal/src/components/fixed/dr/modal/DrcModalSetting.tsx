@@ -88,7 +88,7 @@ export const DrcModalSetting = () => {
   } = useSWR(
     `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
     fetcherHRIS,
-    { shouldRetryOnError: false }
+    { shouldRetryOnError: false, revalidateOnFocus: false }
   );
 
   // useSWR existing dnrs
@@ -100,7 +100,7 @@ export const DrcModalSetting = () => {
   } = useSWR(
     `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
     fetcherHRIS,
-    { shouldRetryOnError: false }
+    { shouldRetryOnError: false, revalidateOnFocus: false }
   );
 
   // combine available and existing dnrs and returns an array of DutyResponsibility
@@ -270,7 +270,7 @@ export const DrcModalSetting = () => {
 
   // mutate if response is changed
   useEffect(() => {
-    if (postDrcResponse) {
+    if (!isEmpty(postDrcResponse)) {
       mutateAvailableDnrs();
       mutateExistingDnrs();
     }
