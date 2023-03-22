@@ -9,6 +9,7 @@ export const civilStatus = [
   { label: 'Single', value: 'Single' },
   { label: 'Married', value: 'Married' },
   { label: 'Divorced', value: 'Divorced' },
+  { label: 'Separated', value: 'Separated' },
   { label: 'Widowed', value: 'Widowed' },
 ];
 

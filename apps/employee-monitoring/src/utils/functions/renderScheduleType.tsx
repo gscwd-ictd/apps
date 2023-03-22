@@ -1,26 +1,24 @@
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 
 // Render badge pill design
-export const renderScheduleType = (categoryType: Categories) => {
+export const useRenderScheduleType = (categoryType: Categories) => {
   if (categoryType === Categories.REGULAR) {
     return (
-      <span className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
+      <div className="bg-red-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded w-[10rem] text-center">
         Regular
-      </span>
+      </div>
     );
   } else if (categoryType === Categories.FLEXIBLE) {
     return (
-      <span className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
+      <div className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded w-[10rem] text-center">
         Flexible
-      </span>
-    );
-  } else if (categoryType === Categories.OPERATOR1) {
-    return (
-      <span className="bg-green-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
-        OPERATOR A
-      </span>
+      </div>
     );
   } else {
-    return;
+    return (
+      <div className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded w-[10rem] text-center">
+        N/A
+      </div>
+    );
   }
 };

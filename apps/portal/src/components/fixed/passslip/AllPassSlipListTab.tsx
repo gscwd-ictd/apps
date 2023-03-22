@@ -16,25 +16,22 @@ export const AllPassSlipListTab = ({
     pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen,
     getPassSlip,
-    setGetPassSlip,
     setPendingPassSlipModalIsOpen,
     setCompletedPassSlipModalIsOpen,
   } = usePassSlipStore((state) => ({
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen: state.completedPassSlipModalIsOpen,
     getPassSlip: state.getPassSlip,
-    setGetPassSlip: state.setGetPassSlip,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     setCompletedPassSlipModalIsOpen: state.setCompletedPassSlipModalIsOpen,
   }));
 
   const onSelect = (passslip) => {
-    setGetPassSlip(passslip);
+    getPassSlip(passslip);
     //PENDING PASS SLIPS
     if (tab === 1) {
       if (!pendingPassSlipModalIsOpen) {
         setPendingPassSlipModalIsOpen(true);
-        console.log(getPassSlip);
       }
       //COMPLETED PASS SLIPS
     } else if (tab === 2) {
@@ -71,7 +68,16 @@ export const AllPassSlipListTab = ({
                   </p>
 
                   <p className="text-xs text-indigo-500">
-                    Status: {item.status}
+                    Status:{' '}
+                    {item.status === 'ongoing'
+                      ? 'Pending'
+                      : item.status === 'approved'
+                      ? 'Approved'
+                      : item.status === 'disapproved'
+                      ? 'Disapproved'
+                      : item.status === 'cancelled'
+                      ? 'Cancelled'
+                      : item.status}
                   </p>
                 </div>
               </li>

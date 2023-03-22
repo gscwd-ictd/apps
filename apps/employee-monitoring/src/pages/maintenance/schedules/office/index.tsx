@@ -1,78 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DataTableHrms } from '@gscwd-apps/oneui';
+import {
+  DataTableHrms,
+  LoadingSpinner,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Schedule } from '../../../../../../../libs/utils/src/lib/types/schedule.type';
 import React, { useEffect, useState } from 'react';
-import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
-import { useForm } from 'react-hook-form';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { SelectOption } from '../../../../../../../libs/utils/src/lib/types/select.type';
-import { listOfRestDays } from '../../../../../../../libs/utils/src/lib/constants/rest-days.const';
 import { isEmpty } from 'lodash';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
-import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { createColumnHelper } from '@tanstack/react-table';
 import useSWR from 'swr';
 import AddOfficeSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/office/AddOfficeSchedModal';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import { convertToTime } from 'apps/employee-monitoring/src/utils/functions/convertToTime';
-import { renderShiftType } from 'apps/employee-monitoring/src/utils/functions/renderShiftType';
-import { renderScheduleType } from 'apps/employee-monitoring/src/utils/functions/renderScheduleType';
-import { renderRestDays } from 'apps/employee-monitoring/src/utils/functions/renderRestDays';
-
-const listOfSchedules: Array<Schedule> = [
-  {
-    name: 'Regular Time Clock',
-    scheduleType: Categories.REGULAR,
-    timeIn: '08:00',
-    timeOut: '05:00',
-    lunchIn: '12:00',
-    lunchOut: '12:30',
-    withLunch: true,
-    restDays: [6, 0],
-    shift: ScheduleShifts.MORNING,
-  },
-  {
-    name: 'Flexible Time Clock A',
-    scheduleType: Categories.FLEXIBLE,
-    timeIn: '07:00',
-    timeOut: '04:00',
-    withLunch: true,
-    lunchIn: '11:00',
-    lunchOut: '11:30',
-    restDays: [1, 0],
-    shift: ScheduleShifts.MORNING,
-  },
-  {
-    name: 'Flexible Time Clock B',
-    scheduleType: Categories.FLEXIBLE,
-    timeIn: '06:00',
-    timeOut: '03:00',
-    withLunch: true,
-    lunchIn: '10:00',
-    lunchOut: '10:30',
-    restDays: [1, 2],
-    shift: ScheduleShifts.MORNING,
-  },
-];
-
-const shiftSelection: Array<SelectOption> = [
-  { label: 'Morning', value: 'morning' },
-  { label: 'Night', value: 'night' },
-];
-
-const categorySelection: Array<SelectOption> = [
-  { label: 'Regular', value: 'regular' },
-  { label: 'Flexible', value: 'flexible' },
-  { label: 'Pumping Operator AM', value: 'operator-am' },
-  { label: 'Pumping Operator PM', value: 'operator-pm' },
-];
+import { useConvertDayToTime } from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
+import { useRenderShiftType } from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
+import { useConvertRestDaysToArray } from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
+import { useConvertRestDaysToString } from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
+import { useRenderRestDays } from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
+import { useRenderScheduleType } from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const action = useScheduleStore((state) => state.action);
   const setAction = useScheduleStore((state) => state.setAction);
   const [withLunch, setWithLunch] = useState<boolean>(true);
   const [currentRowData, setCurrentRowData] = useState<Schedule>(
@@ -82,16 +35,47 @@ export default function Index() {
     []
   );
 
+  const {
+    Schedules,
+    PostResponse,
+    UpdateResponse,
+    DeleteResponse,
+    IsLoading,
+    Error,
+    GetSchedules,
+    GetSchedulesSuccess,
+    GetSchedulesFail,
+    EmptyResponse,
+  } = useScheduleStore((state) => ({
+    Schedules: state.schedules,
+    PostResponse: state.schedule.postResponse,
+    UpdateResponse: state.schedule.updateResponse,
+    DeleteResponse: state.schedule.deleteResponse,
+    IsLoading: state.loading.loadingSchedules,
+    Error: state.error.errorSchedules,
+    GetSchedules: state.getSchedules,
+    GetSchedulesSuccess: state.getSchedulesSuccess,
+    GetSchedulesFail: state.getSchedulesFail,
+    EmptyResponse: state.emptyResponse,
+  }));
+
   const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
   const setModalIsOpen = useScheduleStore((state) => state.setModalIsOpen);
 
   const schedules = useScheduleStore((state) => state.schedules);
   const setSchedules = useScheduleStore((state) => state.setSchedules);
 
-  const { data } = useSWR(
-    `http://192.168.99.124:4104/api/v1/schedule/`,
-    fetcherEMS
-  );
+  // `?base=office`
+  // use SWR
+  const {
+    data: swrSchedules,
+    isLoading: swrIsLoading,
+    error: swrError,
+    mutate: mutateSchedules,
+  } = useSWR('/schedule?base=Office', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -108,95 +92,29 @@ export default function Index() {
 
   // Delete modal function
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+
+  // open delete action
   const openDeleteActionModal = (rowData: Schedule) => {
     setDeleteModalIsOpen(true);
     setCurrentRowData(rowData);
   };
+
+  // close delete action
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  const {
-    setValue,
-    watch,
-    reset,
-    register,
-    formState: { errors },
-  } = useForm<Schedule>({
-    mode: 'onChange',
-    defaultValues: {
-      id: '',
-      scheduleType: Categories.REGULAR,
-      timeIn: '',
-      timeOut: '',
-      withLunch: true,
-      lunchIn: null,
-      lunchOut: null,
-      name: '',
-      restDays: [],
-      shift: ScheduleShifts.MORNING,
-    },
-  });
-
-  // transforms the array of numbers(rest days) to array of key value pair
-  const transformRestDays = (restDays: Array<number>) => {
-    const tempRestDays = restDays.map((day: number) => {
-      return listOfRestDays.find((tempDay) => tempDay.value === day);
-    });
-    return tempRestDays;
-    // .sort((a, b) => (a.value > b.value ? 1 : -1));
-  };
-
-  // transforms the array of numbers(rest days) to array of key value pair
-  const transformRestDaysLabel = (restDays: Array<number>) => {
-    const tempRestDays = restDays.map((day: number) => {
-      return listOfRestDays.find((tempDay) => tempDay.value === day).label;
-    });
-    return tempRestDays;
-    // .sort((a, b) => (a.value > b.value ? 1 : -1));
-  };
-
-  // transform category string
-  const transformCategory = (category: string) => {
-    if (category === 'regular') return 'Regular';
-    else if (category === 'flexible') return 'Flexible';
-    else if (category === 'operator-am') return 'Operator AM';
-    else if (category === 'operator-pm') return 'Operator PM';
-    else return '';
-  };
 
   // when edit action is clicked
   const editAction = async (sched: Schedule, idx: number) => {
     setAction(ModalActions.UPDATE);
     setCurrentRowData(sched);
-    setSelectedRestDays(transformRestDays(sched.restDays));
-    loadNewDefaultValues(sched);
+    setSelectedRestDays(useConvertRestDaysToArray(sched.restDays));
+    // loadNewDefaultValues(sched);
     setModalIsOpen(true);
-  };
-
-  // loads the default values, utilizes react hook forms
-  const loadNewDefaultValues = (sched: Schedule) => {
-    setValue('id', sched.id);
-    setValue('name', sched.name);
-    setValue('scheduleType', sched.scheduleType);
-    setValue('timeIn', sched.timeIn);
-    setValue('timeOut', sched.timeOut);
-    setValue('withLunch', sched.withLunch);
-    setWithLunch(sched.withLunch);
-    setValue('lunchIn', sched.lunchIn);
-    setValue('lunchOut', sched.lunchOut);
-    setValue('shift', sched.shift);
   };
 
   // run this when modal is closed
   const closeAction = () => {
     setModalIsOpen(false);
-    resetToDefaultValues();
-  };
-
-  // reset all values
-  const resetToDefaultValues = () => {
-    reset();
-    setSelectedRestDays([]);
-    setWithLunch(true);
+    // resetToDefaultValues();
   };
 
   // define table columns
@@ -214,39 +132,39 @@ export default function Index() {
     columnHelper.accessor('scheduleType', {
       enableSorting: false,
       header: () => 'Category',
-      cell: (info) => renderScheduleType(info.getValue()),
+      cell: (info) => useRenderScheduleType(info.getValue()),
     }),
     columnHelper.accessor('timeIn', {
       enableSorting: false,
       header: () => 'Time In',
-      cell: (info) => convertToTime(info.getValue()),
+      cell: (info) => useConvertDayToTime(info.getValue()),
     }),
     columnHelper.accessor('timeOut', {
       enableSorting: false,
       header: () => 'Time Out',
-      cell: (info) => convertToTime(info.getValue()),
-    }),
-    columnHelper.accessor('lunchIn', {
-      enableSorting: false,
-      header: () => 'Lunch In',
-      cell: (info) => convertToTime(info.getValue()),
+      cell: (info) => useConvertDayToTime(info.getValue()),
     }),
     columnHelper.accessor('lunchOut', {
       enableSorting: false,
       header: () => 'Lunch Out',
-      cell: (info) => convertToTime(info.getValue()),
+      cell: (info) => useConvertDayToTime(info.getValue()),
+    }),
+    columnHelper.accessor('lunchIn', {
+      enableSorting: false,
+      header: () => 'Lunch In',
+      cell: (info) => useConvertDayToTime(info.getValue()),
     }),
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => renderShiftType(info.getValue()),
+      cell: (info) => useRenderShiftType(info.getValue()),
     }),
     columnHelper.accessor('restDays', {
       enableSorting: false,
       header: () => 'Rest Day',
       cell: (info) =>
-        transformRestDays(info.getValue()).length > 1 ? (
-          renderRestDays(transformRestDaysLabel(info.getValue()))
+        useConvertRestDaysToArray(info.getValue()).length > 0 ? (
+          useRenderRestDays(useConvertRestDaysToString(info.getValue()))
         ) : (
           <span className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
             No rest day
@@ -294,28 +212,42 @@ export default function Index() {
     );
   };
 
-  // set data to state from useSWR
+  // Initial zustand state update
   useEffect(() => {
-    if (!isEmpty(data)) {
-      setSchedules(data.data);
+    EmptyResponse();
+    if (swrIsLoading) {
+      GetSchedules(swrIsLoading);
     }
-  }, [data]);
+  }, [swrIsLoading]);
 
-  // set it to null
-  useEffect(() => {
-    if (isEmpty(watch('lunchIn'))) setValue('lunchIn', null);
-  }, [watch('lunchIn')]);
+  // // set data to state from useSWR
+  // useEffect(() => {
+  //   if (!isEmpty(swrSchedules)) {
+  //     setSchedules(swrSchedules.data);
+  //   }
+  // }, [swrSchedules]);
 
-  // set it to null
+  // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (isEmpty(watch('lunchOut'))) setValue('lunchOut', null);
-  }, [watch('lunchOut')]);
+    if (!isEmpty(swrSchedules)) {
+      GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
+    }
 
-  // with lunch in/out listener
+    if (!isEmpty(swrError)) {
+      GetSchedulesFail(swrIsLoading, swrError);
+    }
+  }, [swrSchedules, swrError]);
+
+  // mutate from swr
   useEffect(() => {
-    if (withLunch) setValue('withLunch', true);
-    else if (!withLunch) setValue('withLunch', false);
-  }, [withLunch]);
+    if (
+      !isEmpty(PostResponse) ||
+      !isEmpty(UpdateResponse) ||
+      !isEmpty(DeleteResponse)
+    ) {
+      mutateSchedules();
+    }
+  }, [PostResponse, UpdateResponse, DeleteResponse]);
 
   return (
     <>
@@ -336,6 +268,11 @@ export default function Index() {
           ]}
         />
 
+        {/* Notification error */}
+        {!isEmpty(Error) ? (
+          <ToastNotification toastType="error" notifMessage={Error} />
+        ) : null}
+
         <AddOfficeSchedModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
@@ -345,26 +282,29 @@ export default function Index() {
         <Can I="access" this="maintenance_schedules">
           <div className="mx-5">
             <Card>
-              {/** Top Card */}
-              <div className="flex flex-row flex-wrap">
-                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                  <button
-                    type="button"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                    onClick={openAddActionModal}
-                  >
-                    <i className="bx bxs-plus-square"></i>&nbsp; Add Schedule
-                  </button>
-                </div>
+              {IsLoading ? (
+                <LoadingSpinner size="lg" />
+              ) : (
+                <div className="flex flex-row flex-wrap">
+                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                    <button
+                      type="button"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                      onClick={openAddActionModal}
+                    >
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Schedule
+                    </button>
+                  </div>
 
-                <DataTableHrms
-                  data={schedules}
-                  columns={columns}
-                  columnVisibility={columnVisibility}
-                  paginate
-                  showGlobalFilter
-                />
-              </div>
+                  <DataTableHrms
+                    data={schedules}
+                    columns={columns}
+                    columnVisibility={columnVisibility}
+                    paginate
+                    showGlobalFilter
+                  />
+                </div>
+              )}
             </Card>
           </div>
         </Can>

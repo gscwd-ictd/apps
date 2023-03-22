@@ -1,8 +1,15 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { isEmpty, isEqual } from 'lodash';
 import { HiSearch } from 'react-icons/hi';
-import { Competency, DutyResponsibility } from '../../../types/dr.type';
+import {
+  Competency,
+  DutiesResponsibilitiesList,
+  DutyResponsibility,
+  DutyResponsibilityList,
+  UpdatedDRCD,
+} from '../../../types/dr.type';
 import { postData, patchData } from '../../../utils/hoc/axios';
 import { DRModalController } from '../../../components/fixed/dr/DRModalController';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
@@ -33,12 +40,38 @@ import {
   UpdateDrcPool,
   UpdateFinalDrcs,
 } from '../../../components/fixed/dr/utils/functions';
+import {
+  patchHRIS,
+  postHRIS,
+} from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
 
 export default function DR({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // get state of position that is selected
   const selectedPosition = useDrStore((state) => state.selectedPosition);
+
+  // selector
+  const {
+    PostPositionResponse,
+    UpdatePositionResponse,
+    PostPosition,
+    PostPositionFail,
+    PostPositionSuccess,
+    UpdatePosition,
+    UpdatePositionSuccess,
+    UpdatePositionFail,
+  } = useDrStore((state) => ({
+    // PostPosition: state.,
+    PostPositionResponse: state.position.postResponse,
+    UpdatePositionResponse: state.position.updateResponse,
+    PostPosition: state.postPosition,
+    PostPositionSuccess: state.postPositionSuccess,
+    PostPositionFail: state.postPositionFail,
+    UpdatePosition: state.updatePosition,
+    UpdatePositionSuccess: state.updatePositionSuccess,
+    UpdatePositionFail: state.updatePositionFail,
+  }));
 
   // get state for all DR pool
   const allDRCPool = useDrStore((state) => state.allDRCPool);
@@ -204,24 +237,111 @@ export default function DR({
     } else closeDrModal();
   };
 
+  const handlePostData = async (data: {
+    finalCoreDRList: Array<DutyResponsibilityList>;
+    finalSupportDRList: Array<DutyResponsibilityList>;
+  }) => {
+    // axios request for post
+    const { error, result } = await postHRIS(
+      `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+      {
+        core: data.finalCoreDRList,
+        support: data.finalSupportDRList,
+      }
+    );
+
+    if (error) {
+      // request is done so set loading to false
+      PostPosition(false);
+
+      // set value for error message
+      PostPositionFail(false, result);
+    } else {
+      // request is done so set loading to false
+      PostPosition(false);
+
+      // set value from returned response
+      PostPositionSuccess(false, result);
+    }
+  };
+
+  const handleUpdateData = async (drcds: {
+    forUpdating: UpdatedDRCD;
+    forPosting: DutiesResponsibilitiesList;
+  }) => {
+    //
+    let isSuccess: { update: boolean; post: boolean } = {
+      update: true,
+      post: true,
+    };
+    // patch
+    if (!isEmpty(drcds.forUpdating)) {
+      const { error } = await patchHRIS(
+        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        drcds.forUpdating
+      );
+
+      // return true if success
+      if (error) {
+        isSuccess = { ...isSuccess, update: false };
+      } else {
+        isSuccess = { ...isSuccess, update: true };
+      }
+    }
+
+    // new drc for the selected position
+    if (!isEmpty(drcds.forPosting)) {
+      const { error } = await postHRIS(
+        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        drcds.forPosting
+      );
+
+      // return true if success
+      if (error) {
+        isSuccess = { ...isSuccess, post: false };
+      } else {
+        isSuccess = { ...isSuccess, post: true };
+      }
+    }
+
+    if (isSuccess.post === false || isSuccess.update === false) {
+      // request is done so set loading to false
+      UpdatePosition(false);
+
+      // set value for error message
+      UpdatePositionFail(false, 'Failed');
+    } else if (isSuccess.post === true && isSuccess.update === true) {
+      // request is done so set loading to false
+      UpdatePosition(false);
+
+      // set value from returned response
+      // UpdatePositionSuccess(false, )
+    }
+  };
+
   const alertAction = async () => {
     if (alert.page === 1) {
       if (action === 'create') {
+        // set loading to true
+        PostPosition(true);
+
         // const finalDRCs = await updateFinalDRs(selectedDRCs);
         const finalDRCs = await UpdateFinalDrcs(selectedDRCs);
 
-        const { error, result } = await postData(
-          `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
-          {
-            core: finalDRCs.finalCoreDRList,
-            support: finalDRCs.finalSupportDRList,
-          }
-        );
+        // const { error, result } = await postData(
+        //   `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+        //   {
+        //     core: finalDRCs.finalCoreDRList,
+        //     support: finalDRCs.finalSupportDRList,
+        //   }
+        // );
 
-        console.log(result);
-
-        error && console.log(error);
+        // handle post for create
+        handlePostData(finalDRCs);
       } else if (action === 'update') {
+        // set loading to true
+        UpdatePosition(true);
+
         // const drcds = await assignUpdatedDRCs(selectedDRCs.core, selectedDRCs.support, allDRCPool);
         const drcds = await AssignUpdatedDrcs(
           selectedDRCs.core,
@@ -229,23 +349,24 @@ export default function DR({
           allDRCPool
         );
 
-        // patch
-        if (!isEmpty(drcds.forUpdating)) {
-          const { error } = await patchData(
-            `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
-            drcds.forUpdating
-          );
+        // handle update
+        handleUpdateData(drcds);
 
-          error && console.log(error);
-        }
-        if (!isEmpty(drcds.forPosting)) {
-          const { error } = await postData(
-            `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
-            drcds.forPosting
-          );
+        // // patch
+        // if (!isEmpty(drcds.forUpdating)) {
+        //   await patchData(
+        //     `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        //     drcds.forUpdating
+        //   );
+        // }
 
-          error && console.log(error);
-        }
+        // // new drc for the selected position
+        // if (!isEmpty(drcds.forPosting)) {
+        //   await postData(
+        //     `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        //     drcds.forPosting
+        //   );
+        // }
       }
 
       setAlert({ ...alert, page: 2 });
@@ -293,17 +414,27 @@ export default function DR({
       itemNumber: '',
       positionTitle: '',
     });
+
     setDrcPoolIsEmpty(false);
     setPoolInitialLoad(false);
+
+    // from getPool --create
     setDrcPoolIsFilled(false);
+
     setFilteredPositions(allPositions);
+
+    // from getPool --create
     setOriginalPool([]);
+
+    // from getPool --create
+    setAllDRCPool([]);
+
     setIsLoading(true);
+
     setSelectedDRCType('');
     setPoolUnselected();
     setDRCisLoaded(false);
     setFilteredDRCs([]);
-    setAllDRCPool([]);
     // setIsLoading(true)
     setSelectedDRCs({ core: [], support: [] });
     setDrcdsForUpdating({ core: [], support: [], deleted: [] });
@@ -359,7 +490,7 @@ export default function DR({
         </Modal.Body>
 
         <Modal.Footer>
-          <div className="flex justify-start gap-2">
+          <div className="flex justify-end gap-2">
             <div className="w-[6rem]">
               {modal.page !== 6 && (
                 <Button onClick={cancelDRModal} variant="info">

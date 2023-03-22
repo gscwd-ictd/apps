@@ -34,29 +34,23 @@ export const Alert: FunctionComponent<AlertProps> & AlertComposition = ({
   children,
 }) => {
   return (
-    <>
-      <Transition appear show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => setOpen(false)}
-        >
-          <FadeInOut>
-            <div className={promptOverlayStyles()} />
-          </FadeInOut>
+    <Transition appear show={open} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={() => setOpen(false)}>
+        <FadeInOut>
+          <div className={promptOverlayStyles()} />
+        </FadeInOut>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className={promptContainerStyles()}>
-              <FadeAndScale>
-                <Dialog.Panel className={promptPanelStyles()}>
-                  {children}
-                </Dialog.Panel>
-              </FadeAndScale>
-            </div>
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className={promptContainerStyles()}>
+            <FadeAndScale>
+              <Dialog.Panel className={promptPanelStyles()}>
+                {children}
+              </Dialog.Panel>
+            </FadeAndScale>
           </div>
-        </Dialog>
-      </Transition>
-    </>
+        </div>
+      </Dialog>
+    </Transition>
   );
 };
 

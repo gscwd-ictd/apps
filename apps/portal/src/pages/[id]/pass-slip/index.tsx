@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { HiDocumentAdd, HiX } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -13,56 +13,64 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 // import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+// import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import useSWR from 'swr';
-import {
-  fetchWithSession,
-  fetchWithToken,
-} from '../../../../src/utils/hoc/fetcher';
+import useSWR, { mutate } from 'swr';
+// import {
+//   fetchWithSession,
+//   fetchWithToken,
+// } from '../../../../src/utils/hoc/fetcher';
 import { SpinnerDotted } from 'spinners-react';
-import { Button } from '@gscwd-apps/oneui';
+import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
 import { PassSlipTabWindow } from '../../../../src/components/fixed/passslip/PassSlipTabWindow';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import React from 'react';
-import { useRouter } from 'next/router';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
-import { format } from 'date-fns';
 import PassSlipApplicationModal from '../../../../src/components/fixed/passslip/PassSlipApplicationModal';
 import PassSlipPendingModal from '../../../../src/components/fixed/passslip/PassSlipPendingModal';
 import PassSlipCompletedModal from '../../../../src/components/fixed/passslip/PassSlipCompletedModal';
+import { isEmpty } from 'lodash';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 
 export default function PassSlip({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const router = useRouter();
-
   const {
     tab,
-    isGetPassSlipLoading,
     applyPassSlipModalIsOpen,
     pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen,
+    loading,
+    error,
+    responseApply,
+    responseCancel,
 
-    setTab,
-    setIsGetPassSlipLoading,
     setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen,
     setCompletedPassSlipModalIsOpen,
+
+    getPassSlipList,
+    getPassSlipListSuccess,
+    getPassSlipListFail,
   } = usePassSlipStore((state) => ({
     tab: state.tab,
-    isGetPassSlipLoading: state.isGetPassSlipLoading,
     applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen: state.completedPassSlipModalIsOpen,
+    loading: state.loading.loadingPassSlips,
+    error: state.error.errorPassSlips,
+    responseApply: state.response.postResponseApply,
+    responseCancel: state.response.deleteResponseCancel,
 
-    setTab: state.setTab,
-    setIsGetPassSlipLoading: state.setIsGetPassSlipLoading,
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     setCompletedPassSlipModalIsOpen: state.setCompletedPassSlipModalIsOpen,
+
+    getPassSlipList: state.getPassSlipList,
+    getPassSlipListSuccess: state.getPassSlipListSuccess,
+    getPassSlipListFail: state.getPassSlipListFail,
   }));
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -79,37 +87,67 @@ export default function PassSlip({
   // cancel action for Pass Slip Application Modal
   const closeApplyPassSlipModal = async () => {
     setApplyPassSlipModalIsOpen(false);
-    setIsGetPassSlipLoading(true);
   };
 
   // cancel action for Pass Slip Pending Modal
   const closePendingPassSlipModal = async () => {
     setPendingPassSlipModalIsOpen(false);
-    setIsGetPassSlipLoading(true);
   };
 
   // cancel action for Pass Slip Completed Modal
   const closeCompletedPassSlipModal = async () => {
     setCompletedPassSlipModalIsOpen(false);
-    setIsGetPassSlipLoading(true);
   };
 
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
-    setIsGetPassSlipLoading(true);
   }, [employeeDetails]);
 
+  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPassSlips,
+    isLoading: swrIsLoading,
+    error: swrError,
+    mutate: mutatePassSlips,
+  } = useSWR(passSlipUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
   useEffect(() => {
-    if (isGetPassSlipLoading) {
-      setTimeout(() => {
-        setIsGetPassSlipLoading(false);
-      }, 500);
+    if (swrIsLoading) {
+      getPassSlipList(swrIsLoading);
     }
-  }, [isGetPassSlipLoading]);
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    // console.log(swrPassSlips);
+    if (!isEmpty(swrPassSlips)) {
+      getPassSlipListSuccess(swrIsLoading, swrPassSlips);
+    }
+
+    if (!isEmpty(swrError)) {
+      getPassSlipListFail(swrIsLoading, swrError.message);
+    }
+  }, [swrPassSlips, swrError]);
+
+  useEffect(() => {
+    if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
+      mutatePassSlips();
+    }
+  }, [responseApply, responseCancel]);
 
   return (
     <>
+      {error ? (
+        <ToastNotification toastType="error" notifMessage={error} />
+      ) : null}
+
       <EmployeeProvider employeeData={employee}>
         <Head>
           <title>Employee Pass Slips</title>
@@ -150,7 +188,8 @@ export default function PassSlip({
                 </div>
               </Button>
             </ContentHeader>
-            {isGetPassSlipLoading ? (
+
+            {loading ? (
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
@@ -169,7 +208,7 @@ export default function PassSlip({
                     </div>
                     <div className="w-full">
                       <PassSlipTabWindow
-                        employeeId={employeeDetails.employmentDetails.userId}
+                      // employeeId={employeeDetails.employmentDetails.userId}
                       />
                     </div>
                   </div>
@@ -188,9 +227,6 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
   const employeeDetails = employeeDummy;
 
-  // const employeePassSlips = await getEmployeePassSlips(
-  //   employeeDetails.user._id
-  // );
   return { props: { employeeDetails } };
 };
 
