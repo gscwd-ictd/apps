@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { Alert, Button } from '@gscwd-apps/oneui';
+import { Alert } from '@gscwd-apps/oneui';
 import {
   useAlertConfirmationStore,
   useAlertSuccessStore,
@@ -11,8 +11,10 @@ import {
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { postHRIS } from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
 import { HiExclamationCircle } from 'react-icons/hi';
+import { useSWRConfig } from 'swr';
 import { UpdateFinalDrcs } from '../utils/drcFunctions';
 
 export const DrcAlertConfirmation = () => {
@@ -33,6 +35,7 @@ export const DrcAlertConfirmation = () => {
     postDrcs,
     postDrcsFail,
     postDrcsSuccess,
+    cancelDrcPage,
   } = useDnrStore((state) => ({
     selectedDnrs: state.selectedDnrs,
     selectedDrcType: state.selectedDrcType,
@@ -40,6 +43,7 @@ export const DrcAlertConfirmation = () => {
     postDrcs: state.postDrcs,
     postDrcsSuccess: state.postDrcsSuccess,
     postDrcsFail: state.postDrcsFail,
+    cancelDrcPage: state.cancelDrcPage,
   }));
 
   // use modal store
@@ -54,12 +58,16 @@ export const DrcAlertConfirmation = () => {
     postPosition,
     postPositionFail,
     postPositionSuccess,
+    emptySelectedPosition,
   } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
     postPosition: state.postPosition,
     postPositionSuccess: state.postPositionSuccess,
     postPositionFail: state.postPositionFail,
+    emptySelectedPosition: state.emptySelectedPosition,
   }));
+
+  const { mutate } = useSWRConfig();
 
   // use employee store
   const employee = useEmployeeStore((state) => state.employeeDetails);
@@ -76,22 +84,33 @@ export const DrcAlertConfirmation = () => {
         postPositionFail(postDrcs.result);
 
         postDrcsFail(postDrcs.result);
-
-        console.log('From confirmation: ', postDrcs.error);
-
-        console.log('From confirmation: Fail');
       } else {
         // set value from returned response
-        // postPositionSuccess(postDrcs.result);
-
-        console.log('From confirmation: Success');
-
-        console.log('From confirmation: ', postDrcs.result);
         // post drcs success
         postDrcsSuccess(postDrcs.result);
 
+        // mutate available drcs
+        await mutate(
+          `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
+        // mutate existing drcs
+        await mutate(
+          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
+        // empty selected position upon success
+        emptySelectedPosition();
+
         // open alert success
         openAlertSuccess();
+
+        // set the default values in dnr
+        cancelDrcPage();
 
         // close
         closeConf();
@@ -105,6 +124,7 @@ export const DrcAlertConfirmation = () => {
   }) => {
     // initialize loading to trues
     postDrcs();
+
     // axios request for post
     const { error, result } = await postHRIS(
       `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
