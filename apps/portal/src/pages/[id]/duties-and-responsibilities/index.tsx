@@ -76,9 +76,6 @@ export default function DutiesResponsibilities({
     getUnfilledDrcPositionsFail: state.getUnfilledDrcPositionsFail,
   }));
 
-  // use modal store
-  const tab = usePositionStore((state) => state.tab);
-
   // initialize unfilled loading
   useEffect(() => {
     if (swrUnfilledIsLoading) {
@@ -96,7 +93,6 @@ export default function DutiesResponsibilities({
   // unfilled positions set
   useEffect(() => {
     if (!isEmpty(swrUnfilledPositions)) {
-      console.log('UNFILLED: ', swrUnfilledPositions.data);
       getUnfilledDrcPositionsSuccess(swrUnfilledPositions.data);
     }
     if (!isEmpty(swrUnfilledError)) {
@@ -107,7 +103,6 @@ export default function DutiesResponsibilities({
   // filled positions set
   useEffect(() => {
     if (!isEmpty(swrFilledPositions)) {
-      console.log('FILLED: ', swrFilledPositions.data);
       getFilledDrcPositionsSuccess(swrFilledPositions.data);
     }
 

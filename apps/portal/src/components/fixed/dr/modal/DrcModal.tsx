@@ -166,6 +166,7 @@ const DrcModal: FunctionComponent = () => {
               type="button"
               className="text-gray-400"
               onClick={closeDrcModal}
+              tabIndex={-1}
             >
               x<span className="sr-only">Close modal</span>
             </button>
