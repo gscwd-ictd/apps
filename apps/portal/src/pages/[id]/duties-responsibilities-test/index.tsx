@@ -57,6 +57,8 @@ export default function DutiesResponsibilities({
 
   // use position store
   const {
+    filledPositions,
+    unfilledPositions,
     getFilledDrcPositions,
     getFilledDrcPositionsFail,
     getFilledDrcPositionsSuccess,
@@ -64,6 +66,8 @@ export default function DutiesResponsibilities({
     getUnfilledDrcPositionsFail,
     getUnfilledDrcPositionsSuccess,
   } = usePositionStore((state) => ({
+    unfilledPositions: state.unfilledPositions,
+    filledPositions: state.filledPositions,
     getFilledDrcPositions: state.getFilledDrcPositions,
     getFilledDrcPositionsSuccess: state.getFilledDrcPositionsSuccess,
     getFilledDrcPositionsFail: state.getFilledDrcPositionsFail,
@@ -92,6 +96,7 @@ export default function DutiesResponsibilities({
   // unfilled positions set
   useEffect(() => {
     if (!isEmpty(swrUnfilledPositions)) {
+      console.log('UNFILLED: ', swrUnfilledPositions.data);
       getUnfilledDrcPositionsSuccess(swrUnfilledPositions.data);
     }
     if (!isEmpty(swrUnfilledError)) {
@@ -102,6 +107,7 @@ export default function DutiesResponsibilities({
   // filled positions set
   useEffect(() => {
     if (!isEmpty(swrFilledPositions)) {
+      console.log('FILLED: ', swrFilledPositions.data);
       getFilledDrcPositionsSuccess(swrFilledPositions.data);
     }
 
@@ -145,7 +151,12 @@ export default function DutiesResponsibilities({
             <>
               <div className="flex w-full">
                 <div className="w-[58rem]">
-                  <DrcTabs />
+                  <DrcTabs
+                    positions={{
+                      unfilled: unfilledPositions,
+                      filled: filledPositions,
+                    }}
+                  />
                 </div>
                 <div className="w-full">
                   <DrcTabWindow />
