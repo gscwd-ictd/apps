@@ -89,8 +89,9 @@ export const govtService = [
 export const apptStatus = [
   // { label: 'Contract of Service', value: 'Contract of Service' },
   { label: 'Coterminous', value: 'Coterminous' },
-  // { label: 'Probationary', value: 'PROBATIONARY' },
+  { label: 'Casual', value: 'Casual' },
   { label: 'Job Order', value: 'Job Order' },
+  // { label: 'Probationary', value: 'PROBATIONARY' },
   { label: 'Temporary', value: 'Temporary' },
   { label: 'Regular', value: 'Regular' },
   { label: 'Self-Employed', value: 'Self-Employed' },
