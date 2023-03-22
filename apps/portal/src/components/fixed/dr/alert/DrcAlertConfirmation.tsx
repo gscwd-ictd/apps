@@ -77,6 +77,8 @@ export const DrcAlertConfirmation = () => {
 
         postDrcsFail(postDrcs.result);
 
+        console.log('From confirmation: ', postDrcs.error);
+
         console.log('From confirmation: Fail');
       } else {
         // set value from returned response
@@ -84,6 +86,7 @@ export const DrcAlertConfirmation = () => {
 
         console.log('From confirmation: Success');
 
+        console.log('From confirmation: ', postDrcs.result);
         // post drcs success
         postDrcsSuccess(postDrcs.result);
 
