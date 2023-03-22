@@ -19,7 +19,10 @@ export const DrcAlertSuccess = () => {
   );
 
   // use modal store
-  const closeModal = useModalStore((state) => state.closeModal);
+  const { closeModal, setModalPage } = useModalStore((state) => ({
+    closeModal: state.closeModal,
+    setModalPage: state.setModalPage,
+  }));
 
   // use dnr store
   const cancelDrcPage = useDnrStore((state) => state.cancelDrcPage);
@@ -28,6 +31,8 @@ export const DrcAlertSuccess = () => {
     emptySelectedPosition();
 
     closeModal();
+
+    // setModalPage(2);
 
     // set alert to close
     setClose();
