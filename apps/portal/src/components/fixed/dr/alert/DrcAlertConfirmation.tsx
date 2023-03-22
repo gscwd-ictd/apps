@@ -114,6 +114,20 @@ export const DrcAlertConfirmation = () => {
           { revalidate: true }
         );
 
+        // mutate unfilled positions
+        await mutate(
+          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/pending`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
+        // mutate filled positions
+        await mutate(
+          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/finished`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
         // close
         closeConf();
 
@@ -150,6 +164,20 @@ export const DrcAlertConfirmation = () => {
         // mutate existing drcs
         await mutate(
           `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
+        // mutate unfilled positions
+        await mutate(
+          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/pending`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
+        // mutate filled positions
+        await mutate(
+          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/finished`,
           fetcherHRIS,
           { revalidate: true }
         );
