@@ -1,13 +1,22 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { LoadingSpinner } from '@gscwd-apps/oneui';
-import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { Position } from 'apps/portal/src/types/position.type';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { HiCheck, HiOutlineCheckCircle } from 'react-icons/hi';
 import { TabHeader } from '../../tab/TabHeader';
 
-export const DrcTabs = () => {
+type Positions = {
+  filled: Array<Position>;
+  unfilled: Array<Position>;
+};
+
+type DrcTabsProps = {
+  positions: Positions;
+};
+
+export const DrcTabs = ({ positions }: DrcTabsProps) => {
   // const setTab = useDrStore((state) => state.setTab);
 
   const { tab, setTab } = usePositionStore((state) => ({
@@ -15,21 +24,12 @@ export const DrcTabs = () => {
     setTab: state.setTab,
   }));
 
-  const {
-    unfilledPositions,
-    filledPositions,
-    loadingFilledPositions,
-    loadingUnfilledPositions,
-  } = usePositionStore((state) => ({
-    filledPositions: state.unfilledPositions,
-    unfilledPositions: state.unfilledPositions,
-    loadingUnfilledPositions: state.loading.loadingUnfilledPositions,
-    loadingFilledPositions: state.loading.loadingFilledPositions,
-  }));
-
-  useEffect(() => {
-    console.log(filledPositions);
-  }, [filledPositions]);
+  const { loadingFilledPositions, loadingUnfilledPositions } = usePositionStore(
+    (state) => ({
+      loadingUnfilledPositions: state.loading.loadingUnfilledPositions,
+      loadingFilledPositions: state.loading.loadingFilledPositions,
+    })
+  );
 
   return (
     <>
@@ -48,7 +48,7 @@ export const DrcTabs = () => {
               icon={<HiOutlineCheckCircle size={26} />}
               subtitle="Show all positions that are for DRC setting"
               notificationCount={
-                !isEmpty(unfilledPositions) ? unfilledPositions.length : 0
+                !isEmpty(positions.unfilled) ? positions.unfilled.length : 0
               }
               className="bg-red-500"
             />
@@ -66,7 +66,7 @@ export const DrcTabs = () => {
               icon={<HiCheck size={26} />}
               subtitle="Show all filled positions with DRCs"
               notificationCount={
-                !isEmpty(filledPositions) ? filledPositions.length : 0
+                !isEmpty(positions.filled) ? positions.filled.length : 0
               }
               className="bg-gray-500"
             />
