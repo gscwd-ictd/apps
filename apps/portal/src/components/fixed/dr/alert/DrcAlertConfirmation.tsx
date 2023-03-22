@@ -26,9 +26,20 @@ export const DrcAlertConfirmation = () => {
     }));
 
   // use dnr store
-  const { selectedDrcType, selectedDnrs } = useDnrStore((state) => ({
+  const {
+    selectedDrcType,
+    selectedDnrs,
+    existingDrcsOnPost,
+    postDrcs,
+    postDrcsFail,
+    postDrcsSuccess,
+  } = useDnrStore((state) => ({
     selectedDnrs: state.selectedDnrs,
     selectedDrcType: state.selectedDrcType,
+    existingDrcsOnPost: state.positionExistingDrcsOnPosting,
+    postDrcs: state.postDrcs,
+    postDrcsSuccess: state.postDrcsSuccess,
+    postDrcsFail: state.postDrcsFail,
   }));
 
   // use modal store
@@ -63,13 +74,19 @@ export const DrcAlertConfirmation = () => {
       if (postDrcs.error) {
         // set value for error message
         postPositionFail(postDrcs.result);
+
+        postDrcsFail(postDrcs.result);
       } else {
         // set value from returned response
-        postPositionSuccess(postDrcs.result);
+        // postPositionSuccess(postDrcs.result);
+
+        // post drcs success
+        postDrcsSuccess(postDrcs.result);
 
         // open alert success
-
         openAlertSuccess();
+
+        // close
         closeConf();
       }
     }
@@ -79,6 +96,8 @@ export const DrcAlertConfirmation = () => {
     core: Array<DutyResponsibilityList>;
     support: Array<DutyResponsibilityList>;
   }) => {
+    // initialize loading to trues
+    postDrcs();
     // axios request for post
     const { error, result } = await postHRIS(
       `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
