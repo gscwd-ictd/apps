@@ -46,7 +46,7 @@ export const DrcAlertSuccess = () => {
           <div className="flex gap-2">
             <button
               onClick={closeAlert}
-              className="w-[6rem] px-3 py-2 bg-indigo-400 rounded text-white"
+              className="w-[12rem] px-3 py-2 bg-indigo-600 rounded text-white"
             >
               <span>Got it, thanks!</span>
             </button>

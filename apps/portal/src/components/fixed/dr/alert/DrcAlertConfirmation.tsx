@@ -5,17 +5,23 @@ import {
   useAlertSuccessStore,
 } from 'apps/portal/src/store/alert.store';
 import {
+  DutiesResponsibilitiesList,
   DutyResponsibilityList,
   useDnrStore,
 } from 'apps/portal/src/store/dnr.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { UpdatedDRCD } from 'apps/portal/src/types/dr.type';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
-import { postHRIS } from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
+import {
+  patchHRIS,
+  postHRIS,
+} from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
+import { isEmpty } from 'lodash';
 import { HiExclamationCircle } from 'react-icons/hi';
 import { useSWRConfig } from 'swr';
-import { UpdateFinalDrcs } from '../utils/drcFunctions';
+import { AssignUpdatedDrcs, UpdateFinalDrcs } from '../utils/drcFunctions';
 
 export const DrcAlertConfirmation = () => {
   // use alert confirmation store
@@ -32,6 +38,7 @@ export const DrcAlertConfirmation = () => {
     selectedDrcType,
     selectedDnrs,
     existingDrcsOnPost,
+    availableDnrs,
     postDrcs,
     postDrcsFail,
     postDrcsSuccess,
@@ -40,6 +47,7 @@ export const DrcAlertConfirmation = () => {
     selectedDnrs: state.selectedDnrs,
     selectedDrcType: state.selectedDrcType,
     existingDrcsOnPost: state.positionExistingDrcsOnPosting,
+    availableDnrs: state.availableDnrs,
     postDrcs: state.postDrcs,
     postDrcsSuccess: state.postDrcsSuccess,
     postDrcsFail: state.postDrcsFail,
@@ -121,9 +129,50 @@ export const DrcAlertConfirmation = () => {
         // set the default values in dnr
         cancelDrcPage();
       }
+    } else if (action === Actions.UPDATE) {
+      // handleUpdateData(selectedDnrs.core,selectedDnrs.support, availableDnrs)
+      const drcsForUpdate = await AssignUpdatedDrcs(
+        selectedDnrs.core,
+        selectedDnrs.support,
+        availableDnrs
+      );
+
+      const updateDrcs = await handleUpdateData(drcsForUpdate);
+
+      if (updateDrcs.post === true && updateDrcs.update === true) {
+        // mutate available drcs
+        await mutate(
+          `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
+        // mutate existing drcs
+        await mutate(
+          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+          fetcherHRIS,
+          { revalidate: true }
+        );
+
+        // close
+        closeConf();
+
+        // closeModal
+        closeModal();
+
+        // empty selected position upon success
+        emptySelectedPosition();
+
+        // open alert success
+        openAlertSuccess();
+
+        // set the default values in dnr
+        cancelDrcPage();
+      }
     }
   };
 
+  // call this for positions where there are no existing drcs
   const handlePostData = async (data: {
     core: Array<DutyResponsibilityList>;
     support: Array<DutyResponsibilityList>;
@@ -141,6 +190,49 @@ export const DrcAlertConfirmation = () => {
     );
 
     return { error, result };
+  };
+
+  //! call this for positions where there are existing drcs
+  const handleUpdateData = async (drcds: {
+    forUpdating: UpdatedDRCD;
+    forPosting: DutiesResponsibilitiesList;
+  }) => {
+    //
+    let isSuccess: { update: boolean; post: boolean } = {
+      update: true,
+      post: true,
+    };
+    // patch
+    if (!isEmpty(drcds.forUpdating)) {
+      const { error } = await patchHRIS(
+        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        drcds.forUpdating
+      );
+
+      // return true if success
+      if (error) {
+        isSuccess = { ...isSuccess, update: false };
+      } else {
+        isSuccess = { ...isSuccess, update: true };
+      }
+    }
+
+    // new drc for the selected position
+    if (!isEmpty(drcds.forPosting)) {
+      const { error } = await postHRIS(
+        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+        drcds.forPosting
+      );
+
+      // return true if success
+      if (error) {
+        isSuccess = { ...isSuccess, post: false };
+      } else {
+        isSuccess = { ...isSuccess, post: true };
+      }
+    }
+
+    return isSuccess;
   };
 
   return (
