@@ -75,7 +75,7 @@ export const AllDrcPositionsListTab = ({
                     {tab === 2 && (
                       <p className="text-sm text-indigo-500">
                         Updated at{' '}
-                        {dayjs(position.updatedAt).format('MMMM d, YYYY')}
+                        {dayjs(position.updatedAt).format('MMMM D, YYYY')}
                       </p>
                     )}
                   </div>
