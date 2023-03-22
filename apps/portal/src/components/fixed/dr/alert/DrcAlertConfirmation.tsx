@@ -152,8 +152,9 @@ export const DrcAlertConfirmation = () => {
       );
 
       const updateDrcs = await handleUpdateData(drcsForUpdate);
-
-      if (updateDrcs.post === true && updateDrcs.update === true) {
+      if (updateDrcs.error === true) {
+        //asdasd
+      } else {
         // mutate available drcs
         await mutate(
           `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
@@ -225,42 +226,12 @@ export const DrcAlertConfirmation = () => {
     forUpdating: UpdatedDRCD;
     forPosting: DutiesResponsibilitiesList;
   }) => {
-    //
-    let isSuccess: { update: boolean; post: boolean } = {
-      update: true,
-      post: true,
-    };
-    // patch
-    if (!isEmpty(drcds.forUpdating)) {
-      const { error } = await patchHRIS(
-        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
-        drcds.forUpdating
-      );
+    const { error, result } = await patchHRIS(
+      `/occupational-group-duties-responsibilities/v2/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+      { add: drcds.forPosting, update: drcds.forUpdating }
+    );
 
-      // return true if success
-      if (error) {
-        isSuccess = { ...isSuccess, update: false };
-      } else {
-        isSuccess = { ...isSuccess, update: true };
-      }
-    }
-
-    // new drc for the selected position
-    if (!isEmpty(drcds.forPosting)) {
-      const { error } = await postHRIS(
-        `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
-        drcds.forPosting
-      );
-
-      // return true if success
-      if (error) {
-        isSuccess = { ...isSuccess, post: false };
-      } else {
-        isSuccess = { ...isSuccess, post: true };
-      }
-    }
-
-    return isSuccess;
+    return { error, result };
   };
 
   return (

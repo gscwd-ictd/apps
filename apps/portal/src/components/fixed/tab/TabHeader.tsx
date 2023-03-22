@@ -51,7 +51,7 @@ export const TabHeader: FC<TabHeaderProps> = ({
         </div>
         <div className="w-[10%] px-4">
           <div
-            className={`rounded-md min-w-[1.2rem] max-w-full flex ${className} ${
+            className={`rounded-md min-w-[1.5rem] max-w-full flex ${className} ${
               notificationCount === 0 ? 'invisible' : 'visible'
             } select-none flex-grow-0 text-white justify-center text-sm`}
           >
