@@ -47,7 +47,10 @@ export const DrcAlertConfirmation = () => {
   }));
 
   // use modal store
-  const action = useModalStore((state) => state.action);
+  const { action, closeModal } = useModalStore((state) => ({
+    action: state.action,
+    closeModal: state.closeModal,
+  }));
 
   // use alert success store
   const openAlertSuccess = useAlertSuccessStore((state) => state.setOpen);
@@ -103,6 +106,12 @@ export const DrcAlertConfirmation = () => {
           { revalidate: true }
         );
 
+        // close
+        closeConf();
+
+        // closeModal
+        closeModal();
+
         // empty selected position upon success
         emptySelectedPosition();
 
@@ -111,9 +120,6 @@ export const DrcAlertConfirmation = () => {
 
         // set the default values in dnr
         cancelDrcPage();
-
-        // close
-        closeConf();
       }
     }
   };

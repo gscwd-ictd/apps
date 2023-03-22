@@ -358,7 +358,6 @@ export const useDnrStore = create<DnrState>()(
         },
         loading: { ...state.loading, loadingExistingDnrs: false },
         existingDnrsIsLoaded: false,
-        shouldMutate: true,
       })),
 
     postDrcsFail: (error: string) =>
