@@ -1,9 +1,7 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Alert } from '@gscwd-apps/oneui';
 import { useAlertSuccessStore } from 'apps/portal/src/store/alert.store';
-import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
-import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { HiCheckCircle } from 'react-icons/hi';
 
 export const DrcAlertSuccess = () => {
@@ -13,31 +11,15 @@ export const DrcAlertSuccess = () => {
     setClose: state.setClose,
   }));
 
-  // use position store
-  const emptySelectedPosition = usePositionStore(
-    (state) => state.emptySelectedPosition
-  );
-
   // use modal store
-  const { closeModal, setModalPage } = useModalStore((state) => ({
-    closeModal: state.closeModal,
-    setModalPage: state.setModalPage,
-  }));
-
-  // use dnr store
-  const cancelDrcPage = useDnrStore((state) => state.cancelDrcPage);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const closeAlert = () => {
-    emptySelectedPosition();
-
+    // close the modal
     closeModal();
-
-    // setModalPage(2);
 
     // set alert to close
     setClose();
-
-    cancelDrcPage();
   };
 
   return (

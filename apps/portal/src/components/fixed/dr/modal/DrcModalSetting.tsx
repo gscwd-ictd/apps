@@ -89,7 +89,6 @@ export const DrcModalSetting = () => {
     data: swrAvailableDnrs,
     error: swrAvailableDnrsError,
     isLoading: swrAvailableDnrsIsLoading,
-    mutate: mutateAvailableDnrs,
   } = useSWR(
     `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
     fetcherHRIS,
@@ -97,6 +96,7 @@ export const DrcModalSetting = () => {
       shouldRetryOnError: false,
       revalidateOnFocus: true,
       revalidateIfStale: true,
+      revalidateOnMount: true,
     }
   );
 
@@ -105,7 +105,6 @@ export const DrcModalSetting = () => {
     data: swrExistingDnrs,
     error: swrExistingDnrsError,
     isLoading: swrExistingDnrsIsLoading,
-    mutate: mutateExistingDnrs,
   } = useSWR(
     `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
     fetcherHRIS,
@@ -113,6 +112,7 @@ export const DrcModalSetting = () => {
       shouldRetryOnError: false,
       revalidateOnFocus: true,
       revalidateIfStale: true,
+      revalidateOnMount: true,
     }
   );
 
@@ -281,24 +281,9 @@ export const DrcModalSetting = () => {
     }
   }, [swrExistingDnrsIsLoading]);
 
-  // mutate if response is changed
-  useEffect(() => {
-    if (!isEmpty(postDrcResponse)) {
-      mutateAvailableDnrs();
-      mutateExistingDnrs();
-    }
-  }, [postDrcResponse]);
-
   // set the default values
   useEffect(() => {
     setSelectedDrcType(null);
-
-    // mutate validator
-    if (shouldMutate === true) {
-      mutateAvailableDnrs();
-      mutateExistingDnrs();
-      setShouldMutateFalse();
-    }
   }, []);
 
   return (
