@@ -3,7 +3,10 @@ import { Button } from '@gscwd-apps/oneui';
 import { DrcAlertConfirmation } from 'apps/portal/src/components/fixed/dr/alert/DrcAlertConfirmation';
 import { DrcAlertSuccess } from 'apps/portal/src/components/fixed/dr/alert/DrcAlertSuccess';
 import DrcModal from 'apps/portal/src/components/fixed/dr/modal/DrcModal';
+import { DrcTabs } from 'apps/portal/src/components/fixed/dr/tab/DrcTabs';
+import { DrcTabWindow } from 'apps/portal/src/components/fixed/dr/tab/DRCTabWindow';
 import { SideNav } from 'apps/portal/src/components/fixed/nav/SideNav';
+import { ContentBody } from 'apps/portal/src/components/modular/custom/containers/ContentBody';
 import { ContentHeader } from 'apps/portal/src/components/modular/custom/containers/ContentHeader';
 import { MainContainer } from 'apps/portal/src/components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
@@ -24,7 +27,10 @@ import { HiSearch } from 'react-icons/hi';
 export default function DutiesResponsibilities({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const openModal = useModalStore((state) => state.openModal);
+  const { openModal, tab } = useModalStore((state) => ({
+    openModal: state.openModal,
+    tab: state.modal.page,
+  }));
 
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
 
@@ -59,6 +65,22 @@ export default function DutiesResponsibilities({
               </div>
             </Button>
           </ContentHeader>
+          <ContentBody>
+            <>
+              <div className="flex w-full">
+                <div className="w-[58rem]">
+                  <DrcTabs tab={tab} />
+                </div>
+                <div className="w-full">
+                  <DrcTabWindow
+                    positionId={
+                      employeeDetails.employmentDetails.assignment.positionId
+                    }
+                  />
+                </div>
+              </div>
+            </>
+          </ContentBody>
         </div>
       </MainContainer>
     </>
