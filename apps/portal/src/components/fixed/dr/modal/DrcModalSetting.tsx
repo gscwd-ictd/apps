@@ -50,6 +50,8 @@ export const DrcModalSetting = () => {
     setSelectedDrcType, // set the selected drc type
     postDrcResponse,
     selectedDnrsOnLoad,
+    shouldMutate,
+    setShouldMutateFalse,
   } = useDnrStore((state) => ({
     originalPoolOfDnrs: state.originalPoolOfDnrs,
     availableDnrs: state.availableDnrs,
@@ -59,6 +61,9 @@ export const DrcModalSetting = () => {
     availableDnrsIsLoaded: state.availableDnrsIsLoaded,
     existingDnrsIsLoaded: state.existingDnrsIsLoaded,
     selectedDrcType: state.selectedDrcType,
+    postDrcResponse: state.positionExistingDrcsOnPosting.postResponse,
+    shouldMutate: state.shouldMutate,
+
     setSelectedDnrs: state.setSelectedDnrs,
     setOriginalPoolOfDnrs: state.setOriginalPoolOfDnrs,
     setAvailableDnrs: state.setAvailableDnrs,
@@ -70,7 +75,7 @@ export const DrcModalSetting = () => {
     getExistingDnrs: state.getExistingDnrs,
     getExistingDnrsSuccess: state.getExistingDnrsSuccess,
     getExistingDnrsFail: state.getExistingDnrsFail,
-    postDrcResponse: state.positionExistingDrcsOnPosting.postResponse,
+    setShouldMutateFalse: state.setShouldMutateFalse,
   }));
 
   // get from modal store
@@ -88,7 +93,11 @@ export const DrcModalSetting = () => {
   } = useSWR(
     `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
     fetcherHRIS,
-    { shouldRetryOnError: false, revalidateOnFocus: false }
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
+    }
   );
 
   // useSWR existing dnrs
@@ -100,7 +109,11 @@ export const DrcModalSetting = () => {
   } = useSWR(
     `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
     fetcherHRIS,
-    { shouldRetryOnError: false, revalidateOnFocus: false }
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
+    }
   );
 
   // combine available and existing dnrs and returns an array of DutyResponsibility
@@ -279,6 +292,13 @@ export const DrcModalSetting = () => {
   // set the default values
   useEffect(() => {
     setSelectedDrcType(null);
+
+    // mutate validator
+    if (shouldMutate === true) {
+      mutateAvailableDnrs();
+      mutateExistingDnrs();
+      setShouldMutateFalse();
+    }
   }, []);
 
   return (

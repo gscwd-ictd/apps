@@ -83,6 +83,9 @@ export type DnrState = {
   // loading state
   loading: DnrLoading;
 
+  // force mutate if true
+  shouldMutate: boolean;
+
   // error state
   error: DnrError;
 
@@ -106,6 +109,9 @@ export type DnrState = {
 
   // position existing drcs on posting
   positionExistingDrcsOnPosting: ExistingDrcResponse;
+
+  // set should mutate to false if mutate is done
+  setShouldMutateFalse: () => void;
 
   // add checked dnrs to selected dnrs
   addCheckedToSelectedDnrs: () => void;
@@ -197,6 +203,10 @@ export const useDnrStore = create<DnrState>()(
       postResponse: DUTIES_RESPONSIBILITIES,
       updateResponse: DUTIES_RESPONSIBILITIES,
     },
+
+    shouldMutate: false,
+    setShouldMutateFalse: () =>
+      set((state) => ({ ...state, shouldMutate: false })),
     setCheckedDnrs: (checkedDnrs: DutiesResponsibilities) =>
       set((state) => ({ ...state, checkedDnrs })),
 
@@ -348,6 +358,7 @@ export const useDnrStore = create<DnrState>()(
         },
         loading: { ...state.loading, loadingExistingDnrs: false },
         existingDnrsIsLoaded: false,
+        shouldMutate: true,
       })),
 
     postDrcsFail: (error: string) =>
