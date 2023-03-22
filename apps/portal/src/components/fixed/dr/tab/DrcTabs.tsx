@@ -11,7 +11,7 @@ type DrcTabsProps = {
 export const DrcTabs = ({ tab }: DrcTabsProps) => {
   // const setTab = useDrStore((state) => state.setTab);
 
-  const setTab = useModalStore((state) => state.setModalPage);
+  const setTab = usePositionStore((state) => state.setTab);
 
   const { unfilledPositions, filledPositions } = usePositionStore((state) => ({
     filledPositions: state.unfilledPositions,

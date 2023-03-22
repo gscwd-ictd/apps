@@ -1,6 +1,6 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { FinishedPosition } from 'apps/portal/src/store/dr.store';
-import { useModalStore } from 'apps/portal/src/store/modal.store';
+import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { Position } from 'apps/portal/src/types/position.type';
 import dayjs from 'dayjs';
@@ -31,11 +31,11 @@ export const AllDrcPositionsListTab = ({
   const setAction = useModalStore((state) => state.setAction);
 
   const onSelect = (position: Position, tab: number) => {
-    let action = null;
+    let action: Actions = null;
     if (tab === 1) {
-      action = 'create';
+      action = Actions.CREATE;
     } else if (tab === 2) {
-      action = 'update';
+      action = Actions.UPDATE;
     }
 
     // set action whether create or update

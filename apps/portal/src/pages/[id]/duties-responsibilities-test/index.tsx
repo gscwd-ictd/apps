@@ -4,13 +4,14 @@ import { DrcAlertConfirmation } from 'apps/portal/src/components/fixed/dr/alert/
 import { DrcAlertSuccess } from 'apps/portal/src/components/fixed/dr/alert/DrcAlertSuccess';
 import DrcModal from 'apps/portal/src/components/fixed/dr/modal/DrcModal';
 import { DrcTabs } from 'apps/portal/src/components/fixed/dr/tab/DrcTabs';
-import { DrcTabWindow } from 'apps/portal/src/components/fixed/dr/tab/DRCTabWindow';
+import { DrcTabWindow } from 'apps/portal/src/components/fixed/dr/tab/DrcTabWindow';
 import { SideNav } from 'apps/portal/src/components/fixed/nav/SideNav';
 import { ContentBody } from 'apps/portal/src/components/modular/custom/containers/ContentBody';
 import { ContentHeader } from 'apps/portal/src/components/modular/custom/containers/ContentHeader';
 import { MainContainer } from 'apps/portal/src/components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
+import { usePositionStore } from 'apps/portal/src/store/position.store';
 import {
   getUserDetails,
   withCookieSession,
@@ -27,10 +28,11 @@ import { HiSearch } from 'react-icons/hi';
 export default function DutiesResponsibilities({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { openModal, tab } = useModalStore((state) => ({
+  const { openModal } = useModalStore((state) => ({
     openModal: state.openModal,
-    tab: state.modal.page,
   }));
+
+  const tab = usePositionStore((state) => state.tab);
 
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
 

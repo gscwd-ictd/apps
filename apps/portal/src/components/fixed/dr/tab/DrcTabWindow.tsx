@@ -1,4 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
@@ -52,7 +53,7 @@ export const DrcTabWindow = ({ positionId }: DrcTabWindowProps) => {
   }));
 
   // use modal store
-  const tab = useModalStore((state) => state.modal.page);
+  const tab = usePositionStore((state) => state.tab);
 
   // initialize unfilled loading
   useEffect(() => {
@@ -92,12 +93,18 @@ export const DrcTabWindow = ({ positionId }: DrcTabWindowProps) => {
   return (
     <>
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
-        {tab === 1 && (
-          <AllDrcPositionsListTab positions={unfilledPositions} tab={tab} />
-        )}
-        {tab === 2 && (
-          <AllDrcPositionsListTab positions={filledPositions} tab={tab} />
-        )}
+        {tab === 1 &&
+          (swrUnfilledIsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <AllDrcPositionsListTab positions={unfilledPositions} tab={tab} />
+          ))}
+        {tab === 2 &&
+          (swrFilledIsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <AllDrcPositionsListTab positions={filledPositions} tab={tab} />
+          ))}
       </div>
     </>
   );
