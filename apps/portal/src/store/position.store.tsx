@@ -28,6 +28,8 @@ type PositionState = {
   unfilledPositions: Array<Position>;
   filledPositions: Array<Position>;
   selectedPosition: Position;
+  tab: number;
+  setTab: (tab: number) => void;
   emptySelectedPosition: () => void;
   postPosition: () => void;
   postPositionSuccess: (response: Position) => void;
@@ -68,11 +70,15 @@ export const usePositionStore = create<PositionState>()(
 
     filledPositions: [],
 
+    tab: 1,
+
     loading: { loadingPosition: false, loadingPositions: false },
 
     error: { errorPosition: '', errorPositions: '' },
 
     selectedPosition: {} as Position,
+
+    setTab: (tab: number) => set((state) => ({ ...state, tab })),
 
     emptySelectedPosition: () =>
       set((state) => ({ ...state, selectedPosition: {} as Position })),
