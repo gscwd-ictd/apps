@@ -12,10 +12,12 @@ import { MainContainer } from 'apps/portal/src/components/modular/custom/contain
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import {
   getUserDetails,
   withCookieSession,
 } from 'apps/portal/src/utils/helpers/session';
+import { isEmpty } from 'lodash';
 import Head from 'next/head';
 import {
   GetServerSideProps,
@@ -24,6 +26,7 @@ import {
 } from 'next/types';
 import { useEffect } from 'react';
 import { HiSearch } from 'react-icons/hi';
+import useSWR from 'swr';
 
 export default function DutiesResponsibilities({
   employeeDetails,
@@ -32,9 +35,80 @@ export default function DutiesResponsibilities({
     openModal: state.openModal,
   }));
 
+  const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
+
+  const {
+    data: swrUnfilledPositions,
+    isLoading: swrUnfilledIsLoading,
+    error: swrUnfilledError,
+  } = useSWR(
+    `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/pending`,
+    fetcherHRIS
+  );
+
+  const {
+    data: swrFilledPositions,
+    isLoading: swrFilledIsLoading,
+    error: swrFilledError,
+  } = useSWR(
+    `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/finished`,
+    fetcherHRIS
+  );
+
+  // use position store
+  const {
+    getFilledDrcPositions,
+    getFilledDrcPositionsFail,
+    getFilledDrcPositionsSuccess,
+    getUnfilledDrcPositions,
+    getUnfilledDrcPositionsFail,
+    getUnfilledDrcPositionsSuccess,
+  } = usePositionStore((state) => ({
+    getFilledDrcPositions: state.getFilledDrcPositions,
+    getFilledDrcPositionsSuccess: state.getFilledDrcPositionsSuccess,
+    getFilledDrcPositionsFail: state.getFilledDrcPositionsFail,
+    getUnfilledDrcPositions: state.getUnfilledDrcPositions,
+    getUnfilledDrcPositionsSuccess: state.getUnfilledDrcPositionsSuccess,
+    getUnfilledDrcPositionsFail: state.getUnfilledDrcPositionsFail,
+  }));
+
+  // use modal store
   const tab = usePositionStore((state) => state.tab);
 
-  const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
+  // initialize unfilled loading
+  useEffect(() => {
+    if (swrUnfilledIsLoading) {
+      getUnfilledDrcPositions(swrUnfilledIsLoading);
+    }
+  }, [swrUnfilledIsLoading]);
+
+  // initialize filled loading
+  useEffect(() => {
+    if (swrFilledIsLoading) {
+      getFilledDrcPositions(swrFilledIsLoading);
+    }
+  }, [swrFilledIsLoading]);
+
+  // unfilled positions set
+  useEffect(() => {
+    if (!isEmpty(swrUnfilledPositions)) {
+      getUnfilledDrcPositionsSuccess(swrUnfilledPositions.data);
+    }
+    if (!isEmpty(swrUnfilledError)) {
+      getUnfilledDrcPositionsFail(swrUnfilledError);
+    }
+  }, [swrUnfilledError, swrUnfilledPositions]);
+
+  // filled positions set
+  useEffect(() => {
+    if (!isEmpty(swrFilledPositions)) {
+      getFilledDrcPositionsSuccess(swrFilledPositions.data);
+    }
+
+    if (!isEmpty(swrFilledError)) {
+      getFilledDrcPositionsFail(swrFilledError);
+    }
+  }, [swrFilledError, swrFilledPositions]);
 
   // set employee store
   useEffect(() => {
@@ -74,11 +148,7 @@ export default function DutiesResponsibilities({
                   <DrcTabs />
                 </div>
                 <div className="w-full">
-                  <DrcTabWindow
-                    positionId={
-                      employeeDetails.employmentDetails.assignment.positionId
-                    }
-                  />
+                  <DrcTabWindow />
                 </div>
               </div>
             </>
