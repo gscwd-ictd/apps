@@ -71,7 +71,7 @@ export default function DutiesResponsibilities({
             <>
               <div className="flex w-full">
                 <div className="w-[58rem]">
-                  <DrcTabs tab={tab} />
+                  <DrcTabs />
                 </div>
                 <div className="w-full">
                   <DrcTabWindow
