@@ -42,12 +42,12 @@ type DnrError = {
   errorExistingDnrs: string;
 };
 
-type ExistingDnrResponse = {
+type ExistingDrcResponse = {
   postResponse: DutiesResponsibilities;
   updateResponse: DutiesResponsibilities;
 };
 
-type AvailableDnrResponse = {
+type AvailableDrcResponse = {
   postResponse: Array<DutyResponsibility>;
   updateResponse: Array<DutyResponsibility>;
 };
@@ -100,6 +100,12 @@ export type DnrState = {
 
   // checked dnrs
   checkedDnrs: DutiesResponsibilities;
+
+  // position available drcs on posting
+  positionAvailableDrcsOnPosting: AvailableDrcResponse;
+
+  // position existing drcs on posting
+  positionExistingDrcsOnPosting: ExistingDrcResponse;
 
   // add checked dnrs to selected dnrs
   addCheckedToSelectedDnrs: () => void;
@@ -160,13 +166,13 @@ export type DnrState = {
   getExistingDnrsFail: (error: string) => void;
 
   // post existing dnrs success
-  postExistingDnrs: () => void;
+  postDrcs: () => void;
 
   //post existing dnrs success
-  postExistingDnrsSuccess: (response: DutiesResponsibilities) => void;
+  postDrcsSuccess: (response: DutiesResponsibilities) => void;
 
   // post existing dnrs fail
-  postExistingDnrsFail: (error: string) => void;
+  postDrcsFail: (error: string) => void;
 };
 
 export const useDnrStore = create<DnrState>()(
@@ -185,6 +191,12 @@ export const useDnrStore = create<DnrState>()(
     selectedDrcType: null,
     filteredDnrValue: '',
     checkedDnrs: DUTIES_RESPONSIBILITIES,
+    positionAvailableDrcsOnPosting: { postResponse: [], updateResponse: [] },
+
+    positionExistingDrcsOnPosting: {
+      postResponse: DUTIES_RESPONSIBILITIES,
+      updateResponse: DUTIES_RESPONSIBILITIES,
+    },
     setCheckedDnrs: (checkedDnrs: DutiesResponsibilities) =>
       set((state) => ({ ...state, checkedDnrs })),
 
@@ -320,21 +332,24 @@ export const useDnrStore = create<DnrState>()(
       }));
     },
 
-    postExistingDnrs: () =>
+    postDrcs: () =>
       set((state) => ({
         ...state,
         loading: { ...state.loading, loadingExistingDnrs: true },
         error: { ...state.error, errorExistingDnrs: '' },
       })),
 
-    postExistingDnrsSuccess: (response: DutiesResponsibilities) =>
+    postDrcsSuccess: (response: DutiesResponsibilities) =>
       set((state) => ({
         ...state,
-
-        selectedDnrs: response,
+        positionExistingDrcsOnPosting: {
+          ...state.positionExistingDrcsOnPosting,
+          postResponse: response,
+        },
+        loading: { ...state.loading, loadingExistingDnrs: false },
       })),
 
-    postExistingDnrsFail: (error: string) =>
+    postDrcsFail: (error: string) =>
       set((state) => ({
         ...state,
         loading: { ...state.loading, loadingExistingDnrs: false },

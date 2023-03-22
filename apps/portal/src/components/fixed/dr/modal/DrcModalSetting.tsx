@@ -48,6 +48,8 @@ export const DrcModalSetting = () => {
     getExistingDnrsFail,
     setSelectedDnrs, // set the selected dnrs
     setSelectedDrcType, // set the selected drc type
+    postDrcResponse,
+    selectedDnrsOnLoad,
   } = useDnrStore((state) => ({
     originalPoolOfDnrs: state.originalPoolOfDnrs,
     availableDnrs: state.availableDnrs,
@@ -68,6 +70,7 @@ export const DrcModalSetting = () => {
     getExistingDnrs: state.getExistingDnrs,
     getExistingDnrsSuccess: state.getExistingDnrsSuccess,
     getExistingDnrsFail: state.getExistingDnrsFail,
+    postDrcResponse: state.positionExistingDrcsOnPosting.postResponse,
   }));
 
   // get from modal store
@@ -267,11 +270,11 @@ export const DrcModalSetting = () => {
 
   // mutate if response is changed
   useEffect(() => {
-    if (!isEmpty(postResponse)) {
+    if (postDrcResponse) {
       mutateAvailableDnrs();
       mutateExistingDnrs();
     }
-  }, [postResponse]);
+  }, [postDrcResponse]);
 
   // set the default values
   useEffect(() => {
