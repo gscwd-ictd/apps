@@ -11,6 +11,8 @@ type PositionResponse = {
 type PositionLoading = {
   loadingPosition: boolean;
   loadingPositions: boolean;
+  loadingUnfilledPositions: boolean;
+  loadingFilledPositions: boolean;
 };
 
 type PositionError = {
@@ -72,7 +74,12 @@ export const usePositionStore = create<PositionState>()(
 
     tab: 1,
 
-    loading: { loadingPosition: false, loadingPositions: false },
+    loading: {
+      loadingPosition: false,
+      loadingPositions: false,
+      loadingFilledPositions: false,
+      loadingUnfilledPositions: false,
+    },
 
     error: { errorPosition: '', errorPositions: '' },
 
@@ -141,7 +148,7 @@ export const usePositionStore = create<PositionState>()(
       set((state) => ({
         ...state,
         unfilledPositions: [],
-        loading: { ...state.loading, loadingPositions: loading },
+        loading: { ...state.loading, loadingUnfilledPositions: loading },
         error: { ...state.error, errorPositions: '' },
       })),
 
@@ -149,13 +156,13 @@ export const usePositionStore = create<PositionState>()(
       set((state) => ({
         ...state,
         unfilledPositions: response,
-        loading: { ...state.loading, loadingPositions: false },
+        loading: { ...state.loading, loadingUnfilledPositions: false },
       })),
 
     getUnfilledDrcPositionsFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingPositions: false },
+        loading: { ...state.loading, loadingUnfilledPositions: false },
         error: { ...state.error, errorPositions: error },
       })),
 
@@ -163,7 +170,7 @@ export const usePositionStore = create<PositionState>()(
       set((state) => ({
         ...state,
         filledPositions: [],
-        loading: { ...state.loading, loadingPositions: loading },
+        loading: { ...state.loading, loadingFilledPositions: loading },
         error: { ...state.error, errorPositions: '' },
       })),
 
@@ -171,13 +178,13 @@ export const usePositionStore = create<PositionState>()(
       set((state) => ({
         ...state,
         filledPositions: response,
-        loading: { ...state.loading, loadingPositions: false },
+        loading: { ...state.loading, loadingFilledPositions: false },
       })),
 
     getFilledDrcPositionsFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingPositions: false },
+        loading: { ...state.loading, loadingFilledPositions: false },
         error: { ...state.error, errorPositions: error },
       })),
 
