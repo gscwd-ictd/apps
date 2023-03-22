@@ -3,6 +3,7 @@ import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { isEmpty } from 'lodash';
+import { useEffect } from 'react';
 import { HiCheck, HiOutlineCheckCircle } from 'react-icons/hi';
 import { TabHeader } from '../../tab/TabHeader';
 
@@ -25,6 +26,10 @@ export const DrcTabs = () => {
     loadingUnfilledPositions: state.loading.loadingUnfilledPositions,
     loadingFilledPositions: state.loading.loadingFilledPositions,
   }));
+
+  useEffect(() => {
+    console.log(filledPositions);
+  }, [filledPositions]);
 
   return (
     <>
@@ -61,7 +66,7 @@ export const DrcTabs = () => {
               icon={<HiCheck size={26} />}
               subtitle="Show all filled positions with DRCs"
               notificationCount={
-                isEmpty(filledPositions) ? filledPositions.length : 0
+                !isEmpty(filledPositions) ? filledPositions.length : 0
               }
               className="bg-gray-500"
             />
