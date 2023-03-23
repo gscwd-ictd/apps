@@ -171,7 +171,7 @@ export const QuestionsPdf = ({
             styles.w45,
             styles.borderRight,
             styles.inputAnswers,
-            { textAlign: 'center', fontSize: 8 },
+            { textAlign: 'center', fontSize: 6.5 },
           ]}
         >
           <Text style={{ textTransform: 'capitalize' }}>
@@ -215,7 +215,7 @@ export const QuestionsPdf = ({
               styles.w30,
               styles.borderRight,
               styles.inputAnswers,
-              { textAlign: 'center', fontSize: 8 },
+              { textAlign: 'center', fontSize: 6.5 },
             ]}
           >
             <Text>N/A</Text>
@@ -355,7 +355,7 @@ export const QuestionsPdf = ({
           {/* details */}
           <View style={[styles.inputAnswers]}>
             <Text>If YES, give details:</Text>
-            <Text style={[styles.detailsField]}>
+            <Text style={[styles.detailsField, { fontSize: 7 }]}>
               {officeRelation.details || 'N/A'}
             </Text>
           </View>
@@ -440,7 +440,7 @@ export const QuestionsPdf = ({
             {/* details */}
             <View style={[styles.inputAnswers]}>
               <Text>If YES, give details:</Text>
-              <Text style={[styles.detailsField]}>
+              <Text style={[styles.detailsField, { fontSize: 7 }]}>
                 {guiltyCharged.guiltyDetails || 'N/A'}
               </Text>
             </View>
@@ -591,7 +591,7 @@ export const QuestionsPdf = ({
           {/* details */}
           <View style={[styles.inputAnswers]}>
             <Text>If YES, give details:</Text>
-            <Text style={[styles.detailsField]}>
+            <Text style={[styles.detailsField, { fontSize: 7 }]}>
               {convicted.details || 'N/A'}
             </Text>
           </View>
@@ -673,7 +673,7 @@ export const QuestionsPdf = ({
           {/* details */}
           <View style={[styles.inputAnswers]}>
             <Text>If YES, give details:</Text>
-            <Text style={[styles.detailsField]}>
+            <Text style={[styles.detailsField, { fontSize: 7 }]}>
               {separatedService.details || 'N/A'}
             </Text>
           </View>
@@ -758,7 +758,7 @@ export const QuestionsPdf = ({
           {/* a. details */}
           <View style={[styles.inputAnswers, styles.rowContainer]}>
             <Text style={{ width: '30%' }}>If YES, give details:</Text>
-            <Text style={[styles.detailsField, { width: '70%' }]}>
+            <Text style={[styles.detailsField, { width: '70%', fontSize: 7 }]}>
               {candidateResigned.candidateDetails || 'N/A'}
             </Text>
           </View>
@@ -812,7 +812,7 @@ export const QuestionsPdf = ({
           {/* b. details */}
           <View style={[styles.inputAnswers, styles.rowContainer]}>
             <Text style={{ width: '30%' }}>If YES, give details:</Text>
-            <Text style={[styles.detailsField, { width: '70%' }]}>
+            <Text style={[styles.detailsField, { width: '70%', fontSize: 7 }]}>
               {candidateResigned.resignedDetails || 'N/A'}
             </Text>
           </View>

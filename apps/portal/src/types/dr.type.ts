@@ -8,7 +8,7 @@ export type DutyResponsibility = {
   odrId: string;
   ogdrId?: string;
   percentage?: number;
-  competency: Competency;
+  competency?: Competency;
   pcplId?: string;
   state?: boolean;
   sequenceNo?: number | undefined;
@@ -86,7 +86,9 @@ export type PositionDR = StandardModalState & {
   tempPercentageDRs: Array<DutyResponsibility>;
   setTempPercentageDRs: Dispatch<SetStateAction<Array<DutyResponsibility>>>;
   btnType: 'button' | 'submit' | 'reset' | undefined;
-  setBtnType: Dispatch<SetStateAction<'button' | 'submit' | 'reset' | undefined>>;
+  setBtnType: Dispatch<
+    SetStateAction<'button' | 'submit' | 'reset' | undefined>
+  >;
   DRCIsLoaded: boolean;
   setDRCIsLoaded: Dispatch<SetStateAction<boolean>>;
   drcdsForUpdating: UpdatedDRCD;

@@ -12,9 +12,13 @@ import { GovernmentIssuedIdAlert } from './GovernmentIssuedIdAlert';
 export const OIGovtID = (): JSX.Element => {
   // set government issued id object, employee object state to pds context
   const governmentIssuedId = usePdsStore((state) => state.governmentIssuedId);
-  const setGovernmentIssuedId = usePdsStore((state) => state.setGovernmentIssuedId);
+  const setGovernmentIssuedId = usePdsStore(
+    (state) => state.setGovernmentIssuedId
+  );
   const employee = useEmployeeStore((state) => state.employeeDetails);
-  const governmentIssuedIdOnEdit = usePdsStore((state) => state.governmentIssuedIdOnEdit);
+  const governmentIssuedIdOnEdit = usePdsStore(
+    (state) => state.governmentIssuedIdOnEdit
+  );
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const hasPds = useEmployeeStore((state) => state.hasPds);
 
@@ -37,7 +41,10 @@ export const OIGovtID = (): JSX.Element => {
 
   // assign employee id on page load
   useEffect(() => {
-    setGovernmentIssuedId({ ...governmentIssuedId, employeeId: employee.employmentDetails.userId });
+    setGovernmentIssuedId({
+      ...governmentIssuedId,
+      employeeId: employee.employmentDetails.userId,
+    });
   }, []);
 
   return (
@@ -46,13 +53,13 @@ export const OIGovtID = (): JSX.Element => {
         title={'Government Issued ID'}
         subtitle=""
         remarks={
-          <div className="flex w-full flex-col items-end justify-end">
+          <div className="flex flex-col items-end justify-end w-full">
             <GovernmentIssuedIdAlert setInitialValues={setInitialValues} />
           </div>
         }
       >
         <>
-          <div className="col-span-1 my-7 w-full">
+          <div className="w-full col-span-1 my-7">
             <SelectListRFFL
               id="govtId"
               selectList={govtIds}
@@ -63,16 +70,26 @@ export const OIGovtID = (): JSX.Element => {
               controller={{
                 ...register('govtId', {
                   value: governmentIssuedId.idNumber,
-                  onChange: (e) => setGovernmentIssuedId({ ...governmentIssuedId, issuedId: e.target.value }),
+                  onChange: (e) =>
+                    setGovernmentIssuedId({
+                      ...governmentIssuedId,
+                      issuedId: e.target.value,
+                    }),
                 }),
               }}
               isError={errors.govtId ? true : false}
               errorMessage={errors.govtId?.message}
-              muted={hasPds && governmentIssuedIdOnEdit ? false : hasPds && !governmentIssuedIdOnEdit ? true : !hasPds && false}
+              muted={
+                hasPds && governmentIssuedIdOnEdit
+                  ? false
+                  : hasPds && !governmentIssuedIdOnEdit
+                  ? true
+                  : !hasPds && false
+              }
             />
           </div>
 
-          <div className="col-span-1 mb-7 w-full">
+          <div className="w-full col-span-1 mb-7">
             <FloatingLabelInputRF
               id="govtIdNo"
               placeholder="ID Number"
@@ -82,35 +99,54 @@ export const OIGovtID = (): JSX.Element => {
               controller={{
                 ...register('govtIdNo', {
                   value: governmentIssuedId.idNumber,
-                  onChange: (e) => setGovernmentIssuedId({ ...governmentIssuedId, idNumber: e.target.value }),
+                  onChange: (e) =>
+                    setGovernmentIssuedId({
+                      ...governmentIssuedId,
+                      idNumber: e.target.value,
+                    }),
                 }),
               }}
               isError={errors.govtIdNo ? true : false}
               errorMessage={errors.govtIdNo?.message}
-              muted={hasPds && governmentIssuedIdOnEdit ? false : hasPds && !governmentIssuedIdOnEdit ? true : !hasPds && false}
+              muted={
+                hasPds && governmentIssuedIdOnEdit
+                  ? false
+                  : hasPds && !governmentIssuedIdOnEdit
+                  ? true
+                  : !hasPds && false
+              }
             />
           </div>
 
-          <div className="col-span-1 mb-7 w-full">
+          <div className="w-full col-span-1 mb-7">
             <FloatingLabelInputRF
               id="issueDate"
               value={governmentIssuedId.issueDate}
-              isRequired
               placeholder="Issued Date"
               type="date"
               controller={{
                 ...register('issueDate', {
                   value: governmentIssuedId.issueDate,
-                  onChange: (e) => setGovernmentIssuedId({ ...governmentIssuedId, issueDate: e.target.value }),
+                  onChange: (e) =>
+                    setGovernmentIssuedId({
+                      ...governmentIssuedId,
+                      issueDate: e.target.value,
+                    }),
                 }),
               }}
               isError={errors.issueDate ? true : false}
               errorMessage={errors.issueDate?.message}
-              muted={hasPds && governmentIssuedIdOnEdit ? false : hasPds && !governmentIssuedIdOnEdit ? true : !hasPds && false}
+              muted={
+                hasPds && governmentIssuedIdOnEdit
+                  ? false
+                  : hasPds && !governmentIssuedIdOnEdit
+                  ? true
+                  : !hasPds && false
+              }
             />
           </div>
 
-          <div className="col-span-1 mb-7 w-full">
+          <div className="w-full col-span-1 mb-7">
             <FloatingLabelInputRF
               id="issuePlace"
               value={governmentIssuedId.issuePlace}
@@ -120,12 +156,22 @@ export const OIGovtID = (): JSX.Element => {
               controller={{
                 ...register('issuePlace', {
                   value: governmentIssuedId.issuePlace,
-                  onChange: (e) => setGovernmentIssuedId({ ...governmentIssuedId, issuePlace: e.target.value }),
+                  onChange: (e) =>
+                    setGovernmentIssuedId({
+                      ...governmentIssuedId,
+                      issuePlace: e.target.value,
+                    }),
                 }),
               }}
               isError={errors.issuePlace ? true : false}
               errorMessage={errors.issuePlace?.message}
-              muted={hasPds && governmentIssuedIdOnEdit ? false : hasPds && !governmentIssuedIdOnEdit ? true : !hasPds && false}
+              muted={
+                hasPds && governmentIssuedIdOnEdit
+                  ? false
+                  : hasPds && !governmentIssuedIdOnEdit
+                  ? true
+                  : !hasPds && false
+              }
             />
           </div>
         </>

@@ -201,6 +201,16 @@ Font.register({
   src: '/assets/fonts/calibri-bold-italic.ttf',
 });
 
+export const chunkSubstr = (word) => {
+  const middle = Math.floor(word.length / 2);
+  const parts =
+    word.length === 1
+      ? [word]
+      : [word.substring(0, middle), word.substring(middle)];
+
+  return parts;
+};
+
 export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   const [isClient, setIsClient] = useState(false);
 
@@ -266,14 +276,28 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
         </View>
 
         {/* Name of School */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w24_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{vocation.schoolName || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Degree/Course */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w22_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{vocation.degree || 'N/A'}</Text>
           </View>
@@ -338,10 +362,17 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
         {/* Scholarship/Honors */}
         <View
-          style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          style={[
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7_45,
+            { fontSize: 6.2, padding: '4 2' },
+          ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ fontSize: 6.2 }}>{vocation.awards || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {vocation.awards || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -365,14 +396,28 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
         </View>
 
         {/* Name of School */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w24_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{college.schoolName || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Degree/Course */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w22_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{college.degree || 'N/A'}</Text>
           </View>
@@ -435,10 +480,17 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
         {/* Scholarship/Honors */}
         <View
-          style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          style={[
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7_45,
+            { fontSize: 6.2, padding: '4 2' },
+          ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ fontSize: 6.2 }}>{college.awards || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {college.awards || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -462,14 +514,28 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
         </View>
 
         {/* Name of School */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w24_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{graduate.schoolName || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Degree/Course */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w22_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{graduate.degree || 'N/A'}</Text>
           </View>
@@ -534,10 +600,17 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
         {/* Scholarship/Honors */}
         <View
-          style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          style={[
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7_45,
+            { fontSize: 6.2, padding: '4 2' },
+          ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ fontSize: 6.2 }}>{graduate.awards || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {graduate.awards || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -629,7 +702,10 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           <View
             style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
           >
-            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+            <Text
+              style={[styles.verticalCenter, { padding: '3 0' }]}
+              hyphenationCallback={(e) => chunkSubstr(e)}
+            >
               {eligibility.licenseNumber || 'N/A'}
             </Text>
           </View>
@@ -750,11 +826,11 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             styles.inputValue,
             styles.horizontalCenter,
             styles.w7,
-            { padding: 0 },
+            { fontSize: 6.2, padding: 0 },
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ fontSize: 6.2 }}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
               {experience.appointmentStatus || 'N/A'}
             </Text>
           </View>
@@ -931,11 +1007,13 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               styles.inputValue,
               styles.horizontalCenter,
               styles.w6,
-              { padding: '5.5 3' },
+              { fontSize: 5, padding: '5.5 3' },
             ]}
           >
-            <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
-              <Text style={{ fontSize: 5 }}>{training.type || 'N/A'}</Text>
+            <View style={[styles.verticalCenter]}>
+              <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+                {training.type || 'N/A'}
+              </Text>
             </View>
           </View>
 
@@ -949,7 +1027,9 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             ]}
           >
             <View style={[styles.verticalCenter]}>
-              <Text>{training.conductedBy || 'N/A'}</Text>
+              <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+                {training.conductedBy || 'N/A'}
+              </Text>
             </View>
           </View>
         </View>
@@ -2165,7 +2245,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {/* Learning and Development Extra Page */}
+            {/* Learning and Development Extra Pages */}
             {pds.learningDevelopment && pds.learningDevelopment.length > 19 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>

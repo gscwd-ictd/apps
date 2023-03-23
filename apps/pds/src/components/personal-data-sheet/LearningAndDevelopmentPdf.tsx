@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { LearningDevelopment } from '../../types/data/lnd.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -149,11 +150,13 @@ export const LearningAndDevelopmentPdf = ({
             styles.inputValue,
             styles.horizontalCenter,
             styles.w6,
-            { padding: '5.5 3' },
+            { fontSize: 5, padding: '5.5 3' },
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ fontSize: 5 }}>{training.type || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {training.type || 'N/A'}
+            </Text>
           </View>
         </View>
 
@@ -167,7 +170,9 @@ export const LearningAndDevelopmentPdf = ({
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{training.conductedBy || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {training.conductedBy || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
