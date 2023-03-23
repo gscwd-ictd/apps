@@ -14,6 +14,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
     })
   );
 
+  // remove
   const handleRemove = (positionIndexToRemove: number) => {
     if (selectedDrcType === 'core') {
       //create a copy of selected core drs
@@ -59,6 +60,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
     }
   };
 
+  // percentage on change
   const handlePercentage = (
     event: FormEvent<HTMLInputElement>,
     drPercentageIndex: number
@@ -131,6 +133,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                 </div>
 
                 <div className="flex flex-row items-center mt-5 mb-2">
+                  {/* handle competency on selection */}
                   <CompetencyDropdown index={index} />
                   <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
                     {dr.competency.pcplId
@@ -181,6 +184,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                 </div>
 
                 <div className="flex flex-row items-center mt-5 mb-2">
+                  {/* handle competency on selection */}
                   <CompetencyDropdown index={index} />
                   <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
                     {dr.competency.pcplId
