@@ -1440,7 +1440,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage6 = () => {
     const content = pds.learningDevelopment
-      .slice(162, 199)
+      .slice(199, 236)
       .map((training, index) => (
         <View
           style={[
