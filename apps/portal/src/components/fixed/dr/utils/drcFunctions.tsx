@@ -115,13 +115,14 @@ export async function AssignUpdatedDrcs(
       if (!isEmpty(coreDRC.ogdrId))
         coreList.push({
           ogdrId: coreDRC.ogdrId!,
+          pcplId: coreDRC.competency.pcplId,
           percentage: coreDRC.percentage!,
         });
       else if (isEmpty(coreDRC.ogdrId))
         corePostList.push({
           odrId: coreDRC.odrId,
           pcplId: coreDRC.competency.pcplId,
-          percentage: coreDRC.percentage!,
+          percentage: coreDRC.percentage,
         });
     });
 
@@ -129,14 +130,15 @@ export async function AssignUpdatedDrcs(
     support.map((supportDRC: DutyResponsibility) => {
       if (!isEmpty(supportDRC.ogdrId))
         supportList.push({
-          ogdrId: supportDRC.ogdrId!,
-          percentage: supportDRC.percentage!,
+          ogdrId: supportDRC.ogdrId,
+          pcplId: supportDRC.competency.pcplId,
+          percentage: supportDRC.percentage,
         });
       else if (isEmpty(supportDRC.ogdrId))
         supportPostList.push({
           odrId: supportDRC.odrId,
           pcplId: supportDRC.competency.pcplId,
-          percentage: supportDRC.percentage!,
+          percentage: supportDRC.percentage,
         });
     });
 
