@@ -8,10 +8,11 @@ const schema = yup.object().shape({
   govtIdNo: yup.string().required().trim().label('This'),
   issueDate: yup
     .string()
-    .required()
-    .test('Date', 'Please choose a valid date', (value) => {
-      return dayjs().diff(dayjs(value), 'hours') >= 0;
-    })
+    .notRequired()
+    .nullable()
+    // .test('Date', 'Please choose a valid date', (value) => {
+    //   return dayjs().diff(dayjs(value), 'hours') >= 0;
+    // })
     .label('This'),
   issuePlace: yup.string().required().trim().label('This'),
   offRelThird: yup.number().required().label('This'),

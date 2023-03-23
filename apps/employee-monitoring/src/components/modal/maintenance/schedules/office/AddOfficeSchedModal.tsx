@@ -3,16 +3,20 @@ import {
   Button,
   LoadingSpinner,
   Modal,
+  ToastNotification,
 } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import Toggle from 'apps/employee-monitoring/src/components/switch/Toggle';
+import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
-import { Categories } from 'libs/utils/src/lib/enums/category.enum';
+import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -22,16 +26,9 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
-const shiftSelection: Array<SelectOption> = [
-  { label: 'Morning', value: 'morning' },
-  { label: 'Night', value: 'night' },
-];
-
 const categorySelection: Array<SelectOption> = [
   { label: 'Regular', value: 'regular' },
   { label: 'Flexible', value: 'flexible' },
-  { label: 'Pumping Operator AM', value: 'operator-am' },
-  { label: 'Pumping Operator PM', value: 'operator-pm' },
 ];
 
 const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
@@ -39,9 +36,23 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   setModalState,
   closeModalAction,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorPostMessage, setErrorPostMessage] = useState<string>('');
-  const [responsePost, setResponsePost] = useState<object>({});
+  const {
+    SchedulePostResponse,
+    IsLoading,
+    Error,
+    PostSchedule,
+    PostScheduleFail,
+    PostScheduleSuccess,
+  } = useScheduleStore((state) => ({
+    SchedulePostResponse: state.schedule.postResponse,
+    IsLoading: state.loading.loadingSchedule,
+    Error: state.error.errorSchedule,
+
+    PostSchedule: state.postSchedule,
+    PostScheduleSuccess: state.postScheduleSuccess,
+    PostScheduleFail: state.postScheduleFail,
+  }));
+
   const [withLunch, setWithLunch] = useState<boolean>(true);
   const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
     []
@@ -57,10 +68,10 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   } = useForm<Schedule>({
     mode: 'onChange',
     defaultValues: {
-      id: '',
       scheduleType: null,
       timeIn: '',
       timeOut: '',
+      scheduleBase: ScheduleBases.OFFICE,
       withLunch: true,
       lunchIn: null,
       lunchOut: null,
@@ -70,55 +81,94 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     },
   });
 
-  const onSubmit: SubmitHandler<Schedule> = (data: Schedule) => {
+  // reset all values
+  const resetToDefaultValues = () => {
+    setSelectedRestDays([]);
+    setWithLunch(true);
+  };
+
+  // convert
+  const useRestDayArrayToNumberArray = (restDays: SelectOption[]) => {
+    const restDayNumbers = restDays.map((restDay) => {
+      return parseInt(restDay.value.toString());
+    });
+    return restDayNumbers;
+  };
+
+  const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
-    setIsLoading(true);
+    PostSchedule(true);
 
-    handlePostResult(data);
-
-    // empty the state to remove previous value
-    setErrorPostMessage('');
-
-    // empty the state to remove previous value
-    setResponsePost({});
+    handlePostResult(sched);
   };
 
   const handlePostResult = async (data: Schedule) => {
-    const { error, result } = await postEmpMonitoring('/holidays', data);
+    const { error, result } = await postEmpMonitoring('/schedule', data);
 
     if (error) {
       // request is done so set loading to false
-      setIsLoading(false);
+      PostSchedule(false);
 
       // set value for error message
-      setErrorPostMessage(result);
+      PostScheduleFail(false, result);
     } else {
       // request is done so set loading to false
-      setIsLoading(false);
+      PostSchedule(false);
 
       // set value from returned response
-      setResponsePost(result);
-      //   mutate('/holidays');
+      PostScheduleSuccess(false, result);
 
-      reset();
+      // set default values
+      resetToDefaultValues();
+
+      // call the close modal action
       closeModalAction();
     }
   };
 
+  // set it to null
   useEffect(() => {
-    register('restDays', { value: [] });
-  }, []);
+    if (isEmpty(watch('lunchIn'))) setValue('lunchIn', null);
+  }, [watch('lunchIn')]);
 
-  useEffect(() => {}, [selectedRestDays]);
+  // set it to null
+  useEffect(() => {
+    if (isEmpty(watch('lunchOut'))) setValue('lunchOut', null);
+  }, [watch('lunchOut')]);
+
+  // with lunch in/out listener
+  useEffect(() => {
+    if (withLunch) setValue('withLunch', true);
+    else if (!withLunch) setValue('withLunch', false);
+  }, [withLunch]);
+
+  // watch
+  useEffect(() => {
+    setValue('restDays', useRestDayArrayToNumberArray(selectedRestDays));
+  }, [selectedRestDays]);
+
+  // set to defaultValues during open
+  useEffect(() => {
+    reset();
+    resetToDefaultValues();
+  }, [modalState]);
 
   return (
     <>
+      {!isEmpty(Error) ? (
+        <ToastNotification toastType="error" notifMessage={Error} />
+      ) : null}
+
+      {!isEmpty(SchedulePostResponse) ? (
+        <ToastNotification toastType="success" notifMessage="Sending Request" />
+      ) : null}
+
       <Modal open={modalState} setOpen={setModalState} steady size="xl">
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">New Schedule</span>
+            <span className="text-2xl text-gray-600">New Office Schedule</span>
             <button
-              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
+              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
               onClick={closeModalAction}
             >
@@ -129,7 +179,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
         <hr />
         <Modal.Body>
           {/* Notification */}
-          {isLoading ? (
+          {IsLoading ? (
             <div className="fixed z-50 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
               <AlertNotification
                 logo={<LoadingSpinner size="xs" />}
@@ -150,10 +200,10 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   controller={{ ...register('name', { required: true }) }}
                   isError={errors.name ? true : false}
                   errorMessage={errors.name?.message}
-                  disabled={isLoading ? true : false}
+                  disabled={IsLoading ? true : false}
                 />
 
-                {/** Shift */}
+                {/** schedule type */}
                 <SelectListRF
                   id="scheduleCategory"
                   selectList={categorySelection}
@@ -161,7 +211,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                     ...register('scheduleType', { required: true }),
                   }}
                   label="Category"
-                  disabled={isLoading ? true : false}
+                  disabled={IsLoading ? true : false}
                 />
 
                 {/** Time in */}
@@ -172,7 +222,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   controller={{ ...register('timeIn', { required: true }) }}
                   isError={errors.timeIn ? true : false}
                   errorMessage={errors.timeIn?.message}
-                  disabled={isLoading ? true : false}
+                  disabled={IsLoading ? true : false}
                 />
 
                 {/** Time Out */}
@@ -183,7 +233,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   controller={{ ...register('timeOut', { required: true }) }}
                   isError={errors.timeOut ? true : false}
                   errorMessage={errors.timeOut?.message}
-                  disabled={isLoading ? true : false}
+                  disabled={IsLoading ? true : false}
                 />
 
                 {/** With Lunch */}
@@ -193,7 +243,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                     enabled={withLunch}
                     setEnabled={setWithLunch}
                     label={'With Lunch In & Out:'}
-                    disabled={isLoading ? true : false}
+                    disabled={IsLoading ? true : false}
                   />
                   <div
                     className={`text-xs ${
@@ -205,7 +255,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                         onClick={() => setWithLunch((prev) => !prev)}
                         className="underline"
                         type="button"
-                        disabled={isLoading ? true : false}
+                        disabled={IsLoading ? true : false}
                       >
                         <span>Yes</span>
                       </button>
@@ -214,7 +264,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                         onClick={() => setWithLunch((prev) => !prev)}
                         className="underline"
                         type="button"
-                        disabled={isLoading ? true : false}
+                        disabled={IsLoading ? true : false}
                       >
                         <span>No</span>
                       </button>
@@ -231,7 +281,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                     controller={{ ...register('lunchIn') }}
                     isError={errors.lunchIn ? true : false}
                     errorMessage={errors.lunchIn?.message}
-                    disabled={isLoading ? true : false}
+                    disabled={IsLoading ? true : false}
                   />
                 ) : null}
 
@@ -244,9 +294,20 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                     controller={{ ...register('lunchOut') }}
                     isError={errors.lunchOut ? true : false}
                     errorMessage={errors.lunchOut?.message}
-                    disabled={isLoading ? true : false}
+                    disabled={IsLoading ? true : false}
                   />
                 ) : null}
+
+                {/** Shift  */}
+                <SelectListRF
+                  id="scheduleShift"
+                  selectList={listOfShifts}
+                  controller={{
+                    ...register('shift', { required: true }),
+                  }}
+                  label="Shift"
+                  disabled={IsLoading ? true : false}
+                />
 
                 {/** Rest Day */}
                 <div className="flex flex-col w-full min-h-[2.25rem]">
@@ -257,7 +318,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                     options={listOfRestDays}
                     onChange={(o) => setSelectedRestDays(o)}
                     value={selectedRestDays}
-                    disabled={isLoading ? true : false}
+                    disabled={IsLoading ? true : false}
                   />
                 </div>
               </div>
@@ -271,7 +332,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
               type="submit"
               form="addoffmodal"
               className="disabled:cursor-not-allowed"
-              disabled={isLoading ? true : false}
+              disabled={IsLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>

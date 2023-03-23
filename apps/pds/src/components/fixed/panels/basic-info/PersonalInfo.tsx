@@ -240,7 +240,7 @@ export const PersonalInfoBI = (): JSX.Element => {
               <FloatingLabelInputRF
                 id="birthDate"
                 className="hover:peer-placeholder-shown:cursor-pointer"
-                placeholder="Date of Birth (MM/DD/YYYY)"
+                placeholder="Date of Birth"
                 isRequired
                 defaultValue={
                   personalInfo.birthDate ? personalInfo.birthDate : ''

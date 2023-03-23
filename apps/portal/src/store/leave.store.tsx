@@ -1,90 +1,249 @@
 import { create } from 'zustand';
-import { AlertState } from '../types/alert.type';
-import { LeaveApplication } from '../types/leave.type';
-import { ErrorState, ModalState } from '../types/modal.type';
+import {
+  Leave,
+  LeaveContents,
+  LeaveId,
+  LeaveList,
+  LeaveType,
+} from '../types/leave.type';
+import { devtools } from 'zustand/middleware';
 
 export type LeavesState = {
-  alert: AlertState;
-  setAlert: (alert: AlertState) => void;
-  modal: ModalState;
-  setModal: (modal: ModalState) => void;
-  action: string;
-  setAction: (value: string) => void;
-  error: ErrorState;
-  setError: (error: ErrorState) => void;
-  selectedLeaveId: string;
-  setSelectedLeaveId: (value: string) => void;
-  selectedLeave: LeaveApplication;
-  setSelectedLeave: (Leaves: LeaveApplication) => void;
-  leaveList: Array<LeaveApplication>;
-  setLeaveList: (Leaves: Array<LeaveApplication>) => void;
+  leaves: {
+    onGoing: Array<Leave>;
+    completed: Array<Leave>;
+  };
+  response: {
+    postResponseApply: LeaveContents;
+    deleteResponseCancel: LeaveId;
+  };
+  loading: {
+    loadingLeaves: boolean;
+    loadingLeaveTypes: boolean;
+    loadingResponse: boolean;
+  };
+  error: {
+    errorLeaves: string;
+    errorLeaveTypes: string;
+    errorResponse: string;
+  };
+  leaveTypes: Array<LeaveType>;
 
-  pendingIsLoaded: boolean;
-  setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
-  fulfilledIsLoaded: boolean;
-  setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => void;
-  isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
-  pendingLeaveList: Array<LeaveApplication>;
-  setPendingLeaveList: (pendingLeaveList: Array<LeaveApplication>) => void;
-  fulfilledLeaveList: Array<LeaveApplication>;
-  setFulfilledLeaveList: (fulfilledLeaveList: Array<LeaveApplication>) => void;
+  leaveIndividual: LeaveContents;
+  applyLeaveModalIsOpen: boolean;
+  pendingLeaveModalIsOpen: boolean;
+  completedLeaveModalIsOpen: boolean;
   tab: number;
+  isGetLeaveLoading: boolean;
+
+  getLeaveList: (loading: boolean) => void;
+  getLeaveListSuccess: (loading: boolean, response) => void;
+  getLeaveListFail: (loading: boolean, error: string) => void;
+
+  postLeave: () => void;
+  postLeaveSuccess: (response: LeaveContents) => void;
+  postLeaveFail: (error: string) => void;
+
+  getLeaveTypes: (loading: boolean) => void;
+  getLeaveTypesSuccess: (loading: boolean, response) => void;
+  getLeaveTypesFail: (loading: boolean, error: string) => void;
+
+  setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
+  setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
+  setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => void;
+
+  getLeaveIndividual: (leaveIndividual: LeaveContents) => void;
+  setIsGetLeaveLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
 };
 
-export const useLeaveStore = create<LeavesState>((set) => ({
-  alert: { isOpen: false, page: 1 },
-  modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
-  action: '',
-  error: { isError: false, errorMessage: '' },
-  selectedLeaveId: '',
-  selectedLeave: {} as LeaveApplication,
-  leaveList: [],
-  pendingIsLoaded: false,
-  fulfilledIsLoaded: false,
-  isLoading: false,
-  pendingLeaveList: [],
-  fulfilledLeaveList: [],
-  tab: 1,
-  setAlert: (alert: AlertState) => {
-    set((state) => ({ ...state, alert }));
-  },
-  setModal: (modal: ModalState) => {
-    set((state) => ({ ...state, modal }));
-  },
-  setAction: (action: string) => {
-    set((state) => ({ ...state, action }));
-  },
-  setError: (error: ErrorState) => {
-    set((state) => ({ ...state, error }));
-  },
-  setSelectedLeaveId: (selectedLeaveId: string) => {
-    set((state) => ({ ...state, selectedLeaveId }));
-  },
-  setSelectedLeave: (selectedLeave: LeaveApplication) => {
-    set((state) => ({ ...state, selectedLeave }));
-  },
+export const useLeaveStore = create<LeavesState>()(
+  devtools((set) => ({
+    leaves: {
+      onGoing: [],
+      completed: [],
+    },
+    response: {
+      postResponseApply: {} as LeaveContents,
+      deleteResponseCancel: {} as LeaveId,
+    },
+    loading: {
+      loadingLeaves: false,
+      loadingLeaveTypes: false,
+      loadingResponse: false,
+    },
+    error: {
+      errorLeaves: '',
+      errorLeaveTypes: '',
+      errorResponse: '',
+    },
+    leaveTypes: [] as Array<LeaveType>,
 
-  setLeaveList: (leaveList: Array<LeaveApplication>) => {
-    set((state) => ({ ...state, leaveList }));
-  },
-  setPendingIsLoaded: (pendingIsLoaded: boolean) => {
-    set((state) => ({ ...state, pendingIsLoaded }));
-  },
-  setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => {
-    set((state) => ({ ...state, fulfilledIsLoaded }));
-  },
-  setIsLoading: (isLoading: boolean) => {
-    set((state) => ({ ...state, isLoading }));
-  },
-  setPendingLeaveList: (pendingLeaveList: Array<LeaveApplication>) => {
-    set((state) => ({ ...state, pendingLeaveList }));
-  },
-  setFulfilledLeaveList: (fulfilledLeaveList: Array<LeaveApplication>) => {
-    set((state) => ({ ...state, fulfilledLeaveList }));
-  },
-  setTab: (tab: number) => {
-    set((state) => ({ ...state, tab }));
-  },
-}));
+    leaveIndividual: {} as LeaveContents,
+
+    //APPLY LEAVE MODAL
+    applyLeaveModalIsOpen: false,
+    pendingLeaveModalIsOpen: false,
+    completedLeaveModalIsOpen: false,
+
+    isGetLeaveLoading: true,
+    tab: 1,
+
+    setIsGetLeaveLoading: (isGetLeaveLoading: boolean) => {
+      set((state) => ({ ...state, isGetLeaveLoading }));
+    },
+
+    setTab: (tab: number) => {
+      set((state) => ({ ...state, tab }));
+    },
+
+    setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, applyLeaveModalIsOpen }));
+    },
+
+    setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, pendingLeaveModalIsOpen }));
+    },
+
+    setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, completedLeaveModalIsOpen }));
+    },
+
+    getLeaveIndividual: (leaveIndividual: LeaveContents) => {
+      set((state) => ({ ...state, leaveIndividual }));
+    },
+
+    //GET LEAVE ACTIONS
+    getLeaveList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaves: {
+          ...state.leaves,
+          onGoing: [],
+          completed: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaves: '',
+        },
+      }));
+    },
+    getLeaveListSuccess: (loading: boolean, response: Leave) => {
+      set((state) => ({
+        ...state,
+        leaves: {
+          ...state.leaves,
+          onGoing: response.ongoing,
+          completed: response.completed,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+      }));
+    },
+    getLeaveListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaves: error,
+        },
+      }));
+    },
+
+    //POST LEAVE ACTIONS
+    postLeave: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: {} as LeaveContents,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    postLeaveSuccess: (response: LeaveContents) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    postLeaveFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
+    //GET LEAVE TYPE ACTIONS
+    getLeaveTypes: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveTypes: {
+          ...state.leaveTypes,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaveTypes: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveTypes: '',
+        },
+      }));
+    },
+    getLeaveTypesSuccess: (loading: boolean, response: Array<LeaveType>) => {
+      set((state) => ({
+        ...state,
+        leaveTypes: response,
+        loading: {
+          ...state.loading,
+          loadingLeaveTypes: loading,
+        },
+      }));
+    },
+    getLeaveTypesFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingLeaveTypes: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveTypes: error,
+        },
+      }));
+    },
+  }))
+);

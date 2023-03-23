@@ -1,31 +1,68 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 import { create } from 'zustand';
-import { ErrorState, ModalState } from '../types/modal.type';
+import { devtools } from 'zustand/middleware';
 
-export type CreateModalState = {
-  modal: ModalState;
-  setModal: () => void;
-  action: string;
-  setAction: (action: string) => void;
-  tab: number;
-  setTab: (tab: number) => void;
-  error: ErrorState;
-  setError: (error: ErrorState) => void;
+export enum Actions {
+  CREATE = 'create',
+  UPDATE = 'update',
+}
+
+type ModalState = {
+  isOpen: boolean;
+  page: number;
 };
 
-export const useModalStore = create<CreateModalState>((set) => ({
-  modal: { isOpen: false, page: 1, subtitle: '', title: '' },
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setModal: () => {},
-  action: '',
-  setAction: (action: string) => {
-    set((state) => ({ ...state, action }));
-  },
-  tab: 1,
-  setTab: (tab: number) => {
-    set((state) => ({ ...state, tab }));
-  },
-  error: {} as ErrorState,
-  setError: (error: ErrorState) => {
-    set((state) => ({ ...state, error }));
-  },
-}));
+export type ModalStoreState = {
+  modal: ModalState;
+  setModal: (modal: ModalState) => void;
+  modalAction: Actions | null;
+  setModalAction: (action: Actions) => void;
+  action: Actions | null;
+  setAction: (action: Actions) => void;
+
+  nextPage: () => void;
+  prevPage: () => void;
+
+  openModal: () => void;
+  closeModal: () => void;
+  setModalPage: (page: number) => void;
+};
+
+export const useModalStore = create<ModalStoreState>()(
+  devtools((set, get) => ({
+    modal: { isOpen: false, page: 1 },
+    setModal: (modal: ModalState) => set((state) => ({ ...state, modal })),
+    modalAction: null,
+    setModalAction: (action: Actions) => {
+      set((state) => ({ ...state, action }));
+    },
+    openModal: () =>
+      set((state) => ({ ...state, modal: { isOpen: true, page: 1 } })),
+
+    closeModal: () =>
+      set((state) => ({ ...state, modal: { isOpen: false, page: 1 } })),
+
+    setModalPage: (page: number) =>
+      set((state) => ({ ...state, modal: { ...state.modal, page } })),
+
+    nextPage: () =>
+      set((state) => ({
+        ...state,
+        modal: { ...state.modal, page: get().modal.page + 1 },
+      })),
+
+    action: null,
+
+    setAction: (action: Actions) => set((state) => ({ ...state, action })),
+
+    prevPage: () =>
+      set((state) => ({
+        ...state,
+        modal: {
+          ...state.modal,
+          page: get().modal.page > 1 ? get().modal.page - 1 : get().modal.page,
+        },
+      })),
+  }))
+);

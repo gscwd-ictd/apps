@@ -31,7 +31,7 @@ export const TabHeader: FC<TabHeaderProps> = ({
         onClick={onClick}
         className={`${
           tab === tabIndex && 'bg-slate-200'
-        } border-b border-gray-200 cursor-pointer rounded-xl rounded-tr-none rounded-bl-none pt-1 hover:drop-shadow-lg  transition-all ease-in-out hover:scale-105 h-[5rem] bg-white items-center flex justify-start mr-6`}
+        } border-b border-gray-200 cursor-pointer rounded-xl rounded-tr-none rounded-bl-none pt-1 hover:drop-shadow-lg  transition-all ease-in-out hover:scale-105 h-[5rem]  items-center flex justify-start mr-6`}
         rel="noreferrer"
       >
         <div
@@ -42,16 +42,16 @@ export const TabHeader: FC<TabHeaderProps> = ({
           {icon}
         </div>
         <div className="flex flex-col w-[80%]">
-          <p className="text-xl  font-normal transition-colors ease-in-out select-none text-black">
+          <p className="text-xl font-normal text-black transition-colors ease-in-out select-none">
             {title}
           </p>
-          <p className="text-sm  font-normal transition-colors ease-in-out select-none ">
+          <p className="text-sm font-normal transition-colors ease-in-out select-none ">
             {subtitle}
           </p>
         </div>
         <div className="w-[10%] px-4">
           <div
-            className={`rounded-md min-w-[1.2rem] max-w-full flex ${className} ${
+            className={`rounded-md min-w-[1.5rem] max-w-full flex ${className} ${
               notificationCount === 0 ? 'invisible' : 'visible'
             } select-none flex-grow-0 text-white justify-center text-sm`}
           >
