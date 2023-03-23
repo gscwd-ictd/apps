@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { Eligibility } from '../../types/data/eligibility.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -167,7 +168,10 @@ export const EligibilityPdf = ({
           <View
             style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
           >
-            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+            <Text
+              style={[styles.verticalCenter, { padding: '3 0' }]}
+              hyphenationCallback={(e) => chunkSubstr(e)}
+            >
               {eligibility.licenseNumber || 'N/A'}
             </Text>
           </View>
