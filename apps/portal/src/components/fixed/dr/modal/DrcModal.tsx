@@ -101,36 +101,19 @@ const DrcModal: FunctionComponent = () => {
   // validate confirm action button
   const validateConfirmActionBtn = () => {
     if (
-      modal.page === 2 &&
-      (DrcChecker(selectedDnrs).noPercentageCounter > 0 ||
-        DrcChecker(selectedDnrs).onEditCounter > 0 ||
-        (selectedDnrs.core.length === 0 && selectedDnrs.support.length === 0) ||
-        (selectedDnrs.core.length > 0 &&
-          (DrcChecker(selectedDnrs).coreTotal < 100 ||
-            DrcChecker(selectedDnrs).coreTotal > 100)) ||
-        DrcChecker(selectedDnrs).noCompetencyCounter > 0 ||
-        (selectedDnrs.support.length > 0 &&
-          (DrcChecker(selectedDnrs).supportTotal < 100 ||
-            DrcChecker(selectedDnrs).supportTotal > 100)) ||
-        isEqual(selectedDnrs, selectedDnrsOnLoad) === true)
-    )
-      return true;
-    else if (
-      modal.page === 3 &&
-      selectedDrcType === 'core' &&
-      (checkedDnrs.core.length === 0 ||
-        (checkedDnrs.core.length > 0 &&
-          CompetencyChecker(checkedDnrs, selectedDrcType)
-            .noCoreCompetencyCounter > 0))
-    )
-      return true;
-    else if (
-      modal.page === 3 &&
-      selectedDrcType === 'support' &&
-      (checkedDnrs.support.length === 0 ||
-        (checkedDnrs.support.length > 0 &&
-          CompetencyChecker(checkedDnrs, selectedDrcType)
-            .noSupportCompetencyCounter > 0))
+      (modal.page === 2 &&
+        (DrcChecker(selectedDnrs).noPercentageCounter > 0 ||
+          DrcChecker(selectedDnrs).onEditCounter > 0 ||
+          (selectedDnrs.core.length === 0 &&
+            selectedDnrs.support.length === 0) ||
+          (selectedDnrs.core.length > 0 &&
+            (DrcChecker(selectedDnrs).coreTotal < 100 ||
+              DrcChecker(selectedDnrs).coreTotal > 100)) ||
+          (selectedDnrs.support.length > 0 &&
+            (DrcChecker(selectedDnrs).supportTotal < 100 ||
+              DrcChecker(selectedDnrs).supportTotal > 100)))) ||
+      DrcChecker(selectedDnrs).noCompetencyCounter > 0 ||
+      isEqual(selectedDnrs, selectedDnrsOnLoad) === true
     )
       return true;
     else return false;
