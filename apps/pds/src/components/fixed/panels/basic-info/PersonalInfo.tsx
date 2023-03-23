@@ -352,7 +352,13 @@ export const PersonalInfoBI = (): JSX.Element => {
                 }}
                 isError={errors.civilStatus ? true : false}
                 errorMessage={errors.civilStatus?.message}
-                muted={hasPds ? true : false}
+                muted={
+                  hasPds && personalInfoOnEdit
+                    ? false
+                    : hasPds && !personalInfoOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
 
@@ -432,7 +438,13 @@ export const PersonalInfoBI = (): JSX.Element => {
                 selectList={bloodType}
                 variant="light"
                 defaultOption="Blood Type"
-                muted={hasPds ? true : false}
+                muted={
+                  hasPds && personalInfoOnEdit
+                    ? false
+                    : hasPds && !personalInfoOnEdit
+                    ? true
+                    : !hasPds && false
+                }
                 controller={{
                   ...register('bloodType', {
                     value: personalInfo.bloodType,
