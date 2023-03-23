@@ -135,7 +135,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                 <div className="flex flex-row items-center mt-5 mb-2">
                   {/* handle competency on selection */}
                   <CompetencyDropdown index={index} />
-                  <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
+                  <label className="w-full p-2 truncate border border-gray-200 rounded-r outline-none work">
                     {dr.competency.pcplId
                       ? `${dr.competency.code} | ${dr.competency.name} | ${dr.competency.level}`
                       : 'No competency selected...'}
@@ -186,9 +186,9 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                 <div className="flex flex-row items-center mt-5 mb-2">
                   {/* handle competency on selection */}
                   <CompetencyDropdown index={index} />
-                  <label className="w-full p-2 border border-gray-200 rounded-r outline-none">
+                  <label className="w-full p-2 truncate border border-gray-200 rounded-r outline-none">
                     {dr.competency.pcplId
-                      ? dr.competency.code
+                      ? `${dr.competency.code} | ${dr.competency.name} | ${dr.competency.level}`
                       : 'Add Competency...'}
                   </label>
                 </div>
@@ -196,8 +196,8 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                 <div className="flex items-center mt-5 mb-2">
                   <input
                     type="number"
-                    minLength={0}
-                    maxLength={100}
+                    min={0}
+                    max={100}
                     onChange={(event) => handlePercentage(event, index)}
                     className="w-full py-2 border border-gray-200 rounded "
                     value={dr.percentage ? dr.percentage : ''}
