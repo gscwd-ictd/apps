@@ -5,7 +5,6 @@ import {
   Recognition,
   Organization,
 } from '../../types/data/other-info.type';
-import { constant } from 'lodash';
 
 const styles = StyleSheet.create({
   lineContainer: {

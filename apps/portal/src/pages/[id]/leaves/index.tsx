@@ -18,7 +18,6 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
 import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
-import { LeavesModalController } from '../../../components/fixed/leaves/LeavesListController';
 import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
@@ -107,9 +106,10 @@ export default function Leaves({
     data: swrLeaves,
     isLoading: swrIsLoading,
     error: swrError,
+    mutate: mutateLeaves,
   } = useSWR(leaveUrl, fetchWithToken, {
     shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   // Initial zustand state update
@@ -123,12 +123,19 @@ export default function Leaves({
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
       getLeaveListSuccess(swrIsLoading, swrLeaves);
+      console.log(swrLeaves);
     }
 
     if (!isEmpty(swrError)) {
       getLeaveListFail(swrIsLoading, swrError.message);
     }
   }, [swrLeaves, swrError]);
+
+  useEffect(() => {
+    if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
+      mutateLeaves();
+    }
+  }, [responseApply, responseCancel]);
 
   return (
     <>

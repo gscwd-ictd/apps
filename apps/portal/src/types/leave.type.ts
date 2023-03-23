@@ -1,27 +1,22 @@
 export type LeaveContents = {
-  id: string;
-  office: string;
-  name: string;
+  employeeId: string;
   dateOfFiling: string | null;
-  position: string;
-  salary: string;
-  typeOfLeave: string;
-  leaveId: string;
-  detailsOfLeave: {
-    inPhilippinesOrAbroad: string; //withinThePhilippines or abroad
-    location: string;
-    hospital: string; //inHospital or outPatient
-    illness: string | null;
-    specialLeaveWomenIllness: string | null;
-    study: string; //mastersDegree, BAR, or Other
-    studyPurpose: string | null; //applicable for Study Other only
-    other: string | null; //monetization, terminal leave
-  };
-  numberOfWorkingDays: string;
-  commutation: string | null;
+  typeOfLeaveDetails: LeaveType;
+  leaveApplicationDates: Array<string>;
+
+  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
+  location?: string;
+  hospital?: string; //inHospital or outPatient
+  illness?: string | null;
+  specialLeaveWomenIllness?: string | null;
+  study?: string; //mastersDegree, BAR, or Other
+  studyPurpose?: string | null; //applicable for Study Other only
+  other?: string | null; //monetization, terminal leave
+  commutation?: string | null;
+  forMonetization?: boolean;
 };
 
-export type LeaveId = Pick<LeaveContents, 'id'>;
+export type LeaveId = Pick<LeaveContents, 'employeeId'>;
 
 //for fetching leave types from useSwr
 export type LeaveType = {
@@ -45,26 +40,26 @@ export type LeaveList = {
 };
 
 export type VacationLeave = {
-  name: string;
-  withinThePhilippines: boolean;
-  abroad: boolean;
-  location: string;
+  leaveTypeId: string;
+  leaveName: string;
+  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
+  location?: string;
   workingDays: Array<string>;
 };
 
 export type ForcedLeave = {
-  name: string;
-  withinThePhilippines: boolean;
-  abroad: boolean;
-  location: string;
+  leaveTypeId: string;
+  leaveName: string;
+  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
+  location?: string;
   workingDays: Array<string>;
 };
 
 export type SickLeave = {
-  name: string;
-  inHospital: boolean;
-  outPatient: boolean;
-  illness: string;
+  leaveTypeId: string;
+  leaveName: string;
+  hospital?: string; //inHospital / Out patient
+  illness?: string;
   workingDays: Array<string>;
 };
 

@@ -8,8 +8,9 @@ type LeavesTabsProps = {
 
 export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
   //zustand initialization to access leave store
-  const { leaves, setTab } = useLeaveStore((state) => ({
-    leaves: state.leaves,
+  const { leavesOnGoing, leavesCompleted, setTab } = useLeaveStore((state) => ({
+    leavesOnGoing: state.leaves.onGoing,
+    leavesCompleted: state.leaves.completed,
     setTab: state.setTab,
   }));
 
@@ -27,7 +28,7 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             title="Pending Leave Application"
             icon={<HiOutlineCheckCircle size={26} />}
             subtitle="Show all pendings Leaves you applied for"
-            notificationCount={leaves.onGoing ? leaves.onGoing.length : 0}
+            notificationCount={leavesOnGoing ? leavesOnGoing.length : 0}
             className="bg-indigo-500"
           />
           <TabHeader
@@ -40,7 +41,7 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             title="Completed Leave Applications"
             icon={<HiCheck size={26} />}
             subtitle="Show all fulfilled Leave applications"
-            notificationCount={leaves.completed ? leaves.completed.length : 0}
+            notificationCount={leavesCompleted ? leavesCompleted.length : 0}
             className="bg-gray-500"
           />
         </ul>
