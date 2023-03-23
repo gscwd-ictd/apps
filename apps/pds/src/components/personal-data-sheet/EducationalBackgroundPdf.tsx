@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { isEmpty } from 'lodash';
 import { EducationInfo } from '../../types/data/education.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -73,16 +74,6 @@ Font.register({
   family: 'ArialNarrowBoldItalic',
   src: '/assets/fonts/arial-narrow-bold-italic.ttf',
 });
-
-const chunkSubstr = (word: string) => {
-  const middle = Math.floor(word.length / 2);
-  const parts =
-    word.length === 1
-      ? [word]
-      : [word.substring(0, middle), word.substring(middle)];
-
-  return parts;
-};
 
 type EducationalBackgroundPdfProps = {
   elementary: EducationInfo;
