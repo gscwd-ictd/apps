@@ -116,6 +116,23 @@ const DrcModal: FunctionComponent = () => {
       isEqual(selectedDnrs, selectedDnrsOnLoad) === true
     )
       return true;
+    else if (
+      modal.page === 3 &&
+      selectedDrcType === 'core' &&
+      (checkedDnrs.core.length === 0 ||
+        (checkedDnrs.core.length > 0 &&
+          CompetencyChecker(checkedDnrs, selectedDrcType)
+            .noCoreCompetencyCounter > 0))
+        ? true
+        : // modal page 3 support
+          modal.page === 3 &&
+          selectedDrcType === 'support' &&
+          (checkedDnrs.support.length === 0 ||
+            (checkedDnrs.support.length > 0 &&
+              CompetencyChecker(checkedDnrs, selectedDrcType)
+                .noSupportCompetencyCounter > 0))
+    )
+      return true;
     else return false;
   };
 
