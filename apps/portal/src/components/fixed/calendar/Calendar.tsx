@@ -1,4 +1,5 @@
 import { Menu, Transition } from '@headlessui/react';
+import { useLeaveStore } from '../../../../src/store/leave.store';
 
 import {
   add,
@@ -32,11 +33,17 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
 
+  //zustand initialization to access Leave store
+  const { leaveDates, setLeaveDates } = useLeaveStore((state) => ({
+    leaveDates: state.leaveDates,
+    setLeaveDates: state.setLeaveDates,
+  }));
+
   function viewDateActivities(day: Date) {
     if (clickableDate) {
       setSelectedDay(day);
       // setViewActivities(true);
-      const specifiedDate = format(day, 'MMM dd, yyy');
+      const specifiedDate = format(day, 'yyyy-MM-dd');
       //check if selected date exist in array - returns true/false
       if (selectedDates.includes(specifiedDate)) {
         //removes date
@@ -53,8 +60,9 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
   }
 
   useEffect(() => {
-    console.log(currentMonth);
-  }, [currentMonth]);
+    // console.log(selectedDates);
+    setLeaveDates(selectedDates);
+  }, [selectedDates]);
 
   const days = eachDayOfInterval({
     start: firstDayCurrentMonth,
@@ -75,7 +83,7 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
 
   return (
     <div className="relative">
-      <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6 ">
+      <div className="">
         <div className="md:grid md:grid-cols-1 md:divide-x md:divide-gray-200 ">
           <div className="w-full">
             <div className="flex items-center">
@@ -135,13 +143,13 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-900 font-semibold',
-                      isEqual(day, selectedDay) && isToday(day) && 'bg-red-500',
+                      isEqual(day, selectedDay) && isToday(day) && '',
                       isEqual(day, selectedDay) && !isToday(day) && '',
                       !isEqual(day, selectedDay) && 'hover:bg-blue-200',
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
                       'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
-                      selectedDates.includes(format(day, 'MMM dd, yyy'))
+                      selectedDates.includes(format(day, 'yyyy-MM-dd'))
                         ? 'bg-indigo-200 rounded-full text-gray-900'
                         : ''
                     )}

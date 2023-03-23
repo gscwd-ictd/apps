@@ -12,14 +12,8 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
-// import { getUserDetails, withSession } from '../../../utils/helpers/session';
-// import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR, { mutate } from 'swr';
-// import {
-//   fetchWithSession,
-//   fetchWithToken,
-// } from '../../../../src/utils/hoc/fetcher';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';

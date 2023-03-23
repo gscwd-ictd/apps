@@ -190,7 +190,7 @@ export default function ApprovalLeaveModal() {
                 Position:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.position}
+                {/* {selectedLeave.position} */}
               </div>
             </div>
             <div className={`flex flex-row gap-4`}>
@@ -198,7 +198,7 @@ export default function ApprovalLeaveModal() {
                 Salary:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.salary}
+                {/* {selectedLeave.salary} */}
               </div>
             </div>
 
@@ -208,7 +208,7 @@ export default function ApprovalLeaveModal() {
                   Office/Department:
                 </label>
                 <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                  {selectedLeave.office}
+                  {/* {selectedLeave.office} */}
                 </div>
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function ApprovalLeaveModal() {
                 Leave Type:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.typeOfLeave}
+                {/* {selectedLeave.typeOfLeave} */}
               </div>
             </div>
             <div className={`flex flex-row gap-4`}>
@@ -247,7 +247,7 @@ export default function ApprovalLeaveModal() {
                 Within Philippines:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.detailsOfLeave.location}
+                {/* {selectedLeave.detailsOfLeave.location} */}
               </div>
             </div>
             <div
@@ -261,7 +261,7 @@ export default function ApprovalLeaveModal() {
                 Abroad:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.detailsOfLeave.location}
+                {/* {selectedLeave.detailsOfLeave.location} */}
               </div>
             </div>
             <div
@@ -275,7 +275,7 @@ export default function ApprovalLeaveModal() {
                 In Hospital:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.detailsOfLeave.illness}
+                {/* {selectedLeave.detailsOfLeave.illness} */}
               </div>
             </div>
             <div
@@ -289,7 +289,7 @@ export default function ApprovalLeaveModal() {
                 Out Patient:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.detailsOfLeave.illness}
+                {/* {selectedLeave.detailsOfLeave.illness} */}
               </div>
             </div>
             <label
@@ -330,31 +330,31 @@ export default function ApprovalLeaveModal() {
             </label>
 
             <div
-              className={`${
-                selectedLeave.detailsOfLeave.other
-                  ? 'flex flex-row gap-4'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.other
+            //     ? 'flex flex-row gap-4'
+            //     : 'hidden'
+            // }`}
             >
               <label className="pt-2 text-slate-500 text-lg font-medium ">
                 Other Reason:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.detailsOfLeave.other}
+                {/* {selectedLeave.detailsOfLeave.other} */}
               </div>
             </div>
             <div
-              className={`${
-                selectedLeave.detailsOfLeave.specialLeaveWomenIllness
-                  ? 'flex flex-row gap-4'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.specialLeaveWomenIllness
+            //     ? 'flex flex-row gap-4'
+            //     : 'hidden'
+            // }`}
             >
               <label className="pt-2 text-slate-500 text-lg font-medium ">
                 Illness:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.detailsOfLeave.specialLeaveWomenIllness}
+                {/* {selectedLeave.detailsOfLeave.specialLeaveWomenIllness} */}
               </div>
             </div>
 
@@ -363,7 +363,7 @@ export default function ApprovalLeaveModal() {
                 Number of Working Days Applied For:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.numberOfWorkingDays}
+                {/* {selectedLeave.numberOfWorkingDays} */}
               </div>
             </div>
             <div className={`flex flex-row gap-4`}>

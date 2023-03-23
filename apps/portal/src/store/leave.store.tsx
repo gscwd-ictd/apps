@@ -27,6 +27,7 @@ export type LeavesState = {
     errorLeaveTypes: string;
     errorResponse: string;
   };
+  leaveDates: Array<string>;
   leaveTypes: Array<LeaveType>;
 
   leaveIndividual: LeaveContents;
@@ -35,6 +36,8 @@ export type LeavesState = {
   completedLeaveModalIsOpen: boolean;
   tab: number;
   isGetLeaveLoading: boolean;
+
+  setLeaveDates: (dates: Array<string>) => void;
 
   getLeaveList: (loading: boolean) => void;
   getLeaveListSuccess: (loading: boolean, response) => void;
@@ -77,6 +80,7 @@ export const useLeaveStore = create<LeavesState>()(
       errorLeaveTypes: '',
       errorResponse: '',
     },
+    leaveDates: [] as Array<string>,
     leaveTypes: [] as Array<LeaveType>,
 
     leaveIndividual: {} as LeaveContents,
@@ -88,6 +92,10 @@ export const useLeaveStore = create<LeavesState>()(
 
     isGetLeaveLoading: true,
     tab: 1,
+
+    setLeaveDates: (leaveDates: Array<string>) => {
+      set((state) => ({ ...state, leaveDates }));
+    },
 
     setIsGetLeaveLoading: (isGetLeaveLoading: boolean) => {
       set((state) => ({ ...state, isGetLeaveLoading }));

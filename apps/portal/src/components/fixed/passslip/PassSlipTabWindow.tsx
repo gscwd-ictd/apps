@@ -3,21 +3,22 @@ import { usePassSlipStore } from '../../../../src/store/passslip.store';
 
 export const PassSlipTabWindow = (): JSX.Element => {
   //zustand initialization to access pass slip store
-  const { tab, passSlips, loading, error } = usePassSlipStore((state) => ({
-    tab: state.tab,
-    passSlips: state.passSlips,
-    loading: state.loading.loadingPassSlips,
-    error: state.error.errorPassSlips,
-  }));
+  const { tab, passSlipsOnGoing, passSlipsCompleted } = usePassSlipStore(
+    (state) => ({
+      tab: state.tab,
+      passSlipsOnGoing: state.passSlips.onGoing,
+      passSlipsCompleted: state.passSlips.completed,
+    })
+  );
 
   return (
     <>
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
         {tab === 1 && (
-          <AllPassSlipListTab passslips={passSlips.onGoing} tab={tab} />
+          <AllPassSlipListTab passslips={passSlipsOnGoing} tab={tab} />
         )}
         {tab === 2 && (
-          <AllPassSlipListTab passslips={passSlips.completed} tab={tab} />
+          <AllPassSlipListTab passslips={passSlipsCompleted} tab={tab} />
         )}
       </div>
     </>
