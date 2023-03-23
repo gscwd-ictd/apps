@@ -18,7 +18,6 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
 import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
-import { LeavesModalController } from '../../../components/fixed/leaves/LeavesListController';
 import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
