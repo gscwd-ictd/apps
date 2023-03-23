@@ -938,7 +938,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage1 = () => {
     const content = pds.learningDevelopment
-      .slice(18, 49)
+      .slice(18, 51)
       .map((training, index) => (
         <View
           style={[
@@ -1040,7 +1040,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage2 = () => {
     const content = pds.learningDevelopment
-      .slice(49, 86)
+      .slice(51, 84)
       .map((training, index) => (
         <View
           style={[
@@ -1140,7 +1140,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage3 = () => {
     const content = pds.learningDevelopment
-      .slice(86, 123)
+      .slice(84, 117)
       .map((training, index) => (
         <View
           style={[
@@ -1240,7 +1240,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage4 = () => {
     const content = pds.learningDevelopment
-      .slice(123, 160)
+      .slice(117, 150)
       .map((training, index) => (
         <View
           style={[
@@ -1340,7 +1340,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage5 = () => {
     const content = pds.learningDevelopment
-      .slice(160, 197)
+      .slice(150, 183)
       .map((training, index) => (
         <View
           style={[
@@ -1440,7 +1440,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage6 = () => {
     const content = pds.learningDevelopment
-      .slice(197, 234)
+      .slice(183, 216)
       .map((training, index) => (
         <View
           style={[
@@ -2495,7 +2495,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 50 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 52 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -2637,7 +2637,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 87 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 85 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -2779,7 +2779,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 124 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 118 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -2921,7 +2921,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 161 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 151 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -3063,7 +3063,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 198 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 184 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
