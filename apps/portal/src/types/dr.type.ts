@@ -105,5 +105,6 @@ export type UpdatedDRCD = {
 
 export type UpdatedDRC = {
   ogdrId: string;
+  pcplId: string;
   percentage: number;
 };
