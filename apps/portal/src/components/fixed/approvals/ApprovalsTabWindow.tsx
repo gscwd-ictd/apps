@@ -256,10 +256,9 @@ export const ApprovalsTabWindow = ({
     // setPendingPassSlipList(pendingPassSlipsApprovals);
     // setApprovedPassSlipList(approvedPassSlipsApprovals);
     // setDisapprovedPassSlipList(diapprovedPassSlipsApprovals);
-
-    setPendingLeaveList(pendingLeaveApprovals);
-    setApprovedLeaveList(approvedLeaveApprovals);
-    setDisapprovedLeaveList(disapprovedLeaveApprovals);
+    // setPendingLeaveList(pendingLeaveApprovals);
+    // setApprovedLeaveList(approvedLeaveApprovals);
+    // setDisapprovedLeaveList(disapprovedLeaveApprovals);
   }, []);
 
   return (

@@ -126,7 +126,7 @@ export default function ApprovalLeaveModal() {
           {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
           <div className="w-full pb-4">
             <span className="text-slate-500 text-xl font-medium">
-              {`${selectedLeave.firstName} ${selectedLeave.middleName} ${selectedLeave.lastName}'s Leave Credits as of Jan 1, 2023`}
+              {/* {`${selectedLeave.firstName} ${selectedLeave.middleName} ${selectedLeave.lastName}'s Leave Credits as of Jan 1, 2023`} */}
             </span>
             <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
               <tbody>
@@ -181,8 +181,8 @@ export default function ApprovalLeaveModal() {
                 Employee:
               </label>
               <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-                {selectedLeave.firstName} {selectedLeave.middleName}{' '}
-                {selectedLeave.lastName}
+                {/* {selectedLeave.firstName} {selectedLeave.middleName}{' '}
+                {selectedLeave.lastName} */}
               </div>
             </div>
             <div className={`flex flex-row gap-4`}>
@@ -237,11 +237,11 @@ export default function ApprovalLeaveModal() {
               </div>
             </div>
             <div
-              className={`${
-                selectedLeave.detailsOfLeave.withinThePhilippines
-                  ? 'flex flex-row gap-4'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.withinThePhilippines
+            //     ? 'flex flex-row gap-4'
+            //     : 'hidden'
+            // }`}
             >
               <label className="pt-2 text-slate-500 text-lg font-medium ">
                 Within Philippines:
@@ -251,11 +251,11 @@ export default function ApprovalLeaveModal() {
               </div>
             </div>
             <div
-              className={`${
-                selectedLeave.detailsOfLeave.abroad
-                  ? 'flex flex-row gap-4'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.abroad
+            //     ? 'flex flex-row gap-4'
+            //     : 'hidden'
+            // }`}
             >
               <label className="pt-2 text-slate-500 text-lg font-medium ">
                 Abroad:
@@ -265,11 +265,11 @@ export default function ApprovalLeaveModal() {
               </div>
             </div>
             <div
-              className={`${
-                selectedLeave.detailsOfLeave.inHospital
-                  ? 'flex flex-row gap-4'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.inHospital
+            //     ? 'flex flex-row gap-4'
+            //     : 'hidden'
+            // }`}
             >
               <label className="pt-2 text-slate-500 text-lg font-medium ">
                 In Hospital:
@@ -279,11 +279,11 @@ export default function ApprovalLeaveModal() {
               </div>
             </div>
             <div
-              className={`${
-                selectedLeave.detailsOfLeave.outPatient
-                  ? 'flex flex-row gap-4'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.outPatient
+            //     ? 'flex flex-row gap-4'
+            //     : 'hidden'
+            // }`}
             >
               <label className="pt-2 text-slate-500 text-lg font-medium ">
                 Out Patient:
@@ -293,38 +293,38 @@ export default function ApprovalLeaveModal() {
               </div>
             </div>
             <label
-              className={`${
-                selectedLeave.detailsOfLeave.masterDegree
-                  ? ' pt-2 text-slate-500 text-lg font-medium'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.masterDegree
+            //     ? ' pt-2 text-slate-500 text-lg font-medium'
+            //     : 'hidden'
+            // }`}
             >
               {`For Completion of Master's Degree`}
             </label>
             <label
-              className={`${
-                selectedLeave.detailsOfLeave.bar
-                  ? ' pt-2 text-slate-500 text-lg font-medium'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.bar
+            //     ? ' pt-2 text-slate-500 text-lg font-medium'
+            //     : 'hidden'
+            // }`}
             >
               {`For BAR/Board Examination Review`}
             </label>
             <label
-              className={`${
-                selectedLeave.detailsOfLeave.monetization
-                  ? ' pt-2 text-slate-500 text-lg font-medium'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.monetization
+            //     ? ' pt-2 text-slate-500 text-lg font-medium'
+            //     : 'hidden'
+            // }`}
             >
               {`For Monetization of Leave Credits`}
             </label>
             <label
-              className={`${
-                selectedLeave.detailsOfLeave.terminal
-                  ? ' pt-2 text-slate-500 text-lg font-medium'
-                  : 'hidden'
-              }`}
+            // className={`${
+            //   selectedLeave.detailsOfLeave.terminal
+            //     ? ' pt-2 text-slate-500 text-lg font-medium'
+            //     : 'hidden'
+            // }`}
             >
               {`For Terminal Leave`}
             </label>

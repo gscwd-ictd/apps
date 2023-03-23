@@ -21,7 +21,7 @@ export default function LeaveInfoModal() {
   const [leaveReminder, setLeaveReminder] = useState<string>(
     'For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985).'
   );
-  const selectedLeave = useLeaveStore((state) => state.selectedLeave);
+  const selectedLeave = useLeaveStore((state) => state.leaveTypes);
 
   const handleLeaveType = (e: string) => {
     setLeaveType(e);
@@ -111,184 +111,185 @@ export default function LeaveInfoModal() {
   // };
 
   return (
-    <>
-      <div className="w-full h-full flex flex-col gap-2 ">
-        <div className="w-full flex flex-col gap-2 p-4 rounded">
-          {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
-          <div className="w-full pb-4">
-            <span className="text-slate-500 text-xl font-medium">
-              {`Your Leave Credits as of Jan 1, 2023`}
-            </span>
-            <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-              <tbody>
-                <tr className="border border-slate-400">
-                  <td className="border border-slate-400"></td>
-                  <td className="border border-slate-400 text-center text-sm p-1">
-                    Vacation Leave
-                  </td>
-                  <td className="border border-slate-400 text-center text-sm p-1">
-                    Sick Leave
-                  </td>
-                </tr>
-                <tr className="border border-slate-400">
-                  <td className="border border-slate-400 text-sm p-1">
-                    Total Earned
-                  </td>
-                  <td className="border border-slate-400 p-1 text-center text-sm">
-                    20
-                  </td>
-                  <td className="border border-slate-400 p-1 text-center text-sm">
-                    10
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-slate-400 text-sm p-1">
-                    Less this application
-                  </td>
-                  <td className="border border-slate-400 p-1 text-center text-sm">
-                    3
-                  </td>
-                  <td className="border border-slate-400 p-1 text-center text-sm">
-                    2
-                  </td>
-                </tr>
-                <tr className="border border-slate-400 bg-green-100">
-                  <td className="border border-slate-400 text-sm p-1">
-                    Balance
-                  </td>
-                  <td className="border border-slate-400 p-1 text-center text-sm">
-                    7
-                  </td>
-                  <td className="border border-slate-400 p-1 text-center text-sm">
-                    8
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="flex flex-row gap-4">
-            <label className="pt-2 text-slate-500 text-xl font-medium ">
-              Leave Type:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.typeOfLeave}
-            </div>
-          </div>
-          <div className="flex flex-row gap-4">
-            <label className="pt-2 text-slate-500 text-xl font-medium ">
-              Leave Details:
-            </label>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.withinThePhilippines
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Within Philippines:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.location}
-            </div>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.abroad
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Abroad:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.location}
-            </div>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.inHospital
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              In Hospital:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.illness}
-            </div>
-          </div>
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.outPatient
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Out Patient:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.illness}
-            </div>
-          </div>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.masterDegree
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For Completion of Master's Degree`}
-          </label>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.bar
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For BAR/Board Examination Review`}
-          </label>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.monetization
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For Monetization of Leave Credits`}
-          </label>
-          <label
-            className={`${
-              selectedLeave.detailsOfLeave.terminal
-                ? ' pt-2 text-slate-500 text-lg font-medium'
-                : 'hidden'
-            }`}
-          >
-            {`For Terminal Leave`}
-          </label>
+    <></>
+    // <>
+    //   <div className="w-full h-full flex flex-col gap-2 ">
+    //     <div className="w-full flex flex-col gap-2 p-4 rounded">
+    //       {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
+    //       <div className="w-full pb-4">
+    //         <span className="text-slate-500 text-xl font-medium">
+    //           {`Your Leave Credits as of Jan 1, 2023`}
+    //         </span>
+    //         <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+    //           <tbody>
+    //             <tr className="border border-slate-400">
+    //               <td className="border border-slate-400"></td>
+    //               <td className="border border-slate-400 text-center text-sm p-1">
+    //                 Vacation Leave
+    //               </td>
+    //               <td className="border border-slate-400 text-center text-sm p-1">
+    //                 Sick Leave
+    //               </td>
+    //             </tr>
+    //             <tr className="border border-slate-400">
+    //               <td className="border border-slate-400 text-sm p-1">
+    //                 Total Earned
+    //               </td>
+    //               <td className="border border-slate-400 p-1 text-center text-sm">
+    //                 20
+    //               </td>
+    //               <td className="border border-slate-400 p-1 text-center text-sm">
+    //                 10
+    //               </td>
+    //             </tr>
+    //             <tr>
+    //               <td className="border border-slate-400 text-sm p-1">
+    //                 Less this application
+    //               </td>
+    //               <td className="border border-slate-400 p-1 text-center text-sm">
+    //                 3
+    //               </td>
+    //               <td className="border border-slate-400 p-1 text-center text-sm">
+    //                 2
+    //               </td>
+    //             </tr>
+    //             <tr className="border border-slate-400 bg-green-100">
+    //               <td className="border border-slate-400 text-sm p-1">
+    //                 Balance
+    //               </td>
+    //               <td className="border border-slate-400 p-1 text-center text-sm">
+    //                 7
+    //               </td>
+    //               <td className="border border-slate-400 p-1 text-center text-sm">
+    //                 8
+    //               </td>
+    //             </tr>
+    //           </tbody>
+    //         </table>
+    //       </div>
+    //       <div className="flex flex-row gap-4">
+    //         <label className="pt-2 text-slate-500 text-xl font-medium ">
+    //           Leave Type:
+    //         </label>
+    //         <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+    //           {selectedLeave.typeOfLeave}
+    //         </div>
+    //       </div>
+    //       <div className="flex flex-row gap-4">
+    //         <label className="pt-2 text-slate-500 text-xl font-medium ">
+    //           Leave Details:
+    //         </label>
+    //       </div>
+    //       <div
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.withinThePhilippines
+    //             ? 'flex flex-row gap-4'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         <label className="pt-2 text-slate-500 text-lg font-medium ">
+    //           Within Philippines:
+    //         </label>
+    //         <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+    //           {selectedLeave.detailsOfLeave.location}
+    //         </div>
+    //       </div>
+    //       <div
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.abroad
+    //             ? 'flex flex-row gap-4'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         <label className="pt-2 text-slate-500 text-lg font-medium ">
+    //           Abroad:
+    //         </label>
+    //         <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+    //           {selectedLeave.detailsOfLeave.location}
+    //         </div>
+    //       </div>
+    //       <div
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.inHospital
+    //             ? 'flex flex-row gap-4'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         <label className="pt-2 text-slate-500 text-lg font-medium ">
+    //           In Hospital:
+    //         </label>
+    //         <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+    //           {selectedLeave.detailsOfLeave.illness}
+    //         </div>
+    //       </div>
+    //       <div
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.outPatient
+    //             ? 'flex flex-row gap-4'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         <label className="pt-2 text-slate-500 text-lg font-medium ">
+    //           Out Patient:
+    //         </label>
+    //         <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+    //           {selectedLeave.detailsOfLeave.illness}
+    //         </div>
+    //       </div>
+    //       <label
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.masterDegree
+    //             ? ' pt-2 text-slate-500 text-lg font-medium'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         {`For Completion of Master's Degree`}
+    //       </label>
+    //       <label
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.bar
+    //             ? ' pt-2 text-slate-500 text-lg font-medium'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         {`For BAR/Board Examination Review`}
+    //       </label>
+    //       <label
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.monetization
+    //             ? ' pt-2 text-slate-500 text-lg font-medium'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         {`For Monetization of Leave Credits`}
+    //       </label>
+    //       <label
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.terminal
+    //             ? ' pt-2 text-slate-500 text-lg font-medium'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         {`For Terminal Leave`}
+    //       </label>
 
-          <div
-            className={`${
-              selectedLeave.detailsOfLeave.other
-                ? 'flex flex-row gap-4'
-                : 'hidden'
-            }`}
-          >
-            <label className="pt-2 text-slate-500 text-lg font-medium ">
-              Other Reason:
-            </label>
-            <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
-              {selectedLeave.detailsOfLeave.other}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    //       <div
+    //         className={`${
+    //           selectedLeave.detailsOfLeave.other
+    //             ? 'flex flex-row gap-4'
+    //             : 'hidden'
+    //         }`}
+    //       >
+    //         <label className="pt-2 text-slate-500 text-lg font-medium ">
+    //           Other Reason:
+    //         </label>
+    //         <div className="text-slate-500 flex items-center p-4 h-10 rounded text-lg border border-slate-300">
+    //           {selectedLeave.detailsOfLeave.other}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </>
   );
 }
 
