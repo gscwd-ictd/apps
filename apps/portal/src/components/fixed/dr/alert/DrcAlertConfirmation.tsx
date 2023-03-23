@@ -221,13 +221,13 @@ export const DrcAlertConfirmation = () => {
     return { error, result };
   };
 
-  //! call this for positions where there are existing drcs
+  // call this for positions where there are existing drcs
   const handleUpdateData = async (drcds: {
     forUpdating: UpdatedDRCD;
     forPosting: DutiesResponsibilitiesList;
   }) => {
     const { error, result } = await patchHRIS(
-      `/occupational-group-duties-responsibilities/v2/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
+      `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
       { add: drcds.forPosting, update: drcds.forUpdating }
     );
 
