@@ -71,7 +71,7 @@ const VerticalLayout = (): JSX.Element => {
                       : destination === 'pds'
                       ? `/${router.query.id}/pds`
                       : destination === 'psb'
-                      ? `http://192.168.137.249:3004/psb/login`
+                      ? `${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`
                       : destination === 'leaves'
                       ? `/${router.query.id}/leaves`
                       : destination === 'dtr'

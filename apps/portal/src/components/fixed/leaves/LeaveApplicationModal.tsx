@@ -120,6 +120,7 @@ export const LeaveApplicationModal = ({
     errorResponse,
     errorLeaveTypes,
     leaveDates,
+    applyLeaveModalIsOpen,
 
     postLeave,
     postLeaveSuccess,
@@ -136,6 +137,7 @@ export const LeaveApplicationModal = ({
     errorResponse: state.error.errorResponse,
     errorLeaveTypes: state.error.errorLeaveTypes,
     leaveDates: state.leaveDates,
+    applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
 
     postLeave: state.postLeave,
     postLeaveSuccess: state.postLeaveSuccess,
@@ -209,8 +211,14 @@ export const LeaveApplicationModal = ({
   }, [leaveDates]);
 
   useEffect(() => {
+    if (!applyLeaveModalIsOpen) {
+      reset();
+      setLeaveObject('');
+    }
+  }, [applyLeaveModalIsOpen]);
+
+  useEffect(() => {
     setValue('employeeId', employeeDetails.employmentDetails.userId);
-    console.log(leaveObject);
   }, [leaveObject]);
 
   const onSubmit: SubmitHandler<LeaveContents> = (data: LeaveContents) => {
@@ -287,10 +295,11 @@ export const LeaveApplicationModal = ({
       };
     }
 
-    handlePostResult(dataToSend);
-    postLeave();
-    // console.log(data);
-    console.log(dataToSend);
+    if (!isEmpty(watch('leaveApplicationDates'))) {
+      handlePostResult(dataToSend);
+      postLeave();
+      console.log(dataToSend);
+    }
   };
 
   const handlePostResult = async (data: LeaveContents) => {
@@ -687,8 +696,7 @@ export const LeaveApplicationModal = ({
                     watch('typeOfLeaveDetails.leaveName') ===
                       'Special Leave Benefits for Women' ||
                     (watch('typeOfLeaveDetails.leaveName') === 'Study Leave' &&
-                      watch('study') === 'Other') ||
-                    watch('typeOfLeaveDetails.leaveName') === 'Forced Leave' ? (
+                      watch('study') === 'Other') ? (
                       <textarea
                         {...(watch('typeOfLeaveDetails.leaveName') ===
                           'Vacation Leave' ||
@@ -735,6 +743,16 @@ export const LeaveApplicationModal = ({
                     <label className="pt-2 text-slate-500 text-xl font-medium">
                       Select Leave Dates:
                     </label>
+                    {/* Notifications */}
+                    {isEmpty(leaveDates) ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Please select date of leave"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
                     <div className="w-full p-4 bg-gray-50 rounded">
                       <Calendar clickableDate={true} />
                     </div>
