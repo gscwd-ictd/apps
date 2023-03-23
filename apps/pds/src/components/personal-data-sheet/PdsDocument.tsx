@@ -201,7 +201,7 @@ Font.register({
   src: '/assets/fonts/calibri-bold-italic.ttf',
 });
 
-export const chunkSubstr = (word) => {
+export const chunkSubstr = (word: string) => {
   const middle = Math.floor(word.length / 2);
   const parts =
     word.length === 1
