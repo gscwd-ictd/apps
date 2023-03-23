@@ -76,7 +76,6 @@ export const SelectedSupportDrcs = (): JSX.Element => {
       // set the selected state to false
       dr.state = false;
 
-      //! Just added this
       // set the selected on edit to false
       dr.onEdit = false;
 
@@ -85,11 +84,9 @@ export const SelectedSupportDrcs = (): JSX.Element => {
     });
 
     // set the all dr pool according to the sorted new pool
-    // setallDRCPool(sortedNewPool);
     setAvailableDnrs(sortedNewPool);
 
     // set the filtered dr pool according to the sorted new pool
-    // setFilteredDRCs(sortedNewPool);
     setFilteredAvailableDnrs(sortedNewPool);
 
     // remove the selected support dr
@@ -100,7 +97,6 @@ export const SelectedSupportDrcs = (): JSX.Element => {
 
     // set the new value of selected support drs
     setSelectedDnrs({ ...selectedDnrs, support: updatedSelectedSupportDnrs });
-    // setTempPercentageDRs(updatedSelectedSupportDRs);
   };
 
   const handleEditToggle = (odrId: string, onEdit: boolean) => {
@@ -121,17 +117,14 @@ export const SelectedSupportDrcs = (): JSX.Element => {
     const tempUpdatedSelectedDnrs: Array<DutyResponsibility> = [];
 
     tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {
-      // if (dr.percentage === undefined || dr.percentage === NaN) dr.percentage = 0;
       if (dr.odrId === odrId) {
         if (e.currentTarget.valueAsNumber >= 0)
           dr.percentage = e.currentTarget.valueAsNumber;
         else dr.percentage = 0;
       }
-      // dr.sequenceNo = index;
       tempUpdatedSelectedDnrs.push(dr);
     });
 
-    // setTempPercentageDRs(tempUpdatedSelectedDrs);
     setSelectedDnrs({ ...selectedDnrs, support: tempUpdatedSelectedDnrs });
   };
 
@@ -144,7 +137,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
               header=""
               className="font-normal w-[5%] flex justify-start"
             />
-            {/* <TableHeader header="" className="font-normal w-[3%] flex justify-start" /> */}
+
             <TableHeader
               header="Description"
               className="font-normal w-[55%] flex justify-start"
@@ -206,6 +199,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                               className={`w-[4rem] h-[1.5rem] rounded outline-none border-0  border-gray-100 text-center ${
                                 dr.onEdit ? 'bg-red-200' : 'bg-transparent'
                               }`}
+                              max={100}
                               value={dr.percentage ? dr.percentage : 0}
                               onChange={(e) =>
                                 onChangePercentage(e, dr.odrId, dr.sequenceNo!)

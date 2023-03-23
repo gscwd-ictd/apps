@@ -76,7 +76,6 @@ export const SelectedCoreDrcs = (): JSX.Element => {
       // set the selected state to false
       dr.state = false;
 
-      //! Just added this
       // set the selected on edit to false
       dr.onEdit = false;
 
@@ -85,11 +84,9 @@ export const SelectedCoreDrcs = (): JSX.Element => {
     });
 
     // set the all dr pool according to the sorted new pool
-    // setAllDRCPool(sortedNewPool);
     setAvailableDnrs(sortedNewPool);
 
     // set the filtered dr pool according to the sorted new pool
-    // setFilteredDRCs(sortedNewPool);
     setFilteredAvailableDnrs(sortedNewPool);
 
     // remove the selected core dr
@@ -99,9 +96,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
     });
 
     // set the new value of selected core drs
-    // setSelectedDRCs({ ...selectedDRCs, core: updatedSelectedCoreDRs });
     setSelectedDnrs({ ...selectedDnrs, core: updatedSelectedCoreDnrs });
-    // setTempPercentageDRs(updatedSelectedCoreDRs);
   };
 
   const handleEditToggle = (odrId: string, onEdit: boolean) => {
@@ -121,8 +116,6 @@ export const SelectedCoreDrcs = (): JSX.Element => {
     const tempUpdatedSelectedDnrs: Array<DutyResponsibility> = [];
 
     tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {
-      // handle if input is
-
       if (dr.odrId === odrId) {
         if (e.currentTarget.valueAsNumber >= 0)
           dr.percentage = e.currentTarget.valueAsNumber;
@@ -132,7 +125,6 @@ export const SelectedCoreDrcs = (): JSX.Element => {
       tempUpdatedSelectedDnrs.push(dr);
     });
 
-    // setTempPercentageDRs(tempUpdatedSelectedDrs);
     setSelectedDnrs({ ...selectedDnrs, core: tempUpdatedSelectedDnrs });
   };
 
@@ -206,8 +198,8 @@ export const SelectedCoreDrcs = (): JSX.Element => {
                             className={`w-[4rem] h-[1.5rem] rounded outline-none border-0  border-gray-100 text-center ${
                               dr.onEdit ? 'bg-red-200' : 'bg-transparent'
                             }`}
+                            max={100}
                             value={dr.percentage ? dr.percentage : 0}
-                            // defaultValue={dr.percentage ? dr.percentage : 0}
                             onChange={(e) =>
                               onChangePercentage(e, dr.odrId, dr.sequenceNo!)
                             }
