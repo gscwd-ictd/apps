@@ -80,10 +80,10 @@ export const VoluntaryWorkPdf = ({
   formatDate,
   voluntaryWork,
 }: VoluntaryWorkPdfProps): JSX.Element => {
-  const [emptyVoluntaryWorkRows] = useState(6);
+  const [emptyVoluntaryWorkRows] = useState(5);
 
   const renderVoluntaryWorkRows = () => {
-    const content = voluntaryWork.slice(0, 6).map((work, index) => (
+    const content = voluntaryWork.slice(0, 5).map((work, index) => (
       <View
         style={[
           styles.borderTop,
