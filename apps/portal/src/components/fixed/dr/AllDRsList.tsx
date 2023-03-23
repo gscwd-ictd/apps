@@ -1,5 +1,3 @@
-import { useContext, useEffect } from 'react';
-import { DRContext } from '../../../context/contexts';
 import { useDrStore } from '../../../store/dr.store';
 import { DutyResponsibility } from '../../../types/dr.type';
 
@@ -27,7 +25,6 @@ export const AllDRsList = ({ type }: AllDRsListProps): JSX.Element => {
 
   const onSelect = (sequenceNo: number | undefined) => {
     // copy the current state of drs
-    // const updatedDRs = [...allDRCPool];
     const updatedDRs: Array<DutyResponsibility> = [...allDRCPool];
 
     // loop through all core drs

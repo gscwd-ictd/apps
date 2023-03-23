@@ -9,6 +9,7 @@ export const civilStatus = [
   { label: 'Single', value: 'Single' },
   { label: 'Married', value: 'Married' },
   { label: 'Divorced', value: 'Divorced' },
+  { label: 'Separated', value: 'Separated' },
   { label: 'Widowed', value: 'Widowed' },
 ];
 
@@ -87,12 +88,14 @@ export const govtService = [
 // appointment status array
 export const apptStatus = [
   // { label: 'Contract of Service', value: 'Contract of Service' },
+  { label: 'Casual', value: 'Casual' },
+  { label: 'Contractual', value: 'Contractual' },
   { label: 'Coterminous', value: 'Coterminous' },
-  // { label: 'Probationary', value: 'PROBATIONARY' },
   { label: 'Job Order', value: 'Job Order' },
-  { label: 'Temporary', value: 'Temporary' },
+  // { label: 'Probationary', value: 'PROBATIONARY' },
   { label: 'Regular', value: 'Regular' },
   { label: 'Self-Employed', value: 'Self-Employed' },
+  { label: 'Temporary', value: 'Temporary' },
 ];
 
 // appointment status array

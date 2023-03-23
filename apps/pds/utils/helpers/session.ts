@@ -65,6 +65,7 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
       };
     } else {
       const portalSsid = getPortalSsid(cookiesArray);
+
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
         {
@@ -88,7 +89,10 @@ export function getPortalSsid(
   let cookieSsids: Array<string> = [];
 
   // initialize the portal ssid array
-  let portalSsid: Array<string | undefined> = [];
+  // let portalSsid: Array<string | undefined> = [];
+
+  // final value of ssid_portal
+  let finPortalSsid = '';
 
   // execute this if there are cookies
   if (cookiesArray.length > 0) {
@@ -97,13 +101,14 @@ export function getPortalSsid(
       // return if it includes ssid_portal return undefined otherwise
       return cookie.includes('ssid_portal') ? cookie : undefined;
     });
+
     // map the result and return cookie if not undefined
-    portalSsid = cookieSsids.map((cookie) => {
-      if (cookie !== undefined) return cookie;
+    cookieSsids.map((cookie) => {
+      if (cookie !== undefined) finPortalSsid = cookie;
     });
 
     // return the result, expected result should be the cookie from ssid_portal
-    return portalSsid[0];
+    return finPortalSsid;
   }
   // return cookiesArray if array length is 0 or less
   return null;

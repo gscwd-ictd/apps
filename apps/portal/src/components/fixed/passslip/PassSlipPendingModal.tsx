@@ -1,12 +1,4 @@
-import { withSession } from '../../../utils/helpers/session';
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
-import Link from 'next/link';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 
@@ -21,11 +13,11 @@ export const PassSlipPendingModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipPendingModalProps) => {
-  const { getPassSlip } = usePassSlipStore((state) => ({
-    getPassSlip: state.getPassSlip,
+  const { passSlip } = usePassSlipStore((state) => ({
+    passSlip: state.passSlip,
   }));
 
-  // modal action button
+  // for cancel pass slip button
   const modalAction = async (e) => {
     e.preventDefault();
   };
@@ -62,7 +54,7 @@ export const PassSlipPendingModal = ({
 
                 <div className="w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {getPassSlip.dateOfApplication}
+                    {passSlip.dateOfApplication}
                   </label>
                 </div>
               </div>
@@ -74,7 +66,7 @@ export const PassSlipPendingModal = ({
 
                 <div className="w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {getPassSlip.natureOfBusiness}
+                    {passSlip.natureOfBusiness}
                   </label>
                 </div>
               </div>
@@ -82,7 +74,7 @@ export const PassSlipPendingModal = ({
               <div className="flex gap-3 justify-between items-center">
                 <label
                   className={`${
-                    getPassSlip.natureOfBusiness === 'Official Business'
+                    passSlip.natureOfBusiness === 'Official Business'
                       ? 'text-slate-500 text-lg whitespace-nowrap font-medium'
                       : 'hidden'
                   }`}
@@ -91,7 +83,7 @@ export const PassSlipPendingModal = ({
                 </label>
                 <div className="w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {getPassSlip.obTransportation}
+                    {passSlip.obTransportation}
                   </label>
                 </div>
               </div>
@@ -105,7 +97,7 @@ export const PassSlipPendingModal = ({
                   </label>
                   <div className="w-96">
                     <label className="text-slate-500 h-12 w-96  text-lg ">
-                      {getPassSlip.estimateHours}
+                      {passSlip.estimateHours}
                     </label>
                   </div>
                 </div>
@@ -121,7 +113,7 @@ export const PassSlipPendingModal = ({
                   className={
                     'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
                   }
-                  value={getPassSlip.purposeDestination}
+                  value={passSlip.purposeDestination}
                   rows={4}
                   disabled={true}
                 ></textarea>
@@ -141,16 +133,6 @@ export const PassSlipPendingModal = ({
               >
                 Cancel Pass Slip
               </Button>
-
-              {/* <Link
-                href={`/${router.query.id}/pass-slip/${employeeDetail.employmentDetails.userId}`}
-                target={'_blank'}
-                className={`${modal.page == 3 ? '' : 'hidden'}`}
-              >
-                <Button variant={'primary'} size={'md'} loading={false}>
-                  View
-                </Button>
-              </Link> */}
             </div>
           </div>
         </Modal.Footer>

@@ -63,7 +63,7 @@ const PersonalDataSheetPdf: NextPage = ({
                   {/** Button */}
                   <div className="flex items-center">
                     <button
-                      className="bg-indigo-400 text-white px-3 py-2 rounded"
+                      className="px-3 py-2 text-white bg-indigo-400 rounded"
                       onClick={onClose}
                     >
                       Click here to close this tab

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { WorkExperience } from '../../types/data/work.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -71,8 +72,6 @@ Font.register({
   family: 'ArialNarrowBoldItalic',
   src: '/assets/fonts/arial-narrow-bold-italic.ttf',
 });
-
-Font.registerHyphenationCallback((word) => [word]);
 
 type WorkExperiencePdfProps = {
   formatDate: any;
@@ -190,11 +189,11 @@ export const WorkExperiencePdf = ({
             styles.inputValue,
             styles.horizontalCenter,
             styles.w7,
-            { padding: 0 },
+            { fontSize: 6.2, padding: 0 },
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text style={{ fontSize: 6.2 }}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
               {experience.appointmentStatus || 'N/A'}
             </Text>
           </View>
@@ -328,7 +327,7 @@ export const WorkExperiencePdf = ({
               styles.inputValue,
               styles.horizontalCenter,
               styles.w7,
-              { padding: 0 },
+              { fontSize: 6.2, padding: 0 },
             ]}
           >
             <View style={[styles.verticalCenter]}>
