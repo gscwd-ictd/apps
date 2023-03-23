@@ -12,7 +12,6 @@ import { SpinnerDotted } from 'spinners-react';
 import {
   getUserDetails,
   withCookieSession,
-  withSession,
 } from '../../../utils/helpers/session';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
