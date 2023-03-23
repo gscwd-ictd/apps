@@ -1,37 +1,139 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
+import { useAlertConfirmationStore } from 'apps/portal/src/store/alert.store';
+import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { isEqual } from 'lodash';
 import { FunctionComponent } from 'react';
+import { CompetencyChecker, DrcChecker } from '../utils/functions';
 import { DrcModalController } from './DrcModalController';
 
 const DrcModal: FunctionComponent = () => {
-  const { modal, setModal, closeModal, nextPage, prevPage } = useModalStore(
+  // use modal store
+  const {
+    modal,
+    action,
+    setModal,
+    closeModal,
+    nextPage,
+    prevPage,
+    openModal,
+    setModalAction,
+    setModalPage,
+  } = useModalStore((state) => ({
+    modal: state.modal,
+    action: state.modalAction,
+    setModal: state.setModal,
+    setModalPage: state.setModalPage,
+    openModal: state.openModal,
+    closeModal: state.closeModal,
+    setModalAction: state.setModalAction,
+    nextPage: state.nextPage,
+    prevPage: state.prevPage,
+  }));
+
+  // use dnr store
+  const {
+    selectedDnrs,
+    selectedDnrsOnLoad,
+    selectedDrcType,
+    checkedDnrs,
+    cancelCheckedDnrsAction,
+    cancelDrcPage,
+    addCheckedToSelectedDnrs,
+  } = useDnrStore((state) => ({
+    selectedDnrs: state.selectedDnrs,
+    selectedDnrsOnLoad: state.selectedDnrsOnLoad,
+    selectedDrcType: state.selectedDrcType,
+    checkedDnrs: state.checkedDnrs,
+    cancelCheckedDnrsAction: state.cancelCheckedDnrsAction,
+    cancelDrcPage: state.cancelDrcPage,
+    addCheckedToSelectedDnrs: state.addCheckedToSelectedDnrs,
+  }));
+
+  // use position store
+  const { selectedPosition, emptySelectedPosition } = usePositionStore(
     (state) => ({
-      modal: state.modal,
-      setModal: state.setModal,
-      action: state.modalAction,
-      openModal: state.openModal,
-      closeModal: state.closeModal,
-      setModalAction: state.setModalAction,
-      nextPage: state.nextPage,
-      prevPage: state.prevPage,
+      selectedPosition: state.selectedPosition,
+      emptySelectedPosition: state.emptySelectedPosition,
     })
   );
 
-  const { selectedPosition } = usePositionStore((state) => ({
-    selectedPosition: state.selectedPosition,
-  }));
+  // use alert confirmation store
+  const confOpen = useAlertConfirmationStore((state) => state.setOpen);
 
+  // close drc modal
+  const closeDrcModal = () => {
+    emptySelectedPosition();
+    closeModal();
+    cancelDrcPage();
+  };
+
+  // confirm action modal
   const actionBtn = () => {
     // put your logic here
-    nextPage();
+
+    if (modal.page === 2) {
+      setModalPage(4);
+    } else if (modal.page === 3) {
+      addCheckedToSelectedDnrs();
+      setModalPage(2);
+    } else if (modal.page === 4) {
+      confOpen();
+    }
+    // nextPage();
   };
 
   const cancelBtn = () => {
     // put your logic here
     if (modal.page === 1) closeModal();
-    else if (modal.page > 1) prevPage();
+    else if (modal.page === 2) {
+      emptySelectedPosition();
+      cancelDrcPage();
+      prevPage();
+    } else if (modal.page === 3) {
+      cancelCheckedDnrsAction();
+      prevPage();
+    } else if (modal.page === 4) setModalPage(2);
+  };
+
+  // validate confirm action button
+  const validateConfirmActionBtn = () => {
+    if (
+      modal.page === 2 &&
+      (DrcChecker(selectedDnrs).noPercentageCounter > 0 ||
+        DrcChecker(selectedDnrs).onEditCounter > 0 ||
+        (selectedDnrs.core.length === 0 && selectedDnrs.support.length === 0) ||
+        (selectedDnrs.core.length > 0 &&
+          (DrcChecker(selectedDnrs).coreTotal < 100 ||
+            DrcChecker(selectedDnrs).coreTotal > 100)) ||
+        DrcChecker(selectedDnrs).noCompetencyCounter > 0 ||
+        (selectedDnrs.support.length > 0 &&
+          (DrcChecker(selectedDnrs).supportTotal < 100 ||
+            DrcChecker(selectedDnrs).supportTotal > 100)) ||
+        isEqual(selectedDnrs, selectedDnrsOnLoad) === true)
+    )
+      return true;
+    else if (
+      modal.page === 3 &&
+      selectedDrcType === 'core' &&
+      (checkedDnrs.core.length === 0 ||
+        (checkedDnrs.core.length > 0 &&
+          CompetencyChecker(checkedDnrs, selectedDrcType)
+            .noCoreCompetencyCounter > 0))
+    )
+      return true;
+    else if (
+      modal.page === 3 &&
+      selectedDrcType === 'support' &&
+      (checkedDnrs.support.length === 0 ||
+        (checkedDnrs.support.length > 0 &&
+          CompetencyChecker(checkedDnrs, selectedDrcType)
+            .noSupportCompetencyCounter > 0))
+    )
+      return true;
+    else return false;
   };
 
   return (
@@ -63,7 +165,8 @@ const DrcModal: FunctionComponent = () => {
             <button
               type="button"
               className="text-gray-400"
-              onClick={closeModal}
+              onClick={closeDrcModal}
+              tabIndex={-1}
             >
               x<span className="sr-only">Close modal</span>
             </button>
@@ -78,7 +181,9 @@ const DrcModal: FunctionComponent = () => {
               {modal.page === 1 ? 'Close' : 'Cancel'}
             </Button>
             {modal.page !== 1 ? (
-              <Button onClick={actionBtn}>Confirm</Button>
+              <Button onClick={actionBtn} disabled={validateConfirmActionBtn()}>
+                Confirm
+              </Button>
             ) : null}
           </div>
         </Modal.Footer>

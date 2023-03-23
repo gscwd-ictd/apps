@@ -1,5 +1,3 @@
-import { useContext, useEffect } from 'react';
-import { DRContext } from '../../../context/contexts';
 import { useDrStore } from '../../../store/dr.store';
 import { DutyResponsibility } from '../../../types/dr.type';
 

@@ -40,9 +40,6 @@ const styles = StyleSheet.create({
     padding: '2 8',
     textTransform: 'uppercase',
     height: 25,
-    // '@media max-width: 30': {
-    //   height: 30,
-    // },
   },
   warningText: {
     fontFamily: 'ArialNarrowBoldItalic',

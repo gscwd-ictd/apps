@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
-import { LeaveApplication } from '../types/leave.type';
+import { LeaveContents } from '../types/leave.type';
 import { ErrorState, ModalState } from '../types/modal.type';
 import { PassSlip } from '../types/passslip.type';
 
@@ -33,16 +33,14 @@ export type ApprovalState = {
   // LEAVES
   selectedLeaveId: string;
   setSelectedLeaveId: (value: string) => void;
-  selectedLeave: LeaveApplication;
-  setSelectedLeave: (selectedLeave: LeaveApplication) => void;
-  pendingLeaveList: Array<LeaveApplication>;
-  setPendingLeaveList: (pendingLeaveList: Array<LeaveApplication>) => void;
-  approvedLeaveList: Array<LeaveApplication>;
-  setApprovedLeaveList: (approvedLeaveList: Array<LeaveApplication>) => void;
-  disapprovedLeaveList: Array<LeaveApplication>;
-  setDisapprovedLeaveList: (
-    disapprovedLeaveList: Array<LeaveApplication>
-  ) => void;
+  selectedLeave: LeaveContents;
+  setSelectedLeave: (selectedLeave: LeaveContents) => void;
+  pendingLeaveList: Array<LeaveContents>;
+  setPendingLeaveList: (pendingLeaveList: Array<LeaveContents>) => void;
+  approvedLeaveList: Array<LeaveContents>;
+  setApprovedLeaveList: (approvedLeaveList: Array<LeaveContents>) => void;
+  disapprovedLeaveList: Array<LeaveContents>;
+  setDisapprovedLeaveList: (disapprovedLeaveList: Array<LeaveContents>) => void;
 
   pendingIsLoaded: boolean;
   setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
@@ -71,7 +69,7 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
 
   // LEAVES
   selectedLeaveId: '',
-  selectedLeave: {} as LeaveApplication,
+  selectedLeave: {} as LeaveContents,
   pendingLeaveList: [],
   approvedLeaveList: [],
   disapprovedLeaveList: [],
@@ -111,19 +109,19 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
   setDisapprovedPassSlipList: (disapprovedPassSlipList: Array<PassSlip>) => {
     set((state) => ({ ...state, disapprovedPassSlipList }));
   },
-  setPendingLeaveList: (pendingLeaveList: Array<LeaveApplication>) => {
+  setPendingLeaveList: (pendingLeaveList: Array<LeaveContents>) => {
     set((state) => ({ ...state, pendingLeaveList }));
   },
-  setApprovedLeaveList: (approvedLeaveList: Array<LeaveApplication>) => {
+  setApprovedLeaveList: (approvedLeaveList: Array<LeaveContents>) => {
     set((state) => ({ ...state, approvedLeaveList }));
   },
-  setDisapprovedLeaveList: (disapprovedLeaveList: Array<LeaveApplication>) => {
+  setDisapprovedLeaveList: (disapprovedLeaveList: Array<LeaveContents>) => {
     set((state) => ({ ...state, disapprovedLeaveList }));
   },
   setSelectedLeaveId: (selectedLeaveId: string) => {
     set((state) => ({ ...state, selectedLeaveId }));
   },
-  setSelectedLeave: (selectedLeave: LeaveApplication) => {
+  setSelectedLeave: (selectedLeave: LeaveContents) => {
     set((state) => ({ ...state, selectedLeave }));
   },
 
