@@ -101,18 +101,19 @@ const DrcModal: FunctionComponent = () => {
   // validate confirm action button
   const validateConfirmActionBtn = () => {
     if (
-      modal.page === 2 &&
-      (DrcChecker(selectedDnrs).noPercentageCounter > 0 ||
-        DrcChecker(selectedDnrs).onEditCounter > 0 ||
-        (selectedDnrs.core.length === 0 && selectedDnrs.support.length === 0) ||
-        (selectedDnrs.core.length > 0 &&
-          (DrcChecker(selectedDnrs).coreTotal < 100 ||
-            DrcChecker(selectedDnrs).coreTotal > 100)) ||
-        DrcChecker(selectedDnrs).noCompetencyCounter > 0 ||
-        (selectedDnrs.support.length > 0 &&
-          (DrcChecker(selectedDnrs).supportTotal < 100 ||
-            DrcChecker(selectedDnrs).supportTotal > 100)) ||
-        isEqual(selectedDnrs, selectedDnrsOnLoad) === true)
+      (modal.page === 2 &&
+        (DrcChecker(selectedDnrs).noPercentageCounter > 0 ||
+          DrcChecker(selectedDnrs).onEditCounter > 0 ||
+          (selectedDnrs.core.length === 0 &&
+            selectedDnrs.support.length === 0) ||
+          (selectedDnrs.core.length > 0 &&
+            (DrcChecker(selectedDnrs).coreTotal < 100 ||
+              DrcChecker(selectedDnrs).coreTotal > 100)) ||
+          (selectedDnrs.support.length > 0 &&
+            (DrcChecker(selectedDnrs).supportTotal < 100 ||
+              DrcChecker(selectedDnrs).supportTotal > 100)))) ||
+      DrcChecker(selectedDnrs).noCompetencyCounter > 0 ||
+      isEqual(selectedDnrs, selectedDnrsOnLoad) === true
     )
       return true;
     else if (

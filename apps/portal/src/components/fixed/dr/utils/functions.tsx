@@ -83,6 +83,7 @@ export async function AssignUpdatedDrcs(
       if (!isEmpty(coreDRC.ogdrId))
         coreList.push({
           ogdrId: coreDRC.ogdrId!,
+          pcplId: coreDRC.competency.pcplId,
           percentage: coreDRC.percentage!,
         });
       else if (isEmpty(coreDRC.ogdrId))
@@ -98,6 +99,7 @@ export async function AssignUpdatedDrcs(
       if (!isEmpty(supportDRC.ogdrId))
         supportList.push({
           ogdrId: supportDRC.ogdrId!,
+          pcplId: supportDRC.competency.pcplId,
           percentage: supportDRC.percentage!,
         });
       else if (isEmpty(supportDRC.ogdrId))
