@@ -164,7 +164,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
                 </>
               ) : null}
             </div>
-            <div className="h-[28rem] overflow-y-scroll">
+            <div className="h-[28rem] overflow-y-auto">
               {filteredPositions.length === 0 ? (
                 <div className="flex justify-center h-full pt-5 text-center">
                   <h5 className="text-2xl font-medium text-gray-300">{`No results found for '${filteredValue}'`}</h5>
