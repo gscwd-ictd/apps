@@ -90,7 +90,6 @@ export const VolWorkExp = (): JSX.Element => {
 
   // fire submit button
   const onSubmit = handleSubmit((work: VoluntaryWork, e: any) => {
-    console.log(work);
     e.preventDefault();
     if (work.to === '') work.to = null;
     // create action

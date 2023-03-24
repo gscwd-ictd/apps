@@ -258,7 +258,7 @@ export const useDnrStore = create<DnrState>()(
     getAvailableDnrsFail: (error: string) =>
       set((state) => ({
         ...state,
-        availableDnrsIsLoaded: true,
+        availableDnrsIsLoaded: false,
         existingDnrsIsLoaded: false,
         loading: { ...state.loading, loadingAvailableDnrs: false },
         error: { ...state.error, errorAvailableDnrs: error },
@@ -297,7 +297,7 @@ export const useDnrStore = create<DnrState>()(
         ...state,
         loading: { ...state.loading, loadingExistingDnrs: false },
         error: { ...state.error, errorExistingDnrs: error },
-        existingDnrsIsLoaded: true,
+        existingDnrsIsLoaded: false,
       })),
 
     cancelCheckedDnrsAction: () => {
