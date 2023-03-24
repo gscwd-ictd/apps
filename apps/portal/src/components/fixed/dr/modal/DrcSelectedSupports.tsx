@@ -100,7 +100,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
   };
 
   const handleEditToggle = (odrId: string, onEdit: boolean) => {
-    const tempSelectedDnrs = [...selectedDnrs.support];
+    const tempSelectedDnrs = JSON.parse(JSON.stringify(selectedDnrs.support));
     const tempUpdatedSelectedDnrs: Array<DutyResponsibility> = [];
 
     tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {

@@ -100,7 +100,8 @@ export const SelectedCoreDrcs = (): JSX.Element => {
   };
 
   const handleEditToggle = (odrId: string, onEdit: boolean) => {
-    const tempSelectedDnrs = [...selectedDnrs.core];
+    const tempSelectedDnrs = JSON.parse(JSON.stringify(selectedDnrs.core));
+
     const tempUpdatedSelectedDnrs: Array<DutyResponsibility> = [];
 
     tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {
