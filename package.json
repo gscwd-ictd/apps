@@ -6,10 +6,10 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "ems": "nx serve employee-monitoring --port 3009 --hostname 0.0.0.0",
+    "ems": "nx serve employee-monitoring --port 3109 --hostname 0.0.0.0",
     "ems:prod": "nx serve employee-monitoring --prod --port 3009 --hostname 0.0.0.0",
-    "portal": "nx serve portal --port 3002 --hostname 0.0.0.0",
-    "pds": "nx serve pds --port 3003 --hostname 0.0.0.0",
+    "portal": "nx serve portal --port 3102 --hostname 0.0.0.0",
+    "pds": "nx serve pds --port 3105 --hostname 0.0.0.0",
     "build portal": "nx portal",
     "build pds": "nx pds"
   },
