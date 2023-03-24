@@ -151,7 +151,7 @@ export const WorkExp = (): JSX.Element => {
                 employeeId: workExp.employeeId,
                 isGovernmentService: workExp.isGovernmentService,
                 isPresentWork: workExp.isGovernmentService,
-                isEdited: workExp.isEdited,
+                isEdited: true,
               };
             }
 
