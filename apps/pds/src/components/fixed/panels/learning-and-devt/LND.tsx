@@ -120,6 +120,7 @@ export const LearningNDevt = (): JSX.Element => {
               title: training.title,
               to: training.to,
               type: training.type,
+              isEdited: true,
             };
           }
 
