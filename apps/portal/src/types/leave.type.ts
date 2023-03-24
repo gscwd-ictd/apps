@@ -39,87 +39,12 @@ export type LeaveList = {
   ongoing: Array<Leave>;
 };
 
-export type VacationLeave = {
-  leaveTypeId: string;
-  leaveName: string;
-  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
-  location?: string;
-  workingDays: Array<string>;
+export type LeaveCredit = {
+  vacation: number;
+  sick: number;
 };
 
-export type ForcedLeave = {
-  leaveTypeId: string;
-  leaveName: string;
-  inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
-  location?: string;
-  workingDays: Array<string>;
-};
-
-export type SickLeave = {
-  leaveTypeId: string;
-  leaveName: string;
-  hospital?: string; //inHospital / Out patient
-  illness?: string;
-  workingDays: Array<string>;
-};
-
-export type MaternityPaternityLeave = {
-  name: string;
-  workingDays: Array<string>;
-};
-
-export type SpecialPrivilegeLeave = {
-  name: string;
-  withinThePhilippines: boolean;
-  abroad: boolean;
-  location: string;
-  workingDays: Array<string>;
-};
-
-export type SoloParentLeave = {
-  name: string;
-  workingDays: Array<string>;
-};
-
-export type StudyLeave = {
-  name: string;
-  completionMastersDegree: boolean;
-  boardExaminationReview: boolean;
-  other: boolean;
-  purpose: string | null;
-  workingDays: Array<string>;
-};
-
-export type VawcLeave = {
-  name: string;
-  workingDays: Array<string>;
-};
-
-export type RehabilitationPrivilegeLeave = {
-  name: string;
-  workingDays: Array<string>;
-};
-
-export type SpecialLeaveBenefitsForWomen = {
-  name: string;
-  illness: string;
-  workingDays: Array<string>;
-};
-
-export type SpecialEmergencyLeave = {
-  name: string;
-  workingDays: Array<string>;
-};
-
-export type AdoptionLeave = {
-  name: string;
-  workingDays: Array<string>;
-};
-
-export type OthersLeave = {
-  name: string;
-  monetization: boolean;
-  terminal: boolean;
-  commutationRequested: boolean;
-  workingDays: Array<string>;
+export type CalendarDate = {
+  date: string;
+  type: string;
 };

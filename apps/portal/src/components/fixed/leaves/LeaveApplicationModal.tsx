@@ -121,6 +121,8 @@ export const LeaveApplicationModal = ({
     errorLeaveTypes,
     leaveDates,
     applyLeaveModalIsOpen,
+    vacationLeave,
+    sickLeave,
 
     postLeave,
     postLeaveSuccess,
@@ -138,6 +140,8 @@ export const LeaveApplicationModal = ({
     errorLeaveTypes: state.error.errorLeaveTypes,
     leaveDates: state.leaveDates,
     applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
+    vacationLeave: state.leaveCredits.vacation,
+    sickLeave: state.leaveCredits.sick,
 
     postLeave: state.postLeave,
     postLeaveSuccess: state.postLeaveSuccess,
@@ -155,6 +159,14 @@ export const LeaveApplicationModal = ({
   const [leaveReminder, setLeaveReminder] = useState<string>(
     'For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985).'
   );
+  const [vacationBalance, setVacationBalance] = useState<number>(0);
+  const [sickBalance, setSickBalance] = useState<number>(0);
+
+  // Set state for vacation/sick leave credits
+  useEffect(() => {
+    setVacationBalance(vacationLeave - leaveDates.length);
+    setSickBalance(sickLeave - leaveDates.length);
+  }, [leaveDates]);
 
   const leaveTypeUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-benefits`;
   const {
@@ -373,57 +385,6 @@ export const LeaveApplicationModal = ({
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
                 {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
-                <div className="w-full pb-4">
-                  <span className="text-slate-500 text-xl font-medium">
-                    Your current Leave Credits:
-                  </span>
-                  <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                    <tbody>
-                      <tr className="border border-slate-400">
-                        <td className="border border-slate-400"></td>
-                        <td className="border border-slate-400 text-center text-sm p-1">
-                          Vacation Leave
-                        </td>
-                        <td className="border border-slate-400 text-center text-sm p-1">
-                          Sick Leave
-                        </td>
-                      </tr>
-                      <tr className="border border-slate-400">
-                        <td className="border border-slate-400 text-sm p-1">
-                          Total Earned
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          20
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          10
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-400 text-sm p-1">
-                          Less this application
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          3
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          2
-                        </td>
-                      </tr>
-                      <tr className="border border-slate-400 bg-green-100">
-                        <td className="border border-slate-400 text-sm p-1">
-                          Balance
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          7
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          8
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
 
                 <div className="flex flex-row justify-between items-center w-full">
                   <div className="flex flex-row justify-between items-center w-full">
@@ -753,12 +714,122 @@ export const LeaveApplicationModal = ({
                       />
                     ) : null}
 
+                    {/* Vacation Leave Credits Notifications */}
+                    {vacationBalance <= 0 &&
+                    (watch('typeOfLeaveDetails.leaveName') ===
+                      'Vacation Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ===
+                        'Forced Leave') ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Insufficient Vacation Leave Credits"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
+                    {/* Sick Leave Credits Notifications */}
+                    {sickBalance <= 0 &&
+                    watch('typeOfLeaveDetails.leaveName') === 'Sick Leave' ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Insufficient Sick Leave Credits"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
                     <div className="w-full p-4 bg-gray-50 rounded">
                       <Calendar clickableDate={true} />
                     </div>
                   </>
                 ) : null}
 
+                <div className="w-full pb-4">
+                  <span className="text-slate-500 text-xl font-medium">
+                    Your current Leave Credits:
+                  </span>
+                  <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                    <tbody>
+                      <tr className="border border-slate-400">
+                        <td className="border border-slate-400"></td>
+                        <td className="border border-slate-400 text-center text-sm p-1">
+                          Vacation Leave
+                        </td>
+                        <td className="border border-slate-400 text-center text-sm p-1">
+                          Sick Leave
+                        </td>
+                      </tr>
+                      <tr className="border border-slate-400">
+                        <td className="border border-slate-400 text-sm p-1">
+                          Total Earned
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {vacationLeave.toFixed(2)}
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {sickLeave.toFixed(2)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-400 text-sm p-1">
+                          Less this application
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                            'Vacation Leave' ||
+                          watch('typeOfLeaveDetails.leaveName') ===
+                            'Forced Leave'
+                            ? leaveDates.length
+                            : 0}
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Sick Leave'
+                            ? leaveDates.length
+                            : 0}
+                        </td>
+                      </tr>
+                      <tr className="border border-slate-400 bg-green-100">
+                        <td className="border border-slate-400 text-sm p-1">
+                          Balance
+                        </td>
+                        <td
+                          className={`${
+                            vacationBalance <= 0 &&
+                            (watch('typeOfLeaveDetails.leaveName') ===
+                              'Vacation Leave' ||
+                              watch('typeOfLeaveDetails.leaveName') ===
+                                'Forced Leave')
+                              ? 'bg-red-300'
+                              : ''
+                          } border border-slate-400 p-1 text-center text-sm`}
+                        >
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                            'Vacation Leave' ||
+                          watch('typeOfLeaveDetails.leaveName') ===
+                            'Forced Leave'
+                            ? vacationBalance.toFixed(2)
+                            : vacationLeave.toFixed(2)}
+                        </td>
+                        <td
+                          className={`${
+                            sickBalance <= 0 &&
+                            watch('typeOfLeaveDetails.leaveName') ===
+                              'Sick Leave'
+                              ? 'bg-red-300'
+                              : ''
+                          } border border-slate-400 p-1 text-center text-sm`}
+                        >
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Sick Leave'
+                            ? sickBalance.toFixed(2)
+                            : sickLeave.toFixed(2)}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
                 <div
                   className={`flex flex-col gap-2 w-full bg-slate-100 text-sm p-2 mt-1`}
                 >
@@ -777,6 +848,16 @@ export const LeaveApplicationModal = ({
                 loading={false}
                 form="ApplyLeaveForm"
                 type="submit"
+                disabled={
+                  vacationBalance <= 0 &&
+                  (watch('typeOfLeaveDetails.leaveName') === 'Vacation Leave' ||
+                    watch('typeOfLeaveDetails.leaveName') === 'Forced Leave')
+                    ? true
+                    : sickBalance <= 0 &&
+                      watch('typeOfLeaveDetails.leaveName') === 'Sick Leave'
+                    ? true
+                    : false
+                }
               >
                 Apply Leave
               </Button>

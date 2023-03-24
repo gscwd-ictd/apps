@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import {
+  CalendarDate,
   Leave,
   LeaveContents,
+  LeaveCredit,
   LeaveId,
-  LeaveList,
   LeaveType,
 } from '../types/leave.type';
 import { devtools } from 'zustand/middleware';
@@ -13,6 +14,11 @@ export type LeavesState = {
     onGoing: Array<Leave>;
     completed: Array<Leave>;
   };
+  leaveCredits: {
+    vacation: number;
+    sick: number;
+  };
+  currentLeaveDates: Array<CalendarDate>;
   response: {
     postResponseApply: LeaveContents;
     deleteResponseCancel: LeaveId;
@@ -21,11 +27,15 @@ export type LeavesState = {
     loadingLeaves: boolean;
     loadingLeaveTypes: boolean;
     loadingResponse: boolean;
+    loadingLeaveCredits: boolean;
+    loadingCurrentLeaveDates: boolean;
   };
   error: {
     errorLeaves: string;
     errorLeaveTypes: string;
     errorResponse: string;
+    errorLeaveCredits: string;
+    errorCurrentLeaveDates: string;
   };
   leaveDates: Array<string>;
   leaveTypes: Array<LeaveType>;
@@ -51,6 +61,14 @@ export type LeavesState = {
   getLeaveTypesSuccess: (loading: boolean, response) => void;
   getLeaveTypesFail: (loading: boolean, error: string) => void;
 
+  getLeaveCredits: (loading: boolean) => void;
+  getLeaveCreditsSuccess: (loading: boolean, response) => void;
+  getLeaveCreditsFail: (loading: boolean, error: string) => void;
+
+  getCurrentLeaveDates: (loading: boolean) => void;
+  getCurrentLeaveDatesSuccess: (loading: boolean, response) => void;
+  getCurrentLeaveDatesFail: (loading: boolean, error: string) => void;
+
   setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
   setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => void;
@@ -66,6 +84,26 @@ export const useLeaveStore = create<LeavesState>()(
       onGoing: [],
       completed: [],
     },
+    leaveCredits: {
+      vacation: 10.3,
+      sick: 5.8,
+    },
+
+    currentLeaveDates: [
+      {
+        date: '2023-03-28',
+        type: 'holiday',
+      },
+      {
+        date: '2023-03-29',
+        type: 'holiday',
+      },
+      {
+        date: '2023-03-30',
+        type: 'leave',
+      },
+    ] as Array<CalendarDate>,
+
     response: {
       postResponseApply: {} as LeaveContents,
       deleteResponseCancel: {} as LeaveId,
@@ -74,13 +112,17 @@ export const useLeaveStore = create<LeavesState>()(
       loadingLeaves: false,
       loadingLeaveTypes: false,
       loadingResponse: false,
+      loadingLeaveCredits: false,
+      loadingCurrentLeaveDates: false,
     },
     error: {
       errorLeaves: '',
       errorLeaveTypes: '',
       errorResponse: '',
+      errorLeaveCredits: '',
+      errorCurrentLeaveDates: '',
     },
-    leaveDates: [] as Array<string>,
+    leaveDates: [] as Array<string>, //store employee selected dates during application
     leaveTypes: [] as Array<LeaveType>,
 
     leaveIndividual: {} as LeaveContents,
@@ -250,6 +292,101 @@ export const useLeaveStore = create<LeavesState>()(
         error: {
           ...state.error,
           errorLeaveTypes: error,
+        },
+      }));
+    },
+
+    //GET LEAVE CREDIT ACTIONS
+    getLeaveCredits: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveCredits: {
+          ...state.leaveCredits,
+          vacation: null,
+          sick: null,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaveCredits: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveCredits: '',
+        },
+      }));
+    },
+    getLeaveCreditsSuccess: (loading: boolean, response: LeaveCredit) => {
+      set((state) => ({
+        ...state,
+        leaves: {
+          ...state.leaves,
+          vacation: response.vacation,
+          sick: response.sick,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaveCredits: loading,
+        },
+      }));
+    },
+    getLeaveCreditsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingLeaveCredits: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveCredits: error,
+        },
+      }));
+    },
+
+    //GET CURRENT APPROVED/PENDING LEAVE DATES ACTIONS
+    getCurrentLeaveDates: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        currentLeaveDates: {
+          ...state.currentLeaveDates,
+          currentLeaveDates: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingCurrentLeaveDates: loading,
+        },
+        error: {
+          ...state.error,
+          errorCurrentLeaveDates: '',
+        },
+      }));
+    },
+    getCurrentLeaveDatesSuccess: (
+      loading: boolean,
+      response: Array<CalendarDate>
+    ) => {
+      set((state) => ({
+        ...state,
+        currentLeaveDates: {
+          ...state.currentLeaveDates,
+          currentLeaveDates: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingCurrentLeaveDates: loading,
+        },
+      }));
+    },
+    getCurrentLeaveDatesFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingCurrentLeaveDates: loading,
+        },
+        error: {
+          ...state.error,
+          errorCurrentLeaveDates: error,
         },
       }));
     },
