@@ -1040,7 +1040,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage2 = () => {
     const content = pds.learningDevelopment
-      .slice(51, 88)
+      .slice(51, 84)
       .map((training, index) => (
         <View
           style={[
@@ -1140,7 +1140,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage3 = () => {
     const content = pds.learningDevelopment
-      .slice(88, 125)
+      .slice(84, 117)
       .map((training, index) => (
         <View
           style={[
@@ -1240,7 +1240,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage4 = () => {
     const content = pds.learningDevelopment
-      .slice(125, 162)
+      .slice(117, 150)
       .map((training, index) => (
         <View
           style={[
@@ -1340,7 +1340,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage5 = () => {
     const content = pds.learningDevelopment
-      .slice(162, 199)
+      .slice(150, 183)
       .map((training, index) => (
         <View
           style={[
@@ -1440,7 +1440,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
 
   const renderLearningDevelopmentExtraPage6 = () => {
     const content = pds.learningDevelopment
-      .slice(162, 199)
+      .slice(183, 216)
       .map((training, index) => (
         <View
           style={[
@@ -1770,6 +1770,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                       III. EDUCATIONAL BACKGROUND
                     </Text>
                   </View>
+
                   {/* Educational Background Header */}
                   <View
                     style={[{ flexDirection: 'row', alignItems: 'stretch' }]}
@@ -1931,6 +1932,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                       IV. CIVIL SERVICE ELIGIBILITY
                     </Text>
                   </View>
+
                   {/* Eligibility Header */}
                   <View
                     style={[{ flexDirection: 'row', alignItems: 'stretch' }]}
@@ -2062,12 +2064,8 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     <Text style={styles.sectionTitleText}>
                       V. WORK EXPERIENCE
                     </Text>
-                    <Text style={styles.sectionSubtitleText}>
-                      (Include private employment. Start from your recent work)
-                      Description of duties should be indicated in the attached
-                      Work Experience sheet.
-                    </Text>
                   </View>
+
                   {/* Work Experience Header */}
                   <View
                     style={[{ flexDirection: 'row', alignItems: 'stretch' }]}
@@ -2242,6 +2240,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                       NON-GOVERNMENT / PEOPLE / VOLUNTARY ORGANIZATION/S
                     </Text>
                   </View>
+
                   {/* Voluntary Work header */}
                   <View
                     style={[
@@ -2363,12 +2362,6 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     <Text style={styles.sectionTitleText}>
                       VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING
                       PROGRAMS ATTENDED
-                    </Text>
-                    <Text style={styles.sectionSubtitleText}>
-                      (Start from the most recent L&D/training program and
-                      include only the relevant L&D/training taken for the last
-                      five (5) years for Division Chief/Executive/Managerial
-                      positions)
                     </Text>
                   </View>
 
@@ -2512,12 +2505,6 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                       VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING
                       PROGRAMS ATTENDED
                     </Text>
-                    <Text style={styles.sectionSubtitleText}>
-                      (Start from the most recent L&D/training program and
-                      include only the relevant L&D/training taken for the last
-                      five (5) years for Division Chief/Executive/Managerial
-                      positions)
-                    </Text>
                   </View>
 
                   {/* Learning and Development header */}
@@ -2650,7 +2637,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 89 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 85 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -2659,12 +2646,6 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     <Text style={styles.sectionTitleText}>
                       VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING
                       PROGRAMS ATTENDED
-                    </Text>
-                    <Text style={styles.sectionSubtitleText}>
-                      (Start from the most recent L&D/training program and
-                      include only the relevant L&D/training taken for the last
-                      five (5) years for Division Chief/Executive/Managerial
-                      positions)
                     </Text>
                   </View>
 
@@ -2798,7 +2779,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 126 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 118 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -2807,12 +2788,6 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     <Text style={styles.sectionTitleText}>
                       VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING
                       PROGRAMS ATTENDED
-                    </Text>
-                    <Text style={styles.sectionSubtitleText}>
-                      (Start from the most recent L&D/training program and
-                      include only the relevant L&D/training taken for the last
-                      five (5) years for Division Chief/Executive/Managerial
-                      positions)
                     </Text>
                   </View>
 
@@ -2946,7 +2921,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 163 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 151 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -2955,12 +2930,6 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     <Text style={styles.sectionTitleText}>
                       VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING
                       PROGRAMS ATTENDED
-                    </Text>
-                    <Text style={styles.sectionSubtitleText}>
-                      (Start from the most recent L&D/training program and
-                      include only the relevant L&D/training taken for the last
-                      five (5) years for Division Chief/Executive/Managerial
-                      positions)
                     </Text>
                   </View>
 
@@ -3094,7 +3063,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               </Page>
             ) : null}
 
-            {pds.learningDevelopment && pds.learningDevelopment.length > 200 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 184 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -3103,12 +3072,6 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     <Text style={styles.sectionTitleText}>
                       VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING
                       PROGRAMS ATTENDED
-                    </Text>
-                    <Text style={styles.sectionSubtitleText}>
-                      (Start from the most recent L&D/training program and
-                      include only the relevant L&D/training taken for the last
-                      five (5) years for Division Chief/Executive/Managerial
-                      positions)
                     </Text>
                   </View>
 

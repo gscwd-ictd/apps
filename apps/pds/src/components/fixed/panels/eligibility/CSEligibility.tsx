@@ -210,7 +210,7 @@ export const CSEligibility = (): JSX.Element => {
     setValue('employeeId', elig.employeeId);
     setValue('examDateFrom', elig.examDate.from);
     setValue('examDateTo', elig.examDate.to);
-    // setValue('examDate', elig.examDate);
+    setValue('validity', elig.validity);
     setValue('examPlace', elig.examPlace);
     setValue('isEdited', elig.isEdited);
     setIsLoaded(true);
