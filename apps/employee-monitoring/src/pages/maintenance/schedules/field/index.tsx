@@ -16,13 +16,14 @@ import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { createColumnHelper } from '@tanstack/react-table';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import { useConvertDayToTime } from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
-import { useRenderShiftType } from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
-import { useConvertRestDaysToArray } from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
-import { useConvertRestDaysToString } from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
-import { useRenderScheduleType } from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
-import { useRenderRestDays } from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
+import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
+
+import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
+import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
+import UseRenderScheduleType from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
+import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import AddFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/AddFieldSchedModal';
+import UseRenderShiftType from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -105,7 +106,7 @@ export default function Index() {
   const editAction = async (sched: Schedule, idx: number) => {
     setAction(ModalActions.UPDATE);
     setCurrentRowData(sched);
-    setSelectedRestDays(useConvertRestDaysToArray(sched.restDays));
+    setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
     // loadNewDefaultValues(sched);
     setModalIsOpen(true);
   };
@@ -131,29 +132,29 @@ export default function Index() {
     columnHelper.accessor('scheduleType', {
       enableSorting: false,
       header: () => 'Category',
-      cell: (info) => useRenderScheduleType(info.getValue()),
+      cell: (info) => UseRenderScheduleType(info.getValue()),
     }),
     columnHelper.accessor('timeIn', {
       enableSorting: false,
       header: () => 'Time In',
-      cell: (info) => useConvertDayToTime(info.getValue()),
+      cell: (info) => UseConvertDayToTime(info.getValue()),
     }),
     columnHelper.accessor('timeOut', {
       enableSorting: false,
       header: () => 'Time Out',
-      cell: (info) => useConvertDayToTime(info.getValue()),
+      cell: (info) => UseConvertDayToTime(info.getValue()),
     }),
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => useRenderShiftType(info.getValue()),
+      cell: (info) => UseRenderShiftType(info.getValue()),
     }),
     columnHelper.accessor('restDays', {
       enableSorting: false,
       header: () => 'Rest Day',
       cell: (info) =>
-        useConvertRestDaysToArray(info.getValue()).length > 0 ? (
-          useRenderRestDays(useConvertRestDaysToString(info.getValue()))
+        UseConvertRestDaysToArray(info.getValue()).length > 0 ? (
+          UseRenderRestDays(UseConvertRestDaysToString(info.getValue()))
         ) : (
           <span className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
             No rest day

@@ -8,13 +8,11 @@ import {
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
-import { SchedulesPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/schedules/Footer';
-import Toggle from 'apps/employee-monitoring/src/components/switch/Toggle';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
+import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
-import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
@@ -102,17 +100,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
     setWithLunch(true);
   };
 
-  // convert
-  const useRestDayArrayToNumberArray = (restDays: SelectOption[]) => {
-    const restDayNumbers = restDays.map((restDay) => {
-      return parseInt(restDay.value.toString());
-    });
-    return restDayNumbers;
-  };
-
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
-    console.log(sched);
-
     // set loading to true
     PostSchedule(true);
 
@@ -143,7 +131,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
 
   // watch
   useEffect(() => {
-    setValue('restDays', useRestDayArrayToNumberArray(selectedRestDays));
+    setValue('restDays', UseRestDaysOptionToNumberArray(selectedRestDays));
   }, [selectedRestDays]);
 
   return (

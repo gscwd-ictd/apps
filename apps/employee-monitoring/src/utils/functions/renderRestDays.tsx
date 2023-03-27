@@ -1,4 +1,4 @@
-export const useRenderRestDays = (restDays: Array<string>) => {
+function UseRenderRestDays(restDays: Array<string>) {
   const tempRestDays = restDays.map((restDay, index: number) => {
     if (restDay === 'Sunday') {
       return (
@@ -75,4 +75,6 @@ export const useRenderRestDays = (restDays: Array<string>) => {
     }
   });
   return <div className="flex flex-wrap w-[6rem] gap-1">{tempRestDays}</div>;
-};
+}
+
+export default UseRenderRestDays;
