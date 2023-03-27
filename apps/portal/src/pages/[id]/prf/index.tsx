@@ -4,13 +4,14 @@ import { Button } from '../../../components/modular/forms/buttons/Button';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
 import {
+  EmployeeDetails,
   EmployeeDetailsPrf,
   EmployeeProfile,
 } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
 import { Roles } from '../../../utils/constants/user-roles';
 import { usePrfStore } from '../../../store/prf.store';
-import { useEmployeeStore } from '../../../store/employee-prf.store';
+
 import { useUserStore } from '../../../store/user.store';
 import {
   createPrf,
@@ -32,11 +33,12 @@ import {
   withCookieSession,
   getUserDetails,
 } from '../../../../src/utils/helpers/session';
+import { useEmployeeStore } from '../../../../src/store/employee.store';
 
 type PrfPageProps = {
   user: User;
-  employee: EmployeeDetailsPrf;
-  profile: EmployeeProfile;
+  employee: EmployeeDetails;
+  // profile: EmployeeProfile;
   pendingRequests: Array<PrfDetails>;
   forApproval: Array<any>;
 };
@@ -44,7 +46,7 @@ type PrfPageProps = {
 export default function Prf({
   user,
   employee,
-  profile,
+  // profile,
   pendingRequests,
   forApproval,
 }: PrfPageProps) {
@@ -85,10 +87,10 @@ export default function Prf({
   const setUser = useUserStore((state) => state.setUser);
 
   // access function to set employee state
-  const setEmployee = useEmployeeStore((state) => state.setEmployee);
+  const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
 
   // acacess function to set profile state
-  const setProfile = useEmployeeStore((state) => state.setProfile);
+  // const setProfile = useEmployeeStore((state) => state.setProfile);
 
   // get loading state from store
   const isLoading = usePrfStore((state) => state.isLoading);
@@ -103,7 +105,7 @@ export default function Prf({
     setEmployee(employee);
 
     // update value of profile
-    setProfile(profile);
+    // setProfile(profile);
 
     setPendingPrfs(pendingRequests);
 
@@ -134,7 +136,11 @@ export default function Prf({
     // check if current modal page is greater than 1
     if (modalPage > 1) {
       // create a prf object
-      const prf = createPrf(selectedPositions, withExam, employee.userId);
+      const prf = createPrf(
+        selectedPositions,
+        withExam,
+        employee.employmentDetails.userId
+      );
 
       // save the newly created prf object in the database
       const { error, result } = await savePrf(prf);
@@ -261,7 +267,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
       props: {
         user: employee.user,
         employee: employee.employmentDetails,
-        profile: employee.profile,
+        // profile: employee.profile,
         pendingRequests,
         forApproval,
       },

@@ -1,3 +1,4 @@
+import { useEmployeeStore } from '../../../../../src/store/employee.store';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { FunctionComponent } from 'react';
@@ -10,15 +11,15 @@ import {
   HiOutlineUser,
 } from 'react-icons/hi';
 import { usePrfStore } from '../../../../store/prf.store';
-import { useEmployeeStore } from '../../../../store/employee-prf.store';
+
 import { Position } from '../../../../types/prf.types';
 
 export const RequestSummary: FunctionComponent = () => {
   // access employee from store
-  const employee = useEmployeeStore((state) => state.employee);
+  const employee = useEmployeeStore((state) => state.employeeDetails);
 
   // access profile from store
-  const profile = useEmployeeStore((state) => state.profile);
+  const profile = useEmployeeStore((state) => state.employeeDetails.profile);
 
   // access with exam from store
   const withExam = usePrfStore((state) => state.withExam);
@@ -48,7 +49,7 @@ export const RequestSummary: FunctionComponent = () => {
             <section className="flex items-center gap-4">
               <HiOutlineDocumentDuplicate className="text-gray-700 shrink-0" />
               <p className="font-medium text-gray-600 truncate">
-                {employee.assignment.positionTitle}
+                {employee.employmentDetails.assignment.positionTitle}
               </p>
             </section>
 
