@@ -13,7 +13,7 @@ import React from 'react';
 import { employeeDummy } from '../../../../types/employee.type';
 import LeavePdf from '../../../../../src/components/fixed/leaves/LeavePdf';
 
-export default function PassSlipPage({
+export default function LeavePdfPage({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
@@ -28,10 +28,10 @@ export default function PassSlipPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
+export const getServerSideProps: GetServerSideProps =
+  // withCookieSession
   async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
-
+    // const employeeDetails = getUserDetails();
+    const employeeDetails = employeeDummy;
     return { props: { employeeDetails } };
-  }
-);
+  };

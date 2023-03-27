@@ -16,6 +16,7 @@ export type LeavesState = {
   };
   leaveCredits: {
     vacation: number;
+    forced: number;
     sick: number;
   };
   unavailableDates: Array<CalendarDate>;
@@ -86,6 +87,7 @@ export const useLeaveStore = create<LeavesState>()(
     },
     leaveCredits: {
       vacation: 10.3,
+      forced: 5,
       sick: 5.8,
     },
 

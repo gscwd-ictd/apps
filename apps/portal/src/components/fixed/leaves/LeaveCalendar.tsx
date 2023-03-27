@@ -17,8 +17,8 @@ import {
 } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
-import { useEmployeeStore } from '../../../../src/store/employee.store';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { useEmployeeStore } from '../../../store/employee.store';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { ToastNotification } from '@gscwd-apps/oneui';
 
@@ -145,7 +145,10 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
       {!isEmpty(swrError) ? (
         <>
           {/* {console.log(errorLeaveTypes)} */}
-          <ToastNotification toastType="error" notifMessage={`${swrError}`} />
+          <ToastNotification
+            toastType="error"
+            notifMessage={`Failed to load Holiday and Leave dates in calendar.`}
+          />
         </>
       ) : null}
 

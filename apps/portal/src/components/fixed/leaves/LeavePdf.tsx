@@ -486,15 +486,7 @@ JSX.Element => {
                           (CSC MC No. 2, s. 2012, as amended)
                         </Text>
                       </View>
-                      <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
-                        <Text style={styles.leaveLabel}>
-                          Special Emergency (Calamity) Leave
-                        </Text>
-                        <Text style={{ fontSize: 6 }}>
-                          (CSC MC No. 2, s. 2012, as amended)
-                        </Text>
-                      </View>
+
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>Adoption Leave</Text>
