@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
-import Calendar from '../calendar/Calendar';
 import {
   AlertNotification,
   Button,
@@ -17,6 +16,7 @@ import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
+import Calendar from './Calendar';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -168,6 +168,7 @@ export const LeaveApplicationModal = ({
     setSickBalance(sickLeave - leaveDates.length);
   }, [leaveDates]);
 
+  //fetch leave benefits list
   const leaveTypeUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-benefits`;
   const {
     data: swrLeaveTypes,
@@ -212,11 +213,32 @@ export const LeaveApplicationModal = ({
   //store json string from leave type selection
   const [leaveObject, setLeaveObject] = useState<string>('');
 
+  const [selectedStudy, setSelectedStudy] = useState<string>('');
+
   const handleTypeOfLeave = (e: string) => {
     setLeaveObject(e);
     const leave = JSON.parse(e) as LeaveType;
     setValue('typeOfLeaveDetails', leave);
   };
+
+  const handleStudy = (e: string) => {
+    setSelectedStudy(e);
+  };
+
+  useEffect(() => {
+    if (selectedStudy === `Completion of Master's Degree`) {
+      setValue('forMastersCompletion', true);
+      setValue('forBarBoardReview', null);
+      setValue('studyLeaveOther', null);
+    } else if (selectedStudy === `BAR/Board Examination Review`) {
+      setValue('forMastersCompletion', null);
+      setValue('forBarBoardReview', true);
+      setValue('studyLeaveOther', null);
+    } else {
+      setValue('forMastersCompletion', null);
+      setValue('forBarBoardReview', null);
+    }
+  }, [selectedStudy]);
 
   useEffect(() => {
     setValue('leaveApplicationDates', leaveDates);
@@ -274,10 +296,14 @@ export const LeaveApplicationModal = ({
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        typeOfLeave: data.typeOfLeaveDetails.leaveName,
         leaveApplicationDates: data.leaveApplicationDates,
-        study: data.study,
-        studyPurpose: data.studyPurpose ? data.studyPurpose : null,
+        forMastersCompletion: data.forBarBoardReview
+          ? data.forBarBoardReview
+          : null,
+        forBarBoardReview: data.forBarBoardReview
+          ? data.forBarBoardReview
+          : null,
+        studyLeaveOther: data.studyLeaveOther ? data.studyLeaveOther : null,
       };
     } else if (
       data.typeOfLeaveDetails.leaveName === 'Special Leave Benefits for Women'
@@ -574,7 +600,10 @@ export const LeaveApplicationModal = ({
                               className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
                               required
                               defaultValue={''}
-                              {...register('study')}
+                              // {...register('study')}
+                              onChange={(e) =>
+                                handleStudy(e.target.value as unknown as string)
+                              }
                             >
                               <option value="" disabled>
                                 Select Study Purpose:
@@ -657,7 +686,7 @@ export const LeaveApplicationModal = ({
                     watch('typeOfLeaveDetails.leaveName') ===
                       'Special Leave Benefits for Women' ||
                     (watch('typeOfLeaveDetails.leaveName') === 'Study Leave' &&
-                      watch('study') === 'Other') ? (
+                      selectedStudy === 'Other') ? (
                       <textarea
                         {...(watch('typeOfLeaveDetails.leaveName') ===
                           'Vacation Leave' ||
@@ -668,7 +697,7 @@ export const LeaveApplicationModal = ({
                           ? { ...register('illness') }
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Study Leave'
-                          ? { ...register('studyPurpose') }
+                          ? { ...register('studyLeaveOther') }
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Special Leave Benefits for Women'
                           ? { ...register('specialLeaveWomenIllness') }
@@ -689,7 +718,7 @@ export const LeaveApplicationModal = ({
                                 'Special Leave Benefits for Women'
                             ? 'Specify Illness'
                             : watch('typeOfLeaveDetails.leaveName') ===
-                                'Study Leave' && watch('study') === 'Other'
+                                'Study Leave' && selectedStudy === 'Other'
                             ? 'Specify Study Leave Purpose'
                             : 'Specify Leave Details'
                         }`}
