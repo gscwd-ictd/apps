@@ -1,10 +1,10 @@
-export const useRenderRestDays = (restDays: Array<string>) => {
+function UseRenderRestDays(restDays: Array<string>) {
   const tempRestDays = restDays.map((restDay, index: number) => {
     if (restDay === 'Sunday') {
       return (
         <span
           key={index}
-          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium  py-0.5 w-[6rem] text-center rounded "
         >
           Sunday
         </span>
@@ -13,7 +13,7 @@ export const useRenderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium  py-0.5 w-[6rem] text-center rounded "
         >
           Monday
         </span>
@@ -22,7 +22,7 @@ export const useRenderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium  py-0.5 rounded w-[6rem] text-center "
         >
           Tuesday
         </span>
@@ -31,7 +31,7 @@ export const useRenderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium  py-0.5 rounded w-[6rem] text-center "
         >
           Wednesday
         </span>
@@ -40,7 +40,7 @@ export const useRenderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium  py-0.5 rounded w-[6rem] text-center "
         >
           Thursday
         </span>
@@ -49,7 +49,7 @@ export const useRenderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium  py-0.5 rounded w-[6rem] text-center "
         >
           Friday
         </span>
@@ -58,7 +58,7 @@ export const useRenderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-blue-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-blue-400 text-white text-xs font-medium  py-0.5 rounded w-[6rem] text-center "
         >
           Saturday
         </span>
@@ -67,12 +67,24 @@ export const useRenderRestDays = (restDays: Array<string>) => {
       return (
         <span
           key={index}
-          className="bg-green-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded "
+          className="bg-green-500 text-white text-xs font-medium  py-0.5 rounded w-[6rem] text-center "
         >
           N/A
         </span>
       );
     }
   });
-  return <div className="flex flex-wrap w-[6rem] gap-1">{tempRestDays}</div>;
-};
+  return (
+    <div className="flex flex-wrap w-full gap-1">
+      {tempRestDays && tempRestDays.length > 0 ? (
+        tempRestDays
+      ) : (
+        <span className="bg-gray-400 text-white text-xs font-medium px-2.5 py-0.5 w-[6rem] text-center rounded">
+          No rest day
+        </span>
+      )}
+    </div>
+  );
+}
+
+export default UseRenderRestDays;

@@ -10,6 +10,7 @@ import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/Sel
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
+import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
@@ -19,17 +20,20 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
 
-type AddModalProps = {
+type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
+  rowData: Schedule;
 };
 
-const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
+const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
+  rowData,
 }) => {
   const {
     SchedulePostResponse,
@@ -48,6 +52,23 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
     PostScheduleFail: state.postScheduleFail,
   }));
 
+  // load default values
+  const loadNewDefaultValues = (sched: Schedule) => {
+    setValue('id', sched.id);
+    setValue('name', sched.name);
+    setValue('scheduleType', sched.scheduleType);
+    setValue('timeIn', sched.timeIn);
+    setValue('timeOut', sched.timeOut);
+    setValue('withLunch', sched.withLunch);
+
+    setWithLunch(sched.withLunch);
+    setValue('lunchIn', sched.lunchIn);
+    setValue('lunchOut', sched.lunchOut);
+    setValue('shift', sched.shift);
+    // setValue('restDays', sched.restDays);
+    setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
+  };
+
   const [withLunch, setWithLunch] = useState<boolean>(true);
   const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
     []
@@ -63,13 +84,13 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
   } = useForm<Schedule>({
     mode: 'onChange',
     defaultValues: {
-      scheduleType: null,
-      timeIn: '',
-      timeOut: '',
-      scheduleBase: ScheduleBases.PUMPING_STATION,
-      name: '',
-      shift: null,
-      restDays: [],
+      id: rowData.id,
+      name: rowData.name,
+      scheduleType: rowData.scheduleType,
+      timeIn: rowData.timeIn,
+      timeOut: rowData.timeOut,
+      scheduleBase: ScheduleBases.FIELD,
+      shift: rowData.shift,
     },
   });
 
@@ -82,9 +103,11 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
-    PostSchedule(true);
+    // PostSchedule(true);
 
-    handlePostResult(sched);
+    console.log(sched);
+
+    // handlePostResult(sched);
   };
 
   const handlePostResult = async (data: Schedule) => {
@@ -114,6 +137,10 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
     setValue('restDays', UseRestDaysOptionToNumberArray(selectedRestDays));
   }, [selectedRestDays]);
 
+  useEffect(() => {
+    if (modalState === true) loadNewDefaultValues(rowData);
+  }, [modalState]);
+
   return (
     <>
       {!isEmpty(Error) ? (
@@ -124,12 +151,10 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
         <ToastNotification toastType="success" notifMessage="Sending Request" />
       ) : null}
 
-      <Modal open={modalState} setOpen={setModalState} steady size="xl">
+      <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">
-              New Pumping Station Schedule
-            </span>
+            <span className="text-2xl text-gray-600">Edit Field Schedule</span>
             <button
               className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
@@ -167,6 +192,15 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
                 />
 
                 {/** schedule type */}
+                <SelectListRF
+                  id="scheduleCategory"
+                  selectList={categorySelection}
+                  controller={{
+                    ...register('scheduleType', { required: true }),
+                  }}
+                  label="Category"
+                  disabled={IsLoading ? true : false}
+                />
 
                 {/** Time in */}
                 <LabelInput
@@ -235,4 +269,4 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddStationSchedModal;
+export default EditFieldSchedModal;

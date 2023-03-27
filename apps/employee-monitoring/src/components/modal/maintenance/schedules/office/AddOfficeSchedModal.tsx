@@ -10,6 +10,7 @@ import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/Sel
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import Toggle from 'apps/employee-monitoring/src/components/switch/Toggle';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
+import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
@@ -19,17 +20,13 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
 
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
-
-const categorySelection: Array<SelectOption> = [
-  { label: 'Regular', value: 'regular' },
-  { label: 'Flexible', value: 'flexible' },
-];
 
 const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   modalState,
@@ -87,14 +84,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     setWithLunch(true);
   };
 
-  // convert
-  const useRestDayArrayToNumberArray = (restDays: SelectOption[]) => {
-    const restDayNumbers = restDays.map((restDay) => {
-      return parseInt(restDay.value.toString());
-    });
-    return restDayNumbers;
-  };
-
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
     PostSchedule(true);
@@ -144,7 +133,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
 
   // watch
   useEffect(() => {
-    setValue('restDays', useRestDayArrayToNumberArray(selectedRestDays));
+    setValue('restDays', UseRestDaysOptionToNumberArray(selectedRestDays));
   }, [selectedRestDays]);
 
   // set to defaultValues during open
@@ -163,7 +152,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
         <ToastNotification toastType="success" notifMessage="Sending Request" />
       ) : null}
 
-      <Modal open={modalState} setOpen={setModalState} steady size="xl">
+      <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
             <span className="text-2xl text-gray-600">New Office Schedule</span>

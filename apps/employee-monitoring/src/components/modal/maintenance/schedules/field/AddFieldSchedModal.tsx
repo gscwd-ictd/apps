@@ -20,17 +20,13 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
 
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
-
-const categorySelection: Array<SelectOption> = [
-  { label: 'Regular', value: 'regular' },
-  { label: 'Flexible', value: 'flexible' },
-];
 
 const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
   modalState,
@@ -164,7 +160,7 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
         <ToastNotification toastType="success" notifMessage="Sending Request" />
       ) : null}
 
-      <Modal open={modalState} setOpen={setModalState} steady size="xl">
+      <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
             <span className="text-2xl text-gray-600">New Field Schedule</span>
