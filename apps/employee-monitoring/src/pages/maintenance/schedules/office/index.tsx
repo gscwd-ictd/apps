@@ -23,6 +23,7 @@ import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functi
 import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
 import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import UseRenderScheduleType from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
+import EditOfficeSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/office/EditOfficeSchedModal';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -132,7 +133,9 @@ export default function Index() {
     columnHelper.accessor('scheduleType', {
       enableSorting: false,
       header: () => 'Category',
-      cell: (info) => UseRenderScheduleType(info.getValue()),
+      cell: (info) => (
+        <div className="w-[6rem]">{UseRenderScheduleType(info.getValue())}</div>
+      ),
     }),
     columnHelper.accessor('timeIn', {
       enableSorting: false,
@@ -157,19 +160,15 @@ export default function Index() {
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => UseRenderShiftType(info.getValue()),
+      cell: (info) => (
+        <div className="w-[6rem]">{UseRenderShiftType(info.getValue())}</div>
+      ),
     }),
     columnHelper.accessor('restDays', {
       enableSorting: false,
       header: () => 'Rest Day',
       cell: (info) =>
-        UseConvertRestDaysToArray(info.getValue()).length > 0 ? (
-          UseRenderRestDays(UseConvertRestDaysToString(info.getValue()))
-        ) : (
-          <span className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
-            No rest day
-          </span>
-        ),
+        UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
     }),
     columnHelper.display({
       header: () => 'Actions',
@@ -270,6 +269,13 @@ export default function Index() {
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
           closeModalAction={closeAddActionModal}
+        />
+
+        <EditOfficeSchedModal
+          modalState={editModalIsOpen}
+          setModalState={setEditModalIsOpen}
+          closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
         />
 
         <Can I="access" this="maintenance_schedules">

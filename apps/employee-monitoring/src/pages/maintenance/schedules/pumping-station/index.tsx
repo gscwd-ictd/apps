@@ -13,7 +13,7 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { createColumnHelper } from '@tanstack/react-table';
 import useSWR from 'swr';
-import AddStationSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/AddStationSchedModal';
+import EditStationModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/EditStationSchedModal';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
 import UseRenderShiftType from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
@@ -23,6 +23,8 @@ import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/Rend
 import UseRenderScheduleType from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import EditStationSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/EditStationSchedModal';
+import AddStationSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/AddStationSchedModal';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -146,19 +148,15 @@ export default function Index() {
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => UseRenderShiftType(info.getValue()),
+      cell: (info) => (
+        <div className="w-[6rem]">{UseRenderShiftType(info.getValue())}</div>
+      ),
     }),
     columnHelper.accessor('restDays', {
       enableSorting: false,
       header: () => 'Rest Day',
       cell: (info) =>
-        UseConvertRestDaysToArray(info.getValue()).length > 0 ? (
-          UseRenderRestDays(UseConvertRestDaysToString(info.getValue()))
-        ) : (
-          <span className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
-            No rest day
-          </span>
-        ),
+        UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
     }),
     columnHelper.display({
       header: () => 'Actions',
@@ -166,7 +164,6 @@ export default function Index() {
       cell: (props) => renderRowActions(props.row.original),
     }),
   ];
-
   // Define visibility of columns
   const columnVisibility = { id: false, scheduleType: false };
 
@@ -266,6 +263,13 @@ export default function Index() {
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
           closeModalAction={closeAddActionModal}
+        />
+
+        <EditStationSchedModal
+          modalState={editModalIsOpen}
+          setModalState={setEditModalIsOpen}
+          closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
         />
 
         <Can I="access" this="maintenance_schedules">

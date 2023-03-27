@@ -24,6 +24,7 @@ import UseRenderScheduleType from 'apps/employee-monitoring/src/utils/functions/
 import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import AddFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/AddFieldSchedModal';
 import UseRenderShiftType from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
+import EditFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/EditFieldSchedModal';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -132,7 +133,9 @@ export default function Index() {
     columnHelper.accessor('scheduleType', {
       enableSorting: false,
       header: () => 'Category',
-      cell: (info) => UseRenderScheduleType(info.getValue()),
+      cell: (info) => (
+        <div className="w-[6rem]">{UseRenderScheduleType(info.getValue())}</div>
+      ),
     }),
     columnHelper.accessor('timeIn', {
       enableSorting: false,
@@ -153,13 +156,7 @@ export default function Index() {
       enableSorting: false,
       header: () => 'Rest Day',
       cell: (info) =>
-        UseConvertRestDaysToArray(info.getValue()).length > 0 ? (
-          UseRenderRestDays(UseConvertRestDaysToString(info.getValue()))
-        ) : (
-          <span className="bg-gray-400 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded ">
-            No rest day
-          </span>
-        ),
+        UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
     }),
     columnHelper.display({
       header: () => 'Actions',
@@ -210,17 +207,11 @@ export default function Index() {
     }
   }, [swrIsLoading]);
 
-  // // set data to state from useSWR
-  // useEffect(() => {
-  //   if (!isEmpty(swrSchedules)) {
-  //     setSchedules(swrSchedules.data);
-  //   }
-  // }, [swrSchedules]);
-
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
       GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
+      console.log(swrSchedules.data);
     }
 
     if (!isEmpty(swrError)) {
@@ -267,6 +258,13 @@ export default function Index() {
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
           closeModalAction={closeAddActionModal}
+        />
+
+        <EditFieldSchedModal
+          modalState={editModalIsOpen}
+          setModalState={setEditModalIsOpen}
+          closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
         />
 
         <Can I="access" this="maintenance_schedules">
