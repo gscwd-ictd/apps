@@ -34,10 +34,13 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
 
   //zustand initialization to access Leave store
-  const { leaveDates, setLeaveDates } = useLeaveStore((state) => ({
-    leaveDates: state.leaveDates,
-    setLeaveDates: state.setLeaveDates,
-  }));
+  const { leaveDates, currentLeaveDates, setLeaveDates } = useLeaveStore(
+    (state) => ({
+      leaveDates: state.leaveDates,
+      currentLeaveDates: state.currentLeaveDates,
+      setLeaveDates: state.setLeaveDates,
+    })
+  );
 
   function viewDateActivities(day: Date) {
     if (clickableDate) {
@@ -54,13 +57,18 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
         );
       } else {
         //adds date to arry
-        setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+
+        if (!currentLeaveDates.some((item) => item.date === specifiedDate)) {
+          setSelectedDates((selectedDates) => [
+            ...selectedDates,
+            specifiedDate,
+          ]);
+        }
       }
     }
   }
 
   useEffect(() => {
-    // console.log(selectedDates);
     setLeaveDates(selectedDates);
   }, [selectedDates]);
 
@@ -135,6 +143,18 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
                       !isEqual(day, selectedDay) &&
                         isToday(day) &&
                         'text-red-500',
+
+                      currentLeaveDates.some(
+                        (item) =>
+                          item.date === format(day, 'yyyy-MM-dd') &&
+                          item.type === 'holiday'
+                      ) && 'text-red-600 bg-red-200 rounded-full',
+
+                      currentLeaveDates.some(
+                        (item) =>
+                          item.date === format(day, 'yyyy-MM-dd') &&
+                          item.type === 'leave'
+                      ) && 'text-green-600 bg-green-200 rounded-full',
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         isSameMonth(day, firstDayCurrentMonth) &&
@@ -174,6 +194,7 @@ function Meeting({ meeting }: any) {
 
   return (
     <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={meeting.imageUrl}
         alt=""
