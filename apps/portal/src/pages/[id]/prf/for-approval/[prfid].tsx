@@ -33,7 +33,7 @@ import {
   PrfDetailsForApproval,
   PrfStatus,
 } from '../../../../types/prf.types';
-import { withCookieSession } from 'apps/portal/src/utils/helpers/session';
+import { withCookieSession } from '../../../../../src/utils/helpers/session';
 
 type ForApprovalProps = {
   profile: EmployeeProfile;

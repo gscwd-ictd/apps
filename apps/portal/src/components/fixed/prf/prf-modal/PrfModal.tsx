@@ -1,21 +1,21 @@
 import { FunctionComponent, useEffect } from 'react';
 import useSWR from 'swr';
-import { orgPos } from '../mock/data';
+// import { orgPos } from '../mock/data';
 import { usePrfStore } from '../../../../store/prf.store';
 import { getWithToken } from '../../../../utils/helpers/http-request';
 import { PositionsList } from './PositionsList';
 import { RequestSummary } from './RequestSummary';
 import { SelectedPositions } from './SelectedPositions';
-import { useEmployeeStore } from '../../../../store/employee-prf.store';
+import { useEmployeeStore } from '../../../../../src/store/employee.store';
 
 // base url for HRIS service
 const url = `${process.env.NEXT_PUBLIC_HRIS_URL}`;
 
 export const PrfModal: FunctionComponent = () => {
   // access employee details
-  const employee = useEmployeeStore((state) => state.employee);
+  const employee = useEmployeeStore((state) => state.employeeDetails);
 
-  const profile = useEmployeeStore((state) => state.profile);
+  // const profile = useEmployeeStore((state) => state.employeeDetails.profile);
 
   // access modal page from store
   const modalPage = usePrfStore((state) => state.modalPage);
@@ -30,11 +30,9 @@ export const PrfModal: FunctionComponent = () => {
 
   // query positions data from hrms api
   const { data } = useSWR(
-    `${url}/organizational-positions/${employee.assignment.id}`,
+    `${url}/organizational-positions/${employee.employmentDetails.assignment.id}`,
     getWithToken
   );
-
-  console.log(data);
 
   //const data = orgPos;
 
