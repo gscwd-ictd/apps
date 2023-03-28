@@ -9,9 +9,13 @@ export type LeaveContents = {
   hospital?: string; //inHospital or outPatient
   illness?: string | null;
   specialLeaveWomenIllness?: string | null;
-  study?: string; //mastersDegree, BAR, or Other
-  studyPurpose?: string | null; //applicable for Study Other only
+
+  forMastersCompletion: boolean;
+  forBarBoardReview: boolean;
+  studyLeaveOther: string | null; //applicable for Study Other only
+
   other?: string | null; //monetization, terminal leave
+
   commutation?: string | null;
   forMonetization?: boolean;
 };

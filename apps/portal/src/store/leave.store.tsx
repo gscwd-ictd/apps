@@ -16,9 +16,10 @@ export type LeavesState = {
   };
   leaveCredits: {
     vacation: number;
+    forced: number;
     sick: number;
   };
-  currentLeaveDates: Array<CalendarDate>;
+  unavailableDates: Array<CalendarDate>;
   response: {
     postResponseApply: LeaveContents;
     deleteResponseCancel: LeaveId;
@@ -28,14 +29,14 @@ export type LeavesState = {
     loadingLeaveTypes: boolean;
     loadingResponse: boolean;
     loadingLeaveCredits: boolean;
-    loadingCurrentLeaveDates: boolean;
+    loadingUnavailableDates: boolean;
   };
   error: {
     errorLeaves: string;
     errorLeaveTypes: string;
     errorResponse: string;
     errorLeaveCredits: string;
-    errorCurrentLeaveDates: string;
+    errorUnavailableDates: string;
   };
   leaveDates: Array<string>;
   leaveTypes: Array<LeaveType>;
@@ -65,9 +66,9 @@ export type LeavesState = {
   getLeaveCreditsSuccess: (loading: boolean, response) => void;
   getLeaveCreditsFail: (loading: boolean, error: string) => void;
 
-  getCurrentLeaveDates: (loading: boolean) => void;
-  getCurrentLeaveDatesSuccess: (loading: boolean, response) => void;
-  getCurrentLeaveDatesFail: (loading: boolean, error: string) => void;
+  getUnavailableDates: (loading: boolean) => void;
+  getUnavailableSuccess: (loading: boolean, response) => void;
+  getUnavailableFail: (loading: boolean, error: string) => void;
 
   setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -86,23 +87,11 @@ export const useLeaveStore = create<LeavesState>()(
     },
     leaveCredits: {
       vacation: 10.3,
+      forced: 5,
       sick: 5.8,
     },
 
-    currentLeaveDates: [
-      {
-        date: '2023-03-28',
-        type: 'holiday',
-      },
-      {
-        date: '2023-03-29',
-        type: 'holiday',
-      },
-      {
-        date: '2023-03-30',
-        type: 'leave',
-      },
-    ] as Array<CalendarDate>,
+    unavailableDates: [] as Array<CalendarDate>,
 
     response: {
       postResponseApply: {} as LeaveContents,
@@ -113,14 +102,14 @@ export const useLeaveStore = create<LeavesState>()(
       loadingLeaveTypes: false,
       loadingResponse: false,
       loadingLeaveCredits: false,
-      loadingCurrentLeaveDates: false,
+      loadingUnavailableDates: false,
     },
     error: {
       errorLeaves: '',
       errorLeaveTypes: '',
       errorResponse: '',
       errorLeaveCredits: '',
-      errorCurrentLeaveDates: '',
+      errorUnavailableDates: '',
     },
     leaveDates: [] as Array<string>, //store employee selected dates during application
     leaveTypes: [] as Array<LeaveType>,
@@ -344,49 +333,49 @@ export const useLeaveStore = create<LeavesState>()(
     },
 
     //GET CURRENT APPROVED/PENDING LEAVE DATES ACTIONS
-    getCurrentLeaveDates: (loading: boolean) => {
+    getUnavailableDates: (loading: boolean) => {
       set((state) => ({
         ...state,
-        currentLeaveDates: {
-          ...state.currentLeaveDates,
-          currentLeaveDates: [],
+        unavailableDates: {
+          ...state.unavailableDates,
+          unavailableDates: [],
         },
         loading: {
           ...state.loading,
-          loadingCurrentLeaveDates: loading,
+          loadingUnavailableDates: loading,
         },
         error: {
           ...state.error,
-          errorCurrentLeaveDates: '',
+          errorUnavailableDates: '',
         },
       }));
     },
-    getCurrentLeaveDatesSuccess: (
+    getUnavailableSuccess: (
       loading: boolean,
       response: Array<CalendarDate>
     ) => {
       set((state) => ({
         ...state,
-        currentLeaveDates: {
-          ...state.currentLeaveDates,
-          currentLeaveDates: response,
+        unavailableDates: {
+          ...state.unavailableDates,
+          unavailableDates: response,
         },
         loading: {
           ...state.loading,
-          loadingCurrentLeaveDates: loading,
+          loadingUnavailableDates: loading,
         },
       }));
     },
-    getCurrentLeaveDatesFail: (loading: boolean, error: string) => {
+    getUnavailableFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {
           ...state.loading,
-          loadingCurrentLeaveDates: loading,
+          loadingUnavailableDates: loading,
         },
         error: {
           ...state.error,
-          errorCurrentLeaveDates: error,
+          errorUnavailableDates: error,
         },
       }));
     },
