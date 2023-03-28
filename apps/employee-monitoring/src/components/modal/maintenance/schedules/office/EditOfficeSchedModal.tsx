@@ -18,7 +18,7 @@ import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { isEmpty } from 'lodash';
+import { isEmpty, setWith } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
@@ -60,9 +60,15 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('scheduleType', sched.scheduleType);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
-    setValue('withLunch', sched.withLunch);
 
-    setWithLunch(sched.withLunch);
+    if (!isEmpty(sched.lunchIn)) {
+      setWithLunch(true);
+      setValue('withLunch', true);
+    } else {
+      setWithLunch(false);
+      setValue('withLunch', false);
+    }
+
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
@@ -140,6 +146,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
 
   useEffect(() => {
     if (modalState === true) loadNewDefaultValues(rowData);
+    console.log(rowData);
   }, [modalState]);
 
   return (

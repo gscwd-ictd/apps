@@ -17,7 +17,7 @@ import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { isEmpty } from 'lodash';
+import { isEmpty, setWith } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
@@ -59,9 +59,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('scheduleType', sched.scheduleType);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
-    setValue('withLunch', sched.withLunch);
-
-    setWithLunch(sched.withLunch);
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
@@ -69,7 +66,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
   };
 
-  const [withLunch, setWithLunch] = useState<boolean>(true);
   const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
     []
   );
@@ -91,6 +87,9 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
       timeOut: rowData.timeOut,
       scheduleBase: ScheduleBases.FIELD,
       shift: rowData.shift,
+      lunchIn: rowData.lunchIn,
+      lunchOut: rowData.lunchOut,
+      restDays: rowData.restDays,
     },
   });
 
@@ -98,7 +97,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
   const resetToDefaultValues = () => {
     reset();
     setSelectedRestDays([]);
-    setWithLunch(true);
   };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
@@ -191,7 +189,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
                   disabled={IsLoading ? true : false}
                 />
 
-                {/** schedule type */}
+                {/** Schedule type */}
                 <SelectListRF
                   id="scheduleCategory"
                   selectList={categorySelection}

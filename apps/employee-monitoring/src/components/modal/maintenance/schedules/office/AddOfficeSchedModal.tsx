@@ -65,6 +65,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   } = useForm<Schedule>({
     mode: 'onChange',
     defaultValues: {
+      name: '',
       scheduleType: null,
       timeIn: '',
       timeOut: '',
@@ -72,7 +73,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
       withLunch: true,
       lunchIn: null,
       lunchOut: null,
-      name: '',
       shift: null,
       restDays: [],
     },

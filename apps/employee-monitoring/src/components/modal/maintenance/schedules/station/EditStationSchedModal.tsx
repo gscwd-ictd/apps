@@ -65,9 +65,6 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('scheduleType', sched.scheduleType);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
-    setValue('withLunch', sched.withLunch);
-
-    setWithLunch(sched.withLunch);
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
