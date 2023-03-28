@@ -65,6 +65,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   } = useForm<Schedule>({
     mode: 'onChange',
     defaultValues: {
+      name: '',
       scheduleType: null,
       timeIn: '',
       timeOut: '',
@@ -72,7 +73,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
       withLunch: true,
       lunchIn: null,
       lunchOut: null,
-      name: '',
       shift: null,
       restDays: [],
     },
@@ -148,10 +148,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
         <ToastNotification toastType="error" notifMessage={Error} />
       ) : null}
 
-      {!isEmpty(SchedulePostResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Sending Request" />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
@@ -165,7 +161,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
             </button>
           </div>
         </Modal.Header>
-        <hr />
+
         <Modal.Body>
           {/* Notification */}
           {IsLoading ? (
