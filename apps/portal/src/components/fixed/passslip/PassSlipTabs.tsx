@@ -29,7 +29,7 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
             }}
             title="Pending Pass Slips"
             icon={<HiOutlineCheckCircle size={26} />}
-            subtitle="Show all pending Pass Slips you applied for"
+            subtitle="Show all ongoing Pass Slips you applied for"
             notificationCount={passSlipsOnGoing ? passSlipsOnGoing.length : 0}
             className="bg-indigo-500"
           />

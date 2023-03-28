@@ -25,7 +25,7 @@ import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { LeaveApplicationModal } from '../../../../src/components/fixed/leaves/LeaveApplicationModal';
-import { LeavePendingModal } from '../../../../src/components/fixed/leaves/LeavePendingModal';
+import { LeavePendingModal } from '../../../components/fixed/leaves/LeavePendingModal';
 import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCompletedModal';
 
 export default function Leaves({
