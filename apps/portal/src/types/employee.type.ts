@@ -71,9 +71,9 @@ export const employeeDummy: EmployeeDetails = {
   profile: {
     _id: 'b35433c0-b1c6-11ed-a79b-000c29f95a80',
     companyId: null,
-    firstName: 'Rannie May',
-    middleName: 'D',
-    lastName: 'Sy',
+    firstName: 'Ricardo Vicente',
+    middleName: 'Dionaldo',
+    lastName: 'Narvaiza',
     nameExt: 'Jr',
     sex: 'Male',
     birthDate: '1991-08-14',

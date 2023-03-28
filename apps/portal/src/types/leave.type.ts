@@ -10,9 +10,9 @@ export type LeaveContents = {
   illness?: string | null;
   specialLeaveWomenIllness?: string | null;
 
-  forMastersCompletion: boolean;
-  forBarBoardReview: boolean;
-  studyLeaveOther: string | null; //applicable for Study Other only
+  forMastersCompletion?: boolean;
+  forBarBoardReview?: boolean;
+  studyLeaveOther?: string | null; //applicable for Study Other only
 
   other?: string | null; //monetization, terminal leave
 
@@ -21,6 +21,26 @@ export type LeaveContents = {
 };
 
 export type LeaveId = Pick<LeaveContents, 'employeeId'>;
+
+export type GetLeaveDetails = {
+  leaveApplicationBasicInfo: {
+    dateOfFiling: string;
+    id: string;
+    leaveDates: Array<string>;
+    leaveName: string;
+    status: string;
+  };
+  leaveApplicationDetails: {
+    inPhilippinesOrAbroad?: string;
+    location?: string;
+    hospital?: string;
+    illness?: string;
+    splWomen?: string;
+    forMastersCompletion?: string;
+    forBarBoardReview?: string;
+    studyLeaveOther?: string | null;
+  };
+};
 
 //for fetching leave types from useSwr
 export type LeaveType = {

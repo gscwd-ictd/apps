@@ -22,7 +22,7 @@ export default function LeavePdfPage({
         <Head>
           <title>Employee Leave</title>
         </Head>
-        <LeavePdf />
+        <LeavePdf employeeDetails={employeeDetails} />
       </>
     )
   );

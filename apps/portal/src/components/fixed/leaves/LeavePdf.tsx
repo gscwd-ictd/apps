@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-// import { EmployeeDetails } from '../../../types/employee.type';
+import { EmployeeDetails } from '../../../../src/types/employee.type';
 
 const styles = StyleSheet.create({
   page: {
@@ -155,14 +155,11 @@ const styles = StyleSheet.create({
   },
 });
 
-// type PassSlipPdfProps = {
-//   employeeDetails: EmployeeDetails;
-// };
+type LeavePdfProps = {
+  employeeDetails: EmployeeDetails;
+};
 
-export const LeavePdf = (): //   {
-//   employeeDetails,
-// }: PassSlipPdfProps
-JSX.Element => {
+export const LeavePdf = ({ employeeDetails }: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const router = useRouter();
@@ -274,33 +271,36 @@ JSX.Element => {
                         marginLeft: 180,
                         fontSize: 8,
                         width: '130px',
+                        textAlign: 'center',
                       }}
                     >
-                      NARVAIZA XXSSSSSWSWFWWQF
+                      {employeeDetails.profile.lastName}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(Last)</Text>
                     <Text
                       style={{
                         position: 'absolute',
                         marginTop: 11,
-                        marginLeft: 320,
+                        marginLeft: 293,
                         fontSize: 8,
                         width: '120px',
+                        textAlign: 'center',
                       }}
                     >
-                      RICARDO VICENTE XXYY WWZ
+                      {employeeDetails.profile.firstName}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(First)</Text>
                     <Text
                       style={{
                         position: 'absolute',
                         marginTop: 11,
-                        marginLeft: 448,
+                        marginLeft: 410,
                         fontSize: 8,
                         width: '100px',
+                        textAlign: 'center',
                       }}
                     >
-                      RICARDO VICENTE XSSW
+                      {employeeDetails.profile.middleName}
                     </Text>
                     <Text style={{ marginRight: 50 }}>(Middle)</Text>
                   </View>
@@ -338,12 +338,15 @@ JSX.Element => {
                       style={{
                         position: 'absolute',
                         paddingBottom: 1,
-                        marginLeft: 280,
+                        marginLeft: 282,
                         fontSize: 8,
                         width: '140px',
                       }}
                     >
-                      CLEARK PROCESSOR A
+                      {
+                        employeeDetails.employmentDetails.assignment
+                          .positionTitle
+                      }
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                     <Text style={{ marginRight: 1 }}>5. SALARY</Text>

@@ -70,7 +70,7 @@ export const AllPassSlipListTab = ({
                   <p className="text-xs text-indigo-500">
                     Status:{' '}
                     {item.status === 'ongoing'
-                      ? 'Pending'
+                      ? 'Ongoing'
                       : item.status === 'approved'
                       ? 'Approved'
                       : item.status === 'disapproved'
@@ -89,7 +89,7 @@ export const AllPassSlipListTab = ({
           <h1 className="text-4xl text-gray-300">
             No{' '}
             {tab === 1
-              ? 'pending pass slip application list'
+              ? 'ongoing pass slip application list'
               : tab === 2
               ? 'completed pass slip application list'
               : ''}{' '}

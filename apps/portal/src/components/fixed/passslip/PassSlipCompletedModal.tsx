@@ -138,7 +138,7 @@ export const PassSlipCompletedModal = ({
                 target={'_blank'}
               >
                 <Button variant={'primary'} size={'md'} loading={false}>
-                  Print
+                  Print PDF
                 </Button>
               </Link>
             </div>

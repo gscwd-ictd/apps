@@ -27,7 +27,7 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             }}
             title="Pending Leave Application"
             icon={<HiOutlineCheckCircle size={26} />}
-            subtitle="Show all pendings Leaves you applied for"
+            subtitle="Show all ongoing Leaves you applied for"
             notificationCount={leavesOnGoing ? leavesOnGoing.length : 0}
             className="bg-indigo-500"
           />

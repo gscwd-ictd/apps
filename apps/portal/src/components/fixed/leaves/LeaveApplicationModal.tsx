@@ -277,12 +277,6 @@ export const LeaveApplicationModal = ({
           leaveApplicationDates: data.leaveApplicationDates,
         };
       }
-    } else if (data.typeOfLeaveDetails.leaveName === 'Forced Leave') {
-      dataToSend = {
-        leaveBenefitsId: data.typeOfLeaveDetails.id,
-        employeeId: data.employeeId,
-        leaveApplicationDates: data.leaveApplicationDates,
-      };
     } else if (data.typeOfLeaveDetails.leaveName === 'Sick Leave') {
       if (data.hospital === 'inHospital') {
         dataToSend = {
@@ -333,7 +327,7 @@ export const LeaveApplicationModal = ({
         leaveApplicationDates: data.leaveApplicationDates,
       };
     }
-
+    //check first if leave dates are filled
     if (!isEmpty(watch('leaveApplicationDates'))) {
       handlePostResult(dataToSend);
       postLeave();
@@ -479,7 +473,7 @@ export const LeaveApplicationModal = ({
                           ? 'Annual five-day vacatuin leave shall be forfeited if not taken during the year. In case the scheduled leave has been cancelled in the exigency of the service by the head of agency, it shall no longer be deducted from the accumulated vacation leave. Availment of one (1) day or more Vacation Leave (VL) shall be considered for complying the mandatory/forced leave subject to the conditions under Section 25, Rule XVI of the Omnibus Rules Implementing E.O. No. 292.'
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Sick Leave'
-                          ? `It shall be filed immediately upon employee's return from such leave. IF filed in advance or exceeding the five (5) days, application shall be accompanied by a medical certificate. In case medical consultation was not availed of, an affidavit should be executed by an applicant.`
+                          ? `It shall be filed immediately upon employee's return from such leave. If filed in advance or exceeding the five (5) days, application shall be accompanied by a medical certificate. In case medical consultation was not availed of, an affidavit should be executed by an applicant.`
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Maternity Leave'
                           ? `Proof of pregnancy e.g. ultrasound, doctor's certificate on the expected data of delivery. Accomplished Notice of Allocation of Maternity Leave Credits (CS Form No. 6a), if needed. Seconded female employees shall enjoy maternity leave with full pay in the recipient agency.`
@@ -509,7 +503,7 @@ export const LeaveApplicationModal = ({
                           ? `The special emergency leave can be applied for a maximum of five (5) straight working days or staggered basis within thirty (30) days from the actual occurence of the natural calamity/disaster. Said privilege shall be enjoyed once a year, not in every instance of calamity or disaster. The head of office shall take full responsibility for teh grant of special emergency leave and verification of teh employee's eligibility to be granted thereof. Said verification shall include: validation of place of residence based on latest available records of the affected employee; verification that the place of residence is covered in the declaration of calamity area by the proper government agency, and such other proofs as may be necessary.`
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Adoption Leave'
-                          ? `Application for adoption leave shall be filed with an authenticated copy of teh Pre-Adoptive Placement Authority issued by the Department of Scoial Welfare and Development (DSWD).`
+                          ? `Application for adoption leave shall be filed with an authenticated copy of the Pre-Adoptive Placement Authority issued by the Department of Scoial Welfare and Development (DSWD).`
                           : watch('typeOfLeaveDetails.leaveName') === 'Others'
                           ? `For Monetization of Leave Credits, application for monetization of fifthy percent (50%) or more of the accumulated leave credits shall be accompanied by letter request to the head of the agency stating the valid and justifiable reasons. For Terminal Leave, proof of employee's resignation or retirement or separation from the service.`
                           : ``}
