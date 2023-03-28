@@ -51,7 +51,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
     PostScheduleFail: state.postScheduleFail,
   }));
 
-  const [withLunch, setWithLunch] = useState<boolean>(true);
   const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
     []
   );
@@ -82,7 +81,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
   // reset all values
   const resetToDefaultValues = () => {
     setSelectedRestDays([]);
-    setWithLunch(true);
   };
 
   // convert
@@ -141,10 +139,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
         <ToastNotification toastType="error" notifMessage={Error} />
       ) : null}
 
-      {!isEmpty(SchedulePostResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Sending Request" />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
@@ -158,7 +152,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
             </button>
           </div>
         </Modal.Header>
-        <hr />
         <Modal.Body>
           {/* Notification */}
           {IsLoading ? (

@@ -11,13 +11,13 @@ import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/Sel
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
 import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
-import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { isEmpty, setWith } from 'lodash';
+import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
@@ -39,17 +39,17 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     SchedulePostResponse,
     IsLoading,
     Error,
-    PostSchedule,
-    PostScheduleFail,
-    PostScheduleSuccess,
+    UpdateSchedule,
+    UpdateScheduleFail,
+    UpdateScheduleSuccess,
   } = useScheduleStore((state) => ({
     SchedulePostResponse: state.schedule.postResponse,
     IsLoading: state.loading.loadingSchedule,
     Error: state.error.errorSchedule,
 
-    PostSchedule: state.postSchedule,
-    PostScheduleSuccess: state.postScheduleSuccess,
-    PostScheduleFail: state.postScheduleFail,
+    UpdateSchedule: state.updateSchedule,
+    UpdateScheduleSuccess: state.updateScheduleSuccess,
+    UpdateScheduleFail: state.updateScheduleFail,
   }));
 
   // load default values
@@ -101,28 +101,26 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
-    // PostSchedule(true);
+    UpdateSchedule(true);
 
-    console.log(sched);
-
-    // handlePostResult(sched);
+    handleUpdateResult(sched);
   };
 
-  const handlePostResult = async (data: Schedule) => {
-    const { error, result } = await postEmpMonitoring('/schedule', data);
+  const handleUpdateResult = async (data: Schedule) => {
+    const { error, result } = await putEmpMonitoring('/schedule', data);
 
     if (error) {
       // request is done so set loading to false
-      PostSchedule(false);
+      UpdateSchedule(false);
 
       // set value for error message
-      PostScheduleFail(false, result);
+      UpdateScheduleFail(false, result);
     } else {
       // request is done so set loading to false
-      PostSchedule(false);
+      UpdateSchedule(false);
 
       // set value from returned response
-      PostScheduleSuccess(false, result);
+      UpdateScheduleSuccess(false, result);
       //   mutate('/holidays');
 
       reset();
@@ -145,10 +143,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
         <ToastNotification toastType="error" notifMessage={Error} />
       ) : null}
 
-      {!isEmpty(SchedulePostResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Sending Request" />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
@@ -162,7 +156,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
             </button>
           </div>
         </Modal.Header>
-        <hr />
+
         <Modal.Body>
           {/* Notification */}
           {IsLoading ? (
@@ -258,7 +252,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
               className="disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
-              <span className="text-xs font-normal">Submit</span>
+              <span className="text-xs font-normal">Update</span>
             </Button>
           </div>
         </Modal.Footer>

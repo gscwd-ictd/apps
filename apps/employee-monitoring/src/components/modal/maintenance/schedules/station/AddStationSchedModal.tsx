@@ -70,6 +70,8 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
       name: '',
       shift: null,
       restDays: [],
+      lunchIn: null,
+      lunchOut: null,
     },
   });
 
@@ -120,11 +122,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
         <ToastNotification toastType="error" notifMessage={Error} />
       ) : null}
 
-      {!isEmpty(SchedulePostResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Sending Request" />
-      ) : null}
-
-      <Modal open={modalState} setOpen={setModalState} steady size="xl">
+      <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
             <span className="text-2xl text-gray-600">
@@ -139,7 +137,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
             </button>
           </div>
         </Modal.Header>
-        <hr />
+
         <Modal.Body>
           {/* Notification */}
           {IsLoading ? (

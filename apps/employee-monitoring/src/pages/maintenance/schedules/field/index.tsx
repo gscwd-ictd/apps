@@ -254,6 +254,22 @@ export default function Index() {
           <ToastNotification toastType="error" notifMessage={Error} />
         ) : null}
 
+        {/* Notification Add Success */}
+        {!isEmpty(PostResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully added!"
+          />
+        ) : null}
+
+        {/* Notification Update Success */}
+        {!isEmpty(UpdateResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully updated!"
+          />
+        ) : null}
+
         <AddFieldSchedModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
