@@ -211,7 +211,6 @@ export default function Index() {
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
       GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
-      console.log(swrSchedules.data);
     }
 
     if (!isEmpty(swrError)) {

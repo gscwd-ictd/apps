@@ -92,7 +92,7 @@ export const SideNavigation = () => {
 
           {/**LEAVE BENEFITS */}
           <Sidebar.Item
-            display="Leave Benefits"
+            display="Leave Applications"
             className="text-xs"
             selected={pathname === Paths[2] ? true : false}
             icon={
@@ -215,7 +215,7 @@ export const SideNavigation = () => {
           {/**Maintenance LEAVE CREDITS */}
 
           <Sidebar.Item
-            display="Leave"
+            display="Leave Benefits"
             className="text-xs"
             hasSubItem
             icon={<i className="text-2xl bx bx-run"></i>}

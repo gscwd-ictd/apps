@@ -24,11 +24,11 @@ import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/funct
 import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import UseRenderScheduleType from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
 import EditOfficeSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/office/EditOfficeSchedModal';
+import DeleteOfficeSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/office/DeleteOfficeSchedModal';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const setAction = useScheduleStore((state) => state.setAction);
-  const [withLunch, setWithLunch] = useState<boolean>(true);
   const [currentRowData, setCurrentRowData] = useState<Schedule>(
     {} as Schedule
   );
@@ -102,21 +102,6 @@ export default function Index() {
 
   // close delete action
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // when edit action is clicked
-  const editAction = async (sched: Schedule, idx: number) => {
-    setAction(ModalActions.UPDATE);
-    setCurrentRowData(sched);
-    setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
-    // loadNewDefaultValues(sched);
-    setModalIsOpen(true);
-  };
-
-  // run this when modal is closed
-  const closeAction = () => {
-    setModalIsOpen(false);
-    // resetToDefaultValues();
-  };
 
   // define table columns
   const columnHelper = createColumnHelper<Schedule>();
@@ -223,6 +208,7 @@ export default function Index() {
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
       GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
+      console.log(swrSchedules.data);
     }
 
     if (!isEmpty(swrError)) {
@@ -281,6 +267,14 @@ export default function Index() {
           />
         ) : null}
 
+        {/* Notification Update Success */}
+        {!isEmpty(DeleteResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully deleted!"
+          />
+        ) : null}
+
         <AddOfficeSchedModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
@@ -291,6 +285,13 @@ export default function Index() {
           modalState={editModalIsOpen}
           setModalState={setEditModalIsOpen}
           closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
+        />
+
+        <DeleteOfficeSchedModal
+          modalState={deleteModalIsOpen}
+          setModalState={setDeleteModalIsOpen}
+          closeModalAction={closeDeleteActionModal}
           rowData={currentRowData}
         />
 
