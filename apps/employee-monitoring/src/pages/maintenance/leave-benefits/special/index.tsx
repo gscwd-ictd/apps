@@ -1,123 +1,177 @@
-import { Button } from '@gscwd-apps/oneui';
+import { DataTableHrms, ToastNotification } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { SpecialPageFooter } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/special-leave/Footer';
-import { SpecialPageHeader } from 'apps/employee-monitoring/src/components/sidebar-items/maintenance/leave/special-leave/Header';
-import { Leave } from 'libs/utils/src/lib/types/leave.type';
 import React, { useEffect, useState } from 'react';
-import { Modal } from '@gscwd-apps/oneui';
-import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-
-const specialLeaves: Array<Partial<Leave>> = [
-  {
-    leaveName: 'Paternity Leave',
-    maximumCredits: 14,
-    status: 'active',
-    actions: '',
-  },
-  {
-    leaveName: 'Maternity Leave',
-    maximumCredits: 105,
-    status: 'active',
-    actions: '',
-  },
-];
+import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
+import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
+import useSWR from 'swr';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import { createColumnHelper } from '@tanstack/react-table';
+import { isEmpty } from 'lodash';
+import AddSpecialModal from 'apps/employee-monitoring/src/components/modal/maintenance/leave/special/AddSpecialModal';
+import EditSpecialModal from 'apps/employee-monitoring/src/components/modal/maintenance/leave/special/EditSpecialModal';
+import DeleteSpecialModal from 'apps/employee-monitoring/src/components/modal/maintenance/leave/special/DeleteSpecialModal';
 
 export default function Index() {
-  const [action, setAction] = useState<string>('');
-  const [leaves, setLeaves] = useState<Array<Partial<Leave>>>([]);
-  const [leaveForEdit, setLeaveForEdit] = useState<Partial<Leave>>(
-    {} as Partial<Leave>
+  const {
+    leaveBenefits,
+    PostResponse,
+    UpdateResponse,
+    DeleteResponse,
+    Error,
+    setLeaveBenefits,
+    EmptyResponse,
+    GetLeaveBenefits,
+    GetLeaveBenefitsFail,
+    GetLeaveBenefitsSuccess,
+  } = useLeaveBenefitStore((state) => ({
+    leaveBenefits: state.leaveBenefits,
+    PostResponse: state.leaveBenefit.postResponse,
+    UpdateResponse: state.leaveBenefit.updateResponse,
+    DeleteResponse: state.leaveBenefit.deleteResponse,
+    Error: state.error.errorLeaveBenefits,
+    setLeaveBenefits: state.setLeaveBenefits,
+    GetLeaveBenefits: state.getLeaveBenefits,
+    GetLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
+    GetLeaveBenefitsFail: state.getLeaveBenefitsFail,
+    EmptyResponse: state.emptyResponse,
+  }));
+  const [currentRowData, setCurrentRowData] = useState<LeaveBenefit>(
+    {} as LeaveBenefit
   );
-  const [leaveModalIsOpen, setLeaveModalIsOpen] = useState<boolean>(false);
 
-  const editAction = (leave: Partial<Leave>) => {
-    setAction('update');
-    setLeaveForEdit(leave);
-    setLeaveModalIsOpen(true);
+  const {
+    data: swrLeaveBenefits,
+    isLoading: swrIsLoading,
+    error: swrError,
+    mutate: mutateLeaveBenefits,
+  } = useSWR('/leave-benefits?base=Recurring', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // add modal function
+  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
+  const openAddActionModal = () => setAddModalIsOpen(true);
+  const closeAddActionModal = () => setAddModalIsOpen(false);
+
+  // edit modal function
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+  const openEditActionModal = (rowData: LeaveBenefit) => {
+    setEditModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeEditActionModal = () => setEditModalIsOpen(false);
+
+  // delete modal function
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+  const openDeleteActionModal = (rowData: LeaveBenefit) => {
+    setDeleteModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
+
+  const editAction = (leave: LeaveBenefit) => {
+    setCurrentRowData(leave);
   };
 
-  const closeAction = () => {
-    setLeaveModalIsOpen(false);
+  // define table columns
+  const columnHelper = createColumnHelper<LeaveBenefit>();
+
+  const columns = [
+    columnHelper.accessor('id', {
+      enableSorting: false,
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('leaveName', {
+      header: () => 'Leave Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('accumulatedCredits', {
+      enableSorting: false,
+      header: () => 'Credits',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('creditDistribution', {
+      enableSorting: false,
+      header: () => 'Distribution',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('isMonetizable', {
+      enableSorting: false,
+      header: () => 'Monetizable',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('canBeCarriedOver', {
+      enableSorting: false,
+      header: () => 'Can be carried over',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.display({
+      header: () => 'Actions',
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
+
+  // Define visibility of columns
+  const columnVisibility = { id: false };
+
+  // Render row actions in the table component
+  const renderRowActions = (rowData: LeaveBenefit) => {
+    return (
+      <>
+        <button
+          type="button"
+          className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+          onClick={() => openEditActionModal(rowData)}
+        >
+          <i className="bx bx-edit-alt"></i>
+        </button>
+
+        <button
+          type="button"
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          onClick={() => openDeleteActionModal(rowData)}
+        >
+          <i className="bx bx-trash-alt"></i>
+        </button>
+      </>
+    );
   };
 
+  // Initial zustand state update
   useEffect(() => {
-    setLeaves(specialLeaves);
-  }, []);
+    EmptyResponse();
+    if (swrIsLoading) {
+      GetLeaveBenefits(swrIsLoading);
+    }
+  }, [swrIsLoading]);
+
+  // upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveBenefits)) {
+      GetLeaveBenefitsSuccess(swrLeaveBenefits.data);
+    }
+
+    if (!isEmpty(swrError)) {
+      GetLeaveBenefitsFail(swrError);
+    }
+  }, [swrLeaveBenefits, swrError]);
+
+  // mutate from swr
+  useEffect(() => {
+    if (
+      !isEmpty(PostResponse) ||
+      !isEmpty(UpdateResponse) ||
+      !isEmpty(DeleteResponse)
+    ) {
+      mutateLeaveBenefits();
+    }
+  }, [PostResponse, UpdateResponse, DeleteResponse]);
+
   return (
-    <div className="min-h-[100%] min-w-full">
-      <Modal
-        open={leaveModalIsOpen}
-        setOpen={setLeaveModalIsOpen}
-        steady
-        size="md"
-      >
-        <Modal.Header>
-          <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">Edit</span>
-            <button
-              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded-full"
-              type="button"
-              onClick={closeAction}
-            >
-              x
-            </button>
-          </div>
-        </Modal.Header>
-        <hr />
-        <Modal.Body>
-          <div className="w-full mt-5">
-            <div className="flex flex-col w-full gap-5">
-              <LabelInput
-                id={'specialName'}
-                label={'Leave Name'}
-                value={leaveForEdit.leaveName}
-                onChange={(e) =>
-                  setLeaveForEdit({
-                    ...leaveForEdit,
-                    leaveName: e.target.value,
-                  })
-                }
-              />
-
-              <LabelInput
-                id={'specialCeiling'}
-                label={'Credit Ceiling'}
-                type="number"
-                onWheel={(e) => e.currentTarget.blur()}
-                value={leaveForEdit.maximumCredits}
-                onChange={(e) =>
-                  setLeaveForEdit({
-                    ...leaveForEdit,
-                    maximumCredits: e.target.valueAsNumber,
-                  })
-                }
-              />
-
-              <div className="flex flex-col">
-                <label htmlFor="specialStatus">
-                  <span className="text-xs text-gray-700">Status</span>
-                </label>
-                <select
-                  id="specialStatus"
-                  className="rounded border active:border-none border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4"
-                  value={leaveForEdit.creditDistribution}
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="flex justify-end w-full">
-            <Button variant="info">
-              <span className="text-xs font-normal">Update</span>
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+    <div className="min-h-[100%] w-full">
       <BreadCrumbs
         title="Special Leave"
         crumbs={[
@@ -128,84 +182,77 @@ export default function Index() {
           },
         ]}
       />
-      <div className="mx-5">
+
+      {/* Notification error */}
+      {!isEmpty(Error) ? (
+        <ToastNotification toastType="error" notifMessage={Error} />
+      ) : null}
+
+      {/* Notification Add Success */}
+      {!isEmpty(PostResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Successfully added!"
+        />
+      ) : null}
+
+      {/* Notification Update Success */}
+      {!isEmpty(UpdateResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Successfully updated!"
+        />
+      ) : null}
+
+      {/* Notification Delete Success */}
+      {!isEmpty(DeleteResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Successfully deleted!"
+        />
+      ) : null}
+
+      <AddSpecialModal
+        modalState={addModalIsOpen}
+        setModalState={setAddModalIsOpen}
+        closeModalAction={closeAddActionModal}
+      />
+
+      <EditSpecialModal
+        modalState={editModalIsOpen}
+        setModalState={setEditModalIsOpen}
+        closeModalAction={closeEditActionModal}
+        rowData={currentRowData}
+      />
+
+      <DeleteSpecialModal
+        modalState={deleteModalIsOpen}
+        setModalState={setDeleteModalIsOpen}
+        closeModalAction={closeDeleteActionModal}
+        rowData={currentRowData}
+      />
+
+      <div className="sm:mx-0 lg:mx-5">
         <Card title={''}>
           {/** Top Card */}
-          <div className="flex flex-col w-full h-full">
-            <SpecialPageHeader />
-            <div className="w-full px-5 mt-5">
-              <table className="w-full">
-                <thead>
-                  <tr className="text-xs border-b-2 text-slate-700">
-                    <th className="font-semibold w-[1/4] text-left ">
-                      Leave Name
-                    </th>
-
-                    <th className="font-semibold w-[1/4] text-left">
-                      Credit Ceiling
-                    </th>
-                    <th className="font-semibold w-[1/4] text-left">Status</th>
-                    <th className="font-semibold w-[1/4] text-center">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide">
-                  {leaves &&
-                    leaves.map((leave, index) => {
-                      return (
-                        <React.Fragment key={index}>
-                          <tr className="h-[4rem] text-gray-700">
-                            <td className="w-[1/4] text-xs ">
-                              {leave.leaveName}
-                            </td>
-                            <td className="w-[1/4] text-xs">
-                              {leave.maximumCredits}
-                            </td>
-
-                            <td className="w-[1/4] text-xs uppercase">
-                              {leave.status}
-                            </td>
-                            <td className="w-[1/4]">
-                              <div className="flex justify-center w-full gap-2">
-                                <Button
-                                  variant="info"
-                                  onClick={() => editAction(leave)}
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    className="w-4 h-4"
-                                  >
-                                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
-                                    <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
-                                  </svg>
-                                </Button>
-                                <Button variant="danger">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    className="w-4 h-4"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        </React.Fragment>
-                      );
-                    })}
-                </tbody>
-              </table>
+          <div className="flex flex-row flex-wrap">
+            <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                onClick={openAddActionModal}
+              >
+                <i className="bx bxs-plus-square"></i>&nbsp; Add Leave Benefit
+              </button>
             </div>
-            <SpecialPageFooter />
+
+            <DataTableHrms
+              data={leaveBenefits}
+              columns={columns}
+              columnVisibility={columnVisibility}
+              paginate
+              showGlobalFilter
+            />
           </div>
         </Card>
       </div>

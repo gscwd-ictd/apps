@@ -1,7 +1,7 @@
 export type LeaveBenefit = {
   id?: string;
   leaveName: string;
-  creditDistribution: CreditDistribution;
+  creditDistribution: CreditDistribution | null;
   accumulatedCredits: number;
   isMonetizable: boolean;
   canBeCarriedOver: boolean;

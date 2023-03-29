@@ -1,7 +1,7 @@
-import { Button, Modal } from '@gscwd-apps/oneui';
-import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
+import { Modal } from '@gscwd-apps/oneui';
+import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
+import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -9,16 +9,16 @@ type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: Schedule;
+  rowData: LeaveBenefit;
 };
 
-const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteCumulativeModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
   rowData,
 }) => {
-  const { handleSubmit, setValue } = useForm<Schedule>({
+  const { handleSubmit, setValue } = useForm<LeaveBenefit>({
     mode: 'onChange',
     defaultValues: { id: rowData.id },
   });
@@ -28,35 +28,38 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
   }, [modalState]);
 
   const {
+    LeaveBenefitPostResponse,
+    Error,
     IsLoading,
-    DeleteResponse,
-    DeleteSchedule,
-    DeleteScheduleFail,
-    DeleteScheduleSuccess,
-  } = useScheduleStore((state) => ({
-    IsLoading: state.loading.loadingSchedules,
-    DeleteResponse: state.schedule.deleteResponse,
-    DeleteSchedule: state.deleteSchedule,
-    DeleteScheduleSuccess: state.deleteScheduleSuccess,
-    DeleteScheduleFail: state.deleteScheduleFail,
+    DeleteLeaveBenefit,
+    DeleteLeaveBenefitFail,
+    DeleteLeaveBenefitSuccess,
+  } = useLeaveBenefitStore((state) => ({
+    LeaveBenefitPostResponse: state.leaveBenefit.deleteResponse,
+    IsLoading: state.loading.loadingLeaveBenefit,
+    Error: state.error.errorLeaveBenefit,
+
+    DeleteLeaveBenefit: state.deleteLeaveBenefit,
+    DeleteLeaveBenefitSuccess: state.deleteLeaveBenefitSuccess,
+    DeleteLeaveBenefitFail: state.deleteLeaveBenefitFail,
   }));
 
-  const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
+  const onSubmit: SubmitHandler<LeaveBenefit> = (sched: LeaveBenefit) => {
     // set to true
-    DeleteSchedule(true);
+    DeleteLeaveBenefit(true);
 
     handleDeleteResult(sched.id);
   };
 
   const handleDeleteResult = async (id: string) => {
-    const { error, result } = await deleteEmpMonitoring(`/schedule/${id}`);
+    const { error, result } = await deleteEmpMonitoring(`/leave-benefit/${id}`);
 
     if (error) {
       // request is done so set loading to false
-      DeleteScheduleFail(false, result);
+      DeleteLeaveBenefitFail(result);
     } else {
       // request is done so set loading to false
-      DeleteScheduleSuccess(false, result);
+      DeleteLeaveBenefitSuccess(result);
 
       // close modal
       closeModalAction();
@@ -80,10 +83,10 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
-          <form onSubmit={handleSubmit(onSubmit)} id="deleteoffschedmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="deletecumulativemodal">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
-                <span className="px-2 text-lg">{rowData.name}</span>
+                <span className="px-2 text-lg">{rowData.leaveName}</span>
               </div>
             </div>
           </form>
@@ -100,7 +103,7 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
             </button>
             <button
               type="submit"
-              form="deleteoffschedmodal"
+              form="deletecumulativemodal"
               className="disabled:cursor-not-allowed w-[4rem] bg-red-500 hover:bg-red-400 active:bg-red-300 rounded text-white"
               disabled={IsLoading ? true : false}
             >
@@ -113,4 +116,4 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteOfficeSchedModal;
+export default DeleteCumulativeModal;

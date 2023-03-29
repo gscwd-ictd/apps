@@ -29,7 +29,7 @@ const distributionSelection: Array<SelectOption> = [
   { label: 'Yearly', value: 'yearly' },
 ];
 
-const AddRecurringModal: FunctionComponent<AddModalProps> = ({
+const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -63,10 +63,11 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
     defaultValues: {
       leaveName: '',
       accumulatedCredits: undefined,
-      canBeCarriedOver: false,
-      category: LeaveCategory.RECURRING,
-      creditDistribution: CreditDistribution.YEARLY,
+      canBeCarriedOver: true,
+      category: LeaveCategory.CUMULATIVE,
+      creditDistribution: null,
       isMonetizable: false,
+      maximumCredits: undefined,
     },
   });
 
@@ -100,7 +101,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
         <Modal.Header>
           <div className="flex justify-between w-full">
             <span className="text-2xl text-gray-600">
-              New Recurring Leave Benefit
+              New Cumulative Leave Benefit
             </span>
             <button
               className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
@@ -125,7 +126,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addrecurringmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="addcumulativemodal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/* Recurring Name */}
@@ -170,7 +171,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addrecurringmodal"
+              form="addcumulativemodal"
               className="disabled:cursor-not-allowed"
             >
               <span className="text-xs font-normal">Submit</span>
@@ -182,4 +183,4 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddRecurringModal;
+export default AddCumulativeModal;
