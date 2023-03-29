@@ -10,8 +10,3 @@ export type Training = {
   type: string;
   assignedEmployees?: Array<string>;
 };
-
-export type TrainingType = {
-  id?: string;
-  name: string;
-};

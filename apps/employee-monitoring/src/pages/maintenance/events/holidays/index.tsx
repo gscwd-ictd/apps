@@ -93,7 +93,7 @@ const Index = () => {
   // Render row actions in the table component
   const renderRowActions = (rowData: Holiday) => {
     return (
-      <>
+      <div className="text-center">
         <button
           type="button"
           className="text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700"
@@ -109,7 +109,7 @@ const Index = () => {
         >
           <i className="bx bx-trash-alt"></i>
         </button>
-      </>
+      </div>
     );
   };
 
