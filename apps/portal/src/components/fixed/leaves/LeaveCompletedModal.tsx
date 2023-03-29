@@ -75,7 +75,7 @@ export const LeaveCompletedModal = ({
   }, [completedLeaveModalIsOpen, leaveId]);
 
   const router = useRouter();
-  console.log(leaveIndividualDetail);
+  // console.log(leaveIndividualDetail);
   return (
     <>
       {/* Notifications */}
@@ -117,28 +117,28 @@ export const LeaveCompletedModal = ({
             </>
           ) : (
             <div className="w-full h-full flex flex-col  ">
-              <AlertNotification
-                alertType="info"
-                notifMessage={
-                  leaveIndividualDetail.leaveApplicationBasicInfo?.status
-                    .charAt(0)
-                    .toUpperCase() +
-                  leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
-                    1
-                  )
-                }
-                dismissible={false}
-              />
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage={
+                      leaveIndividualDetail.leaveApplicationBasicInfo?.status
+                        .charAt(0)
+                        .toUpperCase() +
+                      leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
+                        1
+                      )
+                    }
+                    dismissible={false}
+                  />
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-xl font-medium whitespace-nowrap">
+                      <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                         Leave Type:
                       </label>
 
-                      <div className="w-96 text-right">
-                        <label className="text-slate-500 w-full text-xl ">
+                      <div className="w-96 ">
+                        <label className="text-slate-500 w-full text-lg ">
                           {
                             leaveIndividualDetail.leaveApplicationBasicInfo
                               ?.leaveName
@@ -152,7 +152,7 @@ export const LeaveCompletedModal = ({
                     ?.leaveName ? (
                     <>
                       <div className="flex flex-row justify-between items-center w-full">
-                        <label className="text-slate-500 text-xl font-medium">
+                        <label className="text-slate-500 text-lg font-medium">
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Vacation Leave' ||
                           leaveIndividualDetail.leaveApplicationBasicInfo
@@ -170,12 +170,12 @@ export const LeaveCompletedModal = ({
                             : null}
                         </label>
 
-                        <div className="flex w-full text-right">
+                        <div className="flex w-96 ">
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Vacation Leave' ||
                           leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Special Privilege Leave' ? (
-                            <div className="text-slate-500 w-full text-xl">
+                            <div className="text-slate-500 w-full text-lg">
                               {
                                 leaveIndividualDetail.leaveApplicationDetails
                                   .inPhilippinesOrAbroad
@@ -186,7 +186,7 @@ export const LeaveCompletedModal = ({
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Sick Leave' ? (
                             <>
-                              <div className="text-slate-500 w-full text-xl">
+                              <div className="text-slate-500 w-full text-lg">
                                 {
                                   leaveIndividualDetail.leaveApplicationDetails
                                     .hospital
@@ -198,7 +198,7 @@ export const LeaveCompletedModal = ({
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Study Leave' ? (
                             <>
-                              <div className="text-slate-500 w-full text-xl">
+                              <div className="text-slate-500 w-full text-lg">
                                 {leaveIndividualDetail.leaveApplicationDetails
                                   .forBarBoardReview === '1'
                                   ? 'For BAR/Board Examination Review '
@@ -215,17 +215,17 @@ export const LeaveCompletedModal = ({
 
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-row justify-between items-center w-full">
-                          <label className="text-slate-500 text-xl font-medium">
+                          <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                             Leave Dates:
                           </label>
-                        </div>
 
-                        <div className="flex gap-2 w-full items-center text-right">
-                          <div className="text-slate-500 w-full text-lg ">
-                            {
-                              leaveIndividualDetail.leaveApplicationBasicInfo
-                                ?.leaveDates
-                            }
+                          <div className="w-96 ">
+                            <label className="text-slate-500 w-full text-lg ">
+                              {
+                                leaveIndividualDetail.leaveApplicationBasicInfo
+                                  ?.leaveDates
+                              }
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -281,7 +281,7 @@ export const LeaveCompletedModal = ({
                           .studyLeaveOther) ? (
                         <div className="flex flex-col justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
-                            <label className="text-slate-500 text-xl font-medium whitespace-nowrap">
+                            <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                               Specific Details:
                             </label>
                           </div>

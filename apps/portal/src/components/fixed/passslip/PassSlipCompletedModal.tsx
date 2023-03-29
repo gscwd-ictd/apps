@@ -80,22 +80,20 @@ export const PassSlipCompletedModal = ({
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-between items-center">
-                <label
-                  className={`${
-                    passSlip.natureOfBusiness === 'Official Business'
-                      ? 'text-slate-500 text-lg whitespace-nowrap font-medium'
-                      : 'hidden'
-                  }`}
-                >
-                  Mode of Transportation:
-                </label>
-                <div className="w-96">
-                  <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {passSlip.obTransportation}
+              {passSlip.natureOfBusiness === 'Official Business' ? (
+                <div className="flex gap-3 justify-between items-center">
+                  <label
+                    className={`text-slate-500 text-lg whitespace-nowrap font-medium`}
+                  >
+                    Mode of Transportation:
                   </label>
+                  <div className="w-96">
+                    <label className="text-slate-500 h-12 w-96  text-lg ">
+                      {passSlip.obTransportation}
+                    </label>
+                  </div>
                 </div>
-              </div>
+              ) : null}
               <div
                 className={` flex flex-col gap-2
             `}

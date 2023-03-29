@@ -27,7 +27,7 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
               // setIsLoading(true);
               setTab(1);
             }}
-            title="Pending Pass Slips"
+            title="Ongoing Pass Slips"
             icon={<HiOutlineCheckCircle size={26} />}
             subtitle="Show all ongoing Pass Slips you applied for"
             notificationCount={passSlipsOnGoing ? passSlipsOnGoing.length : 0}

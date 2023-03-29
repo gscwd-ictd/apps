@@ -44,6 +44,8 @@ export type LeavesState = {
     errorIndividualLeave: string;
   };
   leaveDates: Array<string>;
+  leaveDateFrom: string;
+  leaveDateTo: string;
   leaveTypes: Array<LeaveType>;
 
   applyLeaveModalIsOpen: boolean;
@@ -53,6 +55,8 @@ export type LeavesState = {
   isGetLeaveLoading: boolean;
 
   setLeaveDates: (dates: Array<string>) => void;
+  setLeaveDateFrom: (date: string) => void;
+  setLeaveDateTo: (date: string) => void;
   setLeaveId: (id: string) => void;
 
   getLeaveList: (loading: boolean) => void;
@@ -123,6 +127,8 @@ export const useLeaveStore = create<LeavesState>()(
       errorIndividualLeave: '',
     },
     leaveDates: [] as Array<string>, //store employee selected dates during application
+    leaveDateFrom: '',
+    leaveDateTo: '',
     leaveTypes: [] as Array<LeaveType>,
 
     //APPLY LEAVE MODAL
@@ -135,6 +141,14 @@ export const useLeaveStore = create<LeavesState>()(
 
     setLeaveDates: (leaveDates: Array<string>) => {
       set((state) => ({ ...state, leaveDates }));
+    },
+
+    setLeaveDateFrom: (leaveDateFrom: string) => {
+      set((state) => ({ ...state, leaveDateFrom }));
+    },
+
+    setLeaveDateTo: (leaveDateTo: string) => {
+      set((state) => ({ ...state, leaveDateTo }));
     },
 
     setLeaveId: (leaveId: string) => {
