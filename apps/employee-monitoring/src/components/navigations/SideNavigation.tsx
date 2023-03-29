@@ -20,10 +20,10 @@ export const SideNavigation = () => {
   return (
     <Sidebar className="relative w-full">
       <Sidebar.Header>
-        <div className="z-50 flex items-center justify-center w-full gap-2 py-5 text-white">
+        <div className="z-50 flex items-center justify-center w-full gap-0 py-5 text-white">
           <section className="">
-            <div className="text-sky-200/90">
-              <i className="text-4xl bx bxs-network-chart bx-tada"></i>
+            <div className="text-cyan-200/60">
+              <i className="text-4xl bx bxs-network-chart"></i>
             </div>
           </section>
 
