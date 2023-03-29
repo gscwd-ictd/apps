@@ -84,7 +84,7 @@ const Item: FunctionComponent<ItemProps> = ({
   } = useContext(PageContentContext);
 
   return (
-    <li className={itemClass(className, selected)}>
+    <li className={itemClass(className, selected, hasSubItem)}>
       {!hasSubItem ? (
         <Link href={path} className={linkClass(isCollapsed, selected)}>
           {icon}
@@ -119,25 +119,9 @@ const Item: FunctionComponent<ItemProps> = ({
                     {display}
                   </motion.span>
 
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    height={20}
-                    width={20}
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className=" ui-open:rotate-180 ui-open:transform ui-open:transition-all"
-                  >
-                    <polyline points="18 15 12 9 6 15"></polyline>
-                  </svg>
+                  <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
                 </div>
               )}
-              {/* {!isCollapsed && (
-                
-              )} */}
             </div>
           </Accordion.Button>
           <Accordion.Body>

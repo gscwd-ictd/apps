@@ -163,6 +163,11 @@ export const SideNavigation = () => {
             icon={<i className="text-2xl bx bx-calendar-edit"></i>}
             path=""
             hasSubItem
+            selected={
+              pathname === Paths[15] ||
+              pathname === Paths[16] ||
+              pathname === Paths[17]
+            }
             subItems={
               <>
                 <Sidebar.Item
@@ -209,6 +214,11 @@ export const SideNavigation = () => {
             className="text-xs"
             hasSubItem
             icon={<i className="text-2xl bx bx-run"></i>}
+            selected={
+              pathname === Paths[8] ||
+              pathname === Paths[9] ||
+              pathname === Paths[10]
+            }
             subItems={
               <>
                 <Sidebar.Item
@@ -255,6 +265,7 @@ export const SideNavigation = () => {
             path=""
             className="text-xs"
             hasSubItem
+            selected={pathname === Paths[11] || pathname === Paths[12]}
             icon={
               <>
                 <i className="text-2xl bx bxs-calendar-event"></i>

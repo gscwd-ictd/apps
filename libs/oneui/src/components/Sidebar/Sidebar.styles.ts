@@ -9,14 +9,16 @@ export const sidebarClass = (
 
 export const itemClass = (
   classnames: string | undefined,
-  selected: boolean | undefined
+  selected: boolean | undefined,
+  hasSubItem: boolean | undefined
 ) => {
   return cls(
     classnames,
     'w-full border-l-4 duration-100 ease-in-out transition-all',
     {
       'border-l-transparent': !selected,
-      'bg-cyan-400/40': selected,
+      'bg-cyan-400/40': selected && !hasSubItem,
+      'bg-slate-700': selected && hasSubItem,
     }
   );
 };
