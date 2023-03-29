@@ -1,9 +1,14 @@
+export type LeaveDateRange = {
+  from: string;
+  to: string;
+};
+
 export type LeaveContents = {
   employeeId: string;
   dateOfFiling: string | null;
   typeOfLeaveDetails: LeaveType;
   leaveApplicationDates: Array<string>;
-
+  leaveApplicationDatesRange: LeaveDateRange;
   inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
   location?: string;
   hospital?: string; //inHospital or outPatient
@@ -18,6 +23,7 @@ export type LeaveContents = {
 
   commutation?: string | null;
   forMonetization?: boolean;
+  totalNumberOfDays: number; //number of days of leave
 };
 
 export type LeaveId = Pick<LeaveContents, 'employeeId'>;

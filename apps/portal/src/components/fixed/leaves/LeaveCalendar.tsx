@@ -21,6 +21,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { ToastNotification } from '@gscwd-apps/oneui';
+import dayjs from 'dayjs';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -28,9 +29,13 @@ function classNames(...classes: any) {
 
 type CalendarProps = {
   clickableDate: boolean;
+  type: string; // single or range
 };
 
-export default function Calendar({ clickableDate = true }: CalendarProps) {
+export default function Calendar({
+  type = 'single',
+  clickableDate = true,
+}: CalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   // const [viewActivities, setViewActivities] = useState<boolean>(false);
@@ -39,11 +44,18 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const [selectedDateFrom, setSelectedDateFrom] = useState<string>();
+  const [selectedDateTo, setSelectedDateTo] = useState<string>();
 
   //zustand initialization to access Leave store
   const {
     leaveDates,
     unavailableDates,
+    leaveDateFrom,
+    leaveDateTo,
+
+    setLeaveDateFrom,
+    setLeaveDateTo,
     setLeaveDates,
     getUnavailableDates,
     getUnavailableSuccess,
@@ -51,6 +63,11 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
   } = useLeaveStore((state) => ({
     leaveDates: state.leaveDates,
     unavailableDates: state.unavailableDates,
+    leaveDateFrom: state.leaveDateFrom,
+    leaveDateTo: state.leaveDateTo,
+
+    setLeaveDateFrom: state.setLeaveDateFrom,
+    setLeaveDateTo: state.setLeaveDateTo,
     setLeaveDates: state.setLeaveDates,
     getUnavailableDates: state.getUnavailableDates,
     getUnavailableSuccess: state.getUnavailableSuccess,
@@ -73,18 +90,17 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
     if (swrIsLoading) {
       getUnavailableDates(swrIsLoading);
     }
-    console.log(
-      formatISO(new Date('2023-02-28'), {
-        representation: 'date',
-      })
-    );
+    // console.log(
+    //   formatISO(new Date('2023-02-28'), {
+    //     representation: 'date',
+    //   })
+    // );
   }, [swrIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrUnavailableDates)) {
       getUnavailableSuccess(swrIsLoading, swrUnavailableDates);
-      console.log(swrUnavailableDates);
     }
 
     if (!isEmpty(swrError)) {
@@ -117,6 +133,14 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
       }
     }
   }
+
+  useEffect(() => {
+    setLeaveDateFrom(selectedDateFrom);
+  }, [selectedDateFrom]);
+
+  useEffect(() => {
+    setLeaveDateTo(selectedDateTo);
+  }, [selectedDateTo]);
 
   useEffect(() => {
     setLeaveDates(selectedDates);
@@ -152,109 +176,141 @@ export default function Calendar({ clickableDate = true }: CalendarProps) {
         </>
       ) : null}
 
-      <div className="relative">
-        <div className="">
-          <div className="md:grid md:grid-cols-1 md:divide-x md:divide-gray-200 ">
-            <div className="w-full">
-              <div className="flex items-center">
-                <button
-                  type="button"
-                  onClick={previousMonth}
-                  className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-                >
-                  <span className="sr-only">Previous month</span>
-                  <HiOutlineChevronLeft
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                  />
-                </button>
-                <h2 className="flex-auto font-semibold text-gray-900 text-center">
-                  {format(firstDayCurrentMonth, 'MMMM yyyy')}
-                </h2>
-
-                <button
-                  onClick={nextMonth}
-                  type="button"
-                  className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-                >
-                  <span className="sr-only">Next month</span>
-                  <HiOutlineChevronRight
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                  />
-                </button>
-              </div>
-              <div className="grid grid-cols-7 mt-3 text-xs leading-6 text-center text-gray-500">
-                <div className="text-red-600">SUN</div>
-                <div>MON</div>
-                <div>TUE</div>
-                <div>WED</div>
-                <div>THU</div>
-                <div>FRI</div>
-                <div>SAT</div>
-              </div>
-              <div className="grid grid-cols-7 mt-2 text-sm">
-                {days.map((day, dayIdx) => (
-                  <div
-                    key={day.toString()}
-                    className={classNames(
-                      dayIdx === 0 && colStartClasses[getDay(day)],
-                      'py-1.5'
-                    )}
+      {type === 'range' ? (
+        <div className="flex flex-row gap-2 items-center">
+          <label className="text-slate-500 text-lg border-slate-300">
+            From
+          </label>
+          <input
+            required
+            type="date"
+            className="text-slate-500 text-lg border-slate-300"
+            // {...register('leaveApplicationDatesRange.from')}
+            onChange={(e) =>
+              setSelectedDateFrom(e.target.value as unknown as string)
+            }
+          />
+          <label className="text-slate-500 text-lg border-slate-300">To</label>
+          <input
+            required
+            type="date"
+            className="text-slate-500 text-lg border-slate-300"
+            // {...register('leaveApplicationDatesRange.to')}
+            onChange={(e) =>
+              setSelectedDateTo(e.target.value as unknown as string)
+            }
+          />
+          <label className="text-slate-500 text-lg border-slate-300">
+            ={' '}
+            {dayjs(`${selectedDateTo}`).diff(`${selectedDateFrom}`, 'day') + 1}{' '}
+            Days
+          </label>
+        </div>
+      ) : (
+        <div className="relative">
+          <div className="">
+            <div className="md:grid md:grid-cols-1 md:divide-x md:divide-gray-200 ">
+              <div className="w-full">
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={previousMonth}
+                    className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
                   >
-                    <button
-                      type="button"
-                      onClick={() => viewDateActivities(day)}
+                    <span className="sr-only">Previous month</span>
+                    <HiOutlineChevronLeft
+                      className="w-5 h-5"
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <h2 className="flex-auto font-semibold text-gray-900 text-center">
+                    {format(firstDayCurrentMonth, 'MMMM yyyy')}
+                  </h2>
+
+                  <button
+                    onClick={nextMonth}
+                    type="button"
+                    className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+                  >
+                    <span className="sr-only">Next month</span>
+                    <HiOutlineChevronRight
+                      className="w-5 h-5"
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+                <div className="grid grid-cols-7 mt-3 text-xs leading-6 text-center text-gray-500">
+                  <div className="text-red-600">SUN</div>
+                  <div>MON</div>
+                  <div>TUE</div>
+                  <div>WED</div>
+                  <div>THU</div>
+                  <div>FRI</div>
+                  <div>SAT</div>
+                </div>
+                <div className="grid grid-cols-7 mt-2 text-sm">
+                  {days.map((day, dayIdx) => (
+                    <div
+                      key={day.toString()}
                       className={classNames(
-                        isEqual(day, selectedDay) &&
-                          'text-gray-900 font-semibold',
-                        !isEqual(day, selectedDay) &&
-                          isToday(day) &&
-                          'text-red-500',
-                        swrUnavailableDates &&
-                          swrUnavailableDates.some(
-                            (item) =>
-                              item.date === format(day, 'yyyy-MM-dd') &&
-                              item.type === 'Holiday'
-                          ) &&
-                          'text-red-600 bg-red-200 rounded-full',
-                        swrUnavailableDates &&
-                          swrUnavailableDates.some(
-                            (item) =>
-                              item.date === format(day, 'yyyy-MM-dd') &&
-                              item.type === 'Leave'
-                          ) &&
-                          'text-green-600 bg-green-200 rounded-full',
-                        !isEqual(day, selectedDay) &&
-                          !isToday(day) &&
-                          isSameMonth(day, firstDayCurrentMonth) &&
-                          'text-gray-900 font-semibold',
-                        !isEqual(day, selectedDay) &&
-                          !isToday(day) &&
-                          !isSameMonth(day, firstDayCurrentMonth) &&
-                          'text-gray-900 font-semibold',
-                        isEqual(day, selectedDay) && isToday(day) && '',
-                        isEqual(day, selectedDay) && !isToday(day) && '',
-                        !isEqual(day, selectedDay) && 'hover:bg-blue-200',
-                        (isEqual(day, selectedDay) || isToday(day)) &&
-                          'font-semibold',
-                        'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
-                        selectedDates.includes(format(day, 'yyyy-MM-dd'))
-                          ? 'bg-indigo-200 rounded-full text-gray-900'
-                          : ''
+                        dayIdx === 0 && colStartClasses[getDay(day)],
+                        'py-1.5'
                       )}
                     >
-                      <time dateTime={format(day, 'yyyy-MM-dd')}>
-                        {format(day, 'd')}
-                      </time>
-                    </button>
-                  </div>
-                ))}
+                      <button
+                        type="button"
+                        onClick={() => viewDateActivities(day)}
+                        className={classNames(
+                          isEqual(day, selectedDay) &&
+                            'text-gray-900 font-semibold',
+                          !isEqual(day, selectedDay) &&
+                            isToday(day) &&
+                            'text-red-500',
+                          swrUnavailableDates &&
+                            swrUnavailableDates.some(
+                              (item) =>
+                                item.date === format(day, 'yyyy-MM-dd') &&
+                                item.type === 'Holiday'
+                            ) &&
+                            'text-red-600 bg-red-200 rounded-full',
+                          swrUnavailableDates &&
+                            swrUnavailableDates.some(
+                              (item) =>
+                                item.date === format(day, 'yyyy-MM-dd') &&
+                                item.type === 'Leave'
+                            ) &&
+                            'text-green-600 bg-green-200 rounded-full',
+                          !isEqual(day, selectedDay) &&
+                            !isToday(day) &&
+                            isSameMonth(day, firstDayCurrentMonth) &&
+                            'text-gray-900 font-semibold',
+                          !isEqual(day, selectedDay) &&
+                            !isToday(day) &&
+                            !isSameMonth(day, firstDayCurrentMonth) &&
+                            'text-gray-900 font-semibold',
+                          isEqual(day, selectedDay) && isToday(day) && '',
+                          isEqual(day, selectedDay) && !isToday(day) && '',
+                          !isEqual(day, selectedDay) && 'hover:bg-blue-200',
+                          (isEqual(day, selectedDay) || isToday(day)) &&
+                            'font-semibold',
+                          'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
+                          selectedDates.includes(format(day, 'yyyy-MM-dd'))
+                            ? 'bg-indigo-200 rounded-full text-gray-900'
+                            : ''
+                        )}
+                      >
+                        <time dateTime={format(day, 'yyyy-MM-dd')}>
+                          {format(day, 'd')}
+                        </time>
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

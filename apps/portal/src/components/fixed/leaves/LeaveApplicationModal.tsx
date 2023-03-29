@@ -9,7 +9,11 @@ import {
 } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { LeaveContents, LeaveType } from '../../../../src/types/leave.type';
+import {
+  CalendarDate,
+  LeaveContents,
+  LeaveType,
+} from '../../../../src/types/leave.type';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
@@ -17,6 +21,10 @@ import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import Calendar from './LeaveCalendar';
+import dayjs from 'dayjs';
+import dayjsBusinessDays from 'dayjs-business-days';
+var isBetween = require('dayjs/plugin/isBetween');
+dayjs.extend(isBetween);
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -124,6 +132,9 @@ export const LeaveApplicationModal = ({
     vacationLeave,
     forcedLeave,
     sickLeave,
+    unavailableDates,
+    leaveDateFrom,
+    leaveDateTo,
 
     postLeave,
     postLeaveSuccess,
@@ -144,6 +155,9 @@ export const LeaveApplicationModal = ({
     vacationLeave: state.leaveCredits.vacation,
     forcedLeave: state.leaveCredits.forced,
     sickLeave: state.leaveCredits.sick,
+    unavailableDates: state.unavailableDates,
+    leaveDateFrom: state.leaveDateFrom,
+    leaveDateTo: state.leaveDateTo,
 
     postLeave: state.postLeave,
     postLeaveSuccess: state.postLeaveSuccess,
@@ -164,6 +178,11 @@ export const LeaveApplicationModal = ({
   const [vacationBalance, setVacationBalance] = useState<number>(0);
   const [forcedBalance, setForcedBalance] = useState<number>(0);
   const [sickBalance, setSickBalance] = useState<number>(0);
+  const [numberOfHolidays, setNumberOfHolidays] = useState<number>(0);
+  const [holidays, setHolidays] = useState<Array<CalendarDate>>([]);
+  //store json string from leave type selection
+  const [leaveObject, setLeaveObject] = useState<string>('');
+  const [selectedStudy, setSelectedStudy] = useState<string>('');
 
   // Set state for vacation/sick leave credits
   useEffect(() => {
@@ -217,10 +236,24 @@ export const LeaveApplicationModal = ({
       },
     });
 
-  //store json string from leave type selection
-  const [leaveObject, setLeaveObject] = useState<string>('');
+  const calculateHolidays = () => {
+    if (unavailableDates) {
+      console.log(unavailableDates);
+    }
+  };
 
-  const [selectedStudy, setSelectedStudy] = useState<string>('');
+  // useEffect(() => {
+  //   {
+  //     unavailableDates &&
+  //     if (unavailableDates) {
+  //       const holidays = unavailableDates.filter(
+  //         (day, index) => day.type !== 'Holiday'
+  //       );
+  //       console.log(holidays);
+  //     }
+  //   }
+
+  // }, [unavailableDates, leaveDateFrom, leaveDateTo]);
 
   const handleTypeOfLeave = (e: string) => {
     setLeaveObject(e);
@@ -247,6 +280,16 @@ export const LeaveApplicationModal = ({
   useEffect(() => {
     setValue('leaveApplicationDates', leaveDates);
   }, [leaveDates]);
+
+  useEffect(() => {
+    setValue('leaveApplicationDatesRange.from', leaveDateFrom);
+    calculateHolidays();
+  }, [leaveDateFrom]);
+
+  useEffect(() => {
+    setValue('leaveApplicationDatesRange.to', leaveDateTo);
+    calculateHolidays();
+  }, [leaveDateTo]);
 
   useEffect(() => {
     if (!applyLeaveModalIsOpen) {
@@ -297,7 +340,7 @@ export const LeaveApplicationModal = ({
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        leaveApplicationDates: data.leaveApplicationDates,
+        leaveApplicationDates: data.leaveApplicationDatesRange,
         forMastersCompletion: data.forMastersCompletion,
         forBarBoardReview: data.forBarBoardReview,
         studyLeaveOther: data.studyLeaveOther,
@@ -310,6 +353,12 @@ export const LeaveApplicationModal = ({
         employeeId: data.employeeId,
         leaveApplicationDates: data.leaveApplicationDates,
         splWomen: data.specialLeaveWomenIllness,
+      };
+    } else if (data.typeOfLeaveDetails.leaveName === 'Maternity Leave') {
+      dataToSend = {
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        leaveApplicationDates: data.leaveApplicationDatesRange,
       };
     } else if (data.typeOfLeaveDetails.leaveName === 'Others') {
       dataToSend = {
@@ -328,11 +377,19 @@ export const LeaveApplicationModal = ({
       };
     }
     //check first if leave dates are filled
-    if (!isEmpty(watch('leaveApplicationDates'))) {
+    if (
+      (!isEmpty(watch('leaveApplicationDates')) &&
+        watch('typeOfLeaveDetails.leaveName') !== 'Maternity Leave' &&
+        watch('typeOfLeaveDetails.leaveName') !== 'Study Leave') ||
+      (!isEmpty(watch('leaveApplicationDatesRange')) &&
+        (watch('typeOfLeaveDetails.leaveName') === 'Maternity Leave' ||
+          watch('typeOfLeaveDetails.leaveName') === 'Study Leave'))
+    ) {
       handlePostResult(dataToSend);
       postLeave();
       console.log(dataToSend);
-      console.log(selectedStudy);
+      console.log(unavailableDates);
+      console.log(numberOfHolidays, 'holidays');
     }
   };
 
@@ -723,7 +780,10 @@ export const LeaveApplicationModal = ({
                       Select Leave Dates:
                     </label>
                     {/* Notifications */}
-                    {isEmpty(leaveDates) ? (
+                    {isEmpty(leaveDates) &&
+                    watch('typeOfLeaveDetails.leaveName') !==
+                      'Maternity Leave' &&
+                    watch('typeOfLeaveDetails.leaveName') !== 'Study Leave' ? (
                       <AlertNotification
                         alertType="warning"
                         notifMessage="Please select date of leave"
@@ -767,7 +827,12 @@ export const LeaveApplicationModal = ({
                     ) : null}
 
                     <div className="w-full p-4 bg-gray-50 rounded">
-                      <Calendar clickableDate={true} />
+                      {watch('typeOfLeaveDetails.leaveName') ===
+                      'Maternity Leave' ? (
+                        <Calendar type={'range'} clickableDate={true} />
+                      ) : (
+                        <Calendar type={'single'} clickableDate={true} />
+                      )}
                     </div>
                   </>
                 ) : null}
