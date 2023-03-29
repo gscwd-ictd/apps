@@ -11,7 +11,8 @@
     "portal": "nx serve portal --port 3102 --hostname 0.0.0.0",
     "pds": "nx serve pds --port 3105 --hostname 0.0.0.0",
     "build portal": "nx portal",
-    "build pds": "nx pds"
+    "build pds": "nx pds",
+    "build ems": "nx build employee-monitoring"
   },
   "private": true,
   "dependencies": {

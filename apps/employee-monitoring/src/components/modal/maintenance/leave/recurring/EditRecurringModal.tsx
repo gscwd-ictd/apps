@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   AlertNotification,
   Button,
@@ -9,7 +10,6 @@ import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/Sel
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import {
-  CreditDistribution,
   LeaveBenefit,
   LeaveCategory,
 } from 'libs/utils/src/lib/types/leave-benefits.type';
@@ -37,8 +37,6 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
   setModalState,
 }) => {
   const {
-    LeaveBenefitPostResponse,
-    Error,
     IsLoading,
     UpdateLeaveBenefit,
     UpdateLeaveBenefitFail,
@@ -56,8 +54,6 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
   const {
     setValue,
     handleSubmit,
-    watch,
-    reset,
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({

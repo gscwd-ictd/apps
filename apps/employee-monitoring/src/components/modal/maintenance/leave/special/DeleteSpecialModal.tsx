@@ -2,7 +2,8 @@ import { Modal } from '@gscwd-apps/oneui';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
-import { FunctionComponent, useEffect } from 'react';
+import { isEmpty } from 'lodash';
+import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type DeleteModalProps = {
@@ -18,18 +19,9 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  const { handleSubmit, setValue } = useForm<LeaveBenefit>({
-    mode: 'onChange',
-    defaultValues: { id: rowData.id },
-  });
-
-  useEffect(() => {
-    setValue('id', rowData.id);
-  }, [modalState]);
+  const { handleSubmit } = useForm<LeaveBenefit>();
 
   const {
-    LeaveBenefitPostResponse,
-    Error,
     IsLoading,
     DeleteLeaveBenefit,
     DeleteLeaveBenefitFail,
@@ -44,11 +36,13 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
     DeleteLeaveBenefitFail: state.deleteLeaveBenefitFail,
   }));
 
-  const onSubmit: SubmitHandler<LeaveBenefit> = (sched: LeaveBenefit) => {
-    // set to true
-    DeleteLeaveBenefit(true);
+  const onSubmit: SubmitHandler<LeaveBenefit> = () => {
+    if (!isEmpty(rowData.id)) {
+      // set to true
+      DeleteLeaveBenefit(true);
 
-    handleDeleteResult(sched.id);
+      handleDeleteResult(rowData.id);
+    }
   };
 
   const handleDeleteResult = async (id: string) => {
