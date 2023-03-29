@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   AlertNotification,
   Button,
@@ -36,7 +37,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
   rowData,
 }) => {
   const {
-    SchedulePostResponse,
     IsLoading,
     Error,
     UpdateSchedule,
@@ -73,7 +73,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
   const {
     setValue,
     handleSubmit,
-    watch,
     reset,
     register,
     formState: { errors },
@@ -92,12 +91,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
       restDays: rowData.restDays,
     },
   });
-
-  // reset all values
-  const resetToDefaultValues = () => {
-    reset();
-    setSelectedRestDays([]);
-  };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true

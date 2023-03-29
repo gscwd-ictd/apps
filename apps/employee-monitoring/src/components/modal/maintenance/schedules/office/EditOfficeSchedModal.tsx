@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   AlertNotification,
   Button,
@@ -18,7 +19,7 @@ import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { isEmpty, setWith } from 'lodash';
+import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
@@ -37,7 +38,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
   rowData,
 }) => {
   const {
-    SchedulePostResponse,
     IsLoading,
     Error,
     UpdateSchedule,
@@ -101,13 +101,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
     },
   });
 
-  // reset all values
-  const resetToDefaultValues = () => {
-    reset();
-    setSelectedRestDays([]);
-    setWithLunch(true);
-  };
-
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
     UpdateSchedule(true);
@@ -146,7 +139,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
 
   useEffect(() => {
     if (modalState === true) loadNewDefaultValues(rowData);
-    console.log(rowData);
   }, [modalState]);
 
   return (

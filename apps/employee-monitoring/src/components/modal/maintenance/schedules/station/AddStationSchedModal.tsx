@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   AlertNotification,
   Button,
@@ -32,7 +33,6 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
   closeModalAction,
 }) => {
   const {
-    SchedulePostResponse,
     IsLoading,
     Error,
     PostSchedule,
@@ -48,7 +48,6 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
     PostScheduleFail: state.postScheduleFail,
   }));
 
-  const [withLunch, setWithLunch] = useState<boolean>(true);
   const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
     []
   );
@@ -56,7 +55,6 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
   const {
     setValue,
     handleSubmit,
-    watch,
     reset,
     register,
     formState: { errors },
@@ -74,13 +72,6 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
       lunchOut: null,
     },
   });
-
-  // reset all values
-  const resetToDefaultValues = () => {
-    reset();
-    setSelectedRestDays([]);
-    setWithLunch(true);
-  };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true

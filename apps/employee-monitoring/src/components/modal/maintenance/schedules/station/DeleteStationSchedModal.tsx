@@ -1,8 +1,9 @@
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Modal } from '@gscwd-apps/oneui';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
-import { FunctionComponent, useEffect } from 'react';
+import { isEmpty } from 'lodash';
+import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type DeleteModalProps = {
@@ -18,18 +19,10 @@ const DeleteStationSchedModal: FunctionComponent<DeleteModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  const { handleSubmit, setValue } = useForm<Schedule>({
-    mode: 'onChange',
-    defaultValues: { id: rowData.id },
-  });
-
-  useEffect(() => {
-    setValue('id', rowData.id);
-  }, [modalState]);
+  const { handleSubmit } = useForm<Schedule>();
 
   const {
     IsLoading,
-    DeleteResponse,
     DeleteSchedule,
     DeleteScheduleFail,
     DeleteScheduleSuccess,
@@ -41,11 +34,13 @@ const DeleteStationSchedModal: FunctionComponent<DeleteModalProps> = ({
     DeleteScheduleFail: state.deleteScheduleFail,
   }));
 
-  const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
-    // set to true
-    DeleteSchedule(true);
+  const onSubmit: SubmitHandler<Schedule> = () => {
+    if (!isEmpty(rowData.id)) {
+      // set to true
+      DeleteSchedule(true);
 
-    handleDeleteResult(sched.id);
+      handleDeleteResult(rowData.id);
+    }
   };
 
   const handleDeleteResult = async (id: string) => {

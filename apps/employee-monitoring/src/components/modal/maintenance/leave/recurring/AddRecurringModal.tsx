@@ -35,8 +35,6 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
   closeModalAction,
 }) => {
   const {
-    LeaveBenefitPostResponse,
-    Error,
     IsLoading,
     PostLeaveBenefit,
     PostLeaveBenefitFail,
@@ -52,10 +50,8 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
   }));
 
   const {
-    setValue,
     handleSubmit,
-    watch,
-    reset,
+
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({

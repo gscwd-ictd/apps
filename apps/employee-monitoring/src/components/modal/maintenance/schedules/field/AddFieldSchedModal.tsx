@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   AlertNotification,
@@ -9,7 +10,6 @@ import {
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
-import Toggle from 'apps/employee-monitoring/src/components/switch/Toggle';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
@@ -35,7 +35,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
   closeModalAction,
 }) => {
   const {
-    SchedulePostResponse,
     IsLoading,
     Error,
     PostSchedule,
@@ -58,7 +57,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
   const {
     setValue,
     handleSubmit,
-    watch,
     reset,
     register,
     formState: { errors },

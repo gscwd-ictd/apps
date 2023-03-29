@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   AlertNotification,
   Button,
@@ -34,7 +35,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   closeModalAction,
 }) => {
   const {
-    SchedulePostResponse,
     IsLoading,
     Error,
     PostSchedule,
