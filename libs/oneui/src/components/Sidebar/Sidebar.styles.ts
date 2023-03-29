@@ -17,8 +17,8 @@ export const itemClass = (
     'w-full border-l-4 duration-100 ease-in-out transition-all',
     {
       'border-l-transparent': !selected,
-      'bg-cyan-400/40': selected && !hasSubItem,
-      'bg-slate-700': selected && hasSubItem,
+      ' border-cyan-400 bg-cyan-400/40': selected && !hasSubItem,
+      ' border-cyan-400 bg-cyan-800/40': selected && hasSubItem,
     }
   );
 };

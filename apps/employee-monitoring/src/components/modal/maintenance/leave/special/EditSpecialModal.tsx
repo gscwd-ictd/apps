@@ -116,7 +116,7 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
         <Modal.Header>
           <div className="flex justify-between w-full">
             <span className="text-2xl text-gray-600">
-              Edit Recurring Leave Benefit
+              Edit Special Leave Benefit
             </span>
             <button
               className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
