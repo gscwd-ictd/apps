@@ -25,6 +25,7 @@ import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/Rend
 import AddFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/AddFieldSchedModal';
 import UseRenderShiftType from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
 import EditFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/EditFieldSchedModal';
+import DeleteFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/DeleteFieldSchedModal';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -103,21 +104,6 @@ export default function Index() {
   // close delete action
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  // when edit action is clicked
-  const editAction = async (sched: Schedule, idx: number) => {
-    setAction(ModalActions.UPDATE);
-    setCurrentRowData(sched);
-    setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
-    // loadNewDefaultValues(sched);
-    setModalIsOpen(true);
-  };
-
-  // run this when modal is closed
-  const closeAction = () => {
-    setModalIsOpen(false);
-    // resetToDefaultValues();
-  };
-
   // define table columns
   const columnHelper = createColumnHelper<Schedule>();
 
@@ -147,10 +133,22 @@ export default function Index() {
       header: () => 'Time Out',
       cell: (info) => UseConvertDayToTime(info.getValue()),
     }),
+    columnHelper.accessor('lunchOut', {
+      enableSorting: false,
+      header: () => 'Lunch Out',
+      cell: (info) => UseConvertDayToTime(info.getValue()),
+    }),
+    columnHelper.accessor('lunchIn', {
+      enableSorting: false,
+      header: () => 'Lunch In',
+      cell: (info) => UseConvertDayToTime(info.getValue()),
+    }),
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => UseRenderShiftType(info.getValue()),
+      cell: (info) => (
+        <div className="w-[6rem]">{UseRenderShiftType(info.getValue())}</div>
+      ),
     }),
     columnHelper.accessor('restDays', {
       enableSorting: false,
@@ -269,6 +267,14 @@ export default function Index() {
           />
         ) : null}
 
+        {/* Notification Delete Success */}
+        {!isEmpty(DeleteResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully deleted!"
+          />
+        ) : null}
+
         <AddFieldSchedModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
@@ -279,6 +285,13 @@ export default function Index() {
           modalState={editModalIsOpen}
           setModalState={setEditModalIsOpen}
           closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
+        />
+
+        <DeleteFieldSchedModal
+          modalState={deleteModalIsOpen}
+          setModalState={setDeleteModalIsOpen}
+          closeModalAction={closeDeleteActionModal}
           rowData={currentRowData}
         />
 

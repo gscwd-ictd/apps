@@ -12,7 +12,7 @@ type DeleteModalProps = {
   rowData: Schedule;
 };
 
-const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteFieldSchedModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -80,7 +80,7 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
-          <form onSubmit={handleSubmit(onSubmit)} id="deleteoffschedmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="deletefieldschedmodal">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <span className="px-2 text-lg">{rowData.name}</span>
@@ -100,7 +100,7 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
             </button>
             <button
               type="submit"
-              form="deleteoffschedmodal"
+              form="deletefieldschedmodal"
               className="disabled:cursor-not-allowed w-[4rem] bg-red-500 hover:bg-red-400 active:bg-red-300 rounded text-white"
               disabled={IsLoading ? true : false}
             >
@@ -113,4 +113,4 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteOfficeSchedModal;
+export default DeleteFieldSchedModal;

@@ -208,7 +208,6 @@ export default function Index() {
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
       GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
-      console.log(swrSchedules.data);
     }
 
     if (!isEmpty(swrError)) {
@@ -267,7 +266,7 @@ export default function Index() {
           />
         ) : null}
 
-        {/* Notification Update Success */}
+        {/* Notification Delete Success */}
         {!isEmpty(DeleteResponse) ? (
           <ToastNotification
             toastType="success"

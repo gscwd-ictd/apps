@@ -23,24 +23,14 @@ export const SideNavigation = () => {
         <div className="z-50 flex items-center justify-center w-full gap-2 py-5 text-white">
           <section className="">
             <div className="text-sky-200/90">
-              {/* <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="skyblue"
-                className="w-full h-full"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M1 2.75A.75.75 0 011.75 2h16.5a.75.75 0 010 1.5H18v8.75A2.75 2.75 0 0115.25 15h-1.072l.798 3.06a.75.75 0 01-1.452.38L13.41 18H6.59l-.114.44a.75.75 0 01-1.452-.38L5.823 15H4.75A2.75 2.75 0 012 12.25V3.5h-.25A.75.75 0 011 2.75zM7.373 15l-.391 1.5h6.037l-.392-1.5H7.373zm7.49-8.931a.75.75 0 01-.175 1.046 19.326 19.326 0 00-3.398 3.098.75.75 0 01-1.097.04L8.5 8.561l-2.22 2.22A.75.75 0 115.22 9.72l2.75-2.75a.75.75 0 011.06 0l1.664 1.663a20.786 20.786 0 013.122-2.74.75.75 0 011.046.176z"
-                  clipRule="evenodd"
-                />
-              </svg> */}
-              <i className="text-4xl bx bxs-network-chart"></i>
+              <i className="text-4xl bx bxs-network-chart bx-tada"></i>
             </div>
           </section>
 
           <section className={isCollapsed ? 'hidden' : ''}>
-            <span className="text-5xl font-medium text-sky-300">HRMS</span>
+            <span className="text-5xl font-medium text-sky-300 drop-shadow-2xl">
+              HRMS
+            </span>
           </section>
         </div>
       </Sidebar.Header>
@@ -296,56 +286,6 @@ export const SideNavigation = () => {
                 />
               </>
             }
-          />
-
-          {/** Maintenance OVERTIME */}
-          <Sidebar.Item
-            display="Overtime"
-            className="text-xs"
-            icon={
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-                  />
-                </svg>
-              </>
-            }
-            path={Paths[13]}
-          />
-
-          {/** Maintenance PASS SLIP */}
-          <Sidebar.Item
-            display="Pass Slip"
-            className="text-xs"
-            icon={
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-                  />
-                </svg>
-              </>
-            }
-            path={Paths[14]}
           />
 
           {/**Settings Header */}

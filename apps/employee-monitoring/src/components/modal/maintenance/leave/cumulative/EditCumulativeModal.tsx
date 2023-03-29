@@ -14,13 +14,14 @@ import {
   LeaveCategory,
 } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-type AddModalProps = {
+type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
+  rowData: LeaveBenefit;
 };
 
 // mock
@@ -29,26 +30,27 @@ const distributionSelection: Array<SelectOption> = [
   { label: 'Yearly', value: 'yearly' },
 ];
 
-const AddRecurringModal: FunctionComponent<AddModalProps> = ({
+const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
+  rowData,
   modalState,
-  setModalState,
   closeModalAction,
+  setModalState,
 }) => {
   const {
     LeaveBenefitPostResponse,
     Error,
     IsLoading,
-    PostLeaveBenefit,
-    PostLeaveBenefitFail,
-    PostLeaveBenefitSuccess,
+    UpdateLeaveBenefit,
+    UpdateLeaveBenefitFail,
+    UpdateLeaveBenefitSuccess,
   } = useLeaveBenefitStore((state) => ({
     LeaveBenefitPostResponse: state.leaveBenefit.postResponse,
     IsLoading: state.loading.loadingLeaveBenefit,
     Error: state.error.errorLeaveBenefit,
 
-    PostLeaveBenefit: state.postLeaveBenefit,
-    PostLeaveBenefitSuccess: state.postLeaveBenefitSuccess,
-    PostLeaveBenefitFail: state.postLeaveBenefitFail,
+    UpdateLeaveBenefit: state.updateLeaveBenefit,
+    UpdateLeaveBenefitSuccess: state.updateLeaveBenefitSuccess,
+    UpdateLeaveBenefitFail: state.updateLeaveBenefitFail,
   }));
 
   const {
@@ -61,38 +63,56 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
   } = useForm<LeaveBenefit>({
     mode: 'onChange',
     defaultValues: {
-      leaveName: '',
-      accumulatedCredits: undefined,
-      canBeCarriedOver: false,
-      category: LeaveCategory.RECURRING,
-      creditDistribution: CreditDistribution.YEARLY,
-      isMonetizable: false,
+      id: rowData.id,
+      leaveName: rowData.leaveName,
+      accumulatedCredits: rowData.accumulatedCredits,
+      canBeCarriedOver: true,
+      category: LeaveCategory.CUMULATIVE,
+      creditDistribution: rowData.creditDistribution,
+      isMonetizable: true,
+      maximumCredits: rowData.maximumCredits,
     },
   });
+
+  // load default values
+  const loadNewDefaultValues = (leave: LeaveBenefit) => {
+    setValue('id', leave.id);
+    setValue('leaveName', leave.leaveName);
+    setValue('accumulatedCredits', leave.accumulatedCredits);
+    setValue('category', leave.category);
+    setValue('canBeCarriedOver', leave.canBeCarriedOver);
+    setValue('creditDistribution', leave.creditDistribution);
+    setValue('isMonetizable', leave.isMonetizable);
+    setValue('maximumCredits', leave.maximumCredits);
+  };
 
   const onSubmit: SubmitHandler<LeaveBenefit> = (leave: LeaveBenefit) => {
     // console.log(leave);
 
     // set loading to true
-    PostLeaveBenefit(true);
+    UpdateLeaveBenefit(true);
 
-    handlePostLeave(leave);
+    handleEditLeave(leave);
   };
 
-  const handlePostLeave = async (leave: LeaveBenefit) => {
+  const handleEditLeave = async (leave: LeaveBenefit) => {
     const { error, result } = await postEmpMonitoring('/leave-benefits', leave);
 
     if (error) {
       // request is done so set loading to false and set value for error message
-      PostLeaveBenefitFail(result);
+      UpdateLeaveBenefitFail(result);
     } else {
       // request is done so set loading to false and set value from returned response
-      PostLeaveBenefitSuccess(result);
+      UpdateLeaveBenefitSuccess(result);
 
       // call the close modal action
       closeModalAction();
     }
   };
+
+  useEffect(() => {
+    if (modalState === true) loadNewDefaultValues(rowData);
+  }, [modalState]);
 
   return (
     <>
@@ -100,7 +120,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
         <Modal.Header>
           <div className="flex justify-between w-full">
             <span className="text-2xl text-gray-600">
-              New Recurring Leave Benefit
+              Edit Recurring Leave Benefit
             </span>
             <button
               className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
@@ -125,7 +145,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addrecurringmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="editcumulativemodal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/* Recurring Name */}
@@ -170,10 +190,10 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addrecurringmodal"
+              form="editcumulativemodal"
               className="disabled:cursor-not-allowed"
             >
-              <span className="text-xs font-normal">Submit</span>
+              <span className="text-xs font-normal">Update</span>
             </Button>
           </div>
         </Modal.Footer>
@@ -182,4 +202,4 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddRecurringModal;
+export default EditCumulativeModal;

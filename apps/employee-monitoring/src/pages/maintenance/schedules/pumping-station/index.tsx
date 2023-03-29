@@ -25,6 +25,7 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import EditStationSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/EditStationSchedModal';
 import AddStationSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/AddStationSchedModal';
+import DeleteStationSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/DeleteStationSchedModal';
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -133,7 +134,9 @@ export default function Index() {
     columnHelper.accessor('scheduleType', {
       enableSorting: false,
       header: () => 'Category',
-      cell: (info) => UseRenderScheduleType(info.getValue()),
+      cell: (info) => (
+        <div className="w-[6rem]">{UseRenderScheduleType(info.getValue())}</div>
+      ),
     }),
     columnHelper.accessor('timeIn', {
       enableSorting: false,
@@ -143,6 +146,16 @@ export default function Index() {
     columnHelper.accessor('timeOut', {
       enableSorting: false,
       header: () => 'Time Out',
+      cell: (info) => UseConvertDayToTime(info.getValue()),
+    }),
+    columnHelper.accessor('lunchOut', {
+      enableSorting: false,
+      header: () => 'Lunch Out',
+      cell: (info) => UseConvertDayToTime(info.getValue()),
+    }),
+    columnHelper.accessor('lunchIn', {
+      enableSorting: false,
+      header: () => 'Lunch In',
       cell: (info) => UseConvertDayToTime(info.getValue()),
     }),
     columnHelper.accessor('shift', {
@@ -165,7 +178,7 @@ export default function Index() {
     }),
   ];
   // Define visibility of columns
-  const columnVisibility = { id: false, scheduleType: false };
+  const columnVisibility = { id: false };
 
   // Render row actions in the table component
   const renderRowActions = (rowData: Schedule) => {
@@ -275,6 +288,14 @@ export default function Index() {
           />
         ) : null}
 
+        {/* Notification Delete Success */}
+        {!isEmpty(DeleteResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully deleted!"
+          />
+        ) : null}
+
         <AddStationSchedModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
@@ -285,6 +306,13 @@ export default function Index() {
           modalState={editModalIsOpen}
           setModalState={setEditModalIsOpen}
           closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
+        />
+
+        <DeleteStationSchedModal
+          modalState={deleteModalIsOpen}
+          setModalState={setDeleteModalIsOpen}
+          closeModalAction={closeDeleteActionModal}
           rowData={currentRowData}
         />
 

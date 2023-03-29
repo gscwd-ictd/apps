@@ -47,6 +47,8 @@ type LeaveBenefitState = {
   deleteLeaveBenefit: (loading: boolean) => void;
   deleteLeaveBenefitSuccess: (response: LeaveBenefit) => void;
   deleteLeaveBenefitFail: (error: string) => void;
+
+  emptyResponse: () => void;
 };
 
 export const useLeaveBenefitStore = create<LeaveBenefitState>()(
@@ -151,6 +153,17 @@ export const useLeaveBenefitStore = create<LeaveBenefitState>()(
         ...state,
         loading: { ...state.loading, loadingLeaveBenefit: false },
         error: { ...state.error, errorLeaveBenefit: error },
+      })),
+
+    emptyResponse: () =>
+      set((state) => ({
+        ...state,
+        leaveBenefit: {
+          ...state.leaveBenefit,
+          postResponse: {} as LeaveBenefit,
+          updateResponse: {} as LeaveBenefit,
+          deleteResponse: {} as LeaveBenefit,
+        },
       })),
   }))
 );
