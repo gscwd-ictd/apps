@@ -65,7 +65,7 @@ const DeleteCumulativeModal: FunctionComponent<DeleteModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">Confirm Deletion</span>
+            <span className="text-xl text-gray-600">Confirm Deletion</span>
             <button
               className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
