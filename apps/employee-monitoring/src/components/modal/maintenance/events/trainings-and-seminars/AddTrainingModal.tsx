@@ -10,7 +10,7 @@ import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { isEmpty } from 'lodash';
-import { useHolidaysStore } from 'apps/employee-monitoring/src/store/holidays.store';
+import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
 import { Holiday } from 'apps/employee-monitoring/src/utils/types/holiday.type';
 
 type AddModalProps = {
@@ -19,38 +19,28 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
-type Item = {
-  label: string;
-  value: any;
-};
-
-const holidayTypesSelection: Array<SelectOption> = [
-  { label: 'Regular', value: 'regular' },
-  { label: 'Special', value: 'special' },
-];
-
-const AddHolidayModal: FunctionComponent<AddModalProps> = ({
+const AddTrainingModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
 }) => {
   // zustand store initialization
   const {
-    HolidayPostResponse,
+    TrainingTypePostResponse,
     IsLoading,
     Error,
 
-    PostHoliday,
-    PostHolidaySuccess,
-    PostHolidayFail,
-  } = useHolidaysStore((state) => ({
-    HolidayPostResponse: state.holiday.postResponse,
-    IsLoading: state.loading.loadingHoliday,
-    Error: state.error.errorHoliday,
+    postTrainingType,
+    postTrainingTypeSuccess,
+    postTrainingTypeFail,
+  } = useTrainingTypesStore((state) => ({
+    TrainingTypePostResponse: state.trainingType.postResponse,
+    IsLoading: state.loading.loadingTrainingType,
+    Error: state.error.errorTrainingType,
 
-    PostHoliday: state.postHoliday,
-    PostHolidaySuccess: state.postHolidaySuccess,
-    PostHolidayFail: state.postHolidayFail,
+    postTrainingType: state.postTrainingType,
+    postTrainingTypeSuccess: state.postTrainingTypeSuccess,
+    postTrainingTypeFail: state.postTrainingTypeFail,
   }));
 
   // React hook form
@@ -58,36 +48,38 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
     mode: 'onChange',
     defaultValues: {
       name: '',
-      holidayDate: '',
-      type: '',
     },
   });
 
   const onSubmit: SubmitHandler<Holiday> = (data: Holiday) => {
     // set loading to true
-    PostHoliday(true);
+    postTrainingType(true);
 
     handlePostResult(data);
   };
 
   const handlePostResult = async (data: Holiday) => {
-    const { error, result } = await postEmpMonitoring('/holidays', data);
+    const { error, result } = await postEmpMonitoring(
+      '/trainings-and-seminars',
+      data
+    );
 
     if (error) {
       // request is done so set loading to false
-      PostHoliday(false);
+      postTrainingType(false);
 
       // set value for error message
-      PostHolidayFail(false, result);
+      postTrainingTypeFail(false, result);
     } else {
       // request is done so set loading to false
-      PostHoliday(false);
+      postTrainingType(false);
 
       // set value from returned response
-      PostHolidaySuccess(false, result);
+      postTrainingTypeSuccess(false, result);
 
       reset();
       closeModalAction();
+      // EmptyResponse();
     }
   };
 
@@ -98,7 +90,7 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
         <ToastNotification toastType="error" notifMessage={Error} />
       ) : null}
 
-      {!isEmpty(HolidayPostResponse) ? (
+      {!isEmpty(TrainingTypePostResponse) ? (
         <ToastNotification toastType="success" notifMessage="Sending Request" />
       ) : null}
 
@@ -128,8 +120,8 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
               />
             ) : null}
 
-            <form onSubmit={handleSubmit(onSubmit)} id="addHolidayForm">
-              {/* Holiday name input */}
+            <form onSubmit={handleSubmit(onSubmit)} id="addTrainingTypeForm">
+              {/* Training Type name input */}
               <div className="mb-6">
                 <label
                   htmlFor="holiday_name"
@@ -147,52 +139,6 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
                   {...register('name')}
                 />
               </div>
-
-              <div className="grid md:grid-cols-2 md:gap-6">
-                {/* Holiday date input*/}
-                <div className="mb-6">
-                  <label
-                    htmlFor="holiday_date"
-                    className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                  >
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    name="holiday_date"
-                    id="floating_password"
-                    className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder=" "
-                    required
-                    {...register('holidayDate')}
-                  />
-                </div>
-
-                {/* Holiday type input */}
-                <div className="mb-6">
-                  <label
-                    htmlFor="countries"
-                    className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                  >
-                    Type of Holiday
-                  </label>
-                  <select
-                    id="countries"
-                    className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required
-                    {...register('type')}
-                  >
-                    <option value="" disabled>
-                      -
-                    </option>
-                    {holidayTypesSelection.map((item: Item, idx: number) => (
-                      <option value={item.value} key={idx}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
             </form>
           </div>
         </Modal.Body>
@@ -202,7 +148,7 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addHolidayForm"
+              form="addTrainingTypeForm"
               className="text-gray-400 ml-1 disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
@@ -215,4 +161,4 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddHolidayModal;
+export default AddTrainingModal;
