@@ -35,7 +35,7 @@ export const BreadCrumbs: FunctionComponent<BreadCrumbsProps> = ({
               return (
                 <React.Fragment key={index}>
                   <span className="flex items-center h-full text-xs text-gray-400">
-                    /
+                    {crumb.layerNo >= 1 ? '/' : null}
                   </span>
                   {crumb.path === '' ? (
                     <div className="flex items-center h-full text-xs text-gray-600 select-none">

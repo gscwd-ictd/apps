@@ -194,7 +194,7 @@ export const LearningNDevt = (): JSX.Element => {
   const handleRemoveTraining = (trainingIdx: number) => {
     const updatedLND = [...learningDevelopment];
     updatedLND.splice(trainingIdx, 1);
-    deletedLearningDevelopment.push(removedLnd);
+    if (!isEmpty(removedLnd._id)) deletedLearningDevelopment.push(removedLnd);
     setLearningDevelopment(updatedLND);
     setRemoveLndIsOpen(false);
   };

@@ -14,11 +14,10 @@ export const itemClass = (
 ) => {
   return cls(
     classnames,
-    'w-full border-l-4 duration-100 ease-in-out transition-all',
+    'border-l-4 border-transparent w-full  duration-100 ease-in-out transition-all',
     {
-      'border-l-transparent': !selected,
-      ' border-cyan-400 bg-cyan-400/40': selected && !hasSubItem,
-      ' border-cyan-400 bg-cyan-800/40': selected && hasSubItem,
+      'bg-sky-400/40': selected && !hasSubItem,
+      'bg-sky-800/40': selected && hasSubItem,
     }
   );
 };
@@ -30,7 +29,7 @@ export const linkClass = (
   return cls(
     'flex items-center hover:text-slate-50  font-medium py-3 duration-100 ease-in-out transition-all',
     {
-      'justify-center': collapsed,
+      'justify-center hover:pl-1': collapsed,
 
       'pl-4 gap-5': !collapsed,
 

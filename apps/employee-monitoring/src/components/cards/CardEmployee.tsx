@@ -4,10 +4,10 @@ export const CardEmployee = () => {
   return (
     <div className="static flex flex-col w-full h-[18rem] bg-white rounded">
       {/** TOP PART */}
-      <section className="min-w-full h-[50%] bg-blue-200 rounded-t">
+      <section className="min-w-full h-[50%] bg-sky-300/80 rounded-t">
         <div className="flex flex-col m-5">
-          <span className="font-medium text-blue-600">Welcome Back!</span>
-          <span className="text-xs font-light text-blue-600">
+          <span className="font-medium text-sky-800">Welcome Back!</span>
+          <span className="text-xs font-normal text-sky-800">
             Employee Monitoring Dashboard
           </span>
         </div>

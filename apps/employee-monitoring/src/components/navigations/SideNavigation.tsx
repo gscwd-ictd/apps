@@ -18,19 +18,18 @@ export const SideNavigation = () => {
   const { pathname } = useRouter();
 
   return (
-    <Sidebar className="relative w-full">
+    <Sidebar className="relative w-full" background="bg-slate-900">
       <Sidebar.Header>
         <div className="z-50 flex items-center justify-center w-full gap-0 py-5 text-white">
           <section className="">
-            <div className="text-cyan-200/60">
-              <i className="text-4xl bx bxs-network-chart"></i>
+            <div className="text-sky-300/40">
+              <i className="text-5xl bx bxs-network-chart"></i>
+              {/* <i className="text-5xl bx bxl-steam"></i> */}
             </div>
           </section>
 
           <section className={isCollapsed ? 'hidden' : ''}>
-            <span className="text-5xl font-medium text-sky-300 drop-shadow-2xl">
-              HRMS
-            </span>
+            <span className="text-5xl font-medium text-sky-300">HRMS</span>
           </section>
         </div>
       </Sidebar.Header>

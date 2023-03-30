@@ -195,10 +195,10 @@ export const WorkExp = (): JSX.Element => {
   };
 
   // open remove modal state
-  const openRemoveActionModal = (workExpIdx: number) => {
+  const openRemoveActionModal = (workExpIdx: number, work: WorkExperience) => {
     setRemoveWorkExpIsOpen(true);
     setWorkExpToRemove(workExpIdx);
-    // setRemovedWorkExp(work);
+    setRemovedWorkExp(work);
   };
 
   // when edit button is clicked
@@ -618,7 +618,9 @@ export const WorkExp = (): JSX.Element => {
                               isText={true}
                               className="px-1"
                               label={
-                                work.isGovernmentService.toString() === 'true'
+                                work.isGovernmentService.toString() ===
+                                  'true' ||
+                                Boolean(work.isGovernmentService) === true
                                   ? 'YES'
                                   : 'NO'
                               }
@@ -654,7 +656,10 @@ export const WorkExp = (): JSX.Element => {
                                           <div className="w-8">
                                             <DeleteButton
                                               action={() =>
-                                                openRemoveActionModal(workIdx)
+                                                openRemoveActionModal(
+                                                  workIdx,
+                                                  work
+                                                )
                                               }
                                               muted={
                                                 workExperienceOnEdit
@@ -682,7 +687,10 @@ export const WorkExp = (): JSX.Element => {
                                         <div className="w-8">
                                           <DeleteButton
                                             action={() =>
-                                              openRemoveActionModal(workIdx)
+                                              openRemoveActionModal(
+                                                workIdx,
+                                                work
+                                              )
                                             }
                                           />
                                         </div>

@@ -102,7 +102,11 @@ const Item: FunctionComponent<ItemProps> = ({
       ) : (
         <Accordion className="flex flex-col justify-center w-full">
           <Accordion.Button className={linkClass(isCollapsed, selected)}>
-            <div className="flex w-full gap-5 text-center place-items-center">
+            <div
+              className={`flex w-full ${
+                isCollapsed ? 'gap-0' : 'gap-5'
+              } pr-2 text-center place-items-center`}
+            >
               <span
                 className={`${
                   isCollapsed ? 'w-full' : 'w-[10%]'
@@ -110,18 +114,32 @@ const Item: FunctionComponent<ItemProps> = ({
               >
                 {icon}
               </span>
-              {!isCollapsed && (
+              {!isCollapsed ? (
                 <div className="flex justify-between w-full text-left place-items-center">
                   <motion.span
                     initial={{ opacity: 0, x: -100 }}
                     animate={{ opacity: 1, x: 0 }}
                   >
-                    {display}
+                    <span className={`${isCollapsed ? '' : ''}`}>
+                      {display}
+                    </span>
                   </motion.span>
 
                   <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
                 </div>
-              )}
+              ) : isCollapsed ? (
+                <>
+                  <motion.span
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    hidden
+                  >
+                    {display}
+                  </motion.span>
+
+                  <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
+                </>
+              ) : null}
             </div>
           </Accordion.Button>
           <Accordion.Body>

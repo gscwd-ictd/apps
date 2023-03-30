@@ -33,7 +33,12 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
   return (
     <PageContentContext.Provider
       value={{
-        aside: { isCollapsed, setIsCollapsed, previousState, setPreviousState },
+        aside: {
+          isCollapsed,
+          setIsCollapsed,
+          previousState,
+          setPreviousState,
+        },
       }}
     >
       <div className="flex w-screen h-screen overflow-x-hidden bg-slate-100">
