@@ -1,17 +1,14 @@
 import {
   Modal,
-  ToastNotification,
   AlertNotification,
   LoadingSpinner,
   Button,
 } from '@gscwd-apps/oneui';
-import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { isEmpty } from 'lodash';
 import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
-import { Holiday } from 'apps/employee-monitoring/src/utils/types/holiday.type';
+import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
 
 type AddModalProps = {
   modalState: boolean;
@@ -19,46 +16,42 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
-const AddTrainingModal: FunctionComponent<AddModalProps> = ({
+const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
 }) => {
   // zustand store initialization
   const {
-    TrainingTypePostResponse,
     IsLoading,
-    Error,
 
-    postTrainingType,
-    postTrainingTypeSuccess,
-    postTrainingTypeFail,
+    PostTrainingType,
+    PostTrainingTypeSuccess,
+    PostTrainingTypeFail,
   } = useTrainingTypesStore((state) => ({
-    TrainingTypePostResponse: state.trainingType.postResponse,
     IsLoading: state.loading.loadingTrainingType,
-    Error: state.error.errorTrainingType,
 
-    postTrainingType: state.postTrainingType,
-    postTrainingTypeSuccess: state.postTrainingTypeSuccess,
-    postTrainingTypeFail: state.postTrainingTypeFail,
+    PostTrainingType: state.postTrainingType,
+    PostTrainingTypeSuccess: state.postTrainingTypeSuccess,
+    PostTrainingTypeFail: state.postTrainingTypeFail,
   }));
 
   // React hook form
-  const { reset, register, handleSubmit } = useForm<Holiday>({
+  const { reset, register, handleSubmit } = useForm<TrainingType>({
     mode: 'onChange',
     defaultValues: {
       name: '',
     },
   });
 
-  const onSubmit: SubmitHandler<Holiday> = (data: Holiday) => {
+  const onSubmit: SubmitHandler<TrainingType> = (data: TrainingType) => {
     // set loading to true
-    postTrainingType(true);
+    PostTrainingType(true);
 
     handlePostResult(data);
   };
 
-  const handlePostResult = async (data: Holiday) => {
+  const handlePostResult = async (data: TrainingType) => {
     const { error, result } = await postEmpMonitoring(
       '/trainings-and-seminars',
       data
@@ -66,38 +59,28 @@ const AddTrainingModal: FunctionComponent<AddModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      postTrainingType(false);
+      PostTrainingType(false);
 
       // set value for error message
-      postTrainingTypeFail(false, result);
+      PostTrainingTypeFail(false, result);
     } else {
       // request is done so set loading to false
-      postTrainingType(false);
+      PostTrainingType(false);
 
       // set value from returned response
-      postTrainingTypeSuccess(false, result);
+      PostTrainingTypeSuccess(false, result);
 
       reset();
       closeModalAction();
-      // EmptyResponse();
     }
   };
 
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
-      ) : null}
-
-      {!isEmpty(TrainingTypePostResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Sending Request" />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600"></span>
+            <span className="text-xl text-gray-600"></span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -124,15 +107,15 @@ const AddTrainingModal: FunctionComponent<AddModalProps> = ({
               {/* Training Type name input */}
               <div className="mb-6">
                 <label
-                  htmlFor="holiday_name"
+                  htmlFor="training_type_name"
                   className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
                 >
                   Name
                 </label>
                 <input
                   type="text"
-                  name="holiday_name"
-                  id="holiday_name"
+                  name="training_type_name"
+                  id="training_type_name"
                   className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder=" "
                   required
@@ -161,4 +144,4 @@ const AddTrainingModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddTrainingModal;
+export default AddTrainingTypeModal;

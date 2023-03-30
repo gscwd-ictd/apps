@@ -5,21 +5,21 @@ import {
   LoadingSpinner,
   Modal,
 } from '@gscwd-apps/oneui';
-import { useHolidaysStore } from 'apps/employee-monitoring/src/store/holidays.store';
+import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { isEmpty } from 'lodash';
 import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Holiday } from '../../../../../../src/utils/types/holiday.type';
+import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
 
-type DeleteHolidayModal = {
+type DeleteTrainingTypeModal = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: Holiday;
+  rowData: TrainingType;
 };
 
-const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
+const DeleteTrainingTypeModal: FunctionComponent<DeleteTrainingTypeModal> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -29,27 +29,28 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
   const {
     IsLoading,
 
-    DeleteHoliday,
-    DeleteHolidaySuccess,
-    DeleteHolidayFail,
-  } = useHolidaysStore((state) => ({
-    IsLoading: state.loading.loadingHoliday,
+    DeleteTrainingType,
+    DeleteTrainingTypeSuccess,
+    DeleteTrainingTypeFail,
+  } = useTrainingTypesStore((state) => ({
+    IsLoading: state.loading.loadingTrainingType,
 
-    DeleteHoliday: state.deleteHoliday,
-    DeleteHolidaySuccess: state.deleteHolidaySuccess,
-    DeleteHolidayFail: state.deleteHolidayFail,
+    DeleteTrainingType: state.deleteTrainingType,
+    DeleteTrainingTypeSuccess: state.deleteTrainingTypeSuccess,
+    DeleteTrainingTypeFail: state.deleteTrainingTypeFail,
   }));
 
-  const { reset, handleSubmit } = useForm<Holiday>({
+  const { reset, handleSubmit } = useForm<TrainingType>({
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<Holiday> = () => {
+  const onSubmit: SubmitHandler<TrainingType> = () => {
     if (!isEmpty(rowData.id)) {
       // set loading to true
-      DeleteHoliday(true);
+      // DeleteTrainingType(true);
 
-      handleDeleteResult();
+      // handleDeleteResult();
+      console.log(rowData.id);
     }
   };
 
@@ -60,16 +61,16 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
 
     if (error) {
       // request is done so set loading to false
-      DeleteHoliday(false);
+      DeleteTrainingType(false);
 
       // set value for error message
-      DeleteHolidayFail(false, result);
+      DeleteTrainingTypeFail(false, result);
     } else {
       // request is done so set loading to false
-      DeleteHoliday(false);
+      DeleteTrainingType(false);
 
       // set value from returned response
-      DeleteHolidaySuccess(false, result);
+      DeleteTrainingTypeSuccess(false, result);
 
       reset();
       closeModalAction();
@@ -136,4 +137,4 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
   );
 };
 
-export default EditHolidayModal;
+export default DeleteTrainingTypeModal;

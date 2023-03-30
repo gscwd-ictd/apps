@@ -1,6 +1,5 @@
 import {
   Modal,
-  ToastNotification,
   AlertNotification,
   LoadingSpinner,
   Button,
@@ -9,7 +8,6 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { isEmpty } from 'lodash';
 import { useHolidaysStore } from 'apps/employee-monitoring/src/store/holidays.store';
 import { Holiday } from 'apps/employee-monitoring/src/utils/types/holiday.type';
 
@@ -36,17 +34,13 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
 }) => {
   // zustand store initialization
   const {
-    HolidayPostResponse,
     IsLoading,
-    Error,
 
     PostHoliday,
     PostHolidaySuccess,
     PostHolidayFail,
   } = useHolidaysStore((state) => ({
-    HolidayPostResponse: state.holiday.postResponse,
     IsLoading: state.loading.loadingHoliday,
-    Error: state.error.errorHoliday,
 
     PostHoliday: state.postHoliday,
     PostHolidaySuccess: state.postHolidaySuccess,
@@ -93,15 +87,6 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
 
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
-      ) : null}
-
-      {!isEmpty(HolidayPostResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Sending Request" />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">

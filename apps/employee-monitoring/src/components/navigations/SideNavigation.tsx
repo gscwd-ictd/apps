@@ -285,7 +285,7 @@ export const SideNavigation = () => {
                   path={Paths[11]}
                 />
                 <Sidebar.Item
-                  display="Training & Seminars"
+                  display="Training & Seminar Types"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
                   selected={pathname === Paths[12] ? true : false}
                   icon={

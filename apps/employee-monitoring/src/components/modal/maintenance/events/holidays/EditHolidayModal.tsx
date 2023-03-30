@@ -4,7 +4,6 @@ import {
   Button,
   LoadingSpinner,
   Modal,
-  ToastNotification,
 } from '@gscwd-apps/oneui';
 import { useHolidaysStore } from 'apps/employee-monitoring/src/store/holidays.store';
 import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
@@ -47,17 +46,13 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
 }) => {
   // zustand store initialization
   const {
-    HolidayUpdateResponse,
     IsLoading,
-    Error,
 
     UpdateHoliday,
     UpdateHolidaySuccess,
     UpdateHolidayFail,
   } = useHolidaysStore((state) => ({
-    HolidayUpdateResponse: state.holiday.postResponse,
     IsLoading: state.loading.loadingHoliday,
-    Error: state.error.errorHoliday,
 
     UpdateHoliday: state.updateHoliday,
     UpdateHolidaySuccess: state.updateHolidaySuccess,
@@ -121,18 +116,6 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
 
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
-      ) : null}
-
-      {!isEmpty(HolidayUpdateResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Updated successfully"
-        />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">

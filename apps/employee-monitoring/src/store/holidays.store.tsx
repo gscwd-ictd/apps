@@ -152,6 +152,11 @@ export const useHolidaysStore = create<HolidaysState>()(
           updateResponse: {} as Holiday,
           deleteResponse: {} as HolidayId,
         },
+        error: {
+          ...state.error,
+          errorHolidays: '',
+          errorHoliday: '',
+        },
       })),
   }))
 );
