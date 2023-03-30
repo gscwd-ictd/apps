@@ -9,20 +9,40 @@ import {
   withCookieSession,
   withSession,
 } from '../../../../utils/helpers/session';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { employeeDummy } from '../../../../types/employee.type';
 import LeavePdf from '../../../../../src/components/fixed/leaves/LeavePdf';
+import { useLeaveStore } from '../../../../../src/store/leave.store';
 
 export default function LeavePdfPage({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const {
+    leaveIndividualDetail,
+    leaveId,
+    loadingLeaveDetails,
+    errorLeaveDetails,
+    completedLeaveModalIsOpen,
+  } = useLeaveStore((state) => ({
+    leaveIndividualDetail: state.leaveIndividualDetail,
+    leaveId: state.leaveId,
+    loadingLeaveDetails: state.loading.loadingIndividualLeave,
+    errorLeaveDetails: state.error.errorIndividualLeave,
+    completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
+  }));
+
+  useEffect(() => {
+    console.log(employeeDetails, 'test');
+  }, [employeeDetails]);
+
   return (
     employeeDetails && (
       <>
         <Head>
           <title>Employee Leave</title>
         </Head>
-        <LeavePdf employeeDetails={employeeDetails} />
+
+        {/* <LeavePdf employeeDetails={employeeDetails} leaveDetails={leaveIndividualDetail} /> */}
       </>
     )
   );

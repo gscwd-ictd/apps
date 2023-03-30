@@ -47,6 +47,7 @@ export type LeavesState = {
   leaveDateFrom: string;
   leaveDateTo: string;
   leaveTypes: Array<LeaveType>;
+  overlappingLeaveCount: number;
 
   applyLeaveModalIsOpen: boolean;
   pendingLeaveModalIsOpen: boolean;
@@ -58,6 +59,7 @@ export type LeavesState = {
   setLeaveDateFrom: (date: string) => void;
   setLeaveDateTo: (date: string) => void;
   setLeaveId: (id: string) => void;
+  setOverlappingLeaveCount: (overlappingLeaveCount: number) => void;
 
   getLeaveList: (loading: boolean) => void;
   getLeaveListSuccess: (loading: boolean, response) => void;
@@ -130,6 +132,7 @@ export const useLeaveStore = create<LeavesState>()(
     leaveDateFrom: '',
     leaveDateTo: '',
     leaveTypes: [] as Array<LeaveType>,
+    overlappingLeaveCount: 0,
 
     //APPLY LEAVE MODAL
     applyLeaveModalIsOpen: false,
@@ -153,6 +156,10 @@ export const useLeaveStore = create<LeavesState>()(
 
     setLeaveId: (leaveId: string) => {
       set((state) => ({ ...state, leaveId }));
+    },
+
+    setOverlappingLeaveCount: (overlappingLeaveCount: number) => {
+      set((state) => ({ ...state, overlappingLeaveCount }));
     },
 
     setIsGetLeaveLoading: (isGetLeaveLoading: boolean) => {
