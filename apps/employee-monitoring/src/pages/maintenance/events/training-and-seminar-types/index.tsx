@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import fetcherEMS from '../../../../../src/utils/fetcher/FetcherEMS';
+import fetcherEMS from '../../../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
-import { useTrainingTypesStore } from '../../../../../src/store/training-type.store';
+import { useTrainingTypesStore } from '../../../../store/training-type.store';
 
 import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
 
@@ -14,8 +15,11 @@ import {
 } from '@gscwd-apps/oneui';
 import { Card } from '../../../../components/cards/Card';
 import { BreadCrumbs } from '../../../../components/navigations/BreadCrumbs';
-import AddTrainingModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/trainings-and-seminars/AddTrainingModal';
+import AddTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/AddTrainingTypeModal';
+import EditTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/EditTrainingTypeModal';
+import DeleteTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/DeleteTrainingTypeModal';
 
+// Mock Data REMOVE later
 const TypesMockData: Array<TrainingType> = [
   {
     id: '001',
@@ -69,7 +73,7 @@ const Index = () => {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('name', {
-      header: () => 'Event',
+      header: () => 'Name',
       cell: (info) => info.getValue(),
     }),
     columnHelper.display({
@@ -118,11 +122,13 @@ const Index = () => {
   // Zustand initialization
   const {
     TrainingTypes,
-    PostResponse,
-    UpdateResponse,
-    DeleteResponse,
+    PostTrainingTypeResponse,
+    UpdateTrainingTypeResponse,
+    DeleteTrainingTypeResponse,
+
     IsLoading,
-    Error,
+    ErrorTrainingTypes,
+    ErrorTrainingType,
 
     GetTrainingTypes,
     GetTrainingTypesSuccess,
@@ -131,11 +137,13 @@ const Index = () => {
     EmptyResponse,
   } = useTrainingTypesStore((state) => ({
     TrainingTypes: state.trainingTypes,
-    PostResponse: state.trainingType.postResponse,
-    UpdateResponse: state.trainingType.updateResponse,
-    DeleteResponse: state.trainingType.deleteResponse,
+    PostTrainingTypeResponse: state.trainingType.postResponse,
+    UpdateTrainingTypeResponse: state.trainingType.updateResponse,
+    DeleteTrainingTypeResponse: state.trainingType.deleteResponse,
+
     IsLoading: state.loading.loadingTrainingTypes,
-    Error: state.error.errorTrainingTypes,
+    ErrorTrainingTypes: state.error.errorTrainingTypes,
+    ErrorTrainingType: state.error.errorTrainingType,
 
     GetTrainingTypes: state.getTrainingTypes,
     GetTrainingTypesSuccess: state.getTrainingTypesSuccess,
@@ -165,21 +173,51 @@ const Index = () => {
 
   useEffect(() => {
     if (
-      !isEmpty(PostResponse) ||
-      !isEmpty(UpdateResponse) ||
-      !isEmpty(DeleteResponse)
+      !isEmpty(PostTrainingTypeResponse) ||
+      !isEmpty(UpdateTrainingTypeResponse) ||
+      !isEmpty(DeleteTrainingTypeResponse)
     ) {
       mutateTrainings();
     }
-  }, [PostResponse, UpdateResponse, DeleteResponse]);
+  }, [
+    PostTrainingTypeResponse,
+    UpdateTrainingTypeResponse,
+    DeleteTrainingTypeResponse,
+  ]);
 
   return (
     <div className="min-h-[100%] min-w-full px-4">
-      <BreadCrumbs title="Training & Seminars" />
+      <BreadCrumbs title="Training & Seminar Types" />
 
-      {/* Notification error */}
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
+      {/* Error Notifications */}
+      {!isEmpty(ErrorTrainingTypes) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={ErrorTrainingTypes}
+        />
+      ) : null}
+      {!isEmpty(ErrorTrainingType) ? (
+        <ToastNotification toastType="error" notifMessage={ErrorTrainingType} />
+      ) : null}
+
+      {/* Success Notifications */}
+      {!isEmpty(PostTrainingTypeResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Training type added successfully"
+        />
+      ) : null}
+      {!isEmpty(UpdateTrainingTypeResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Training type updated successfully"
+        />
+      ) : null}
+      {!isEmpty(DeleteTrainingTypeResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Training type deleted successfully"
+        />
       ) : null}
 
       <Card>
@@ -199,6 +237,7 @@ const Index = () => {
 
             <DataTableHrms
               data={TypesMockData}
+              // data={TrainingTypes}
               columns={columns}
               columnVisibility={columnVisibility}
               paginate
@@ -209,27 +248,27 @@ const Index = () => {
       </Card>
 
       {/* Add modal */}
-      <AddTrainingModal
+      <AddTrainingTypeModal
         modalState={addModalIsOpen}
         setModalState={setAddModalIsOpen}
         closeModalAction={closeAddActionModal}
       />
 
       {/* Edit modal */}
-      {/* <EditHolidayModal
+      <EditTrainingTypeModal
         modalState={editModalIsOpen}
         setModalState={setEditModalIsOpen}
         closeModalAction={closeEditActionModal}
         rowData={currentRowData}
-      /> */}
+      />
 
       {/* Delete modal */}
-      {/* <DeleteHolidayModal
+      <DeleteTrainingTypeModal
         modalState={deleteModalIsOpen}
         setModalState={setDeleteModalIsOpen}
         closeModalAction={closeDeleteActionModal}
         rowData={currentRowData}
-      /> */}
+      />
     </div>
   );
 };

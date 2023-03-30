@@ -173,6 +173,11 @@ export const useTrainingTypesStore = create<TrainingTypesState>()(
           updateResponse: {} as TrainingType,
           deleteResponse: {} as TrainingTypeId,
         },
+        error: {
+          ...state.error,
+          errorTrainingTypes: '',
+          errorTrainingType: '',
+        },
       })),
   }))
 );

@@ -11,7 +11,7 @@ export const Paths = [
   '/maintenance/leave-benefits/cumulative', // 9
   '/maintenance/leave-benefits/special', //10
   '/maintenance/events/holidays', // 11
-  '/maintenance/events/trainings-and-seminars', // 12
+  '/maintenance/events/training-and-seminar-types', // 12
   '/maintenance/overtime', // 13
   '/maintenance/pass-slip', // 14
   '/maintenance/schedules/office', // 15

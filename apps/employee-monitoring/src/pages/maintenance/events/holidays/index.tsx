@@ -127,11 +127,13 @@ const Index = () => {
   // Zustand initialization
   const {
     Holidays,
-    PostResponse,
-    UpdateResponse,
-    DeleteResponse,
+    PostHolidayResponse,
+    UpdateHolidayResponse,
+    DeleteHolidayResponse,
+
     IsLoading,
-    Error,
+    ErrorHolidays,
+    ErrorHoliday,
 
     GetHolidays,
     GetHolidaysSuccess,
@@ -140,11 +142,13 @@ const Index = () => {
     EmptyResponse,
   } = useHolidaysStore((state) => ({
     Holidays: state.holidays,
-    PostResponse: state.holiday.postResponse,
-    UpdateResponse: state.holiday.updateResponse,
-    DeleteResponse: state.holiday.deleteResponse,
+    PostHolidayResponse: state.holiday.postResponse,
+    UpdateHolidayResponse: state.holiday.updateResponse,
+    DeleteHolidayResponse: state.holiday.deleteResponse,
+
     IsLoading: state.loading.loadingHolidays,
-    Error: state.error.errorHolidays,
+    ErrorHolidays: state.error.errorHolidays,
+    ErrorHoliday: state.error.errorHoliday,
 
     GetHolidays: state.getHolidays,
     GetHolidaysSuccess: state.getHolidaysSuccess,
@@ -174,21 +178,44 @@ const Index = () => {
 
   useEffect(() => {
     if (
-      !isEmpty(PostResponse) ||
-      !isEmpty(UpdateResponse) ||
-      !isEmpty(DeleteResponse)
+      !isEmpty(PostHolidayResponse) ||
+      !isEmpty(UpdateHolidayResponse) ||
+      !isEmpty(DeleteHolidayResponse)
     ) {
       mutateHolidays();
     }
-  }, [PostResponse, UpdateResponse, DeleteResponse]);
+  }, [PostHolidayResponse, UpdateHolidayResponse, DeleteHolidayResponse]);
 
   return (
     <div className="min-h-[100%] min-w-full px-4">
       <BreadCrumbs title="Holidays" />
 
-      {/* Notification error */}
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
+      {/* Error Notifications */}
+      {!isEmpty(ErrorHolidays) ? (
+        <ToastNotification toastType="error" notifMessage={ErrorHolidays} />
+      ) : null}
+      {!isEmpty(ErrorHoliday) ? (
+        <ToastNotification toastType="error" notifMessage={ErrorHoliday} />
+      ) : null}
+
+      {/* Success Notifications */}
+      {!isEmpty(PostHolidayResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Holiday added successfully"
+        />
+      ) : null}
+      {!isEmpty(UpdateHolidayResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Holiday updated successfully"
+        />
+      ) : null}
+      {!isEmpty(DeleteHolidayResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Holiday deleted successfully"
+        />
       ) : null}
 
       <Card>
