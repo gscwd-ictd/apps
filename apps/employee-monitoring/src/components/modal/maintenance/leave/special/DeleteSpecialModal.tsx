@@ -63,45 +63,37 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
-        <Modal.Header withCloseBtn>
-          <div className="flex justify-between w-full">
-            <span className="text-xl text-gray-600">Confirm Deletion</span>
-            <button
-              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
-              type="button"
-              onClick={closeModalAction}
-            >
-              x
-            </button>
-          </div>
-        </Modal.Header>
-
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmit)} id="deletespecialmodal">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
-                <span className="px-2 text-lg">{rowData.leaveName}</span>
+                <span className="px-2 mt-5 text-xl font-medium text-center text-gray-600">
+                  Delete Leave Benefit
+                </span>
+                <span className="px-2 text-lg text-center text-gray-400">
+                  "{rowData.leaveName}"
+                </span>
               </div>
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end w-full gap-2">
+          <div className="flex justify-between w-full gap-2">
             <button
               type="button"
               onClick={closeModalAction}
-              className="disabled:cursor-not-allowed w-[4rem] text-black bg-white active:bg-gray-200 hover:bg-gray-100 rounded border border-gray-200"
+              className="w-full text-black bg-white border border-gray-200 rounded disabled:cursor-not-allowed active:bg-gray-200 hover:bg-gray-100"
               disabled={IsLoading ? true : false}
             >
-              <span className="text-xs font-normal">No</span>
+              <span className="font-normal text-md">No</span>
             </button>
             <button
               type="submit"
-              form="deletespecialmodal"
-              className="disabled:cursor-not-allowed w-[4rem] bg-red-500 hover:bg-red-400 active:bg-red-300 rounded text-white"
+              form="deleteoffschedmodal"
+              className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={IsLoading ? true : false}
             >
-              <span className="text-xs font-normal">Yes</span>
+              <span className="font-normal text-md">Yes</span>
             </button>
           </div>
         </Modal.Footer>
