@@ -11,7 +11,7 @@ import { isEmpty, isEqual } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import {
   getUserDetails,
-  withCookieSession,
+  withCookieSessionPds,
 } from '../../../utils/helpers/session';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -426,7 +426,7 @@ export default function Dashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
+export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
   async (context: GetServerSidePropsContext) => {
     const employee = getUserDetails();
 
