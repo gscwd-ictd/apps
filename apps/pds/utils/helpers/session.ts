@@ -81,35 +81,76 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
   };
 }
 
-// updated cookie with session specifically for pds
+// // updated cookie with session specifically for pds
+// export function withCookieSessionPds(serverSideProps: GetServerSideProps) {
+//   return async (context: GetServerSidePropsContext) => {
+//     // assign context cookie to cookie
+//     const cookie = context.req.headers.cookie;
+
+//     if (!cookie) {
+//       return {
+//         redirect: {
+//           permanent: false,
+//           destination: `${process.env.NEXT_PUBLIC_PORTAL_FE_URL}/login`,
+//         },
+//       };
+//     } else {
+//       // assign the splitted cookie to cookies array
+//       const cookiesArray = cookie.split(';') as string[];
+//       const portalSsid = getPortalSsid(cookiesArray);
+
+//       const { data } = await axios.get(
+//         `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
+//         {
+//           withCredentials: true,
+//           headers: { Cookie: `${portalSsid}` },
+//         }
+//       );
+
+//       setUserDetails(data);
+
+//       return await serverSideProps(context);
+//     }
+//   };
+// }
+// updated cookie with session
 export function withCookieSessionPds(serverSideProps: GetServerSideProps) {
   return async (context: GetServerSidePropsContext) => {
-    // assign context cookie to cookie
-    const cookie = context.req.headers.cookie;
+    try {
+      // assign context cookie to cookie
+      const cookie = context.req.headers.cookie;
 
-    if (!cookie) {
+      // assign the splitted cookie to cookies array
+
+      const cookiesArray = cookie.split(';') as string[];
+      const portalSsid = getPortalSsid(cookiesArray);
+
+      if (portalSsid.length > 0) {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
+          {
+            withCredentials: true,
+            headers: { Cookie: `${portalSsid}` },
+          }
+        );
+
+        setUserDetails(data);
+        return await serverSideProps(context);
+      } else {
+        return {
+          redirect: {
+            permanent: false,
+            destination: `${process.env.NEXT_PUBLIC_PORTAL_FE_URL}/login`,
+          },
+        };
+      }
+    } catch {
       return {
         redirect: {
           permanent: false,
           destination: `${process.env.NEXT_PUBLIC_PORTAL_FE_URL}/login`,
         },
       };
-    } else {
-      // assign the splitted cookie to cookies array
-      const cookiesArray = cookie.split(';') as string[];
-      const portalSsid = getPortalSsid(cookiesArray);
-
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-        {
-          withCredentials: true,
-          headers: { Cookie: `${portalSsid}` },
-        }
-      );
-
-      setUserDetails(data);
-
-      return await serverSideProps(context);
     }
   };
 }
