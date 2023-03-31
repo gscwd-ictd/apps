@@ -1,4 +1,4 @@
-// Render badge pill design
+/* This function is used for rendering schedule shifts */
 
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
