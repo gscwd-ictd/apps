@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { Modal } from '@gscwd-apps/oneui';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
@@ -89,7 +90,7 @@ const DeleteCumulativeModal: FunctionComponent<DeleteModalProps> = ({
             </button>
             <button
               type="submit"
-              form="deleteoffschedmodal"
+              form="deletecumulativemodal"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={IsLoading ? true : false}
             >
