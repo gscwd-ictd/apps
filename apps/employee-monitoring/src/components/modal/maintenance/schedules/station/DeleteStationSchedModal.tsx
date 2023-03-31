@@ -77,7 +77,7 @@ const DeleteStationSchedModal: FunctionComponent<DeleteModalProps> = ({
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-between w-full gap-2">
+          <div className="flex flex-row-reverse justify-between w-full gap-2">
             <button
               type="button"
               onClick={closeModalAction}
