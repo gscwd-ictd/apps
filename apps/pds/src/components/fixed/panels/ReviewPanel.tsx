@@ -696,10 +696,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to) && isEmpty(yearGraduated)
+                                      isEmpty(to.toString()) &&
+                                      isEmpty(yearGraduated.toString())
                                         ? 'Present'
-                                        : !isEmpty(to) &&
-                                          !isEmpty(yearGraduated)
+                                        : !isEmpty(to.toString()) &&
+                                          !isEmpty(yearGraduated.toString())
                                         ? yearGraduated
                                         : 'N/A'
                                     }
@@ -771,10 +772,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to) && isEmpty(yearGraduated)
+                                      isEmpty(to.toString()) &&
+                                      isEmpty(yearGraduated.toString())
                                         ? 'Present'
-                                        : !isEmpty(to) &&
-                                          !isEmpty(yearGraduated)
+                                        : !isEmpty(to.toString()) &&
+                                          !isEmpty(yearGraduated.toString())
                                         ? yearGraduated
                                         : 'N/A'
                                     }
@@ -846,10 +848,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to) && isEmpty(yearGraduated)
+                                      isEmpty(to.toString()) &&
+                                      isEmpty(yearGraduated.toString())
                                         ? 'Present'
-                                        : !isEmpty(to) &&
-                                          !isEmpty(yearGraduated)
+                                        : !isEmpty(to.toString()) &&
+                                          !isEmpty(yearGraduated.toString())
                                         ? yearGraduated
                                         : 'N/A'
                                     }
