@@ -75,19 +75,8 @@ export const LeaveCompletedModal = ({
   }, [completedLeaveModalIsOpen, leaveId]);
 
   const router = useRouter();
-  // console.log(leaveIndividualDetail);
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
-        <>
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorLeaveDetails}: Failed to load Leave Details`}
-          />
-        </>
-      ) : null}
-
       <Modal size={'lg'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
@@ -119,18 +108,21 @@ export const LeaveCompletedModal = ({
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
-                  <AlertNotification
-                    alertType="info"
-                    notifMessage={
-                      leaveIndividualDetail.leaveApplicationBasicInfo?.status
-                        .charAt(0)
-                        .toUpperCase() +
-                      leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
-                        1
-                      )
-                    }
-                    dismissible={false}
-                  />
+                  {leaveIndividualDetail.leaveApplicationBasicInfo ? (
+                    <AlertNotification
+                      alertType="info"
+                      notifMessage={
+                        leaveIndividualDetail.leaveApplicationBasicInfo?.status
+                          .charAt(0)
+                          .toUpperCase() +
+                        leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
+                          1
+                        )
+                      }
+                      dismissible={false}
+                    />
+                  ) : null}
+
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-row justify-between items-center w-full">
                       <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
@@ -221,10 +213,26 @@ export const LeaveCompletedModal = ({
 
                           <div className="w-96 ">
                             <label className="text-slate-500 w-full text-lg ">
-                              {
-                                leaveIndividualDetail.leaveApplicationBasicInfo
-                                  ?.leaveDates
-                              }
+                              {leaveIndividualDetail.leaveApplicationBasicInfo
+                                .leaveName === 'Maternity Leave' ||
+                              leaveIndividualDetail.leaveApplicationBasicInfo
+                                .leaveName === 'Study Leave'
+                                ? // show first and last date (array) only if maternity or study leave
+                                  `${
+                                    leaveIndividualDetail
+                                      .leaveApplicationBasicInfo?.leaveDates[0]
+                                  } - ${
+                                    leaveIndividualDetail
+                                      .leaveApplicationBasicInfo?.leaveDates[
+                                      leaveIndividualDetail
+                                        .leaveApplicationBasicInfo?.leaveDates
+                                        .length - 1
+                                    ]
+                                  }`
+                                : // show all dates if not maternity or study leave
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates.join(
+                                    ', '
+                                  )}
                             </label>
                           </div>
                         </div>

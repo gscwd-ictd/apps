@@ -37,7 +37,11 @@ export default function Leaves({
     pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen,
     loading,
-    error,
+    errorLeaves,
+    errorLeaveDetails,
+    errorUnavailableDates,
+    errorLeaveTypes,
+    errorResponse,
     responseApply,
     responseCancel,
 
@@ -55,7 +59,12 @@ export default function Leaves({
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
 
     loading: state.loading.loadingLeaves,
-    error: state.error.errorLeaves,
+    errorLeaves: state.error.errorLeaves,
+    errorLeaveDetails: state.error.errorIndividualLeave,
+    errorUnavailableDates: state.error.errorUnavailableDates,
+    errorLeaveTypes: state.error.errorLeaveTypes,
+    errorResponse: state.error.errorResponse,
+
     responseApply: state.response.postResponseApply,
     responseCancel: state.response.deleteResponseCancel,
 
@@ -139,9 +148,73 @@ export default function Leaves({
 
   return (
     <>
-      {error ? (
-        <ToastNotification toastType="error" notifMessage={error} />
-      ) : null}
+      <>
+        {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
+        {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
+          <>
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`}
+            />
+          </>
+        ) : null}
+
+        {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
+        {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (
+          <>
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`}
+            />
+          </>
+        ) : null}
+
+        {/* Unavailable Calendar Dates Load Failed Error */}
+        {!isEmpty(errorUnavailableDates) ? (
+          <>
+            <ToastNotification
+              toastType="error"
+              notifMessage={`Failed to load Holiday and Leave dates in calendar.`}
+            />
+          </>
+        ) : null}
+
+        {/* Leave List Load Failed Error */}
+        {errorLeaves ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorLeaves}.`}
+          />
+        ) : null}
+
+        {/* Leave Types Selection Load Failed Error */}
+        {!isEmpty(errorLeaveTypes) ? (
+          <>
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${errorLeaveTypes}: Failed to load Leave Types.`}
+            />
+          </>
+        ) : null}
+
+        {/* Post/Submit Leave Error*/}
+        {!isEmpty(errorResponse) ? (
+          <>
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${errorResponse}.`}
+            />
+          </>
+        ) : null}
+
+        {/* Post/Submit Leave Success*/}
+        {!isEmpty(responseApply) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Leave Application Successful! Please wait for supervisor's decision on this application."
+          />
+        ) : null}
+      </>
 
       <EmployeeProvider employeeData={employee}>
         <Head>

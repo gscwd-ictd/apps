@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
+import { GetLeaveDetails } from '../../../../src/types/leave.type';
 
 const styles = StyleSheet.create({
   page: {
@@ -157,9 +158,13 @@ const styles = StyleSheet.create({
 
 type LeavePdfProps = {
   employeeDetails: EmployeeDetails;
+  leaveDetails: GetLeaveDetails;
 };
 
-export const LeavePdf = ({ employeeDetails }: LeavePdfProps): JSX.Element => {
+export const LeavePdf = ({
+  employeeDetails,
+  leaveDetails,
+}: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const router = useRouter();
@@ -330,7 +335,7 @@ export const LeavePdf = ({ employeeDetails }: LeavePdfProps): JSX.Element => {
                         width: '100px',
                       }}
                     >
-                      JANUARY 23, 2023
+                      {leaveDetails.leaveApplicationBasicInfo.dateOfFiling}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                     <Text style={{ marginRight: 1 }}>4. POSITION</Text>

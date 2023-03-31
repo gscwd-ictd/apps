@@ -20,7 +20,6 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
-import { ToastNotification } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
 
 function classNames(...classes: any) {
@@ -44,8 +43,8 @@ export default function Calendar({
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-  const [selectedDateFrom, setSelectedDateFrom] = useState<string>();
-  const [selectedDateTo, setSelectedDateTo] = useState<string>();
+  // const [leaveDateFrom, setleaveDateFrom] = useState<string>();
+  // const [leaveDateTo, setleaveDateTo] = useState<string>();
 
   //zustand initialization to access Leave store
   const {
@@ -53,6 +52,8 @@ export default function Calendar({
     unavailableDates,
     leaveDateFrom,
     leaveDateTo,
+    errorUnavailableDates,
+    overlappingLeaveCount,
 
     setLeaveDateFrom,
     setLeaveDateTo,
@@ -60,11 +61,14 @@ export default function Calendar({
     getUnavailableDates,
     getUnavailableSuccess,
     getUnavailableFail,
+    setOverlappingLeaveCount,
   } = useLeaveStore((state) => ({
     leaveDates: state.leaveDates,
     unavailableDates: state.unavailableDates,
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
+    errorUnavailableDates: state.error.errorUnavailableDates,
+    overlappingLeaveCount: state.overlappingLeaveCount,
 
     setLeaveDateFrom: state.setLeaveDateFrom,
     setLeaveDateTo: state.setLeaveDateTo,
@@ -72,6 +76,7 @@ export default function Calendar({
     getUnavailableDates: state.getUnavailableDates,
     getUnavailableSuccess: state.getUnavailableSuccess,
     getUnavailableFail: state.getUnavailableFail,
+    setOverlappingLeaveCount: state.setOverlappingLeaveCount,
   }));
 
   //fetch unavailable dates (current leaves/holidays)
@@ -84,17 +89,14 @@ export default function Calendar({
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
+  const [holidayCount, setHolidayCount] = useState<number>(0);
+  // const [overlappingLeave, setOverlappingLeave] = useState<number>(0);
 
   // Initial zustand state update
   useEffect(() => {
     if (swrIsLoading) {
       getUnavailableDates(swrIsLoading);
     }
-    // console.log(
-    //   formatISO(new Date('2023-02-28'), {
-    //     representation: 'date',
-    //   })
-    // );
   }, [swrIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
@@ -134,13 +136,37 @@ export default function Calendar({
     }
   }
 
-  useEffect(() => {
-    setLeaveDateFrom(selectedDateFrom);
-  }, [selectedDateFrom]);
+  function getHolidayCount() {
+    const holiday = swrUnavailableDates?.filter(
+      (unavailableDate) =>
+        unavailableDate.type === 'Holiday' &&
+        unavailableDate.date >= leaveDateFrom &&
+        unavailableDate.date <= leaveDateTo
+    ).length;
+    setHolidayCount(holiday);
+  }
+
+  function getOverlappingLeaveCount() {
+    const leave = swrUnavailableDates?.filter(
+      (unavailableDate) =>
+        unavailableDate.type === 'Leave' &&
+        unavailableDate.date >= leaveDateFrom &&
+        unavailableDate.date <= leaveDateTo
+    ).length;
+    setOverlappingLeaveCount(leave);
+  }
 
   useEffect(() => {
-    setLeaveDateTo(selectedDateTo);
-  }, [selectedDateTo]);
+    setLeaveDateFrom(leaveDateFrom);
+    getHolidayCount();
+    getOverlappingLeaveCount();
+  }, [leaveDateFrom]);
+
+  useEffect(() => {
+    setLeaveDateTo(leaveDateTo);
+    getHolidayCount();
+    getOverlappingLeaveCount();
+  }, [leaveDateTo]);
 
   useEffect(() => {
     setLeaveDates(selectedDates);
@@ -165,17 +191,6 @@ export default function Calendar({
 
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(swrError) ? (
-        <>
-          {/* {console.log(errorLeaveTypes)} */}
-          <ToastNotification
-            toastType="error"
-            notifMessage={`Failed to load Holiday and Leave dates in calendar.`}
-          />
-        </>
-      ) : null}
-
       {type === 'range' ? (
         <div className="flex flex-row gap-2 items-center">
           <label className="text-slate-500 text-lg border-slate-300">
@@ -187,7 +202,7 @@ export default function Calendar({
             className="text-slate-500 text-lg border-slate-300"
             // {...register('leaveApplicationDatesRange.from')}
             onChange={(e) =>
-              setSelectedDateFrom(e.target.value as unknown as string)
+              setLeaveDateFrom(e.target.value as unknown as string)
             }
           />
           <label className="text-slate-500 text-lg border-slate-300">To</label>
@@ -197,13 +212,23 @@ export default function Calendar({
             className="text-slate-500 text-lg border-slate-300"
             // {...register('leaveApplicationDatesRange.to')}
             onChange={(e) =>
-              setSelectedDateTo(e.target.value as unknown as string)
+              setLeaveDateTo(e.target.value as unknown as string)
             }
           />
-          <label className="text-slate-500 text-lg border-slate-300">
+          <label className="text-slate-500 text-md border-slate-300">
             ={' '}
-            {dayjs(`${selectedDateTo}`).diff(`${selectedDateFrom}`, 'day') + 1}{' '}
-            Days
+            {leaveDateFrom && leaveDateTo
+              ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1
+              : 0}{' '}
+            Calendar Day(s) - {holidayCount} Holiday(s) -{' '}
+            {overlappingLeaveCount} Overlapping Leave(s) ={' '}
+            {leaveDateFrom && leaveDateTo
+              ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') +
+                1 -
+                holidayCount -
+                overlappingLeaveCount
+              : 0}{' '}
+            Leave Day(s)
           </label>
         </div>
       ) : (

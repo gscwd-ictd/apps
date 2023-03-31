@@ -1,12 +1,6 @@
-import { useRouter } from 'next/router';
 import { Leave } from '../../../../src/types/leave.type';
 import { useLeaveStore } from '../../../../src/store/leave.store';
-import { isEmpty } from 'lodash';
-import { useEffect } from 'react';
-import useSWR from 'swr';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
-import axios from 'axios';
 
 type AllLeaveListTabProps = {
   leaves: Array<Leave>;
@@ -43,7 +37,6 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
 
   const OnSelect = (leaveId: string) => {
     setLeaveId(leaveId);
-
     if (tab === 1) {
       if (!pendingLeaveModalIsOpen) {
         setPendingLeaveModalIsOpen(true);
@@ -74,7 +67,13 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                     Date of Filing: {leave.dateOfFiling}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Working Days: {leave.leaveDates}
+                    Working Days:{' '}
+                    {leave.leaveName === 'Maternity Leave' ||
+                    leave.leaveName === 'Study Leave'
+                      ? `From ${leave.leaveDates[0]} To ${
+                          leave.leaveDates[leave.leaveDates.length - 1]
+                        }`
+                      : leave.leaveDates.join(', ')}
                   </p>
 
                   <p className="text-xs text-indigo-500">

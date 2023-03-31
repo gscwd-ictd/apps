@@ -37,7 +37,8 @@ export default function PassSlip({
     pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen,
     loading,
-    error,
+    errorPassSlips,
+    errorResponse,
     responseApply,
     responseCancel,
 
@@ -54,7 +55,8 @@ export default function PassSlip({
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen: state.completedPassSlipModalIsOpen,
     loading: state.loading.loadingPassSlips,
-    error: state.error.errorPassSlips,
+    errorPassSlips: state.error.errorPassSlips,
+    errorResponse: state.error.errorResponse,
     responseApply: state.response.postResponseApply,
     responseCancel: state.response.deleteResponseCancel,
 
@@ -138,9 +140,28 @@ export default function PassSlip({
 
   return (
     <>
-      {error ? (
-        <ToastNotification toastType="error" notifMessage={error} />
-      ) : null}
+      <>
+        {/* Pass Slip List Load Failed Error */}
+        {errorPassSlips ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorPassSlips}: Failed to load Pass Slips.`}
+          />
+        ) : null}
+
+        {/* Post/Submit Pass Slip Error */}
+        {!isEmpty(errorResponse) ? (
+          <ToastNotification toastType="error" notifMessage={errorResponse} />
+        ) : null}
+
+        {/* Post/Submit Pass Slip Success */}
+        {!isEmpty(responseApply) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
+          />
+        ) : null}
+      </>
 
       <EmployeeProvider employeeData={employee}>
         <Head>

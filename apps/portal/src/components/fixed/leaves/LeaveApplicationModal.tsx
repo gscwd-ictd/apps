@@ -22,9 +22,6 @@ import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import Calendar from './LeaveCalendar';
 import dayjs from 'dayjs';
-import dayjsBusinessDays from 'dayjs-business-days';
-var isBetween = require('dayjs/plugin/isBetween');
-dayjs.extend(isBetween);
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -135,6 +132,7 @@ export const LeaveApplicationModal = ({
     unavailableDates,
     leaveDateFrom,
     leaveDateTo,
+    overlappingLeaveCount,
 
     postLeave,
     postLeaveSuccess,
@@ -145,6 +143,8 @@ export const LeaveApplicationModal = ({
     getLeaveTypesFail,
 
     setLeaveDates,
+    setLeaveDateFrom,
+    setLeaveDateTo,
   } = useLeaveStore((state) => ({
     postResponseApply: state.response.postResponseApply,
     loadingResponse: state.loading.loadingResponse,
@@ -158,6 +158,7 @@ export const LeaveApplicationModal = ({
     unavailableDates: state.unavailableDates,
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
+    overlappingLeaveCount: state.overlappingLeaveCount,
 
     postLeave: state.postLeave,
     postLeaveSuccess: state.postLeaveSuccess,
@@ -167,6 +168,9 @@ export const LeaveApplicationModal = ({
     getLeaveTypesSuccess: state.getLeaveTypesSuccess,
     getLeaveTypesFail: state.getLeaveTypesFail,
     setLeaveDates: state.setLeaveDates,
+
+    setLeaveDateFrom: state.setLeaveDateFrom,
+    setLeaveDateTo: state.setLeaveDateTo,
   }));
 
   // set state for employee store
@@ -236,29 +240,18 @@ export const LeaveApplicationModal = ({
       },
     });
 
-  const calculateHolidays = () => {
-    if (unavailableDates) {
-      console.log(unavailableDates);
-    }
-  };
+  const calculateHolidays = () => {};
 
-  // useEffect(() => {
-  //   {
-  //     unavailableDates &&
-  //     if (unavailableDates) {
-  //       const holidays = unavailableDates.filter(
-  //         (day, index) => day.type !== 'Holiday'
-  //       );
-  //       console.log(holidays);
-  //     }
-  //   }
-
-  // }, [unavailableDates, leaveDateFrom, leaveDateTo]);
+  useEffect(() => {
+    console.log(unavailableDates, 'overlapping leaves');
+  }, [leaveDateFrom, leaveDateTo, watch('typeOfLeaveDetails.leaveName')]);
 
   const handleTypeOfLeave = (e: string) => {
     setLeaveObject(e);
     const leave = JSON.parse(e) as LeaveType;
     setValue('typeOfLeaveDetails', leave);
+    setLeaveDateFrom(null);
+    setLeaveDateTo(null);
   };
 
   const handleStudy = (e: string) => {
@@ -283,12 +276,10 @@ export const LeaveApplicationModal = ({
 
   useEffect(() => {
     setValue('leaveApplicationDatesRange.from', leaveDateFrom);
-    calculateHolidays();
   }, [leaveDateFrom]);
 
   useEffect(() => {
     setValue('leaveApplicationDatesRange.to', leaveDateTo);
-    calculateHolidays();
   }, [leaveDateTo]);
 
   useEffect(() => {
@@ -354,7 +345,10 @@ export const LeaveApplicationModal = ({
         leaveApplicationDates: data.leaveApplicationDates,
         splWomen: data.specialLeaveWomenIllness,
       };
-    } else if (data.typeOfLeaveDetails.leaveName === 'Maternity Leave') {
+    } else if (
+      data.typeOfLeaveDetails.leaveName === 'Maternity Leave' ||
+      data.typeOfLeaveDetails.leaveName === 'Study Leave'
+    ) {
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
@@ -364,7 +358,6 @@ export const LeaveApplicationModal = ({
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        typeOfLeave: data.typeOfLeaveDetails.leaveName,
         leaveApplicationDates: data.leaveApplicationDates,
         other: data.other,
         commutation: data.commutation ? data.commutation : null,
@@ -399,6 +392,7 @@ export const LeaveApplicationModal = ({
     if (error) {
       postLeaveFail(result);
     } else {
+      console.log(result);
       postLeaveSuccess(result);
       reset();
       setLeaveObject('');
@@ -408,34 +402,6 @@ export const LeaveApplicationModal = ({
 
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(errorLeaveTypes) ? (
-        <>
-          {/* {console.log(errorLeaveTypes)} */}
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorLeaveTypes}: Failed to load Leave Types`}
-          />
-        </>
-      ) : null}
-
-      {!isEmpty(errorResponse) ? (
-        <>
-          {/* {console.log(errorLeaveTypes)} */}
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorResponse}`}
-          />
-        </>
-      ) : null}
-
-      {!isEmpty(postResponseApply) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Leave Application Successful! Please wait for supervisor's decision on this application"
-        />
-      ) : null}
-
       <Modal size={'xl'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
@@ -792,6 +758,20 @@ export const LeaveApplicationModal = ({
                       />
                     ) : null}
 
+                    {/* Notifications */}
+                    {leaveDateTo < leaveDateFrom &&
+                    (watch('typeOfLeaveDetails.leaveName') ==
+                      'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ==
+                        'Study Leave') ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Please select an acceptable date of leave"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
                     {/* Vacation Leave Credits Notifications */}
                     {vacationBalance <= 0 &&
                     watch('typeOfLeaveDetails.leaveName') ===
@@ -828,7 +808,9 @@ export const LeaveApplicationModal = ({
 
                     <div className="w-full p-4 bg-gray-50 rounded">
                       {watch('typeOfLeaveDetails.leaveName') ===
-                      'Maternity Leave' ? (
+                        'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ===
+                        'Study Leave' ? (
                         <Calendar type={'range'} clickableDate={true} />
                       ) : (
                         <Calendar type={'single'} clickableDate={true} />
@@ -969,6 +951,16 @@ export const LeaveApplicationModal = ({
                     ? true
                     : sickBalance <= 0 &&
                       watch('typeOfLeaveDetails.leaveName') === 'Sick Leave'
+                    ? true
+                    : overlappingLeaveCount > 0 &&
+                      (watch('typeOfLeaveDetails.leaveName') ===
+                        'Maternity Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') === 'Study Leave')
+                    ? true
+                    : leaveDates.length <= 0 &&
+                      (watch('typeOfLeaveDetails.leaveName') !==
+                        'Maternity Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') !== 'Study Leave')
                     ? true
                     : false
                 }
