@@ -456,6 +456,14 @@ export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
           props: { employee, pdsDetails: applicantPds.data },
           redirect: { destination: '/401', permanent: false },
         };
+      } else {
+        return {
+          props: {},
+          redirect: {
+            destination: `${process.env.NEXT_PUBLIC_PORTAL_FE_URL}/login`,
+            permanent: false,
+          },
+        };
       }
     } catch {
       return {
