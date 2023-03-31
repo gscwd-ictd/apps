@@ -59,15 +59,9 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      PostTrainingType(false);
-
-      // set value for error message
       PostTrainingTypeFail(false, result);
     } else {
       // request is done so set loading to false
-      PostTrainingType(false);
-
-      // set value from returned response
       PostTrainingTypeSuccess(false, result);
 
       reset();
