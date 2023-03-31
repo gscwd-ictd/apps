@@ -7,8 +7,10 @@ export type LeaveContents = {
   employeeId: string;
   dateOfFiling: string | null;
   typeOfLeaveDetails: LeaveType;
+
   leaveApplicationDates: Array<string>;
   leaveApplicationDatesRange: LeaveDateRange;
+  
   inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
   location?: string;
   hospital?: string; //inHospital or outPatient

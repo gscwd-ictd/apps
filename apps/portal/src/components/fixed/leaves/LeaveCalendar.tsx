@@ -6,7 +6,6 @@ import {
   eachDayOfInterval,
   endOfMonth,
   format,
-  formatISO,
   getDay,
   isEqual,
   isSameMonth,
@@ -43,8 +42,6 @@ export default function Calendar({
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-  // const [leaveDateFrom, setleaveDateFrom] = useState<string>();
-  // const [leaveDateTo, setleaveDateTo] = useState<string>();
 
   //zustand initialization to access Leave store
   const {

@@ -240,11 +240,9 @@ export const LeaveApplicationModal = ({
       },
     });
 
-  const calculateHolidays = () => {};
-
-  useEffect(() => {
-    console.log(unavailableDates, 'overlapping leaves');
-  }, [leaveDateFrom, leaveDateTo, watch('typeOfLeaveDetails.leaveName')]);
+  // useEffect(() => {
+  //   console.log(unavailableDates, 'overlapping leaves');
+  // }, [leaveDateFrom, leaveDateTo, watch('typeOfLeaveDetails.leaveName')]);
 
   const handleTypeOfLeave = (e: string) => {
     setLeaveObject(e);
@@ -392,7 +390,7 @@ export const LeaveApplicationModal = ({
     if (error) {
       postLeaveFail(result);
     } else {
-      console.log(result);
+      console.log(result, 'result of POST');
       postLeaveSuccess(result);
       reset();
       setLeaveObject('');
@@ -801,6 +799,20 @@ export const LeaveApplicationModal = ({
                       <AlertNotification
                         alertType="warning"
                         notifMessage="Insufficient Sick Leave Credits"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
+                    {/* Overlapping Leaves Notifications */}
+                    {overlappingLeaveCount > 0 &&
+                    (watch('typeOfLeaveDetails.leaveName') ===
+                      'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ===
+                        'Study Leave') ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="There are overlapping leaves in your application"
                         dismissible={false}
                         className="-mb-1"
                       />

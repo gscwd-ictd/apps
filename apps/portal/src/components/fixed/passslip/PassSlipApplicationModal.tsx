@@ -126,20 +126,7 @@ export const PassSlipApplicationModal = ({
 
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(errorResponse) ? (
-        <>
-          {console.log(errorResponse)}
-          <ToastNotification toastType="error" notifMessage={errorResponse} />
-        </>
-      ) : null}
-
-      {!isEmpty(postResponseApply) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
-        />
-      ) : null}
+      
 
       <Modal size={'lg'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
