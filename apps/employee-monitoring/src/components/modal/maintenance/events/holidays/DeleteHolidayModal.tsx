@@ -40,9 +40,7 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
     DeleteHolidayFail: state.deleteHolidayFail,
   }));
 
-  const { reset, handleSubmit } = useForm<Holiday>({
-    mode: 'onChange',
-  });
+  const { handleSubmit } = useForm<Holiday>();
 
   const onSubmit: SubmitHandler<Holiday> = () => {
     if (!isEmpty(rowData.id)) {
@@ -60,18 +58,11 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
 
     if (error) {
       // request is done so set loading to false
-      DeleteHoliday(false);
-
-      // set value for error message
       DeleteHolidayFail(false, result);
     } else {
       // request is done so set loading to false
-      DeleteHoliday(false);
-
-      // set value from returned response
       DeleteHolidaySuccess(false, result);
 
-      reset();
       closeModalAction();
     }
   };

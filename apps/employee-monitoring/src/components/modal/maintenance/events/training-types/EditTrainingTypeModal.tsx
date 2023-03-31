@@ -66,15 +66,9 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      UpdateTrainingType(false);
-
-      // set value for error message
       UpdateTrainingTypeFail(false, result);
     } else {
       // request is done so set loading to false
-      UpdateTrainingType(false);
-
-      // set value from returned response
       UpdateTrainingTypeSuccess(false, result);
 
       reset();

@@ -69,15 +69,9 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      PostHoliday(false);
-
-      // set value for error message
       PostHolidayFail(false, result);
     } else {
       // request is done so set loading to false
-      PostHoliday(false);
-
-      // set value from returned response
       PostHolidaySuccess(false, result);
 
       reset();

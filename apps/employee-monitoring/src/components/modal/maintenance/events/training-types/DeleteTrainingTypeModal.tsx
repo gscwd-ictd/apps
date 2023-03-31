@@ -40,7 +40,7 @@ const DeleteTrainingTypeModal: FunctionComponent<DeleteTrainingTypeModal> = ({
     DeleteTrainingTypeFail: state.deleteTrainingTypeFail,
   }));
 
-  const { reset, handleSubmit } = useForm<TrainingType>({
+  const { handleSubmit } = useForm<TrainingType>({
     mode: 'onChange',
   });
 
@@ -61,18 +61,11 @@ const DeleteTrainingTypeModal: FunctionComponent<DeleteTrainingTypeModal> = ({
 
     if (error) {
       // request is done so set loading to false
-      DeleteTrainingType(false);
-
-      // set value for error message
       DeleteTrainingTypeFail(false, result);
     } else {
       // request is done so set loading to false
-      DeleteTrainingType(false);
-
-      // set value from returned response
       DeleteTrainingTypeSuccess(false, result);
 
-      reset();
       closeModalAction();
     }
   };

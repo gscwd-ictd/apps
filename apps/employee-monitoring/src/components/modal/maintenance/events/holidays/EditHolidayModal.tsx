@@ -76,15 +76,9 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      UpdateHoliday(false);
-
-      // set value for error message
       UpdateHolidayFail(false, result);
     } else {
       // request is done so set loading to false
-      UpdateHoliday(false);
-
-      // set value from returned response
       UpdateHolidaySuccess(false, result);
 
       reset();
