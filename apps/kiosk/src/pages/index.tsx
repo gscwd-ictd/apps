@@ -1,5 +1,7 @@
 import { Button } from '@gscwd-apps/oneui';
 import styles from './index.module.css';
+import Link from 'next/link';
+import Webcam from 'react-webcam';
 
 export function Index() {
   /*
@@ -9,10 +11,19 @@ export function Index() {
    */
   return (
     <>
-      <div className="w-screen h-screen flex justify-center item-center">
-        <Button variant={'primary'} size={'md'} loading={false}>
-          Print PDF
-        </Button>
+      <div className="w-screen h-screen flex justify-center items-center bg-red-200">
+        <div className="flex gap-10">
+          <Link href={`/pass-slip/`}>
+            <Button variant={'primary'} size={'md'} loading={false}>
+              PASS SLIP
+            </Button>
+          </Link>
+          <Link href={`/coffee/`}>
+            <Button variant={'primary'} size={'md'} loading={false}>
+              COFFEE BREAK
+            </Button>
+          </Link>
+        </div>
       </div>
     </>
   );

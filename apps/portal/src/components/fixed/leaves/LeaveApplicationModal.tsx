@@ -376,8 +376,8 @@ export const LeaveApplicationModal = ({
         (watch('typeOfLeaveDetails.leaveName') === 'Maternity Leave' ||
           watch('typeOfLeaveDetails.leaveName') === 'Study Leave'))
     ) {
-      handlePostResult(dataToSend);
-      postLeave();
+      // handlePostResult(dataToSend);
+      // postLeave();
       console.log(dataToSend);
       console.log(unavailableDates);
       console.log(numberOfHolidays, 'holidays');

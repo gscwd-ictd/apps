@@ -107,8 +107,9 @@ export const PassSlipApplicationModal = ({
   }, [watch('natureOfBusiness')]);
 
   const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
-    handlePostResult(data);
-    postPassSlipList();
+    // handlePostResult(data);
+    // postPassSlipList();
+    console.log(data);
   };
 
   const handlePostResult = async (data: PassSlip) => {
@@ -126,8 +127,6 @@ export const PassSlipApplicationModal = ({
 
   return (
     <>
-      
-
       <Modal size={'lg'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
