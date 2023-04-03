@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
@@ -63,6 +63,17 @@ const DeleteCumulativeModal: FunctionComponent<DeleteModalProps> = ({
 
   return (
     <>
+      {IsLoading ? (
+        <div className="fixed z-50 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+          <AlertNotification
+            logo={<LoadingSpinner size="xs" />}
+            alertType="info"
+            notifMessage="Submitting request"
+            dismissible={false}
+          />
+        </div>
+      ) : null}
+
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmit)} id="deletecumulativemodal">
