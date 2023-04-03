@@ -107,8 +107,9 @@ export const PassSlipApplicationModal = ({
   }, [watch('natureOfBusiness')]);
 
   const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
-    handlePostResult(data);
-    postPassSlipList();
+    // handlePostResult(data);
+    // postPassSlipList();
+    console.log(data);
   };
 
   const handlePostResult = async (data: PassSlip) => {
@@ -126,21 +127,6 @@ export const PassSlipApplicationModal = ({
 
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(errorResponse) ? (
-        <>
-          {console.log(errorResponse)}
-          <ToastNotification toastType="error" notifMessage={errorResponse} />
-        </>
-      ) : null}
-
-      {!isEmpty(postResponseApply) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
-        />
-      ) : null}
-
       <Modal size={'lg'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
