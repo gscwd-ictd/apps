@@ -135,7 +135,7 @@ export default function Leaves({
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
       getLeaveListSuccess(swrIsLoading, swrLeaves);
-      console.log(swrLeaves);
+      // console.log(swrLeaves);
     }
 
     if (!isEmpty(swrError)) {

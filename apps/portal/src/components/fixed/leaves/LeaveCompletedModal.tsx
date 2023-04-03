@@ -406,7 +406,10 @@ export const LeaveCompletedModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Link href={`/${router.query.id}/leaves/123`} target={'_blank'}>
+              <Link
+                href={`/${router.query.id}/leaves/${leaveId}`}
+                target={'_blank'}
+              >
                 <Button
                   variant={'primary'}
                   size={'md'}
