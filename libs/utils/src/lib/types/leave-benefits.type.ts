@@ -6,7 +6,7 @@ export type LeaveBenefit = {
   isMonetizable: boolean;
   canBeCarriedOver: boolean;
   maximumCredits?: number;
-  category: LeaveCategory;
+  leaveType: LeaveType;
 };
 
 export enum CreditDistribution {
@@ -14,10 +14,10 @@ export enum CreditDistribution {
   MONTHLY = 'monthly',
 }
 
-export enum LeaveCategory {
+export enum LeaveType {
   RECURRING = 'recurring',
   CUMULATIVE = 'cumulative',
-  SPECIAL = 'special',
+  SPECIAL = 'special leave benefits',
 }
 
 export type LeaveBenefitId = Pick<LeaveBenefit, 'id'>;

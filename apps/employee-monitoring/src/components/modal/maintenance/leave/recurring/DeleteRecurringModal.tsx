@@ -52,7 +52,7 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
     if (error) {
       // request is done so set loading to false
       DeleteLeaveBenefitFail(result);
-    } else {
+    } else if (error === false) {
       // request is done so set loading to false
       DeleteLeaveBenefitSuccess(result);
 

@@ -10,7 +10,7 @@ import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-b
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import {
   LeaveBenefit,
-  LeaveCategory,
+  LeaveType,
 } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent } from 'react';
@@ -59,7 +59,7 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
       leaveName: '',
       accumulatedCredits: undefined,
       canBeCarriedOver: true,
-      category: LeaveCategory.CUMULATIVE,
+      leaveType: LeaveType.CUMULATIVE,
       creditDistribution: null,
       isMonetizable: false,
       maximumCredits: undefined,
