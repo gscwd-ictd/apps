@@ -11,7 +11,7 @@ import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-b
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import {
   LeaveBenefit,
-  LeaveCategory,
+  LeaveType,
 } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent, useEffect } from 'react';
@@ -63,7 +63,7 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
       leaveName: rowData.leaveName,
       accumulatedCredits: rowData.accumulatedCredits,
       canBeCarriedOver: true,
-      category: LeaveCategory.CUMULATIVE,
+      leaveType: LeaveType.CUMULATIVE,
       creditDistribution: rowData.creditDistribution,
       isMonetizable: true,
       maximumCredits: rowData.maximumCredits,
@@ -75,7 +75,7 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
     setValue('id', leave.id);
     setValue('leaveName', leave.leaveName);
     setValue('accumulatedCredits', leave.accumulatedCredits);
-    setValue('category', leave.category);
+    setValue('leaveType', leave.leaveType);
     setValue('canBeCarriedOver', leave.canBeCarriedOver);
     setValue('creditDistribution', leave.creditDistribution);
     setValue('isMonetizable', leave.isMonetizable);

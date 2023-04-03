@@ -11,7 +11,7 @@ import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/emp
 import {
   CreditDistribution,
   LeaveBenefit,
-  LeaveCategory,
+  LeaveType,
 } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent } from 'react';
@@ -60,7 +60,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
       leaveName: '',
       accumulatedCredits: undefined,
       canBeCarriedOver: false,
-      category: LeaveCategory.RECURRING,
+      leaveType: LeaveType.RECURRING,
       creditDistribution: CreditDistribution.YEARLY,
       isMonetizable: false,
     },

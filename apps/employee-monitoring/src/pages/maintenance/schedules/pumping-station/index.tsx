@@ -44,7 +44,8 @@ export default function Index() {
     UpdateResponse,
     DeleteResponse,
     IsLoading,
-    Error,
+    ScheduleError,
+    SchedulesError,
     GetSchedules,
     GetSchedulesSuccess,
     GetSchedulesFail,
@@ -55,7 +56,8 @@ export default function Index() {
     UpdateResponse: state.schedule.updateResponse,
     DeleteResponse: state.schedule.deleteResponse,
     IsLoading: state.loading.loadingSchedules,
-    Error: state.error.errorSchedules,
+    ScheduleError: state.error.errorSchedule,
+    SchedulesError: state.error.errorSchedules,
     GetSchedules: state.getSchedules,
     GetSchedulesSuccess: state.getSchedulesSuccess,
     GetSchedulesFail: state.getSchedulesFail,
@@ -268,8 +270,13 @@ export default function Index() {
         />
 
         {/* Notification error */}
-        {!isEmpty(Error) ? (
-          <ToastNotification toastType="error" notifMessage={Error} />
+        {!isEmpty(ScheduleError) ? (
+          <ToastNotification toastType="error" notifMessage={ScheduleError} />
+        ) : null}
+
+        {/* Notification error */}
+        {!isEmpty(SchedulesError) ? (
+          <ToastNotification toastType="error" notifMessage={SchedulesError} />
         ) : null}
 
         {/* Notification Add Success */}

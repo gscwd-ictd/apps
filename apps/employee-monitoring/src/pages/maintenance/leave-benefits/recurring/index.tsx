@@ -1,6 +1,7 @@
 import {
   Button,
   DataTableHrms,
+  LoadingSpinner,
   Modal,
   ToastNotification,
 } from '@gscwd-apps/oneui';
@@ -16,6 +17,8 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { isEmpty } from 'lodash';
 import EditRecurringModal from 'apps/employee-monitoring/src/components/modal/maintenance/leave/recurring/EditRecurringModal';
 import DeleteRecurringModal from 'apps/employee-monitoring/src/components/modal/maintenance/leave/recurring/DeleteRecurringModal';
+import UseRenderBooleanYesOrNo from 'apps/employee-monitoring/src/utils/functions/RenderBooleanYesOrNo';
+import UseRenderDistribution from 'apps/employee-monitoring/src/utils/functions/RenderDistribution';
 
 export default function Index() {
   const {
@@ -23,7 +26,8 @@ export default function Index() {
     PostResponse,
     UpdateResponse,
     DeleteResponse,
-    Error,
+    LeaveBenefitError,
+    LeaveBenefitsError,
     setLeaveBenefits,
     EmptyResponse,
     GetLeaveBenefits,
@@ -34,7 +38,8 @@ export default function Index() {
     PostResponse: state.leaveBenefit.postResponse,
     UpdateResponse: state.leaveBenefit.updateResponse,
     DeleteResponse: state.leaveBenefit.deleteResponse,
-    Error: state.error.errorLeaveBenefits,
+    LeaveBenefitError: state.error.errorLeaveBenefit,
+    LeaveBenefitsError: state.error.errorLeaveBenefits,
     setLeaveBenefits: state.setLeaveBenefits,
     GetLeaveBenefits: state.getLeaveBenefits,
     GetLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
@@ -50,7 +55,7 @@ export default function Index() {
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateLeaveBenefits,
-  } = useSWR('/leave-benefits?base=Recurring', fetcherEMS, {
+  } = useSWR('/leave-benefits?type=Recurring', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -100,17 +105,27 @@ export default function Index() {
     columnHelper.accessor('creditDistribution', {
       enableSorting: false,
       header: () => 'Distribution',
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <div className="w-[4rem]">{UseRenderDistribution(info.getValue())}</div>
+      ),
     }),
     columnHelper.accessor('isMonetizable', {
       enableSorting: false,
       header: () => 'Monetizable',
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <div className="w-[3rem]">
+          {UseRenderBooleanYesOrNo(info.getValue())}
+        </div>
+      ),
     }),
     columnHelper.accessor('canBeCarriedOver', {
       enableSorting: false,
       header: () => 'Can be carried over',
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <div className="w-[3rem]">
+          {UseRenderBooleanYesOrNo(info.getValue())}
+        </div>
+      ),
     }),
     columnHelper.display({
       header: () => 'Actions',
@@ -188,9 +203,17 @@ export default function Index() {
         ]}
       />
 
-      {/* Notification error */}
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
+      {/* Notification error for array of benefits */}
+      {!isEmpty(LeaveBenefitsError) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={LeaveBenefitsError}
+        />
+      ) : null}
+
+      {/* Notification error for single entry of benefit */}
+      {!isEmpty(LeaveBenefitError) ? (
+        <ToastNotification toastType="error" notifMessage={LeaveBenefitError} />
       ) : null}
 
       {/* Notification Add Success */}
@@ -238,27 +261,30 @@ export default function Index() {
       />
 
       <div className="sm:mx-0 lg:mx-5">
-        <Card title={''}>
-          {/** Top Card */}
-          <div className="flex flex-row flex-wrap">
-            <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                onClick={openAddActionModal}
-              >
-                <i className="bx bxs-plus-square"></i>&nbsp; Add Leave Benefit
-              </button>
-            </div>
+        <Card>
+          {swrIsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <div className="flex flex-row flex-wrap">
+              <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                  onClick={openAddActionModal}
+                >
+                  <i className="bx bxs-plus-square"></i>&nbsp; Add Leave Benefit
+                </button>
+              </div>
 
-            <DataTableHrms
-              data={leaveBenefits}
-              columns={columns}
-              columnVisibility={columnVisibility}
-              paginate
-              showGlobalFilter
-            />
-          </div>
+              <DataTableHrms
+                data={leaveBenefits}
+                columns={columns}
+                columnVisibility={columnVisibility}
+                paginate
+                showGlobalFilter
+              />
+            </div>
+          )}
         </Card>
       </div>
     </div>
