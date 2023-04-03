@@ -107,9 +107,9 @@ export const PassSlipApplicationModal = ({
   }, [watch('natureOfBusiness')]);
 
   const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
-    // handlePostResult(data);
-    // postPassSlipList();
-    console.log(data);
+    handlePostResult(data);
+    postPassSlipList();
+    // console.log(data);
   };
 
   const handlePostResult = async (data: PassSlip) => {
