@@ -75,13 +75,13 @@ const Index = () => {
   const renderHolidayType = (holidayType: string) => {
     if (holidayType === 'regular') {
       return (
-        <span className="bg-red-100 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-500">
+        <span className="bg-red-400 text-white text-xs font-medium px-1 py-0.5 rounded text-center">
           Regular
         </span>
       );
     } else if (holidayType === 'special') {
       return (
-        <span className="bg-blue-100 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-500">
+        <span className="bg-blue-400 text-white text-xs font-medium px-1 py-0.5 rounded text-center">
           Special
         </span>
       );
@@ -96,7 +96,7 @@ const Index = () => {
       <div className="text-center">
         <button
           type="button"
-          className="text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700"
+          className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
           onClick={() => openEditActionModal(rowData)}
         >
           <i className="bx bx-edit-alt"></i>
@@ -104,7 +104,7 @@ const Index = () => {
 
         <button
           type="button"
-          className="text-white bg-red-700 hover:bg-blue-800 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
           onClick={() => openDeleteActionModal(rowData)}
         >
           <i className="bx bx-trash-alt"></i>

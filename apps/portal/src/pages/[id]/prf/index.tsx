@@ -1,39 +1,42 @@
 import { GetServerSideProps } from 'next';
 import { useEffect } from 'react';
-import { Button } from '../../../components/modular/forms/buttons/Button';
-import { PageTitle } from '../../../components/modular/html/PageTitle';
-import { Modal } from '../../../components/modular/overlays/Modal';
-import {
-  EmployeeDetails,
-  EmployeeDetailsPrf,
-  EmployeeProfile,
-} from '../../../types/employee.type';
-import { User } from '../../../types/user.type';
-import { Roles } from '../../../utils/constants/user-roles';
-import { usePrfStore } from '../../../store/prf.store';
 
+import { EmployeeDetails } from '../../../types/employee.type';
+import { User } from '../../../types/user.type';
+import { PrfDetails } from '../../../types/prf.types';
+
+import { Roles } from '../../../utils/constants/user-roles';
+
+import { usePrfStore } from '../../../store/prf.store';
 import { useUserStore } from '../../../store/user.store';
+
 import {
   createPrf,
   getForApprovalPrfs,
   getPendingPrfs,
   savePrf,
 } from '../../../utils/helpers/prf.requests';
+
 import { PrfModal } from '../../../components/fixed/prf/prf-modal/PrfModal';
 import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingPrfList';
 import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
 import { TabHeader } from '../../../components/fixed/prf/prf-index/TabHeader';
-import { PrfDetails } from '../../../types/prf.types';
+
 import { SideNav } from '../../../../src/components/fixed/nav/SideNav';
 import { MainContainer } from '../../../../src/components/modular/custom/containers/MainContainer';
 import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
 import { SpinnerDotted } from 'spinners-react';
+
 import {
-  withCookieSession,
   getUserDetails,
+  withCookieSession,
 } from '../../../../src/utils/helpers/session';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
+
+import { Button } from '../../../components/modular/forms/buttons/Button';
+import { PageTitle } from '../../../components/modular/html/PageTitle';
+import { Modal } from '../../../components/modular/overlays/Modal';
 
 type PrfPageProps = {
   user: User;
@@ -89,7 +92,7 @@ export default function Prf({
   // access function to set employee state
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
 
-  // acacess function to set profile state
+  // access function to set profile state
   // const setProfile = useEmployeeStore((state) => state.setProfile);
 
   // get loading state from store

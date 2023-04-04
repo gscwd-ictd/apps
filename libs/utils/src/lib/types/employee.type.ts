@@ -22,3 +22,8 @@ export type EmployeeProfile = {
   employmentDetails: EmploymentDetails;
   personalDetails: PersonalDetails;
 };
+
+export type EmployeeId = Pick<EmploymentDetails, 'employeeId'>;
+
+export type EmployeeAsOption = Pick<EmploymentDetails, 'employeeId'> &
+  Pick<PersonalDetails, 'fullName'>;
