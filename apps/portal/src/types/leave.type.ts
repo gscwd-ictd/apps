@@ -10,7 +10,7 @@ export type LeaveContents = {
 
   leaveApplicationDates: Array<string>;
   leaveApplicationDatesRange: LeaveDateRange;
-  
+
   inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
   location?: string;
   hospital?: string; //inHospital or outPatient
@@ -31,6 +31,19 @@ export type LeaveContents = {
 export type LeaveId = Pick<LeaveContents, 'employeeId'>;
 
 export type GetLeaveDetails = {
+  employeeDetails: {
+    assignment: {
+      id: string;
+      name: string;
+      positionId: string;
+      positionTitle: string;
+      salary: string;
+    };
+    companyId: string;
+    userId: string;
+    userRole: string;
+  };
+
   leaveApplicationBasicInfo: {
     dateOfFiling: string;
     id: string;

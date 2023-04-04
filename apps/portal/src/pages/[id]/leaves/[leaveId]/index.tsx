@@ -7,12 +7,18 @@ import {
 import {
   getUserDetails,
   withCookieSession,
-  withSession,
 } from '../../../../utils/helpers/session';
 import React, { useEffect } from 'react';
 import { employeeDummy } from '../../../../types/employee.type';
 import LeavePdf from '../../../../../src/components/fixed/leaves/LeavePdf';
 import { useLeaveStore } from '../../../../../src/store/leave.store';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import { isEmpty } from 'lodash';
+import useSWR from 'swr';
+import { fetchWithToken } from '../../../../../src/utils/hoc/fetcher';
+import { SpinnerDotted } from 'spinners-react';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 export default function LeavePdfPage({
   employeeDetails,
@@ -23,35 +29,120 @@ export default function LeavePdfPage({
     loadingLeaveDetails,
     errorLeaveDetails,
     completedLeaveModalIsOpen,
+
+    setLeaveId,
+    getLeaveIndividualDetail,
+    getLeaveIndividualDetailSuccess,
+    getLeaveIndividualDetailFail,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
     loadingLeaveDetails: state.loading.loadingIndividualLeave,
     errorLeaveDetails: state.error.errorIndividualLeave,
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
+
+    setLeaveId: state.setLeaveId,
+    getLeaveIndividualDetail: state.getLeaveIndividualDetail,
+    getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
+    getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
   }));
 
+  const router = useRouter();
+
   useEffect(() => {
+    // getLeaveDetail();
+
     console.log(employeeDetails, 'test');
   }, [employeeDetails]);
 
+  // const getLeaveDetail = async () => {
+  //   try {
+  //     const { data } = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`
+  //     );
+
+  //     if (!isEmpty(data)) {
+  //       getLeaveIndividualDetailSuccess(false, data);
+  //     }
+  //   } catch (error) {
+  //     getLeaveIndividualDetailFail(false, error.message);
+  //   }
+  // };
+
+  const leaveDetailPdf = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`;
+  const {
+    data: swrLeaveDetailsPdf,
+    isLoading: swrIsLoading,
+    error: swrError,
+  } = useSWR(leaveDetailPdf, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoading) {
+      getLeaveIndividualDetail(true);
+    }
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveDetailsPdf)) {
+      getLeaveIndividualDetailSuccess(swrIsLoading, swrLeaveDetailsPdf);
+      console.log(swrLeaveDetailsPdf, 'test');
+    }
+
+    if (!isEmpty(swrError)) {
+      getLeaveIndividualDetailFail(swrIsLoading, swrError.message);
+    }
+  }, [swrLeaveDetailsPdf, swrError]);
+
   return (
-    employeeDetails && (
+    employeeDetails &&
+    leaveIndividualDetail && (
       <>
         <Head>
           <title>Employee Leave</title>
         </Head>
 
-        {/* <LeavePdf employeeDetails={employeeDetails} leaveDetails={leaveIndividualDetail} /> */}
+        {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
+        {!isEmpty(errorLeaveDetails) ? (
+          <>
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`}
+            />
+          </>
+        ) : null}
+
+        {swrIsLoading ? (
+          <div className="w-full h-screen  static flex flex-col justify-center items-center place-items-center">
+            <SpinnerDotted
+              speed={70}
+              thickness={70}
+              className="w-full flex h-full transition-all "
+              color="slateblue"
+              size={100}
+            />
+          </div>
+        ) : (
+          <>
+            <LeavePdf
+              employeeDetails={employeeDetails}
+              leaveDetails={swrLeaveDetailsPdf}
+            />
+          </>
+        )}
       </>
     )
   );
 }
 
-export const getServerSideProps: GetServerSideProps =
-  // withCookieSession
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
-    // const employeeDetails = getUserDetails();
-    const employeeDetails = employeeDummy;
+    const employeeDetails = getUserDetails();
+
     return { props: { employeeDetails } };
-  };
+  }
+);

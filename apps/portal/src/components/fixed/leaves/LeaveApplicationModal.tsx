@@ -771,7 +771,7 @@ export const LeaveApplicationModal = ({
                     ) : null}
 
                     {/* Vacation Leave Credits Notifications */}
-                    {vacationBalance <= 0 &&
+                    {vacationBalance < 0 &&
                     watch('typeOfLeaveDetails.leaveName') ===
                       'Vacation Leave' ? (
                       <AlertNotification
@@ -783,7 +783,7 @@ export const LeaveApplicationModal = ({
                     ) : null}
 
                     {/* Vacation Leave Credits Notifications */}
-                    {forcedBalance <= 0 &&
+                    {forcedBalance < 0 &&
                     watch('typeOfLeaveDetails.leaveName') === 'Forced Leave' ? (
                       <AlertNotification
                         alertType="warning"
@@ -794,7 +794,7 @@ export const LeaveApplicationModal = ({
                     ) : null}
 
                     {/* Sick Leave Credits Notifications */}
-                    {sickBalance <= 0 &&
+                    {sickBalance < 0 &&
                     watch('typeOfLeaveDetails.leaveName') === 'Sick Leave' ? (
                       <AlertNotification
                         alertType="warning"
@@ -892,7 +892,7 @@ export const LeaveApplicationModal = ({
                         </td>
                         <td
                           className={`${
-                            vacationBalance <= 0 &&
+                            vacationBalance < 0 &&
                             watch('typeOfLeaveDetails.leaveName') ===
                               'Vacation Leave'
                               ? 'bg-red-300'
@@ -906,7 +906,7 @@ export const LeaveApplicationModal = ({
                         </td>
                         <td
                           className={`${
-                            forcedBalance <= 0 &&
+                            forcedBalance < 0 &&
                             watch('typeOfLeaveDetails.leaveName') ===
                               'Forced Leave'
                               ? 'bg-red-300'
@@ -920,7 +920,7 @@ export const LeaveApplicationModal = ({
                         </td>
                         <td
                           className={`${
-                            sickBalance <= 0 &&
+                            sickBalance < 0 &&
                             watch('typeOfLeaveDetails.leaveName') ===
                               'Sick Leave'
                               ? 'bg-red-300'
@@ -955,13 +955,13 @@ export const LeaveApplicationModal = ({
                 form="ApplyLeaveForm"
                 type="submit"
                 disabled={
-                  vacationBalance <= 0 &&
+                  vacationBalance < 0 &&
                   watch('typeOfLeaveDetails.leaveName') === 'Vacation Leave'
                     ? true
-                    : forcedBalance <= 0 &&
+                    : forcedBalance < 0 &&
                       watch('typeOfLeaveDetails.leaveName') === 'Forced Leave'
                     ? true
-                    : sickBalance <= 0 &&
+                    : sickBalance < 0 &&
                       watch('typeOfLeaveDetails.leaveName') === 'Sick Leave'
                     ? true
                     : overlappingLeaveCount > 0 &&
@@ -970,9 +970,14 @@ export const LeaveApplicationModal = ({
                         watch('typeOfLeaveDetails.leaveName') === 'Study Leave')
                     ? true
                     : leaveDates.length <= 0 &&
-                      (watch('typeOfLeaveDetails.leaveName') !==
+                      watch('typeOfLeaveDetails.leaveName') !==
+                        'Maternity Leave' &&
+                      watch('typeOfLeaveDetails.leaveName') !== 'Study Leave'
+                    ? true
+                    : leaveDateTo < leaveDateFrom &&
+                      (watch('typeOfLeaveDetails.leaveName') ==
                         'Maternity Leave' ||
-                        watch('typeOfLeaveDetails.leaveName') !== 'Study Leave')
+                        watch('typeOfLeaveDetails.leaveName') == 'Study Leave')
                     ? true
                     : false
                 }

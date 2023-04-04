@@ -114,15 +114,16 @@ export const LeavePendingModal = ({
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   {leaveIndividualDetail.leaveApplicationBasicInfo ? (
                     <AlertNotification
-                      alertType="info"
-                      notifMessage={
-                        leaveIndividualDetail.leaveApplicationBasicInfo?.status
-                          .charAt(0)
-                          .toUpperCase() +
-                        leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
-                          1
-                        )
-                      }
+                      alertType="warning"
+                      // notifMessage={
+                      //   leaveIndividualDetail.leaveApplicationBasicInfo?.status
+                      //     .charAt(0)
+                      //     .toUpperCase() +
+                      //   leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
+                      //     1
+                      //   )
+                      // }
+                      notifMessage={'Awaiting approval'}
                       dismissible={false}
                     />
                   ) : null}
