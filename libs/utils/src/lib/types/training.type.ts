@@ -1,8 +1,8 @@
 export type Training = {
   id?: string;
   name: string;
-  dateTo: string;
-  dateFrom: string;
+  dateTo: string | Date | null;
+  dateFrom: string | Date | null;
   hours: number;
   location: string;
   inOffice: boolean;
@@ -10,3 +10,5 @@ export type Training = {
   type: string;
   assignedEmployees?: Array<string>;
 };
+
+export type TrainingId = Pick<Training, 'id'>;

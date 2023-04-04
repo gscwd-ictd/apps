@@ -50,6 +50,7 @@ export default function Index() {
     GetSchedulesSuccess,
     GetSchedulesFail,
     EmptyResponse,
+    EmptyErrors,
   } = useScheduleStore((state) => ({
     Schedules: state.schedules,
     PostResponse: state.schedule.postResponse,
@@ -62,6 +63,7 @@ export default function Index() {
     GetSchedulesSuccess: state.getSchedulesSuccess,
     GetSchedulesFail: state.getSchedulesFail,
     EmptyResponse: state.emptyResponse,
+    EmptyErrors: state.emptyErrors,
   }));
 
   const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
@@ -215,6 +217,7 @@ export default function Index() {
 
   // Initial zustand state update
   useEffect(() => {
+    EmptyErrors();
     EmptyResponse();
     if (swrIsLoading) {
       GetSchedules(swrIsLoading);
