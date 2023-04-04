@@ -209,11 +209,11 @@ export default function Index() {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
-      GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
+      GetSchedulesSuccess(swrSchedules.data);
     }
 
     if (!isEmpty(swrError)) {
-      GetSchedulesFail(swrIsLoading, swrError);
+      GetSchedulesFail(swrError);
     }
   }, [swrSchedules, swrError]);
 

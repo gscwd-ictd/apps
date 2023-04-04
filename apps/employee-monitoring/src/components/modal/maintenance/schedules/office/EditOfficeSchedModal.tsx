@@ -105,8 +105,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
     // set loading to true
     UpdateSchedule(true);
 
-    console.log(sched);
-
     handleUpdateResult(sched);
   };
 
@@ -118,13 +116,13 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
       UpdateSchedule(false);
 
       // set value for error message
-      UpdateScheduleFail(false, result);
+      UpdateScheduleFail(result);
     } else {
       // request is done so set loading to false
       UpdateSchedule(false);
 
       // set value from returned response
-      UpdateScheduleSuccess(false, result);
+      UpdateScheduleSuccess(result);
       //   mutate('/holidays');
 
       reset();
@@ -143,10 +141,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
 
   return (
     <>
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">

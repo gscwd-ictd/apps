@@ -50,6 +50,7 @@ export default function Index() {
     GetSchedulesSuccess,
     GetSchedulesFail,
     EmptyResponse,
+    EmptyErrors,
   } = useScheduleStore((state) => ({
     Schedules: state.schedules,
     PostResponse: state.schedule.postResponse,
@@ -62,6 +63,7 @@ export default function Index() {
     GetSchedulesSuccess: state.getSchedulesSuccess,
     GetSchedulesFail: state.getSchedulesFail,
     EmptyResponse: state.emptyResponse,
+    EmptyErrors: state.emptyErrors,
   }));
 
   const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
@@ -210,11 +212,11 @@ export default function Index() {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
-      GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
+      GetSchedulesSuccess(swrSchedules.data);
     }
 
     if (!isEmpty(swrError)) {
-      GetSchedulesFail(swrIsLoading, swrError);
+      GetSchedulesFail(swrError);
     }
   }, [swrSchedules, swrError]);
 
@@ -228,6 +230,11 @@ export default function Index() {
       mutateSchedules();
     }
   }, [PostResponse, UpdateResponse, DeleteResponse]);
+
+  // set error to empty on page load
+  useEffect(() => {
+    EmptyErrors();
+  }, []);
 
   return (
     <>

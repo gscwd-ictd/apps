@@ -28,7 +28,7 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
     DeleteScheduleFail,
     DeleteScheduleSuccess,
   } = useScheduleStore((state) => ({
-    IsLoading: state.loading.loadingSchedules,
+    IsLoading: state.loading.loadingSchedule,
     DeleteResponse: state.schedule.deleteResponse,
     DeleteSchedule: state.deleteSchedule,
     DeleteScheduleSuccess: state.deleteScheduleSuccess,
@@ -49,10 +49,10 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      DeleteScheduleFail(false, result);
+      DeleteScheduleFail(result);
     } else {
       // request is done so set loading to false
-      DeleteScheduleSuccess(false, result);
+      DeleteScheduleSuccess(result);
 
       // close modal
       closeModalAction();

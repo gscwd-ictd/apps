@@ -69,7 +69,10 @@ export const useLeaveBenefitStore = create<LeaveBenefitState>()(
         ...state,
         leaveBenefits: [],
         loading: { ...state.loading, loadingLeaveBenefits: loading },
-        error: { ...state.error, errorLeaveBenefits: '' },
+        error: {
+          errorLeaveBenefits: '',
+          errorLeaveBenefit: '',
+        },
       })),
     getLeaveBenefitsSuccess: (response: Array<LeaveBenefit>) =>
       set((state) => ({
