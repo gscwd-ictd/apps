@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import fetcherEMS from '../../../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
-import { useTrainingTypesStore } from '../../../../store/training-type.store';
 
+import { useTrainingTypesStore } from '../../../../store/training-type.store';
 import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
@@ -91,7 +91,7 @@ const Index = () => {
       <div className="text-center">
         <button
           type="button"
-          className="text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700"
+          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
           onClick={() => openEditActionModal(rowData)}
         >
           <i className="bx bx-edit-alt"></i>
@@ -99,7 +99,7 @@ const Index = () => {
 
         <button
           type="button"
-          className="text-white bg-red-700 hover:bg-blue-800 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
           onClick={() => openDeleteActionModal(rowData)}
         >
           <i className="bx bx-trash-alt"></i>
