@@ -94,7 +94,7 @@ const Index = () => {
   const openAddActionModal = () => setAddModalIsOpen(true);
   const closeAddActionModal = () => setAddModalIsOpen(false);
 
-  // Edit travel order details modal function
+  // Edit modal function
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
   const openEditActionModal = (rowData: TravelOrder) => {
     setEditModalIsOpen(true);
