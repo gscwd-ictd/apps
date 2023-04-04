@@ -91,9 +91,7 @@ export default function Prf({
 
   // access function to set employee state
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
-
-  // access function to set profile state
-  // const setProfile = useEmployeeStore((state) => state.setProfile);
+  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
   // get loading state from store
   const isLoading = usePrfStore((state) => state.isLoading);
@@ -115,7 +113,7 @@ export default function Prf({
     setForApprovalPrfs(forApproval);
 
     setIsLoading(true);
-  }, []);
+  }, [employee]);
 
   useEffect(() => {
     if (isLoading) {
@@ -173,6 +171,7 @@ export default function Prf({
 
     // make the modal visible
     setIsOpen(true);
+    console.log(employeeDetail, 'employee store');
   };
 
   return (
@@ -269,7 +268,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     return {
       props: {
         user: employee.user,
-        employee: employee.employmentDetails,
+        employee: employee,
         // profile: employee.profile,
         pendingRequests,
         forApproval,

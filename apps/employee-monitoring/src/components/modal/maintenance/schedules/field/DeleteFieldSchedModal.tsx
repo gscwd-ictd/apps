@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
@@ -28,7 +28,7 @@ const DeleteFieldSchedModal: FunctionComponent<DeleteModalProps> = ({
     DeleteScheduleFail,
     DeleteScheduleSuccess,
   } = useScheduleStore((state) => ({
-    IsLoading: state.loading.loadingSchedules,
+    IsLoading: state.loading.loadingSchedule,
     DeleteResponse: state.schedule.deleteResponse,
     DeleteSchedule: state.deleteSchedule,
     DeleteScheduleSuccess: state.deleteScheduleSuccess,
@@ -49,13 +49,16 @@ const DeleteFieldSchedModal: FunctionComponent<DeleteModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      DeleteScheduleFail(false, result);
-    } else {
+      DeleteScheduleFail(result);
+    } else if (error === false) {
       // request is done so set loading to false
-      DeleteScheduleSuccess(false, result);
+      DeleteScheduleSuccess(result);
 
       // close modal
       closeModalAction();
+    } else {
+      // request is done so set loading to false
+      DeleteScheduleFail('Something went wrong. Please try again later.');
     }
   };
 
@@ -75,9 +78,19 @@ const DeleteFieldSchedModal: FunctionComponent<DeleteModalProps> = ({
               </div>
             </div>
           </form>
+          {IsLoading ? (
+            <div className="flex justify-center w-full">
+              <AlertNotification
+                logo={<LoadingSpinner size="xs" />}
+                alertType="info"
+                notifMessage="Submitting request"
+                dismissible={false}
+              />
+            </div>
+          ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-between w-full gap-2">
+          <div className="flex flex-row-reverse justify-between w-full gap-2">
             <button
               type="button"
               onClick={closeModalAction}

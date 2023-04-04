@@ -13,7 +13,10 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 // import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+} from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
@@ -289,18 +292,18 @@ export default function Leaves({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

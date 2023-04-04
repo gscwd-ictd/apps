@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
@@ -52,12 +52,15 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
     if (error) {
       // request is done so set loading to false
       DeleteLeaveBenefitFail(result);
-    } else {
+    } else if (error === false) {
       // request is done so set loading to false
       DeleteLeaveBenefitSuccess(result);
 
       // close modal
       closeModalAction();
+    } else {
+      // request is done so set loading to false
+      DeleteLeaveBenefitFail(result);
     }
   };
 
@@ -77,9 +80,19 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
               </div>
             </div>
           </form>
+          {IsLoading ? (
+            <div className="flex justify-center w-full">
+              <AlertNotification
+                logo={<LoadingSpinner size="xs" />}
+                alertType="info"
+                notifMessage="Submitting request"
+                dismissible={false}
+              />
+            </div>
+          ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-between w-full gap-2">
+          <div className="flex flex-row-reverse justify-between w-full gap-2">
             <button
               type="button"
               onClick={closeModalAction}

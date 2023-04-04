@@ -44,22 +44,26 @@ export default function Index() {
     UpdateResponse,
     DeleteResponse,
     IsLoading,
-    Error,
+    ScheduleError,
+    SchedulesError,
     GetSchedules,
     GetSchedulesSuccess,
     GetSchedulesFail,
     EmptyResponse,
+    EmptyErrors,
   } = useScheduleStore((state) => ({
     Schedules: state.schedules,
     PostResponse: state.schedule.postResponse,
     UpdateResponse: state.schedule.updateResponse,
     DeleteResponse: state.schedule.deleteResponse,
     IsLoading: state.loading.loadingSchedules,
-    Error: state.error.errorSchedules,
+    ScheduleError: state.error.errorSchedule,
+    SchedulesError: state.error.errorSchedules,
     GetSchedules: state.getSchedules,
     GetSchedulesSuccess: state.getSchedulesSuccess,
     GetSchedulesFail: state.getSchedulesFail,
     EmptyResponse: state.emptyResponse,
+    EmptyErrors: state.emptyErrors,
   }));
 
   const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
@@ -199,6 +203,7 @@ export default function Index() {
 
   // Initial zustand state update
   useEffect(() => {
+    EmptyErrors();
     EmptyResponse();
     if (swrIsLoading) {
       GetSchedules(swrIsLoading);
@@ -208,11 +213,11 @@ export default function Index() {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrSchedules)) {
-      GetSchedulesSuccess(swrIsLoading, swrSchedules.data);
+      GetSchedulesSuccess(swrSchedules.data);
     }
 
     if (!isEmpty(swrError)) {
-      GetSchedulesFail(swrIsLoading, swrError);
+      GetSchedulesFail(swrError);
     }
   }, [swrSchedules, swrError]);
 
@@ -247,8 +252,13 @@ export default function Index() {
         />
 
         {/* Notification error */}
-        {!isEmpty(Error) ? (
-          <ToastNotification toastType="error" notifMessage={Error} />
+        {!isEmpty(ScheduleError) ? (
+          <ToastNotification toastType="error" notifMessage={ScheduleError} />
+        ) : null}
+
+        {/* Notification error */}
+        {!isEmpty(SchedulesError) ? (
+          <ToastNotification toastType="error" notifMessage={SchedulesError} />
         ) : null}
 
         {/* Notification Add Success */}

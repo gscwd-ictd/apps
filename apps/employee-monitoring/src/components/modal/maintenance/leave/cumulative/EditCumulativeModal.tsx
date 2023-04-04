@@ -8,10 +8,10 @@ import {
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
-import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import {
   LeaveBenefit,
-  LeaveCategory,
+  LeaveType,
 } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent, useEffect } from 'react';
@@ -63,7 +63,7 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
       leaveName: rowData.leaveName,
       accumulatedCredits: rowData.accumulatedCredits,
       canBeCarriedOver: true,
-      category: LeaveCategory.CUMULATIVE,
+      leaveType: LeaveType.CUMULATIVE,
       creditDistribution: rowData.creditDistribution,
       isMonetizable: true,
       maximumCredits: rowData.maximumCredits,
@@ -75,7 +75,7 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
     setValue('id', leave.id);
     setValue('leaveName', leave.leaveName);
     setValue('accumulatedCredits', leave.accumulatedCredits);
-    setValue('category', leave.category);
+    setValue('leaveType', leave.leaveType);
     setValue('canBeCarriedOver', leave.canBeCarriedOver);
     setValue('creditDistribution', leave.creditDistribution);
     setValue('isMonetizable', leave.isMonetizable);
@@ -92,7 +92,10 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
   };
 
   const handleEditLeave = async (leave: LeaveBenefit) => {
-    const { error, result } = await postEmpMonitoring('/leave-benefits', leave);
+    const { error, result } = await patchEmpMonitoring(
+      '/leave-benefits',
+      leave
+    );
 
     if (error) {
       // request is done so set loading to false and set value for error message

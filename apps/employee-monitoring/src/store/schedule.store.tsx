@@ -27,22 +27,24 @@ export type ScheduleState = {
   error: ErrorSchedule;
 
   getSchedules: (loading: boolean) => void;
-  getSchedulesSuccess: (loading: boolean, response: Array<Schedule>) => void;
-  getSchedulesFail: (loading: boolean, error: string) => void;
+  getSchedulesSuccess: (response: Array<Schedule>) => void;
+  getSchedulesFail: (error: string) => void;
 
   postSchedule: (loading: boolean) => void;
-  postScheduleSuccess: (loading: boolean, response: Schedule) => void;
-  postScheduleFail: (loading: boolean, error: string) => void;
+  postScheduleSuccess: (response: Schedule) => void;
+  postScheduleFail: (error: string) => void;
 
   updateSchedule: (loading: boolean) => void;
-  updateScheduleSuccess: (loading: boolean, response: Schedule) => void;
-  updateScheduleFail: (loading: boolean, error: string) => void;
+  updateScheduleSuccess: (response: Schedule) => void;
+  updateScheduleFail: (error: string) => void;
 
   deleteSchedule: (loading: boolean) => void;
-  deleteScheduleSuccess: (loading: boolean, response: Schedule) => void;
-  deleteScheduleFail: (loading: boolean, error: string) => void;
+  deleteScheduleSuccess: (response: Schedule) => void;
+  deleteScheduleFail: (error: string) => void;
 
   emptyResponse: () => void;
+
+  emptyErrors: () => void;
 
   modalIsOpen: boolean;
   setModalIsOpen: (modalIsOpen: boolean) => void;
@@ -72,17 +74,17 @@ export const useScheduleStore = create<ScheduleState>()(
         error: { ...state.error, errorSchedules: '' },
       })),
 
-    getSchedulesSuccess: (loading: boolean, response: Array<Schedule>) =>
+    getSchedulesSuccess: (response: Array<Schedule>) =>
       set((state) => ({
         ...state,
         schedules: response,
-        loading: { ...state.loading, loadingSchedules: loading },
+        loading: { ...state.loading, loadingSchedules: false },
       })),
 
-    getSchedulesFail: (loading: boolean, error: string) =>
+    getSchedulesFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingSchedules: loading },
+        loading: { ...state.loading, loadingSchedules: false },
         error: { ...state.error, errorSchedules: error },
       })),
 
@@ -94,17 +96,17 @@ export const useScheduleStore = create<ScheduleState>()(
         error: { ...state.error, errorSchedule: '' },
       })),
 
-    postScheduleSuccess: (loading: boolean, response: Schedule) =>
+    postScheduleSuccess: (response: Schedule) =>
       set((state) => ({
         ...state,
         schedule: { ...state.schedule, postResponse: response },
-        loading: { ...state.loading, loadingSchedule: loading },
+        loading: { ...state.loading, loadingSchedule: false },
       })),
 
-    postScheduleFail: (loading: boolean, error: string) =>
+    postScheduleFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingSchedule: loading },
+        loading: { ...state.loading, loadingSchedule: false },
         error: { ...state.error, errorSchedule: error },
       })),
 
@@ -116,17 +118,17 @@ export const useScheduleStore = create<ScheduleState>()(
         error: { ...state.error, errorSchedule: '' },
       })),
 
-    updateScheduleSuccess: (loading: boolean, response: Schedule) =>
+    updateScheduleSuccess: (response: Schedule) =>
       set((state) => ({
         ...state,
         schedule: { ...state.schedule, updateResponse: response },
-        loading: { ...state.loading, loadingSchedule: loading },
+        loading: { ...state.loading, loadingSchedule: false },
       })),
 
-    updateScheduleFail: (loading: boolean, error: string) =>
+    updateScheduleFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingSchedule: loading },
+        loading: { ...state.loading, loadingSchedule: false },
         error: { ...state.error, errorSchedule: error },
       })),
 
@@ -138,17 +140,17 @@ export const useScheduleStore = create<ScheduleState>()(
         error: { ...state.error, errorSchedule: '' },
       })),
 
-    deleteScheduleSuccess: (loading: boolean, response: Schedule) =>
+    deleteScheduleSuccess: (response: Schedule) =>
       set((state) => ({
         ...state,
+        loading: { ...state.loading, loadingSchedule: false },
         schedule: { ...state.schedule, deleteResponse: response },
-        loading: { ...state.loading, loadingSchedule: loading },
       })),
 
-    deleteScheduleFail: (loading: boolean, error: string) =>
+    deleteScheduleFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingSchedule: loading },
+        loading: { ...state.loading, loadingSchedule: false },
         error: { ...state.error, errorSchedule: error },
       })),
 
@@ -173,6 +175,12 @@ export const useScheduleStore = create<ScheduleState>()(
           updateResponse: {} as Schedule,
           deleteResponse: {} as Schedule,
         },
+      })),
+
+    emptyErrors: () =>
+      set((state) => ({
+        ...state,
+        error: { errorSchedule: '', errorSchedules: '' },
       })),
   }))
 );

@@ -88,13 +88,13 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
       PostSchedule(false);
 
       // set value for error message
-      PostScheduleFail(false, result);
+      PostScheduleFail(result);
     } else {
       // request is done so set loading to false
       PostSchedule(false);
 
       // set value from returned response
-      PostScheduleSuccess(false, result);
+      PostScheduleSuccess(result);
       //   mutate('/holidays');
 
       reset();
@@ -109,10 +109,6 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
 
   return (
     <>
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">

@@ -1,3 +1,5 @@
+/* This function is used for rendering rest days */
+
 function UseRenderRestDays(restDays: Array<string>) {
   const tempRestDays = restDays.map((restDay, index: number) => {
     if (restDay === 'Sunday') {

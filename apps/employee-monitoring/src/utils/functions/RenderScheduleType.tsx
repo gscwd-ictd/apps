@@ -1,6 +1,7 @@
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 
-// Render badge pill design
+/* This function is used for rendering schedule types */
+
 function UseRenderScheduleType(categoryType: Categories) {
   if (categoryType === Categories.REGULAR) {
     return (
