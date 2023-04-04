@@ -61,17 +61,6 @@ const DeleteStationSchedModal: FunctionComponent<DeleteModalProps> = ({
 
   return (
     <>
-      {IsLoading ? (
-        <div className="fixed z-50 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-          <AlertNotification
-            logo={<LoadingSpinner size="xs" />}
-            alertType="info"
-            notifMessage="Submitting request"
-            dismissible={false}
-          />
-        </div>
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmit)} id="deletestationschedmodal">
@@ -86,6 +75,16 @@ const DeleteStationSchedModal: FunctionComponent<DeleteModalProps> = ({
               </div>
             </div>
           </form>
+          {IsLoading ? (
+            <div className="flex justify-center w-full">
+              <AlertNotification
+                logo={<LoadingSpinner size="xs" />}
+                alertType="info"
+                notifMessage="Submitting request"
+                dismissible={false}
+              />
+            </div>
+          ) : null}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex flex-row-reverse justify-between w-full gap-2">

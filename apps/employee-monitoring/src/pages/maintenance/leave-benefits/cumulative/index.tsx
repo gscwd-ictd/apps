@@ -27,6 +27,7 @@ export default function Index() {
     UpdateResponse,
     DeleteResponse,
     setLeaveBenefits,
+    EmptyErrors,
     EmptyResponse,
     GetLeaveBenefits,
     GetLeaveBenefitsFail,
@@ -43,6 +44,7 @@ export default function Index() {
     GetLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
     GetLeaveBenefitsFail: state.getLeaveBenefitsFail,
     EmptyResponse: state.emptyResponse,
+    EmptyErrors: state.emptyErrors,
   }));
   const [currentRowData, setCurrentRowData] = useState<LeaveBenefit>(
     {} as LeaveBenefit
@@ -160,6 +162,7 @@ export default function Index() {
 
   // Initial zustand state update
   useEffect(() => {
+    EmptyErrors();
     EmptyResponse();
     if (swrIsLoading) {
       GetLeaveBenefits(swrIsLoading);

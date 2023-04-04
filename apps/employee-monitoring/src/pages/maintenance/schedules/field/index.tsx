@@ -203,6 +203,7 @@ export default function Index() {
 
   // Initial zustand state update
   useEffect(() => {
+    EmptyErrors();
     EmptyResponse();
     if (swrIsLoading) {
       GetSchedules(swrIsLoading);
@@ -230,11 +231,6 @@ export default function Index() {
       mutateSchedules();
     }
   }, [PostResponse, UpdateResponse, DeleteResponse]);
-
-  // set error to empty on page load
-  useEffect(() => {
-    EmptyErrors();
-  }, []);
 
   return (
     <>

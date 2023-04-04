@@ -23,6 +23,7 @@ export default defineAbility((can) => {
     { I: 'access', this: 'Settings' },
     { I: 'access', this: 'Personnel_selection' },
     { I: 'access', this: 'maintenance_schedules' },
+    { I: 'access', this: 'monitoring_trainings_and_seminars' },
   ];
 
   // cookies.get('isSuperUser')
