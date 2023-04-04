@@ -58,6 +58,9 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
 
       // close modal
       closeModalAction();
+    } else {
+      // request is done so set loading to false
+      DeleteLeaveBenefitFail(result);
     }
   };
 
