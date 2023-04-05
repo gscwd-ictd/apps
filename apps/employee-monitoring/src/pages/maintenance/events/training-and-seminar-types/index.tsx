@@ -22,19 +22,19 @@ import DeleteTrainingTypeModal from 'apps/employee-monitoring/src/components/mod
 // Mock Data REMOVE later
 export const TypesMockData: Array<TrainingType> = [
   {
-    id: 'foundational',
+    id: '001',
     name: 'Foundational',
   },
   {
-    id: 'technical',
+    id: '002',
     name: 'Technical',
   },
   {
-    id: 'managerial',
+    id: '003',
     name: 'Managerial/Leadership',
   },
   {
-    id: 'professional',
+    id: '004',
     name: 'Professional',
   },
 ];

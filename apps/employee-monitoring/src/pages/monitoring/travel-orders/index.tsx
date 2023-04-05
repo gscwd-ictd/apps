@@ -16,6 +16,8 @@ import {
 import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import AddTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/AddTravelOrderModal';
+import DeleteTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/DeleteTravelOrderModal';
+import EditTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/EditTravelOrderModal';
 
 // Mock Data REMOVE later
 const TypesMockData: Array<TravelOrder> = [
@@ -23,7 +25,7 @@ const TypesMockData: Array<TravelOrder> = [
     id: 'travelorder001',
     employee: {
       employeeId: '001',
-      fullName: 'Employee 1',
+      fullName: 'Allyn Cubero',
     },
     travelOrderNo: '2023-001',
     purposeOfTravel: 'Sample purpose of travel',
@@ -40,7 +42,7 @@ const TypesMockData: Array<TravelOrder> = [
     id: 'travelorder002',
     employee: {
       employeeId: '002',
-      fullName: 'Employee 2',
+      fullName: 'Alexis Aponesto',
     },
     travelOrderNo: '2023-002',
     purposeOfTravel: 'Sample purpose of travel',
@@ -62,7 +64,7 @@ const TypesMockData: Array<TravelOrder> = [
     id: 'travelorder003',
     employee: {
       employeeId: '003',
-      fullName: 'Employee 3',
+      fullName: 'Ricardo Vicente Supremo',
     },
     travelOrderNo: '2023-003',
     purposeOfTravel: 'Sample purpose of travel',
@@ -143,7 +145,7 @@ const Index = () => {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openEditActionModal(rowData)}
+          onClick={() => openEditActionModal(rowData)}
         >
           <i className="bx bx-edit-alt"></i>
         </button>
@@ -151,7 +153,7 @@ const Index = () => {
         <button
           type="button"
           className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
+          onClick={() => openDeleteActionModal(rowData)}
         >
           <i className="bx bx-trash-alt"></i>
         </button>
@@ -174,6 +176,8 @@ const Index = () => {
   const {
     TravelOrders,
     PostTravelOrderResponse,
+    UpdateTravelOrderResponse,
+    DeleteTravelOrderResponse,
 
     IsLoading,
     ErrorTravelOrders,
@@ -187,6 +191,8 @@ const Index = () => {
   } = useTravelOrderStore((state) => ({
     TravelOrders: state.travelOrders,
     PostTravelOrderResponse: state.travelOrder.postResponse,
+    UpdateTravelOrderResponse: state.travelOrder.updateResponse,
+    DeleteTravelOrderResponse: state.travelOrder.deleteResponse,
 
     IsLoading: state.loading.loadingTravelOrders,
     ErrorTravelOrders: state.error.errorTravelOrders,
@@ -220,16 +226,16 @@ const Index = () => {
 
   useEffect(() => {
     if (
-      !isEmpty(PostTravelOrderResponse)
-      // || !isEmpty(UpdateTravelOrderResponse) ||
-      // !isEmpty(DeleteTravelOrderResponse)
+      !isEmpty(PostTravelOrderResponse) ||
+      !isEmpty(UpdateTravelOrderResponse) ||
+      !isEmpty(DeleteTravelOrderResponse)
     ) {
       mutateTravelOrders();
     }
   }, [
     PostTravelOrderResponse,
-    // UpdateTravelOrderResponse,
-    // DeleteTravelOrderResponse,
+    UpdateTravelOrderResponse,
+    DeleteTravelOrderResponse,
   ]);
 
   return (
@@ -245,7 +251,7 @@ const Index = () => {
       ) : null}
 
       {/* Success Notifications */}
-      {/* {!isEmpty(PostTravelOrderResponse) ? (
+      {!isEmpty(PostTravelOrderResponse) ? (
         <ToastNotification
           toastType="success"
           notifMessage="Travel order added successfully"
@@ -262,7 +268,7 @@ const Index = () => {
           toastType="success"
           notifMessage="Travel order deleted successfully"
         />
-      ) : null} */}
+      ) : null}
 
       <Card>
         {IsLoading ? (
@@ -299,20 +305,20 @@ const Index = () => {
       />
 
       {/* Edit modal */}
-      {/* <EditTrainingTypeModal
+      <EditTravelOrderModal
         modalState={editModalIsOpen}
         setModalState={setEditModalIsOpen}
         closeModalAction={closeEditActionModal}
         rowData={currentRowData}
-      /> */}
+      />
 
       {/* Delete modal */}
-      {/* <DeleteTrainingTypeModal
+      <DeleteTravelOrderModal
         modalState={deleteModalIsOpen}
         setModalState={setDeleteModalIsOpen}
         closeModalAction={closeDeleteActionModal}
         rowData={currentRowData}
-      /> */}
+      />
     </div>
   );
 };

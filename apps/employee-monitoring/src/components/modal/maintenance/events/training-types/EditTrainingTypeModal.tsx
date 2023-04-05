@@ -1,16 +1,21 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { FunctionComponent, useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { isEmpty } from 'lodash';
+import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+
+import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
+import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
+
 import {
   AlertNotification,
   Button,
   LoadingSpinner,
   Modal,
 } from '@gscwd-apps/oneui';
-import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { isEmpty } from 'lodash';
-import { FunctionComponent, useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
 type EditModalProps = {
   modalState: boolean;
@@ -45,30 +50,42 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
     UpdateTrainingTypeFail: state.updateTrainingTypeFail,
   }));
 
+  // yup error handling initialization
+  const yupSchema = yup
+    .object({
+      name: yup.string().required('Training type name is required'),
+    })
+    .required();
+
   // React hook form
-  const { reset, register, setValue, handleSubmit } = useForm<TrainingType>({
+  const {
+    reset,
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TrainingType>({
     mode: 'onChange',
+    resolver: yupResolver(yupSchema),
   });
 
+  // form submission
   const onSubmit: SubmitHandler<TrainingType> = (data: TrainingType) => {
-    // set loading to true
     // UpdateTrainingType();
 
-    // handlePostResult(data);
+    // handlePatchResult(data);
     console.log(data);
   };
 
-  const handlePostResult = async (data: TrainingType) => {
+  const handlePatchResult = async (data: TrainingType) => {
     const { error, result } = await patchEmpMonitoring(
       '/trainings-and-seminars',
       data
     );
 
     if (error) {
-      // request is done so set loading to false
       UpdateTrainingTypeFail(result);
     } else {
-      // request is done so set loading to false
       UpdateTrainingTypeSuccess(result);
 
       reset();
@@ -122,20 +139,12 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
             <form onSubmit={handleSubmit(onSubmit)} id="editTrainingTypeForm">
               {/* Training Type name input */}
               <div className="mb-6">
-                <label
-                  htmlFor="training_type_name"
-                  className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="training_type_name"
-                  id="training_type_name"
-                  className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder=" "
-                  required
-                  {...register('name')}
+                <LabelInput
+                  id={'trainingTypeName'}
+                  label={'Training Type Name'}
+                  controller={{ ...register('name') }}
+                  isError={errors.name ? true : false}
+                  errorMessage={errors.name?.message}
                 />
               </div>
             </form>
