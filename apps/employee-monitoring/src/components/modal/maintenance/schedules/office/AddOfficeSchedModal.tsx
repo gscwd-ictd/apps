@@ -22,6 +22,8 @@ import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ScheduleSchema from '../ScheduleSchema';
 
 type AddModalProps = {
   modalState: boolean;
@@ -63,6 +65,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     register,
     formState: { errors },
   } = useForm<Schedule>({
+    resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     defaultValues: {
       name: '',
@@ -81,6 +84,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   // reset all values
   const resetToDefaultValues = () => {
     setSelectedRestDays([]);
+    reset();
     setWithLunch(true);
   };
 
@@ -128,7 +132,11 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   // with lunch in/out listener
   useEffect(() => {
     if (withLunch) setValue('withLunch', true);
-    else if (!withLunch) setValue('withLunch', false);
+    else if (!withLunch) {
+      setValue('withLunch', false);
+      setValue('lunchIn', null);
+      setValue('lunchOut', null);
+    }
   }, [withLunch]);
 
   // watch
@@ -137,10 +145,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
   }, [selectedRestDays]);
 
   // set to defaultValues during open
-  useEffect(() => {
-    reset();
-    resetToDefaultValues();
-  }, [modalState]);
+  useEffect(() => resetToDefaultValues(), [modalState]);
 
   return (
     <>
@@ -178,7 +183,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                 <LabelInput
                   id={'scheduleName'}
                   label={'Schedule Name'}
-                  controller={{ ...register('name', { required: true }) }}
+                  controller={{ ...register('name') }}
                   isError={errors.name ? true : false}
                   errorMessage={errors.name?.message}
                   disabled={IsLoading ? true : false}
@@ -189,7 +194,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   id="scheduleCategory"
                   selectList={categorySelection}
                   controller={{
-                    ...register('scheduleType', { required: true }),
+                    ...register('scheduleType'),
                   }}
                   label="Category"
                   isError={errors.scheduleType ? true : false}
@@ -202,7 +207,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   id={'scheduleTimeIn'}
                   type="time"
                   label={'Time In'}
-                  controller={{ ...register('timeIn', { required: true }) }}
+                  controller={{ ...register('timeIn') }}
                   isError={errors.timeIn ? true : false}
                   errorMessage={errors.timeIn?.message}
                   disabled={IsLoading ? true : false}
@@ -213,7 +218,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   id={'scheduleTimeOut'}
                   type="time"
                   label={'Time Out'}
-                  controller={{ ...register('timeOut', { required: true }) }}
+                  controller={{ ...register('timeOut') }}
                   isError={errors.timeOut ? true : false}
                   errorMessage={errors.timeOut?.message}
                   disabled={IsLoading ? true : false}
@@ -286,7 +291,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   id="scheduleShift"
                   selectList={listOfShifts}
                   controller={{
-                    ...register('shift', { required: true }),
+                    ...register('shift'),
                   }}
                   label="Shift"
                   disabled={IsLoading ? true : false}

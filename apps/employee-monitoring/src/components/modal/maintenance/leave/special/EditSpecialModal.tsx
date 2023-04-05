@@ -5,6 +5,7 @@ import {
   LoadingSpinner,
   Modal,
 } from '@gscwd-apps/oneui';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
@@ -16,6 +17,7 @@ import {
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import LeaveBenefitSchema from '../LeaveBenefitSchema';
 
 type EditModalProps = {
   modalState: boolean;
@@ -57,6 +59,7 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({
+    resolver: yupResolver(LeaveBenefitSchema),
     mode: 'onChange',
     defaultValues: {
       id: rowData.id,
@@ -147,37 +150,24 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
           <form onSubmit={handleSubmit(onSubmit)} id="editspecialmodal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
-                {/* Recurring Name */}
+                {/* special Name */}
                 <LabelInput
-                  id={'recurringName'}
+                  id={'specialName'}
                   label={'Leave Name'}
                   controller={{ ...register('leaveName', { required: true }) }}
                   isError={errors.leaveName ? true : false}
                   errorMessage={errors.leaveName?.message}
                   disabled={IsLoading ? true : false}
                 />
-
-                {/* Recurring Credits */}
+                {/* special Credits */}
                 <LabelInput
-                  id="recurringAccumulatedCredits"
-                  label="Credits"
+                  id="specialMaximumCredits"
+                  label="Credit Ceiling"
                   controller={{
-                    ...register('accumulatedCredits', { required: true }),
+                    ...register('maximumCredits'),
                   }}
-                  isError={errors.accumulatedCredits ? true : false}
-                  errorMessage={errors.accumulatedCredits?.message}
-                  disabled={IsLoading ? true : false}
-                />
-
-                {/* Recurring Distribution */}
-                <SelectListRF
-                  id="recurringDistribution"
-                  label="Credit Distribution"
-                  selectList={distributionSelection}
-                  controller={{
-                    ...register('creditDistribution', { required: true }),
-                  }}
-                  isError={errors.creditDistribution ? true : false}
+                  isError={errors.maximumCredits ? true : false}
+                  errorMessage={errors.maximumCredits?.message}
                   disabled={IsLoading ? true : false}
                 />
               </div>
