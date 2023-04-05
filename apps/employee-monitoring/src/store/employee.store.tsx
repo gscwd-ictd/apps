@@ -24,12 +24,9 @@ export type EmployeesState = {
   loading: LoadingEmployee;
   error: ErrorEmployee;
 
-  getEmployeeAsOptions: (loading: boolean) => void;
-  getEmployeeAsOptionsSuccess: (
-    loading: boolean,
-    response: Array<EmployeeAsOption>
-  ) => void;
-  getEmployeeAsOptionsFail: (loading: boolean, error: string) => void;
+  getEmployeeAsOptions: () => void;
+  getEmployeeAsOptionsSuccess: (response: Array<EmployeeAsOption>) => void;
+  getEmployeeAsOptionsFail: (error: string) => void;
 
   emptyResponse: () => void;
 };
@@ -49,26 +46,23 @@ export const useEmployeeStore = create<EmployeesState>()(
     },
 
     // actions to get list employee for dropdown option (id | fullName)
-    getEmployeeAsOptions: (loading: boolean) =>
+    getEmployeeAsOptions: () =>
       set((state) => ({
         ...state,
         employeeAsOptions: [],
-        loading: { ...state.loading, loadingEmployeeAsOptions: loading },
+        loading: { ...state.loading, loadingEmployeeAsOptions: true },
         error: { ...state.error, errorEmployeeAsOptions: '' },
       })),
-    getEmployeeAsOptionsSuccess: (
-      loading: boolean,
-      response: Array<EmployeeAsOption>
-    ) =>
+    getEmployeeAsOptionsSuccess: (response: Array<EmployeeAsOption>) =>
       set((state) => ({
         ...state,
         employeeAsOptions: response,
-        loading: { ...state.loading, loadingEmployeeAsOptions: loading },
+        loading: { ...state.loading, loadingEmployeeAsOptions: false },
       })),
-    getEmployeeAsOptionsFail: (loading: boolean, error: string) =>
+    getEmployeeAsOptionsFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingEmployeeAsOptions: loading },
+        loading: { ...state.loading, loadingEmployeeAsOptions: false },
         error: { ...state.error, errorEmployeeAsOptions: error },
       })),
 

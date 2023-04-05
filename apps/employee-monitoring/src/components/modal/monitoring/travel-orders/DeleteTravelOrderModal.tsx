@@ -45,7 +45,7 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
   const onSubmit: SubmitHandler<Holiday> = () => {
     if (!isEmpty(rowData.id)) {
       // set loading to true
-      DeleteHoliday();
+      DeleteHoliday(true);
 
       handleDeleteResult();
     }
@@ -58,10 +58,10 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
 
     if (error) {
       // request is done so set loading to false
-      DeleteHolidayFail(result);
+      DeleteHolidayFail(false, result);
     } else {
       // request is done so set loading to false
-      DeleteHolidaySuccess(result);
+      DeleteHolidaySuccess(false, result);
 
       closeModalAction();
     }

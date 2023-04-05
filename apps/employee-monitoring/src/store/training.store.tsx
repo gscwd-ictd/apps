@@ -80,14 +80,14 @@ export const useTrainingsStore = create<TrainingsState>()(
         error: { ...state.error, errorTrainings: error },
       })),
 
-    postTraining: (loading: boolean) =>
+    postTraining: () =>
       set((state) => ({
         ...state,
         training: {
           ...state.training,
           postResponse: {} as Training,
         },
-        loading: { ...state.loading, loadingTraining: loading },
+        loading: { ...state.loading, loadingTraining: true },
         error: { ...state.error, errorTraining: '' },
       })),
     postTrainingSuccess: (response: Training) =>
@@ -103,14 +103,14 @@ export const useTrainingsStore = create<TrainingsState>()(
         error: { ...state.error, errorTraining: error },
       })),
 
-    updateTraining: (loading: boolean) =>
+    updateTraining: () =>
       set((state) => ({
         ...state,
         training: {
           ...state.training,
           updateResponse: {} as Training,
         },
-        loading: { ...state.loading, loadingTraining: loading },
+        loading: { ...state.loading, loadingTraining: true },
         error: { ...state.error, errorTraining: '' },
       })),
     updateTrainingSuccess: (response: Training) =>
@@ -129,14 +129,14 @@ export const useTrainingsStore = create<TrainingsState>()(
         error: { ...state.error, errorTraining: error },
       })),
 
-    deleteTraining: (loading: boolean) =>
+    deleteTraining: () =>
       set((state) => ({
         ...state,
         training: {
           ...state.training,
           deleteResponse: {} as TrainingId,
         },
-        loading: { ...state.loading, loadingTraining: loading },
+        loading: { ...state.loading, loadingTraining: true },
         error: { ...state.error, errorTraining: '' },
       })),
     deleteTrainingSuccess: (response: TrainingId) =>

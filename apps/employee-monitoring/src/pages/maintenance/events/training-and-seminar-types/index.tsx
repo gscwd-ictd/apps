@@ -167,7 +167,7 @@ const Index = () => {
     }
 
     if (!isEmpty(swrError)) {
-      GetTrainingTypesFail(swrIsLoading, swrError);
+      GetTrainingTypesFail(swrIsLoading, swrError.message);
     }
   }, [swrTrainingTypes, swrError]);
 

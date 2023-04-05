@@ -1,3 +1,4 @@
+import { type } from 'os';
 import { EmployeeAsOption } from './employee.type';
 
 export type TravelOrder = {
@@ -10,7 +11,13 @@ export type TravelOrder = {
 };
 
 export type Itinerary = {
-  id: string;
+  id?: string;
   scheduledDate: string;
   scheduledPlace: string;
 };
+
+export type TravelOrderForm = Omit<TravelOrder, 'employee'> & {
+  employeeId: string;
+};
+
+export type TravelOrderId = Pick<TravelOrder, 'id'>;

@@ -46,7 +46,7 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
 
   const onSubmit: SubmitHandler<TrainingType> = (data: TrainingType) => {
     // set loading to true
-    PostTrainingType(true);
+    PostTrainingType();
 
     handlePostResult(data);
   };
@@ -59,10 +59,10 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      PostTrainingTypeFail(false, result);
+      PostTrainingTypeFail(result);
     } else {
       // request is done so set loading to false
-      PostTrainingTypeSuccess(false, result);
+      PostTrainingTypeSuccess(result);
 
       reset();
       closeModalAction();

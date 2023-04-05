@@ -1,18 +1,29 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { TravelOrder } from '../../../../libs/utils/src/lib/types/travel-order.type';
+import {
+  TravelOrder,
+  TravelOrderId,
+} from '../../../../libs/utils/src/lib/types/travel-order.type';
+
+type ResponseTravelOrder = {
+  postResponse: TravelOrder;
+  updateResponse: TravelOrder;
+  deleteResponse: TravelOrderId;
+};
 
 type LoadingTravelOrder = {
+  loadingTravelOrder: boolean;
   loadingTravelOrders: boolean;
 };
 
 type ErrorTravelOrder = {
+  errorTravelOrder: string;
   errorTravelOrders: string;
 };
 
 export type TravelOrderState = {
   travelOrders: Array<TravelOrder>;
-
+  travelOrder: ResponseTravelOrder;
   loading: LoadingTravelOrder;
   error: ErrorTravelOrder;
 
@@ -23,16 +34,27 @@ export type TravelOrderState = {
   ) => void;
   getTravelOrdersFail: (loading: boolean, error: string) => void;
 
+  postTravelOrder: () => void;
+  postTravelOrderSuccess: (response: TravelOrder) => void;
+  postTravelOrderFail: (error: string) => void;
+
   emptyResponse: () => void;
 };
 
 export const useTravelOrderStore = create<TravelOrderState>()(
   devtools((set) => ({
     travelOrders: [],
+    travelOrder: {
+      postResponse: {} as TravelOrder,
+      updateResponse: {} as TravelOrder,
+      deleteResponse: {} as TravelOrderId,
+    },
     loading: {
+      loadingTravelOrder: false,
       loadingTravelOrders: false,
     },
     error: {
+      errorTravelOrder: '',
       errorTravelOrders: '',
     },
 
@@ -57,10 +79,40 @@ export const useTravelOrderStore = create<TravelOrderState>()(
         error: { ...state.error, errorTravelOrders: error },
       })),
 
+    // actions to send travel order details
+    postTravelOrder: () =>
+      set((state) => ({
+        ...state,
+        travelOrder: {
+          ...state.travelOrder,
+          postResponse: {} as TravelOrder,
+        },
+        loading: { ...state.loading, loadingTravelOrder: true },
+        error: { ...state.error, errorTravelOrder: '' },
+      })),
+    postTravelOrderSuccess: (response: TravelOrder) =>
+      set((state) => ({
+        ...state,
+        travelOrder: { ...state.travelOrder, postResponse: response },
+        loading: { ...state.loading, loadingTravelOrder: false },
+      })),
+    postTravelOrderFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingTravelOrder: false },
+        error: { ...state.error, errorTravelOrder: error },
+      })),
+
     // action to empty response and error states
     emptyResponse: () =>
       set((state) => ({
         ...state,
+        travelOrder: {
+          ...state.travelOrder,
+          postResponse: {} as TravelOrder,
+          updateResponse: {} as TravelOrder,
+          deleteResponse: {} as TravelOrderId,
+        },
         error: {
           ...state.error,
           errorTravelOrders: '',
