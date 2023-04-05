@@ -4,7 +4,7 @@ import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 
-import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
+import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
 import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
@@ -12,11 +12,10 @@ import {
   DataTableHrms,
   LoadingSpinner,
   ToastNotification,
-  Dropdown,
 } from '@gscwd-apps/oneui';
 import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
-import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
+import AddTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/AddTravelOrderModal';
 
 // Mock Data REMOVE later
 const TypesMockData: Array<TravelOrder> = [
@@ -162,7 +161,7 @@ const Index = () => {
 
   // fetch data for list of travel orders
   const {
-    data: swrTrainingTypes,
+    data: swrTravelOrder,
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateTravelOrders,
@@ -174,8 +173,11 @@ const Index = () => {
   // Zustand initialization
   const {
     TravelOrders,
+    PostTravelOrderResponse,
+
     IsLoading,
-    Error,
+    ErrorTravelOrders,
+    ErrorTravelOrder,
 
     GetTravelOrders,
     GetTravelOrdersSuccess,
@@ -184,8 +186,11 @@ const Index = () => {
     EmptyResponse,
   } = useTravelOrderStore((state) => ({
     TravelOrders: state.travelOrders,
+    PostTravelOrderResponse: state.travelOrder.postResponse,
+
     IsLoading: state.loading.loadingTravelOrders,
-    Error: state.error.errorTravelOrders,
+    ErrorTravelOrders: state.error.errorTravelOrders,
+    ErrorTravelOrder: state.error.errorTravelOrder,
 
     GetTravelOrders: state.getTravelOrders,
     GetTravelOrdersSuccess: state.getTravelOrdersSuccess,
@@ -204,36 +209,39 @@ const Index = () => {
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (!isEmpty(swrTrainingTypes)) {
-      GetTravelOrdersSuccess(swrIsLoading, swrTrainingTypes.data);
+    if (!isEmpty(swrTravelOrder)) {
+      GetTravelOrdersSuccess(swrIsLoading, swrTravelOrder.data);
     }
 
     if (!isEmpty(swrError)) {
-      GetTravelOrdersFail(swrIsLoading, swrError);
+      GetTravelOrdersFail(swrIsLoading, swrError.message);
     }
-  }, [swrTrainingTypes, swrError]);
+  }, [swrTravelOrder, swrError]);
 
-  // useEffect(() => {
-  //   if (
-  //     !isEmpty(PostTravelOrderResponse) ||
-  //     !isEmpty(UpdateTravelOrderResponse) ||
-  //     !isEmpty(DeleteTravelOrderResponse)
-  //   ) {
-  //     mutateTravelOrders();
-  //   }
-  // }, [
-  //   PostTravelOrderResponse,
-  //   UpdateTravelOrderResponse,
-  //   DeleteTravelOrderResponse,
-  // ]);
+  useEffect(() => {
+    if (
+      !isEmpty(PostTravelOrderResponse)
+      // || !isEmpty(UpdateTravelOrderResponse) ||
+      // !isEmpty(DeleteTravelOrderResponse)
+    ) {
+      mutateTravelOrders();
+    }
+  }, [
+    PostTravelOrderResponse,
+    // UpdateTravelOrderResponse,
+    // DeleteTravelOrderResponse,
+  ]);
 
   return (
     <div className="min-h-[100%] min-w-full px-4">
       <BreadCrumbs title="Travel Orders" />
 
       {/* Error Notifications */}
-      {!isEmpty(Error) ? (
-        <ToastNotification toastType="error" notifMessage={Error} />
+      {!isEmpty(ErrorTravelOrders) ? (
+        <ToastNotification toastType="error" notifMessage={ErrorTravelOrders} />
+      ) : null}
+      {!isEmpty(ErrorTravelOrder) ? (
+        <ToastNotification toastType="error" notifMessage={ErrorTravelOrder} />
       ) : null}
 
       {/* Success Notifications */}
@@ -257,28 +265,7 @@ const Index = () => {
       ) : null} */}
 
       <Card>
-        <div className="flex flex-row flex-wrap">
-          <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-            <button
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-              // onClick={openAddActionModal}
-            >
-              <i className="bx bxs-plus-square"></i>&nbsp; Add Travel Order
-            </button>
-          </div>
-
-          <DataTableHrms
-            data={TypesMockData}
-            // data={TrainingTypes}
-            columns={columns}
-            columnVisibility={columnVisibility}
-            paginate
-            showGlobalFilter
-          />
-        </div>
-
-        {/* {IsLoading ? (
+        {IsLoading ? (
           <LoadingSpinner size="lg" />
         ) : (
           <div className="flex flex-row flex-wrap">
@@ -286,30 +273,30 @@ const Index = () => {
               <button
                 type="button"
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                // onClick={openAddActionModal}
+                onClick={openAddActionModal}
               >
-                <i className="bx bxs-plus-square"></i>&nbsp; Add Training Type
+                <i className="bx bxs-plus-square"></i>&nbsp; Add Travel Order
               </button>
             </div>
 
             <DataTableHrms
               data={TypesMockData}
-              // data={TrainingTypes}
+              // data={TravelOrders}
               columns={columns}
               columnVisibility={columnVisibility}
               paginate
               showGlobalFilter
             />
           </div>
-        )} */}
+        )}
       </Card>
 
       {/* Add modal */}
-      {/* <AddTrainingTypeModal
+      <AddTravelOrderModal
         modalState={addModalIsOpen}
         setModalState={setAddModalIsOpen}
         closeModalAction={closeAddActionModal}
-      /> */}
+      />
 
       {/* Edit modal */}
       {/* <EditTrainingTypeModal

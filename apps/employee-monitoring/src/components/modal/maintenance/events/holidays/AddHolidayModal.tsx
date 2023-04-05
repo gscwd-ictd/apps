@@ -59,7 +59,7 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
 
   const onSubmit: SubmitHandler<Holiday> = (data: Holiday) => {
     // set loading to true
-    PostHoliday(true);
+    PostHoliday();
 
     handlePostResult(data);
   };
@@ -69,10 +69,10 @@ const AddHolidayModal: FunctionComponent<AddModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      PostHolidayFail(false, result);
+      PostHolidayFail(result);
     } else {
       // request is done so set loading to false
-      PostHolidaySuccess(false, result);
+      PostHolidaySuccess(result);
 
       reset();
       closeModalAction();

@@ -47,7 +47,7 @@ const DeleteTrainingTypeModal: FunctionComponent<DeleteTrainingTypeModal> = ({
   const onSubmit: SubmitHandler<TrainingType> = () => {
     if (!isEmpty(rowData.id)) {
       // set loading to true
-      // DeleteTrainingType(true);
+      // DeleteTrainingType();
 
       // handleDeleteResult();
       console.log(rowData.id);
@@ -61,10 +61,10 @@ const DeleteTrainingTypeModal: FunctionComponent<DeleteTrainingTypeModal> = ({
 
     if (error) {
       // request is done so set loading to false
-      DeleteTrainingTypeFail(false, result);
+      DeleteTrainingTypeFail(result);
     } else {
       // request is done so set loading to false
-      DeleteTrainingTypeSuccess(false, result);
+      DeleteTrainingTypeSuccess(result);
 
       closeModalAction();
     }

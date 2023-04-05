@@ -28,17 +28,17 @@ export type HolidaysState = {
   getHolidaysSuccess: (loading: boolean, response: Array<Holiday>) => void;
   getHolidaysFail: (loading: boolean, error: string) => void;
 
-  postHoliday: (loading: boolean) => void;
-  postHolidaySuccess: (loading: boolean, response: Holiday) => void;
-  postHolidayFail: (loading: boolean, error: string) => void;
+  postHoliday: () => void;
+  postHolidaySuccess: (response: Holiday) => void;
+  postHolidayFail: (error: string) => void;
 
-  updateHoliday: (loading: boolean) => void;
-  updateHolidaySuccess: (loading: boolean, response: Holiday) => void;
-  updateHolidayFail: (loading: boolean, error: string) => void;
+  updateHoliday: () => void;
+  updateHolidaySuccess: (response: Holiday) => void;
+  updateHolidayFail: (error: string) => void;
 
-  deleteHoliday: (loading: boolean) => void;
-  deleteHolidaySuccess: (loading: boolean, response: HolidayId) => void;
-  deleteHolidayFail: (loading: boolean, error: string) => void;
+  deleteHoliday: () => void;
+  deleteHolidaySuccess: (response: HolidayId) => void;
+  deleteHolidayFail: (error: string) => void;
 
   emptyResponse: () => void;
 };
@@ -80,66 +80,66 @@ export const useHolidaysStore = create<HolidaysState>()(
         error: { ...state.error, errorHolidays: error },
       })),
 
-    postHoliday: (loading: boolean) =>
+    postHoliday: () =>
       set((state) => ({
         ...state,
         holiday: { ...state.holiday, postResponse: {} as Holiday },
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: true },
         error: { ...state.error, errorHoliday: '' },
       })),
-    postHolidaySuccess: (loading: boolean, response: Holiday) =>
+    postHolidaySuccess: (response: Holiday) =>
       set((state) => ({
         ...state,
         holiday: { ...state.holiday, postResponse: response },
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: false },
       })),
-    postHolidayFail: (loading: boolean, error: string) =>
+    postHolidayFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: false },
         error: { ...state.error, errorHoliday: error },
       })),
 
-    updateHoliday: (loading: boolean) =>
+    updateHoliday: () =>
       set((state) => ({
         ...state,
         holiday: { ...state.holiday, updateResponse: {} as Holiday },
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: true },
         error: { ...state.error, errorHoliday: '' },
       })),
-    updateHolidaySuccess: (loading: boolean, response: Holiday) =>
+    updateHolidaySuccess: (response: Holiday) =>
       set((state) => ({
         ...state,
         holiday: {
           ...state.holiday,
           updateResponse: response,
         },
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: false },
       })),
-    updateHolidayFail: (loading: boolean, error: string) =>
+    updateHolidayFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: false },
         error: { ...state.error, errorHoliday: error },
       })),
 
-    deleteHoliday: (loading: boolean) =>
+    deleteHoliday: () =>
       set((state) => ({
         ...state,
         holiday: { ...state.holiday, deleteResponse: {} as HolidayId },
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: true },
         error: { ...state.error, errorHoliday: '' },
       })),
-    deleteHolidaySuccess: (loading: boolean, response: HolidayId) =>
+    deleteHolidaySuccess: (response: HolidayId) =>
       set((state) => ({
         ...state,
         holiday: { ...state.holiday, deleteResponse: response },
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: false },
       })),
-    deleteHolidayFail: (loading: boolean, error: string) =>
+    deleteHolidayFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: false },
         error: { ...state.error, errorHoliday: error },
       })),
 

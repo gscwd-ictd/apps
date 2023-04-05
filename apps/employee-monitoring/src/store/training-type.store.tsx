@@ -34,20 +34,17 @@ export type TrainingTypesState = {
   ) => void;
   getTrainingTypesFail: (loading: boolean, error: string) => void;
 
-  postTrainingType: (loading: boolean) => void;
-  postTrainingTypeSuccess: (loading: boolean, response: TrainingType) => void;
-  postTrainingTypeFail: (loading: boolean, error: string) => void;
+  postTrainingType: () => void;
+  postTrainingTypeSuccess: (response: TrainingType) => void;
+  postTrainingTypeFail: (error: string) => void;
 
-  updateTrainingType: (loading: boolean) => void;
-  updateTrainingTypeSuccess: (loading: boolean, response: TrainingType) => void;
-  updateTrainingTypeFail: (loading: boolean, error: string) => void;
+  updateTrainingType: () => void;
+  updateTrainingTypeSuccess: (response: TrainingType) => void;
+  updateTrainingTypeFail: (error: string) => void;
 
-  deleteTrainingType: (loading: boolean) => void;
-  deleteTrainingTypeSuccess: (
-    loading: boolean,
-    response: TrainingTypeId
-  ) => void;
-  deleteTrainingTypeFail: (loading: boolean, error: string) => void;
+  deleteTrainingType: () => void;
+  deleteTrainingTypeSuccess: (response: TrainingTypeId) => void;
+  deleteTrainingTypeFail: (error: string) => void;
 
   emptyResponse: () => void;
 };
@@ -92,75 +89,75 @@ export const useTrainingTypesStore = create<TrainingTypesState>()(
         error: { ...state.error, errorTrainingTypes: error },
       })),
 
-    postTrainingType: (loading: boolean) =>
+    postTrainingType: () =>
       set((state) => ({
         ...state,
         trainingType: {
           ...state.trainingType,
           postResponse: {} as TrainingType,
         },
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: true },
         error: { ...state.error, errorTrainingType: '' },
       })),
-    postTrainingTypeSuccess: (loading: boolean, response: TrainingType) =>
+    postTrainingTypeSuccess: (response: TrainingType) =>
       set((state) => ({
         ...state,
         trainingType: { ...state.trainingType, postResponse: response },
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: false },
       })),
-    postTrainingTypeFail: (loading: boolean, error: string) =>
+    postTrainingTypeFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: false },
         error: { ...state.error, errorTrainingType: error },
       })),
 
-    updateTrainingType: (loading: boolean) =>
+    updateTrainingType: () =>
       set((state) => ({
         ...state,
         trainingType: {
           ...state.trainingType,
           updateResponse: {} as TrainingType,
         },
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: true },
         error: { ...state.error, errorTrainingType: '' },
       })),
-    updateTrainingTypeSuccess: (loading: boolean, response: TrainingType) =>
+    updateTrainingTypeSuccess: (response: TrainingType) =>
       set((state) => ({
         ...state,
         trainingType: {
           ...state.trainingType,
           updateResponse: response,
         },
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: false },
       })),
-    updateTrainingTypeFail: (loading: boolean, error: string) =>
+    updateTrainingTypeFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: false },
         error: { ...state.error, errorTrainingType: error },
       })),
 
-    deleteTrainingType: (loading: boolean) =>
+    deleteTrainingType: () =>
       set((state) => ({
         ...state,
         trainingType: {
           ...state.trainingType,
           deleteResponse: {} as TrainingTypeId,
         },
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: true },
         error: { ...state.error, errorTrainingType: '' },
       })),
-    deleteTrainingTypeSuccess: (loading: boolean, response: TrainingTypeId) =>
+    deleteTrainingTypeSuccess: (response: TrainingTypeId) =>
       set((state) => ({
         ...state,
         trainingType: { ...state.trainingType, deleteResponse: response },
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: false },
       })),
-    deleteTrainingTypeFail: (loading: boolean, error: string) =>
+    deleteTrainingTypeFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingTrainingType: loading },
+        loading: { ...state.loading, loadingTrainingType: false },
         error: { ...state.error, errorTrainingType: error },
       })),
 

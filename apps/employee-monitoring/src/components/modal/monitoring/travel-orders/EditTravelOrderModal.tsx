@@ -66,7 +66,7 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
 
   const onSubmit: SubmitHandler<Holiday> = (data: Holiday) => {
     // set loading to true
-    UpdateHoliday();
+    UpdateHoliday(true);
 
     handlePostResult(data);
   };
@@ -76,10 +76,10 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      UpdateHolidayFail(result);
+      UpdateHolidayFail(false, result);
     } else {
       // request is done so set loading to false
-      UpdateHolidaySuccess(result);
+      UpdateHolidaySuccess(false, result);
 
       reset();
       closeModalAction();

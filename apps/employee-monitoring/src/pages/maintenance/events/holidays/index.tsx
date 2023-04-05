@@ -172,7 +172,7 @@ const Index = () => {
     }
 
     if (!isEmpty(swrError)) {
-      GetHolidaysFail(swrIsLoading, swrError);
+      GetHolidaysFail(swrIsLoading, swrError.message);
     }
   }, [swrHolidays, swrError]);
 

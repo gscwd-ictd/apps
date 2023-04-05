@@ -52,7 +52,7 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
 
   const onSubmit: SubmitHandler<TrainingType> = (data: TrainingType) => {
     // set loading to true
-    // UpdateTrainingType(true);
+    // UpdateTrainingType();
 
     // handlePostResult(data);
     console.log(data);
@@ -66,10 +66,10 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
 
     if (error) {
       // request is done so set loading to false
-      UpdateTrainingTypeFail(false, result);
+      UpdateTrainingTypeFail(result);
     } else {
       // request is done so set loading to false
-      UpdateTrainingTypeSuccess(false, result);
+      UpdateTrainingTypeSuccess(result);
 
       reset();
       closeModalAction();
