@@ -4,9 +4,6 @@ import {
   LoadingSpinner,
   Modal,
 } from '@gscwd-apps/oneui';
-import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
-import { TypesMockData } from 'apps/employee-monitoring/src/pages/maintenance/events/training-and-seminar-types';
 import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
 import { useTrainingsStore } from 'apps/employee-monitoring/src/store/training.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
@@ -17,23 +14,22 @@ import { Training } from 'libs/utils/src/lib/types/training.type';
 import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import useSWR from 'swr';
+import { LabelInput } from '../../../inputs/LabelInput';
+import { SelectListRF } from '../../../inputs/SelectListRF';
 import Toggle from '../../../switch/Toggle';
+import useSWR from 'swr';
+import { TypesMockData } from 'apps/employee-monitoring/src/pages/maintenance/events/training-and-seminar-types';
 
-type AddModalProps = {
+type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
+  rowData: Training;
 };
 
-// mock
-const distributionSelection: Array<SelectOption> = [
-  { label: 'Monthly', value: 'monthly' },
-  { label: 'Yearly', value: 'yearly' },
-];
-
-const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
+const EditTrainingsModal: FunctionComponent<EditModalProps> = ({
   modalState,
+  rowData,
   setModalState,
   closeModalAction,
 }) => {
@@ -42,12 +38,13 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
 
   const {
     Error,
-
+    LeaveBenefitPostResponse,
     IsLoading,
     PostTraining,
     PostTrainingFail,
     PostTrainingSuccess,
   } = useTrainingsStore((state) => ({
+    LeaveBenefitPostResponse: state.training.postResponse,
     IsLoading: state.loading.loadingTraining,
     Error: state.error.errorTraining,
     PostTraining: state.postTraining,
@@ -133,8 +130,19 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
           value: trainingType.id,
         });
       });
-
     setTrainingTypes(selectOption);
+  };
+
+  const loadNewDefaultValues = (training: Training) => {
+    setValue('id', training.id);
+    setValue('name', training.name);
+    setValue('type', training.type);
+    setValue('dateFrom', training.dateFrom);
+    setValue('dateTo', training.dateTo);
+    setValue('hours', training.hours);
+    setInOffice(training.inOffice);
+    setValue('learningServiceProvider', training.learningServiceProvider);
+    setValue('location', training.location);
   };
 
   // initialize zustand state update
@@ -169,6 +177,11 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
   useEffect(() => {
     register('inOffice');
   }, []);
+
+  // load values on page load
+  useEffect(() => {
+    if (modalState === true) loadNewDefaultValues(rowData);
+  }, [modalState]);
 
   return (
     <>
@@ -326,4 +339,4 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddTrainingsModal;
+export default EditTrainingsModal;

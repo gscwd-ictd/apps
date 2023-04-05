@@ -148,7 +148,7 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
               variant="info"
               type="submit"
               form="editTrainingTypeForm"
-              className="text-gray-400 ml-1 disabled:cursor-not-allowed"
+              className="ml-1 text-gray-400 disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
