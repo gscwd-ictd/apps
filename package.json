@@ -24,6 +24,7 @@
     "@headlessui/react": "^1.7.7",
     "@headlessui/tailwindcss": "^0.1.2",
     "@heroicons/react": "^2.0.13",
+    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^2.9.10",
     "@nrwl/next": "15.2.1",
     "@react-pdf/renderer": "^3.1.5",

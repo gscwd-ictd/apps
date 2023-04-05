@@ -183,6 +183,8 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
                     ...register('shift', { required: true }),
                   }}
                   label="Shift"
+                  isError={errors.shift ? true : false}
+                  errorMessage={errors.shift?.message}
                   disabled={IsLoading ? true : false}
                 />
 
