@@ -5,6 +5,7 @@ import {
   LoadingSpinner,
   Modal,
 } from '@gscwd-apps/oneui';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
@@ -16,6 +17,7 @@ import {
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import LeaveBenefitSchema from '../LeaveBenefitSchema';
 
 type EditModalProps = {
   modalState: boolean;
@@ -57,6 +59,7 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({
+    resolver: yupResolver(LeaveBenefitSchema),
     mode: 'onChange',
     defaultValues: {
       id: rowData.id,

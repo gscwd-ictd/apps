@@ -4,6 +4,7 @@ import {
   LoadingSpinner,
   Modal,
 } from '@gscwd-apps/oneui';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
@@ -16,6 +17,7 @@ import {
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import LeaveBenefitSchema from '../LeaveBenefitSchema';
 
 type AddModalProps = {
   modalState: boolean;
@@ -55,6 +57,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({
+    resolver: yupResolver(LeaveBenefitSchema),
     mode: 'onChange',
     defaultValues: {
       leaveName: '',
@@ -155,6 +158,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
                     ...register('creditDistribution', { required: true }),
                   }}
                   isError={errors.creditDistribution ? true : false}
+                  errorMessage={errors.creditDistribution?.message}
                   disabled={IsLoading ? true : false}
                 />
               </div>

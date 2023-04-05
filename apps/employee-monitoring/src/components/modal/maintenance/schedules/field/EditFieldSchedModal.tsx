@@ -22,6 +22,8 @@ import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ScheduleSchema from '../ScheduleSchema';
 
 type EditModalProps = {
   modalState: boolean;
@@ -75,8 +77,10 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     handleSubmit,
     reset,
     register,
+    clearErrors,
     formState: { errors },
   } = useForm<Schedule>({
+    resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     defaultValues: {
       id: rowData.id,
@@ -127,7 +131,10 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
   }, [selectedRestDays]);
 
   useEffect(() => {
-    if (modalState === true) loadNewDefaultValues(rowData);
+    if (modalState === true) {
+      loadNewDefaultValues(rowData);
+      clearErrors();
+    }
   }, [modalState]);
 
   return (
