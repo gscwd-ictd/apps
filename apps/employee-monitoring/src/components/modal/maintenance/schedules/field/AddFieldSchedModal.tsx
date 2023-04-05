@@ -5,7 +5,6 @@ import {
   Button,
   LoadingSpinner,
   Modal,
-  ToastNotification,
 } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
@@ -17,12 +16,12 @@ import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
-import { ErrorMessage } from '@hookform/error-message';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ScheduleSchema from '../ScheduleSchema';
 
 type AddModalProps = {
   modalState: boolean;
@@ -60,11 +59,13 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
     handleSubmit,
     reset,
     register,
+    clearErrors,
     formState: { errors },
   } = useForm<Schedule>({
+    resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     defaultValues: {
-      scheduleType: Categories.FLEXIBLE,
+      scheduleType: null,
       timeIn: '',
       timeOut: '',
       scheduleBase: ScheduleBases.FIELD,
@@ -80,6 +81,7 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
   // reset all values
   const resetToDefaultValues = () => {
     setSelectedRestDays([]);
+    reset();
   };
 
   // convert
@@ -128,8 +130,7 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
 
   // set to defaultValues during open
   useEffect(() => {
-    reset();
-    resetToDefaultValues();
+    if (modalState === true) resetToDefaultValues();
   }, [modalState]);
 
   return (
@@ -172,11 +173,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
                   errorMessage={errors.name?.message}
                   disabled={IsLoading ? true : false}
                 />
-                <ErrorMessage
-                  errors={errors}
-                  name="name"
-                  render={({ message }) => <p>{message}</p>}
-                />
 
                 {/** schedule type */}
                 <SelectListRF
@@ -187,6 +183,8 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
                   }}
                   label="Category"
                   disabled={IsLoading ? true : false}
+                  isError={errors.scheduleType ? true : false}
+                  errorMessage={errors.scheduleType?.message}
                 />
 
                 {/** Time in */}
@@ -219,6 +217,8 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
                     ...register('shift', { required: true }),
                   }}
                   label="Shift"
+                  isError={errors.shift ? true : false}
+                  errorMessage={errors.shift?.message}
                   disabled={IsLoading ? true : false}
                 />
 

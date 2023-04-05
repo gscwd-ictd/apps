@@ -5,7 +5,7 @@ export type LeaveBenefit = {
   accumulatedCredits: number;
   isMonetizable: boolean;
   canBeCarriedOver: boolean;
-  maximumCredits?: number;
+  maximumCredits?: number | null;
   leaveType: LeaveType;
 };
 

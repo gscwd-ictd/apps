@@ -6,6 +6,7 @@ import {
   Modal,
   ToastNotification,
 } from '@gscwd-apps/oneui';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
@@ -17,15 +18,57 @@ import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
+
+const ScheduleSchema = yup.object().shape({
+  id: yup.string().notRequired().trim(),
+  scheduleType: yup.string().nullable().notRequired().label('Schedule type'),
+  name: yup.string().nullable(false).required().trim().label('Name'),
+  timeIn: yup.string().nullable().required().label('Time in'),
+  timeOut: yup.string().nullable().required().label('Time out'),
+  withLunch: yup.boolean().notRequired(),
+  lunchIn: yup
+    .string()
+    .label('Lunch in')
+    .when('withLunch', {
+      is: true,
+      then: yup
+        .string()
+        .required()
+        .typeError('Time in is a required field')
+        .trim()
+        .label('Time in'),
+    })
+    .when('withLunch', {
+      is: false,
+      then: yup.string().notRequired().nullable().label('Time in'),
+    }),
+  lunchOut: yup
+    .string()
+    .label('Lunch out')
+    .when('withLunch', {
+      is: true,
+      then: yup
+        .string()
+        .required()
+        .typeError('Time out is a required field')
+        .trim()
+        .label('Time out'),
+    })
+    .when('withLunch', {
+      is: false,
+      then: yup.string().notRequired().nullable().label('Time out'),
+    }),
+  shift: yup.string().nullable().required().label('Shift'),
+});
 
 const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
   modalState,
@@ -59,6 +102,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
     register,
     formState: { errors },
   } = useForm<Schedule>({
+    resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     defaultValues: {
       scheduleType: null,
@@ -66,12 +110,19 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
       timeOut: '',
       scheduleBase: ScheduleBases.PUMPING_STATION,
       name: '',
+      withLunch: false,
       shift: null,
       restDays: [],
       lunchIn: null,
       lunchOut: null,
     },
   });
+
+  // reset all values
+  const resetToDefaultValues = () => {
+    setSelectedRestDays([]);
+    reset();
+  };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
@@ -106,6 +157,14 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
   useEffect(() => {
     setValue('restDays', UseRestDaysOptionToNumberArray(selectedRestDays));
   }, [selectedRestDays]);
+
+  useEffect(() => {
+    if (modalState === true) resetToDefaultValues();
+  }, [modalState]);
+
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
   return (
     <>
@@ -145,7 +204,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
                 <LabelInput
                   id={'scheduleName'}
                   label={'Schedule Name'}
-                  controller={{ ...register('name', { required: true }) }}
+                  controller={{ ...register('name') }}
                   isError={errors.name ? true : false}
                   errorMessage={errors.name?.message}
                   disabled={IsLoading ? true : false}
@@ -158,7 +217,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
                   id={'scheduleTimeIn'}
                   type="time"
                   label={'Time In'}
-                  controller={{ ...register('timeIn', { required: true }) }}
+                  controller={{ ...register('timeIn') }}
                   isError={errors.timeIn ? true : false}
                   errorMessage={errors.timeIn?.message}
                   disabled={IsLoading ? true : false}
@@ -169,7 +228,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
                   id={'scheduleTimeOut'}
                   type="time"
                   label={'Time Out'}
-                  controller={{ ...register('timeOut', { required: true }) }}
+                  controller={{ ...register('timeOut') }}
                   isError={errors.timeOut ? true : false}
                   errorMessage={errors.timeOut?.message}
                   disabled={IsLoading ? true : false}
@@ -180,7 +239,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
                   id="scheduleShift"
                   selectList={listOfShifts}
                   controller={{
-                    ...register('shift', { required: true }),
+                    ...register('shift'),
                   }}
                   label="Shift"
                   isError={errors.shift ? true : false}

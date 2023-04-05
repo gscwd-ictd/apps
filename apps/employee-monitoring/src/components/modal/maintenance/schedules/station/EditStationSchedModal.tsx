@@ -5,6 +5,7 @@ import {
   Modal,
   ToastNotification,
 } from '@gscwd-apps/oneui';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
@@ -20,6 +21,7 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import ScheduleSchema from '../ScheduleSchema';
 
 type EditModalProps = {
   modalState: boolean;
@@ -80,11 +82,12 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
   const {
     setValue,
     handleSubmit,
-    watch,
     reset,
     register,
+    clearErrors,
     formState: { errors },
   } = useForm<Schedule>({
+    resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     defaultValues: {
       id: rowData.id,
@@ -96,13 +99,6 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
       shift: rowData.shift,
     },
   });
-
-  // reset all values
-  const resetToDefaultValues = () => {
-    reset();
-    setSelectedRestDays([]);
-    setWithLunch(true);
-  };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
@@ -139,7 +135,10 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
   }, [selectedRestDays]);
 
   useEffect(() => {
-    if (modalState === true) loadNewDefaultValues(rowData);
+    if (modalState === true) {
+      loadNewDefaultValues(rowData);
+      clearErrors();
+    }
   }, [modalState]);
 
   return (

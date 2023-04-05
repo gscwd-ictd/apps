@@ -4,18 +4,18 @@ import {
   LoadingSpinner,
   Modal,
 } from '@gscwd-apps/oneui';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import {
-  CreditDistribution,
   LeaveBenefit,
   LeaveType,
 } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import LeaveBenefitSchema from '../LeaveBenefitSchema';
 
 type AddModalProps = {
   modalState: boolean;
@@ -51,27 +51,26 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
 
   const {
     handleSubmit,
-
+    getValues,
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({
+    resolver: yupResolver(LeaveBenefitSchema),
     mode: 'onChange',
     defaultValues: {
       leaveName: '',
-      accumulatedCredits: undefined,
+      accumulatedCredits: null,
       canBeCarriedOver: false,
-      leaveType: LeaveType.RECURRING,
-      creditDistribution: CreditDistribution.YEARLY,
+      maximumCredits: undefined,
+      creditDistribution: null,
       isMonetizable: false,
+      leaveType: LeaveType.SPECIAL,
     },
   });
 
   const onSubmit: SubmitHandler<LeaveBenefit> = (leave: LeaveBenefit) => {
-    // console.log(leave);
-
     // set loading to true
     PostLeaveBenefit(true);
-
     handlePostLeave(leave);
   };
 
@@ -124,9 +123,9 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
           <form onSubmit={handleSubmit(onSubmit)} id="addspecialmodal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
-                {/* Recurring Name */}
+                {/* special Name */}
                 <LabelInput
-                  id={'recurringName'}
+                  id={'specialName'}
                   label={'Leave Name'}
                   controller={{ ...register('leaveName', { required: true }) }}
                   isError={errors.leaveName ? true : false}
@@ -134,31 +133,22 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
                   disabled={IsLoading ? true : false}
                 />
 
-                {/* Recurring Credits */}
+                {/* special Credits */}
                 <LabelInput
-                  id="recurringAccumulatedCredits"
-                  label="Credits"
+                  id="specialMaximumCredits"
+                  label="Credit Ceiling"
                   controller={{
-                    ...register('accumulatedCredits', { required: true }),
+                    ...register('maximumCredits'),
                   }}
-                  isError={errors.accumulatedCredits ? true : false}
-                  errorMessage={errors.accumulatedCredits?.message}
-                  disabled={IsLoading ? true : false}
-                />
-
-                {/* Recurring Distribution */}
-                <SelectListRF
-                  id="recurringDistribution"
-                  label="Credit Distribution"
-                  selectList={distributionSelection}
-                  controller={{
-                    ...register('creditDistribution', { required: true }),
-                  }}
-                  isError={errors.creditDistribution ? true : false}
+                  isError={errors.maximumCredits ? true : false}
+                  errorMessage={errors.maximumCredits?.message}
                   disabled={IsLoading ? true : false}
                 />
               </div>
             </div>
+            <button type="button" onClick={() => console.log(getValues())}>
+              Log
+            </button>
           </form>
         </Modal.Body>
         <Modal.Footer>

@@ -2,6 +2,7 @@ import { Button, DataTableHrms, Modal } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import AddTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/AddTrainingsModal';
+import DeleteTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/DeleteTrainingsModal';
 import EditTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/EditTrainingsModal';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
@@ -234,6 +235,13 @@ export default function Index() {
           modalState={editModalIsOpen}
           setModalState={setEditModalIsOpen}
           closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
+        />
+
+        <DeleteTrainingsModal
+          modalState={deleteModalIsOpen}
+          setModalState={setDeleteModalIsOpen}
+          closeModalAction={closeDeleteActionModal}
           rowData={currentRowData}
         />
 

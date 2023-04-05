@@ -23,6 +23,8 @@ import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ScheduleSchema from '../ScheduleSchema';
 
 type EditModalProps = {
   modalState: boolean;
@@ -87,8 +89,10 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
     watch,
     reset,
     register,
+    clearErrors,
     formState: { errors },
   } = useForm<Schedule>({
+    resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     defaultValues: {
       id: rowData.id,
@@ -130,13 +134,36 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
     }
   };
 
+  // set it to null
+  useEffect(() => {
+    if (isEmpty(watch('lunchIn'))) setValue('lunchIn', null);
+  }, [watch('lunchIn')]);
+
+  // set it to null
+  useEffect(() => {
+    if (isEmpty(watch('lunchOut'))) setValue('lunchOut', null);
+  }, [watch('lunchOut')]);
+
+  // with lunch in/out listener
+  useEffect(() => {
+    if (withLunch) setValue('withLunch', true);
+    else if (!withLunch) {
+      setValue('withLunch', false);
+      setValue('lunchIn', null);
+      setValue('lunchOut', null);
+    }
+  }, [withLunch]);
+
   // watch
   useEffect(() => {
     setValue('restDays', UseRestDaysOptionToNumberArray(selectedRestDays));
   }, [selectedRestDays]);
 
   useEffect(() => {
-    if (modalState === true) loadNewDefaultValues(rowData);
+    if (modalState === true) {
+      loadNewDefaultValues(rowData);
+      clearErrors();
+    }
   }, [modalState]);
 
   return (

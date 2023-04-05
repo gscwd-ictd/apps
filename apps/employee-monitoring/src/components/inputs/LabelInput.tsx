@@ -48,7 +48,7 @@ export const LabelInput: FunctionComponent<
       />
 
       {isError ? (
-        <div className="text-xs text-red-400">{errorMessage}</div>
+        <div className="mt-1 text-xs text-red-400">{errorMessage}</div>
       ) : null}
     </div>
   );

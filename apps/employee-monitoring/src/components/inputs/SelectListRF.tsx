@@ -43,7 +43,7 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
           isError
             ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
             : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-        } hover:cursor-pointer w-full outline-none text-xs text-gray-600 h-[2.5rem] p-2.5 ${className}`}
+        } hover:cursor-pointer w-full outline-none text-xs text-gray-900 h-[2.5rem] p-2.5 ${className}`}
         {...props}
       >
         <option value="" key="" disabled>
@@ -57,7 +57,7 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
         ))}
       </select>
       {errorMessage && (
-        <span className="text-xs text-red-600">{errorMessage}</span>
+        <span className="mt-1 text-xs text-red-400">{errorMessage}</span>
       )}
     </div>
   );
