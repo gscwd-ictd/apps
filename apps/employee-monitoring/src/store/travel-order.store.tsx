@@ -38,6 +38,14 @@ export type TravelOrderState = {
   postTravelOrderSuccess: (response: TravelOrder) => void;
   postTravelOrderFail: (error: string) => void;
 
+  updateTravelOrder: () => void;
+  updateTravelOrderSuccess: (response: TravelOrder) => void;
+  updateTravelOrderFail: (error: string) => void;
+
+  deleteTravelOrder: () => void;
+  deleteTravelOrderSuccess: (response: TravelOrderId) => void;
+  deleteTravelOrderFail: (error: string) => void;
+
   emptyResponse: () => void;
 };
 
@@ -103,6 +111,57 @@ export const useTravelOrderStore = create<TravelOrderState>()(
         error: { ...state.error, errorTravelOrder: error },
       })),
 
+    // actions to update travel order details
+    updateTravelOrder: () =>
+      set((state) => ({
+        ...state,
+        travelOrder: {
+          ...state.travelOrder,
+          updateResponse: {} as TravelOrder,
+        },
+        loading: { ...state.loading, loadingTravelOrder: true },
+        error: { ...state.error, errorTravelOrder: '' },
+      })),
+    updateTravelOrderSuccess: (response: TravelOrder) =>
+      set((state) => ({
+        ...state,
+        travelOrder: {
+          ...state.travelOrder,
+          updateResponse: response,
+        },
+        loading: { ...state.loading, loadingTravelOrder: false },
+      })),
+    updateTravelOrderFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingTravelOrder: false },
+        error: { ...state.error, errorTravelOrder: error },
+      })),
+
+    // actions to delete a travel order
+    deleteTravelOrder: () =>
+      set((state) => ({
+        ...state,
+        travelOrder: {
+          ...state.travelOrder,
+          deleteResponse: {} as TravelOrderId,
+        },
+        loading: { ...state.loading, loadingTravelOrder: true },
+        error: { ...state.error, errorTravelOrder: '' },
+      })),
+    deleteTravelOrderSuccess: (response: TravelOrderId) =>
+      set((state) => ({
+        ...state,
+        travelOrder: { ...state.travelOrder, deleteResponse: response },
+        loading: { ...state.loading, loadingTravelOrder: false },
+      })),
+    deleteTravelOrderFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingTravelOrder: false },
+        error: { ...state.error, errorTravelOrder: error },
+      })),
+
     // action to empty response and error states
     emptyResponse: () =>
       set((state) => ({
@@ -116,6 +175,7 @@ export const useTravelOrderStore = create<TravelOrderState>()(
         error: {
           ...state.error,
           errorTravelOrders: '',
+          errorTravelOrder: '',
         },
       })),
   }))

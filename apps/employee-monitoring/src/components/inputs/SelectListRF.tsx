@@ -57,7 +57,7 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
         ))}
       </select>
       {errorMessage && (
-        <span className="text-xs text-red-600">{errorMessage}</span>
+        <span className="text-xs mt-1 text-red-600">{errorMessage}</span>
       )}
     </div>
   );

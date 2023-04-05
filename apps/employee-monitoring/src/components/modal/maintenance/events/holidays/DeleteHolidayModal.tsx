@@ -1,25 +1,22 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-} from '@gscwd-apps/oneui';
-import { useHolidaysStore } from 'apps/employee-monitoring/src/store/holidays.store';
-import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { isEmpty } from 'lodash';
 import { FunctionComponent } from 'react';
+import { isEmpty } from 'lodash';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Holiday } from '../../../../../../src/utils/types/holiday.type';
+import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
-type DeleteHolidayModal = {
+import { Holiday } from '../../../../../../src/utils/types/holiday.type';
+import { useHolidaysStore } from 'apps/employee-monitoring/src/store/holidays.store';
+
+import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+
+type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   rowData: Holiday;
 };
 
-const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
+const DeleteHolidayModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -42,9 +39,9 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
 
   const { handleSubmit } = useForm<Holiday>();
 
+  // form submission
   const onSubmit: SubmitHandler<Holiday> = () => {
     if (!isEmpty(rowData.id)) {
-      // set loading to true
       DeleteHoliday();
 
       handleDeleteResult();
@@ -57,10 +54,8 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
     );
 
     if (error) {
-      // request is done so set loading to false
       DeleteHolidayFail(result);
     } else {
-      // request is done so set loading to false
       DeleteHolidaySuccess(result);
 
       closeModalAction();
@@ -120,4 +115,4 @@ const EditHolidayModal: FunctionComponent<DeleteHolidayModal> = ({
   );
 };
 
-export default EditHolidayModal;
+export default DeleteHolidayModal;

@@ -1,25 +1,22 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-} from '@gscwd-apps/oneui';
-import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
-import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { isEmpty } from 'lodash';
 import { FunctionComponent } from 'react';
+import { isEmpty } from 'lodash';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
+import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
-type DeleteTrainingTypeModal = {
+import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
+import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
+
+import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+
+type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   rowData: TrainingType;
 };
 
-const DeleteTrainingTypeModal: FunctionComponent<DeleteTrainingTypeModal> = ({
+const DeleteTrainingTypeModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -44,26 +41,23 @@ const DeleteTrainingTypeModal: FunctionComponent<DeleteTrainingTypeModal> = ({
     mode: 'onChange',
   });
 
+  // form submission
   const onSubmit: SubmitHandler<TrainingType> = () => {
     if (!isEmpty(rowData.id)) {
-      // set loading to true
-      // DeleteTrainingType();
-
-      // handleDeleteResult();
-      console.log(rowData.id);
     }
+    DeleteTrainingType();
+
+    handleDeleteResult();
   };
 
   const handleDeleteResult = async () => {
     const { error, result } = await deleteEmpMonitoring(
-      `/holidays/${rowData.id}`
+      `/trainings-and-seminars/${rowData.id}`
     );
 
     if (error) {
-      // request is done so set loading to false
       DeleteTrainingTypeFail(result);
     } else {
-      // request is done so set loading to false
       DeleteTrainingTypeSuccess(result);
 
       closeModalAction();

@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect, useState, Fragment } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { isEmpty, isError } from 'lodash';
+import { isEmpty } from 'lodash';
 import {
   getEmpMonitoring,
   postEmpMonitoring,
@@ -22,6 +22,7 @@ import {
 } from '@gscwd-apps/oneui';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
+import { LabelInput } from '../../../inputs/LabelInput';
 
 // Mock data REMOVE later
 const TypesMockData: Array<EmployeeAsOption> = [
@@ -32,20 +33,22 @@ const TypesMockData: Array<EmployeeAsOption> = [
   { employeeId: '005', fullName: 'Eric Sison' },
 ];
 
-type AddTravelOrderProps = {
+type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
+const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
 }) => {
+  // selected employee from combobox option
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeAsOption>(
     {} as EmployeeAsOption
   );
+  // value from combobox input
   const [employeeQuery, setEmployeeQuery] = useState('');
 
   // filter employee list based on query value
@@ -85,8 +88,6 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
     GetEmployeeAsOptions,
     GetEmployeeAsOptionsSuccess,
     GetEmployeeAsOptionsFail,
-
-    EmptyResponse,
   } = useEmployeeStore((state) => ({
     EmployeeAsOptions: state.employeeAsOptions,
     IsLoadingEAO: state.loading.loadingEmployeeAsOptions,
@@ -95,10 +96,9 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
     GetEmployeeAsOptions: state.getEmployeeAsOptions,
     GetEmployeeAsOptionsSuccess: state.getEmployeeAsOptionsSuccess,
     GetEmployeeAsOptionsFail: state.getEmployeeAsOptionsFail,
-
-    EmptyResponse: state.emptyResponse,
   }));
 
+  // yup error handling initialization
   const yupSchema = yup
     .object({
       travelOrderNo: yup.string().required('Travel Order No is required'),
@@ -120,6 +120,7 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
     control,
     setValue,
     handleSubmit,
+    clearErrors,
     formState: { errors },
   } = useForm<TravelOrderForm>({
     mode: 'onChange',
@@ -138,6 +139,7 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
     name: 'itineraryOfTravel',
   });
 
+  // form submission
   const onSubmit: SubmitHandler<TravelOrderForm> = (data: TravelOrderForm) => {
     // set loading to true
     // PostTravelOrder();
@@ -166,14 +168,9 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
     const { error, result } = await getEmpMonitoring('/employee');
 
     if (error) {
-      // request is done so set loading to false
       GetEmployeeAsOptionsFail(result);
     } else {
-      // request is done so set loading to false
       GetEmployeeAsOptionsSuccess(result);
-
-      reset();
-      closeModalAction();
     }
   };
 
@@ -184,13 +181,16 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
       // GetEmployeeAsOptions();
     } else {
       reset();
+      setSelectedEmployee({} as EmployeeAsOption);
     }
   }, [modalState]);
 
   // Set employeeId value upon change on selectedEmployee state
   useEffect(() => {
     if (!isEmpty(selectedEmployee)) {
+      console.log(selectedEmployee);
       setValue('employeeId', selectedEmployee.employeeId);
+      clearErrors('employeeId');
     }
   }, [selectedEmployee]);
 
@@ -232,46 +232,25 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
               <div className="grid md:grid-cols-2 md:gap-6">
                 {/* Travel order no input */}
                 <div className="mb-6">
-                  <label
-                    htmlFor="travel_order_no"
-                    className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                  >
-                    Travel Order No.
-                  </label>
-                  <input
-                    type="text"
-                    name="travel_order_no"
-                    id="travel_order_no"
-                    className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    {...register('travelOrderNo')}
+                  <LabelInput
+                    id={'travelOrderNo'}
+                    label={'Travel Order No.'}
+                    controller={{ ...register('travelOrderNo') }}
+                    isError={errors.travelOrderNo ? true : false}
+                    errorMessage={errors.travelOrderNo?.message}
                   />
-                  {errors.travelOrderNo && (
-                    <div className="mt-1 text-xs text-red-600">
-                      {errors.travelOrderNo?.message}
-                    </div>
-                  )}
                 </div>
 
                 {/* Date requested input */}
                 <div className="mb-6">
-                  <label
-                    htmlFor="date_requested"
-                    className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                  >
-                    Date requested
-                  </label>
-                  <input
+                  <LabelInput
+                    id={'dateRequested'}
+                    label={'Date Requested'}
                     type="date"
-                    name="date_requested"
-                    id="date_requested"
-                    className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    {...register('dateRequested')}
+                    controller={{ ...register('dateRequested') }}
+                    isError={errors.dateRequested ? true : false}
+                    errorMessage={errors.dateRequested?.message}
                   />
-                  {errors.dateRequested && (
-                    <div className="mt-1 text-xs text-red-600">
-                      {errors.dateRequested?.message}
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -291,7 +270,13 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
                   <div className="relative mt-1">
                     <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                       <Combobox.Input
-                        className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
+                        block p-2.5
+                        bg-gray-50 border ${
+                          errors.employeeId
+                            ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+                            : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        }`}
                         displayValue={(selectedEmployee: EmployeeAsOption) =>
                           selectedEmployee.fullName
                         }
@@ -368,11 +353,11 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
                     </Transition>
                   </div>
                 </Combobox>
-                {errors.employeeId && (
-                  <div className="mt-1 text-xs text-red-600">
+                {errors.employeeId ? (
+                  <div className="mt-1 text-xs text-red-400">
                     {errors.employeeId?.message}
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* Itinerary dynamic fields */}
@@ -386,25 +371,55 @@ const AddTravelOrderModal: FunctionComponent<AddTravelOrderProps> = ({
                       className="grid md:grid-cols-11 md:gap-3 pb-1"
                       key={item.id}
                     >
-                      <input
-                        type="date"
-                        className="col-span-5 bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Date"
-                        {...register(
-                          `itineraryOfTravel.${index}.scheduledDate`,
-                          { required: true }
-                        )}
-                      />
+                      <div className="col-span-5">
+                        <input
+                          type="date"
+                          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
+                          block p-2.5
+                          bg-gray-50 border ${
+                            errors?.itineraryOfTravel?.[index]?.scheduledDate
+                              ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+                              : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                          }`}
+                          {...register(
+                            `itineraryOfTravel.${index}.scheduledDate`
+                          )}
+                        />
+                        {errors?.itineraryOfTravel?.[index]?.scheduledDate ? (
+                          <div className="mt-1 text-xs text-red-400">
+                            {
+                              errors?.itineraryOfTravel?.[index]?.scheduledDate
+                                ?.message
+                            }
+                          </div>
+                        ) : null}
+                      </div>
 
-                      <input
-                        type="text"
-                        className="col-span-5 first-line:bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Place"
-                        {...register(
-                          `itineraryOfTravel.${index}.scheduledPlace`,
-                          { required: true }
-                        )}
-                      />
+                      <div className="col-span-5">
+                        <input
+                          type="text"
+                          className={`col-span-5 rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
+                        block p-2.5
+                        bg-gray-50 border ${
+                          errors?.itineraryOfTravel?.[index]?.scheduledPlace
+                            ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+                            : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        }`}
+                          placeholder="Place"
+                          {...register(
+                            `itineraryOfTravel.${index}.scheduledPlace`
+                          )}
+                        />
+
+                        {errors?.itineraryOfTravel?.[index]?.scheduledPlace ? (
+                          <div className="mt-1 text-xs text-red-400">
+                            {
+                              errors?.itineraryOfTravel?.[index]?.scheduledPlace
+                                ?.message
+                            }
+                          </div>
+                        ) : null}
+                      </div>
 
                       {index === 0 ? (
                         <Button

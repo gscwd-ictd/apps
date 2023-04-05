@@ -1,14 +1,19 @@
+import { FunctionComponent, useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+
+import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
+import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
+
 import {
   Modal,
   AlertNotification,
   LoadingSpinner,
   Button,
 } from '@gscwd-apps/oneui';
-import { FunctionComponent } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
-import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
 type AddModalProps = {
   modalState: boolean;
@@ -36,14 +41,28 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
     PostTrainingTypeFail: state.postTrainingTypeFail,
   }));
 
+  // yup error handling initialization
+  const yupSchema = yup
+    .object({
+      name: yup.string().required('Training type name is required'),
+    })
+    .required();
+
   // React hook form
-  const { reset, register, handleSubmit } = useForm<TrainingType>({
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TrainingType>({
     mode: 'onChange',
     defaultValues: {
       name: '',
     },
+    resolver: yupResolver(yupSchema),
   });
 
+  // form submission
   const onSubmit: SubmitHandler<TrainingType> = (data: TrainingType) => {
     // set loading to true
     PostTrainingType();
@@ -58,16 +77,21 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
     );
 
     if (error) {
-      // request is done so set loading to false
       PostTrainingTypeFail(result);
     } else {
-      // request is done so set loading to false
       PostTrainingTypeSuccess(result);
 
       reset();
       closeModalAction();
     }
   };
+
+  // Reset input value to empty every time that modal is closed
+  useEffect(() => {
+    if (!modalState) {
+      reset();
+    }
+  }, [modalState]);
 
   return (
     <>
@@ -100,20 +124,12 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
             <form onSubmit={handleSubmit(onSubmit)} id="addTrainingTypeForm">
               {/* Training Type name input */}
               <div className="mb-6">
-                <label
-                  htmlFor="training_type_name"
-                  className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="training_type_name"
-                  id="training_type_name"
-                  className="bg-gray-50 border border-gray-300 sm:text-xs text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-400 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder=" "
-                  required
-                  {...register('name')}
+                <LabelInput
+                  id={'trainingTypeName'}
+                  label={'Training Type Name'}
+                  controller={{ ...register('name') }}
+                  isError={errors.name ? true : false}
+                  errorMessage={errors.name?.message}
                 />
               </div>
             </form>
