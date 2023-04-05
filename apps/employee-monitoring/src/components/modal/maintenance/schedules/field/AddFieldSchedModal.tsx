@@ -22,6 +22,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
+import { ErrorMessage } from '@hookform/error-message';
 
 type AddModalProps = {
   modalState: boolean;
@@ -170,6 +171,11 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
                   isError={errors.name ? true : false}
                   errorMessage={errors.name?.message}
                   disabled={IsLoading ? true : false}
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="name"
+                  render={({ message }) => <p>{message}</p>}
                 />
 
                 {/** schedule type */}

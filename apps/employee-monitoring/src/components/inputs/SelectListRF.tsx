@@ -8,7 +8,7 @@ interface MySelectListRFProps
   controller: object;
   label: string;
   isError?: boolean;
-  errorMessage?: boolean;
+  errorMessage?: string;
 }
 
 type Item = {
@@ -31,13 +31,19 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
   return (
     <div className="flex flex-col">
       <label htmlFor={id}>
-        <span className="text-xs text-gray-700">{label}</span>
+        <span className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
+          {label}
+        </span>
       </label>
       <select
         id={id}
         {...controller}
         disabled={muted}
-        className={`rounded border border-gray-300/90 hover:cursor-pointer w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4 ${className}`}
+        className={`rounded-lg bg-gray-50 border ${
+          isError
+            ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+            : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+        } hover:cursor-pointer w-full outline-none text-xs text-gray-600 h-[2.5rem] p-2.5 ${className}`}
         {...props}
       >
         <option value="" key="" disabled>

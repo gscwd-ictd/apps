@@ -189,6 +189,8 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                     ...register('scheduleType', { required: true }),
                   }}
                   label="Category"
+                  isError={errors.scheduleType ? true : false}
+                  errorMessage={errors.scheduleType?.message}
                   disabled={IsLoading ? true : false}
                 />
 
@@ -284,6 +286,8 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                     ...register('shift', { required: true }),
                   }}
                   label="Shift"
+                  isError={errors.shift ? true : false}
+                  errorMessage={errors.shift?.message}
                   disabled={IsLoading ? true : false}
                 />
 

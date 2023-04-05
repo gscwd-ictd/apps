@@ -192,6 +192,8 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                     ...register('scheduleType', { required: true }),
                   }}
                   label="Category"
+                  isError={errors.scheduleType ? true : false}
+                  errorMessage={errors.scheduleType?.message}
                   disabled={IsLoading ? true : false}
                 />
 
@@ -288,6 +290,8 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   }}
                   label="Shift"
                   disabled={IsLoading ? true : false}
+                  isError={errors.shift ? true : false}
+                  errorMessage={errors.shift?.message}
                 />
 
                 {/** Rest Day */}

@@ -105,7 +105,10 @@ export function MySelectList({
 
   return (
     <div className="flex flex-col w-full">
-      <label htmlFor={id} className="text-xs text-gray-700">
+      <label
+        htmlFor={id}
+        className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
+      >
         {label}
       </label>
 
@@ -115,7 +118,7 @@ export function MySelectList({
         onBlur={() => setIsOpen(false)}
         onClick={() => setIsOpen((prev) => !prev)}
         tabIndex={0}
-        className="flex hover:cursor-pointer relative w-full border border-gray-300/90 rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
+        className="flex hover:cursor-pointer relative w-full bg-gray-50 border border-gray-300/90 rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
       >
         <span className="text-xs text-gray-700 ">
           {multiple
