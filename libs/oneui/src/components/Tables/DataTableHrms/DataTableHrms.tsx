@@ -117,6 +117,8 @@ export type TablePropsHrms<T extends object> = {
   showGlobalFilter?: boolean;
   filterFn?: FilterFn<T>;
   accessorFn?: AccessorFn<T>;
+  isSelectable?: boolean;
+  isDeletable?: boolean;
 };
 
 export const DataTableHrms = <T extends object>({
@@ -126,6 +128,9 @@ export const DataTableHrms = <T extends object>({
   showGlobalFilter = false,
   columnVisibility,
   filterFn = filterFns.fuzzy,
+  accessorFn,
+  isDeletable,
+  isSelectable,
   onRowClick,
 }: TablePropsHrms<T>) => {
   // set state for sorting the table
@@ -170,7 +175,7 @@ export const DataTableHrms = <T extends object>({
 
       <div className="flex flex-col order-3 w-full h-full overflow-y-auto bg-white rounded-md">
         <table className="flex-1 w-full text-left whitespace-no-wrap bg-white table-auto">
-          <thead className="sticky top-0 z-30 text-sm text-gray-600 bg-white border-b">
+          <thead className="sticky top-0 text-sm text-gray-600 bg-white border-b">
             {table.getHeaderGroups().map((group) => {
               return (
                 <tr key={group.id}>
