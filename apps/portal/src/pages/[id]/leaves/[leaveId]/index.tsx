@@ -49,11 +49,11 @@ export default function LeavePdfPage({
 
   const router = useRouter();
 
-  useEffect(() => {
-    // getLeaveDetail();
+  // useEffect(() => {
+  //   // getLeaveDetail();
 
-    console.log(employeeDetails, 'test');
-  }, [employeeDetails]);
+  //   console.log(employeeDetails, 'test');
+  // }, [employeeDetails]);
 
   // const getLeaveDetail = async () => {
   //   try {

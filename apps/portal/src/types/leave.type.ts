@@ -3,6 +3,7 @@ export type LeaveDateRange = {
   to: string;
 };
 
+//for filling out react hook form in leave application
 export type LeaveContents = {
   employeeId: string;
   dateOfFiling: string | null;
@@ -70,8 +71,6 @@ export type LeaveType = {
 };
 
 export type Leave = {
-  completed: Leave[];
-  ongoing: Leave[];
   id: string;
   leaveName: string;
   dateOfFiling: string;

@@ -105,6 +105,87 @@ export const setModules = async (userDetails: EmployeeDetails) => {
 
       // card.destination === 'approvals'
     );
+  } else if (
+    isEqual(
+      userDetails.employmentDetails.userRole,
+      UserRole.OIC_DIVISION_MANAGER
+    )
+  ) {
+    allowed = Modules.filter(
+      (card) =>
+        card.destination === 'dnr' ||
+        card.destination === 'prf' ||
+        card.destination === 'endorsement' ||
+        card.destination === 'pds' ||
+        card.destination === 'psb' ||
+        card.destination === 'leaves' ||
+        card.destination === 'pass-slip'
+      // ||
+      // card.destination === 'dtr' ||
+
+      // card.destination === 'approvals'
+    );
+  } else if (
+    isEqual(
+      userDetails.employmentDetails.userRole,
+      UserRole.OIC_DEPARTMENT_MANAGER
+    )
+  ) {
+    allowed = Modules.filter(
+      (card) =>
+        card.destination === 'dnr' ||
+        card.destination === 'prf' ||
+        card.destination === 'endorsement' ||
+        card.destination === 'pds' ||
+        card.destination === 'psb' ||
+        card.destination === 'leaves' ||
+        card.destination === 'pass-slip'
+      //  ||
+      // card.destination === 'dtr' ||
+
+      // card.destination === 'approvals'
+    );
+  } else if (
+    isEqual(
+      userDetails.employmentDetails.userRole,
+      UserRole.OIC_ASSISTANT_GENERAL_MANAGER
+    )
+  ) {
+    allowed = Modules.filter(
+      (card) =>
+        card.destination === 'dnr' ||
+        card.destination === 'prf' ||
+        card.destination === 'endorsement' ||
+        card.destination === 'pds' ||
+        card.destination === 'psb' ||
+        card.destination === 'leaves' ||
+        card.destination === 'pass-slip'
+      //  ||
+      // card.destination === 'dtr' ||
+
+      // card.destination === 'approvals'
+    );
+  } else if (
+    isEqual(
+      userDetails.employmentDetails.userRole,
+      UserRole.OIC_GENERAL_MANAGER
+    )
+  ) {
+    allowed = Modules.filter(
+      (card) =>
+        card.destination === 'dnr' ||
+        card.destination === 'prf' ||
+        card.destination === 'endorsement' ||
+        card.destination === 'selection' ||
+        card.destination === 'pds' ||
+        card.destination === 'psb' ||
+        card.destination === 'leaves' ||
+        card.destination === 'pass-slip'
+      // ||
+      // card.destination === 'dtr' ||
+
+      // card.destination === 'approvals'
+    );
   }
   return allowed;
 };

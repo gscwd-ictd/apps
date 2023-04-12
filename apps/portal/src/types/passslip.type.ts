@@ -32,20 +32,3 @@ export type PassSlipContents = {
 };
 
 export type PassSlipId = Pick<PassSlipContents, 'id'>;
-
-export type CompletedPassSlipContents = {
-  employeeName: string;
-  supervisorName: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  id: string;
-  employeeId: string;
-  supervisorId: string;
-  status: string;
-  natureOfBusiness: string;
-  obTransportation: string;
-  estimateHours: string;
-  purposeDestination: string;
-  isCancelled: boolean;
-};
