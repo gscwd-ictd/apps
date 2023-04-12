@@ -134,6 +134,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     setValue,
     handleSubmit,
     clearErrors,
+    getValues,
     formState: { errors },
   } = useForm<TravelOrderForm>({
     mode: 'onChange',
@@ -222,6 +223,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
           });
         }
       });
+      setValue('deleted', []);
     }
   }, [rowData]);
 
@@ -396,6 +398,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                       className="grid md:grid-cols-11 md:gap-3 pb-1"
                       key={item.id}
                     >
+                      {/* Date of visit */}
                       <div className="col-span-5">
                         <input
                           type="date"
@@ -420,6 +423,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                         ) : null}
                       </div>
 
+                      {/* Place to visit  */}
                       <div className="col-span-5">
                         <input
                           type="text"
@@ -446,12 +450,17 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                         ) : null}
                       </div>
 
+                      {/* Add or Remove button */}
                       {index === 0 ? (
                         <Button
                           variant="info"
                           type="button"
                           onClick={() => {
-                            append({ scheduledDate: '', scheduledPlace: '' });
+                            append({
+                              id: '',
+                              scheduledDate: '',
+                              scheduledPlace: '',
+                            });
                           }}
                         >
                           <i className="bx bx-plus"></i>
@@ -460,7 +469,18 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                         <Button
                           variant="danger"
                           type="button"
-                          onClick={() => remove(index)}
+                          onClick={() => {
+                            if (
+                              getValues(`itineraryOfTravel.${index}.id`) !== ''
+                            ) {
+                              setValue('deleted', [
+                                ...getValues('deleted'),
+                                getValues(`itineraryOfTravel.${index}.id`),
+                              ]);
+                            }
+
+                            remove(index);
+                          }}
                         >
                           <i className="bx bx-minus"></i>
                         </Button>

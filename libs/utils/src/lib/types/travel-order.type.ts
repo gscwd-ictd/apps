@@ -18,6 +18,7 @@ export type Itinerary = {
 
 export type TravelOrderForm = Omit<TravelOrder, 'employee'> & {
   employeeId: string;
+  deleted?: Array<string>;
 };
 
 export type TravelOrderId = Pick<TravelOrder, 'id'>;
