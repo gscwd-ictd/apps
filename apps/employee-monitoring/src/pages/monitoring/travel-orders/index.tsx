@@ -58,6 +58,11 @@ const TypesMockData: Array<TravelOrder> = [
         scheduledDate: '2023-04-22',
         scheduledPlace: 'Place 2',
       },
+      {
+        id: 'itinerary003',
+        scheduledDate: '2023-04-23',
+        scheduledPlace: 'Place 3',
+      },
     ],
   },
   {
@@ -224,6 +229,7 @@ const Index = () => {
     }
   }, [swrTravelOrder, swrError]);
 
+  // Get new list of travel orders
   useEffect(() => {
     if (
       !isEmpty(PostTravelOrderResponse) ||
