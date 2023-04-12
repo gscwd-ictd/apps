@@ -9,6 +9,7 @@ import { usePassSlipStore } from '../../../../store/passslip.store';
 import React, { useEffect } from 'react';
 import { PassSlipPdf } from '../../../../components/fixed/passslip/PassSlipPdf';
 import { employeeDummy } from '../../../../../src/types/employee.type';
+import { useLeaveStore } from '../../../../../src/store/leave.store';
 
 export default function PassSlipPage({
   employeeDetails,
@@ -16,6 +17,40 @@ export default function PassSlipPage({
   const { passSlip } = usePassSlipStore((state) => ({
     passSlip: state.passSlip,
   }));
+
+  const {
+    leaveIndividualDetail,
+    leaveId,
+    loadingLeaveDetails,
+    errorLeaveDetails,
+    completedLeaveModalIsOpen,
+
+    setLeaveId,
+    getLeaveIndividualDetail,
+    getLeaveIndividualDetailSuccess,
+    getLeaveIndividualDetailFail,
+  } = useLeaveStore((state) => ({
+    leaveIndividualDetail: state.leaveIndividualDetail,
+    leaveId: state.leaveId,
+    loadingLeaveDetails: state.loading.loadingIndividualLeave,
+    errorLeaveDetails: state.error.errorIndividualLeave,
+    completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
+
+    setLeaveId: state.setLeaveId,
+    getLeaveIndividualDetail: state.getLeaveIndividualDetail,
+    getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
+    getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
+  }));
+
+  // const passSlipDetailPdf = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`;
+  // const {
+  //   data: swrLeaveDetailsPdf,
+  //   isLoading: swrIsLoading,
+  //   error: swrError,
+  // } = useSWR(leaveDetailPdf, fetchWithToken, {
+  //   shouldRetryOnError: false,
+  //   revalidateOnFocus: false,
+  // });
 
   return (
     employeeDetails && (

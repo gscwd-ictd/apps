@@ -6,6 +6,7 @@ import {
   LeaveContents,
   LeaveCredit,
   LeaveId,
+  LeaveList,
   LeaveType,
 } from '../types/leave.type';
 import { devtools } from 'zustand/middleware';
@@ -201,7 +202,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveListSuccess: (loading: boolean, response: Leave) => {
+    getLeaveListSuccess: (loading: boolean, response: LeaveList) => {
       set((state) => ({
         ...state,
         leaves: {
