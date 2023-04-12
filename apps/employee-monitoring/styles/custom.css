@@ -27,3 +27,12 @@
     transform: translate3d(4px, 0, 0);
   }
 }
+
+#customReactSelect
+  .select2-selection__control
+  .select2-selection__input-container,
+#customReactSelect .select2-selection__control .select2-selection__placeholder,
+#customReactSelect .select2-selection__menu .select2-selection__option,
+#customReactSelect .select2-selection__multi-value__label {
+  font-size: 0.8rem;
+}

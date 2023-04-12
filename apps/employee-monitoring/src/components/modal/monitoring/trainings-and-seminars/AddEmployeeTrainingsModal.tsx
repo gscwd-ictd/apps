@@ -1,5 +1,10 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { DataTableHrms, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import {
+  DataTableHrms,
+  LoadingSpinner,
+  Modal,
+  useDataTable,
+} from '@gscwd-apps/oneui';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 import fetcherHRIS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRIS';
 import {
@@ -7,14 +12,15 @@ import {
   EmployeeProfile,
 } from 'libs/utils/src/lib/types/employee.type';
 import { isEmpty } from 'lodash';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Training } from 'libs/utils/src/lib/types/training.type';
 import { useTrainingsStore } from 'apps/employee-monitoring/src/store/training.store';
-
+import { DataTable } from '../../../../../../../libs/oneui/src/components/Tables/DataTable/DataTable';
+import { info } from 'console';
 interface SelectOption {
   readonly label: string;
   readonly value: string;
@@ -36,11 +42,14 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
   const [unassignedEmployees, setUnassignedEmployees] = useState<
     Array<SelectOption>
   >([]);
+
   //   const [assignedEmployees, setAssignedEmployees] = useState<Array<string>>([]);
   const [isAssigned, setIsAssigned] = useState<boolean>(false);
+  const [checked, setChecked] = useState<boolean>(false);
   const [options, setOptions] = useState<Array<EmployeeAsOption>>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [value, setValue] = useState<readonly SelectOption[] | null>();
+  const checkbox = useRef<any>();
 
   const {
     assignedEmployees,
@@ -54,11 +63,12 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
     setEmployeeIdsForRemove: state.setEmployeeIdsForRemove,
   }));
 
+  // mutate select option element to employee as option
   const getArrayOfIds = (employees: readonly SelectOption[]) => {
-    const ids = employees.map((employee: SelectOption) => {
-      return employee.value;
+    const employee = employees.map((employee: SelectOption) => {
+      return { employeeId: employee.value, fullName: employee.label };
     });
-    return ids;
+    return employee;
   };
 
   // use swr function
@@ -85,76 +95,76 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
 
   // mutate
   const mutateEmployeeFromFetch = (employees: Array<EmployeeProfile>) => {
-    const newEmployees = employees.map((employee: EmployeeProfile) => {
-      return {
-        value: employee.employmentDetails.employeeId,
-        label: employee.personalDetails.fullName,
-      };
-    });
-    setUnassignedEmployees(newEmployees);
+    if (employees && employees.length > 0) {
+      const newEmployees = employees.map((employee: EmployeeProfile) => {
+        return {
+          value: employee.employmentDetails.employeeId,
+          label: employee.personalDetails.fullName,
+        };
+      });
+      setUnassignedEmployees(newEmployees);
+    }
   };
 
   // on change checkbox
-  const onChangeCheckBox = (rowData: EmployeeAsOption, e: boolean) => {
-    // if (e) {
-    //   // setEmployeeIdsForRemove([...employeeIdsForRemove, rowData.employeeId]);
-    //   setEmployeeIdsForRemove(rowData.employeeId);
-    //   console.log(e);
-    //   // setEmployeeIdsForRemove()
-    // } else {
-    //   console.log(e);
-    //   //   setEmployeeIdsForRemove([
-    //   //     ...employeeIdsForRemove.filter((id) => id !== rowData.employeeId),
-    //   //   ]);
-    // }
-    setEmployeeIdsForRemove(rowData.employeeId);
+  const onChangeCheckBox = (info: any) => {
+    info.row.getToggleSelectedHandler();
+    if (info) {
+      // setEmployeeIdsForRemove([...employeeIdsForRemove, rowData.employeeId]);
+      // setEmployeeIdsForRemove(rowData.employeeId);
+      console.log(info);
+      // setEmployeeIdsForRemove()
+    } else {
+      //   setEmployeeIdsForRemove([
+      //     ...employeeIdsForRemove.filter((id) => id !== rowData.employeeId),
+      //   ]);
+    }
   };
 
-  // mutate the assigned employees
-  const getFilteredAssignedEmployees = (employeeIds: string[]) => {
-    const finalEmployeeIds = employeeIds.map((employeeId) => {
-      const filteredEmployees = unassignedEmployees.find(
-        (filteredEmployee) => filteredEmployee.value === employeeId
-      );
-      return {
-        employeeId: filteredEmployees.value,
-        fullName: filteredEmployees.label,
-      };
-    });
-    return finalEmployeeIds;
-  };
-
-  // define table columns
   const columnHelper = createColumnHelper<EmployeeAsOption>();
   const columns = [
-    columnHelper.accessor('employeeId', { cell: (info) => info.getValue() }),
-    columnHelper.display({
-      header: () => '',
-      id: 'deleteCheckbox',
-      cell: (props) => renderRowActions(props.row.original),
+    // columnHelper.accessor('employeeId', { cell: (info) => info.getValue() }),
+    columnHelper.accessor('employeeId', {
+      header: '',
+      enableSorting: false,
+      cell: (info) => (
+        <input
+          type="checkbox"
+          checked={info.row.getIsSelected()}
+          className="rounded"
+          onChange={info.row.getToggleSelectedHandler()}
+        />
+      ),
     }),
     columnHelper.accessor('fullName', {
       enableColumnFilter: false,
       enableSorting: false,
       header: () => 'Full Name',
+      cell: (props) => props.getValue(),
     }),
   ];
 
-  // render row actions in the table component
-  const renderRowActions = (employeeData: EmployeeAsOption) => {
-    return (
-      <>
-        <input
-          type="checkbox"
-          className="text-red-400 rounded focus:ring-red-500 focus:outline-none"
-          checked={true}
-          onChange={(e) => onChangeCheckBox(employeeData, e.target.checked)}
-        />
-      </>
-    );
-  };
+  const { table } = useDataTable({
+    columns: columns,
+    data: assignedEmployees,
+    enableRowSelection: true,
+  });
+
+  useEffect(
+    () =>
+      console.log(
+        table
+          .getSelectedRowModel()
+          .rows.map((selectedRow) => selectedRow.original.employeeId)
+      ),
+    [table.getState().rowSelection]
+  );
+
+  // define table columns
 
   const columnVisibility = { employeeId: false };
+
+  // use data table
 
   // use effect for swr loading
   useEffect(() => {
@@ -177,7 +187,7 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
 
   return (
     <>
-      <Modal open={modalState} setOpen={setModalState} size="lg" steady>
+      <Modal open={modalState} setOpen={setModalState} size="md" steady>
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full px-2">
             <span className="text-2xl text-gray-600">
@@ -193,13 +203,14 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
           </div>
         </Modal.Header>
         <Modal.Body>
-          <div className="min-h-[20rem] px-2 flex flex-col">
+          <div className="min-h-[30rem] px-2 flex flex-col">
             {swrIsLoading ? (
               <LoadingSpinner size="lg" />
             ) : (
               <>
                 <div className="flex items-center w-full gap-4">
                   <Select
+                    id="customReactSelect"
                     isMulti
                     name="employees"
                     options={unassignedEmployees}
@@ -209,42 +220,21 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
                     onChange={(newValue) => setValue(newValue)}
                   />
                   <button
-                    className="p-2 w-[5rem] text-sm text-white bg-blue-400 active:bg-blue-300 rounded"
+                    className="p-2 w-[5rem] text-xs text-white bg-blue-400 active:bg-blue-300 rounded"
                     onClick={() => {
-                      setAssignedEmployees([
-                        ...assignedEmployees,
-                        ...getArrayOfIds(value),
-                      ]);
-                      setIsAssigned(true);
-                      setValue(null);
+                      setAssignedEmployees(getArrayOfIds(value));
+                      setValue([]);
                     }}
                   >
                     Assign
                   </button>
                 </div>
-                {!isAssigned ? (
+                {assignedEmployees.length > 0 ? (
+                  <DataTable model={table} />
+                ) : (
                   <div className="flex items-center h-[22rem] justify-center flex-1 text-gray-600">
                     --No Assigned Employees--
                   </div>
-                ) : (
-                  <>
-                    <div className="w-full mt-5">
-                      <div className="flex flex-col w-full gap-5">
-                        <DataTableHrms
-                          data={getFilteredAssignedEmployees(assignedEmployees)}
-                          columns={columns}
-                          columnVisibility={columnVisibility}
-                          paginate
-                          // showGlobalFilter
-                        />
-                        <button
-                          onClick={() => console.log(employeeIdsForRemove)}
-                        >
-                          LOG
-                        </button>
-                      </div>
-                    </div>
-                  </>
                 )}
               </>
             )}

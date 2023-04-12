@@ -26,13 +26,13 @@ export type TrainingsState = {
   training: ResponseTraining;
   loading: LoadingTraining;
   error: ErrorTraining;
-  assignedEmployees: Array<string>;
+  assignedEmployees: Array<EmployeeAsOption>;
   employeeIdsForRemove: Array<string>;
-  setAssignedEmployees: (assignedEmployees: Array<string>) => void;
+  setAssignedEmployees: (assignedEmployees: Array<EmployeeAsOption>) => void;
   setEmployeeIdsForRemove: (employeeId: string) => void;
 
   getAssignedEmployees: () => void;
-  getAssignedEmployeesSuccess: (response: Array<string>) => void;
+  getAssignedEmployeesSuccess: (response: Array<EmployeeAsOption>) => void;
   getAssignedEmployeesFail: (error: string) => void;
 
   getTrainings: (loading: boolean) => void;
@@ -83,7 +83,7 @@ export const useTrainingsStore = create<TrainingsState>()(
       }));
     },
 
-    setAssignedEmployees: (assignedEmployees: Array<string>) =>
+    setAssignedEmployees: (assignedEmployees: Array<EmployeeAsOption>) =>
       set((state) => ({ ...state, assignedEmployees })),
 
     getAssignedEmployees: () =>
@@ -93,7 +93,7 @@ export const useTrainingsStore = create<TrainingsState>()(
         error: { ...state.error, errorEmployees: '' },
       })),
 
-    getAssignedEmployeesSuccess: (response: Array<string>) =>
+    getAssignedEmployeesSuccess: (response: Array<EmployeeAsOption>) =>
       set((state) => ({
         ...state,
         assignedEmployees: response,
