@@ -10,8 +10,6 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
   width = 'auto',
   onRowClick,
 }) => {
-  console.log(model?.getRowModel().rows);
-
   return (
     <div>
       <div>

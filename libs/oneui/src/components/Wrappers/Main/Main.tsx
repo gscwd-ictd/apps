@@ -8,7 +8,7 @@ type MainProps = {
 export const Main: FunctionComponent<MainProps> = ({ children, className }) => {
   return (
     <main
-      className={`${className}  h-full w-full flex-1 overflow-y-auto bg-transparent`}
+      className={`${className}  h-full w-full overflow-x-hidden bg-transparent`}
     >
       {children}
     </main>

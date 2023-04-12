@@ -5,5 +5,9 @@ type NavProps = {
 };
 
 export const Nav: FunctionComponent<NavProps> = ({ children }) => {
-  return <nav className="bg-white h-16 shadow-xl shadow-slate-200/30">{children}</nav>;
+  return (
+    <nav className="h-16 bg-white shadow-xl shadow-slate-200/30">
+      {children}
+    </nav>
+  );
 };

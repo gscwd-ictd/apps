@@ -23,15 +23,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
             <SideNavigation />
           </Aside>
 
-          <div className="flex flex-col w-full h-full">
+          <Main>
             <TopNavigation />
-            <Main>
-              <div className="w-full h-full overflow-y-auto">
-                <Component {...pageProps} />
-                <Footer />
-              </div>
-            </Main>
-          </div>
+            <Component {...pageProps} />
+            <Footer />
+          </Main>
         </PageContent>
       </AbilityContext.Provider>
     </>

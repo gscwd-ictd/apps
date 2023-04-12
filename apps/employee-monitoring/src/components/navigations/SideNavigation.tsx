@@ -1,6 +1,6 @@
 import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   MyCalendarClockIcon,
   MyCalendarHeartIcon,
@@ -107,7 +107,7 @@ export const SideNavigation = () => {
 
           {/**PASS SLIP */}
           <Sidebar.Item
-            display="Pass Slip"
+            display="Pass Slips"
             className="text-xs"
             selected={pathname === Paths[6] ? true : false}
             icon={

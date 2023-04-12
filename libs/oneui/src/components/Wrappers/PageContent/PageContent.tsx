@@ -41,9 +41,7 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
         },
       }}
     >
-      <div className="flex w-screen h-screen overflow-x-hidden bg-slate-100">
-        {children}
-      </div>
+      <div className="flex w-full h-screen bg-slate-100">{children}</div>
     </PageContentContext.Provider>
   );
 };
