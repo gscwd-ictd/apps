@@ -6,18 +6,17 @@ import React, { useEffect, useState } from 'react';
 import { EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import useSWR from 'swr';
 import fetcherHRIS from '../../../utils/fetcher/FetcherHRIS';
-import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
 import axios from 'axios';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ActionDropdown } from 'apps/employee-monitoring/src/components/dropdown/ActionDropdown';
 
 export default function Index({
   employees,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [allEmployees, setAllEmployees] = useState<Array<EmployeeRowData>>([]);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const selectedAssignment = useDtrStore((state) => state.selectedAssignment);
 
   const [currentRowData, setCurrentRowData] = useState<EmployeeRowData>(
     {} as EmployeeRowData
@@ -102,6 +101,15 @@ export default function Index({
               <span className="text-xs">View DTR</span>
             </div>
           </button>
+
+          <button
+            type="button"
+            className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          >
+            <i className="bx bxs-user-plus"></i>
+          </button>
+
+          <ActionDropdown />
         </div>
       </>
     );

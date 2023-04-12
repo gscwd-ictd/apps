@@ -1,6 +1,7 @@
 import { Button, DataTableHrms, Modal } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
+import AddEmpTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/AddEmployeeTrainingsModal';
 import AddTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/AddTrainingsModal';
 import DeleteTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/DeleteTrainingsModal';
 import EditTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/EditTrainingsModal';
@@ -9,7 +10,10 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import UseRenderBooleanYesOrNo from 'apps/employee-monitoring/src/utils/functions/RenderBooleanYesOrNo';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Training } from '../../../../../../libs/utils/src/lib/types/training.type';
+import {
+  Training,
+  TrainingId,
+} from '../../../../../../libs/utils/src/lib/types/training.type';
 
 // mock data
 const training: Array<Training> = [
@@ -108,6 +112,14 @@ export default function Index() {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
+  // add employee modal function
+  const [addEmpModalIsOpen, setAddEmpModalIsOpen] = useState<boolean>(false);
+  const openAddEmpActionModal = (rowData: Training) => {
+    setAddEmpModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeAddEmpActionModal = () => setAddEmpModalIsOpen(false);
+
   // define table columns
   const columnHelper = createColumnHelper<Training>();
 
@@ -191,7 +203,7 @@ export default function Index() {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
+          onClick={() => openAddEmpActionModal(rowData)}
         >
           <i className="bx bxs-user-plus"></i>
         </button>
@@ -242,6 +254,13 @@ export default function Index() {
           modalState={deleteModalIsOpen}
           setModalState={setDeleteModalIsOpen}
           closeModalAction={closeDeleteActionModal}
+          rowData={currentRowData}
+        />
+
+        <AddEmpTrainingsModal
+          modalState={addEmpModalIsOpen}
+          setModalState={setAddEmpModalIsOpen}
+          closeModalAction={closeAddEmpActionModal}
           rowData={currentRowData}
         />
 
