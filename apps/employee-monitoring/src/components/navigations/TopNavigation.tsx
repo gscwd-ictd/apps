@@ -1,10 +1,29 @@
-import { PageContentContext, Nav } from '@gscwd-apps/oneui';
-import { useContext, useEffect } from 'react';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { useContext, useEffect, useState } from 'react';
+
+// hook
+const useWidth = () => {
+  const [width, setWidth] = useState(0);
+  const handleResize = () => setWidth(window.innerWidth);
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [width]);
+  return width;
+};
 
 export const TopNavigation = () => {
+  const windowWidth = useWidth();
   const {
     aside: { isCollapsed, setIsCollapsed },
   } = useContext(PageContentContext);
+
+  useEffect(() => {
+    if (windowWidth <= 1024) setIsCollapsed(true);
+    else if (windowWidth > 1024) setIsCollapsed(false);
+  }, [windowWidth]);
 
   return (
     <header

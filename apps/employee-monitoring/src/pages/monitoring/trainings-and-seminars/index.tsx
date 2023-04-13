@@ -271,11 +271,11 @@ export default function Index() {
                 <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
                   <button
                     type="button"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none items-center focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center sm:inline-block md:inline-block lg:inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
                     onClick={openAddActionModal}
                   >
-                    <i className="bx bxs-plus-square"></i>&nbsp; Add Trainings &
-                    Seminars
+                    <i className="bx bxs-plus-square"></i>&nbsp;{' '}
+                    <span>Add Trainings & Seminars</span>
                   </button>
                 </div>
 

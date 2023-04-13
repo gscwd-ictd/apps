@@ -3,7 +3,7 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import useSWR from 'SWR';
+import useSWR from 'swr';
 
 export default function Index() {
   const { data: swrPassSlips, isLoading: swrIsLoading } = useSWR(
