@@ -27,7 +27,7 @@ type PassSlipState = {
   cancelPassSlipFail: (error: string) => void;
 };
 
-export const PassSlipStore = create<PassSlipState>()(
+export const usePassSlipStore = create<PassSlipState>()(
   devtools((set, get) => ({
     passSlip: {} as PassSlip,
     passSlips: [],
@@ -37,6 +37,7 @@ export const PassSlipStore = create<PassSlipState>()(
     getPassSlips: () =>
       set((state) => ({
         ...state,
+        passSlips: [],
         loading: { ...state.loading, loadingPassSlips: true },
         error: { ...state.error, errorPassSlips: '' },
       })),
@@ -58,6 +59,7 @@ export const PassSlipStore = create<PassSlipState>()(
     cancelPassSlip: () =>
       set((state) => ({
         ...state,
+        passSlip: {} as PassSlip,
         loading: { ...state.loading, loadingPassSlip: true },
         error: { ...state.error, errorPassSlip: '' },
       })),
