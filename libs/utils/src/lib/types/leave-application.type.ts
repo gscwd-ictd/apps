@@ -67,7 +67,7 @@ export type EmployeeLeaveDetails = {
 };
 
 // Single row type for employee leaves
-export type EmployeeLeaveRow = {
+export type EmployeeLeave = {
   id: string;
   leaveName: string;
   dateOfFiling: string;
@@ -77,8 +77,8 @@ export type EmployeeLeaveRow = {
 
 // List of leaves per employee
 export type EmployeeLeaveList = {
-  completed: Array<EmployeeLeaveRow>;
-  ongoing: Array<EmployeeLeaveRow>;
+  completed: Array<EmployeeLeave>;
+  ongoing: Array<EmployeeLeave>;
 };
 
 // Leave credits of single employee
@@ -95,10 +95,10 @@ export type CalendarDate = {
 };
 
 // Individual leave id
-export type LeaveId = Pick<EmployeeLeaveRow, 'id'>;
+export type LeaveId = Pick<EmployeeLeave, 'id'>;
 
 // Single row type for collated employee leaves
 export type LeaveRow = {
   employeeId: string;
   fullName: string;
-} & EmployeeLeaveRow;
+} & EmployeeLeave;

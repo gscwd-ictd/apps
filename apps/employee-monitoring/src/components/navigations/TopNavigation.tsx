@@ -1,34 +1,14 @@
 import { PageContentContext } from '@gscwd-apps/oneui';
 import { useContext, useEffect, useState } from 'react';
 
-// hook
-const useWidth = () => {
-  const [width, setWidth] = useState(0);
-  const handleResize = () => setWidth(window.innerWidth);
-
-  useEffect(() => {
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [width]);
-  return width;
-};
-
 export const TopNavigation = () => {
-  const windowWidth = useWidth();
   const {
-    aside: { isCollapsed, setIsCollapsed },
+    aside: { isCollapsed, setIsCollapsed, isMobile },
   } = useContext(PageContentContext);
-
-  useEffect(() => {
-    if (windowWidth <= 1024) setIsCollapsed(true);
-    else if (windowWidth > 1024) setIsCollapsed(false);
-  }, [windowWidth]);
 
   return (
     <header
       id="page-topbar"
-      // className="flex max-w-full py-4 pl-5 text-center pr-14"
       className={`fixed top-0 right-0 z-50 h-16 text-center left-16 bg-white shadow-xl  ${
         isCollapsed
           ? 'sm:left-16 md:left-16 lg:left-16'
@@ -39,6 +19,7 @@ export const TopNavigation = () => {
         <section className="w-[30%] flex text-left">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
+            disabled={isMobile}
             className="text-gray-700 bg-transparent "
           >
             <svg
