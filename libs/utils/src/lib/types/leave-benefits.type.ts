@@ -1,3 +1,4 @@
+
 export type LeaveBenefit = {
   id?: string;
   leaveName: string;
@@ -8,6 +9,8 @@ export type LeaveBenefit = {
   maximumCredits?: number | null;
   leaveType: LeaveType;
 };
+
+export type LeaveBenefitOptions = Pick<LeaveBenefit, 'id'| 'leaveName'>
 
 export enum CreditDistribution {
   YEARLY = 'yearly',

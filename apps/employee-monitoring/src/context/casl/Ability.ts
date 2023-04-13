@@ -1,12 +1,9 @@
 import { defineAbility } from '@casl/ability';
 import { isEmpty } from 'lodash';
-import Cookies from 'universal-cookie';
 
 const isSuperAdmin = false;
-const isUser = true;
 
 export default defineAbility((can) => {
-  const cookies = new Cookies();
   //   const userAccessArr = JSON.parse(localStorage.getItem('userAccess'));
   const userAccessArr = [
     { I: 'access', this: 'Duties_responsibilities' },
@@ -22,8 +19,10 @@ export default defineAbility((can) => {
     { I: 'access', this: 'Organization_structure' },
     { I: 'access', this: 'Settings' },
     { I: 'access', this: 'Personnel_selection' },
-    { I: 'access', this: 'maintenance_schedules' },
-    { I: 'access', this: 'monitoring_trainings_and_seminars' },
+    { I: 'access', this: 'Schedules' },
+    { I: 'access', this: 'Trainings_and_seminars' },
+    { I: 'access', this: 'Pass_slips' },
+    { I: 'access', this: 'Leave_benefits' },
   ];
 
   // cookies.get('isSuperUser')

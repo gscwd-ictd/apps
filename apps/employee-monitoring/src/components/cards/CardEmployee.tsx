@@ -22,7 +22,7 @@ export const CardEmployee = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            className="mx-5 bg-white border rounded-full sm:w-12 sm:h-12 lg:w-16 lg:h-16 sm:-mt-8 lg:-mt-8 fill-slate-700/90 "
+            className="mx-5 bg-white border rounded-full sm:w-6 sm:h-6 md:w-10 md:h-10 lg:w-16 lg:h-16 sm:-mt-8 lg:-mt-8 fill-slate-700/90"
           >
             <path
               fillRule="evenodd"

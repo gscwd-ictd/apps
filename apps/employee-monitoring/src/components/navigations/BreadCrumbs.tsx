@@ -17,7 +17,7 @@ export const BreadCrumbs: FunctionComponent<BreadCrumbsProps> = ({
 }) => {
   return (
     <div className="flex justify-between w-full h-16 px-5 bg-inherit ">
-      <div className="flex items-center w-full h-full font-semibold text-gray-700 uppercase">
+      <div className="flex items-center w-full h-full text-xs font-semibold text-gray-700 uppercase lg:text-sm">
         {title}
       </div>
       <div className="flex justify-end w-full gap-2">
