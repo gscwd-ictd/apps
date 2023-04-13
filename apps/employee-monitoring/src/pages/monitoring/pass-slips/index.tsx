@@ -4,12 +4,11 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import {
   NatureOfBusiness,
-  ObTransportation,
   PassSlipStatus,
-} from 'apps/employee-monitoring/src/utils/enum/pass-slip.enum';
-import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+} from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
