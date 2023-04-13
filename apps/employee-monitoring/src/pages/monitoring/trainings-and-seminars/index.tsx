@@ -265,7 +265,7 @@ export default function Index() {
         />
 
         <Can I="access" this="Trainings_and_seminars">
-          <div className="sm:mx-0 lg:mx-5">
+          <div className="sm:mx-0 md:mx-0 lg:mx-5">
             <Card>
               <div className="flex flex-row flex-wrap">
                 <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">

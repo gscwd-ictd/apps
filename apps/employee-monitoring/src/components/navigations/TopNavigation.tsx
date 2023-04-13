@@ -6,21 +6,17 @@ export const TopNavigation = () => {
     aside: { isCollapsed, setIsCollapsed },
   } = useContext(PageContentContext);
 
-  useEffect(() => {
-    const x = window.matchMedia('(max-width: 700px)');
-    function myFunction(e) {
-      setIsCollapsed(!isCollapsed);
-    }
-    x.addListener(myFunction);
-    return () => x.removeListener(myFunction);
-  }, []);
-
   return (
-    <Nav>
-      <header
-        id="page-topbar"
-        className="flex max-w-full py-4 pl-5 text-center  pr-14"
-      >
+    <header
+      id="page-topbar"
+      // className="flex max-w-full py-4 pl-5 text-center pr-14"
+      className={`fixed top-0 right-0 z-50 h-16 text-center left-16 bg-white shadow-xl  ${
+        isCollapsed
+          ? 'sm:left-16 md:left-16 lg:left-16'
+          : 'sm:left-16 md:left-64 lg:left-64'
+      }  shadow-slate-200/30 transition-all`}
+    >
+      <div className="flex justify-between h-16 pr-3 mx-2 my-auto text-center ">
         <section className="w-[30%] flex text-left">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -102,7 +98,7 @@ export const TopNavigation = () => {
             </div>
           </div>
         </section>
-      </header>
-    </Nav>
+      </div>
+    </header>
   );
 };

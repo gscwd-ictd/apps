@@ -23,8 +23,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
             <SideNavigation />
           </Aside>
 
+          <TopNavigation />
           <Main>
-            <TopNavigation />
             <Component {...pageProps} />
             <Footer />
           </Main>
