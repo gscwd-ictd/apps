@@ -2,9 +2,24 @@ import { PageContentContext } from '@gscwd-apps/oneui';
 import { useContext, useEffect, useState } from 'react';
 
 export const TopNavigation = () => {
+  const [isToggled, setIsToggled] = useState<boolean>(false);
   const {
-    aside: { isCollapsed, setIsCollapsed, isMobile },
+    aside: { isCollapsed, setIsCollapsed, isMobile, setPreviousState },
   } = useContext(PageContentContext);
+
+  // on click toggle
+  const collapseOnClick = () => {
+    setIsCollapsed(!isCollapsed);
+    setIsToggled(true);
+  };
+
+  // preserve the value of isCollapsed
+  useEffect(() => {
+    if (isToggled) {
+      setPreviousState(isCollapsed);
+      setIsToggled(false);
+    }
+  }, [isCollapsed, isToggled]);
 
   return (
     <header
@@ -18,7 +33,7 @@ export const TopNavigation = () => {
       <div className="flex justify-between h-16 pr-3 mx-2 my-auto text-center ">
         <section className="w-[30%] flex text-left">
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={collapseOnClick}
             disabled={isMobile}
             className="text-gray-700 bg-transparent "
           >

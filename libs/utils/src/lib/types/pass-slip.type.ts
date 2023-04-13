@@ -1,9 +1,10 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
+
 import {
   NatureOfBusiness,
   ObTransportation,
   PassSlipStatus,
-} from '../../../../../apps/employee-monitoring/src/utils/enum/pass-slip.enum';
+} from '../enums/pass-slip.enum';
 
 // Pass slip application form
 export type PassSlipApplicationForm = {
