@@ -277,7 +277,7 @@ export const DataTableHrms = <T extends object>({
                   aria-label="Pagination"
                 >
                   <button
-                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 focus:z-20"
+                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 "
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -285,7 +285,7 @@ export const DataTableHrms = <T extends object>({
                     {'Previous'}
                   </button>
                   <button
-                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 focus:z-20"
+                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 "
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                   >

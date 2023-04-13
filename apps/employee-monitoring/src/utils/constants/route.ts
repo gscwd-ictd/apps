@@ -5,7 +5,7 @@ export const Paths = [
   '/monitoring/travel-orders', // 3
   '/monitoring/trainings-and-seminars', // 4
   '/monitoring/overtime', // 5
-  '/monitoring/pass-slip', //6
+  '/monitoring/pass-slips', //6
   '/maintenance/daily-time-record', // 7
   '/maintenance/leave-benefits/recurring', // 8
   '/maintenance/leave-benefits/cumulative', // 9

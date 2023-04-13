@@ -305,7 +305,7 @@ export default function Index() {
           rowData={currentRowData}
         />
 
-        <Can I="access" this="maintenance_schedules">
+        <Can I="access" this="Schedules">
           <div className="mx-5">
             <Card>
               {IsLoading ? (

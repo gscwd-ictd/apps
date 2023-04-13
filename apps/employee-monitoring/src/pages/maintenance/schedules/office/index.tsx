@@ -296,8 +296,8 @@ export default function Index() {
           rowData={currentRowData}
         />
 
-        <Can I="access" this="maintenance_schedules">
-          <div className="mx-5">
+        <Can I="access" this="Schedules">
+          <div className="sm:mx-0 lg:mx-5">
             <Card>
               {IsLoading ? (
                 <LoadingSpinner size="lg" />

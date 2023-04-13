@@ -19,6 +19,7 @@ import EditRecurringModal from 'apps/employee-monitoring/src/components/modal/ma
 import DeleteRecurringModal from 'apps/employee-monitoring/src/components/modal/maintenance/leave/recurring/DeleteRecurringModal';
 import UseRenderBooleanYesOrNo from 'apps/employee-monitoring/src/utils/functions/RenderBooleanYesOrNo';
 import UseRenderDistribution from 'apps/employee-monitoring/src/utils/functions/RenderDistribution';
+import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 
 export default function Index() {
   const {
@@ -259,33 +260,36 @@ export default function Index() {
         rowData={currentRowData}
       />
 
-      <div className="sm:mx-0 lg:mx-5">
-        <Card>
-          {swrIsLoading ? (
-            <LoadingSpinner size="lg" />
-          ) : (
-            <div className="flex flex-row flex-wrap">
-              <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                <button
-                  type="button"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                  onClick={openAddActionModal}
-                >
-                  <i className="bx bxs-plus-square"></i>&nbsp; Add Leave Benefit
-                </button>
-              </div>
+      <Can I="access" this="Leave_benefits">
+        <div className="sm:mx-0 lg:mx-5">
+          <Card>
+            {swrIsLoading ? (
+              <LoadingSpinner size="lg" />
+            ) : (
+              <div className="flex flex-row flex-wrap">
+                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                  <button
+                    type="button"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                    onClick={openAddActionModal}
+                  >
+                    <i className="bx bxs-plus-square"></i>&nbsp; Add Leave
+                    Benefit
+                  </button>
+                </div>
 
-              <DataTableHrms
-                data={leaveBenefits}
-                columns={columns}
-                columnVisibility={columnVisibility}
-                paginate
-                showGlobalFilter
-              />
-            </div>
-          )}
-        </Card>
-      </div>
+                <DataTableHrms
+                  data={leaveBenefits}
+                  columns={columns}
+                  columnVisibility={columnVisibility}
+                  paginate
+                  showGlobalFilter
+                />
+              </div>
+            )}
+          </Card>
+        </div>
+      </Can>
     </div>
   );
 }
