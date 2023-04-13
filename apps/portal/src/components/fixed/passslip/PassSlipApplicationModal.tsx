@@ -10,7 +10,7 @@ import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { PassSlip } from '../../../../src/types/passslip.type';
+import { PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
 import { HiX } from 'react-icons/hi';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
@@ -79,18 +79,19 @@ export const PassSlipApplicationModal = ({
   // );
 
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } = useForm<PassSlip>({
-    mode: 'onChange',
-    defaultValues: {
-      employeeId: '',
-      dateOfApplication: dateToday,
-      natureOfBusiness: '',
-      estimateHours: 0,
-      purposeDestination: '',
-      isCancelled: false,
-      obTransportation: '',
-    },
-  });
+  const { reset, register, handleSubmit, watch, setValue } =
+    useForm<PassSlipApplicationForm>({
+      mode: 'onChange',
+      defaultValues: {
+        employeeId: '',
+        dateOfApplication: dateToday,
+        natureOfBusiness: null,
+        estimateHours: 0,
+        purposeDestination: '',
+        isCancelled: false,
+        obTransportation: null,
+      },
+    });
 
   useEffect(() => {
     if (
@@ -106,13 +107,15 @@ export const PassSlipApplicationModal = ({
     setValue('employeeId', employeeDetails.employmentDetails.userId);
   }, [watch('natureOfBusiness')]);
 
-  const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
+  const onSubmit: SubmitHandler<PassSlipApplicationForm> = (
+    data: PassSlipApplicationForm
+  ) => {
     handlePostResult(data);
     postPassSlipList();
     // console.log(data);
   };
 
-  const handlePostResult = async (data: PassSlip) => {
+  const handlePostResult = async (data: PassSlipApplicationForm) => {
     const { error, result } = await postPortal('/v1/pass-slip', data);
 
     if (error) {

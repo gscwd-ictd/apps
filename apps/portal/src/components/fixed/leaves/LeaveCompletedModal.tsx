@@ -1,16 +1,9 @@
-import {
-  AlertNotification,
-  Button,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { HiX } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { useEffect } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../../src/store/employee.store';

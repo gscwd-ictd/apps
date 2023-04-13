@@ -90,7 +90,6 @@ export default function LeavePdfPage({
   useEffect(() => {
     if (!isEmpty(swrLeaveDetailsPdf)) {
       getLeaveIndividualDetailSuccess(swrIsLoading, swrLeaveDetailsPdf);
-      console.log(swrLeaveDetailsPdf, 'test');
     }
 
     if (!isEmpty(swrError)) {

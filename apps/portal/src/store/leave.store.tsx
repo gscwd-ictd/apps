@@ -1,20 +1,20 @@
 import { create } from 'zustand';
+import { LeaveBenefitOptions } from '../../../../libs/utils/src/lib/types/leave-benefits.type';
 import {
+  EmployeeLeave,
+  EmployeeLeaveDetails,
   CalendarDate,
-  GetLeaveDetails,
-  Leave,
-  LeaveContents,
-  LeaveCredit,
+  LeaveApplicationForm,
+  EmployeeLeaveList,
+  EmployeeLeaveCredits,
   LeaveId,
-  LeaveList,
-  LeaveType,
-} from '../types/leave.type';
+} from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 
 export type LeavesState = {
   leaves: {
-    onGoing: Array<Leave>;
-    completed: Array<Leave>;
+    onGoing: Array<EmployeeLeave>;
+    completed: Array<EmployeeLeave>;
   };
   leaveCredits: {
     vacation: number;
@@ -22,10 +22,10 @@ export type LeavesState = {
     sick: number;
   };
   leaveId: string;
-  leaveIndividualDetail: GetLeaveDetails;
+  leaveIndividualDetail: EmployeeLeaveDetails;
   unavailableDates: Array<CalendarDate>;
   response: {
-    postResponseApply: LeaveContents;
+    postResponseApply: LeaveApplicationForm;
     deleteResponseCancel: LeaveId;
   };
   loading: {
@@ -47,7 +47,7 @@ export type LeavesState = {
   leaveDates: Array<string>;
   leaveDateFrom: string;
   leaveDateTo: string;
-  leaveTypes: Array<LeaveType>;
+  leaveTypes: Array<LeaveBenefitOptions>;
   overlappingLeaveCount: number;
 
   applyLeaveModalIsOpen: boolean;
@@ -67,7 +67,7 @@ export type LeavesState = {
   getLeaveListFail: (loading: boolean, error: string) => void;
 
   postLeave: () => void;
-  postLeaveSuccess: (response: LeaveContents) => void;
+  postLeaveSuccess: (response: LeaveApplicationForm) => void;
   postLeaveFail: (error: string) => void;
 
   getLeaveTypes: (loading: boolean) => void;
@@ -106,11 +106,11 @@ export const useLeaveStore = create<LeavesState>()(
       sick: 5.8,
     },
     leaveId: '',
-    leaveIndividualDetail: {} as GetLeaveDetails,
+    leaveIndividualDetail: {} as EmployeeLeaveDetails,
     unavailableDates: [] as Array<CalendarDate>,
 
     response: {
-      postResponseApply: {} as LeaveContents,
+      postResponseApply: {} as LeaveApplicationForm,
       deleteResponseCancel: {} as LeaveId,
     },
     loading: {
@@ -132,7 +132,7 @@ export const useLeaveStore = create<LeavesState>()(
     leaveDates: [] as Array<string>, //store employee selected dates during application
     leaveDateFrom: '',
     leaveDateTo: '',
-    leaveTypes: [] as Array<LeaveType>,
+    leaveTypes: [] as Array<LeaveBenefitOptions>,
     overlappingLeaveCount: 0,
 
     //APPLY LEAVE MODAL
@@ -202,7 +202,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveListSuccess: (loading: boolean, response: LeaveList) => {
+    getLeaveListSuccess: (loading: boolean, response: EmployeeLeaveList) => {
       set((state) => ({
         ...state,
         leaves: {
@@ -236,7 +236,7 @@ export const useLeaveStore = create<LeavesState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveContents,
+          postResponseApply: {} as LeaveApplicationForm,
         },
         loading: {
           ...state.loading,
@@ -248,7 +248,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    postLeaveSuccess: (response: LeaveContents) => {
+    postLeaveSuccess: (response: LeaveApplicationForm) => {
       set((state) => ({
         ...state,
         response: {
@@ -292,7 +292,10 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveTypesSuccess: (loading: boolean, response: Array<LeaveType>) => {
+    getLeaveTypesSuccess: (
+      loading: boolean,
+      response: Array<LeaveBenefitOptions>
+    ) => {
       set((state) => ({
         ...state,
         leaveTypes: response,
@@ -335,7 +338,10 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveCreditsSuccess: (loading: boolean, response: LeaveCredit) => {
+    getLeaveCreditsSuccess: (
+      loading: boolean,
+      response: EmployeeLeaveCredits
+    ) => {
       set((state) => ({
         ...state,
         leaves: {
@@ -415,7 +421,7 @@ export const useLeaveStore = create<LeavesState>()(
     getLeaveIndividualDetail: (loading: boolean) => {
       set((state) => ({
         ...state,
-        leaveIndividualDetail: {} as GetLeaveDetails,
+        leaveIndividualDetail: {} as EmployeeLeaveDetails,
         loading: {
           ...state.loading,
           loadingIndividualLeave: loading,
@@ -428,7 +434,7 @@ export const useLeaveStore = create<LeavesState>()(
     },
     getLeaveIndividualDetailSuccess: (
       loading: boolean,
-      response: GetLeaveDetails
+      response: EmployeeLeaveDetails
     ) => {
       set((state) => ({
         ...state,

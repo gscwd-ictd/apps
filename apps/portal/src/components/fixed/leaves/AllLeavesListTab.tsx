@@ -1,9 +1,9 @@
-import { Leave } from '../../../../src/types/leave.type';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
+import { EmployeeLeave } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 type AllLeaveListTabProps = {
-  leaves: Array<Leave>;
+  leaves: Array<EmployeeLeave>;
   tab: number;
 };
 
@@ -52,7 +52,7 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
     <>
       {leaves && leaves.length > 0 ? (
         <ul className="mt-4">
-          {leaves.map((leave: Leave, index: number) => {
+          {leaves.map((leave: EmployeeLeave, index: number) => {
             return (
               <li
                 key={index}

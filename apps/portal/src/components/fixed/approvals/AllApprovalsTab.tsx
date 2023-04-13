@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
-import { PassSlip } from '../../../types/passslip.type';
-import { GetLeaveDetails } from '../../../../src/types/leave.type';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 
+import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+
+import { PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
+
 type AllApprovalListTabProps = {
-  passslips: Array<PassSlip> | null;
-  leaves: Array<GetLeaveDetails> | null;
+  passslips: Array<PassSlipApplicationForm> | null;
+  leaves: Array<EmployeeLeaveDetails> | null;
   tab: number;
 };
 
@@ -64,7 +66,7 @@ export const AllApprovalsTab = ({
 
   const setAction = useApprovalStore((state) => state.setAction);
 
-  const onSelectPassSlip = (passslip: PassSlip) => {
+  const onSelectPassSlip = (passslip: PassSlipApplicationForm) => {
     setSelectedPassSlip(passslip);
     // setSelectedPassSlipId(passslip.id);
     if (tab === 1) {
@@ -112,7 +114,7 @@ export const AllApprovalsTab = ({
     }
   };
 
-  const onSelectLeave = (leave: GetLeaveDetails) => {
+  const onSelectLeave = (leave: EmployeeLeaveDetails) => {
     setSelectedLeave(leave);
     setSelectedLeaveId(leave.leaveApplicationBasicInfo.id);
     console.log(leave);
@@ -155,7 +157,7 @@ export const AllApprovalsTab = ({
     <>
       {passslips && passslips.length > 0 ? (
         <ul className="mt-4">
-          {passslips.map((item: PassSlip, index: number) => {
+          {passslips.map((item: PassSlipApplicationForm, index: number) => {
             return (
               <li
                 key={index}
@@ -183,7 +185,7 @@ export const AllApprovalsTab = ({
         </ul>
       ) : leaves && leaves.length > 0 ? (
         <ul className="mt-4">
-          {leaves.map((item: GetLeaveDetails, index: number) => {
+          {leaves.map((item: EmployeeLeaveDetails, index: number) => {
             return (
               <li
                 key={index}

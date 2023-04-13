@@ -1,9 +1,9 @@
 import { usePassSlipStore } from '../../../store/passslip.store';
 import dayjs from 'dayjs';
-import { PassSlipContents } from '../../../../src/types/passslip.type';
+import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 
 type AllPassSlipListTabProps = {
-  passslips: Array<PassSlipContents> | null;
+  passslips: Array<PassSlip> | null;
   tab: number;
 };
 
@@ -45,7 +45,7 @@ export const AllPassSlipListTab = ({
     <>
       {passslips && passslips.length > 0 ? (
         <ul className="mt-4">
-          {passslips.map((item: PassSlipContents, index: number) => {
+          {passslips.map((item: PassSlip, index: number) => {
             return (
               <li
                 key={index}

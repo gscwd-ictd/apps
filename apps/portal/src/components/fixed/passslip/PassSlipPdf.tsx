@@ -8,8 +8,7 @@ import {
   View,
   Image,
 } from '@react-pdf/renderer';
-import { PassSlipContents } from '../../../../src/types/passslip.type';
-
+import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import React, { useEffect, useState } from 'react';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
 
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
 
 type PassSlipPdfProps = {
   employeeDetails: EmployeeDetails;
-  passSlipDetails: PassSlipContents;
+  passSlipDetails: PassSlip;
 };
 
 export const PassSlipPdf = ({
