@@ -23,7 +23,7 @@ import Link from 'next/link';
 import { ApprovalsTabs } from '../../../../src/components/fixed/approvals/ApprovalsTabs';
 import { ApprovalsTabWindow } from '../../../../src/components/fixed/approvals/ApprovalsTabWindow';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
-import { ApprovalListController } from '../../../../src/components/fixed/approvals/ApprovalsListController';
+
 import { ApprovalTypeSelect } from '../../../../src/components/fixed/approvals/ApprovalTypeSelect';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { ApprovalPendingLeaveModal } from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
@@ -176,7 +176,7 @@ export default function Approvals({
               </h3>
             </Modal.Header>
             <Modal.Body>
-              <ApprovalListController page={modal.page} />
+              {/* <ApprovalListController page={modal.page} /> */}
             </Modal.Body>
             <Modal.Footer>
               <div className="flex justify-end gap-2">
