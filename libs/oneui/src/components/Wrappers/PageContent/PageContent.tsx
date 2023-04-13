@@ -58,8 +58,8 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
 
   // this use effect listens if the user clicked the collapse button while the window width is greater that 1024
   useEffect(() => {
-    if (!isMobile) setIsCollapsed(false);
-  }, [isMobile]);
+    if (!isMobile && !previousState) setIsCollapsed(false);
+  }, [isMobile, previousState]);
 
   return (
     <PageContentContext.Provider
