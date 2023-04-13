@@ -1,8 +1,17 @@
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
-import { LeaveContents } from '../types/leave.type';
+import {
+  ApprovalLeaveList,
+  GetLeaveDetails,
+  Leave,
+  LeaveList,
+} from '../types/leave.type';
 import { ErrorState, ModalState } from '../types/modal.type';
-import { PassSlip } from '../types/passslip.type';
+import {
+  ApprovalPassSlipList,
+  PassSlip,
+  PassSlipContents,
+} from '../types/passslip.type';
 
 export type ApprovalState = {
   alert: AlertState;
@@ -11,10 +20,63 @@ export type ApprovalState = {
   setModal: (modal: ModalState) => void;
   action: string;
   setAction: (value: string) => void;
-  error: ErrorState;
-  setError: (error: ErrorState) => void;
   selectedApprovalType: number;
   setSelectedApprovalType: (value: number) => void;
+
+  leaves: {
+    onGoing: Array<Leave>;
+    approved: Array<Leave>;
+    disapproved: Array<Leave>;
+  };
+
+  passSlips: {
+    onGoing: Array<PassSlipContents>;
+    approved: Array<PassSlipContents>;
+    disapproved: Array<PassSlipContents>;
+  };
+
+  loading: {
+    loadingLeaves: boolean;
+    loadingLeaveResponse: boolean;
+    loadingIndividualLeave: boolean;
+
+    loadingPassSlips: boolean;
+    loadingPassSlipResponse: boolean;
+    loadingIndividualPassSlip: boolean;
+  };
+  error: {
+    errorLeaves: string;
+    errorLeaveResponse: string;
+    errorIndividualLeave: string;
+
+    errorPassSlips: string;
+    errorPassSlipResponse: string;
+    errorIndividualPassSlip: string;
+  };
+
+  pendingLeaveModalIsOpen: boolean;
+  setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
+
+  approvedLeaveModalIsOpen: boolean;
+  setApprovedLeaveModalIsOpen: (approvedLeaveModalIsOpen: boolean) => void;
+
+  disapprovedLeaveModalIsOpen: boolean;
+  setDisapprovedLeaveModalIsOpen: (
+    disapprovedLeaveModalIsOpen: boolean
+  ) => void;
+
+  pendingPassSlipModalIsOpen: boolean;
+  setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
+
+  approvedPassSlipModalIsOpen: boolean;
+  setApprovedPassSlipModalIsOpen: (
+    approvedPassSlipModalIsOpen: boolean
+  ) => void;
+
+  disapprovedPassSlipModalIsOpen: boolean;
+  setDisapprovedPassSlipModalIsOpen: (
+    disapprovedPassSlipModalIsOpen: boolean
+  ) => void;
 
   // PASS SLIPS
   selectedPassSlipId: string;
@@ -31,16 +93,29 @@ export type ApprovalState = {
   ) => void;
 
   // LEAVES
+  leaveId: string;
+  leaveIndividualDetail: GetLeaveDetails;
+  getLeaveIndividualDetail: (loading: boolean) => void;
+  getLeaveIndividualDetailSuccess: (loading: boolean, response) => void;
+  getLeaveIndividualDetailFail: (loading: boolean, error: string) => void;
+
+  getLeaveList: (loading: boolean) => void;
+  getLeaveListSuccess: (loading: boolean, response) => void;
+  getLeaveListFail: (loading: boolean, error: string) => void;
+  setLeaveId: (id: string) => void;
+
   selectedLeaveId: string;
   setSelectedLeaveId: (value: string) => void;
-  selectedLeave: LeaveContents;
-  setSelectedLeave: (selectedLeave: LeaveContents) => void;
-  pendingLeaveList: Array<LeaveContents>;
-  setPendingLeaveList: (pendingLeaveList: Array<LeaveContents>) => void;
-  approvedLeaveList: Array<LeaveContents>;
-  setApprovedLeaveList: (approvedLeaveList: Array<LeaveContents>) => void;
-  disapprovedLeaveList: Array<LeaveContents>;
-  setDisapprovedLeaveList: (disapprovedLeaveList: Array<LeaveContents>) => void;
+  selectedLeave: GetLeaveDetails;
+  setSelectedLeave: (selectedLeave: GetLeaveDetails) => void;
+  pendingLeaveList: Array<GetLeaveDetails>;
+  setPendingLeaveList: (pendingLeaveList: Array<GetLeaveDetails>) => void;
+  approvedLeaveList: Array<GetLeaveDetails>;
+  setApprovedLeaveList: (approvedLeaveList: Array<GetLeaveDetails>) => void;
+  disapprovedLeaveList: Array<GetLeaveDetails>;
+  setDisapprovedLeaveList: (
+    disapprovedLeaveList: Array<GetLeaveDetails>
+  ) => void;
 
   pendingIsLoaded: boolean;
   setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
@@ -57,8 +132,49 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
   alert: { isOpen: false, page: 1 },
   modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
   action: '',
-  error: { isError: false, errorMessage: '' },
   selectedApprovalType: 1,
+
+  leaves: {
+    onGoing: [],
+    approved: [],
+    disapproved: [],
+  },
+
+  passSlips: {
+    onGoing: [],
+    approved: [],
+    disapproved: [],
+  },
+
+  leaveId: '',
+  leaveIndividualDetail: {} as GetLeaveDetails,
+
+  loading: {
+    loadingLeaves: false,
+    loadingLeaveResponse: false,
+    loadingIndividualLeave: false,
+
+    loadingPassSlips: false,
+    loadingPassSlipResponse: false,
+    loadingIndividualPassSlip: false,
+  },
+  error: {
+    errorLeaves: '',
+    errorLeaveResponse: '',
+    errorIndividualLeave: '',
+
+    errorPassSlips: '',
+    errorPassSlipResponse: '',
+    errorIndividualPassSlip: '',
+  },
+
+  pendingLeaveModalIsOpen: false,
+  approvedLeaveModalIsOpen: false,
+  disapprovedLeaveModalIsOpen: false,
+
+  pendingPassSlipModalIsOpen: false,
+  approvedPassSlipModalIsOpen: false,
+  disapprovedPassSlipModalIsOpen: false,
 
   // PASS SLIPS
   selectedPassSlipId: '',
@@ -69,7 +185,7 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
 
   // LEAVES
   selectedLeaveId: '',
-  selectedLeave: {} as LeaveContents,
+  selectedLeave: {} as GetLeaveDetails,
   pendingLeaveList: [],
   approvedLeaveList: [],
   disapprovedLeaveList: [],
@@ -88,9 +204,7 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
   setAction: (action: string) => {
     set((state) => ({ ...state, action }));
   },
-  setError: (error: ErrorState) => {
-    set((state) => ({ ...state, error }));
-  },
+
   setSelectedApprovalType: (selectedApprovalType: number) => {
     set((state) => ({ ...state, selectedApprovalType }));
   },
@@ -109,19 +223,19 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
   setDisapprovedPassSlipList: (disapprovedPassSlipList: Array<PassSlip>) => {
     set((state) => ({ ...state, disapprovedPassSlipList }));
   },
-  setPendingLeaveList: (pendingLeaveList: Array<LeaveContents>) => {
+  setPendingLeaveList: (pendingLeaveList: Array<GetLeaveDetails>) => {
     set((state) => ({ ...state, pendingLeaveList }));
   },
-  setApprovedLeaveList: (approvedLeaveList: Array<LeaveContents>) => {
+  setApprovedLeaveList: (approvedLeaveList: Array<GetLeaveDetails>) => {
     set((state) => ({ ...state, approvedLeaveList }));
   },
-  setDisapprovedLeaveList: (disapprovedLeaveList: Array<LeaveContents>) => {
+  setDisapprovedLeaveList: (disapprovedLeaveList: Array<GetLeaveDetails>) => {
     set((state) => ({ ...state, disapprovedLeaveList }));
   },
   setSelectedLeaveId: (selectedLeaveId: string) => {
     set((state) => ({ ...state, selectedLeaveId }));
   },
-  setSelectedLeave: (selectedLeave: LeaveContents) => {
+  setSelectedLeave: (selectedLeave: GetLeaveDetails) => {
     set((state) => ({ ...state, selectedLeave }));
   },
 
@@ -137,5 +251,178 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
 
   setTab: (tab: number) => {
     set((state) => ({ ...state, tab }));
+  },
+
+  setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => {
+    set((state) => ({ ...state, pendingLeaveModalIsOpen }));
+  },
+
+  setApprovedLeaveModalIsOpen: (approvedLeaveModalIsOpen: boolean) => {
+    set((state) => ({ ...state, approvedLeaveModalIsOpen }));
+  },
+
+  setDisapprovedLeaveModalIsOpen: (disapprovedLeaveModalIsOpen: boolean) => {
+    set((state) => ({ ...state, disapprovedLeaveModalIsOpen }));
+  },
+
+  setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => {
+    set((state) => ({ ...state, pendingPassSlipModalIsOpen }));
+  },
+
+  setApprovedPassSlipModalIsOpen: (approvedPassSlipModalIsOpen: boolean) => {
+    set((state) => ({ ...state, approvedPassSlipModalIsOpen }));
+  },
+
+  setDisapprovedPassSlipModalIsOpen: (
+    disapprovedPassSlipModalIsOpen: boolean
+  ) => {
+    set((state) => ({ ...state, disapprovedPassSlipModalIsOpen }));
+  },
+
+  setLeaveId: (leaveId: string) => {
+    set((state) => ({ ...state, leaveId }));
+  },
+
+  //GET LEAVE ACTIONS
+  getLeaveList: (loading: boolean) => {
+    set((state) => ({
+      ...state,
+      leaves: {
+        ...state.leaves,
+        onGoing: [],
+        approved: [],
+        disapproved: [],
+      },
+      loading: {
+        ...state.loading,
+        loadingLeaves: loading,
+      },
+      error: {
+        ...state.error,
+        errorLeaves: '',
+      },
+    }));
+  },
+  getLeaveListSuccess: (loading: boolean, response: ApprovalLeaveList) => {
+    set((state) => ({
+      ...state,
+      leaves: {
+        ...state.leaves,
+        onGoing: response.ongoing,
+        approved: response.approved,
+        disapproved: response.disapproved,
+      },
+      loading: {
+        ...state.loading,
+        loadingLeaves: loading,
+      },
+    }));
+  },
+  getLeaveListFail: (loading: boolean, error: string) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingLeaves: loading,
+      },
+      error: {
+        ...state.error,
+        errorLeaves: error,
+      },
+    }));
+  },
+
+  //GET LEAVE INDIVIDUAL DETAILS ACTIONS
+  getLeaveIndividualDetail: (loading: boolean) => {
+    set((state) => ({
+      ...state,
+      leaveIndividualDetail: {} as GetLeaveDetails,
+      loading: {
+        ...state.loading,
+        loadingIndividualLeave: loading,
+      },
+      error: {
+        ...state.error,
+        errorIndividualLeave: '',
+      },
+    }));
+  },
+  getLeaveIndividualDetailSuccess: (
+    loading: boolean,
+    response: GetLeaveDetails
+  ) => {
+    set((state) => ({
+      ...state,
+      leaveIndividualDetail: response,
+      loading: {
+        ...state.loading,
+        loadingIndividualLeave: loading,
+      },
+    }));
+  },
+  getLeaveIndividualDetailFail: (loading: boolean, error: string) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingIndividualLeave: loading,
+      },
+      error: {
+        ...state.error,
+        errorIndividualLeave: error,
+      },
+    }));
+  },
+
+  //GET PASS SLIP ACTIONS
+  getPassSlipList: (loading: boolean) => {
+    set((state) => ({
+      ...state,
+      passSlips: {
+        ...state.passSlips,
+        onGoing: [],
+        approved: [],
+        disapproved: [],
+      },
+      loading: {
+        ...state.loading,
+        loadingPassSlips: loading,
+      },
+      error: {
+        ...state.error,
+        errorPassSlips: '',
+      },
+    }));
+  },
+  getPassSlipListSuccess: (
+    loading: boolean,
+    response: ApprovalPassSlipList
+  ) => {
+    set((state) => ({
+      ...state,
+      passSlips: {
+        ...state.passSlips,
+        onGoing: response.ongoing,
+        approved: response.approved,
+        disapproved: response.disapproved,
+      },
+      loading: {
+        ...state.loading,
+        loadingPassSlips: loading,
+      },
+    }));
+  },
+  getPassSlipListFail: (loading: boolean, error: string) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingPassSlips: loading,
+      },
+      error: {
+        ...state.error,
+        errorPassSlips: error,
+      },
+    }));
   },
 }));

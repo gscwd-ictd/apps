@@ -43,9 +43,9 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                   // setIsLoading(true);
                   setTab(1);
                 }}
-                title="Pending Pass Slip Approvals"
+                title="Ongoing Pass Slip Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
-                subtitle="Show all pending Pass Slips you applied for"
+                subtitle="Show all ongoing Pass Slips you applied for"
                 notificationCount={
                   pendingPassSlipList ? pendingPassSlipList.length : 0
                 }
@@ -58,9 +58,9 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                   // setIsLoading(true);
                   setTab(2);
                 }}
-                title="Pending Leave Approvals"
+                title="Ongoing Leave Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
-                subtitle="Show all pending Pass Slips you applied for"
+                subtitle="Show all ongoing Pass Slips you applied for"
                 notificationCount={
                   pendingLeaveList ? pendingLeaveList.length : 0
                 }
@@ -79,7 +79,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Approved Pass Slips"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
+                subtitle="Show all approved Pass Slip applications"
                 notificationCount={
                   approvedPassSlipList ? approvedPassSlipList.length : 0
                 }
@@ -94,7 +94,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Approved Leaves"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
+                subtitle="Show all approved Pass Slip applications"
                 notificationCount={
                   approvedLeaveList ? approvedLeaveList.length : 0
                 }
@@ -114,7 +114,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Disapproved Pass Slips"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
+                subtitle="Show all disapproved Pass Slip applications"
                 notificationCount={
                   disapprovedPassSlipList ? disapprovedPassSlipList.length : 0
                 }
@@ -129,7 +129,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Disapproved Leaves"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
+                subtitle="Show all disapproved Pass Slip applications"
                 notificationCount={
                   disapprovedLeaveList ? disapprovedLeaveList.length : 0
                 }

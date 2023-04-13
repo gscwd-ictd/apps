@@ -9,8 +9,14 @@ export type PassSlip = {
 };
 
 export type PassSlipList = {
-  completed: Array<PassSlipContents>;
   ongoing: Array<PassSlipContents>;
+  completed: Array<PassSlipContents>;
+};
+
+export type ApprovalPassSlipList = {
+  ongoing: Array<PassSlipContents>;
+  approved: Array<PassSlipContents>;
+  disapproved: Array<PassSlipContents>;
 };
 
 export type PassSlipContents = {

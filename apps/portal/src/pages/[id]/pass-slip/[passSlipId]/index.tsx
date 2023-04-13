@@ -42,12 +42,12 @@ export default function PassSlipPage({
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
   }));
 
-  // const passSlipDetailPdf = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`;
+  // const passSlipDetailPdf = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.passSlipId}`;
   // const {
-  //   data: swrLeaveDetailsPdf,
+  //   data: swrPassSlipDetailsPdf,
   //   isLoading: swrIsLoading,
   //   error: swrError,
-  // } = useSWR(leaveDetailPdf, fetchWithToken, {
+  // } = useSWR(passSlipDetailPdf, fetchWithToken, {
   //   shouldRetryOnError: false,
   //   revalidateOnFocus: false,
   // });
@@ -68,18 +68,18 @@ export default function PassSlipPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

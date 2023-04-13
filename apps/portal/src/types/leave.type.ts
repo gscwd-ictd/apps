@@ -83,6 +83,12 @@ export type LeaveList = {
   ongoing: Array<Leave>;
 };
 
+export type ApprovalLeaveList = {
+  ongoing: Array<Leave>;
+  approved: Array<Leave>;
+  disapproved: Array<Leave>;
+};
+
 export type LeaveCredit = {
   vacation: number;
   sick: number;

@@ -26,18 +26,48 @@ import { useApprovalStore } from '../../../../src/store/approvals.store';
 import { ApprovalListController } from '../../../../src/components/fixed/approvals/ApprovalsListController';
 import { ApprovalTypeSelect } from '../../../../src/components/fixed/approvals/ApprovalTypeSelect';
 import { employeeDummy } from '../../../../src/types/employee.type';
+import { ApprovalPendingLeaveModal } from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
 
 export default function Approvals({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const {
+    tab,
+    pendingLeaveModalIsOpen,
+    approvedLeaveModalIsOpen,
+    disapprovedLeaveModalIsOpen,
+    pendingPassSlipModalIsOpen,
+    approvedPassSlipModalIsOpen,
+    disapprovedPassSlipModalIsOpen,
+
+    setPendingLeaveModalIsOpen,
+    setApprovedLeaveModalIsOpen,
+    setDisapprovedLeaveModalIsOpen,
+    setPendingPassSlipModalIsOpen,
+    setApprovedPassSlipModalIsOpen,
+    setDisapprovedPassSlipModalIsOpen,
+  } = useApprovalStore((state) => ({
+    tab: state.tab,
+    pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
+    approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
+    disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
+    pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
+    approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
+    disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
+
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
+    setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
+    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
+    setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
+  }));
+
   // get state for the modal
   const modal = useApprovalStore((state) => state.modal);
 
   // get loading state from store
   const isLoading = useApprovalStore((state) => state.isLoading);
-
-  // set tab state
-  const tab = useApprovalStore((state) => state.tab);
 
   // set loading state from store
   const setIsLoading = useApprovalStore((state) => state.setIsLoading);
@@ -84,12 +114,35 @@ export default function Approvals({
     }
   }, [isLoading, setIsLoading]);
 
-  //modal action button
-  // const modalAction = () => (
-  //   <PDFViewer>
-  //     {/* <PassSlipPdf /> */}
-  //   </PDFViewer>
-  // );
+  // cancel action for Pending Leave Application Modal
+  const closePendingLeaveModal = async () => {
+    setPendingLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Approved Leave Application Modal
+  const closeApprovedLeaveModal = async () => {
+    setApprovedLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Dispproved Leave Application Modal
+  const closeDisapprovedLeaveModal = async () => {
+    setDisapprovedLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Pending Leave Application Modal
+  const closePendingPassSlipModal = async () => {
+    setPendingLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Approved Leave Application Modal
+  const closeApprovedPassSlipModal = async () => {
+    setApprovedLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Dispproved Leave Application Modal
+  const closeDisapprovedPassSlipModal = async () => {
+    setDisapprovedLeaveModalIsOpen(false);
+  };
 
   return (
     <>
@@ -100,6 +153,13 @@ export default function Approvals({
           </Head>
 
           <SideNav />
+
+          {/* Pending Leave Approval Modal */}
+          <ApprovalPendingLeaveModal
+            modalState={pendingLeaveModalIsOpen}
+            setModalState={setPendingLeaveModalIsOpen}
+            closeModalAction={closePendingLeaveModal}
+          />
 
           <Modal size={'xl'} open={modal.isOpen} setOpen={openModal}>
             <Modal.Header>
