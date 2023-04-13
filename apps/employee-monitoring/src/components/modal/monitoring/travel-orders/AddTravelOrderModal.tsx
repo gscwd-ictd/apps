@@ -188,7 +188,6 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
   // Set employeeId value upon change on selectedEmployee state
   useEffect(() => {
     if (!isEmpty(selectedEmployee)) {
-      console.log(selectedEmployee);
       setValue('employeeId', selectedEmployee.employeeId);
       clearErrors('employeeId');
     }
