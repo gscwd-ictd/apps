@@ -18,12 +18,12 @@ export type PassSlipApplicationForm = {
 
 // List of pass slips per employee
 export type EmployeePassSlipList = {
-  completed: Array<PassSlipRow>;
-  ongoing: Array<PassSlipRow>;
+  completed: Array<PassSlip>;
+  ongoing: Array<PassSlip>;
 };
 
 // Single row type for individual or collated employees pass slip
-export type PassSlipRow = {
+export type PassSlip = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
@@ -35,4 +35,4 @@ export type PassSlipRow = {
 } & PassSlipApplicationForm;
 
 // Individual pass slip id
-export type PassSlipId = Pick<PassSlipRow, 'id'>;
+export type PassSlipId = Pick<PassSlip, 'id'>;
