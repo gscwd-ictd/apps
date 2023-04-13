@@ -2,6 +2,7 @@
 import {
   NatureOfBusiness,
   ObTransportation,
+  PassSlipStatus,
 } from '../../../../../apps/employee-monitoring/src/utils/enum/pass-slip.enum';
 
 export type PassSlip = {
@@ -16,5 +17,5 @@ export type PassSlip = {
   employeeName: string;
   supervisorName: string;
   supervisorId: string;
-  status: string;
+  status: PassSlipStatus;
 };

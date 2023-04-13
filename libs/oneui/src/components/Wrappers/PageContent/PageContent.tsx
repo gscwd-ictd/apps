@@ -17,9 +17,24 @@ type PageContentContextState = {
     setIsCollapsed: (state: boolean) => void;
     previousState: boolean;
     setPreviousState: (state: boolean) => void;
+    isMobile: boolean;
+    setIsMobile: (state: boolean) => void;
   };
   // header: {},
   // footer: {},
+};
+
+// hook
+const useWidth = () => {
+  const [width, setWidth] = useState(0);
+  const handleResize = () => setWidth(window.innerWidth);
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [width]);
+  return width;
 };
 
 export const PageContentContext = createContext({} as PageContentContextState);
@@ -27,8 +42,24 @@ export const PageContentContext = createContext({} as PageContentContextState);
 export const PageContent: FunctionComponent<PageContentProps> = ({
   children,
 }) => {
+  const windowWidth = useWidth();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [previousState, setPreviousState] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (windowWidth < 1024) {
+      setIsCollapsed(true);
+      setIsMobile(true);
+    } else if (windowWidth >= 1024) {
+      setIsMobile(false);
+    }
+  }, [windowWidth]);
+
+  // this use effect listens if the user clicked the collapse button while the window width is greater that 1024
+  useEffect(() => {
+    if (!isMobile) setIsCollapsed(false);
+  }, [isMobile]);
 
   return (
     <PageContentContext.Provider
@@ -38,6 +69,8 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
           setIsCollapsed,
           previousState,
           setPreviousState,
+          isMobile,
+          setIsMobile,
         },
       }}
     >
