@@ -2,7 +2,7 @@ import { OfficeSVG } from '../svgs/Office';
 
 export const CardEmployee = () => {
   return (
-    <div className="static flex flex-col w-full h-[18rem] bg-white rounded">
+    <div className="static flex flex-col w-full h-[18rem] bg-white rounded-md border shadow">
       {/** TOP PART */}
       <section className="min-w-full h-[50%] bg-sky-300/80 rounded-t">
         <div className="flex flex-col m-5">

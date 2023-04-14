@@ -25,62 +25,67 @@ const specialHolidays: Array<Holidays> = [
 ];
 
 const events: Array<Events> = [
-  { date: 'February 1-31', title: 'Philippine Heart Month' },
+  { date: 'February 1-28', title: 'Philippine Heart Month' },
 ];
 
 export const Holidays = (): JSX.Element => {
   return (
-    <div className="w-full  flex static h-[24rem] rounded">
-      <Card title="Upcoming Holidays & Events" className="border-none rounded">
-        <div className="flex flex-col w-full h-full text-xs">
+    <div className="flex w-full border rounded-md shadow">
+      <Card
+        title="Upcoming Holidays & Events"
+        className="overflow-y-hidden border-none rounded"
+      >
+        <div className="flex flex-col w-full gap-2 overflow-y-auto text-xs">
           {/* Regular Holidays */}
-          <span className="text-gray-500"> Regular Holidays</span>
-          <div className="flex flex-col w-full px-2 py-1 rounded bg-blue-50">
-            {regularHolidays.slice(0, 5).map((holiday, index) => {
-              return (
-                <div key={index} className="flex gap-2">
-                  <div className="w-[30%]">• {holiday.date}</div>
-                  <div className="w-[70%]">{holiday.title}</div>
-                </div>
-              );
-            })}
+          <div>
+            <div className="text-gray-500"> Regular Holidays</div>
+            <div className="flex flex-col w-full px-2 py-1 rounded bg-blue-50">
+              {regularHolidays.slice(0, 5).map((holiday, index) => {
+                return (
+                  <div key={index} className="flex gap-2">
+                    <div className="w-[30%]">• {holiday.date}</div>
+                    <div className="w-[70%]">{holiday.title}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <br />
 
           {/* Special Holidays */}
-          <span className="text-gray-500"> Special non-working Holidays</span>
-          <div className="flex flex-col w-full px-2 py-2 rounded bg-blue-50">
-            {specialHolidays.slice(0, 5).map((holiday, index) => {
-              return (
-                <div key={index} className="flex gap-2">
-                  <div className="w-[30%]">• {holiday.date}</div>
-                  <div className="w-[70%]">{holiday.title}</div>
-                </div>
-              );
-            })}
+          <div>
+            <div className="text-gray-500"> Special non-working Holidays</div>
+            <div className="flex flex-col w-full px-2 py-2 rounded bg-blue-50">
+              {specialHolidays.slice(0, 5).map((holiday, index) => {
+                return (
+                  <div key={index} className="flex gap-2">
+                    <div className="w-[30%]">• {holiday.date}</div>
+                    <div className="w-[70%]">{holiday.title}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <br />
 
           {/* Special Holidays */}
-          <span className="text-gray-500"> Events</span>
-          <div className="flex flex-col w-full px-2 py-2 rounded bg-blue-50">
-            {events.slice(0, 5).map((event, index) => {
-              return (
-                <div key={index} className="flex gap-2">
-                  <div className="w-[30%]">• {event.date}</div>
-                  <div className="w-[70%]">{event.title}</div>
-                </div>
-              );
-            })}
+          <div>
+            <div className="text-gray-500"> Events</div>
+            <div className="flex flex-col w-full px-2 py-2 rounded bg-blue-50">
+              {events.slice(0, 5).map((event, index) => {
+                return (
+                  <div key={index} className="flex gap-2">
+                    <div className="w-[30%]">• {event.date}</div>
+                    <div className="w-[70%]">{event.title}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
         {/* Button */}
-        <div className="flex flex-col justify-end pt-2">
-          <div className="w-[16rem]">
-            <button className="px-3 py-1 bg-blue-400 rounded">
-              <span className="text-xs text-white">View More →</span>
-            </button>
-          </div>
+        <div className="flex flex-col justify-end py-2 mt-2">
+          <button className="px-3 py-1 bg-blue-400 rounded">
+            <div className="text-xs text-white">View More →</div>
+          </button>
         </div>
       </Card>
     </div>

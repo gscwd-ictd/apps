@@ -156,7 +156,6 @@ export const DataTableHrms = <T extends object>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onGlobalFilterChange: setGlobalFilter,
-
     globalFilterFn: filterFn,
   });
 
