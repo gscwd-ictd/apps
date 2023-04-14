@@ -5,8 +5,8 @@ import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 function UseRenderPassSlipStatus(status: PassSlipStatus) {
   if (status === PassSlipStatus.ONGOING) {
     return (
-      <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs">
-        <span className="px-2 py-[0.2rem] rounded bg-blue-400 text-white text-center">
+      <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs font-medium ">
+        <span className="px-2 py-[0.2rem] rounded bg-yellow-100 text-yellow-800 text-center">
           Ongoing
         </span>
       </div>
@@ -14,7 +14,7 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
   } else if (status === PassSlipStatus.APPROVED) {
     return (
       <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs">
-        <span className="px-2 py-[0.2rem] rounded bg-green-500 text-white text-center">
+        <span className="px-2 py-[0.2rem] rounded bg-green-400 text-white text-center">
           Approved
         </span>
       </div>

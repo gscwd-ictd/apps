@@ -1,8 +1,12 @@
-import { Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Modal } from '@gscwd-apps/oneui';
 import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
 import UseRenderObTransportation from 'apps/employee-monitoring/src/utils/functions/RenderObTransporation';
+import dayjs from 'dayjs';
+import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import React, { FunctionComponent } from 'react';
+import { LabelInput } from '../../../inputs/LabelInput';
+import { LabelValue } from '../../../labels/LabelValue';
 
 type ViewPassSlipModalProps = {
   rowData: PassSlip;
@@ -21,30 +25,75 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="sm">
         <Modal.Header withCloseBtn>
-          <div className="text-2xl text-gray-600">Pass Slip Authorization</div>
+          <div className="flex gap-1 px-5 text-2xl font-medium text-gray-700">
+            {rowData.status === PassSlipStatus.ONGOING
+              ? 'Ongoing'
+              : rowData.status === PassSlipStatus.APPROVED
+              ? 'Completed'
+              : rowData.status === PassSlipStatus.DISAPPROVED
+              ? 'Completed'
+              : rowData.status === PassSlipStatus.CANCELLED
+              ? 'Cancelled'
+              : ''}
+            <span>Pass Slip</span>
+          </div>
         </Modal.Header>
         <Modal.Body>
-          <div className="min-h-[30rem] px-2 w-full flex flex-col gap-1">
-            <div className="flex justify-between w-full">
-              <div> DATE: {rowData.dateOfApplication}</div>
-              <div> DEPARTMENT: Sample Department</div>
-            </div>
-            <div className="flex items-center w-full gap-1">
-              <span>NATURE OF BUSINESS:</span>
-              <span>{rowData.natureOfBusiness}</span>
-            </div>
+          <div className="w-full">
+            <div className="flex flex-col w-full gap-5 px-5">
+              <AlertNotification
+                alertType={
+                  rowData.status === PassSlipStatus.ONGOING
+                    ? 'warning'
+                    : rowData.status === PassSlipStatus.APPROVED
+                    ? 'success'
+                    : rowData.status === PassSlipStatus.DISAPPROVED
+                    ? 'error'
+                    : rowData.status === PassSlipStatus.CANCELLED
+                    ? 'error'
+                    : ''
+                }
+                notifMessage={
+                  rowData.status === PassSlipStatus.ONGOING
+                    ? 'Awaiting Supervisor Approval'
+                    : rowData.status === PassSlipStatus.APPROVED
+                    ? 'Approved'
+                    : rowData.status === PassSlipStatus.DISAPPROVED
+                    ? 'Disapproved'
+                    : rowData.status === PassSlipStatus.CANCELLED
+                    ? 'Cancelled'
+                    : ''
+                }
+                dismissible={false}
+              />
 
-            <div className="flex items-center gap-1">
-              <span>Ob Transportation:</span>
-              <span>{rowData.obTransportation}</span>
+              {/* Date of Application */}
+
+              <LabelValue
+                label="Date of Application: "
+                value={dayjs(rowData.dateOfApplication).format('MMMM DD, YYYY')}
+              />
+
+              <LabelValue
+                label="Nature of Business: "
+                value={rowData.natureOfBusiness}
+              />
+
+              <LabelValue
+                label="Mode of Transportation: "
+                value={rowData.obTransportation ?? 'N/A'}
+              />
+
+              <LabelValue
+                label="Estimated Hours: "
+                value={rowData.estimateHours}
+              />
+
+              <LabelValue
+                label="Purpose or Destination: "
+                value={rowData.purposeDestination}
+              />
             </div>
-            <div>
-              Estimated Hours:
-              {rowData.estimateHours < 1 ? 'N/A' : rowData.estimateHours}
-            </div>
-            <div> Purpose or Destination: {rowData.purposeDestination}</div>
-            <div> Employee Name: {rowData.employeeName}</div>
-            <div>Status: {rowData.status}</div>
           </div>
         </Modal.Body>
       </Modal>
