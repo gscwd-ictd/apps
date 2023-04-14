@@ -119,7 +119,7 @@ export default function Index({
 
   return (
     <>
-      <div className="min-h-[100%] min-w-full">
+      <div className="w-full">
         <BreadCrumbs
           title="Daily Time Record"
           crumbs={[

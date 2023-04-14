@@ -200,7 +200,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="w-full ">
+      <div className="w-full">
         <BreadCrumbs
           title="Pass Slips"
           crumbs={[
