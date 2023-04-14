@@ -5,6 +5,8 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
+import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
 import {
   NatureOfBusiness,
   PassSlipStatus,
@@ -29,21 +31,21 @@ const passSlips: Array<PassSlip> = [
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Ricardo Vicente P. Narvaiza',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.DISAPPROVED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
+    natureOfBusiness: NatureOfBusiness.HALF_DAY,
     obTransportation: null,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Allyn Joseph C. Cubero',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
@@ -57,42 +59,42 @@ const passSlips: Array<PassSlip> = [
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Eric C. Sison',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.APPROVED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
+    natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
     obTransportation: null,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Eric C. Sison',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.APPROVED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
+    natureOfBusiness: NatureOfBusiness.PERSONAL_BUSINESS,
     obTransportation: null,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Alexis G. Aponesto',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.CANCELLED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
+    natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
     obTransportation: null,
     estimateHours: 0,
     purposeDestination: 'undertime',
@@ -114,14 +116,14 @@ export default function Index() {
       cell: (info) => info.getValue(),
     }),
 
-    columnHelper.accessor('employeeName', {
-      header: 'Employee Name',
+    columnHelper.accessor('dateOfApplication', {
+      header: 'Date of Application',
       enableSorting: false,
       cell: (info) => info.getValue(),
     }),
 
-    columnHelper.accessor('dateOfApplication', {
-      header: 'Date of Application',
+    columnHelper.accessor('employeeName', {
+      header: 'Employee Name',
       enableSorting: false,
       cell: (info) => info.getValue(),
     }),
@@ -129,11 +131,11 @@ export default function Index() {
     columnHelper.accessor('natureOfBusiness', {
       header: 'Nature of Business',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => UseRenderNatureOfBusiness(info.getValue()),
     }),
 
     columnHelper.accessor('obTransportation', {
-      header: 'Official Business',
+      header: 'OB Transportation',
       enableSorting: false,
       cell: (info) => (!isEmpty(info.getValue()) ? info.getValue() : 'N/A'),
     }),
@@ -153,7 +155,7 @@ export default function Index() {
     columnHelper.accessor('status', {
       header: 'Status',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => UseRenderPassSlipStatus(info.getValue()),
     }),
 
     columnHelper.display({
@@ -198,7 +200,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="min-h-[100%] w-full">
+      <div className="w-full ">
         <BreadCrumbs
           title="Pass Slips"
           crumbs={[
@@ -211,9 +213,9 @@ export default function Index() {
         />
 
         <Can I="access" this="Pass_slips">
-          <div className="sm:mx-0 md:mx-0 lg:mx-5">
+          <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
             <Card>
-              <div className="flex flex-row flex-wrap">
+              <div className="flex flex-row flex-wrap ">
                 <DataTableHrms
                   data={passSlips}
                   columns={columns}

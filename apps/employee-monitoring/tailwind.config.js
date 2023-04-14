@@ -7,6 +7,9 @@ module.exports = {
     // purge components from apps
     'apps/employee-monitoring/src/components/**/*.{js,jsx,ts,tsx}',
 
+    // purge utils from apps
+    'apps/employee-monitoring/src/utils/**/*.{js,jsx,ts,tsx}',
+
     // purge shred-ui components from libs
     'libs/oneui/src/**/!(*.stories|*.spec).{ts,tsx,jsx,js,html}',
   ],
