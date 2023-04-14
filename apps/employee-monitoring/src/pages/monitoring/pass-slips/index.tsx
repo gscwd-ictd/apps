@@ -6,9 +6,11 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
+import UseRenderObTransportation from 'apps/employee-monitoring/src/utils/functions/RenderObTransporation';
 import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
 import {
   NatureOfBusiness,
+  ObTransportation,
   PassSlipStatus,
 } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
@@ -67,7 +69,7 @@ const passSlips: Array<PassSlip> = [
     status: PassSlipStatus.APPROVED,
     dateOfApplication: '2023-03-01',
     natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
-    obTransportation: null,
+    obTransportation: ObTransportation.OFFICE_VEHICLE,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
@@ -83,7 +85,7 @@ const passSlips: Array<PassSlip> = [
     natureOfBusiness: NatureOfBusiness.PERSONAL_BUSINESS,
     obTransportation: null,
     estimateHours: 0,
-    purposeDestination: 'undertime',
+    purposeDestination: 'undertime undertime undertime ',
     isCancelled: Boolean(0),
   },
   {
@@ -95,7 +97,7 @@ const passSlips: Array<PassSlip> = [
     status: PassSlipStatus.CANCELLED,
     dateOfApplication: '2023-03-01',
     natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
-    obTransportation: null,
+    obTransportation: ObTransportation.PRIVATE_OR_PERSONAL_VEHICLE,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
@@ -137,19 +139,21 @@ export default function Index() {
     columnHelper.accessor('obTransportation', {
       header: 'OB Transportation',
       enableSorting: false,
-      cell: (info) => (!isEmpty(info.getValue()) ? info.getValue() : 'N/A'),
+      cell: (info) => UseRenderObTransportation(info.getValue()),
     }),
 
     columnHelper.accessor('estimateHours', {
       header: 'Estimated Hours',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() !== 0 ? info.getValue() : '-'),
     }),
 
     columnHelper.accessor('purposeDestination', {
       header: 'Purpose/Destination',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <div className="max-w-[6rem] truncate">{info.getValue()}</div>
+      ),
     }),
 
     columnHelper.accessor('status', {

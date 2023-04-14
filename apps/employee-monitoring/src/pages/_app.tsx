@@ -26,7 +26,6 @@ function CustomApp({ Component, pageProps }: AppProps) {
           <TopNavigation />
           <Main>
             <Component {...pageProps} />
-
             <Footer />
           </Main>
         </PageContent>
