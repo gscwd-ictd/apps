@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { fetchWithSession } from '../../../../src/utils/hoc/fetcher';
@@ -38,15 +39,15 @@ export const AppEndTabWindow = ({
 
   const tab = useAppEndStore((state) => state.tab);
 
-  useEffect(
-    () => setPendingPublicationList(pendingPublications),
-    [pendingPublications]
-  );
+  useEffect(() => {
+    if (!isEmpty(pendingPublicationList))
+      setPendingPublicationList(pendingPublications);
+  }, [pendingPublications]);
 
-  useEffect(
-    () => setFulfilledPublicationList(fulfilledPublications),
-    [fulfilledPublications]
-  );
+  useEffect(() => {
+    if (!isEmpty(fulfilledPublicationList))
+      setFulfilledPublicationList(fulfilledPublications);
+  }, [fulfilledPublications]);
 
   return (
     <>
