@@ -2,6 +2,7 @@
 import { DataTableHrms } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
+import ViewPassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/ViewPassSlipModal';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
@@ -15,6 +16,7 @@ import {
 } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { isEmpty } from 'lodash';
+import { useState } from 'react';
 import useSWR from 'swr';
 
 const passSlips: Array<PassSlip> = [
@@ -111,6 +113,18 @@ export default function Index() {
     { shouldRetryOnError: false, revalidateOnFocus: false }
   );
 
+  const [currentRowData, setCurrentRowData] = useState<PassSlip>(
+    {} as PassSlip
+  );
+
+  // view modal function
+  const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
+  const openViewModal = (rowData: PassSlip) => {
+    setViewModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeViewModal = () => setViewModalIsOpen(false);
+
   // columns
   const columnHelper = createColumnHelper<PassSlip>();
   const columns = [
@@ -176,17 +190,9 @@ export default function Index() {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openEditActionModal(rowData)}
+          onClick={() => openViewModal(rowData)}
         >
-          <i className="bx bx-edit-alt"></i>
-        </button>
-
-        <button
-          type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openAddEmpActionModal(rowData)}
-        >
-          <i className="bx bxs-user-plus"></i>
+          <i className="bx bx-show"></i>
         </button>
 
         <button
@@ -216,6 +222,14 @@ export default function Index() {
           ]}
         />
 
+        {/* view modal */}
+        <ViewPassSlipModal
+          modalState={viewModalIsOpen}
+          setModalState={setViewModalIsOpen}
+          closeModalAction={closeViewModal}
+          rowData={currentRowData}
+        />
+
         <Can I="access" this="Pass_slips">
           <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
             <Card>
@@ -225,6 +239,7 @@ export default function Index() {
                   columns={columns}
                   columnVisibility={columnVisibility}
                   paginate
+                  showGlobalFilter
                 />
               </div>
             </Card>
