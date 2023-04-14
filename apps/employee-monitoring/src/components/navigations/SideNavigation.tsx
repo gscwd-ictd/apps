@@ -28,8 +28,15 @@ export const SideNavigation = () => {
             </div>
           </section>
 
-          <section className={isCollapsed ? 'hidden' : ''}>
+          <section
+            className={`${
+              isCollapsed ? 'hidden' : ''
+            } flex flex-col text-center select-none`}
+          >
             <span className="text-5xl font-medium text-sky-300">HRMS</span>
+            <span className="text-xs font-light text-sky-300">
+              Employee Monitoring
+            </span>
           </section>
         </div>
       </Sidebar.Header>
