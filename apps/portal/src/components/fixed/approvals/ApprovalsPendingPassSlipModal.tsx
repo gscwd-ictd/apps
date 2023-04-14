@@ -1,19 +1,18 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
+import { useState } from 'react';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  type: string;
 };
 
-export const PassSlipApprovalModal = ({
+export const ApprovalsPendingPassSlipModal = ({
   modalState,
   setModalState,
   closeModalAction,
-  type,
 }: PassSlipPendingModalProps) => {
   const { passSlip } = usePassSlipStore((state) => ({
     passSlip: state.passSlip,
@@ -21,6 +20,18 @@ export const PassSlipApprovalModal = ({
 
   const modalAction = async (e) => {
     e.preventDefault();
+  };
+
+  const [reason, setReason] = useState<string>('');
+  const [action, setAction] = useState<string>('');
+
+  const onChangeType = (action: string) => {
+    setAction(action);
+    console.log(action);
+  };
+
+  const handleReason = (e: string) => {
+    setReason(e);
   };
 
   return (
@@ -115,6 +126,37 @@ export const PassSlipApprovalModal = ({
                   disabled={true}
                 ></textarea>
               </div>
+              <div className="w-full flex gap-2 justify-start items-center pt-12">
+                <span className="text-slate-500 text-xl font-medium">
+                  Action:
+                </span>
+                <select
+                  className={`text-slate-500 w-100 h-10 rounded text-md border border-slate-200'
+                  
+              `}
+                  onChange={(e) =>
+                    onChangeType(e.target.value as unknown as string)
+                  }
+                >
+                  <option>Approve</option>
+                  <option>Disapprove</option>
+                </select>
+              </div>
+              <form id="DisapproveForm">
+                {action === 'Disapprove' ? (
+                  <textarea
+                    required={true}
+                    className={
+                      'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
+                    }
+                    placeholder="Enter Reason"
+                    rows={3}
+                    onChange={(e) =>
+                      handleReason(e.target.value as unknown as string)
+                    }
+                  ></textarea>
+                ) : null}
+              </form>
             </div>
           </div>
         </Modal.Body>
@@ -147,4 +189,4 @@ export const PassSlipApprovalModal = ({
   );
 };
 
-export default PassSlipApprovalModal;
+export default ApprovalsPendingPassSlipModal;

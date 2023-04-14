@@ -4,7 +4,10 @@ import { useApprovalStore } from '../../../../src/store/approvals.store';
 
 import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
-import { PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
+import {
+  PassSlip,
+  PassSlipApplicationForm,
+} from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
@@ -24,6 +27,8 @@ export const AllApprovalsTab = ({
     pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
+    postResponsePassSlip,
+    postResponseLeave,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -31,6 +36,9 @@ export const AllApprovalsTab = ({
     setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen,
+
+    setPassSlipIndividualDetail,
+    setLeaveId,
   } = useApprovalStore((state) => ({
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
@@ -38,6 +46,8 @@ export const AllApprovalsTab = ({
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
+    postResponsePassSlip: state.response.postResponsePassSlip,
+    postResponseLeave: state.response.postResponseLeave,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -45,69 +55,25 @@ export const AllApprovalsTab = ({
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
+    setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
+    setLeaveId: state.setLeaveId,
   }));
 
-  const modal = useApprovalStore((state) => state.modal);
-  const setModal = useApprovalStore((state) => state.setModal);
-
-  const setSelectedPassSlip = useApprovalStore(
-    (state) => state.setSelectedPassSlip
-  );
-
-  const setSelectedPassSlipId = useApprovalStore(
-    (state) => state.setSelectedPassSlipId
-  );
-
-  const setSelectedLeave = useApprovalStore((state) => state.setSelectedLeave);
-
-  const setSelectedLeaveId = useApprovalStore(
-    (state) => state.setSelectedLeaveId
-  );
-
-  const setAction = useApprovalStore((state) => state.setAction);
-
-  const onSelectPassSlip = (passslip: PassSlipApplicationForm) => {
-    setSelectedPassSlip(passslip);
+  const onSelectPassSlip = (passslip: PassSlip) => {
+    setPassSlipIndividualDetail(passslip);
     // setSelectedPassSlipId(passslip.id);
     if (tab === 1) {
       // PENDING APPROVAL PASS SLIP
-      // if (!modal.isOpen) {
-      //   setAction('Apply Action');
-      //   setModal({
-      //     ...modal,
-      //     page: 1,
-      //     isOpen: true,
-      //     title: 'Pass Slip Approval',
-      //   });
-      // }
       if (!pendingPassSlipModalIsOpen) {
         setPendingPassSlipModalIsOpen(true);
       }
     } else if (tab === 3) {
       // APPROVED PASS SLIP
-      // if (!modal.isOpen) {
-      //   setAction('View');
-      //   setModal({
-      //     ...modal,
-      //     page: 2,
-      //     isOpen: true,
-      //     title: 'Approved Pass Slip',
-      //   });
-      // }
       if (!approvedPassSlipModalIsOpen) {
         setPendingPassSlipModalIsOpen(true);
       }
     } else if (tab === 5) {
       // DISAPPROVED PASS SLIP
-      // if (!modal.isOpen) {
-      //   setAction('View');
-      //   setModal({
-      //     ...modal,
-      //     page: 2,
-      //     isOpen: true,
-      //     title: 'Disapproved Pass Slip',
-      //   });
-      // }
       if (!disapprovedPassSlipModalIsOpen) {
         setDisapprovedPassSlipModalIsOpen(true);
       }
@@ -115,40 +81,21 @@ export const AllApprovalsTab = ({
   };
 
   const onSelectLeave = (leave: EmployeeLeaveDetails) => {
-    setSelectedLeave(leave);
-    setSelectedLeaveId(leave.leaveApplicationBasicInfo.id);
-    console.log(leave);
+    setLeaveId(leave.leaveApplicationBasicInfo.id);
     if (tab === 2) {
       // PENDING APPROVAL LEAVES
-      // if (!modal.isOpen) {
-      //   setAction('Apply Action');
-      //   setModal({ ...modal, page: 3, isOpen: true, title: 'Leave Approval' });
-      // }
       if (!pendingLeaveModalIsOpen) {
         setPendingLeaveModalIsOpen(true);
       }
     } else if (tab === 4) {
       // APPROVED LEAVES
-      // if (!modal.isOpen) {
-      //   setAction('View');
-      //   setModal({ ...modal, page: 4, isOpen: true, title: 'Approved Leave' });
-      // }
       if (!approvedLeaveModalIsOpen) {
         setApprovedLeaveModalIsOpen(true);
       }
     } else if (tab === 6) {
       // DISAPPROVED LEAVES
-      if (!modal.isOpen) {
-        // setAction('View');
-        // setModal({
-        //   ...modal,
-        //   page: 4,
-        //   isOpen: true,
-        //   title: 'Disapproved Leave',
-        // });
-        if (!disapprovedLeaveModalIsOpen) {
-          setDisapprovedLeaveModalIsOpen(true);
-        }
+      if (!disapprovedLeaveModalIsOpen) {
+        setDisapprovedLeaveModalIsOpen(true);
       }
     }
   };
@@ -157,7 +104,7 @@ export const AllApprovalsTab = ({
     <>
       {passslips && passslips.length > 0 ? (
         <ul className="mt-4">
-          {passslips.map((item: PassSlipApplicationForm, index: number) => {
+          {passslips.map((item: PassSlip, index: number) => {
             return (
               <li
                 key={index}
@@ -170,13 +117,14 @@ export const AllApprovalsTab = ({
                   </h1>
                   {/* <p className="text-md text-gray-500"></p> */}
                   <p className="text-sm text-gray-500">
-                    {/* Estimated Hours: {item.estimatedHours} */}
+                    Estimated Hours: {item.estimateHours}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {/* Purpose: {item.purpose} */}
+                    Purpose: {item.purposeDestination}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    {/* Fulfilled on {dayjs(item.date).format('MMMM d, YYYY')} */}
+                    Filed on{' '}
+                    {dayjs(item.dateOfApplication).format('MMMM d, YYYY')}
                   </p>
                 </div>
               </li>
