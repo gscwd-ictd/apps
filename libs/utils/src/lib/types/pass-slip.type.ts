@@ -11,6 +11,7 @@ export type PassSlipApplicationForm = {
   employeeId: string;
   dateOfApplication: string;
   natureOfBusiness: NatureOfBusiness | null;
+  vehiclePlateNumber?: string | null;
   obTransportation: ObTransportation | null;
   estimateHours?: number | null;
   purposeDestination: string;
