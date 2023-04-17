@@ -2,15 +2,21 @@
 import { DataTableHrms } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
+import ViewPassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/ViewPassSlipModal';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
+import UseRenderObTransportation from 'apps/employee-monitoring/src/utils/functions/RenderObTransporation';
+import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
 import {
   NatureOfBusiness,
+  ObTransportation,
   PassSlipStatus,
 } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { isEmpty } from 'lodash';
+import { useState } from 'react';
 import useSWR from 'swr';
 
 const passSlips: Array<PassSlip> = [
@@ -29,21 +35,21 @@ const passSlips: Array<PassSlip> = [
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Ricardo Vicente P. Narvaiza',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.DISAPPROVED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
+    natureOfBusiness: NatureOfBusiness.HALF_DAY,
     obTransportation: null,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Allyn Joseph C. Cubero',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
@@ -57,43 +63,43 @@ const passSlips: Array<PassSlip> = [
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Eric C. Sison',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.APPROVED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
-    obTransportation: null,
+    natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
+    obTransportation: ObTransportation.OFFICE_VEHICLE,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Eric C. Sison',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.APPROVED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
+    natureOfBusiness: NatureOfBusiness.PERSONAL_BUSINESS,
     obTransportation: null,
     estimateHours: 0,
-    purposeDestination: 'undertime',
+    purposeDestination: 'undertime undertime undertime ',
     isCancelled: Boolean(0),
   },
   {
-    employeeName: 'Maritess P. Primaylon',
+    employeeName: 'Alexis G. Aponesto',
     supervisorName: 'Michael G. Gabales',
     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
     status: PassSlipStatus.CANCELLED,
     dateOfApplication: '2023-03-01',
-    natureOfBusiness: NatureOfBusiness.UNDERTIME,
-    obTransportation: null,
+    natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
+    obTransportation: ObTransportation.PRIVATE_OR_PERSONAL_VEHICLE,
     estimateHours: 0,
     purposeDestination: 'undertime',
     isCancelled: Boolean(0),
@@ -107,16 +113,22 @@ export default function Index() {
     { shouldRetryOnError: false, revalidateOnFocus: false }
   );
 
+  const [currentRowData, setCurrentRowData] = useState<PassSlip>(
+    {} as PassSlip
+  );
+
+  // view modal function
+  const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
+  const openViewModal = (rowData: PassSlip) => {
+    setViewModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeViewModal = () => setViewModalIsOpen(false);
+
   // columns
   const columnHelper = createColumnHelper<PassSlip>();
   const columns = [
     columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
-
-    columnHelper.accessor('employeeName', {
-      header: 'Employee Name',
-      enableSorting: false,
       cell: (info) => info.getValue(),
     }),
 
@@ -126,34 +138,42 @@ export default function Index() {
       cell: (info) => info.getValue(),
     }),
 
-    columnHelper.accessor('natureOfBusiness', {
-      header: 'Nature of Business',
+    columnHelper.accessor('employeeName', {
+      header: 'Employee Name',
       enableSorting: false,
       cell: (info) => info.getValue(),
     }),
 
-    columnHelper.accessor('obTransportation', {
-      header: 'Official Business',
+    columnHelper.accessor('natureOfBusiness', {
+      header: 'Nature of Business',
       enableSorting: false,
-      cell: (info) => (!isEmpty(info.getValue()) ? info.getValue() : 'N/A'),
+      cell: (info) => UseRenderNatureOfBusiness(info.getValue()),
+    }),
+
+    columnHelper.accessor('obTransportation', {
+      header: 'OB Transportation',
+      enableSorting: false,
+      cell: (info) => UseRenderObTransportation(info.getValue()),
     }),
 
     columnHelper.accessor('estimateHours', {
       header: 'Estimated Hours',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() !== 0 ? info.getValue() : '-'),
     }),
 
     columnHelper.accessor('purposeDestination', {
       header: 'Purpose/Destination',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <div className="max-w-[6rem] truncate">{info.getValue()}</div>
+      ),
     }),
 
     columnHelper.accessor('status', {
       header: 'Status',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => UseRenderPassSlipStatus(info.getValue()),
     }),
 
     columnHelper.display({
@@ -170,17 +190,9 @@ export default function Index() {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openEditActionModal(rowData)}
+          onClick={() => openViewModal(rowData)}
         >
-          <i className="bx bx-edit-alt"></i>
-        </button>
-
-        <button
-          type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openAddEmpActionModal(rowData)}
-        >
-          <i className="bx bxs-user-plus"></i>
+          <i className="bx bx-show"></i>
         </button>
 
         <button
@@ -198,7 +210,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="min-h-[100%] w-full">
+      <div className="w-full">
         <BreadCrumbs
           title="Pass Slips"
           crumbs={[
@@ -210,15 +222,24 @@ export default function Index() {
           ]}
         />
 
+        {/* view modal */}
+        <ViewPassSlipModal
+          modalState={viewModalIsOpen}
+          setModalState={setViewModalIsOpen}
+          closeModalAction={closeViewModal}
+          rowData={currentRowData}
+        />
+
         <Can I="access" this="Pass_slips">
-          <div className="sm:mx-0 md:mx-0 lg:mx-5">
+          <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
             <Card>
-              <div className="flex flex-row flex-wrap">
+              <div className="flex flex-row flex-wrap ">
                 <DataTableHrms
                   data={passSlips}
                   columns={columns}
                   columnVisibility={columnVisibility}
                   paginate
+                  showGlobalFilter
                 />
               </div>
             </Card>

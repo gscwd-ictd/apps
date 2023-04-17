@@ -35,6 +35,7 @@ export const TopNavigation = () => {
           <button
             onClick={collapseOnClick}
             disabled={isMobile}
+            hidden={isMobile}
             className="text-gray-700 bg-transparent "
           >
             <svg

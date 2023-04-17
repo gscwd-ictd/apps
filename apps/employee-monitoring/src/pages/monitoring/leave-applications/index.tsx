@@ -19,7 +19,7 @@ import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 const Index = () => {
   return (
     <></>
-    // <div className="min-h-[100%] min-w-full px-4">
+    // <div className="w-full px-4">
     //   <BreadCrumbs title="Travel Orders" />
 
     //   {/* Error Notifications */}

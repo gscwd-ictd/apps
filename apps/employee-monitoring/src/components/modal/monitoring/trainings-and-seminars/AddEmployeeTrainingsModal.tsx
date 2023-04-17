@@ -106,21 +106,6 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
     }
   };
 
-  // on change checkbox
-  const onChangeCheckBox = (info: any) => {
-    info.row.getToggleSelectedHandler();
-    if (info) {
-      // setEmployeeIdsForRemove([...employeeIdsForRemove, rowData.employeeId]);
-      // setEmployeeIdsForRemove(rowData.employeeId);
-      console.log(info);
-      // setEmployeeIdsForRemove()
-    } else {
-      //   setEmployeeIdsForRemove([
-      //     ...employeeIdsForRemove.filter((id) => id !== rowData.employeeId),
-      //   ]);
-    }
-  };
-
   const columnHelper = createColumnHelper<EmployeeAsOption>();
   const columns = [
     // columnHelper.accessor('employeeId', { cell: (info) => info.getValue() }),

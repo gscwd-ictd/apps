@@ -187,7 +187,7 @@ const Index = () => {
   }, [PostHolidayResponse, UpdateHolidayResponse, DeleteHolidayResponse]);
 
   return (
-    <div className="min-h-[100%] min-w-full px-4">
+    <div className="w-full px-4">
       <BreadCrumbs title="Holidays" />
 
       {/* Error Notifications */}

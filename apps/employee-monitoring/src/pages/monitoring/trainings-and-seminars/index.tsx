@@ -225,7 +225,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="min-h-[100%] w-full">
+      <div className="w-full">
         <BreadCrumbs
           title="Trainings & Seminars"
           crumbs={[

@@ -91,24 +91,6 @@ export default function Index({
     return (
       <>
         <div className="flex items-center justify-start">
-          <button
-            type="button"
-            className="text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700"
-            onClick={() => openEditActionModal(rowData)}
-          >
-            <div className="flex gap-1">
-              <i className="bx bxs-show"></i>
-              <span className="text-xs">View DTR</span>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          >
-            <i className="bx bxs-user-plus"></i>
-          </button>
-
           <ActionDropdown />
         </div>
       </>
@@ -137,7 +119,7 @@ export default function Index({
 
   return (
     <>
-      <div className="min-h-[100%] min-w-full">
+      <div className="w-full">
         <BreadCrumbs
           title="Daily Time Record"
           crumbs={[
