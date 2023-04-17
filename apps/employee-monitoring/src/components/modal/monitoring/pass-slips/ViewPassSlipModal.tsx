@@ -1,11 +1,8 @@
 import { AlertNotification, Modal } from '@gscwd-apps/oneui';
-import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
-import UseRenderObTransportation from 'apps/employee-monitoring/src/utils/functions/RenderObTransporation';
 import dayjs from 'dayjs';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import React, { FunctionComponent } from 'react';
-import { LabelInput } from '../../../inputs/LabelInput';
 import { LabelValue } from '../../../labels/LabelValue';
 
 type ViewPassSlipModalProps = {
@@ -25,7 +22,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="sm">
         <Modal.Header withCloseBtn>
-          <div className="flex gap-1 px-5 text-2xl font-medium text-gray-700">
+          <div className="flex gap-1 px-5 text-lg font-medium text-gray-700">
             {rowData.status === PassSlipStatus.ONGOING
               ? 'Ongoing'
               : rowData.status === PassSlipStatus.APPROVED
@@ -40,7 +37,52 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full">
-            <div className="flex flex-col w-full gap-5 px-5">
+            <div className="flex flex-col w-full gap-4 px-5">
+              {/* Date of Application */}
+
+              <div className="px-5 py-2 bg-gray-100 rounded">
+                <div className="flex items-center justify-between ">
+                  <div className="flex items-center gap-2 ">
+                    <i className="text-blue-500 bx bxs-user"></i>
+
+                    <div className="font-medium text-gray-600 text-md">
+                      {rowData.employeeName}
+                    </div>
+                  </div>
+
+                  <div className="items-center text-xs text-gray-600">
+                    Information, Communications & Technology
+                  </div>
+                </div>
+
+                <LabelValue
+                  label="Date of Application: "
+                  value={dayjs(rowData.dateOfApplication).format(
+                    'MMMM DD, YYYY'
+                  )}
+                />
+
+                <LabelValue
+                  label="Nature of Business: "
+                  value={rowData.natureOfBusiness}
+                />
+
+                <LabelValue
+                  label="Mode of Transportation: "
+                  value={rowData.obTransportation ?? 'N/A'}
+                />
+
+                <LabelValue
+                  label="Estimated Hours: "
+                  value={rowData.estimateHours}
+                />
+
+                <LabelValue
+                  label="Purpose or Destination: "
+                  value={rowData.purposeDestination}
+                />
+              </div>
+
               <AlertNotification
                 alertType={
                   rowData.status === PassSlipStatus.ONGOING
@@ -65,33 +107,6 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                     : ''
                 }
                 dismissible={false}
-              />
-
-              {/* Date of Application */}
-
-              <LabelValue
-                label="Date of Application: "
-                value={dayjs(rowData.dateOfApplication).format('MMMM DD, YYYY')}
-              />
-
-              <LabelValue
-                label="Nature of Business: "
-                value={rowData.natureOfBusiness}
-              />
-
-              <LabelValue
-                label="Mode of Transportation: "
-                value={rowData.obTransportation ?? 'N/A'}
-              />
-
-              <LabelValue
-                label="Estimated Hours: "
-                value={rowData.estimateHours}
-              />
-
-              <LabelValue
-                label="Purpose or Destination: "
-                value={rowData.purposeDestination}
               />
             </div>
           </div>

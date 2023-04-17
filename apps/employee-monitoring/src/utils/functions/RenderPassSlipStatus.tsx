@@ -1,41 +1,35 @@
 /* This function is used for rendering pass slip statuses */
 
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import BadgePill from '../../components/badges/BadgePill';
 
 function UseRenderPassSlipStatus(status: PassSlipStatus) {
-  if (status === PassSlipStatus.ONGOING) {
-    return (
-      <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs font-medium ">
-        <span className="px-2 py-[0.2rem] rounded bg-yellow-100 text-yellow-800 text-center">
-          Ongoing
-        </span>
-      </div>
-    );
-  } else if (status === PassSlipStatus.APPROVED) {
-    return (
-      <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs">
-        <span className="px-2 py-[0.2rem] rounded bg-green-400 text-white text-center">
-          Approved
-        </span>
-      </div>
-    );
-  } else if (status === PassSlipStatus.DISAPPROVED) {
-    return (
-      <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs">
-        <span className="px-2 py-[0.2rem] bg-red-400 rounded text-white text-center">
-          Disapproved
-        </span>
-      </div>
-    );
-  } else if (status === PassSlipStatus.CANCELLED) {
-    return (
-      <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs">
-        <span className="px-2 py-[0.2rem] rounded bg-gray-400 text-white text-center">
-          Cancelled
-        </span>
-      </div>
-    );
-  }
+  return (
+    <BadgePill
+      variant={
+        status === PassSlipStatus.APPROVED
+          ? 'success'
+          : status === PassSlipStatus.DISAPPROVED
+          ? 'error'
+          : status === PassSlipStatus.ONGOING
+          ? 'warning'
+          : status === PassSlipStatus.CANCELLED
+          ? 'default'
+          : null
+      }
+      label={
+        status === PassSlipStatus.APPROVED
+          ? 'Approved'
+          : status === PassSlipStatus.DISAPPROVED
+          ? 'Disapproved'
+          : status === PassSlipStatus.ONGOING
+          ? 'Ongoing'
+          : status === PassSlipStatus.CANCELLED
+          ? 'Cancelled'
+          : ''
+      }
+    />
+  );
 }
 
 export default UseRenderPassSlipStatus;
