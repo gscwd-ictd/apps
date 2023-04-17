@@ -10,6 +10,7 @@ export const ApprovalTypeSelect = () => {
   const setSelectedApprovalType = useApprovalStore(
     (state) => state.setSelectedApprovalType
   );
+  const setTab = useApprovalStore((state) => state.setTab);
 
   const selection = [
     { type: 'For Approval', code: 1 },
@@ -33,6 +34,15 @@ export const ApprovalTypeSelect = () => {
   const onChangeType = (code: number) => {
     // e.preventDefault();
     setSelectedApprovalType(code);
+    if (code === 1) {
+      setTab(1); //auto select 1st option in left panel
+    }
+    if (code === 2) {
+      setTab(3); //auto select 1st option in left panel
+    }
+    if (code === 3) {
+      setTab(5); //auto select 1st option in left panel
+    }
   };
 
   return (

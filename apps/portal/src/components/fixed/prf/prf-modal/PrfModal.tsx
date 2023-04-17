@@ -29,8 +29,9 @@ export const PrfModal: FunctionComponent = () => {
   );
 
   // query positions data from hrms api
+  //route is for fetching positions for request to the manager
   const { data } = useSWR(
-    `${url}/organizational-positions/${employee.employmentDetails.assignment.id}`,
+    `${url}/organizational-positions/${employee.employmentDetails.assignment.id}/${employee.user._id}`,
     getWithToken
   );
 

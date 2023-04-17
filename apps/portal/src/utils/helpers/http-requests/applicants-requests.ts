@@ -9,7 +9,6 @@ export const getJobOpeningDetails = async (vppId: string) => {
     );
     return data;
   } catch (error) {
-    console.log(error);
     return { error };
   }
 };

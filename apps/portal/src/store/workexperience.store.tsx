@@ -2,6 +2,38 @@ import { create } from 'zustand';
 import { WorkExperience } from '../types/workexp.type';
 
 export type WorkExpState = {
+  loading: {
+    loadingJobOpening: boolean;
+    loadingIfApplied: boolean;
+    loadingWorkExperience: boolean;
+    loadingApplyJob: boolean;
+  };
+  error: {
+    errorJobOpening: string;
+    errorIfApplied: string;
+    errorWorkExperience: string;
+    errorApplyJob: string;
+    errorCaptcha: string;
+    errorMessage: string;
+  };
+  response: {
+    responseApplyJob: string;
+  };
+
+  setloadingJobOpening: (loading: boolean) => void;
+  setloadingifApplied: (loading: boolean) => void;
+  setloadingWorkExperience: (loading: boolean) => void;
+  setloadingApplyJob: (loading: boolean) => void;
+
+  setErrorJobOpening: (error: string) => void;
+  setErrorIfApplied: (error: string) => void;
+  setErrorWorkExperience: (error: string) => void;
+  setErrorApplyJob: (error: string) => void;
+  setErrorCaptcha: (error: string) => void;
+  setErrorMessage: (error: string) => void;
+
+  setResponseApply: (response: string) => void;
+
   workExperience: Array<WorkExperience>;
   withRelevantExperience: boolean;
   setWithRelevantExperience: (withExperience: boolean) => void;
@@ -30,6 +62,24 @@ export type WorkExpState = {
 };
 
 export const useWorkExpStore = create<WorkExpState>((set) => ({
+  loading: {
+    loadingJobOpening: false,
+    loadingIfApplied: false,
+    loadingWorkExperience: false,
+    loadingApplyJob: false,
+  },
+  error: {
+    errorJobOpening: '',
+    errorIfApplied: '',
+    errorWorkExperience: '',
+    errorApplyJob: '',
+    errorCaptcha: '',
+    errorMessage: '',
+  },
+  response: {
+    responseApplyJob: '',
+  },
+
   workExperience: [] as Array<WorkExperience>,
   withRelevantExperience: false,
   resetWorkExperience: () => {
@@ -170,6 +220,116 @@ export const useWorkExpStore = create<WorkExpState>((set) => ({
         }
         return exp;
       }),
+    }));
+  },
+
+  setloadingJobOpening: (loading: boolean) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingJobOpening: loading,
+      },
+    }));
+  },
+
+  setloadingifApplied: (loading: boolean) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingIfApplied: loading,
+      },
+    }));
+  },
+
+  setloadingWorkExperience: (loading: boolean) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingWorkExperience: loading,
+      },
+    }));
+  },
+
+  setloadingApplyJob: (loading: boolean) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingApplyJob: loading,
+      },
+    }));
+  },
+
+  setErrorJobOpening: (error: string) => {
+    set((state) => ({
+      ...state,
+      error: {
+        ...state.error,
+        errorJobOpening: error,
+      },
+    }));
+  },
+
+  setErrorIfApplied: (error: string) => {
+    set((state) => ({
+      ...state,
+      error: {
+        ...state.error,
+        errorIfApplied: error,
+      },
+    }));
+  },
+
+  setErrorWorkExperience: (error: string) => {
+    set((state) => ({
+      ...state,
+      error: {
+        ...state.error,
+        errorWorkExperience: error,
+      },
+    }));
+  },
+
+  setErrorApplyJob: (error: string) => {
+    set((state) => ({
+      ...state,
+      error: {
+        ...state.error,
+        errorApplyJob: error,
+      },
+    }));
+  },
+
+  setErrorCaptcha: (error: string) => {
+    set((state) => ({
+      ...state,
+      error: {
+        ...state.error,
+        errorCaptcha: error,
+      },
+    }));
+  },
+
+  setErrorMessage: (error: string) => {
+    set((state) => ({
+      ...state,
+      error: {
+        ...state.error,
+        errorMessage: error,
+      },
+    }));
+  },
+
+  setResponseApply: (response: string) => {
+    set((state) => ({
+      ...state,
+      response: {
+        ...state.response,
+        responseApplyJob: response,
+      },
     }));
   },
 }));

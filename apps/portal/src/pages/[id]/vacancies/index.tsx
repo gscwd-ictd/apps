@@ -29,7 +29,12 @@ import {
 import { isEmpty } from 'lodash';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Button, Modal } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  Modal,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsPanel';
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
@@ -59,6 +64,40 @@ export default function Vacancies({
     (state) => state.withRelevantExperience
   );
 
+  const {
+    errorJobOpening,
+    errorIfApplied,
+    errorWorkExperience,
+    errorApplyJob,
+    errorCaptcha,
+    errorMessage,
+    responseApply,
+
+    setErrorJobOpening,
+    setErrorIfApplied,
+    setErrorWorkExperience,
+    setErrorApplyJob,
+    setErrorCaptcha,
+    setErrorMessage,
+    setResponseApply,
+  } = useWorkExpStore((state) => ({
+    errorJobOpening: state.error.errorJobOpening,
+    errorIfApplied: state.error.errorIfApplied,
+    errorWorkExperience: state.error.errorWorkExperience,
+    errorApplyJob: state.error.errorApplyJob,
+    errorCaptcha: state.error.errorCaptcha,
+    errorMessage: state.error.errorMessage,
+    responseApply: state.response.responseApplyJob,
+
+    setErrorJobOpening: state.setErrorJobOpening,
+    setErrorIfApplied: state.setErrorIfApplied,
+    setErrorWorkExperience: state.setErrorWorkExperience,
+    setErrorApplyJob: state.setErrorApplyJob,
+    setErrorCaptcha: state.setErrorCaptcha,
+    setErrorMessage: state.setErrorMessage,
+    setResponseApply: state.setResponseApply,
+  }));
+
   // set state for handling modal page
   const [modal, setModal] = useState({
     isOpen: false,
@@ -83,7 +122,8 @@ export default function Vacancies({
     if (jobOpeningDesc) {
       setJobDetails(jobOpeningDesc);
       if (jobOpeningDesc.error) {
-        toast.error(jobOpeningDesc.error + '');
+        setErrorJobOpening(jobOpeningDesc.error + '');
+        // toast.error(jobOpeningDesc.error + '');
       }
     }
 
@@ -100,7 +140,8 @@ export default function Vacancies({
     const data = await getWorkExp(employeeId);
     if (data) {
       if (data.error) {
-        toast.error(data.error + ' Error');
+        setErrorWorkExperience(data.error + ' Error');
+        // toast.error(data.error + ' Error');
       } else {
         setWorkExperience(data);
       }
@@ -137,7 +178,7 @@ export default function Vacancies({
     if (!messageContent) {
       setIsCaptchaError(true);
       setWiggleEffect(true);
-      toast.error('Failed to load message contents!');
+      setErrorMessage('Failed to load message contents!');
     } else if (
       password != captchaPassword ||
       password == '' ||
@@ -145,7 +186,7 @@ export default function Vacancies({
     ) {
       setIsCaptchaError(true);
       setWiggleEffect(true);
-      toast.error('Incorrect Captcha!');
+      setErrorCaptcha('Incorrect Captcha!');
     } else {
       completeApplication();
     }
@@ -162,11 +203,12 @@ export default function Vacancies({
     if (data && data.internalApplicant?.applicantStatus == 'For review') {
       setIsApplied(true);
       setIsCaptchaError(false);
-      toast.success('Application Successful!');
+      setResponseApply('Application Successful!');
+      // toast.success('Application Successful!');
       changeModalPage(1);
-      console.log(data);
     } else {
-      toast.error(data.error.response.data.message);
+      setErrorApplyJob(data.error.response.data.message);
+      // toast.error(data.error.response.data.message);
     }
   };
 
@@ -188,6 +230,49 @@ export default function Vacancies({
 
   return (
     <>
+      {errorApplyJob ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorApplyJob}`}
+        />
+      ) : null}
+
+      {errorIfApplied ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorIfApplied}`}
+        />
+      ) : null}
+
+      {errorWorkExperience ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorWorkExperience}`}
+        />
+      ) : null}
+
+      {errorJobOpening ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorJobOpening}`}
+        />
+      ) : null}
+
+      {errorCaptcha ? (
+        <ToastNotification toastType="error" notifMessage={`${errorCaptcha}`} />
+      ) : null}
+
+      {errorMessage ? (
+        <ToastNotification toastType="error" notifMessage={`${errorMessage}`} />
+      ) : null}
+
+      {responseApply ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage={`${responseApply}`}
+        />
+      ) : null}
+
       {data && (
         <div>
           <Head>
@@ -218,6 +303,14 @@ export default function Vacancies({
             </Modal.Header>
 
             <Modal.Body>
+              {isApplied || hasApplied ? (
+                <AlertNotification
+                  alertType="info"
+                  notifMessage="You have applied for this position."
+                  dismissible={false}
+                />
+              ) : null}
+
               <VacancyModalController
                 page={modal.page}
                 dataJobOpening={jobDetails}
@@ -229,7 +322,7 @@ export default function Vacancies({
               <div className="flex flex-col w-full">
                 {modal.page === 1 ? (
                   <div className="flex flex-col items-end w-full">
-                    <div
+                    {/* <div
                       className={`${
                         isApplied || hasApplied
                           ? 'bg-green-500 p-2 text-white rounded w-full text-center'
@@ -237,7 +330,7 @@ export default function Vacancies({
                       }`}
                     >
                       <label>You have applied for this position.</label>
-                    </div>
+                    </div> */}
                     <Button
                       className={`${
                         isApplied || hasApplied ? 'hidden' : 'h-10'
@@ -249,7 +342,7 @@ export default function Vacancies({
                   </div>
                 ) : modal.page === 2 ? (
                   <div className="flex items-center justify-between w-full h-10">
-                    <div
+                    {/* <div
                       className={`${
                         isApplied || hasApplied
                           ? 'bg-green-500 p-2 text-white rounded w-full text-center'
@@ -257,7 +350,7 @@ export default function Vacancies({
                       }`}
                     >
                       <label>You have applied for this position.</label>
-                    </div>
+                    </div> */}
 
                     <div
                       className={`${
@@ -430,7 +523,7 @@ export default function Vacancies({
 
           <SideNav />
           <MainContainer>
-            <ToastContainer
+            {/* <ToastContainer
               className={'uppercase text-xs'}
               position="top-right"
               autoClose={3000}
@@ -442,7 +535,7 @@ export default function Vacancies({
               draggable
               pauseOnHover
               theme="light"
-            />
+            /> */}
             <div className="flex flex-row w-full h-full pb-10">
               <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
                 Job Vacancies
