@@ -19,18 +19,18 @@ export const JobDetailsPanel = (props: {
           <label className="font-bold">Position Title: </label>
           {props.data.jobDescription.positionTitle}
         </div>
-        <div className="pr-2">
+        {/* <div className="pr-2">
           <label className="font-bold">Office: </label>
           {props.data.jobDescription.assignedTo.office}
-        </div>
+        </div> */}
         <div className="pr-2">
           <label className="font-bold">Department: </label>
           {props.data.jobDescription.assignedTo.department}
         </div>
-        <div className="pr-2">
+        {/* <div className="pr-2">
           <label className="font-bold">Division: </label>
           {props.data.jobDescription.assignedTo.division}
-        </div>
+        </div> */}
         <div className="pr-2">
           <label className="font-bold">Report To: </label>
           {props.data.jobDescription.reportsTo}
@@ -43,12 +43,12 @@ export const JobDetailsPanel = (props: {
           <label className="font-bold">Nature of Appointment: </label>
           {props.data.jobDescription.natureOfAppointment}
         </div>
-        <div className="pr-2">
+        {/* <div className="pr-2">
           <label className="font-bold">
             Description of the Office/Department/Division:{' '}
           </label>
           {props.data.jobDescription.summary}
-        </div>
+        </div> */}
         <div className="pr-2">
           <label className="font-bold">Description of the Position: </label>
           {props.data.jobDescription.description}

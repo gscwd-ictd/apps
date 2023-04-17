@@ -280,7 +280,7 @@ export default function Vacancies({
           </Head>
 
           <Modal
-            size={'xl'}
+            size={'lg'}
             open={modal.isOpen}
             setOpen={() => setModal({ ...modal })}
           >
