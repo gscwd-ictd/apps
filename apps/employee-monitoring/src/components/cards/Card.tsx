@@ -15,7 +15,7 @@ export const Card: FunctionComponent<CardProps> = ({
 }) => {
   return (
     <div
-      className={`flex w-full h-full ${bgColor} ${className} overflow-x-hidden `}
+      className={`flex w-full h-full ${bgColor} ${className} overflow-hidden `}
     >
       <section className="w-full mx-5 my-3 ">
         <div className="w-full pb-5 font-medium text-left text-gray-700">
