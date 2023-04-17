@@ -40,7 +40,7 @@ export const PassSlipCompletedModal = ({
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {passSlip.status === 'approved' ? (
+              {passSlip.status === 'Approved' ? (
                 <AlertNotification
                   alertType="info"
                   notifMessage="Approved"
@@ -48,7 +48,7 @@ export const PassSlipCompletedModal = ({
                 />
               ) : null}
 
-              {passSlip.status === 'disapproved' ? (
+              {passSlip.status === 'Disapproved' ? (
                 <AlertNotification
                   alertType="info"
                   notifMessage="Disapproved"
