@@ -26,7 +26,7 @@ export const AllApplicantsList = () => {
   const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/${vppId}/all`;
 
   // use swr
-  const { data } = useSWR([applicantGetUrl, random], fetchWithSession);
+  const { data } = useSWR(applicantGetUrl, fetchWithSession);
 
   // on select
   const onSelect = (sequenceNo: number) => {

@@ -10,7 +10,7 @@ export const JobDetailsPanel = (props: {
 }): JSX.Element => {
   return (
     <>
-      <div className="bg-slate-100 py-4 px-4 m-0 rounded-xl text-gray-800">
+      <div className="bg-slate-100 flex flex-col gap-2 py-4 px-4 m-0 rounded-xl text-gray-800">
         <div className="pr-2 ">
           <label className="font-bold">Item Number: </label>
           {props.data.jobDescription.itemNumber}
@@ -41,7 +41,10 @@ export const JobDetailsPanel = (props: {
         </div>
         <div className="pr-2">
           <label className="font-bold">Nature of Appointment: </label>
-          {props.data.jobDescription.natureOfAppointment}
+          {props.data.jobDescription.natureOfAppointment
+            .charAt(0)
+            .toUpperCase() +
+            props.data.jobDescription.natureOfAppointment.slice(1)}
         </div>
         {/* <div className="pr-2">
           <label className="font-bold">
@@ -49,10 +52,10 @@ export const JobDetailsPanel = (props: {
           </label>
           {props.data.jobDescription.summary}
         </div> */}
-        <div className="pr-2">
+        {/* <div className="pr-2">
           <label className="font-bold">Description of the Position: </label>
           {props.data.jobDescription.description}
-        </div>
+        </div> */}
         <div>
           <label className="font-bold">Deadline: </label>
           {props.details.postingDeadline &&

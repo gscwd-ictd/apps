@@ -27,8 +27,6 @@ import {
   withSession,
 } from '../../../utils/helpers/session';
 import { isEmpty } from 'lodash';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import {
   AlertNotification,
   Button,
@@ -163,6 +161,13 @@ export default function Vacancies({
       resetExperience();
     }
     if (e == 2) {
+      setResponseApply(null);
+      setErrorJobOpening(null);
+      setErrorWorkExperience(null);
+      setErrorApplyJob(null);
+      setErrorCaptcha(null);
+      setErrorMessage(null);
+      setPassword('');
       handleWorkExperience(employeeId);
       setPwdArray([]);
     }
@@ -171,25 +176,40 @@ export default function Vacancies({
   // cancel action for modal
   const modalCancel = async () => {
     setModal({ ...modal, isOpen: false });
+    setResponseApply(null);
+    setErrorJobOpening(null);
+    setErrorWorkExperience(null);
+    setErrorApplyJob(null);
+    setErrorCaptcha(null);
+    setErrorMessage(null);
+    setPassword('');
   };
 
   // set modal main modal action (confirm)
   const modalAction = async () => {
-    if (!messageContent) {
-      setIsCaptchaError(true);
-      setWiggleEffect(true);
-      setErrorMessage('Failed to load message contents!');
-    } else if (
-      password != captchaPassword ||
-      password == '' ||
-      captchaPassword == ''
-    ) {
-      setIsCaptchaError(true);
-      setWiggleEffect(true);
-      setErrorCaptcha('Incorrect Captcha!');
-    } else {
-      completeApplication();
-    }
+    setResponseApply(null);
+    setErrorJobOpening(null);
+    setErrorWorkExperience(null);
+    setErrorApplyJob(null);
+    setErrorCaptcha(null);
+    setErrorMessage(null);
+    setTimeout(() => {
+      if (!messageContent) {
+        setIsCaptchaError(true);
+        setWiggleEffect(true);
+        setErrorMessage('Failed to load message contents!');
+      } else if (
+        password != captchaPassword ||
+        password == '' ||
+        captchaPassword == ''
+      ) {
+        setIsCaptchaError(true);
+        setWiggleEffect(true);
+        setErrorCaptcha('Incorrect Captcha!');
+      } else {
+        completeApplication();
+      }
+    }, 100);
   };
 
   // complete appilcation
@@ -204,16 +224,15 @@ export default function Vacancies({
       setIsApplied(true);
       setIsCaptchaError(false);
       setResponseApply('Application Successful!');
-      // toast.success('Application Successful!');
       changeModalPage(1);
     } else {
       setErrorApplyJob(data.error.response.data.message);
-      // toast.error(data.error.response.data.message);
     }
   };
 
   // generate captcha
   const getCaptcha = () => {
+    setPassword('');
     const data = GenerateCaptcha();
     if (data) {
       setCaptchaPassword(data.pwd);
@@ -230,12 +249,15 @@ export default function Vacancies({
 
   return (
     <>
-      {errorApplyJob ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`${errorApplyJob}`}
-        />
-      ) : null}
+      {
+        //error response from POST if tried to POST with empty supervisor/office
+        !isEmpty(errorApplyJob) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorApplyJob}`}
+          />
+        ) : null
+      }
 
       {errorIfApplied ? (
         <ToastNotification
@@ -244,29 +266,29 @@ export default function Vacancies({
         />
       ) : null}
 
-      {errorWorkExperience ? (
+      {!isEmpty(errorWorkExperience) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorWorkExperience}`}
         />
       ) : null}
 
-      {errorJobOpening ? (
+      {!isEmpty(errorJobOpening) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorJobOpening}`}
         />
       ) : null}
 
-      {errorCaptcha ? (
+      {!isEmpty(errorCaptcha) ? (
         <ToastNotification toastType="error" notifMessage={`${errorCaptcha}`} />
       ) : null}
 
-      {errorMessage ? (
+      {!isEmpty(errorMessage) ? (
         <ToastNotification toastType="error" notifMessage={`${errorMessage}`} />
       ) : null}
 
-      {responseApply ? (
+      {!isEmpty(responseApply) ? (
         <ToastNotification
           toastType="success"
           notifMessage={`${responseApply}`}
@@ -280,7 +302,7 @@ export default function Vacancies({
           </Head>
 
           <Modal
-            size={'lg'}
+            size={'xl'}
             open={modal.isOpen}
             setOpen={() => setModal({ ...modal })}
           >
@@ -306,7 +328,7 @@ export default function Vacancies({
               {isApplied || hasApplied ? (
                 <AlertNotification
                   alertType="info"
-                  notifMessage="You have applied for this position."
+                  notifMessage="You have already applied for this position."
                   dismissible={false}
                 />
               ) : null}
@@ -414,7 +436,7 @@ export default function Vacancies({
                         </div>
                         <input
                           type="text"
-                          defaultValue=""
+                          value={password}
                           placeholder="Enter Captcha"
                           className={`${
                             wiggleEffect && 'animate-shake border-red-600'
@@ -523,19 +545,6 @@ export default function Vacancies({
 
           <SideNav />
           <MainContainer>
-            {/* <ToastContainer
-              className={'uppercase text-xs'}
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            /> */}
             <div className="flex flex-row w-full h-full pb-10">
               <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
                 Job Vacancies
@@ -558,7 +567,7 @@ export default function Vacancies({
                   })
                 ) : (
                   <div className="flex flex-col items-center justify-center w-full h-full">
-                    <label className="w-full text-4xl text-center opacity-50 ">
+                    <label className="w-full text-4xl text-center text-gray-400 ">
                       NO VACANCIES
                     </label>
                   </div>
