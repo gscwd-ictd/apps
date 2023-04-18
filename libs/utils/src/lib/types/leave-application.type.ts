@@ -98,7 +98,7 @@ export type CalendarDate = {
 export type LeaveId = Pick<EmployeeLeave, 'id'>;
 
 // Single row type for collated employee leaves
-export type LeaveRow = {
+export type MonitoringLeave = {
   employeeId: string;
   fullName: string;
 } & EmployeeLeave;
