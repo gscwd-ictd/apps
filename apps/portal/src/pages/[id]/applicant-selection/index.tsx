@@ -1,4 +1,4 @@
-import { Alert, Button, Modal } from '@gscwd-apps/oneui';
+import { Alert, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import {
   GetServerSideProps,
@@ -27,10 +27,65 @@ import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Applicant } from '../../../types/applicant.type';
+import { employeeDummy } from '../../../../src/types/employee.type';
+import { isEmpty } from 'lodash';
+import useSWR from 'swr';
+import fetcherHRIS from '../../../../src/utils/helpers/fetchers/FetcherHRIS';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 
 export default function AppPosAppointment({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const {
+    loadingPublicationList,
+    loadingFulfilledPublicationList,
+    loadingPendingPublicationList,
+    loadingResponse,
+    errorPublicationList,
+    errorFulfilledPublicationList,
+    errorPendingPublicationList,
+    errorResponse,
+    patchResponseApply,
+
+    getPendingPublicationList,
+    getPendingPublicationListSuccess,
+    getPendingPublicationListFail,
+
+    getFulfilledPublicationList,
+    getFulfilledPublicationListSuccess,
+    getFulfilledPublicationListFail,
+
+    patchPublication,
+    patchPublicationSuccess,
+    patchPublicationFail,
+  } = useAppSelectionStore((state) => ({
+    loadingPublicationList: state.loading.loadingPublicationList,
+    loadingFulfilledPublicationList:
+      state.loading.loadingFulfilledPublicationList,
+    loadingPendingPublicationList: state.loading.loadingPendingPublicationList,
+    loadingResponse: state.loading.loadingResponse,
+
+    errorPublicationList: state.errors.errorPublicationList,
+    errorFulfilledPublicationList: state.errors.errorFulfilledPublicationList,
+    errorPendingPublicationList: state.errors.errorPendingPublicationList,
+    errorResponse: state.errors.errorResponse,
+
+    patchResponseApply: state.response.patchResponseApply,
+
+    getPendingPublicationList: state.getPendingPublicationList,
+    getPendingPublicationListSuccess: state.getPendingPublicationListSuccess,
+    getPendingPublicationListFail: state.getPendingPublicationListFail,
+
+    getFulfilledPublicationList: state.getFulfilledPublicationList,
+    getFulfilledPublicationListSuccess:
+      state.getFulfilledPublicationListSuccess,
+    getFulfilledPublicationListFail: state.getFulfilledPublicationListFail,
+
+    patchPublication: state.patchPublication,
+    patchPublicationSuccess: state.patchPublicationSuccess,
+    patchPublicationFail: state.patchPublicationFail,
+  }));
+
   // get state for the modal
   const modal = useAppSelectionStore((state) => state.modal);
 
@@ -116,6 +171,7 @@ export default function AppPosAppointment({
 
   // confirm modal action
   const alertAction = async () => {
+    let data;
     if (alert.page === 1) {
       const applicantIds = await getArrayOfIdsFromSelectedApplicants(
         selectedApplicants
@@ -127,13 +183,25 @@ export default function AppPosAppointment({
         `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/${selectedPublication.vppId}`, //* Changed
         postingApplicantIds
       );
-      console.log(result);
-      error && console.log(error);
+      console.log('patched start');
+      patchPublication();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      data = result;
+      console.log(result, 'result');
+      error && console.log(error, 'error');
 
       if (!error) {
+        console.log('patched successfully');
+        console.log(data, 'patched data');
+        patchPublicationSuccess(data);
+        setAlert({ ...alert, page: 2 });
+      } else {
+        patchPublicationFail(data);
+        console.log(data, 'patch error message');
         setAlert({ ...alert, page: 2 });
       }
     } else if (alert.page === 2) {
+      console.log('closed alert modal');
       setIsLoading(true);
       setModal({ ...modal, isOpen: false, page: 1 });
       setAlert({ ...alert, isOpen: false, page: 1 });
@@ -153,8 +221,139 @@ export default function AppPosAppointment({
     }
   }, [isLoading]);
 
+  const pendingUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/publications/pending`;
+  const fulfilledUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/publications/selected`;
+
+  //PENDING SELECTION
+  const {
+    data: swrPendingPublications,
+    isLoading: swrPendingPublicationIsLoading,
+    error: swrPendingPublicationError,
+    mutate: mutatePendingPublications,
+  } = useSWR(pendingUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  //FULFILLED SELECTION
+  const {
+    data: swrFulfilledPublications,
+    isLoading: swrFulfilledPublicationIsLoading,
+    error: swrFulfilledPublicationError,
+    mutate: mutateFulfilledPublications,
+  } = useSWR(fulfilledUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  //PENDING SELECTION
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPendingPublicationIsLoading) {
+      getPendingPublicationList(swrPendingPublicationIsLoading);
+    }
+  }, [swrPendingPublicationIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPendingPublications)) {
+      console.log(
+        swrPendingPublications,
+        'pending',
+        swrPendingPublicationIsLoading,
+        'loading'
+      );
+      getPendingPublicationListSuccess(
+        swrPendingPublicationIsLoading,
+        swrPendingPublications
+      );
+    }
+
+    if (!isEmpty(swrPendingPublicationError)) {
+      getPendingPublicationListFail(
+        swrPendingPublicationIsLoading,
+        swrPendingPublicationError.message
+      );
+    }
+  }, [swrPendingPublications, swrPendingPublicationError]);
+
+  //FULFILLED SELECTION
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrFulfilledPublicationIsLoading) {
+      getFulfilledPublicationList(swrFulfilledPublicationIsLoading);
+    }
+  }, [swrFulfilledPublicationIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrFulfilledPublications)) {
+      console.log(
+        swrFulfilledPublications,
+        'fulfilled',
+        swrFulfilledPublicationIsLoading,
+        'loading'
+      );
+      getFulfilledPublicationListSuccess(
+        swrFulfilledPublicationIsLoading,
+        swrFulfilledPublications
+      );
+    }
+
+    if (!isEmpty(swrFulfilledPublicationError)) {
+      getFulfilledPublicationListFail(
+        swrFulfilledPublicationIsLoading,
+        swrFulfilledPublicationError.message
+      );
+    }
+  }, [swrFulfilledPublications, swrFulfilledPublicationError]);
+
+  //mutate publications when patchResponseApply is updated
+  useEffect(() => {
+    if (!isEmpty(patchResponseApply)) {
+      console.log('mag mutate dapat');
+      mutatePendingPublications();
+      mutateFulfilledPublications();
+    }
+  }, [patchResponseApply]);
+
   return (
     <>
+      {!isEmpty(patchResponseApply) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage={`Selection Complete!`}
+        />
+      ) : null}
+
+      {!isEmpty(errorResponse) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={` ${errorResponse}.`}
+        />
+      ) : null}
+
+      {!isEmpty(errorPublicationList) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`Search Publication: ${errorPublicationList}.`}
+        />
+      ) : null}
+
+      {!isEmpty(errorFulfilledPublicationList) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`For Selection Publications: ${errorFulfilledPublicationList}.`}
+        />
+      ) : null}
+
+      {!isEmpty(errorPendingPublicationList) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`Fulfilled Publications: ${errorPendingPublicationList}.`}
+        />
+      ) : null}
+
       <Head>
         <title>Appointing Authority Selection</title>
       </Head>
@@ -253,7 +452,7 @@ export default function AppPosAppointment({
             </Button>
           </ContentHeader>
 
-          {isLoading ? (
+          {loadingPendingPublicationList && loadingFulfilledPublicationList ? (
             <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
               <SpinnerDotted
                 speed={70}
@@ -287,9 +486,17 @@ export default function AppPosAppointment({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
-    return { props: { employeeDetails } };
-  }
-);
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
+
+  return { props: { employeeDetails } };
+};
+
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
+//     return { props: { employeeDetails } };
+//   }
+// );

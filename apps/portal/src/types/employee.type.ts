@@ -90,6 +90,6 @@ export const employeeDummy: EmployeeDetails = {
       positionId: '929448ca-f048-11ec-8d31-c4bde5a04065',
       positionTitle: 'Senior Engineer A',
     },
-    userRole: 'division_manager',
+    userRole: 'general_manager',
   },
 };

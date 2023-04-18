@@ -115,20 +115,6 @@ export default function Approvals({
   // set state for employee store
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
-  // open the modal
-  const openModal = () => {
-    if (!modal.isOpen) {
-      setAction('Apply Action');
-      setModal({ ...modal, page: 1, isOpen: true });
-    }
-  };
-
-  // cancel action for modal
-  const modalCancel = async () => {
-    setModal({ ...modal, isOpen: false });
-    setIsLoading(true);
-  };
-
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
