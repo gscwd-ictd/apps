@@ -1,23 +1,32 @@
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../store/leave.store';
-import { HiX } from 'react-icons/hi';
-import { isEmpty } from 'lodash';
-import { useEffect } from 'react';
-import { SpinnerDotted } from 'spinners-react';
-import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { HiMail, HiX } from 'react-icons/hi';
+import { withSession } from '../../../utils/helpers/session';
+import { useApprovalStore } from '../../../store/approvals.store';
+import { Modal } from 'libs/oneui/src/components/Modal';
+import { Button } from 'libs/oneui/src/components/Button';
+import { isEmpty } from 'lodash';
+import { SpinnerDotted } from 'spinners-react';
+import { AlertNotification } from '@gscwd-apps/oneui';
+import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 
-type LeavePendingModalProps = {
+type ApprovalPendingLeaveModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-export const LeavePendingModal = ({
+export const ApprovalPendingLeaveModal = ({
   modalState,
   setModalState,
   closeModalAction,
-}: LeavePendingModalProps) => {
+}: ApprovalPendingLeaveModalProps) => {
   const {
     leaveIndividualDetail,
     leaveId,
@@ -29,7 +38,7 @@ export const LeavePendingModal = ({
     getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail,
-  } = useLeaveStore((state) => ({
+  } = useApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
     loadingLeaveDetails: state.loading.loadingIndividualLeave,
@@ -42,12 +51,22 @@ export const LeavePendingModal = ({
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
   }));
 
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const [reason, setReason] = useState<string>('');
+  const [action, setAction] = useState<string>('');
+
+  const onChangeType = (action: string) => {
+    setAction(action);
+    console.log(action);
+  };
+
+  const handleReason = (e: string) => {
+    setReason(e);
+  };
 
   const getLeaveDetail = async (leaveId: string) => {
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${leaveId}`
+        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${leaveId}`
       );
 
       if (!isEmpty(data)) {
@@ -65,7 +84,7 @@ export const LeavePendingModal = ({
     }
   }, [pendingLeaveModalIsOpen, leaveId]);
 
-  // for cancel pass slip button
+  //submit
   const modalAction = async (e) => {
     e.preventDefault();
   };
@@ -396,6 +415,37 @@ export const LeavePendingModal = ({
                   </div>
                 </div>
               </div>
+              <div className="w-full flex gap-2 justify-start items-center pt-12">
+                <span className="text-slate-500 text-xl font-medium">
+                  Action:
+                </span>
+                <select
+                  className={`text-slate-500 w-100 h-10 rounded text-md border border-slate-200'
+                  
+              `}
+                  onChange={(e) =>
+                    onChangeType(e.target.value as unknown as string)
+                  }
+                >
+                  <option>Approve</option>
+                  <option>Disapprove</option>
+                </select>
+              </div>
+              <form id="DisapproveForm">
+                {action === 'Disapprove' ? (
+                  <textarea
+                    required={true}
+                    className={
+                      'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
+                    }
+                    placeholder="Enter Reason"
+                    rows={3}
+                    onChange={(e) =>
+                      handleReason(e.target.value as unknown as string)
+                    }
+                  ></textarea>
+                ) : null}
+              </form>
             </div>
           )}
         </Modal.Body>
@@ -403,13 +453,14 @@ export const LeavePendingModal = ({
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
               <Button
+                form={'DisapproveForm'}
                 variant={'primary'}
                 size={'md'}
                 loading={false}
                 onClick={(e) => modalAction(e)}
                 type="submit"
               >
-                Cancel Leave
+                Submit
               </Button>
             </div>
           </div>
@@ -418,5 +469,3 @@ export const LeavePendingModal = ({
     </>
   );
 };
-
-export default LeavePendingModal;

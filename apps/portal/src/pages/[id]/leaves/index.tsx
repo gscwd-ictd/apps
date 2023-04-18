@@ -87,17 +87,17 @@ export default function Leaves({
     }
   };
 
-  // cancel action for Pass Slip Application Modal
+  // cancel action for Leave Application Modal
   const closeApplyLeaveModal = async () => {
     setApplyLeaveModalIsOpen(false);
   };
 
-  // cancel action for Pass Slip Pending Modal
+  // cancel action for Leave Pending Modal
   const closePendingLeaveModal = async () => {
     setPendingLeaveModalIsOpen(false);
   };
 
-  // cancel action for Pass Slip Completed Modal
+  // cancel action for Leave Completed Modal
   const closeCompletedLeaveModal = async () => {
     setCompletedLeaveModalIsOpen(false);
   };
@@ -292,18 +292,18 @@ export default function Leaves({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
 
-//   return { props: { employeeDetails } };
-// };
+  return { props: { employeeDetails } };
+};
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+//     return { props: { employeeDetails } };
+//   }
+// );

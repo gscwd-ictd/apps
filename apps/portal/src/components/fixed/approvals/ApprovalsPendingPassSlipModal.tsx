@@ -1,25 +1,38 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 
-type PassSlipCompletedModalProps = {
+type PassSlipPendingModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-export const PassSlipCompletedModal = ({
+export const ApprovalsPendingPassSlipModal = ({
   modalState,
   setModalState,
   closeModalAction,
-}: PassSlipCompletedModalProps) => {
+}: PassSlipPendingModalProps) => {
   const { passSlip } = usePassSlipStore((state) => ({
     passSlip: state.passSlip,
   }));
 
-  const router = useRouter();
+  const modalAction = async (e) => {
+    e.preventDefault();
+  };
+
+  const [reason, setReason] = useState<string>('');
+  const [action, setAction] = useState<string>('');
+
+  const onChangeType = (action: string) => {
+    setAction(action);
+    console.log(action);
+  };
+
+  const handleReason = (e: string) => {
+    setReason(e);
+  };
 
   return (
     <>
@@ -27,7 +40,7 @@ export const PassSlipCompletedModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Completed Pass Slip</span>
+              <span>Ongoing Pass Slip</span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}
@@ -40,21 +53,11 @@ export const PassSlipCompletedModal = ({
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {passSlip.status === 'Approved' ? (
-                <AlertNotification
-                  alertType="info"
-                  notifMessage="Approved"
-                  dismissible={false}
-                />
-              ) : null}
-
-              {passSlip.status === 'Disapproved' ? (
-                <AlertNotification
-                  alertType="info"
-                  notifMessage="Disapproved"
-                  dismissible={false}
-                />
-              ) : null}
+              <AlertNotification
+                alertType="warning"
+                notifMessage="Awaiting Supervisor Approval"
+                dismissible={false}
+              />
 
               <div className="flex gap-2 justify-between items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
@@ -94,10 +97,8 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
               ) : null}
-              <div
-                className={` flex flex-col gap-2
-            `}
-              >
+
+              <div className={` flex flex-col gap-2`}>
                 <div className="flex gap-2 justify-between items-center">
                   <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                     Estimated Hours:
@@ -125,20 +126,61 @@ export const PassSlipCompletedModal = ({
                   disabled={true}
                 ></textarea>
               </div>
+              <div className="w-full flex gap-2 justify-start items-center pt-12">
+                <span className="text-slate-500 text-xl font-medium">
+                  Action:
+                </span>
+                <select
+                  className={`text-slate-500 w-100 h-10 rounded text-md border border-slate-200'
+                  
+              `}
+                  onChange={(e) =>
+                    onChangeType(e.target.value as unknown as string)
+                  }
+                >
+                  <option>Approve</option>
+                  <option>Disapprove</option>
+                </select>
+              </div>
+              <form id="DisapproveForm">
+                {action === 'Disapprove' ? (
+                  <textarea
+                    required={true}
+                    className={
+                      'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
+                    }
+                    placeholder="Enter Reason"
+                    rows={3}
+                    onChange={(e) =>
+                      handleReason(e.target.value as unknown as string)
+                    }
+                  ></textarea>
+                ) : null}
+              </form>
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Link
-                href={`/${router.query.id}/pass-slip/${passSlip.id}`}
-                target={'_blank'}
+              <Button
+                variant={'warning'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => modalAction(e)}
+                type="submit"
               >
-                <Button variant={'primary'} size={'md'} loading={false}>
-                  Print PDF
-                </Button>
-              </Link>
+                Disapprove
+              </Button>
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => modalAction(e)}
+                type="submit"
+              >
+                Approve
+              </Button>
             </div>
           </div>
         </Modal.Footer>
@@ -147,4 +189,4 @@ export const PassSlipCompletedModal = ({
   );
 };
 
-export default PassSlipCompletedModal;
+export default ApprovalsPendingPassSlipModal;

@@ -9,11 +9,6 @@ import {
 } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import {
-  CalendarDate,
-  LeaveContents,
-  LeaveType,
-} from '../../../../src/types/leave.type';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
@@ -21,7 +16,11 @@ import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import Calendar from './LeaveCalendar';
-import dayjs from 'dayjs';
+import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
+import {
+  CalendarDate,
+  LeaveApplicationForm,
+} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -226,7 +225,7 @@ export const LeaveApplicationModal = ({
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } =
-    useForm<LeaveContents>({
+    useForm<LeaveApplicationForm>({
       mode: 'onChange',
       defaultValues: {
         // employeeId: employeeDetails.employmentDetails.userId,
@@ -246,7 +245,7 @@ export const LeaveApplicationModal = ({
 
   const handleTypeOfLeave = (e: string) => {
     setLeaveObject(e);
-    const leave = JSON.parse(e) as LeaveType;
+    const leave = JSON.parse(e) as LeaveBenefitOptions;
     setValue('typeOfLeaveDetails', leave);
     setLeaveDateFrom(null);
     setLeaveDateTo(null);
@@ -291,7 +290,9 @@ export const LeaveApplicationModal = ({
     setValue('employeeId', employeeDetails.employmentDetails.userId);
   }, [leaveObject]);
 
-  const onSubmit: SubmitHandler<LeaveContents> = (data: LeaveContents) => {
+  const onSubmit: SubmitHandler<LeaveApplicationForm> = (
+    data: LeaveApplicationForm
+  ) => {
     let dataToSend;
     if (data.typeOfLeaveDetails.leaveName === 'Vacation Leave') {
       if (data.inPhilippinesOrAbroad === 'Philippines') {
@@ -384,7 +385,7 @@ export const LeaveApplicationModal = ({
     }
   };
 
-  const handlePostResult = async (data: LeaveContents) => {
+  const handlePostResult = async (data: LeaveApplicationForm) => {
     const { error, result } = await postPortal('/v1/leave-application', data);
 
     if (error) {
@@ -456,7 +457,7 @@ export const LeaveApplicationModal = ({
                         // typeOfLeave
                         swrLeaveTypes
                           ? swrLeaveTypes.map(
-                              (item: LeaveType, idx: number) => (
+                              (item: LeaveBenefitOptions, idx: number) => (
                                 <option
                                   value={`{"id":"${item.id}", "leaveName":"${item.leaveName}"}`}
                                   key={idx}

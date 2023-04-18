@@ -14,7 +14,8 @@ import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
-import { GetLeaveDetails } from '../../../../src/types/leave.type';
+
+import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 const styles = StyleSheet.create({
   page: {
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
 
 type LeavePdfProps = {
   employeeDetails: EmployeeDetails;
-  leaveDetails: GetLeaveDetails;
+  leaveDetails: EmployeeLeaveDetails;
 };
 
 export const LeavePdf = ({

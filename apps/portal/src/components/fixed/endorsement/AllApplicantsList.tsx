@@ -27,6 +27,7 @@ export const AllApplicantsList = () => {
     fetcherHRIS
   );
 
+
   // on select
   const onSelect = (sequenceNo: number) => {
     // copy the current state of applicant list
