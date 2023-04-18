@@ -121,8 +121,6 @@ export default function ApplicantEndorsement({
         `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/shortlist/${selectedPublication.vppId}`,
         postingApplicantIds
       );
-      console.log(result);
-      error && console.log(error);
 
       // opens the success page
       if (!error) {
