@@ -8,12 +8,14 @@ type PublicationLoading = {
   loadingPendingPublications: boolean;
   loadingFulfilledPublications: boolean;
   loadingPublications: boolean;
+  loadingPublication: boolean;
 };
 
 type PublicationError = {
   errorPendingPublications: string;
   errorFulfilledPublications: string;
   errorPublications: string;
+  errorPublication: string;
 };
 
 type PublicationShortList = Pick<Publication, 'vppId'> & PostingApplicantId;
@@ -102,6 +104,10 @@ export type EndorsementState = {
   getPublications: () => void;
   getPublicationsSuccess: (response: Array<Publication>) => void;
   getPublicationsFail: (error: string) => void;
+
+  updatePublication: () => void;
+  updatePublicationSuccess: (response: Array<PublicationShortList>) => void;
+  updatePublicationFail: (error: string) => void;
 };
 
 export const useAppEndStore = create<EndorsementState>((set) => ({
@@ -125,11 +131,13 @@ export const useAppEndStore = create<EndorsementState>((set) => ({
     errorFulfilledPublications: '',
     errorPendingPublications: '',
     errorPublications: '',
+    errorPublication: '',
   },
   publicationLoading: {
     loadingPendingPublications: false,
     loadingFulfilledPublications: false,
     loadingPublications: false,
+    loadingPublication: false,
   },
   publicationResponse: { updateResponse: [] },
 
@@ -293,5 +301,36 @@ export const useAppEndStore = create<EndorsementState>((set) => ({
         loadingPublications: false,
       },
       publicationError: { ...state.publicationError, errorPublications: error },
+    })),
+
+  updatePublication: () =>
+    set((state) => ({
+      ...state,
+      publicationResponse: { ...state.publicationResponse, updateResponse: [] },
+      publicationLoading: {
+        ...state.publicationLoading,
+        loadingPublication: true,
+      },
+      publicationError: { ...state.publicationError, errorPublication: '' },
+    })),
+
+  updatePublicationSuccess: (response: Array<PublicationShortList>) =>
+    set((state) => ({
+      ...state,
+      publicationResponse: { updateResponse: response },
+      publicationLoading: {
+        ...state.publicationLoading,
+        loadingPublication: false,
+      },
+    })),
+
+  updatePublicationFail: (error: string) =>
+    set((state) => ({
+      ...state,
+      publicationLoading: {
+        ...state.publicationLoading,
+        loadingPublication: false,
+      },
+      publicationError: { ...state.publicationError, errorPublication: error },
     })),
 }));

@@ -28,41 +28,15 @@ const AppEndModal: FunctionComponent = () => {
     setModal({ ...modal, page: 1, isOpen: true });
   };
 
-  // close the modal
-  const closeModal = () => {
-    setModal({ ...modal, isOpen: false });
-    // setPublicationList([]);
-    // setFilteredPublicationList([]);
-    // setIsLoading(true);
-  };
-
   // confirm action for main modal
   const modalAction = async () => {
-    if (modal.page === 2) {
-      setAlert({ ...alert, isOpen: true, page: 1 });
-      // setModal({ ...modal, page: 4 });
-      //   setIsLoading(true);
-    } else if (modal.page === 4) {
-      setDefaultValues();
-      setModal({ ...modal, isOpen: false });
-      //   setIsLoading(true);
-    }
-  };
-
-  const setDefaultValues = () => {
-    //   setAction('');
-    //   setPublicationList([]);
-    //   setFilteredPublicationList([]);
-    //   setSelectedApplicants([]);
+    if (modal.page === 2) setAlert({ ...alert, isOpen: true, page: 1 });
   };
 
   // cancel action for modal
   const modalCancel = async () => {
     if (modal.page === 1) {
       setModal({ ...modal, isOpen: false });
-      //   setPublicationList([]);
-      //   setFilteredPublicationList([]);
-      //   setIsLoading(true);
     } else if (modal.page === 2) {
       setModal({ ...modal, page: 1 });
       setSelectedApplicants([]);
