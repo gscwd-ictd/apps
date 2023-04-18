@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { HiSearch } from 'react-icons/hi';
@@ -21,67 +22,124 @@ import {
 import {
   getUserDetails,
   withCookieSession,
-  withSession,
 } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { AppEndAlertController } from '../../../components/fixed/endorsement/AppEndAlertController';
-import { Modal, Button, Alert } from '@gscwd-apps/oneui';
+import { Button, Alert } from '@gscwd-apps/oneui';
+import useSWR from 'swr';
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
+import { isEmpty } from 'lodash';
+import AppEndAlert from 'apps/portal/src/components/fixed/endorsement/alert/AppEndAlert';
+import AppEndModal from 'apps/portal/src/components/fixed/endorsement/modal/AppEndModal';
 
 export default function ApplicantEndorsement({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // get state for the modal
-  const modal = useAppEndStore((state) => state.modal);
-
-  // get loading state from store
-  const isLoading = useAppEndStore((state) => state.isLoading);
-
-  // set tab state
-  const tab = useAppEndStore((state) => state.tab);
-
-  // get the selected publication state
-  const selectedPublication = useAppEndStore(
-    (state) => state.selectedPublication
+  // swr pending
+  const {
+    data: swrPendingPublications,
+    isLoading: swrPendingIsLoading,
+    error: swrPendingError,
+  } = useSWR(
+    `applicant-endorsement/publications/${employeeDetails.employmentDetails.userId}/pending`,
+    fetcherHRIS,
+    { shouldRetryOnError: false, revalidateOnFocus: false }
   );
 
-  // get state for selected applicants
-  const selectedApplicants = useAppEndStore(
-    (state) => state.selectedApplicants
+  // swr fulfilled
+  const {
+    data: swrFulfilledPublications,
+    isLoading: swrFulfilledIsLoading,
+    error: swrFulfilledError,
+  } = useSWR(
+    `/applicant-endorsement/publications/${employeeDetails.employmentDetails.userId}/selected`,
+    fetcherHRIS,
+    { shouldRetryOnError: false, revalidateOnFocus: false }
   );
 
-  // set loading state from store
-  const setIsLoading = useAppEndStore((state) => state.setIsLoading);
+  // pending get
+  useEffect(() => {
+    if (swrPendingIsLoading) getPendingPublications();
+  }, [swrPendingIsLoading]);
 
-  // set state for the modal
-  const setModal = useAppEndStore((state) => state.setModal);
+  // fulfilled get
+  useEffect(() => {
+    if (swrFulfilledIsLoading) getFulfilledPublications();
+  }, [swrFulfilledIsLoading]);
 
-  // set the selected publication list state
-  const setPublicationList = useAppEndStore(
-    (state) => state.setPublicationList
-  );
+  // pending publications set
+  useEffect(() => {
+    if (!isEmpty(swrPendingPublications)) {
+      //! changed from pendingPublicationList
+      // setPendingPublicationList(swrPendingPublications.data);
+      getPendingPublicationsSuccess(swrPendingPublications.data);
+    }
 
-  // set the filtered publication list state
-  const setFilteredPublicationList = useAppEndStore(
-    (state) => state.setFilteredPublicationList
-  );
+    if (!isEmpty(swrPendingError)) getPendingPublicationsFail(swrPendingError);
+  }, [swrPendingPublications, swrPendingError]);
 
-  // set state for selected applicants
-  const setSelectedApplicants = useAppEndStore(
-    (state) => state.setSelectedApplicants
-  );
+  // fulfilled publications set
+  useEffect(() => {
+    if (!isEmpty(swrFulfilledPublications)) {
+      //! changed from fulfilledPublicationList
+      // setFulfilledPublicationList(swrFulfilledPublications);
+      getFulfilledPublicationsSuccess(swrFulfilledPublications.data);
+    }
+
+    if (!isEmpty(swrFulfilledError))
+      getFulfilledPublicationsFail(swrFulfilledError);
+  }, [swrFulfilledPublications, swrFulfilledError]);
+
+  // call app-end store
+  const {
+    getPendingPublications,
+    getPendingPublicationsFail,
+    getPendingPublicationsSuccess,
+    getFulfilledPublications,
+    getFulfilledPublicationsFail,
+    getFulfilledPublicationsSuccess,
+    action,
+    alert,
+    isLoading,
+    modal,
+    selectedApplicants,
+    selectedPublication,
+    setAlert,
+    setFilteredPublicationList,
+    setIsLoading,
+    setModal,
+    setPublicationList,
+    tab,
+    setAction,
+    setSelectedApplicants,
+  } = useAppEndStore((state) => ({
+    tab: state.tab,
+    alert: state.alert,
+    modal: state.modal,
+    action: state.action,
+    isLoading: state.isLoading,
+    selectedApplicants: state.selectedApplicants,
+    selectedPublication: state.selectedPublication,
+    setAction: state.setAction,
+    setSelectedApplicants: state.setSelectedApplicants,
+    getPendingPublications: state.getPendingPublications,
+    getPendingPublicationsSuccess: state.getPendingPublicationsSuccess,
+    getPendingPublicationsFail: state.getPendingPublicationsFail,
+    getFulfilledPublications: state.getFulfilledPublications,
+    getFulfilledPublicationsSuccess: state.getFulfilledPublicationsSuccess,
+    getFulfilledPublicationsFail: state.getFulfilledPublicationsFail,
+    setAlert: state.setAlert,
+    setIsLoading: state.setIsLoading,
+    setModal: state.setModal,
+    setPublicationList: state.setPublicationList,
+    setFilteredPublicationList: state.setFilteredPublicationList,
+  }));
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
     (state) => state.setEmployeeDetails
   );
-
-  // set action
-  const setAction = useAppEndStore((state) => state.setAction);
-
-  const alert = useAppEndStore((state) => state.alert);
-
-  const setAlert = useAppEndStore((state) => state.setAlert);
 
   // gets an array of strings of ids of all selected applicants
   const getArrayOfIdsFromSelectedApplicants = async (
@@ -98,81 +156,6 @@ export default function ApplicantEndorsement({
   // open the modal
   const openModal = () => {
     setModal({ ...modal, page: 1, isOpen: true });
-  };
-
-  // close the modal
-  const closeModal = () => {
-    setModal({ ...modal, isOpen: false });
-    setPublicationList([]);
-    setFilteredPublicationList([]);
-    setIsLoading(true);
-  };
-
-  // alert action button is fired
-  const alertAction = async () => {
-    if (alert.page === 1) {
-      const applicantIds = await getArrayOfIdsFromSelectedApplicants(
-        selectedApplicants
-      );
-      const postingApplicantIds = {
-        postingApplicantIds: applicantIds,
-      };
-      const { error, result } = await patchData(
-        `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/shortlist/${selectedPublication.vppId}`,
-        postingApplicantIds
-      );
-
-      // opens the success page
-      if (!error) {
-        setAlert({ ...alert, page: 2 });
-      }
-    } else if (alert.page === 2) {
-      setDefaultValues();
-      setModal({ ...modal, isOpen: false });
-      setIsLoading(true);
-      setAlert({ ...alert, isOpen: false });
-    }
-  };
-
-  // alert set open
-  const openAlert = () => {
-    setAlert({ ...alert, isOpen: true });
-  };
-
-  // confirm action for main modal
-  const modalAction = async () => {
-    if (modal.page === 2) {
-      setAlert({ ...alert, isOpen: true, page: 1 });
-      // setModal({ ...modal, page: 4 });
-      setIsLoading(true);
-    } else if (modal.page === 4) {
-      setDefaultValues();
-      setModal({ ...modal, isOpen: false });
-      setIsLoading(true);
-    }
-  };
-
-  // cancel action for modal
-  const modalCancel = async () => {
-    if (modal.page === 1) {
-      setModal({ ...modal, isOpen: false });
-      setPublicationList([]);
-      setFilteredPublicationList([]);
-      setIsLoading(true);
-    } else if (modal.page === 2) {
-      setModal({ ...modal, page: 1 });
-      setSelectedApplicants([]);
-    } else if (modal.page === 3) {
-      setModal({ ...modal, page: 1 });
-      setAction('');
-    }
-  };
-
-  const setDefaultValues = () => {
-    setAction('');
-    setPublicationList([]);
-    setFilteredPublicationList([]);
-    setSelectedApplicants([]);
   };
 
   // set the employee details on page load
@@ -199,83 +182,9 @@ export default function ApplicantEndorsement({
 
           <SideNav />
 
-          <Modal
-            open={modal.isOpen}
-            setOpen={openModal}
-            size={
-              modal.page === 1
-                ? 'lg'
-                : modal.page === 3
-                ? 'md'
-                : modal.page === 4
-                ? 'sm'
-                : 'xl'
-            }
-            steady
-          >
-            <Modal.Header>
-              <h3 className="text-xl font-semibold text-gray-700">
-                <div className="px-5">
-                  {modal.page === 1
-                    ? 'Select an endorsement'
-                    : modal.page === 3
-                    ? 'Endorsement Summary'
-                    : 'Endorsement'}
-                </div>
-              </h3>
-            </Modal.Header>
-            <Modal.Body>
-              <AppEndModalController page={modal.page} />
-            </Modal.Body>
-            <Modal.Footer>
-              <div className="flex justify-end gap-2">
-                {modal.page !== 4 ? (
-                  <div className="w-[6rem]">
-                    <Button variant="info" onClick={modalCancel}>
-                      {modal.page === 1 ? 'Close' : 'Cancel'}
-                    </Button>
-                  </div>
-                ) : null}
-                {modal.page !== 1 && modal.page !== 3 && (
-                  <div className="min-w-[6rem] max-w-auto">
-                    <Button
-                      onClick={modalAction}
-                      disabled={
-                        modal.page === 2 && selectedApplicants.length < 1
-                      }
-                    >
-                      {modal.page !== 4 ? 'Confirm' : 'Got it, Thanks!'}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </Modal.Footer>
-          </Modal>
+          <AppEndModal />
 
-          <Alert open={alert.isOpen} setOpen={openAlert}>
-            <Alert.Description>
-              <AppEndAlertController page={alert.page} />
-            </Alert.Description>
-            <Alert.Footer alignEnd>
-              <div className="flex gap-2">
-                {alert.page === 1 && (
-                  <div className="w-[5rem]">
-                    <Button
-                      variant="info"
-                      onClick={() => setAlert({ ...alert, isOpen: false })}
-                    >
-                      No
-                    </Button>
-                  </div>
-                )}
-                <div className="min-w-[5rem] max-w-auto">
-                  <Button onClick={alertAction}>
-                    {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
-                  </Button>
-                </div>
-              </div>
-            </Alert.Footer>
-          </Alert>
+          <AppEndAlert />
 
           <MainContainer>
             <div className="w-full h-full px-32">
@@ -307,9 +216,7 @@ export default function ApplicantEndorsement({
                         <AppEndTabs tab={tab} />
                       </div>
                       <div className="w-full">
-                        <AppEndTabWindow
-                          employeeId={employeeDetails.employmentDetails.userId}
-                        />
+                        <AppEndTabWindow />
                       </div>
                     </div>
                   </>
