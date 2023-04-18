@@ -255,15 +255,15 @@ export const DataTableHrms = <T extends object>({
             <div className="flex justify-between flex-1 sm:hidden">
               <button
                 className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                // onClick={() => previousPage()}
-                // disabled={!canPreviousPage}
+                onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
               >
                 {'Previous'}
               </button>
               <button
                 className="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                // onClick={() => nextPage()}
-                // disabled={!canNextPage}
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
               >
                 {'Next'}
               </button>
