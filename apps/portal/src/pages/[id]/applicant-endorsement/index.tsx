@@ -159,18 +159,7 @@ export default function ApplicantEndorsement({
   };
 
   // set the employee details on page load
-  useEffect(() => {
-    setEmployeeDetails(employeeDetails);
-    setIsLoading(true);
-  }, []);
-
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-    }
-  }, [isLoading]);
+  useEffect(() => setEmployeeDetails(employeeDetails), []);
 
   return (
     <>
@@ -198,30 +187,19 @@ export default function ApplicantEndorsement({
                   </div>
                 </Button>
               </ContentHeader>
-              {isLoading ? (
-                <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                  <SpinnerDotted
-                    speed={70}
-                    thickness={70}
-                    className="flex w-full h-full transition-all "
-                    color="slateblue"
-                    size={100}
-                  />
-                </div>
-              ) : (
-                <ContentBody>
-                  <>
-                    <div className="flex w-full">
-                      <div className="w-[58rem]">
-                        <AppEndTabs tab={tab} />
-                      </div>
-                      <div className="w-full">
-                        <AppEndTabWindow />
-                      </div>
+
+              <ContentBody>
+                <>
+                  <div className="flex w-full">
+                    <div className="w-[58rem]">
+                      <AppEndTabs tab={tab} />
                     </div>
-                  </>
-                </ContentBody>
-              )}
+                    <div className="w-full">
+                      <AppEndTabWindow />
+                    </div>
+                  </div>
+                </>
+              </ContentBody>
             </div>
           </MainContainer>
         </EmployeeProvider>

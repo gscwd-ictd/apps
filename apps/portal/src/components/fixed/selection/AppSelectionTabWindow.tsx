@@ -1,6 +1,7 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { useEffect } from 'react';
 import useSWR from 'swr';
-import { fetchWithSession } from '../../../../src/utils/hoc/fetcher';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { AllSelectionPublicationListTab } from './AllSelectionPublicationListTab';
 
@@ -11,13 +12,18 @@ type AppSelectionTabWindowProps = {
 export const AppSelectionTabWindow = ({
   positionId,
 }: AppSelectionTabWindowProps) => {
-  const pendingUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/pending`;
-  const fulfilledUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/selected`;
-  const { data: pendingPublications } = useSWR(pendingUrl, fetchWithSession);
-  const { data: fulfilledPublications } = useSWR(
-    fulfilledUrl,
-    fetchWithSession
-  );
+  const { data: swrPendingPublications, isLoading: swrPendingIsLoading } =
+    useSWR(
+      `/applicant-endorsement/appointing-authority-selection/publications/pending`,
+      fetcherHRIS,
+      { shouldRetryOnError: false, revalidateOnFocus: false }
+    );
+  const { data: swrFulfilledPublications, isLoading: swrFulfilledIsLoading } =
+    useSWR(
+      `/applicant-endorsement/appointing-authority-selection/publications/selected`,
+      fetcherHRIS,
+      { shouldRetryOnError: false, revalidateOnFocus: false }
+    );
 
   const pendingPublicationList = useAppSelectionStore(
     (state) => state.pendingPublicationList
@@ -38,28 +44,30 @@ export const AppSelectionTabWindow = ({
   const tab = useAppSelectionStore((state) => state.tab);
 
   useEffect(() => {
-    setPendingPublicationList(pendingPublications);
-  }, [pendingPublications]);
+    setPendingPublicationList(swrPendingPublications);
+  }, [swrPendingPublications]);
 
   useEffect(() => {
-    setFulfilledPublicationList(fulfilledPublications);
-  }, [fulfilledPublications]);
+    setFulfilledPublicationList(swrFulfilledPublications);
+  }, [swrFulfilledPublications]);
 
   return (
     <>
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
-        {tab === 1 && (
-          <AllSelectionPublicationListTab
-            publications={pendingPublicationList}
-            tab={tab}
-          />
-        )}
-        {tab === 2 && (
-          <AllSelectionPublicationListTab
-            publications={fulfilledPublicationList}
-            tab={tab}
-          />
-        )}
+        {tab === 1 &&
+          (swrPendingIsLoading ? null : (
+            <AllSelectionPublicationListTab
+              publications={swrPendingPublications.data}
+              tab={tab}
+            />
+          ))}
+        {tab === 2 &&
+          (swrFulfilledIsLoading ? null : (
+            <AllSelectionPublicationListTab
+              publications={swrFulfilledPublications.data}
+              tab={tab}
+            />
+          ))}
       </div>
     </>
   );

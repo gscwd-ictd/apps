@@ -1,18 +1,27 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
 import { FunctionComponent } from 'react';
 import { AppEndModalController } from '../AppEndListController';
 
 const AppEndModal: FunctionComponent = () => {
-  const { modal, alert, selectedApplicants, setModal, setAlert, setAction } =
-    useAppEndStore((state) => ({
-      modal: state.modal,
-      setModal: state.setModal,
-      alert: state.alert,
-      setAlert: state.setAlert,
-      selectedApplicants: state.selectedApplicants,
-      setAction: state.setAction,
-    }));
+  const {
+    modal,
+    alert,
+    selectedApplicants,
+    setModal,
+    setAlert,
+    setAction,
+    setSelectedApplicants,
+  } = useAppEndStore((state) => ({
+    modal: state.modal,
+    setModal: state.setModal,
+    alert: state.alert,
+    setAlert: state.setAlert,
+    selectedApplicants: state.selectedApplicants,
+    setAction: state.setAction,
+    setSelectedApplicants: state.setSelectedApplicants,
+  }));
 
   // open the modal
   const openModal = () => {
@@ -31,7 +40,7 @@ const AppEndModal: FunctionComponent = () => {
   const modalAction = async () => {
     if (modal.page === 2) {
       setAlert({ ...alert, isOpen: true, page: 1 });
-      setModal({ ...modal, page: 4 });
+      // setModal({ ...modal, page: 4 });
       //   setIsLoading(true);
     } else if (modal.page === 4) {
       setDefaultValues();
@@ -56,7 +65,7 @@ const AppEndModal: FunctionComponent = () => {
       //   setIsLoading(true);
     } else if (modal.page === 2) {
       setModal({ ...modal, page: 1 });
-      //   setSelectedApplicants([]);
+      setSelectedApplicants([]);
     } else if (modal.page === 3) {
       setModal({ ...modal, page: 1 });
       setAction('');
@@ -69,7 +78,7 @@ const AppEndModal: FunctionComponent = () => {
       setOpen={openModal}
       size={
         modal.page === 1
-          ? 'lg'
+          ? 'md'
           : modal.page === 3
           ? 'md'
           : modal.page === 4
