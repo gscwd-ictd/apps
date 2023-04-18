@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router';
-import { HiEye, HiPencil, HiPlus, HiPlusCircle } from 'react-icons/hi';
+import { HiEye, HiPlusCircle } from 'react-icons/hi';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Publication } from '../../../types/publication.type';
 import { Button } from '../../modular/common/forms/Button';
@@ -14,12 +13,10 @@ export const AllPublicationList = () => {
   const setSelectedPublicationId = useAppEndStore(
     (state) => state.setSelectedPublicationId
   );
-  const router = useRouter();
 
   const onSelect = (publication: Publication, action: string) => {
     setSelectedPublication(publication);
     setSelectedPublicationId(publication.vppId);
-    console.log(publication.vppId);
 
     if (action === 'create') {
       setModal({ ...modal, page: 2 });
@@ -39,10 +36,10 @@ export const AllPublicationList = () => {
               <li
                 key={index}
                 // onClick={() => onSelect(item)}
-                className="flex bg-inherit   items-center justify-between  border-l-transparent py-4 transition-colors ease-in-out"
+                className="flex items-center justify-between py-4 transition-colors ease-in-out bg-inherit border-l-transparent"
               >
-                <div className="flex items-center hover:bg-indigo-50 justify-between w-full py-2 px-5 ">
-                  <div className="w-full flex flex-col">
+                <div className="flex items-center justify-between w-full px-5 py-2 hover:bg-indigo-50 ">
+                  <div className="flex flex-col w-full">
                     <h1 className="font-medium text-gray-600">
                       {item.positionTitle}
                     </h1>
@@ -56,7 +53,7 @@ export const AllPublicationList = () => {
                       btnLabel="SET"
                       icon={<HiPlusCircle />}
                       className="w-28"
-                      light
+                      btnVariant="default"
                       shadow
                       iconPlacement="start"
                       onClick={() => onSelect(item, 'create')}

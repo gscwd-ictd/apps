@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Alert, Button } from '@gscwd-apps/oneui';
 import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
 import { Applicant } from 'apps/portal/src/types/applicant.type';
@@ -81,17 +82,18 @@ const AppEndAlert = () => {
       <Alert.Footer alignEnd>
         <div className="flex gap-2">
           {alert.page === 1 && (
-            <div className="w-[5rem]">
+            <div className="min-w-[5rem] max-w-auto">
               <Button
                 variant="info"
                 onClick={() => setAlert({ ...alert, isOpen: false })}
+                className="w-full"
               >
                 No
               </Button>
             </div>
           )}
           <div className="min-w-[5rem] max-w-auto">
-            <Button onClick={alertAction}>
+            <Button onClick={alertAction} className="w-full">
               {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
             </Button>
           </div>

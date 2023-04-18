@@ -10,7 +10,7 @@ export const AppEndSelectPublication = () => {
           <div className="flex justify-end px-3 mb-1 text-sm">
             <p className="text-gray-600">
               {publicationList.length > 0 &&
-                `${publicationList.length} endorsements for selection`}{' '}
+                `${publicationList.length} endorsement(s) found`}{' '}
             </p>
           </div>
           <div className="relative px-3 mt-2 mb-5">
@@ -21,7 +21,7 @@ export const AppEndSelectPublication = () => {
                 <AllPublicationList />
               ) : (
                 <>
-                  <div className="w-full text-3xl font-medium flex text-gray-600 justify-center place-items-center justify-items-center h-full">
+                  <div className="flex justify-center w-full h-full text-3xl font-medium text-gray-600 place-items-center justify-items-center">
                     NO ENDORSEMENTS FOUND
                   </div>
                 </>
