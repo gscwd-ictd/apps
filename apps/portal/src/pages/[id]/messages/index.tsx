@@ -242,7 +242,7 @@ export default function Messages({
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const { data } = await axios.get(
-      `http://192.168.137.249:4003/api/vacant-position-postings/psb/schedules/${context.query.id}/unacknowledged`
+      `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/schedules/${context.query.id}/unacknowledged`
     );
     return { props: { pendingAcknowledgements: data, id: context.query.id } };
   }

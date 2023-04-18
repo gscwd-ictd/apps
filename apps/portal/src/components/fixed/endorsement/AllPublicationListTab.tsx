@@ -26,10 +26,6 @@ export const AllPublicationListTab = ({
     (state) => state.setSelectedPublicationId
   );
 
-  const selectedPublicationId = useAppEndStore(
-    (state) => state.selectedPublicationId
-  );
-
   const setAction = useAppEndStore((state) => state.setAction);
 
   const onSelect = (publication: Publication) => {
@@ -53,13 +49,13 @@ export const AllPublicationListTab = ({
               <li
                 key={index}
                 onClick={() => onSelect(item)}
-                className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
+                className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
               >
-                <div className=" w-full py-2 px-1 ">
-                  <h1 className="font-medium text-xl text-gray-600">
+                <div className="w-full px-1 py-2 ">
+                  <h1 className="text-xl font-medium text-gray-600">
                     {item.positionTitle}
                   </h1>
-                  {/* <p className="text-md text-gray-500"></p> */}
+                  {/* <p className="text-gray-500 text-md"></p> */}
                   <p className="text-sm text-gray-500">{item.itemNumber}</p>
                   <p className="text-xs text-gray-500">
                     {item.placeOfAssignment}
