@@ -1,6 +1,8 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
+import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import useSWR from 'swr';
-import { fetchWithSession } from '../../../../src/utils/hoc/fetcher';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { AllPublicationListTab } from './AllPublicationListTab';
 
@@ -11,13 +13,16 @@ type AppEndTabWindowProps = {
 export const AppEndTabWindow = ({
   employeeId,
 }: AppEndTabWindowProps): JSX.Element => {
-  const pendingUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/publications/${employeeId}/pending`;
-  const fulfilledUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/publications/${employeeId}/selected`;
-  const { data: pendingPublications } = useSWR(pendingUrl, fetchWithSession);
+  const { data: pendingPublications } = useSWR(
+    `applicant-endorsement/publications/${employeeId}/pending`,
+    fetcherHRIS,
+    { shouldRetryOnError: false, revalidateOnFocus: false }
+  );
 
   const { data: fulfilledPublications } = useSWR(
-    fulfilledUrl,
-    fetchWithSession
+    `/applicant-endorsement/publications/${employeeId}/selected`,
+    fetcherHRIS,
+    { shouldRetryOnError: false, revalidateOnFocus: false }
   );
 
   const pendingPublicationList = useAppEndStore(
@@ -38,15 +43,17 @@ export const AppEndTabWindow = ({
 
   const tab = useAppEndStore((state) => state.tab);
 
-  useEffect(
-    () => setPendingPublicationList(pendingPublications),
-    [pendingPublications]
-  );
+  useEffect(() => {
+    if (!isEmpty(pendingPublications))
+      //! changed from pendingPublicationList
+      setPendingPublicationList(pendingPublications.data);
+  }, [pendingPublications]);
 
-  useEffect(
-    () => setFulfilledPublicationList(fulfilledPublications),
-    [fulfilledPublications]
-  );
+  useEffect(() => {
+    if (!isEmpty(fulfilledPublications))
+      //! changed from fulfilledPublicationList
+      setFulfilledPublicationList(fulfilledPublications.data);
+  }, [fulfilledPublications]);
 
   return (
     <>

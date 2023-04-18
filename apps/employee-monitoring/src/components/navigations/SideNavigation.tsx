@@ -20,7 +20,7 @@ export const SideNavigation = () => {
   return (
     <Sidebar className="relative w-full" background="bg-slate-900">
       <Sidebar.Header>
-        <div className="z-50 flex items-center justify-center w-full gap-0 py-5 text-white">
+        <div className="flex items-center justify-center w-full gap-0 py-5 text-white">
           <section className="">
             <div className="text-sky-300/40">
               <i className="text-5xl bx bxs-network-chart"></i>
@@ -28,8 +28,15 @@ export const SideNavigation = () => {
             </div>
           </section>
 
-          <section className={isCollapsed ? 'hidden' : ''}>
+          <section
+            className={`${
+              isCollapsed ? 'hidden' : ''
+            } flex flex-col text-center select-none`}
+          >
             <span className="text-5xl font-medium text-sky-300">HRMS</span>
+            <span className="text-xs font-light text-sky-300">
+              Employee Monitoring
+            </span>
           </section>
         </div>
       </Sidebar.Header>

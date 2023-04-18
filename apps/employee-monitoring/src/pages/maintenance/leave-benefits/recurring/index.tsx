@@ -191,7 +191,7 @@ export default function Index() {
   }, [PostResponse, UpdateResponse, DeleteResponse]);
 
   return (
-    <div className="min-h-[100%] w-full">
+    <div className="w-full">
       <BreadCrumbs
         title="Recurring Leave"
         crumbs={[

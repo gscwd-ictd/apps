@@ -1,17 +1,13 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { fetchWithSession } from '../../../../src/utils/hoc/fetcher';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import useSWR from 'swr';
 
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Applicant } from '../../../types/applicant.type';
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 
 export const AllApplicantsList = () => {
-  // const [applicantListIsLoaded, setApplicantListIsLoaded] = useState<boolean>(false);
-
-  // use this to assign as a parameter in useSWR
-  const random = useRef(Date.now());
-
   const vppId = useAppEndStore((state) => state.selectedPublicationId);
 
   const applicantList = useAppEndStore((state) => state.applicantList);
@@ -23,10 +19,13 @@ export const AllApplicantsList = () => {
   const setApplicantList = useAppEndStore((state) => state.setApplicantList);
 
   // initialize url to get applicant
-  const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/${vppId}/all`;
+  // const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/${vppId}/all`;
 
   // use swr
-  const { data } = useSWR([applicantGetUrl, random], fetchWithSession);
+  const { data: swrApplicants } = useSWR(
+    `/applicant-endorsement/${vppId}/all`,
+    fetcherHRIS
+  );
 
   // on select
   const onSelect = (sequenceNo: number) => {
@@ -62,15 +61,17 @@ export const AllApplicantsList = () => {
   };
 
   useEffect(() => {
-    if (data) {
-      const applicants = data.map((applicant: any, index: number) => {
-        applicant.state = false;
-        applicant.sequenceNo = index;
-        return applicant;
-      });
+    if (swrApplicants) {
+      const applicants = swrApplicants.data.map(
+        (applicant: any, index: number) => {
+          applicant.state = false;
+          applicant.sequenceNo = index;
+          return applicant;
+        }
+      );
       setApplicantList(applicants);
     }
-  }, [data]);
+  }, [swrApplicants]);
 
   return (
     <>
@@ -95,7 +96,7 @@ export const AllApplicantsList = () => {
                     applicant.state;
                   }}
                   checked={applicant.state ? true : false}
-                  className="mr-2 cursor-pointer rounded-sm border-2 border-gray-300 p-2 transition-colors checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
+                  className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
                 />
               </li>
             );
@@ -103,7 +104,7 @@ export const AllApplicantsList = () => {
         </ul>
       ) : (
         <>
-          <div className="w-full h-full flex justify-center items-center animate-pulse text-gray-500 uppercase">
+          <div className="flex items-center justify-center w-full h-full text-gray-500 uppercase animate-pulse">
             No Applicant Data
           </div>
         </>
