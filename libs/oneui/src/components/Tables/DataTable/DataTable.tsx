@@ -4,7 +4,6 @@ import { DataTableProps } from './types/data-table-props';
 import { SortableColumn } from './SortableColumn';
 import { GlobalFilter } from './GlobalFilter';
 import { ColumnFilter } from './ColumnFilter';
-import { head } from 'lodash';
 
 export const DataTable: FunctionComponent<DataTableProps> = ({
   hydrating = false,
@@ -26,7 +25,6 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
           <div key={headerGroup.id} className="flex">
             {headerGroup.headers.map((header) => (
               <div key={header.id}>
-                {/* {console.log(header.column)} */}
                 {header.column.getCanFilter() ? (
                   <div className=" w-1/4 pr-2">
                     <ColumnFilter
