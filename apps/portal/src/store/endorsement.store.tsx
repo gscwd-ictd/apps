@@ -44,7 +44,7 @@ export const PUBLICATION: Publication = {
   prfNo: '',
   prfId: '',
   withExam: 0,
-  postingStatus: '',
+  postingStatus: null,
 };
 
 export type EndorsementState = {
@@ -108,6 +108,9 @@ export type EndorsementState = {
   updatePublication: () => void;
   updatePublicationSuccess: (response: Array<PublicationShortList>) => void;
   updatePublicationFail: (error: string) => void;
+
+  searchValue: string;
+  setSearchValue: (searchValue: string) => void;
 };
 
 export const useAppEndStore = create<EndorsementState>((set) => ({
@@ -140,6 +143,8 @@ export const useAppEndStore = create<EndorsementState>((set) => ({
     loadingPublication: false,
   },
   publicationResponse: { updateResponse: [] },
+
+  searchValue: '',
 
   tab: 1,
   setAlert: (alert: AlertState) => {
@@ -333,4 +338,7 @@ export const useAppEndStore = create<EndorsementState>((set) => ({
       },
       publicationError: { ...state.publicationError, errorPublication: error },
     })),
+
+  setSearchValue: (searchValue: string) =>
+    set((state) => ({ ...state, searchValue })),
 }));

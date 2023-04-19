@@ -1,11 +1,12 @@
-import { useRouter } from 'next/router';
 import { HiEye, HiPlusCircle } from 'react-icons/hi';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Publication } from '../../../types/publication.type';
 import { Button } from '../../modular/common/forms/Button';
 
 export const AllPublicationList = () => {
-  const publicationList = useAppEndStore((state) => state.publicationList);
+  const filteredPublicationList = useAppEndStore(
+    (state) => state.filteredPublicationList
+  );
   const modal = useAppEndStore((state) => state.modal);
   const setSelectedPublication = useAppEndStore(
     (state) => state.setSelectedPublication
@@ -14,7 +15,6 @@ export const AllPublicationList = () => {
   const setSelectedPublicationId = useAppEndStore(
     (state) => state.setSelectedPublicationId
   );
-  const router = useRouter();
 
   const onSelect = (publication: Publication, action: string) => {
     setSelectedPublication(publication);
@@ -32,8 +32,8 @@ export const AllPublicationList = () => {
   return (
     <>
       <ul>
-        {publicationList &&
-          publicationList.map((item: Publication, index: number) => {
+        {filteredPublicationList &&
+          filteredPublicationList.map((item: Publication, index: number) => {
             return (
               <li
                 key={index}
