@@ -20,8 +20,6 @@ export const AppSelectionSelectPublication = () => {
             </p>
           </div>
           <div className="relative px-3 mt-2 mb-5">
-            {/* <HiOutlineSearch className="absolute mt-[0.9rem] ml-3 h-[1.25rem] w-[1.25rem] text-gray-500" />
-                        <input className="w-full py-3 pl-10 pr-12 border-gray-200 rounded" placeholder="Seach for a position title" type="text" /> */}
             <div className="overflow-y-auto">
               <AllSelectionPublicationList />
             </div>

@@ -79,9 +79,13 @@ export const DrcAlertConfirmation = () => {
   }));
 
   const { mutate } = useSWRConfig();
-
   // use employee store
   const employee = useEmployeeStore((state) => state.employeeDetails);
+
+  const availableDrcUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`;
+  const existingDrcUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`;
+  const pendingDrcUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/pending`;
+  const filledDrcUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/finished`;
 
   const onSubmitConfirm = async () => {
     closeConf();
@@ -101,32 +105,16 @@ export const DrcAlertConfirmation = () => {
         postDrcsSuccess(postDrcs.result);
 
         // mutate available drcs
-        await mutate(
-          `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
+        await mutate(availableDrcUrl, { revalidate: true });
 
         // mutate existing drcs
-        await mutate(
-          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
+        await mutate(existingDrcUrl, { revalidate: true });
 
         // mutate unfilled positions
-        await mutate(
-          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/pending`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
+        await mutate(pendingDrcUrl, { revalidate: true });
 
         // mutate filled positions
-        await mutate(
-          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/finished`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
+        await mutate(filledDrcUrl, { revalidate: true });
 
         // close
         closeConf();
@@ -156,33 +144,16 @@ export const DrcAlertConfirmation = () => {
         //asdasd
       } else {
         // mutate available drcs
-        await mutate(
-          `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
+        await mutate(availableDrcUrl, { revalidate: true });
 
         // mutate existing drcs
-        await mutate(
-          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
+        await mutate(existingDrcUrl, { revalidate: true });
 
         // mutate unfilled positions
-        await mutate(
-          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/pending`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
+        await mutate(pendingDrcUrl, { revalidate: true });
 
         // mutate filled positions
-        await mutate(
-          `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/finished`,
-          fetcherHRIS,
-          { revalidate: true }
-        );
-
+        await mutate(filledDrcUrl, { revalidate: true });
         // close
         closeConf();
 
