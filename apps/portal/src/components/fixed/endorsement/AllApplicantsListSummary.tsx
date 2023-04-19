@@ -32,15 +32,15 @@ export const AllApplicantsListSummary = () => {
   }, [swrApplicants]);
 
   return (
-    <>
-      <div className="pl-4 mt-5 text-gray-500">Applicants:</div>
-      <div className="w-full flex flex-col bg-slate-100 rounded p-4 mt-2 text-gray-500 h-[10rem] overflow-y-scroll">
+    <div className="mt-5 border-2 border-gray-200 rounded">
+      <div className="px-4 py-2 text-lg text-gray-500">Applicants</div>
+      <div className="w-full flex flex-col bg-indigo-100/50 rounded p-4 mt-2 text-gray-500 h-[10rem] overflow-y-auto">
         {applicantList.length > 0 ? (
           applicantList.map((applicant: Applicant, index: number) => {
             return (
               <div
                 key={index}
-                className="flex flex-col justify-start w-full px-4"
+                className="flex flex-col justify-start w-full px-2"
               >
                 <span className="flex w-full gap-2 font-light">
                   <div className="w-[2rem]">{index + 1}.</div>
@@ -57,6 +57,6 @@ export const AllApplicantsListSummary = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };

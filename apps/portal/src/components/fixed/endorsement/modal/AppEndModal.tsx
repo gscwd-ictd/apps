@@ -50,27 +50,28 @@ const AppEndModal: FunctionComponent = () => {
     <Modal
       open={modal.isOpen}
       setOpen={openModal}
-      size={
-        modal.page === 1
-          ? 'md'
-          : modal.page === 3
-          ? 'md'
-          : modal.page === 4
-          ? 'sm'
-          : 'xl'
-      }
+      size={modal.page === 1 ? 'lg' : modal.page === 3 ? 'lg' : 'xl'}
       steady
     >
       <Modal.Header>
-        <h3 className="text-xl font-semibold text-gray-700">
-          <div className="px-5">
-            {modal.page === 1
-              ? 'Select an endorsement'
-              : modal.page === 3
-              ? 'Endorsement Summary'
-              : 'Endorsement'}
+        <div className="flex w-full px-5 justifty-between">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-700">
+              {modal.page === 1
+                ? 'Applicant Endorsement'
+                : modal.page === 3
+                ? 'Endorsement Summary'
+                : null}
+            </h3>
+            <p>
+              {modal.page == 1
+                ? 'Select an endorsement'
+                : modal.page === 2
+                ? 'Select applicant(s)'
+                : null}
+            </p>
           </div>
-        </h3>
+        </div>
       </Modal.Header>
       <Modal.Body>
         <AppEndModalController page={modal.page} />
