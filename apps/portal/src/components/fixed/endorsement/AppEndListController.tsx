@@ -1,6 +1,6 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { isEmpty } from 'lodash';
-import { use, useEffect } from 'react';
+import { useEffect } from 'react';
 import useSWR from 'swr';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useAppEndStore } from '../../../store/endorsement.store';
@@ -71,7 +71,7 @@ export const AppEndModalController = ({ page }: AppEndListControllerProps) => {
       );
 
   return (
-    <div className="max-h-[90%] px-2">
+    <div className="max-h-[90%]">
       <>
         {page === 1 && <AppEndSelectPublication />}
         {page === 2 && <AppEndSelectApplicants />}

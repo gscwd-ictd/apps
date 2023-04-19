@@ -41,7 +41,7 @@ export const AllPublicationList = () => {
                 // onClick={() => onSelect(item)}
                 className="flex items-center justify-between transition-colors ease-in-out border-b bg-inherit"
               >
-                <div className="flex items-center justify-between w-full px-5 py-4 hover:bg-indigo-50">
+                <div className="flex items-center justify-between w-full px-4 py-4 hover:bg-indigo-50">
                   <div className="flex flex-col w-full">
                     <h1 className="font-medium text-gray-600">
                       {item.positionTitle}

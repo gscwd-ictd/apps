@@ -295,6 +295,9 @@ export const DrcModalSetting = () => {
         <span className="text-sm font-normal">
           {selectedPosition.itemNumber}
         </span>
+        <span className="text-xs font-normal">
+          {selectedPosition.designation}
+        </span>
 
         {/** HERE */}
         <div className="flex flex-col mt-5">
