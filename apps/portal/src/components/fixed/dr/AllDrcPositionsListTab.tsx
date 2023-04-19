@@ -1,31 +1,41 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import { FinishedPosition } from 'apps/portal/src/store/dr.store';
+import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
+import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { Position } from 'apps/portal/src/types/position.type';
 import dayjs from 'dayjs';
-import { FinishedPosition, useDrStore } from '../../../store/dr.store';
-import { Position } from '../../../types/position.type';
 
 type AllDrcPositionsListTabProps = {
   positions: Array<FinishedPosition>;
   tab: number;
 };
 
-export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTabProps): JSX.Element => {
+export const AllDrcPositionsListTab = ({
+  positions,
+  tab,
+}: AllDrcPositionsListTabProps): JSX.Element => {
   // get all related state from dr context
 
-  const filteredPositions = useDrStore((state) => state.filteredPositions);
+  const filteredPositions = usePositionStore(
+    (state) => state.filteredPositions
+  );
 
-  const modal = useDrStore((state) => state.modal);
+  const modal = useModalStore((state) => state.modal);
 
-  const setSelectedPosition = useDrStore((state) => state.setSelectedPosition);
+  const setSelectedPosition = usePositionStore(
+    (state) => state.setSelectedPosition
+  );
 
-  const setModal = useDrStore((state) => state.setModal);
+  const setModal = useModalStore((state) => state.setModal);
 
-  const setAction = useDrStore((state) => state.setAction);
+  const setAction = useModalStore((state) => state.setAction);
 
   const onSelect = (position: Position, tab: number) => {
-    let action = '';
+    let action: Actions = null;
     if (tab === 1) {
-      action = 'create';
+      action = Actions.CREATE;
     } else if (tab === 2) {
-      action = 'update';
+      action = Actions.UPDATE;
     }
 
     // set action whether create or update
@@ -48,13 +58,29 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
                 <li
                   key={index}
                   onClick={() => onSelect(position, tab)}
-                  className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
+                  className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
                 >
-                  <div className='w-full py-2 px-1'>
-                    <h1 className="font-medium text-xl text-gray-600">{position.positionTitle}</h1>
-                    <p className="text-sm text-gray-500">{position.itemNumber}</p>
-                    {tab === 1 && <p className="text-sm text-indigo-500">No duties, responsibilities, and competencies</p>}
-                    {tab === 2 && <p className="text-sm text-indigo-500">Updated at {dayjs(position.updatedAt).format('MMMM d, YYYY')}</p>}
+                  <div className="w-full px-1 py-2">
+                    <h1 className="text-xl font-medium text-gray-600">
+                      {position.positionTitle}
+                    </h1>
+                    <p className="text-sm text-gray-500">
+                      {position.itemNumber}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {position.designation}
+                    </p>
+                    {tab === 1 && (
+                      <p className="text-sm text-indigo-500">
+                        No duties, responsibilities, and competencies
+                      </p>
+                    )}
+                    {tab === 2 && (
+                      <p className="text-sm text-indigo-500">
+                        Updated at{' '}
+                        {dayjs(position.updatedAt).format('MMMM D, YYYY')}
+                      </p>
+                    )}
                   </div>
                 </li>
               );
@@ -62,7 +88,15 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
         </ul>
       ) : (
         <div className="flex justify-center pt-20">
-          <h1 className="text-4xl text-gray-300">No {tab === 1 ? 'positions with no DRCs' : tab === 2 ? 'positions with DRCs' : ''} at the moment</h1>
+          <h1 className="text-4xl text-gray-300">
+            No{' '}
+            {tab === 1
+              ? 'positions with no DRCs'
+              : tab === 2
+              ? 'positions with DRCs'
+              : ''}{' '}
+            at the moment
+          </h1>
         </div>
       )}
     </>

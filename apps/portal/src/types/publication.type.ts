@@ -18,8 +18,9 @@ export type Publication = {
   prfNo: string;
   prfId: string;
   withExam: number;
-  postingStatus: string;
+  postingStatus: PublicationPostingStatus | null;
   hasSelected?: number;
+  requestingEntitySelectionDate?: Date;
 };
 
 export type PublicationDetails = {
@@ -30,4 +31,25 @@ export type PublicationDetails = {
   numberOfInterviewedApplicants: string;
   numberOfQualifiedApplicants: string;
   salaryGrade?: number;
+  positionDetails: {
+    postingStatus: PublicationPostingStatus | null;
+  };
 };
+
+export enum PublicationPostingStatus {
+  FOR_CSC_APPROVAL = 'For CSC approval',
+  OPEN_FOR_APPLICATION = 'Open for application',
+  CLOSED_FOR_APPLICATION = 'Closed for application',
+  REQUESTING_ENTITY_SELECTION = 'Requesting entity selection',
+  REQUESTING_ENTITY_SELECTION_DONE = 'Requesting entity selection done',
+  SCHEDULED_FOR_EXAMINATION = 'Scheduled for examination',
+  EXAMINATION_DONE = 'Examination done',
+  SCHEDULED_FOR_INTERVIEW = 'Scheduled for interview',
+  INTERVIEW_ONGOING = 'Interview ongoing',
+  INTERVIEW_DONE = 'Interview done',
+  SELECTION_DONE = 'Selection done',
+  APPOINTING_AUTHORITY_SELECTION = 'Appointing authority selection',
+  APPOINTING_AUTHORITY_SELECTION_DONE = 'Appointing authority selection done',
+  HIRING_PROCESS_DONE = 'Hiring process done',
+  FOR_PRINTING = 'For printing',
+}

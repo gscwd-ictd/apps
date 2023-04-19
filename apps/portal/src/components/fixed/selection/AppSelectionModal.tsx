@@ -5,6 +5,7 @@ import { usePassSlipStore } from '../../../store/passslip.store';
 import { useRouter } from 'next/router';
 import { AppSelectionModalController } from './AppSelectionListController';
 import { useAppSelectionStore } from '../../../../src/store/selection.store';
+import { PublicationPostingStatus } from '../../../../src/types/publication.type';
 
 type AppSelectionModalProps = {
   modalState: boolean;
@@ -18,6 +19,10 @@ export const AppSelectionModal = ({
   closeModalAction,
 }: AppSelectionModalProps) => {
   const router = useRouter();
+
+  const publicationDetails = useAppSelectionStore(
+    (state) => state.publicationDetails
+  );
 
   // get state for the modal
   const modal = useAppSelectionStore((state) => state.modal);
@@ -86,23 +91,26 @@ export const AppSelectionModal = ({
             ) : null}
             {modal.page !== 1 && modal.page !== 3 && (
               <div className="min-w-[6rem] max-w-auto">
-                <Button
-                  onClick={modalAction}
-                  disabled={
-                    modal.page === 2 &&
-                    !(selectedApplicants.length === 0) &&
-                    modal.page === 2 &&
-                    selectedApplicants.length > 0 &&
-                    selectedApplicants.length !==
-                      parseInt(selectedPublication.numberOfPositions!)
-                  }
-                >
-                  {modal.page === 4
-                    ? 'Got it, Thanks!'
-                    : modal.page === 2 && selectedApplicants.length === 0
-                    ? 'Select none'
-                    : 'Confirm'}
-                </Button>
+                {publicationDetails?.positionDetails?.postingStatus ===
+                PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION ? (
+                  <Button
+                    onClick={modalAction}
+                    disabled={
+                      modal.page === 2 &&
+                      !(selectedApplicants.length === 0) &&
+                      modal.page === 2 &&
+                      selectedApplicants.length > 0 &&
+                      selectedApplicants.length !==
+                        parseInt(selectedPublication.numberOfPositions!)
+                    }
+                  >
+                    {modal.page === 4
+                      ? 'Got it, Thanks!'
+                      : modal.page === 2 && selectedApplicants.length === 0
+                      ? 'Select none'
+                      : 'Confirm'}
+                  </Button>
+                ) : null}
               </div>
             )}
           </div>

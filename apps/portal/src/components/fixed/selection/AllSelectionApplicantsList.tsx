@@ -140,6 +140,7 @@ export const AllSelectionApplicantsList = () => {
         numberOfInterviewedApplicants,
         numberOfQualifiedApplicants,
         salaryGrade,
+        positionDetails: { postingStatus },
       } = swrApplicants; //! changed --added data
       setPublicationDetails({
         allPsbSubmitted,
@@ -149,6 +150,9 @@ export const AllSelectionApplicantsList = () => {
         numberOfInterviewedApplicants,
         numberOfQualifiedApplicants,
         salaryGrade,
+        positionDetails: {
+          postingStatus,
+        },
       });
     }
   }, [swrApplicants, applicantListIsLoaded]);

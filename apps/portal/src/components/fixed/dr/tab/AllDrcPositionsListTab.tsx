@@ -67,6 +67,9 @@ export const AllDrcPositionsListTab = ({
                     <p className="text-sm text-gray-500">
                       {position.itemNumber}
                     </p>
+                    <p className="text-xs text-gray-500">
+                      {position.designation}
+                    </p>
                     {tab === 1 && (
                       <p className="text-sm text-indigo-500">
                         No duties, responsibilities, and competencies
@@ -75,7 +78,7 @@ export const AllDrcPositionsListTab = ({
                     {tab === 2 && (
                       <p className="text-sm text-indigo-500">
                         Updated at{' '}
-                        {dayjs(position.updatedAt).format('MMMM D, YYYY')}
+                        {dayjs(position.updatedAt).format('MMMM DD, YYYY')}
                       </p>
                     )}
                   </div>

@@ -1,11 +1,13 @@
-import { useRouter } from 'next/router';
-import { HiEye, HiPencil, HiPlus, HiPlusCircle } from 'react-icons/hi';
+import dayjs from 'dayjs';
+import { HiEye, HiPlusCircle } from 'react-icons/hi';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Publication } from '../../../types/publication.type';
 import { Button } from '../../modular/common/forms/Button';
 
 export const AllPublicationList = () => {
-  const publicationList = useAppEndStore((state) => state.publicationList);
+  const filteredPublicationList = useAppEndStore(
+    (state) => state.filteredPublicationList
+  );
   const modal = useAppEndStore((state) => state.modal);
   const setSelectedPublication = useAppEndStore(
     (state) => state.setSelectedPublication
@@ -14,12 +16,10 @@ export const AllPublicationList = () => {
   const setSelectedPublicationId = useAppEndStore(
     (state) => state.setSelectedPublicationId
   );
-  const router = useRouter();
 
   const onSelect = (publication: Publication, action: string) => {
     setSelectedPublication(publication);
     setSelectedPublicationId(publication.vppId);
-    console.log(publication.vppId);
 
     if (action === 'create') {
       setModal({ ...modal, page: 2 });
@@ -33,16 +33,16 @@ export const AllPublicationList = () => {
   return (
     <>
       <ul>
-        {publicationList &&
-          publicationList.map((item: Publication, index: number) => {
+        {filteredPublicationList &&
+          filteredPublicationList.map((item: Publication, index: number) => {
             return (
               <li
                 key={index}
                 // onClick={() => onSelect(item)}
-                className="flex bg-inherit   items-center justify-between  border-l-transparent py-4 transition-colors ease-in-out"
+                className="flex items-center justify-between transition-colors ease-in-out border-b bg-inherit"
               >
-                <div className="flex items-center hover:bg-indigo-50 justify-between w-full py-2 px-5 ">
-                  <div className="w-full flex flex-col">
+                <div className="flex items-center justify-between w-full px-4 py-4 hover:bg-indigo-50">
+                  <div className="flex flex-col w-full">
                     <h1 className="font-medium text-gray-600">
                       {item.positionTitle}
                     </h1>
@@ -50,13 +50,21 @@ export const AllPublicationList = () => {
                     <p className="text-xs text-gray-500">
                       {item.placeOfAssignment}
                     </p>
+                    <div className="text-xs text-indigo-600">
+                      {item.hasSelected === 0
+                        ? 'Publication posting date: '
+                        : item.hasSelected === 1
+                        ? 'Fulfilled on '
+                        : null}
+                      {dayjs(item.postingDeadline).format('MMMM DD, YYYY')}
+                    </div>
                   </div>
                   {item.hasSelected === 0 ? (
                     <Button
                       btnLabel="SET"
                       icon={<HiPlusCircle />}
                       className="w-28"
-                      light
+                      btnVariant="default"
                       shadow
                       iconPlacement="start"
                       onClick={() => onSelect(item, 'create')}

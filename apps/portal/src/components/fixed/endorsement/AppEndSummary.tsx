@@ -1,40 +1,43 @@
 import dayjs from 'dayjs';
-import { useRef } from 'react';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { AllApplicantsListSummary } from './AllApplicantsListSummary';
 
 export const AppEndSummary = () => {
-    // const [applicantListIsLoaded, setApplicantListIsLoaded] = useState<boolean>(false);
-
-    // use this to assign as a parameter in useSWR
-    const random = useRef(Date.now());
-
-    const publication = useAppEndStore((state) => state.selectedPublication);
-
-    const applicantList = useAppEndStore((state) => state.applicantList);
-
-    // initialize url to get applicant
-
-    return (
-        <>
-            <div className="mt-14 w-full">
-                <div className='w-full flex justify-between'>
-                    <div className="text-lg font-medium text-gray-600">{publication.positionTitle}</div>
-                    <div className='text-indigo-500 text-md'>Fulfilled on {dayjs(publication.postingDate).format('MMMM d, YYYY')}</div>
-                </div>
-                <div className="flex mt-2 w-full justify-between text-xs text-gray-800">
-                    <div>
-                        <div>{publication.itemNumber}</div>
-                        <div>{publication.placeOfAssignment}</div>
-                    </div>
-                    <div>
-                        <div>Positions needed: {publication.numberOfPositions}</div>
-                        <div>Number of applicants selected for interview: {applicantList.length}</div>
-                    </div>
-                </div>
-
-                <AllApplicantsListSummary />
+  const publication = useAppEndStore((state) => state.selectedPublication);
+  const applicantList = useAppEndStore((state) => state.applicantList);
+  return (
+    <>
+      <div className="w-full px-5 py-2 bg-indigo-800 rounded">
+        <div className="flex justify-between w-full mt-2 text-gray-200">
+          <div>
+            <div className="text-xl font-medium">
+              {publication.positionTitle}
             </div>
-        </>
-    );
+            <div className="mt-2 text-sm font-normal">
+              {publication.itemNumber}
+            </div>
+            <div className="text-sm font-normal">
+              {publication.placeOfAssignment}
+            </div>
+          </div>
+          <div>
+            <div className="font-medium text-gray-200 text-md">
+              Fulfilled on{' '}
+              {dayjs(publication.requestingEntitySelectionDate).format(
+                'MMMM DD, YYYY'
+              )}
+            </div>
+            <div className="mt-2 text-sm font-normal">
+              Positions needed: {publication.numberOfPositions}
+            </div>
+            <div className="text-sm font-normal">
+              Number of applicants selected for interview:{' '}
+              {applicantList.length}
+            </div>
+          </div>
+        </div>
+      </div>
+      <AllApplicantsListSummary />
+    </>
+  );
 };

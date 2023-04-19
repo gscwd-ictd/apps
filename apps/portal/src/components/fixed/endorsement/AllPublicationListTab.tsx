@@ -1,6 +1,5 @@
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Publication } from '../../../types/publication.type';
-import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
 type AllPublicationListTabProps = {
@@ -12,8 +11,6 @@ export const AllPublicationListTab = ({
   publications,
   tab,
 }: AllPublicationListTabProps) => {
-  const router = useRouter();
-
   const modal = useAppEndStore((state) => state.modal);
 
   const setSelectedPublication = useAppEndStore(
@@ -61,8 +58,18 @@ export const AllPublicationListTab = ({
                     {item.placeOfAssignment}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Fulfilled on{' '}
-                    {dayjs(item.postingDate).format('MMMM d, YYYY')}
+                    {tab === 1
+                      ? 'Publication Posting Date: '
+                      : tab === 2
+                      ? 'Fulfilled on '
+                      : null}
+                    {tab === 1
+                      ? dayjs(item.postingDate).format('MMMM DD, YYYY')
+                      : tab === 2
+                      ? dayjs(item.requestingEntitySelectionDate).format(
+                          'MMMM DD, YYYY'
+                        )
+                      : null}
                   </p>
                 </div>
               </li>

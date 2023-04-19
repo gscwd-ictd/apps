@@ -5,3 +5,5 @@ export type Applicant = {
   state?: boolean;
   sequenceNo?: number;
 };
+
+export type PostingApplicantId = Pick<Applicant, 'postingApplicantId'>;
