@@ -16,7 +16,10 @@ axiosApi.interceptors.response.use(
 );
 
 const fetcherHRIS = async (url: string, config: AxiosRequestConfig) =>
-  await axiosApi.get(url, config).then((res) => res);
+  await axiosApi
+    .get(url, config)
+    .then((res) => res)
+    .catch((error) => error);
 // .catch((error) => error);
 // const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
