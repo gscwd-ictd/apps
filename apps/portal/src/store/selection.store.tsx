@@ -271,7 +271,7 @@ export const useAppSelectionStore = create<SelectionState>()(
         pendingPublicationList: response,
         loading: {
           ...state.loading,
-          loadingPendingPublicationList: loading,
+          loadingPendingPublicationList: false,
         },
       }));
     },
@@ -314,7 +314,7 @@ export const useAppSelectionStore = create<SelectionState>()(
         fulfilledPublicationList: response,
         loading: {
           ...state.loading,
-          loadingFulfilledPublicationList: loading,
+          loadingFulfilledPublicationList: false,
         },
       }));
     },

@@ -89,10 +89,11 @@ export const AppSelectionModal = ({
                 </Button>
               </div>
             ) : null}
-            {modal.page !== 1 && modal.page !== 3 && (
-              <div className="min-w-[6rem] max-w-auto">
-                {publicationDetails?.positionDetails?.postingStatus ===
-                PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION ? (
+            {modal.page !== 1 &&
+              modal.page !== 3 &&
+              (publicationDetails?.positionDetails?.postingStatus ===
+              PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION ? (
+                <div className="min-w-[6rem] max-w-auto">
                   <Button
                     onClick={modalAction}
                     disabled={
@@ -110,9 +111,8 @@ export const AppSelectionModal = ({
                       ? 'Select none'
                       : 'Confirm'}
                   </Button>
-                ) : null}
-              </div>
-            )}
+                </div>
+              ) : null)}
           </div>
         </Modal.Footer>
       </Modal>

@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Alert, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import {
@@ -30,9 +31,10 @@ import { Applicant } from '../../../types/applicant.type';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
-import fetcherHRIS from '../../../../src/utils/helpers/fetchers/FetcherHRIS';
+
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import AppSelectionModal from '../../../../src/components/fixed/selection/AppSelectionModal';
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 
 export default function AppPosAppointment({
   employeeDetails,
@@ -144,6 +146,7 @@ export default function AppPosAppointment({
   // open the modal
   const openModal = () => {
     setModal({ ...modal, page: 1, isOpen: true });
+    setAppSelectionModalIsOpen(true);
   };
 
   // close the modal
@@ -155,6 +158,7 @@ export default function AppPosAppointment({
   // cancel action for App Selection Modal
   const closeAppSelectionModal = async () => {
     setAppSelectionModalIsOpen(false);
+    setSelectedApplicants([]);
   };
 
   // confirm action for modal
@@ -215,6 +219,7 @@ export default function AppPosAppointment({
       setIsLoading(true);
       setModal({ ...modal, isOpen: false, page: 1 });
       setAlert({ ...alert, isOpen: false, page: 1 });
+      closeAppSelectionModal();
     }
   };
 
@@ -231,8 +236,8 @@ export default function AppPosAppointment({
     }
   }, [isLoading]);
 
-  const pendingUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/publications/pending`;
-  const fulfilledUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/publications/selected`;
+  const pendingUrl = `/applicant-endorsement/appointing-authority-selection/publications/pending`;
+  const fulfilledUrl = `/applicant-endorsement/appointing-authority-selection/publications/selected`;
 
   //PENDING SELECTION
   const {
@@ -240,7 +245,7 @@ export default function AppPosAppointment({
     isLoading: swrPendingPublicationIsLoading,
     error: swrPendingPublicationError,
     mutate: mutatePendingPublications,
-  } = useSWR(pendingUrl, fetchWithToken, {
+  } = useSWR(pendingUrl, fetcherHRIS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -251,7 +256,7 @@ export default function AppPosAppointment({
     isLoading: swrFulfilledPublicationIsLoading,
     error: swrFulfilledPublicationError,
     mutate: mutateFulfilledPublications,
-  } = useSWR(fulfilledUrl, fetchWithToken, {
+  } = useSWR(fulfilledUrl, fetcherHRIS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -267,23 +272,14 @@ export default function AppPosAppointment({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPendingPublications)) {
-      console.log(
-        swrPendingPublications,
-        'pending',
-        swrPendingPublicationIsLoading,
-        'loading'
-      );
       getPendingPublicationListSuccess(
         swrPendingPublicationIsLoading,
-        swrPendingPublications
+        swrPendingPublications.data
       );
     }
 
     if (!isEmpty(swrPendingPublicationError)) {
-      getPendingPublicationListFail(
-        swrPendingPublicationIsLoading,
-        swrPendingPublicationError.message
-      );
+      getPendingPublicationListFail(false, swrPendingPublicationError);
     }
   }, [swrPendingPublications, swrPendingPublicationError]);
 
@@ -298,23 +294,14 @@ export default function AppPosAppointment({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFulfilledPublications)) {
-      console.log(
-        swrFulfilledPublications,
-        'fulfilled',
-        swrFulfilledPublicationIsLoading,
-        'loading'
-      );
       getFulfilledPublicationListSuccess(
         swrFulfilledPublicationIsLoading,
-        swrFulfilledPublications
+        swrFulfilledPublications.data
       );
     }
 
     if (!isEmpty(swrFulfilledPublicationError)) {
-      getFulfilledPublicationListFail(
-        swrFulfilledPublicationIsLoading,
-        swrFulfilledPublicationError.message
-      );
+      getFulfilledPublicationListFail(false, swrFulfilledPublicationError);
     }
   }, [swrFulfilledPublications, swrFulfilledPublicationError]);
 
@@ -375,62 +362,6 @@ export default function AppPosAppointment({
         setModalState={setAppSelectionModalIsOpen}
         closeModalAction={closeAppSelectionModal}
       />
-
-      {/* <>
-      <Modal
-        open={modal.isOpen}
-        setOpen={openModal}
-        size={modal.page === 2 ? 'xl' : 'lg'}
-        steady
-      >
-        <Modal.Header>
-          <h3 className="text-xl font-semibold text-gray-700">
-            <div className="px-5">
-              {modal.page === 1
-                ? 'Select a publication'
-                : modal.page === 2 && 'Select Applicants'}
-            </div>
-          </h3>
-        </Modal.Header>
-
-        <Modal.Body>
-     
-          {/* <AppSelectionModalController page={modal.page} />
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="flex justify-end gap-2">
-            {modal.page !== 4 ? (
-              <div className="w-[6rem]">
-                <Button variant="info" onClick={modalCancel}>
-                  {modal.page === 1 ? 'Close' : 'Cancel'}
-                </Button>
-              </div>
-            ) : null}
-            {modal.page !== 1 && modal.page !== 3 && (
-              <div className="min-w-[6rem] max-w-auto">
-                <Button
-                  onClick={modalAction}
-                  disabled={
-                    modal.page === 2 &&
-                    !(selectedApplicants.length === 0) &&
-                    modal.page === 2 &&
-                    selectedApplicants.length > 0 &&
-                    selectedApplicants.length !==
-                      parseInt(selectedPublication.numberOfPositions!)
-                  }
-                >
-                  {modal.page === 4
-                    ? 'Got it, Thanks!'
-                    : modal.page === 2 && selectedApplicants.length === 0
-                    ? 'Select none'
-                    : 'Confirm'}
-                </Button>
-              </div>
-            )}
-          </div>
-        </Modal.Footer>
-      </Modal>
-      </> */}
 
       <Alert open={alert.isOpen} setOpen={openAlert}>
         <Alert.Description>

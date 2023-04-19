@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Publication } from '../../../types/publication.type';
+import { useEffect } from 'react';
+import { isEmpty } from 'lodash';
 
 type AllSelectionPublicationListTabProps = {
   publications: Array<Publication>;
@@ -40,9 +42,13 @@ export const AllSelectionPublicationListTab = ({
     setAppSelectionModalIsOpen(true);
   };
 
+  useEffect(() => {
+    console.log(tab, 'test');
+  }, []);
+
   return (
     <>
-      {publications && publications.length > 0 ? (
+      {!isEmpty(publications) ? (
         <ul className="mt-4">
           {publications.map((item: Publication, index: number) => {
             return (

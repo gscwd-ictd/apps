@@ -34,17 +34,11 @@ export const AllSelectionApplicantsList = () => {
     (state) => state.selectedPublicationId
   );
 
-  // initialize url to get applicant
-  // const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/${vppId}`;
-  // const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/interview-rating/${selectedPublicationId}`;
+  const { patchResponseApply } = useAppSelectionStore((state) => ({
+    patchResponseApply: state.response.patchResponseApply,
+  }));
 
   // use swr
-  // const { data } = useSWR([applicantGetUrl, random], fetchWithSession);
-  // const { data: swrApplicants } = useSWR(
-  //   `/vacant-position-postings/interview-rating/${selectedPublicationId}`,
-  //   fetcherHRIS
-  // );
-
   const applicantsUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/interview-rating/${selectedPublicationId}`;
 
   //Applicants SWR
@@ -53,10 +47,17 @@ export const AllSelectionApplicantsList = () => {
     isLoading: swrIsLoadingApplicants,
     error: swrApplicantsError,
     mutate: mutateApplicants,
-  } = useSWR(applicantsUrl, fetchWithToken, {
+  } = useSWR(applicantsUrl, fetcherHRIS, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
+
+  //mutate publications when patchResponseApply is updated
+  useEffect(() => {
+    if (!isEmpty(patchResponseApply)) {
+      mutateApplicants();
+    }
+  }, [patchResponseApply]);
 
   // on select
   const onSelect = (sequenceNo: number) => {
@@ -94,7 +95,7 @@ export const AllSelectionApplicantsList = () => {
   useEffect(() => {
     console.log(swrApplicants, 'swrapplicants');
     if (swrApplicants && applicantListIsLoaded === false) {
-      const fetchedData: any = [...swrApplicants.ranking]; //! changed --added data
+      const fetchedData: any = [...swrApplicants.data.ranking]; //! changed --added data
 
       const applicants =
         fetchedData &&
@@ -141,7 +142,7 @@ export const AllSelectionApplicantsList = () => {
         numberOfQualifiedApplicants,
         salaryGrade,
         positionDetails: { postingStatus },
-      } = swrApplicants; //! changed --added data
+      } = swrApplicants.data; //! changed --added data
       setPublicationDetails({
         allPsbSubmitted,
         dateOfPanelInterview,
@@ -212,11 +213,12 @@ export const AllSelectionApplicantsList = () => {
           <ul>
             {applicantList.map(
               (applicant: ApplicantWithScores, index: number) => {
+                console.log(applicant.isSelectedByAppointingAuthority);
                 return (
                   <li
                     key={index}
                     onClick={() =>
-                      swrApplicants.positionDetails.postingStatus ===
+                      swrApplicants.data.positionDetails.postingStatus ===
                       'Appointing authority selection'
                         ? onSelect(applicant.sequenceNo!)
                         : {}
@@ -305,9 +307,8 @@ export const AllSelectionApplicantsList = () => {
                           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           applicant.state;
                         }}
-                        // onChange={() => onSelect(applicant.sequenceNo!)}
                         checked={
-                          swrApplicants?.positionDetails.postingStatus ===
+                          swrApplicants?.data.positionDetails.postingStatus ===
                           'Appointing authority selection'
                             ? applicant.state
                               ? true
@@ -317,7 +318,7 @@ export const AllSelectionApplicantsList = () => {
                             : false
                         }
                         className={`${
-                          swrApplicants?.positionDetails.postingStatus ===
+                          swrApplicants?.data.positionDetails.postingStatus ===
                           'Appointing authority selection'
                             ? applicant.state
                               ? ''
