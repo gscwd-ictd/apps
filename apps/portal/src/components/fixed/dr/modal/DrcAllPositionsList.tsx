@@ -52,6 +52,9 @@ export const DrcAllPositionsList = (): JSX.Element => {
                     {position.positionTitle}
                   </h1>
                   <p className="text-sm text-gray-500">{position.itemNumber}</p>
+                  <p className="text-xs text-gray-500">
+                    {position.designation}
+                  </p>
                 </div>
 
                 <div className="flex gap-2">

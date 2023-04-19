@@ -72,7 +72,8 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
       // check if there is a match
       if (
         position.positionTitle.match(new RegExp(value, 'i')) ||
-        position.itemNumber.match(new RegExp(value, 'i'))
+        position.itemNumber.match(new RegExp(value, 'i')) ||
+        position.designation.match(new RegExp(value, 'i'))
       ) {
         // insert the matching position inside the filtered result
 
@@ -103,6 +104,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
   useEffect(() => {
     if (!isEmpty(swrPositions)) {
       // success
+
       GetAllPositionsSuccess(swrPositions.data);
     }
 
