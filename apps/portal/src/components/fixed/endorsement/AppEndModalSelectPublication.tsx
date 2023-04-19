@@ -40,7 +40,8 @@ export const AppEndSelectPublication = () => {
       // check if there is a match
       if (
         publication.positionTitle.match(new RegExp(value, 'i')) ||
-        publication.itemNumber.match(new RegExp(value, 'i'))
+        publication.itemNumber.match(new RegExp(value, 'i')) ||
+        publication.placeOfAssignment.match(new RegExp(value, 'i'))
       ) {
         // insert the matching position inside the filtered result
         filteredResult.push(publication);
@@ -66,9 +67,15 @@ export const AppEndSelectPublication = () => {
     setFilteredPublicationList(publicationList);
   };
 
-  // set search value to default on page open
+  // set the default values
   useEffect(() => {
-    if (modal.page === 1) setSearchValue('');
+    if (modal.page === 1) {
+      // set the search value to default
+      setSearchValue('');
+
+      // set the filtered publication list from publication list
+      setFilteredPublicationList(publicationList);
+    }
   }, [modal.page]);
 
   return (
