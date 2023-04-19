@@ -71,7 +71,7 @@ export const AppEndModalController = ({ page }: AppEndListControllerProps) => {
       );
 
   return (
-    <div className="max-h-[90%]">
+    <div className="max-h-[90%] px-2">
       <>
         {page === 1 && <AppEndSelectPublication />}
         {page === 2 && <AppEndSelectApplicants />}
