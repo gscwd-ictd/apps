@@ -18,7 +18,7 @@ export type Publication = {
   prfNo: string;
   prfId: string;
   withExam: number;
-  postingStatus: PublicationPostingStatus;
+  postingStatus: PublicationPostingStatus | null;
   hasSelected?: number;
   requestingEntitySelectionDate?: Date;
 };

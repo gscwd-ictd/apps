@@ -70,7 +70,10 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
     // loop through positions array and filter according to position title
     positions.filter((position: Position) => {
       // check if there is a match
-      if (position.positionTitle.match(new RegExp(value, 'i'))) {
+      if (
+        position.positionTitle.match(new RegExp(value, 'i')) ||
+        position.itemNumber.match(new RegExp(value, 'i'))
+      ) {
         // insert the matching position inside the filtered result
 
         filteredResult.push(position);
