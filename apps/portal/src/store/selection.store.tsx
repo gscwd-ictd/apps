@@ -53,6 +53,9 @@ export type SelectionState = {
   patchPublicationSuccess: (response: Publication) => void;
   patchPublicationFail: (error: string) => void;
 
+  appSelectionModalIsOpen: boolean;
+  setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => void;
+
   alert: AlertState;
   setAlert: (alert: AlertState) => void;
   modal: ModalState;
@@ -113,6 +116,12 @@ export const useAppSelectionStore = create<SelectionState>()(
       errorPendingPublicationList: '',
       errorFulfilledPublicationList: '',
       errorResponse: '',
+    },
+
+    appSelectionModalIsOpen: false,
+
+    setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => {
+      set((state) => ({ ...state, appSelectionModalIsOpen }));
     },
 
     alert: { isOpen: false, page: 1 },

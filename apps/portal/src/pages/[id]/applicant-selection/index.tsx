@@ -32,6 +32,7 @@ import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 import fetcherHRIS from '../../../../src/utils/helpers/fetchers/FetcherHRIS';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import AppSelectionModal from '../../../../src/components/fixed/selection/AppSelectionModal';
 
 export default function AppPosAppointment({
   employeeDetails,
@@ -46,7 +47,9 @@ export default function AppPosAppointment({
     errorPendingPublicationList,
     errorResponse,
     patchResponseApply,
+    appSelectionModalIsOpen,
 
+    setAppSelectionModalIsOpen,
     getPendingPublicationList,
     getPendingPublicationListSuccess,
     getPendingPublicationListFail,
@@ -71,7 +74,9 @@ export default function AppPosAppointment({
     errorResponse: state.errors.errorResponse,
 
     patchResponseApply: state.response.patchResponseApply,
+    appSelectionModalIsOpen: state.appSelectionModalIsOpen,
 
+    setAppSelectionModalIsOpen: state.setAppSelectionModalIsOpen,
     getPendingPublicationList: state.getPendingPublicationList,
     getPendingPublicationListSuccess: state.getPendingPublicationListSuccess,
     getPendingPublicationListFail: state.getPendingPublicationListFail,
@@ -145,6 +150,11 @@ export default function AppPosAppointment({
   const closeModal = () => {
     setIsLoading(true);
     setModal({ ...modal, isOpen: false });
+  };
+
+  // cancel action for App Selection Modal
+  const closeAppSelectionModal = async () => {
+    setAppSelectionModalIsOpen(false);
   };
 
   // confirm action for modal
@@ -360,6 +370,13 @@ export default function AppPosAppointment({
 
       <SideNav />
 
+      <AppSelectionModal
+        modalState={appSelectionModalIsOpen}
+        setModalState={setAppSelectionModalIsOpen}
+        closeModalAction={closeAppSelectionModal}
+      />
+
+      {/* <>
       <Modal
         open={modal.isOpen}
         setOpen={openModal}
@@ -377,8 +394,8 @@ export default function AppPosAppointment({
         </Modal.Header>
 
         <Modal.Body>
-          {/* <Button onClick={() => console.log(selectedApplicants)}>Log Selected Applicants</Button> */}
-          <AppSelectionModalController page={modal.page} />
+     
+          {/* <AppSelectionModalController page={modal.page} />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
@@ -413,6 +430,7 @@ export default function AppPosAppointment({
           </div>
         </Modal.Footer>
       </Modal>
+      </> */}
 
       <Alert open={alert.isOpen} setOpen={openAlert}>
         <Alert.Description>

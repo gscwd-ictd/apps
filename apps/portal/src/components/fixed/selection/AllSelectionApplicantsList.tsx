@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Applicant } from '../../../types/applicant.type';
 import { ApplicantWithScores, PsbScores } from '../../../types/selection.type';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 
 export const AllSelectionApplicantsList = () => {
   const [applicantListIsLoaded, setApplicantListIsLoaded] =
@@ -39,10 +40,23 @@ export const AllSelectionApplicantsList = () => {
 
   // use swr
   // const { data } = useSWR([applicantGetUrl, random], fetchWithSession);
-  const { data: swrApplicants } = useSWR(
-    `/vacant-position-postings/interview-rating/${selectedPublicationId}`,
-    fetcherHRIS
-  );
+  // const { data: swrApplicants } = useSWR(
+  //   `/vacant-position-postings/interview-rating/${selectedPublicationId}`,
+  //   fetcherHRIS
+  // );
+
+  const applicantsUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/interview-rating/${selectedPublicationId}`;
+
+  //Applicants SWR
+  const {
+    data: swrApplicants,
+    isLoading: swrIsLoadingApplicants,
+    error: swrApplicantsError,
+    mutate: mutateApplicants,
+  } = useSWR(applicantsUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   // on select
   const onSelect = (sequenceNo: number) => {
@@ -59,7 +73,7 @@ export const AllSelectionApplicantsList = () => {
     });
 
     setApplicantList(updatedApplicantList);
-
+    console.log(updatedApplicantList, 'updated applicants');
     addToSelectedApplicants();
   };
 
@@ -78,8 +92,9 @@ export const AllSelectionApplicantsList = () => {
   };
 
   useEffect(() => {
+    console.log(swrApplicants, 'swrapplicants');
     if (swrApplicants && applicantListIsLoaded === false) {
-      const fetchedData: any = [...swrApplicants.data.ranking]; //! changed --added data
+      const fetchedData: any = [...swrApplicants.ranking]; //! changed --added data
 
       const applicants =
         fetchedData &&
@@ -125,7 +140,7 @@ export const AllSelectionApplicantsList = () => {
         numberOfInterviewedApplicants,
         numberOfQualifiedApplicants,
         salaryGrade,
-      } = swrApplicants.data; //! changed --added data
+      } = swrApplicants; //! changed --added data
       setPublicationDetails({
         allPsbSubmitted,
         dateOfPanelInterview,
@@ -196,7 +211,12 @@ export const AllSelectionApplicantsList = () => {
                 return (
                   <li
                     key={index}
-                    onClick={() => onSelect(applicant.sequenceNo!)}
+                    onClick={() =>
+                      swrApplicants.positionDetails.postingStatus ===
+                      'Appointing authority selection'
+                        ? onSelect(applicant.sequenceNo!)
+                        : {}
+                    }
                     className={`flex grid-cols-3 items-center border-b gap-4 ${
                       applicant.state && 'bg-slate-300'
                     } w-full hover:cursor-pointer border-b-gray-100 border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-100`}
@@ -282,8 +302,26 @@ export const AllSelectionApplicantsList = () => {
                           applicant.state;
                         }}
                         // onChange={() => onSelect(applicant.sequenceNo!)}
-                        checked={applicant.state ? true : false}
-                        className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
+                        checked={
+                          swrApplicants?.positionDetails.postingStatus ===
+                          'Appointing authority selection'
+                            ? applicant.state
+                              ? true
+                              : false
+                            : applicant.isSelectedByAppointingAuthority === 1
+                            ? true
+                            : false
+                        }
+                        className={`${
+                          swrApplicants?.positionDetails.postingStatus ===
+                          'Appointing authority selection'
+                            ? applicant.state
+                              ? ''
+                              : ''
+                            : applicant.isSelectedByAppointingAuthority === 1
+                            ? ''
+                            : 'hidden'
+                        } p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
                       />
                     </div>
                   </li>

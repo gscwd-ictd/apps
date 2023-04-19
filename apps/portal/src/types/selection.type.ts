@@ -15,8 +15,10 @@ export type ApplicantWithScores = Applicant & {
   psb_8?: string;
   rank?: string;
   average: string;
+  isSelectedByAppointingAuthority: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type ApplicantScores = {};
 
 export type PsbScores = {
@@ -35,7 +37,8 @@ export type Ranking = {
   allPsbSubmitted: string;
 };
 
-export type ApplicantSelection = StandardModalState & ApplicantEndorsementWithScores;
+export type ApplicantSelection = StandardModalState &
+  ApplicantEndorsementWithScores;
 
 export type ApplicantEndorsementWithScores = Omit<
   ApplicantEndorsement,
@@ -57,7 +60,9 @@ export type ApplicantEndorsementWithScores = Omit<
   selectedApplicants: Array<ApplicantWithScores>;
   setSelectedApplicants: Dispatch<SetStateAction<Array<ApplicantWithScores>>>;
   filteredApplicantList: Array<ApplicantWithScores>;
-  setFilteredApplicantList: Dispatch<SetStateAction<Array<ApplicantWithScores>>>;
+  setFilteredApplicantList: Dispatch<
+    SetStateAction<Array<ApplicantWithScores>>
+  >;
   applicantList: Array<ApplicantWithScores>;
   setApplicantList: Dispatch<SetStateAction<Array<ApplicantWithScores>>>;
 };
