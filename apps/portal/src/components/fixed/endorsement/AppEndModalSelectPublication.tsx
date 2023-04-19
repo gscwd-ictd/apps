@@ -85,7 +85,13 @@ export const AppEndSelectPublication = () => {
           <div className="flex justify-end px-3 mb-1 text-sm">
             <p className="text-gray-600">
               {filteredPublicationList.length > 0 &&
-                `${filteredPublicationList.length} endorsement(s) found`}{' '}
+                `${filteredPublicationList.length} ${
+                  filteredPublicationList.length === 1
+                    ? 'endorsement'
+                    : filteredPublicationList.length > 1
+                    ? 'endorsements'
+                    : ''
+                } found`}{' '}
             </p>
           </div>
           <div className="relative mt-2 mb-5">
