@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Applicant } from '../../../types/applicant.type';
 import { ApplicantWithScores, PsbScores } from '../../../types/selection.type';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 
 export const AllSelectionApplicantsList = () => {
   const [applicantListIsLoaded, setApplicantListIsLoaded] =
@@ -33,16 +34,30 @@ export const AllSelectionApplicantsList = () => {
     (state) => state.selectedPublicationId
   );
 
-  // initialize url to get applicant
-  // const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/${vppId}`;
-  // const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/interview-rating/${selectedPublicationId}`;
+  const { patchResponseApply } = useAppSelectionStore((state) => ({
+    patchResponseApply: state.response.patchResponseApply,
+  }));
 
   // use swr
-  // const { data } = useSWR([applicantGetUrl, random], fetchWithSession);
-  const { data: swrApplicants } = useSWR(
-    `/vacant-position-postings/interview-rating/${selectedPublicationId}`,
-    fetcherHRIS
-  );
+  const applicantsUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/interview-rating/${selectedPublicationId}`;
+
+  //Applicants SWR
+  const {
+    data: swrApplicants,
+    isLoading: swrIsLoadingApplicants,
+    error: swrApplicantsError,
+    mutate: mutateApplicants,
+  } = useSWR(applicantsUrl, fetcherHRIS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  //mutate publications when patchResponseApply is updated
+  useEffect(() => {
+    if (!isEmpty(patchResponseApply)) {
+      mutateApplicants();
+    }
+  }, [patchResponseApply]);
 
   // on select
   const onSelect = (sequenceNo: number) => {
@@ -59,7 +74,7 @@ export const AllSelectionApplicantsList = () => {
     });
 
     setApplicantList(updatedApplicantList);
-
+    console.log(updatedApplicantList, 'updated applicants');
     addToSelectedApplicants();
   };
 
@@ -78,6 +93,7 @@ export const AllSelectionApplicantsList = () => {
   };
 
   useEffect(() => {
+    console.log(swrApplicants, 'swrapplicants');
     if (swrApplicants && applicantListIsLoaded === false) {
       const fetchedData: any = [...swrApplicants.data.ranking]; //! changed --added data
 
@@ -125,6 +141,7 @@ export const AllSelectionApplicantsList = () => {
         numberOfInterviewedApplicants,
         numberOfQualifiedApplicants,
         salaryGrade,
+        positionDetails: { postingStatus },
       } = swrApplicants.data; //! changed --added data
       setPublicationDetails({
         allPsbSubmitted,
@@ -134,6 +151,9 @@ export const AllSelectionApplicantsList = () => {
         numberOfInterviewedApplicants,
         numberOfQualifiedApplicants,
         salaryGrade,
+        positionDetails: {
+          postingStatus,
+        },
       });
     }
   }, [swrApplicants, applicantListIsLoaded]);
@@ -193,10 +213,16 @@ export const AllSelectionApplicantsList = () => {
           <ul>
             {applicantList.map(
               (applicant: ApplicantWithScores, index: number) => {
+                console.log(applicant.isSelectedByAppointingAuthority);
                 return (
                   <li
                     key={index}
-                    onClick={() => onSelect(applicant.sequenceNo!)}
+                    onClick={() =>
+                      swrApplicants.data.positionDetails.postingStatus ===
+                      'Appointing authority selection'
+                        ? onSelect(applicant.sequenceNo!)
+                        : {}
+                    }
                     className={`flex grid-cols-3 items-center border-b gap-4 ${
                       applicant.state && 'bg-slate-300'
                     } w-full hover:cursor-pointer border-b-gray-100 border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-100`}
@@ -281,9 +307,26 @@ export const AllSelectionApplicantsList = () => {
                           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                           applicant.state;
                         }}
-                        // onChange={() => onSelect(applicant.sequenceNo!)}
-                        checked={applicant.state ? true : false}
-                        className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
+                        checked={
+                          swrApplicants?.data.positionDetails.postingStatus ===
+                          'Appointing authority selection'
+                            ? applicant.state
+                              ? true
+                              : false
+                            : applicant.isSelectedByAppointingAuthority === 1
+                            ? true
+                            : false
+                        }
+                        className={`${
+                          swrApplicants?.data.positionDetails.postingStatus ===
+                          'Appointing authority selection'
+                            ? applicant.state
+                              ? ''
+                              : ''
+                            : applicant.isSelectedByAppointingAuthority === 1
+                            ? ''
+                            : 'hidden'
+                        } p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
                       />
                     </div>
                   </li>

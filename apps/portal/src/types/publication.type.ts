@@ -31,6 +31,9 @@ export type PublicationDetails = {
   numberOfInterviewedApplicants: string;
   numberOfQualifiedApplicants: string;
   salaryGrade?: number;
+  positionDetails: {
+    postingStatus: PublicationPostingStatus | null;
+  };
 };
 
 export enum PublicationPostingStatus {
