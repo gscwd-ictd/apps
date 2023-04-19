@@ -30,6 +30,7 @@ export type EmploymentDetails = {
   companyId: string | null;
   assignment: Assignment;
   userRole: string;
+  isHRMPSB?: boolean;
 };
 
 export type EmployeeDetails = {
