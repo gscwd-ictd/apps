@@ -1,6 +1,7 @@
 import { usePassSlipStore } from '../../../store/passslip.store';
 import dayjs from 'dayjs';
 import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
+import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 type AllPassSlipListTabProps = {
   passslips: Array<PassSlip> | null;
@@ -50,10 +51,10 @@ export const AllPassSlipListTab = ({
               <li
                 key={index}
                 onClick={() => onSelect(item)}
-                className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
+                className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
               >
-                <div className=" w-full py-2 px-1 ">
-                  <h1 className="font-medium text-xl text-gray-600">
+                <div className="w-full px-1 py-2 ">
+                  <h1 className="text-xl font-medium text-gray-600">
                     {item.natureOfBusiness}
                   </h1>
                   <p className="text-sm text-gray-500">
@@ -68,7 +69,9 @@ export const AllPassSlipListTab = ({
                   </p>
 
                   <p className="text-xs text-indigo-500">
+
                     Status: {item.status}
+
                   </p>
                 </div>
               </li>
