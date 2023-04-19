@@ -27,13 +27,26 @@ export type JobOpeningDetails = {
     itemNumber: string;
     positionTitle: string;
     assignedTo: {
-      division: string;
-      office: string;
-      department: string;
+      division: {
+        id: string;
+        name: string;
+      };
+      office: {
+        id: string;
+        name: string;
+      };
+      department: {
+        id: string;
+        name: string;
+      };
     };
-    salaryGrade: number;
-    stepIncrement: number;
-    actualSalary: number;
+    salary: {
+      id: string;
+      stepIncrement: number;
+      amount: number;
+      salaryGrade: number;
+    };
+
     natureOfAppointment: string;
     summary: string;
     description: string;

@@ -10,7 +10,7 @@ export const JobDetailsPanel = (props: {
 }): JSX.Element => {
   return (
     <>
-      <div className="bg-slate-100 flex flex-col gap-2 py-4 px-4 m-0 rounded-xl text-gray-800">
+      <div className="flex flex-col gap-2 px-4 py-4 m-0 text-gray-800 bg-slate-100 rounded-xl">
         <div className="pr-2 ">
           <label className="font-bold">Item Number: </label>
           {props.data.jobDescription.itemNumber}
@@ -25,7 +25,7 @@ export const JobDetailsPanel = (props: {
         </div> */}
         <div className="pr-2">
           <label className="font-bold">Department: </label>
-          {props.data.jobDescription.assignedTo.department}
+          {props.data.jobDescription.assignedTo.department.name}
         </div>
         {/* <div className="pr-2">
           <label className="font-bold">Division: </label>
@@ -37,7 +37,7 @@ export const JobDetailsPanel = (props: {
         </div>
         <div className="pr-2">
           <label className="font-bold">Salary Grade: </label>
-          {props.data.jobDescription.salaryGrade}
+          {props.data.jobDescription.salary.salaryGrade}
         </div>
         <div className="pr-2">
           <label className="font-bold">Nature of Appointment: </label>

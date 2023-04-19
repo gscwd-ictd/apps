@@ -117,6 +117,7 @@ export default function Vacancies({
     setIsMessageOpen(true);
 
     const jobOpeningDesc = await getJobOpeningDetails(vacancies.vppId);
+    console.log(jobOpeningDesc);
     if (jobOpeningDesc) {
       setJobDetails(jobOpeningDesc);
       if (jobOpeningDesc.error) {
@@ -136,6 +137,7 @@ export default function Vacancies({
 
   const handleWorkExperience = async (employeeId: string) => {
     const data = await getWorkExp(employeeId);
+
     if (data) {
       if (data.error) {
         setErrorWorkExperience(data.error + ' Error');
