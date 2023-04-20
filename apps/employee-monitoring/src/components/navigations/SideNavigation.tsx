@@ -18,20 +18,19 @@ export const SideNavigation = () => {
   const { pathname } = useRouter();
 
   return (
-    <Sidebar className="relative w-full" background="bg-slate-900">
+    <Sidebar className="relative w-full" background="bg-gray-800">
       <Sidebar.Header>
-        <div className="flex items-center justify-center w-full gap-0 py-5 text-white">
+        <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
           <section className="">
             <div className="text-sky-300/40">
               <i className="text-5xl bx bxs-network-chart"></i>
-              {/* <i className="text-5xl bx bxl-steam"></i> */}
             </div>
           </section>
 
           <section
             className={`${
               isCollapsed ? 'hidden' : ''
-            } flex flex-col text-center select-none`}
+            } flex flex-col text-center items-center select-none`}
           >
             <span className="text-5xl font-medium text-sky-300">HRMS</span>
             <span className="text-xs font-light text-sky-300">
@@ -56,7 +55,7 @@ export const SideNavigation = () => {
             selected={pathname === Paths[0] ? true : false}
             icon={
               <>
-                <i className="text-2xl bx bx-home"></i>
+                <i className="text-xl bx bx-home"></i>
               </>
             }
             path={Paths[0]}
@@ -80,7 +79,7 @@ export const SideNavigation = () => {
             selected={pathname === Paths[1] ? true : false}
             icon={
               <>
-                <i className="text-2xl bx bx-fingerprint"></i>
+                <i className="text-xl bx bx-fingerprint"></i>
               </>
             }
             path={Paths[1]}
@@ -93,7 +92,7 @@ export const SideNavigation = () => {
             selected={pathname === Paths[2] ? true : false}
             icon={
               <>
-                <i className="text-2xl bx bx-run"></i>
+                <i className="text-xl bx bx-run"></i>
               </>
             }
             path={Paths[2]}
@@ -106,7 +105,7 @@ export const SideNavigation = () => {
             selected={pathname === Paths[5] ? true : false}
             icon={
               <>
-                <i className="text-2xl bx bx-timer"></i>
+                <i className="text-xl bx bx-timer"></i>
               </>
             }
             path={Paths[5]}
@@ -119,7 +118,7 @@ export const SideNavigation = () => {
             selected={pathname === Paths[6] ? true : false}
             icon={
               <>
-                <i className="text-2xl bx bxs-file-export"></i>
+                <i className="text-xl bx bxs-file-export"></i>
               </>
             }
             path={Paths[6]}
@@ -133,7 +132,7 @@ export const SideNavigation = () => {
             className="text-xs"
             icon={
               <>
-                <i className="text-2xl bx bx-chalkboard"></i>
+                <i className="text-xl bx bx-chalkboard"></i>
               </>
             }
           />
@@ -146,7 +145,7 @@ export const SideNavigation = () => {
             className="text-xs"
             icon={
               <>
-                <i className="text-2xl bx bxs-truck"></i>
+                <i className="text-xl bx bxs-truck"></i>
               </>
             }
           />
@@ -166,7 +165,7 @@ export const SideNavigation = () => {
           <Sidebar.Item
             display="Schedules"
             className="text-xs"
-            icon={<i className="text-2xl bx bx-calendar-edit"></i>}
+            icon={<i className="text-xl bx bx-calendar-edit"></i>}
             path=""
             hasSubItem
             selected={
@@ -182,7 +181,7 @@ export const SideNavigation = () => {
                   selected={pathname === Paths[15] ? true : false}
                   icon={
                     <>
-                      <i className="text-2xl bx bxs-buildings"></i>
+                      <i className="text-xl bx bxs-buildings"></i>
                     </>
                   }
                   path={Paths[15]}
@@ -193,7 +192,7 @@ export const SideNavigation = () => {
                   selected={pathname === Paths[16] ? true : false}
                   icon={
                     <>
-                      <i className="text-2xl bx bxs-hard-hat"></i>
+                      <i className="text-xl bx bxs-hard-hat"></i>
                     </>
                   }
                   path={Paths[16]}
@@ -204,7 +203,7 @@ export const SideNavigation = () => {
                   selected={pathname === Paths[17] ? true : false}
                   icon={
                     <>
-                      <i className="text-2xl bx bxs-factory"></i>
+                      <i className="text-xl bx bxs-factory"></i>
                     </>
                   }
                   path={Paths[17]}
@@ -219,7 +218,7 @@ export const SideNavigation = () => {
             display="Leave Benefits"
             className="text-xs"
             hasSubItem
-            icon={<i className="text-2xl bx bx-run"></i>}
+            icon={<i className="text-xl bx bx-run"></i>}
             selected={
               pathname === Paths[8] ||
               pathname === Paths[9] ||
@@ -274,7 +273,7 @@ export const SideNavigation = () => {
             selected={pathname === Paths[11] || pathname === Paths[12]}
             icon={
               <>
-                <i className="text-2xl bx bxs-calendar-event"></i>
+                <i className="text-xl bx bxs-calendar-event"></i>
               </>
             }
             subItems={

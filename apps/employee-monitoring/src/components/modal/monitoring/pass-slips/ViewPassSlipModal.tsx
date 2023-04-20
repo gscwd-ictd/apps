@@ -20,7 +20,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 }) => {
   return (
     <>
-      <Modal open={modalState} setOpen={setModalState} size="sm">
+      <Modal open={modalState} setOpen={setModalState} size="md">
         <Modal.Header withCloseBtn>
           <div className="flex gap-1 px-5 text-lg font-medium text-gray-700">
             {rowData.status === PassSlipStatus.ONGOING
@@ -50,35 +50,40 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="items-center text-xs text-gray-600">
+                  <div className="items-center text-sm text-gray-600">
                     Information, Communications & Technology
                   </div>
                 </div>
-
-                <LabelValue
-                  label="Date of Application: "
-                  value={dayjs(rowData.dateOfApplication).format(
-                    'MMMM DD, YYYY'
-                  )}
-                />
-
-                <LabelValue
-                  label="Nature of Business: "
-                  value={rowData.natureOfBusiness}
-                />
+                <div className="flex items-center justify-between ">
+                  <LabelValue
+                    label="Nature of Business: "
+                    textSize="sm"
+                    value={rowData.natureOfBusiness}
+                  />
+                  <LabelValue
+                    label="Date of Application: "
+                    textSize="sm"
+                    value={dayjs(rowData.dateOfApplication).format(
+                      'MMMM DD, YYYY'
+                    )}
+                  />
+                </div>
 
                 <LabelValue
                   label="Mode of Transportation: "
+                  textSize="sm"
                   value={rowData.obTransportation ?? 'N/A'}
                 />
 
                 <LabelValue
                   label="Estimated Hours: "
+                  textSize="sm"
                   value={rowData.estimateHours}
                 />
 
                 <LabelValue
                   label="Purpose or Destination: "
+                  textSize="sm"
                   value={rowData.purposeDestination}
                 />
               </div>

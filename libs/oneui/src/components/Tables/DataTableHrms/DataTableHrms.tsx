@@ -166,14 +166,14 @@ export const DataTableHrms = <T extends object>({
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={(value) => setGlobalFilter(String(value))}
-            className="px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-full hover:bg-gray-50 focus-visible:outline-none w-60"
+            className="px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus-visible:outline-none w-60"
             placeholder="Search all columns..."
           />
         ) : null}
       </div>
 
       <div className="flex flex-col order-3 w-full h-full overflow-y-auto bg-white rounded-md">
-        <table className="flex-1 w-full text-left whitespace-no-wrap bg-white table-auto">
+        <table className="flex-1 text-left whitespace-no-wrap bg-white">
           <thead className="sticky top-0 text-sm text-gray-600 bg-white border-b">
             {table.getHeaderGroups().map((group) => {
               return (
@@ -250,13 +250,13 @@ export const DataTableHrms = <T extends object>({
         </table>
 
         {data && paginate ? (
-          <div className="flex items-center justify-end px-4 py-3 space-x-3 bg-white border-t border-gray-200 sm:px-6">
+          <div className="sticky bottom-0 flex items-center justify-end w-full px-4 py-3 space-x-3 bg-white border-t border-gray-200 sm:px-6">
             {/* Next and Previous button */}
             <div className="flex justify-between flex-1 sm:hidden">
               <button
                 className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                 onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
+                disabled={!table.getCanPreviousPage()}
               >
                 {'Previous'}
               </button>
