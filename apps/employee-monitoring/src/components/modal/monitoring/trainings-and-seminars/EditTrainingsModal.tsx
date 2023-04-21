@@ -69,7 +69,7 @@ const EditTrainingsModal: FunctionComponent<EditModalProps> = ({
     data: swrTrainingTypes,
     error: swrError,
     isLoading: swrIsLoading,
-  } = useSWR('/trainings-and-seminars', fetcherEMS, {
+  } = useSWR('/trainings-seminars-types', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -81,29 +81,19 @@ const EditTrainingsModal: FunctionComponent<EditModalProps> = ({
     formState: { errors },
   } = useForm<Training>({
     mode: 'onChange',
-    defaultValues: {
-      name: '',
-      dateFrom: null,
-      dateTo: null,
-      hours: undefined,
-      inOffice: false,
-      location: '',
-      learningServiceProvider: '',
-      type: '',
-      assignedEmployees: [],
-    },
   });
 
   const onSubmit: SubmitHandler<Training> = (training: Training) => {
     // set loading to true
-    PostTraining(true);
+    // PostTraining();
+    console.log(training);
 
-    handlePostTraining(training);
+    // handlePostTraining(training);
   };
 
   const handlePostTraining = async (training: Training) => {
     const { error, result } = await postEmpMonitoring(
-      '/trainings-and-seminars',
+      '/trainings-seminars',
       training
     );
 
@@ -136,7 +126,10 @@ const EditTrainingsModal: FunctionComponent<EditModalProps> = ({
   const loadNewDefaultValues = (training: Training) => {
     setValue('id', training.id);
     setValue('name', training.name);
-    setValue('type', training.type);
+    // setValue('seminarTrainingType.name', training.seminarTrainingType.name);
+    setValue('seminarTrainingType', training.seminarTrainingType);
+
+    // setValue('seminarTrainingType', training.seminarTrainingType);
     setValue('dateFrom', training.dateFrom);
     setValue('dateTo', training.dateTo);
     setValue('hours', training.hours);
@@ -157,13 +150,13 @@ const EditTrainingsModal: FunctionComponent<EditModalProps> = ({
   useEffect(() => {
     if (!isEmpty(swrTrainingTypes)) {
       GetTrainingTypesSuccess(swrIsLoading, swrTrainingTypes.data);
-      // transformTrainingTypes(swrTrainingTypes.data);
-      transformTrainingTypes(TypesMockData); //! Remove this!
+      transformTrainingTypes(swrTrainingTypes.data);
+      // transformTrainingTypes(TypesMockData); //! Remove this!
     }
 
     if (!isEmpty(swrError)) {
       GetTrainingTypesFail(swrIsLoading, swrError);
-      transformTrainingTypes(TypesMockData); //! Remove this!
+      // transformTrainingTypes(TypesMockData); //! Remove this!
     }
   }, [swrError, swrTrainingTypes]);
 
@@ -189,7 +182,7 @@ const EditTrainingsModal: FunctionComponent<EditModalProps> = ({
         <Modal.Header>
           <div className="flex justify-between w-full">
             <span className="text-2xl text-gray-600">
-              New Trainings & Seminars
+              Update Trainings & Seminars
             </span>
             <button
               className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
@@ -233,7 +226,11 @@ const EditTrainingsModal: FunctionComponent<EditModalProps> = ({
                     <SelectListRF
                       id="trainingType"
                       selectList={trainingTypes}
-                      controller={{ ...register('type', { required: true }) }}
+                      controller={{
+                        ...register('seminarTrainingType', {
+                          required: true,
+                        }),
+                      }}
                       label="Training Type"
                       disabled={IsLoading ? true : false}
                     />

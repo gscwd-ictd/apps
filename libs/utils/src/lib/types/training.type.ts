@@ -1,3 +1,5 @@
+import { TrainingType, TrainingTypeId } from './training-type.type';
+
 export type Training = {
   id?: string;
   name: string;
@@ -7,8 +9,12 @@ export type Training = {
   location: string;
   inOffice: boolean;
   learningServiceProvider: string;
-  type: string;
+  seminarTrainingType: TrainingType;
   assignedEmployees?: Array<string>;
 };
+
+// edit/viewing type
+export type TrainingWithTrainingId = Omit<Training, 'seminarTrainingType'> &
+  TrainingTypeId;
 
 export type TrainingId = Pick<Training, 'id'>;

@@ -71,15 +71,15 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
 
   // form submission
   const onSubmit: SubmitHandler<TrainingType> = (data: TrainingType) => {
-    // UpdateTrainingType();
+    UpdateTrainingType();
 
-    // handlePatchResult(data);
-    console.log(data);
+    handlePatchResult(data);
+    // console.log(data);
   };
 
   const handlePatchResult = async (data: TrainingType) => {
     const { error, result } = await patchEmpMonitoring(
-      '/trainings-and-seminars',
+      '/trainings-seminars-types',
       data
     );
 
@@ -100,7 +100,7 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
 
       // traverse to each object and setValue
       keys.forEach((key: TrainingTypeKeys) => {
-        setValue(key, rowData[key], {
+        return setValue(key, rowData[key], {
           shouldValidate: true,
           shouldDirty: true,
         });
