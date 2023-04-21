@@ -105,9 +105,8 @@ export default function Messages({
           <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
             Inbox
             {acknowledgements.length > 0 ? (
-              acknowledgements
-                .reverse()
-                .map((acknowledgement: MessageContent, messageIdx: number) => {
+              acknowledgements.map(
+                (acknowledgement: MessageContent, messageIdx: number) => {
                   return (
                     <div
                       key={messageIdx}
@@ -129,7 +128,8 @@ export default function Messages({
                       />
                     </div>
                   );
-                })
+                }
+              )
             ) : (
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <label className="text-5xl opacity-50">NO MAIL</label>
