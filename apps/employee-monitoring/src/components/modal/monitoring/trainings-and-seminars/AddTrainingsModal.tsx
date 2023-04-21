@@ -26,12 +26,6 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
-// mock
-const distributionSelection: Array<SelectOption> = [
-  { label: 'Monthly', value: 'monthly' },
-  { label: 'Yearly', value: 'yearly' },
-];
-
 const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
@@ -72,7 +66,7 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
     data: swrTrainingTypes,
     error: swrError,
     isLoading: swrIsLoading,
-  } = useSWR('/trainings-and-seminars', fetcherEMS, {
+  } = useSWR('/trainings-seminars-types', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -92,21 +86,21 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
       inOffice: false,
       location: '',
       learningServiceProvider: '',
-      type: '',
+      seminarTrainingType: { name: '' },
       assignedEmployees: [],
     },
   });
 
   const onSubmit: SubmitHandler<Training> = (training: Training) => {
     // set loading to true
-    PostTraining(true);
+    PostTraining();
 
     handlePostTraining(training);
   };
 
   const handlePostTraining = async (training: Training) => {
     const { error, result } = await postEmpMonitoring(
-      '/trainings-and-seminars',
+      '/trainings-seminars',
       training
     );
 
@@ -149,13 +143,13 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
   useEffect(() => {
     if (!isEmpty(swrTrainingTypes)) {
       GetTrainingTypesSuccess(swrIsLoading, swrTrainingTypes.data);
-      // transformTrainingTypes(swrTrainingTypes.data);
-      transformTrainingTypes(TypesMockData); //! Remove this!
+      transformTrainingTypes(swrTrainingTypes.data);
+      // transformTrainingTypes(TypesMockData); //! Remove this!
     }
 
     if (!isEmpty(swrError)) {
       GetTrainingTypesFail(swrIsLoading, swrError);
-      transformTrainingTypes(TypesMockData); //! Remove this!
+      // transformTrainingTypes(TypesMockData); //! Remove this!
     }
   }, [swrError, swrTrainingTypes]);
 
@@ -220,7 +214,9 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
                     <SelectListRF
                       id="trainingType"
                       selectList={trainingTypes}
-                      controller={{ ...register('type', { required: true }) }}
+                      controller={{
+                        ...register('seminarTrainingType', { required: true }),
+                      }}
                       label="Training Type"
                       disabled={IsLoading ? true : false}
                     />
@@ -231,6 +227,7 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
                       controller={{
                         ...register('dateFrom', { required: true }),
                       }}
+                      type="date"
                       disabled={IsLoading ? true : false}
                     />
 
@@ -238,6 +235,7 @@ const AddTrainingsModal: FunctionComponent<AddModalProps> = ({
                       id="trainingDateEnd"
                       label="Date End"
                       controller={{ ...register('dateTo', { required: true }) }}
+                      type="date"
                       disabled={IsLoading ? true : false}
                     />
 

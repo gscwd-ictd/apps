@@ -391,7 +391,7 @@ export default function AppPosAppointment({
       <MainContainer>
         <div className="w-full h-full px-32">
           <ContentHeader
-            title="Applicant Selection"
+            title="Appointing Authority Selection"
             subtitle="Select an applicant for the position"
           >
             <Button onClick={openModal}>

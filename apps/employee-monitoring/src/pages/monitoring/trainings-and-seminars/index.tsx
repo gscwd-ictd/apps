@@ -7,86 +7,115 @@ import DeleteTrainingsModal from 'apps/employee-monitoring/src/components/modal/
 import EditTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/EditTrainingsModal';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { useTrainingsStore } from 'apps/employee-monitoring/src/store/training.store';
 import UseRenderBooleanYesOrNo from 'apps/employee-monitoring/src/utils/functions/RenderBooleanYesOrNo';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import {
-  Training,
-  TrainingId,
-} from '../../../../../../libs/utils/src/lib/types/training.type';
+import { Training } from '../../../../../../libs/utils/src/lib/types/training.type';
+import useSWR from 'swr';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import { isEmpty } from 'lodash';
+import dayjs from 'dayjs';
 
 // mock data
-const training: Array<Training> = [
-  {
-    id: '001',
-    name: 'Skills Training',
-    dateFrom: 'February 27, 2023',
-    dateTo: 'February 29, 2023',
-    hours: 18,
-    inOffice: true,
-    learningServiceProvider: 'General Santos City Water District',
-    location: 'GSCWD Office',
-    type: 'foundational',
-    assignedEmployees: [
-      'Gergina Phan',
-      'Spiridon Duarte',
-      'Nidia Wolanski',
-      'Zemfira Benvenuti',
-      'Tony Hutmacher',
-    ],
-  },
-  {
-    id: '002',
-    name: 'Leadership Training',
-    dateFrom: 'March 18, 2023',
-    dateTo: 'March 18, 2023',
-    hours: 5,
-    inOffice: true,
-    learningServiceProvider: 'General Santos City Water District',
-    location: 'GSCWD Office',
-    type: 'managerial',
-    assignedEmployees: ['Ellen Kron', 'Joana Loper'],
-  },
-  {
-    id: '003',
-    name: 'Senior Executive Training',
-    dateFrom: 'March 22, 2023',
-    dateTo: 'March 23, 2023',
-    hours: 10,
-    inOffice: false,
-    learningServiceProvider: 'Ree Cardo Services',
-    location: 'Green Leaf Hotel Gensan',
-    type: 'managerial',
-    assignedEmployees: ['Georgina Zeman', 'Inna Trajkovski'],
-  },
-  {
-    id: '004',
-    name: 'Technical Skills Training',
-    dateFrom: 'April 01, 2023',
-    dateTo: 'April 02, 2023',
-    hours: 10,
-    inOffice: false,
-    learningServiceProvider: 'Ree Cardo Services',
-    location: 'Gumasa, Saranggani Province',
-    type: 'technical',
-    assignedEmployees: ['Theo McPhee', 'Wilma Ariesen'],
-  },
-  {
-    id: '005',
-    name: 'Project Management Workshop Seminar',
-    dateFrom: 'April 05, 2023',
-    dateTo: 'April 10, 2023',
-    hours: 36,
-    inOffice: false,
-    learningServiceProvider: 'Ree Cardo Services',
-    location: 'Cebu City',
-    type: 'professional',
-    assignedEmployees: ['Sofia Whitaker'],
-  },
-];
+// const training: Array<Training> = [
+//   {
+//     id: '001',
+//     name: 'Skills Training',
+//     dateFrom: 'February 27, 2023',
+//     dateTo: 'February 29, 2023',
+//     hours: 18,
+//     inOffice: true,
+//     learningServiceProvider: 'General Santos City Water District',
+//     location: 'GSCWD Office',
+//     seminarTrainingType: 'foundational',
+//     assignedEmployees: [
+//       'Gergina Phan',
+//       'Spiridon Duarte',
+//       'Nidia Wolanski',
+//       'Zemfira Benvenuti',
+//       'Tony Hutmacher',
+//     ],
+//   },
+//   {
+//     id: '002',
+//     name: 'Leadership Training',
+//     dateFrom: 'March 18, 2023',
+//     dateTo: 'March 18, 2023',
+//     hours: 5,
+//     inOffice: true,
+//     learningServiceProvider: 'General Santos City Water District',
+//     location: 'GSCWD Office',
+//     seminarTrainingType: 'managerial',
+//     assignedEmployees: ['Ellen Kron', 'Joana Loper'],
+//   },
+//   {
+//     id: '003',
+//     name: 'Senior Executive Training',
+//     dateFrom: 'March 22, 2023',
+//     dateTo: 'March 23, 2023',
+//     hours: 10,
+//     inOffice: false,
+//     learningServiceProvider: 'Ree Cardo Services',
+//     location: 'Green Leaf Hotel Gensan',
+//     seminarTrainingType: 'managerial',
+//     assignedEmployees: ['Georgina Zeman', 'Inna Trajkovski'],
+//   },
+//   {
+//     id: '004',
+//     name: 'Technical Skills Training',
+//     dateFrom: 'April 01, 2023',
+//     dateTo: 'April 02, 2023',
+//     hours: 10,
+//     inOffice: false,
+//     learningServiceProvider: 'Ree Cardo Services',
+//     location: 'Gumasa, Saranggani Province',
+//     seminarTrainingType: 'technical',
+//     assignedEmployees: ['Theo McPhee', 'Wilma Ariesen'],
+//   },
+//   {
+//     id: '005',
+//     name: 'Project Management Workshop Seminar',
+//     dateFrom: 'April 05, 2023',
+//     dateTo: 'April 10, 2023',
+//     hours: 36,
+//     inOffice: false,
+//     learningServiceProvider: 'Ree Cardo Services',
+//     location: 'Cebu City',
+//     seminarTrainingType: 'professional',
+//     assignedEmployees: ['Sofia Whitaker'],
+//   },
+// ];
 
 export default function Index() {
-  const [trainings, setTrainings] = useState<Array<Training>>([]);
+  const {
+    trainings,
+    deleteResponse,
+    postResponse,
+    updateResponse,
+    getTrainings,
+    getTrainingsFail,
+    getTrainingsSuccess,
+  } = useTrainingsStore((state) => ({
+    trainings: state.trainings,
+    postResponse: state.training.postResponse,
+    updateResponse: state.training.updateResponse,
+    deleteResponse: state.training.deleteResponse,
+    getTrainings: state.getTrainings,
+    getTrainingsSuccess: state.getTrainingsSuccess,
+    getTrainingsFail: state.getTrainingsFail,
+  }));
+
+  const {
+    data: swrTrainings,
+    isLoading: swrTrainingsIsLoading,
+    error: swrTrainingsError,
+    mutate: swrTrainingsMutate,
+  } = useSWR('/trainings-seminars', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
   const [currentRowData, setCurrentRowData] = useState<Training>(
     {} as Training
   );
@@ -133,20 +162,20 @@ export default function Index() {
       header: () => 'Training/Seminar Name',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('type', {
+    columnHelper.accessor('seminarTrainingType', {
       enableSorting: false,
       header: () => 'Type',
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue().name,
     }),
     columnHelper.accessor('dateFrom', {
       enableSorting: false,
       header: () => 'Date Start',
-      cell: (info) => info.getValue(),
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('dateTo', {
       enableSorting: false,
       header: () => 'Date End',
-      cell: (info) => info.getValue(),
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('hours', {
       enableSorting: false,
@@ -219,9 +248,30 @@ export default function Index() {
     );
   };
 
+  // initial zustand state
   useEffect(() => {
-    setTrainings(training);
-  }, []);
+    if (swrTrainingsIsLoading) {
+      getTrainings();
+    }
+  }, [swrTrainingsIsLoading]);
+
+  // success get
+  useEffect(() => {
+    if (!isEmpty(swrTrainings)) getTrainingsSuccess(swrTrainings.data);
+
+    if (!isEmpty(swrTrainingsError)) getTrainingsFail(swrTrainingsError);
+  }, [swrTrainings, swrTrainingsError]);
+
+  // mutate
+  useEffect(() => {
+    if (
+      !isEmpty(postResponse) ||
+      !isEmpty(updateResponse) ||
+      !isEmpty(deleteResponse)
+    ) {
+      swrTrainingsMutate();
+    }
+  }, [postResponse, deleteResponse, updateResponse]);
 
   return (
     <>

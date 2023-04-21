@@ -20,7 +20,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 }) => {
   return (
     <>
-      <Modal open={modalState} setOpen={setModalState} size="sm">
+      <Modal open={modalState} setOpen={setModalState} size="lg">
         <Modal.Header withCloseBtn>
           <div className="flex gap-1 px-5 text-lg font-medium text-gray-700">
             {rowData.status === PassSlipStatus.ONGOING
@@ -40,9 +40,9 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
             <div className="flex flex-col w-full gap-4 px-5">
               {/* Date of Application */}
 
-              <div className="px-5 py-2 bg-gray-100 rounded">
-                <div className="flex items-center justify-between ">
-                  <div className="flex items-center gap-2 ">
+              <div className="flex flex-col gap-2 px-5 py-2 bg-gray-100 rounded">
+                <div className="sm:flex sm:flex-col md:gap-2 md:flex md:flex-col lg:flex lg:flex-row lg:justify-between">
+                  {/* <div className="flex items-center gap-2 ">
                     <i className="text-blue-500 bx bxs-user"></i>
 
                     <div className="font-medium text-gray-600 text-md">
@@ -50,35 +50,46 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="items-center text-xs text-gray-600">
+                  <div className="items-center text-sm text-gray-600">
                     Information, Communications & Technology
-                  </div>
+                  </div> */}
+                  <LabelValue
+                    label="Employee Name: "
+                    textSize="sm"
+                    value={rowData.employeeName}
+                  />
+                </div>
+                <div className="gap-0 sm:gap-2 sm:flex sm:flex-col md:gap-2 md:flex md:flex-col lg:flex lg:flex-row lg:justify-between ">
+                  <LabelValue
+                    label="Nature of Business: "
+                    textSize="sm"
+                    value={rowData.natureOfBusiness}
+                  />
+                  <LabelValue
+                    label="Date of Application: "
+                    textSize="sm"
+                    value={dayjs(rowData.dateOfApplication).format(
+                      'MMMM DD, YYYY'
+                    )}
+                  />
+                </div>
+                <div className="sm:flex sm:flex-col md:gap-2 md:flex md:flex-col lg:flex lg:flex-row lg:justify-between ">
+                  <LabelValue
+                    label="Mode of Transportation: "
+                    textSize="sm"
+                    value={rowData.obTransportation ?? 'N/A'}
+                  />
+
+                  <LabelValue
+                    label="Estimated Hours: "
+                    textSize="sm"
+                    value={rowData.estimateHours}
+                  />
                 </div>
 
                 <LabelValue
-                  label="Date of Application: "
-                  value={dayjs(rowData.dateOfApplication).format(
-                    'MMMM DD, YYYY'
-                  )}
-                />
-
-                <LabelValue
-                  label="Nature of Business: "
-                  value={rowData.natureOfBusiness}
-                />
-
-                <LabelValue
-                  label="Mode of Transportation: "
-                  value={rowData.obTransportation ?? 'N/A'}
-                />
-
-                <LabelValue
-                  label="Estimated Hours: "
-                  value={rowData.estimateHours}
-                />
-
-                <LabelValue
                   label="Purpose or Destination: "
+                  textSize="sm"
                   value={rowData.purposeDestination}
                 />
               </div>

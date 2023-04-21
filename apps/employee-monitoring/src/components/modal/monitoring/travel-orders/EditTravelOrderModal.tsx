@@ -295,7 +295,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                   disabled={IsLoadingEAO ? true : false}
                 >
                   <div className="relative mt-1">
-                    <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                    <div className="relative w-full overflow-hidden text-left bg-white rounded-lg cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                       <Combobox.Input
                         className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
                         block p-2.5
@@ -316,7 +316,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                           <LoadingSpinner size="xs" />
                         ) : (
                           <ChevronDownIcon
-                            className="h-5 w-5 text-gray-400"
+                            className="w-5 h-5 text-gray-400"
                             aria-hidden="true"
                           />
                         )}
@@ -330,10 +330,10 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                       leaveTo="opacity-0"
                       afterLeave={() => setEmployeeQuery('')}
                     >
-                      <Combobox.Options className="absolute mt-1 max-h-30 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      <Combobox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-30 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {filteredEmployee.length === 0 &&
                         employeeQuery !== '' ? (
-                          <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                          <div className="relative px-4 py-2 text-gray-700 cursor-default select-none">
                             Nothing found.
                           </div>
                         ) : (
@@ -366,7 +366,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                                       }`}
                                     >
                                       <CheckIcon
-                                        className="h-5 w-5"
+                                        className="w-5 h-5"
                                         aria-hidden="true"
                                       />
                                     </span>
@@ -395,7 +395,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                 {fields.map((item, index) => {
                   return (
                     <div
-                      className="grid md:grid-cols-11 md:gap-3 pb-1"
+                      className="grid pb-1 md:grid-cols-11 md:gap-3"
                       key={item.id}
                     >
                       {/* Date of visit */}
@@ -499,7 +499,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
               variant="info"
               type="submit"
               form="editTravelOrderForm"
-              className="text-gray-400 ml-1 disabled:cursor-not-allowed"
+              className="ml-1 text-gray-400 disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>

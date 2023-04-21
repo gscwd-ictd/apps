@@ -114,7 +114,8 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateTrainings,
-  } = useSWR('/trainings-and-seminars', fetcherEMS, {
+  } = useSWR('/trainings-seminars-types', fetcherEMS, {
+    // changed from trainings-and-seminars-types
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -236,8 +237,8 @@ const Index = () => {
             </div>
 
             <DataTableHrms
-              data={TypesMockData}
-              // data={TrainingTypes}
+              // data={TypesMockData}
+              data={TrainingTypes}
               columns={columns}
               columnVisibility={columnVisibility}
               paginate

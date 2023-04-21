@@ -9,8 +9,12 @@ type ResponseTraining = {
   deleteResponse: TrainingId;
 };
 
+type ResponseEmployees = {
+  postResponse: Array<EmployeeAsOption>;
+  deleteResponse: Array<EmployeeAsOption>;
+};
+
 type LoadingTraining = {
-  loadingEmployees: boolean;
   loadingTrainings: boolean;
   loadingTraining: boolean;
 };
@@ -18,7 +22,20 @@ type LoadingTraining = {
 type ErrorTraining = {
   errorTrainings: string;
   errorTraining: string;
-  errorEmployees: string;
+};
+
+type LoadingEmployees = {
+  loadingGetAssignedEmployees: boolean;
+  loadingGetUnassignedEmployees: boolean;
+  loadingPostAssignedEmployees: boolean;
+  loadingDeleteAssignedEmployees: boolean;
+};
+
+type ErrorEmployees = {
+  errorGetAssignedEmployees: string;
+  errorGetUnassignedEmployees: string;
+  errorPostAssignedEmployees: string;
+  errorDeleteAssignedEmployees: string;
 };
 
 export type TrainingsState = {
@@ -26,7 +43,11 @@ export type TrainingsState = {
   training: ResponseTraining;
   loading: LoadingTraining;
   error: ErrorTraining;
+  loadingEmployees: LoadingEmployees;
+  errorEmployees: ErrorEmployees;
+  employees: ResponseEmployees;
   assignedEmployees: Array<EmployeeAsOption>;
+  unassignedEmployees: Array<EmployeeAsOption>;
   employeeIdsForRemove: Array<string>;
   setAssignedEmployees: (assignedEmployees: Array<EmployeeAsOption>) => void;
   setEmployeeIdsForRemove: (employeeId: string) => void;
@@ -35,19 +56,23 @@ export type TrainingsState = {
   getAssignedEmployeesSuccess: (response: Array<EmployeeAsOption>) => void;
   getAssignedEmployeesFail: (error: string) => void;
 
-  getTrainings: (loading: boolean) => void;
+  postAssignedEmployees: () => void;
+  postAssignedEmployeesSuccess: (response: Array<EmployeeAsOption>) => void;
+  postAssignedEmployeesFail: (error: string) => void;
+
+  getTrainings: () => void;
   getTrainingsSuccess: (response: Array<Training>) => void;
   getTrainingsFail: (error: string) => void;
 
-  postTraining: (loading: boolean) => void;
+  postTraining: () => void;
   postTrainingSuccess: (response: Training) => void;
   postTrainingFail: (error: string) => void;
 
-  updateTraining: (loading: boolean) => void;
+  updateTraining: () => void;
   updateTrainingSuccess: (response: Training) => void;
   updateTrainingFail: (error: string) => void;
 
-  deleteTraining: (loading: boolean) => void;
+  deleteTraining: () => void;
   deleteTrainingSuccess: (response: TrainingId) => void;
   deleteTrainingFail: (error: string) => void;
 
@@ -58,7 +83,22 @@ export const useTrainingsStore = create<TrainingsState>()(
   devtools((set, get) => ({
     trainings: [],
     assignedEmployees: [],
+    unassignedEmployees: [],
     employeeIdsForRemove: [],
+    employees: { postResponse: [], deleteResponse: [] },
+    errorEmployees: {
+      errorGetAssignedEmployees: '',
+      errorDeleteAssignedEmployees: '',
+      errorGetUnassignedEmployees: '',
+      errorPostAssignedEmployees: '',
+    },
+
+    loadingEmployees: {
+      loadingDeleteAssignedEmployees: false,
+      loadingGetAssignedEmployees: false,
+      loadingGetUnassignedEmployees: false,
+      loadingPostAssignedEmployees: false,
+    },
     training: {
       postResponse: {} as Training,
       updateResponse: {} as Training,
@@ -67,12 +107,11 @@ export const useTrainingsStore = create<TrainingsState>()(
     loading: {
       loadingTrainings: false,
       loadingTraining: false,
-      loadingEmployees: false,
     },
+
     error: {
       errorTrainings: '',
       errorTraining: '',
-      errorEmployees: '',
     },
 
     setEmployeeIdsForRemove: (employeeId: string) => {
@@ -89,28 +128,80 @@ export const useTrainingsStore = create<TrainingsState>()(
     getAssignedEmployees: () =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingEmployees: true },
-        error: { ...state.error, errorEmployees: '' },
+        loadingEmployees: {
+          ...state.loadingEmployees,
+          loadingGetAssignedEmployees: true,
+        },
+        errorEmployees: {
+          ...state.errorEmployees,
+          errorGetAssignedEmployees: '',
+        },
       })),
 
     getAssignedEmployeesSuccess: (response: Array<EmployeeAsOption>) =>
       set((state) => ({
         ...state,
         assignedEmployees: response,
-        loading: { ...state.loading, loadingEmployees: false },
+        loadingEmployees: {
+          ...state.loadingEmployees,
+          loadingGetAssignedEmployees: false,
+        },
       })),
 
     getAssignedEmployeesFail: (error: string) =>
       set((state) => ({
         ...state,
-        error: { ...state.error, errorEmployees: error },
+        errorEmployees: {
+          ...state.errorEmployees,
+          errorGetAssignedEmployees: error,
+        },
+        loadingEmployees: {
+          ...state.loadingEmployees,
+          loadingGetAssignedEmployees: false,
+        },
       })),
 
-    getTrainings: (loading: boolean) =>
+    postAssignedEmployees: () =>
+      set((state) => ({
+        ...state,
+        errorEmployees: {
+          ...state.errorEmployees,
+          errorPostAssignedEmployees: '',
+        },
+        employees: { ...state.employees, postResponse: [] },
+        loadingEmployees: {
+          ...state.loadingEmployees,
+          loadingPostAssignedEmployees: false,
+        },
+      })),
+
+    postAssignedEmployeesSuccess: (response: Array<EmployeeAsOption>) =>
+      set((state) => ({
+        ...state,
+        assignedEmployees: response,
+        loadingEmployees: {
+          ...state.loadingEmployees,
+          loadingPostAssignedEmployees: false,
+        },
+      })),
+
+    postAssignedEmployeesFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loadingEmployees: {
+          ...state.loadingEmployees,
+          loadingPostAssignedEmployees: false,
+        },
+        errorEmployees: {
+          ...state.errorEmployees,
+          errorPostAssignedEmployees: error,
+        },
+      })),
+    getTrainings: () =>
       set((state) => ({
         ...state,
         trainings: [],
-        loading: { ...state.loading, loadingTrainings: loading },
+        loading: { ...state.loading, loadingTrainings: true },
         error: { ...state.error, errorTrainings: '' },
       })),
     getTrainingsSuccess: (response: Array<Training>) =>

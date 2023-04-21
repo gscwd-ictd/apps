@@ -72,7 +72,7 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
 
   const handlePostResult = async (data: TrainingType) => {
     const { error, result } = await postEmpMonitoring(
-      '/trainings-and-seminars',
+      '/trainings-seminars-types', // changed from trainings-and-seminars
       data
     );
 
@@ -142,7 +142,7 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
               variant="info"
               type="submit"
               form="addTrainingTypeForm"
-              className="text-gray-400 ml-1 disabled:cursor-not-allowed"
+              className="ml-1 text-gray-400 disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>

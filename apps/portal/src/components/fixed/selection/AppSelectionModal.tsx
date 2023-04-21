@@ -1,7 +1,4 @@
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import Link from 'next/link';
-import { HiX } from 'react-icons/hi';
-import { usePassSlipStore } from '../../../store/passslip.store';
+import { Button, Modal } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
 import { AppSelectionModalController } from './AppSelectionListController';
 import { useAppSelectionStore } from '../../../../src/store/selection.store';
