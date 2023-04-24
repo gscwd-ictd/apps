@@ -13,7 +13,11 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 // import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
@@ -306,18 +310,18 @@ export default function Approvals({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);
