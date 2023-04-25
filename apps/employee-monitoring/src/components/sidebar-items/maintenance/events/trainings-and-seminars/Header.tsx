@@ -1,18 +1,18 @@
 import { Button } from '@gscwd-apps/oneui';
-import { useTrainingTypeStore } from 'apps/employee-monitoring/src/store/training-type.store';
+import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { useState } from 'react';
 import { SearchBox } from '../../../../inputs/SearchBox';
 
 export const TrainingCategoriesPageHeader = (): JSX.Element => {
   const [searchValue, setSearchValue] = useState<string>('');
-  const setAction = useTrainingTypeStore((state) => state.setAction);
-  const setModalIsOpen = useTrainingTypeStore((state) => state.setModalIsOpen);
+  // const setAction = useTrainingTypesStore((state) => state.setAction);
+  // const setModalIsOpen = useTrainingTypesStore((state) => state.setModalIsOpen);
 
   // open modal
   const createModalIsOpen = () => {
-    setModalIsOpen(true);
-    setAction(ModalActions.CREATE);
+    // setModalIsOpen(true);
+    // setAction(ModalActions.CREATE);
   };
 
   return (

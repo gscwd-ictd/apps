@@ -66,7 +66,7 @@ export const ColumnFilter = ({
     <>
       <datalist id={column.id + 'list'} className="capitalize">
         {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={UseCapitalizer(value)} key={value} />
+          <option value={value} key={value} />
         ))}
       </datalist>
 

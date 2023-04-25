@@ -9,7 +9,8 @@ import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
 import {
-  DataTableHrms,
+  DataTable,
+  useDataTable,
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
@@ -123,25 +124,30 @@ const Index = () => {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('travelOrderNo', {
-      header: () => 'Travel Order No.',
+      header: 'Travel Order No.',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('employee', {
-      header: () => 'Employee Name',
+      header: 'Employee Name',
       cell: (info) => info.getValue().fullName,
     }),
     columnHelper.accessor('dateRequested', {
-      header: () => 'Date',
+      header: 'Date',
       cell: (info) => info.getValue(),
     }),
     columnHelper.display({
       id: 'actions',
+      enableColumnFilter: false,
       cell: (props) => renderRowActions(props.row.original),
     }),
   ];
 
-  // Define visibility of columns
-  const columnVisibility = { id: false };
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: TypesMockData,
+    columnVisibility: { id: false },
+  });
 
   // Render row actions in the table component
   const renderRowActions = (rowData: TravelOrder) => {
@@ -291,14 +297,7 @@ const Index = () => {
               </button>
             </div>
 
-            <DataTableHrms
-              data={TypesMockData}
-              // data={TravelOrders}
-              columns={columns}
-              columnVisibility={columnVisibility}
-              paginate
-              showGlobalFilter
-            />
+            <DataTable model={table} showGlobalFilter={true} paginate={true} />
           </div>
         )}
       </Card>
