@@ -74,7 +74,6 @@ const EditTrainingTypeModal: FunctionComponent<EditModalProps> = ({
     UpdateTrainingType();
 
     handlePatchResult(data);
-    // console.log(data);
   };
 
   const handlePatchResult = async (data: TrainingType) => {

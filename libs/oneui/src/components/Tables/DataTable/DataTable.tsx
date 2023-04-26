@@ -11,36 +11,41 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
   width = 'auto',
   onRowClick,
   showGlobalFilter = false,
+  showColumnFilter = false,
   paginate = false,
 }) => {
   return (
     <>
-      <div className="order-1 w-full search-box-wrapper">
+      <div className="order-1 w-1/2 search-box-wrapper">
         {showGlobalFilter ? <GlobalFilter model={model} /> : null}
       </div>
 
-      <div className="order-1 w-full search-box-wrapper py-5">
-        <p className="text-xs pb-1">Filters:</p>
-        {model?.getHeaderGroups().map((headerGroup) => (
-          <div key={headerGroup.id} className="flex">
-            {headerGroup.headers.map((header) => (
-              <div key={header.id}>
-                {header.column.getCanFilter() ? (
-                  <div className=" w-1/4 pr-2">
-                    <ColumnFilter
-                      column={header.column}
-                      model={model}
-                      placeholder={header.column.columnDef.header}
-                    />
+      <div className="order-3 w-full search-box-wrapper py-5">
+        {showColumnFilter ? (
+          <>
+            <p className="text-xs pb-1">Filters:</p>
+            {model?.getHeaderGroups().map((headerGroup) => (
+              <div key={headerGroup.id} className="flex">
+                {headerGroup.headers.map((header) => (
+                  <div key={header.id}>
+                    {header.column.getCanFilter() ? (
+                      <div className=" w-1/4 pr-2">
+                        <ColumnFilter
+                          column={header.column}
+                          model={model}
+                          placeholder={header.column.columnDef.header}
+                        />
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
+                ))}
               </div>
             ))}
-          </div>
-        ))}
+          </>
+        ) : null}
       </div>
 
-      <div className="flex flex-col order-3 w-full h-full overflow-y-auto bg-white rounded-md">
+      <div className="flex flex-col order-4 w-full h-full overflow-y-auto bg-white rounded-md">
         <table className="flex-1 w-full text-left whitespace-no-wrap bg-white table-auto">
           <thead className="sticky top-0 text-sm text-gray-600 bg-white border-b">
             {model?.getHeaderGroups().map((headerGroup) => (

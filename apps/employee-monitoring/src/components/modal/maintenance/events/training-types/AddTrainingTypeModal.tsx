@@ -72,7 +72,7 @@ const AddTrainingTypeModal: FunctionComponent<AddModalProps> = ({
 
   const handlePostResult = async (data: TrainingType) => {
     const { error, result } = await postEmpMonitoring(
-      '/trainings-seminars-types', // changed from trainings-and-seminars
+      '/trainings-seminars-types',
       data
     );
 

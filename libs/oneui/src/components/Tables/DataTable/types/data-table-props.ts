@@ -6,5 +6,6 @@ export type DataTableProps = {
   model: Table<any>;
   onRowClick?: (row: Row<any>) => void;
   showGlobalFilter?: boolean;
+  showColumnFilter?: boolean;
   paginate?: boolean;
 };

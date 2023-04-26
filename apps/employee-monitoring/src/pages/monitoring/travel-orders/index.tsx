@@ -96,6 +96,17 @@ const Index = () => {
     {} as TravelOrder
   );
 
+  // fetch data for list of travel orders
+  const {
+    data: swrTravelOrder,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateTravelOrders,
+  } = useSWR('/travel-order', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);
@@ -142,13 +153,6 @@ const Index = () => {
     }),
   ];
 
-  // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: TypesMockData,
-    columnVisibility: { id: false },
-  });
-
   // Render row actions in the table component
   const renderRowActions = (rowData: TravelOrder) => {
     return (
@@ -171,17 +175,6 @@ const Index = () => {
       </div>
     );
   };
-
-  // fetch data for list of travel orders
-  const {
-    data: swrTravelOrder,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateTravelOrders,
-  } = useSWR('/travel-order', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
 
   // Zustand initialization
   const {
@@ -215,6 +208,13 @@ const Index = () => {
 
     EmptyResponse: state.emptyResponse,
   }));
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: TypesMockData,
+    columnVisibility: { id: false },
+  });
 
   // Initial zustand state update
   useEffect(() => {

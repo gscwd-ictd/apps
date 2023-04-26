@@ -9,7 +9,8 @@ import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
 import {
-  DataTableHrms,
+  DataTable,
+  useDataTable,
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
@@ -20,30 +21,42 @@ import EditTrainingTypeModal from 'apps/employee-monitoring/src/components/modal
 import DeleteTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/DeleteTrainingTypeModal';
 
 // Mock Data REMOVE later
-export const TypesMockData: Array<TrainingType> = [
-  {
-    id: '001',
-    name: 'Foundational',
-  },
-  {
-    id: '002',
-    name: 'Technical',
-  },
-  {
-    id: '003',
-    name: 'Managerial/Leadership',
-  },
-  {
-    id: '004',
-    name: 'Professional',
-  },
-];
+// export const TypesMockData: Array<TrainingType> = [
+//   {
+//     id: '001',
+//     name: 'Foundational',
+//   },
+//   {
+//     id: '002',
+//     name: 'Technical',
+//   },
+//   {
+//     id: '003',
+//     name: 'Managerial/Leadership',
+//   },
+//   {
+//     id: '004',
+//     name: 'Professional',
+//   },
+// ];
 
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<TrainingType>(
     {} as TrainingType
   );
+
+  // fetch data for list of holidays
+  const {
+    data: swrTrainingTypes,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateTrainings,
+  } = useSWR('/trainings-seminars-types', fetcherEMS, {
+    // changed from trainings-and-seminars-types
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -75,15 +88,14 @@ const Index = () => {
     columnHelper.accessor('name', {
       header: () => 'Name',
       cell: (info) => info.getValue(),
+      enableColumnFilter: false,
     }),
     columnHelper.display({
       id: 'actions',
       cell: (props) => renderRowActions(props.row.original),
+      enableColumnFilter: false,
     }),
   ];
-
-  // Define visibility of columns
-  const columnVisibility = { id: false };
 
   // Render row actions in the table component
   const renderRowActions = (rowData: TrainingType) => {
@@ -107,18 +119,6 @@ const Index = () => {
       </div>
     );
   };
-
-  // fetch data for list of holidays
-  const {
-    data: swrTrainingTypes,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateTrainings,
-  } = useSWR('/trainings-seminars-types', fetcherEMS, {
-    // changed from trainings-and-seminars-types
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
 
   // Zustand initialization
   const {
@@ -152,6 +152,13 @@ const Index = () => {
 
     EmptyResponse: state.emptyResponse,
   }));
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: TrainingTypes,
+    columnVisibility: { id: false },
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -236,13 +243,11 @@ const Index = () => {
               </button>
             </div>
 
-            <DataTableHrms
-              // data={TypesMockData}
-              data={TrainingTypes}
-              columns={columns}
-              columnVisibility={columnVisibility}
-              paginate
-              showGlobalFilter
+            <DataTable
+              model={table}
+              showGlobalFilter={true}
+              showColumnFilter={false}
+              paginate={true}
             />
           </div>
         )}
