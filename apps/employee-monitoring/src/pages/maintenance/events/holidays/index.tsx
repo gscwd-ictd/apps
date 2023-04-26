@@ -9,7 +9,8 @@ import { Holiday } from '../../../../utils/types/holiday.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
 import {
-  DataTableHrms,
+  DataTable,
+  useDataTable,
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
@@ -22,6 +23,17 @@ import DeleteHolidayModal from '../../../../components/modal/maintenance/events/
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<Holiday>({} as Holiday);
+
+  // fetch data for list of holidays
+  const {
+    data: swrHolidays,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateHolidays,
+  } = useSWR('/holidays', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -43,33 +55,6 @@ const Index = () => {
     setCurrentRowData(rowData);
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // Define table columns
-  const columnHelper = createColumnHelper<Holiday>();
-  const columns = [
-    columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('name', {
-      header: () => 'Event',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('holidayDate', {
-      header: () => 'Holiday Date',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('type', {
-      header: () => 'Type',
-      cell: (info) => renderHolidayType(info.getValue()),
-    }),
-    columnHelper.display({
-      id: 'actions',
-      cell: (props) => renderRowActions(props.row.original),
-    }),
-  ];
-
-  // Define visibility of columns
-  const columnVisibility = { id: false };
 
   // Render badge pill design
   const renderHolidayType = (holidayType: string) => {
@@ -113,16 +98,29 @@ const Index = () => {
     );
   };
 
-  // fetch data for list of holidays
-  const {
-    data: swrHolidays,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateHolidays,
-  } = useSWR('/holidays', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // Define table columns
+  const columnHelper = createColumnHelper<Holiday>();
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('name', {
+      header: () => 'Event',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('holidayDate', {
+      header: () => 'Holiday Date',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('type', {
+      header: () => 'Type',
+      cell: (info) => renderHolidayType(info.getValue()),
+    }),
+    columnHelper.display({
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
 
   // Zustand initialization
   const {
@@ -157,9 +155,15 @@ const Index = () => {
     EmptyResponse: state.emptyResponse,
   }));
 
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: Holidays,
+    columnVisibility: { id: false },
+  });
+
   // Initial zustand state update
   useEffect(() => {
-    EmptyResponse();
     if (swrIsLoading) {
       GetHolidays(swrIsLoading);
     }
@@ -183,6 +187,10 @@ const Index = () => {
       !isEmpty(DeleteHolidayResponse)
     ) {
       mutateHolidays();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 3000);
     }
   }, [PostHolidayResponse, UpdateHolidayResponse, DeleteHolidayResponse]);
 
@@ -233,12 +241,11 @@ const Index = () => {
               </button>
             </div>
 
-            <DataTableHrms
-              data={Holidays}
-              columns={columns}
-              columnVisibility={columnVisibility}
-              paginate
-              showGlobalFilter
+            <DataTable
+              model={table}
+              showGlobalFilter={true}
+              showColumnFilter={false}
+              paginate={true}
             />
           </div>
         )}

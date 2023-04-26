@@ -20,26 +20,6 @@ import AddTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/
 import EditTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/EditTrainingTypeModal';
 import DeleteTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/DeleteTrainingTypeModal';
 
-// Mock Data REMOVE later
-// export const TypesMockData: Array<TrainingType> = [
-//   {
-//     id: '001',
-//     name: 'Foundational',
-//   },
-//   {
-//     id: '002',
-//     name: 'Technical',
-//   },
-//   {
-//     id: '003',
-//     name: 'Managerial/Leadership',
-//   },
-//   {
-//     id: '004',
-//     name: 'Professional',
-//   },
-// ];
-
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<TrainingType>(
@@ -79,24 +59,6 @@ const Index = () => {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  // Define table columns
-  const columnHelper = createColumnHelper<TrainingType>();
-  const columns = [
-    columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('name', {
-      header: () => 'Name',
-      cell: (info) => info.getValue(),
-      enableColumnFilter: false,
-    }),
-    columnHelper.display({
-      id: 'actions',
-      cell: (props) => renderRowActions(props.row.original),
-      enableColumnFilter: false,
-    }),
-  ];
-
   // Render row actions in the table component
   const renderRowActions = (rowData: TrainingType) => {
     return (
@@ -119,6 +81,24 @@ const Index = () => {
       </div>
     );
   };
+
+  // Define table columns
+  const columnHelper = createColumnHelper<TrainingType>();
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('name', {
+      header: () => 'Name',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.display({
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+      enableColumnFilter: false,
+    }),
+  ];
 
   // Zustand initialization
   const {
@@ -162,7 +142,6 @@ const Index = () => {
 
   // Initial zustand state update
   useEffect(() => {
-    EmptyResponse();
     if (swrIsLoading) {
       GetTrainingTypes(swrIsLoading);
     }
@@ -179,6 +158,7 @@ const Index = () => {
     }
   }, [swrTrainingTypes, swrError]);
 
+  // Get new updated data and clear responses from POST, UPDATE and DELETE
   useEffect(() => {
     if (
       !isEmpty(PostTrainingTypeResponse) ||
@@ -186,6 +166,10 @@ const Index = () => {
       !isEmpty(DeleteTrainingTypeResponse)
     ) {
       mutateTrainings();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 3000);
     }
   }, [
     PostTrainingTypeResponse,
