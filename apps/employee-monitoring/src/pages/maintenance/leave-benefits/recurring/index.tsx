@@ -1,6 +1,7 @@
 import {
   Button,
-  DataTableHrms,
+  DataTable,
+  useDataTable,
   LoadingSpinner,
   Modal,
   ToastNotification,
@@ -23,7 +24,7 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 
 export default function Index() {
   const {
-    leaveBenefits,
+    LeaveBenefits,
     PostResponse,
     UpdateResponse,
     DeleteResponse,
@@ -36,7 +37,7 @@ export default function Index() {
     GetLeaveBenefitsFail,
     GetLeaveBenefitsSuccess,
   } = useLeaveBenefitStore((state) => ({
-    leaveBenefits: state.leaveBenefits,
+    LeaveBenefits: state.leaveBenefits,
     PostResponse: state.leaveBenefit.postResponse,
     UpdateResponse: state.leaveBenefit.updateResponse,
     DeleteResponse: state.leaveBenefit.deleteResponse,
@@ -49,6 +50,7 @@ export default function Index() {
     EmptyResponse: state.emptyResponse,
     EmptyErrors: state.emptyErrors,
   }));
+
   const [currentRowData, setCurrentRowData] = useState<LeaveBenefit>(
     {} as LeaveBenefit
   );
@@ -84,58 +86,6 @@ export default function Index() {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  // define table columns
-  const columnHelper = createColumnHelper<LeaveBenefit>();
-
-  const columns = [
-    columnHelper.accessor('id', {
-      enableSorting: false,
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('leaveName', {
-      header: () => 'Leave Name',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('accumulatedCredits', {
-      enableSorting: false,
-      header: () => 'Credits',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('creditDistribution', {
-      enableSorting: false,
-      header: () => 'Distribution',
-      cell: (info) => (
-        <div className="w-[4rem]">{UseRenderDistribution(info.getValue())}</div>
-      ),
-    }),
-    columnHelper.accessor('isMonetizable', {
-      enableSorting: false,
-      header: () => 'Monetizable',
-      cell: (info) => (
-        <div className="w-[3rem]">
-          {UseRenderBooleanYesOrNo(info.getValue())}
-        </div>
-      ),
-    }),
-    columnHelper.accessor('canBeCarriedOver', {
-      enableSorting: false,
-      header: () => 'Can be carried over',
-      cell: (info) => (
-        <div className="w-[3rem]">
-          {UseRenderBooleanYesOrNo(info.getValue())}
-        </div>
-      ),
-    }),
-    columnHelper.display({
-      header: () => 'Actions',
-      id: 'actions',
-      cell: (props) => renderRowActions(props.row.original),
-    }),
-  ];
-
-  // Define visibility of columns
-  const columnVisibility = { id: false };
-
   // Render row actions in the table component
   const renderRowActions = (rowData: LeaveBenefit) => {
     return (
@@ -159,10 +109,66 @@ export default function Index() {
     );
   };
 
+  // define table columns
+  const columnHelper = createColumnHelper<LeaveBenefit>();
+
+  const columns = [
+    columnHelper.accessor('id', {
+      enableSorting: false,
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('leaveName', {
+      header: 'Leave Name',
+      enableColumnFilter: false,
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('accumulatedCredits', {
+      enableSorting: false,
+      enableColumnFilter: false,
+      header: 'Credits',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('creditDistribution', {
+      enableSorting: false,
+      header: 'Distribution',
+      cell: (info) => (
+        <div className="w-[4rem]">{UseRenderDistribution(info.getValue())}</div>
+      ),
+    }),
+    columnHelper.accessor('isMonetizable', {
+      enableSorting: false,
+      header: 'Monetizable',
+      cell: (info) => (
+        <div className="w-[3rem]">
+          {UseRenderBooleanYesOrNo(info.getValue())}
+        </div>
+      ),
+    }),
+    columnHelper.accessor('canBeCarriedOver', {
+      enableSorting: false,
+      header: 'Can be carried over',
+      cell: (info) => (
+        <div className="w-[3rem]">
+          {UseRenderBooleanYesOrNo(info.getValue())}
+        </div>
+      ),
+    }),
+    columnHelper.display({
+      header: () => 'Actions',
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: LeaveBenefits,
+    columnVisibility: { id: false },
+  });
+
   // Initial zustand state update
   useEffect(() => {
-    EmptyResponse();
-    EmptyErrors();
     if (swrIsLoading) {
       GetLeaveBenefits(swrIsLoading);
     }
@@ -187,6 +193,11 @@ export default function Index() {
       !isEmpty(DeleteResponse)
     ) {
       mutateLeaveBenefits();
+
+      setTimeout(() => {
+        EmptyResponse();
+        EmptyErrors();
+      }, 3000);
     }
   }, [PostResponse, UpdateResponse, DeleteResponse]);
 
@@ -278,12 +289,11 @@ export default function Index() {
                   </button>
                 </div>
 
-                <DataTableHrms
-                  data={leaveBenefits}
-                  columns={columns}
-                  columnVisibility={columnVisibility}
-                  paginate
-                  showGlobalFilter
+                <DataTable
+                  model={table}
+                  showGlobalFilter={true}
+                  showColumnFilter={true}
+                  paginate={true}
                 />
               </div>
             )}

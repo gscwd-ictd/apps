@@ -74,7 +74,7 @@ export const ColumnFilter = ({
         type="text"
         value={(columnFilterValue ?? '') as string}
         onChange={(value) => column.setFilterValue(value)}
-        placeholder={`Column - ${placeholder}... ( ${
+        placeholder={`Column - ${placeholder}... (${
           column.getFacetedUniqueValues().size
         })`}
         className="px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus-visible:outline-none w-80"

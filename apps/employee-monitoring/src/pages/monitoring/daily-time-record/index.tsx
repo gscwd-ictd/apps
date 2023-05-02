@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button, DataTableHrms } from '@gscwd-apps/oneui';
+import { Button, DataTable, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
@@ -54,6 +53,18 @@ export default function Index({
     setModalIsOpen(true);
   };
 
+    // render row actions in the table component
+    const renderRowActions = (rowData: EmployeeRowData) => {
+      return (
+        <>
+          <div className="flex items-center justify-start">
+            <ActionDropdown />
+          </div>
+        </>
+      );
+    };
+
+    
   // define table columns
   const columnHelper = createColumnHelper<EmployeeRowData>();
 
@@ -63,17 +74,17 @@ export default function Index({
     }),
     columnHelper.accessor('fullName', {
       enableSorting: false,
-      header: () => 'Full Name',
+      header: 'Full Name',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('positionTitle', {
       enableSorting: false,
-      header: () => 'Position Title',
+      header: 'Position Title',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('assignment.name', {
       enableSorting: false,
-      header: () => 'Assignment',
+      header: 'Assignment',
       cell: (info) => info.getValue(),
     }),
     columnHelper.display({
@@ -83,19 +94,13 @@ export default function Index({
     }),
   ];
 
-  // Define visibility of columns
-  const columnVisibility = { id: false };
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: allEmployees,
+    columnVisibility: { id: false },
+  });
 
-  // render row actions in the table component
-  const renderRowActions = (rowData: EmployeeRowData) => {
-    return (
-      <>
-        <div className="flex items-center justify-start">
-          <ActionDropdown />
-        </div>
-      </>
-    );
-  };
 
   useEffect(() => {
     if (employees) {
@@ -135,12 +140,19 @@ export default function Index({
           <Card>
             {/** Top Card */}
             <div className="flex flex-col flex-wrap ">
-              <DataTableHrms
+              {/* <DataTableHrms
                 data={allEmployees}
                 columns={columns}
                 columnVisibility={columnVisibility}
                 paginate
                 showGlobalFilter
+              /> */}
+
+              <DataTable
+                model={table}
+                showGlobalFilter={true}
+                showColumnFilter={true}
+                paginate={true}
               />
             </div>
           </Card>

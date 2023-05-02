@@ -40,7 +40,7 @@ const DeleteTrainingsModal: FunctionComponent<DeleteModalProps> = ({
   const onSubmit: SubmitHandler<Training> = () => {
     if (!isEmpty(rowData.id)) {
       // set to true
-      DeleteTraining(true);
+      DeleteTraining();
 
       handleDeleteResult(rowData.id);
     }
