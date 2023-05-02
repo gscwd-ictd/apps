@@ -1,4 +1,4 @@
-import { Button, DataTableHrms, Modal } from '@gscwd-apps/oneui';
+import { Button, DataTable, useDataTable, Modal } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import AddEmpTrainingsModal from 'apps/employee-monitoring/src/components/modal/monitoring/trainings-and-seminars/AddEmployeeTrainingsModal';
@@ -88,6 +88,7 @@ import dayjs from 'dayjs';
 // ];
 
 export default function Index() {
+  // Zustand initialization
   const {
     trainings,
     deleteResponse,
@@ -149,74 +150,6 @@ export default function Index() {
   };
   const closeAddEmpActionModal = () => setAddEmpModalIsOpen(false);
 
-  // define table columns
-  const columnHelper = createColumnHelper<Training>();
-
-  const columns = [
-    columnHelper.accessor('id', {
-      enableSorting: false,
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('name', {
-      enableSorting: false,
-      header: () => 'Training/Seminar Name',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('seminarTrainingType', {
-      enableSorting: false,
-      header: () => 'Type',
-      cell: (info) => info.getValue().name,
-    }),
-    columnHelper.accessor('dateFrom', {
-      enableSorting: false,
-      header: () => 'Date Start',
-      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
-    }),
-    columnHelper.accessor('dateTo', {
-      enableSorting: false,
-      header: () => 'Date End',
-      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
-    }),
-    columnHelper.accessor('hours', {
-      enableSorting: false,
-      header: () => 'Total Hours',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('inOffice', {
-      enableSorting: false,
-      header: () => 'In-Office training?',
-      cell: (info) => (
-        <div className="w-[3rem]">
-          {UseRenderBooleanYesOrNo(info.getValue())}
-        </div>
-      ),
-    }),
-
-    columnHelper.accessor('learningServiceProvider', {
-      enableSorting: false,
-      header: () => 'Learning Service Provider',
-      cell: (info) => info.getValue(),
-    }),
-
-    columnHelper.accessor('location', {
-      enableSorting: false,
-      header: () => 'Location',
-      cell: (info) => info.getValue(),
-    }),
-
-    columnHelper.display({
-      header: () => 'Actions',
-      id: 'actions',
-      cell: (props) => renderRowActions(props.row.original),
-    }),
-  ];
-
-  // Define visibility of columns
-  const columnVisibility = {
-    id: false,
-    location: false,
-  };
-
   // Render row actions in the table component
   const renderRowActions = (rowData: Training) => {
     return (
@@ -248,6 +181,85 @@ export default function Index() {
     );
   };
 
+  // define table columns
+  const columnHelper = createColumnHelper<Training>();
+  const columns = [
+    columnHelper.accessor('id', {
+      enableSorting: false,
+      cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.accessor('name', {
+      header: 'Training/Seminar Name',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+
+    columnHelper.accessor('seminarTrainingType.name', {
+      enableSorting: false,
+      header: 'Type',
+      cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.group({
+      id: 'inclusiveDates',
+      header: () => <div className="text-center w-full">Inclusive Date</div>,
+      columns: [
+        columnHelper.accessor('dateFrom', {
+          enableSorting: false,
+          header: 'Date Start',
+          cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+        }),
+        columnHelper.accessor('dateTo', {
+          enableSorting: false,
+          header: 'Date End',
+          cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+        }),
+      ],
+    }),
+
+    // columnHelper.accessor('hours', {
+    //   enableSorting: false,
+    //   header: 'Total Hours',
+    //   cell: (info) => info.getValue(),
+    // }),
+
+    columnHelper.accessor('inOffice', {
+      enableSorting: false,
+      header: 'In-Office training?',
+      cell: (info) => (
+        <div className="w-[3rem]">
+          {UseRenderBooleanYesOrNo(info.getValue())}
+        </div>
+      ),
+    }),
+
+    columnHelper.accessor('learningServiceProvider', {
+      enableSorting: false,
+      header: 'Learning Service Provider',
+      cell: (info) => info.getValue(),
+    }),
+
+    // columnHelper.accessor('location', {
+    //   enableSorting: false,
+    //   header: () => 'Location',
+    //   cell: (info) => info.getValue(),
+    // }),
+
+    columnHelper.display({
+      header: () => 'Actions',
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: trainings,
+    columnVisibility: { id: false },
+  });
+
   // initial zustand state
   useEffect(() => {
     if (swrTrainingsIsLoading) {
@@ -275,7 +287,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full px-4">
         <BreadCrumbs
           title="Trainings & Seminars"
           crumbs={[
@@ -322,19 +334,18 @@ export default function Index() {
                   <button
                     type="button"
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none items-center focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center sm:inline-block md:inline-block lg:inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                    onClick={openAddActionModal}
+                    onClick={() => openAddActionModal}
                   >
                     <i className="bx bxs-plus-square"></i>&nbsp;{' '}
                     <span>Add Trainings & Seminars</span>
                   </button>
                 </div>
 
-                <DataTableHrms
-                  data={trainings}
-                  columns={columns}
-                  columnVisibility={columnVisibility}
-                  paginate
-                  showGlobalFilter
+                <DataTable
+                  model={table}
+                  showGlobalFilter={true}
+                  showColumnFilter={true}
+                  paginate={true}
                 />
               </div>
             </Card>

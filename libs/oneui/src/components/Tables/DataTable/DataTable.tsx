@@ -4,6 +4,7 @@ import { DataTableProps } from './types/data-table-props';
 import { SortableColumn } from './SortableColumn';
 import { GlobalFilter } from './GlobalFilter';
 import { ColumnFilter } from './ColumnFilter';
+import { Button } from '@gscwd-apps/oneui';
 
 export const DataTable: FunctionComponent<DataTableProps> = ({
   hydrating = false,
@@ -11,45 +12,64 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
   width = 'auto',
   onRowClick,
   showGlobalFilter = false,
+  showColumnFilter = false,
   paginate = false,
 }) => {
+  const resetInputs = () => {
+    // model.setColumnFilters.
+  };
+
   return (
     <>
-      <div className="order-1 w-full search-box-wrapper">
+      <div className="order-1 w-1/2 search-box-wrapper">
         {showGlobalFilter ? <GlobalFilter model={model} /> : null}
       </div>
 
-      <div className="order-1 w-full search-box-wrapper py-5">
-        <p className="text-xs pb-1">Filters:</p>
-        {model?.getHeaderGroups().map((headerGroup) => (
-          <div key={headerGroup.id} className="flex">
-            {headerGroup.headers.map((header) => (
-              <div key={header.id}>
-                {header.column.getCanFilter() ? (
-                  <div className=" w-1/4 pr-2">
-                    <ColumnFilter
-                      column={header.column}
-                      model={model}
-                      placeholder={header.column.columnDef.header}
-                    />
-                  </div>
-                ) : null}
+      <div className="order-3 w-full search-box-wrapper py-5">
+        {showColumnFilter ? (
+          <>
+            <p className="text-xs pb-1">Filters:</p>
+            {model?.getHeaderGroups().map((headerGroup) => (
+              <div key={headerGroup.id} className="flex flex-wrap">
+                {headerGroup.headers.map((header) => {
+                  return header.isPlaceholder ? null : (
+                    <div key={header.id}>
+                      {header.column.getCanFilter() ? (
+                        <div className=" w-1/4 pr-2">
+                          <ColumnFilter
+                            column={header.column}
+                            model={model}
+                            placeholder={header.column.columnDef.header}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
               </div>
             ))}
-          </div>
-        ))}
+
+            <Button onClick={() => resetDateInputs()} variant="info">
+              <i className="bx bx-reset"></i>
+            </Button>
+          </>
+        ) : null}
       </div>
 
-      <div className="flex flex-col order-3 w-full h-full overflow-y-auto bg-white rounded-md">
+      <div className="flex flex-col order-4 w-full h-full overflow-y-auto bg-white rounded-md">
         <table className="flex-1 w-full text-left whitespace-no-wrap bg-white table-auto">
           <thead className="sticky top-0 text-sm text-gray-600 bg-white border-b">
             {model?.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
+              <tr
+                key={headerGroup.id}
+                className={'header_level_' + headerGroup.id}
+              >
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
                     scope="col"
                     className="px-6 py-3 text-xs font-semibold text-left text-black align-middle border-l-0 border-r-0 bg-blueGray-50 text-blueGray-500 border-blueGray-100 whitespace-nowrap"
+                    colSpan={header.colSpan}
                   >
                     {header.isPlaceholder ? null : (
                       <div

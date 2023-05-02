@@ -70,6 +70,17 @@ const Index = () => {
     {} as MonitoringLeave
   );
 
+  // fetch data for list of leave applications
+  const {
+    data: swrLeaveApplication,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateLeaveApplications,
+  } = useSWR('/leave-applications', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
   const openViewActionModal = (rowData: MonitoringLeave) => {
@@ -77,6 +88,43 @@ const Index = () => {
     setCurrentRowData(rowData);
   };
   const closeViewActionModal = () => setViewModalIsOpen(false);
+
+  // Rendering of leave dates in row
+  const renderRowLeaveDates = (leaveDates: Array<string>) => {
+    if (leaveDates) {
+      if (leaveDates.length > 4) {
+        return (
+          <span className="bg-gray-500 text-white text-xs font-medium px-1 py-0.5 ml-1 rounded text-center">
+            {leaveDates[0]} TO {leaveDates.slice(-1)}
+          </span>
+        );
+      } else {
+        return leaveDates.map((leaveDate: string, index: number) => (
+          <span
+            className="bg-gray-500 text-white text-xs font-medium px-1 py-0.5 ml-1 rounded text-center"
+            key={index}
+          >
+            {leaveDate}
+          </span>
+        ));
+      }
+    }
+  };
+
+  // Render row actions in the table component
+  const renderRowActions = (rowData: MonitoringLeave) => {
+    return (
+      <div className="text-center">
+        <button
+          type="button"
+          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+          onClick={() => openViewActionModal(rowData)}
+        >
+          <i className="bx bx-show"></i>
+        </button>
+      </div>
+    );
+  };
 
   // Define table columns
   const columnHelper = createColumnHelper<MonitoringLeave>();
@@ -120,59 +168,11 @@ const Index = () => {
     }),
   ];
 
-  // Rendering of leave dates in row
-  const renderRowLeaveDates = (leaveDates: Array<string>) => {
-    if (leaveDates) {
-      if (leaveDates.length > 4) {
-        return (
-          <span className="bg-gray-500 text-white text-xs font-medium px-1 py-0.5 ml-1 rounded text-center">
-            {leaveDates[0]} TO {leaveDates.slice(-1)}
-          </span>
-        );
-      } else {
-        return leaveDates.map((leaveDate: string, index: number) => (
-          <span
-            className="bg-gray-500 text-white text-xs font-medium px-1 py-0.5 ml-1 rounded text-center"
-            key={index}
-          >
-            {leaveDate}
-          </span>
-        ));
-      }
-    }
-  };
-
-  // Render row actions in the table component
-  const renderRowActions = (rowData: MonitoringLeave) => {
-    return (
-      <div className="text-center">
-        <button
-          type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          onClick={() => openViewActionModal(rowData)}
-        >
-          <i className="bx bx-show"></i>
-        </button>
-      </div>
-    );
-  };
-
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
     data: TypesMockData,
     columnVisibility: { id: false, employeeId: false },
-  });
-
-  // fetch data for list of leave applications
-  const {
-    data: swrLeaveApplication,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateLeaveApplications,
-  } = useSWR('/leave-applications', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
   });
 
   // Zustand initialization
@@ -213,7 +213,7 @@ const Index = () => {
   }, [swrLeaveApplication, swrError]);
 
   return (
-    <div className="min-h-[100%] min-w-full px-4">
+    <div className="w-full px-4">
       <BreadCrumbs title="Leave Applications" />
 
       {/* Error Notifications */}
@@ -259,7 +259,12 @@ const Index = () => {
               </button>
             </div> */}
 
-            <DataTable model={table} showGlobalFilter={true} paginate={true} />
+            <DataTable
+              model={table}
+              showGlobalFilter={true}
+              showColumnFilter={true}
+              paginate={true}
+            />
           </div>
         )}
       </Card>

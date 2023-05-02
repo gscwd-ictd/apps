@@ -6,7 +6,7 @@ import {
 } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
-import { TypesMockData } from 'apps/employee-monitoring/src/pages/maintenance/events/training-and-seminar-types';
+// import { TypesMockData } from 'apps/employee-monitoring/src/pages/maintenance/events/training-and-seminar-types';
 import { useTrainingTypesStore } from 'apps/employee-monitoring/src/store/training-type.store';
 import { useTrainingsStore } from 'apps/employee-monitoring/src/store/training.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';

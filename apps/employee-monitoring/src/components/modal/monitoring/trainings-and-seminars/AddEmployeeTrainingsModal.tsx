@@ -1,6 +1,6 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import {
-  DataTableHrms,
+  DataTable,
   LoadingSpinner,
   Modal,
   useDataTable,
@@ -12,14 +12,12 @@ import {
   EmployeeProfile,
 } from 'libs/utils/src/lib/types/employee.type';
 import { isEmpty } from 'lodash';
-import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 import Select from 'react-select';
-import CreatableSelect from 'react-select/creatable';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Training } from 'libs/utils/src/lib/types/training.type';
 import { useTrainingsStore } from 'apps/employee-monitoring/src/store/training.store';
-import { DataTable } from '../../../../../../../libs/oneui/src/components/Tables/DataTable/DataTable';
 import { info } from 'console';
 interface SelectOption {
   readonly label: string;
@@ -215,7 +213,12 @@ const AddEmpTrainingsModal: FunctionComponent<AddEmpTrainingsModalProps> = ({
                   </button>
                 </div>
                 {assignedEmployees.length > 0 ? (
-                  <DataTable model={table} />
+                  <DataTable
+                    model={table}
+                    showGlobalFilter={false}
+                    showColumnFilter={false}
+                    paginate={true}
+                  />
                 ) : (
                   <div className="flex items-center h-[22rem] justify-center flex-1 text-gray-600">
                     --No Assigned Employees--

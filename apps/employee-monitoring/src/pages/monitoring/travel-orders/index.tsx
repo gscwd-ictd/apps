@@ -96,6 +96,17 @@ const Index = () => {
     {} as TravelOrder
   );
 
+  // fetch data for list of travel orders
+  const {
+    data: swrTravelOrder,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateTravelOrders,
+  } = useSWR('/travel-order', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);
@@ -116,38 +127,6 @@ const Index = () => {
     setCurrentRowData(rowData);
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // Define table columns
-  const columnHelper = createColumnHelper<TravelOrder>();
-  const columns = [
-    columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('travelOrderNo', {
-      header: 'Travel Order No.',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('employee', {
-      header: 'Employee Name',
-      cell: (info) => info.getValue().fullName,
-    }),
-    columnHelper.accessor('dateRequested', {
-      header: 'Date',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.display({
-      id: 'actions',
-      enableColumnFilter: false,
-      cell: (props) => renderRowActions(props.row.original),
-    }),
-  ];
-
-  // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: TypesMockData,
-    columnVisibility: { id: false },
-  });
 
   // Render row actions in the table component
   const renderRowActions = (rowData: TravelOrder) => {
@@ -172,16 +151,32 @@ const Index = () => {
     );
   };
 
-  // fetch data for list of travel orders
-  const {
-    data: swrTravelOrder,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateTravelOrders,
-  } = useSWR('/travel-order', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // Define table columns
+  const columnHelper = createColumnHelper<TravelOrder>();
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('travelOrderNo', {
+      header: 'Travel Order No.',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('employee.fullName', {
+      header: 'Employee Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('dateRequested', {
+      header: 'Date',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.display({
+      id: 'actions',
+      enableColumnFilter: false,
+      cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
 
   // Zustand initialization
   const {
@@ -216,9 +211,15 @@ const Index = () => {
     EmptyResponse: state.emptyResponse,
   }));
 
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: TypesMockData,
+    columnVisibility: { id: false },
+  });
+
   // Initial zustand state update
   useEffect(() => {
-    EmptyResponse();
     if (swrIsLoading) {
       GetTravelOrders(swrIsLoading);
     }
@@ -243,6 +244,10 @@ const Index = () => {
       !isEmpty(DeleteTravelOrderResponse)
     ) {
       mutateTravelOrders();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 3000);
     }
   }, [
     PostTravelOrderResponse,
@@ -282,25 +287,32 @@ const Index = () => {
         />
       ) : null}
 
-      <Card>
-        {IsLoading ? (
-          <LoadingSpinner size="lg" />
-        ) : (
-          <div className="flex flex-row flex-wrap">
-            <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                onClick={openAddActionModal}
-              >
-                <i className="bx bxs-plus-square"></i>&nbsp; Add Travel Order
-              </button>
-            </div>
+      <div className="sm:mx-0 md:mx-0 lg:mx-5">
+        <Card>
+          {IsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <div className="flex flex-row flex-wrap">
+              <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                  onClick={openAddActionModal}
+                >
+                  <i className="bx bxs-plus-square"></i>&nbsp; Add Travel Order
+                </button>
+              </div>
 
-            <DataTable model={table} showGlobalFilter={true} paginate={true} />
-          </div>
-        )}
-      </Card>
+              <DataTable
+                model={table}
+                showGlobalFilter={true}
+                showColumnFilter={true}
+                paginate={true}
+              />
+            </div>
+          )}
+        </Card>
+      </div>
 
       {/* Add modal */}
       <AddTravelOrderModal

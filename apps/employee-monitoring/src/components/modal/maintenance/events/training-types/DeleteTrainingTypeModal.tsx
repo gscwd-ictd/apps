@@ -52,7 +52,7 @@ const DeleteTrainingTypeModal: FunctionComponent<DeleteModalProps> = ({
 
   const handleDeleteResult = async (id: string) => {
     const { error, result } = await deleteEmpMonitoring(
-      `/trainings-seminars-types/${id}` // changed from trainings-and-seminars
+      `/trainings-seminars-types/${id}`
     );
 
     if (error) {

@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { DataTableHrms } from '@gscwd-apps/oneui';
+import { DataTable, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import ViewPassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/ViewPassSlipModal';
@@ -107,14 +107,14 @@ const passSlips: Array<PassSlip> = [
 ];
 
 export default function Index() {
+  const [currentRowData, setCurrentRowData] = useState<PassSlip>(
+    {} as PassSlip
+  );
+
   const { data: swrPassSlips, isLoading: swrIsLoading } = useSWR(
     '/pass-slip',
     fetcherEMS,
     { shouldRetryOnError: false, revalidateOnFocus: false }
-  );
-
-  const [currentRowData, setCurrentRowData] = useState<PassSlip>(
-    {} as PassSlip
   );
 
   // view modal function
@@ -124,6 +124,29 @@ export default function Index() {
     setCurrentRowData(rowData);
   };
   const closeViewModal = () => setViewModalIsOpen(false);
+
+  // Render row actions in the table component
+  const renderRowActions = (rowData: PassSlip) => {
+    return (
+      <>
+        <button
+          type="button"
+          className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+          onClick={() => openViewModal(rowData)}
+        >
+          <i className="bx bx-show"></i>
+        </button>
+
+        <button
+          type="button"
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          // onClick={() => openDeleteActionModal(rowData)}
+        >
+          <i className="bx bx-trash-alt"></i>
+        </button>
+      </>
+    );
+  };
 
   // columns
   const columnHelper = createColumnHelper<PassSlip>();
@@ -156,11 +179,11 @@ export default function Index() {
       cell: (info) => UseRenderObTransportation(info.getValue()),
     }),
 
-    columnHelper.accessor('estimateHours', {
-      header: 'Estimated Hours',
-      enableSorting: false,
-      cell: (info) => (info.getValue() !== 0 ? info.getValue() : '-'),
-    }),
+    // columnHelper.accessor('estimateHours', {
+    //   header: 'Estimated Hours',
+    //   enableSorting: false,
+    //   cell: (info) => (info.getValue() !== 0 ? info.getValue() : '-'),
+    // }),
 
     columnHelper.accessor('purposeDestination', {
       header: 'Purpose/Destination',
@@ -183,34 +206,16 @@ export default function Index() {
     }),
   ];
 
-  // Render row actions in the table component
-  const renderRowActions = (rowData: PassSlip) => {
-    return (
-      <>
-        <button
-          type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          onClick={() => openViewModal(rowData)}
-        >
-          <i className="bx bx-show"></i>
-        </button>
-
-        <button
-          type="button"
-          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
-        >
-          <i className="bx bx-trash-alt"></i>
-        </button>
-      </>
-    );
-  };
-
-  const columnVisibility = { id: false };
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: passSlips,
+    columnVisibility: { id: false },
+  });
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full px-4">
         <BreadCrumbs
           title="Pass Slips"
           crumbs={[
@@ -234,12 +239,11 @@ export default function Index() {
           <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
             <Card>
               <div className="flex flex-row flex-wrap ">
-                <DataTableHrms
-                  data={passSlips}
-                  columns={columns}
-                  columnVisibility={columnVisibility}
-                  paginate
-                  showGlobalFilter
+                <DataTable
+                  model={table}
+                  showGlobalFilter={true}
+                  showColumnFilter={true}
+                  paginate={true}
                 />
               </div>
             </Card>

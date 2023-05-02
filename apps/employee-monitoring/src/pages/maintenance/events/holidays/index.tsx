@@ -9,7 +9,8 @@ import { Holiday } from '../../../../utils/types/holiday.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
 import {
-  DataTableHrms,
+  DataTable,
+  useDataTable,
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
@@ -22,6 +23,17 @@ import DeleteHolidayModal from '../../../../components/modal/maintenance/events/
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<Holiday>({} as Holiday);
+
+  // fetch data for list of holidays
+  const {
+    data: swrHolidays,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateHolidays,
+  } = useSWR('/holidays', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -43,33 +55,6 @@ const Index = () => {
     setCurrentRowData(rowData);
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // Define table columns
-  const columnHelper = createColumnHelper<Holiday>();
-  const columns = [
-    columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('name', {
-      header: () => 'Event',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('holidayDate', {
-      header: () => 'Holiday Date',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('type', {
-      header: () => 'Type',
-      cell: (info) => renderHolidayType(info.getValue()),
-    }),
-    columnHelper.display({
-      id: 'actions',
-      cell: (props) => renderRowActions(props.row.original),
-    }),
-  ];
-
-  // Define visibility of columns
-  const columnVisibility = { id: false };
 
   // Render badge pill design
   const renderHolidayType = (holidayType: string) => {
@@ -113,16 +98,31 @@ const Index = () => {
     );
   };
 
-  // fetch data for list of holidays
-  const {
-    data: swrHolidays,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateHolidays,
-  } = useSWR('/holidays', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // Define table columns
+  const columnHelper = createColumnHelper<Holiday>();
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('name', {
+      header: 'Event',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('holidayDate', {
+      header: 'Holiday Date',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('type', {
+      header: 'Type',
+      cell: (info) => renderHolidayType(info.getValue()),
+    }),
+    columnHelper.display({
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
 
   // Zustand initialization
   const {
@@ -157,9 +157,15 @@ const Index = () => {
     EmptyResponse: state.emptyResponse,
   }));
 
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: Holidays,
+    columnVisibility: { id: false },
+  });
+
   // Initial zustand state update
   useEffect(() => {
-    EmptyResponse();
     if (swrIsLoading) {
       GetHolidays(swrIsLoading);
     }
@@ -183,6 +189,10 @@ const Index = () => {
       !isEmpty(DeleteHolidayResponse)
     ) {
       mutateHolidays();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 3000);
     }
   }, [PostHolidayResponse, UpdateHolidayResponse, DeleteHolidayResponse]);
 
@@ -218,31 +228,32 @@ const Index = () => {
         />
       ) : null}
 
-      <Card>
-        {IsLoading ? (
-          <LoadingSpinner size="lg" />
-        ) : (
-          <div className="flex flex-row flex-wrap">
-            <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                onClick={openAddActionModal}
-              >
-                <i className="bx bxs-plus-square"></i>&nbsp; Add Holiday
-              </button>
-            </div>
+      <div className="sm:mx-0 md:mx-0 lg:mx-5">
+        <Card>
+          {IsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <div className="flex flex-row flex-wrap">
+              <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                  onClick={openAddActionModal}
+                >
+                  <i className="bx bxs-plus-square"></i>&nbsp; Add Holiday
+                </button>
+              </div>
 
-            <DataTableHrms
-              data={Holidays}
-              columns={columns}
-              columnVisibility={columnVisibility}
-              paginate
-              showGlobalFilter
-            />
-          </div>
-        )}
-      </Card>
+              <DataTable
+                model={table}
+                showGlobalFilter={true}
+                showColumnFilter={true}
+                paginate={true}
+              />
+            </div>
+          )}
+        </Card>
+      </div>
 
       {/* Add modal */}
       <AddHolidayModal

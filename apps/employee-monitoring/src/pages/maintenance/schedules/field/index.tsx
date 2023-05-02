@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  DataTableHrms,
+  DataTable,
+  useDataTable,
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
@@ -108,6 +109,37 @@ export default function Index() {
   // close delete action
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
+  // Render row actions in the table component
+  const renderRowActions = (rowData: Schedule) => {
+    return (
+      <>
+        <button
+          type="button"
+          className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+          onClick={() => openEditActionModal(rowData)}
+        >
+          <i className="bx bx-edit-alt"></i>
+        </button>
+
+        <button
+          type="button"
+          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          // onClick={() => openDeleteActionModal(rowData)}
+        >
+          <i className="bx bxs-user-plus"></i>
+        </button>
+
+        <button
+          type="button"
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          onClick={() => openDeleteActionModal(rowData)}
+        >
+          <i className="bx bx-trash-alt"></i>
+        </button>
+      </>
+    );
+  };
+
   // define table columns
   const columnHelper = createColumnHelper<Schedule>();
 
@@ -167,44 +199,15 @@ export default function Index() {
     }),
   ];
 
-  // Define visibility of columns
-  const columnVisibility = { id: false };
-
-  // Render row actions in the table component
-  const renderRowActions = (rowData: Schedule) => {
-    return (
-      <>
-        <button
-          type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          onClick={() => openEditActionModal(rowData)}
-        >
-          <i className="bx bx-edit-alt"></i>
-        </button>
-
-        <button
-          type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
-        >
-          <i className="bx bxs-user-plus"></i>
-        </button>
-
-        <button
-          type="button"
-          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          onClick={() => openDeleteActionModal(rowData)}
-        >
-          <i className="bx bx-trash-alt"></i>
-        </button>
-      </>
-    );
-  };
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: Schedules,
+    columnVisibility: { id: false },
+  });
 
   // Initial zustand state update
   useEffect(() => {
-    EmptyErrors();
-    EmptyResponse();
     if (swrIsLoading) {
       GetSchedules(swrIsLoading);
     }
@@ -229,6 +232,11 @@ export default function Index() {
       !isEmpty(DeleteResponse)
     ) {
       mutateSchedules();
+
+      setTimeout(() => {
+        EmptyResponse();
+        EmptyErrors();
+      }, 3000);
     }
   }, [PostResponse, UpdateResponse, DeleteResponse]);
 
@@ -322,12 +330,11 @@ export default function Index() {
                     </button>
                   </div>
 
-                  <DataTableHrms
-                    data={schedules}
-                    columns={columns}
-                    columnVisibility={columnVisibility}
-                    paginate
-                    showGlobalFilter
+                  <DataTable
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={false}
+                    paginate={true}
                   />
                 </div>
               )}

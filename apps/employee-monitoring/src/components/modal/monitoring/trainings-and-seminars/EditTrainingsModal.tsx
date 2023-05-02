@@ -18,7 +18,7 @@ import { LabelInput } from '../../../inputs/LabelInput';
 import { SelectListRF } from '../../../inputs/SelectListRF';
 import Toggle from '../../../switch/Toggle';
 import useSWR from 'swr';
-import { TypesMockData } from 'apps/employee-monitoring/src/pages/maintenance/events/training-and-seminar-types';
+// import { TypesMockData } from 'apps/employee-monitoring/src/pages/maintenance/events/training-and-seminar-types';
 
 type EditModalProps = {
   modalState: boolean;

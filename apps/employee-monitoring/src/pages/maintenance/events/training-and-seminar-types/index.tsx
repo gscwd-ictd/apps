@@ -9,7 +9,8 @@ import { TrainingType } from 'libs/utils/src/lib/types/training-type.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
 import {
-  DataTableHrms,
+  DataTable,
+  useDataTable,
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
@@ -19,31 +20,23 @@ import AddTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/
 import EditTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/EditTrainingTypeModal';
 import DeleteTrainingTypeModal from 'apps/employee-monitoring/src/components/modal/maintenance/events/training-types/DeleteTrainingTypeModal';
 
-// Mock Data REMOVE later
-export const TypesMockData: Array<TrainingType> = [
-  {
-    id: '001',
-    name: 'Foundational',
-  },
-  {
-    id: '002',
-    name: 'Technical',
-  },
-  {
-    id: '003',
-    name: 'Managerial/Leadership',
-  },
-  {
-    id: '004',
-    name: 'Professional',
-  },
-];
-
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<TrainingType>(
     {} as TrainingType
   );
+
+  // fetch data for list of holidays
+  const {
+    data: swrTrainingTypes,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateTrainings,
+  } = useSWR('/trainings-seminars-types', fetcherEMS, {
+    // changed from trainings-and-seminars-types
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -65,25 +58,6 @@ const Index = () => {
     setCurrentRowData(rowData);
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // Define table columns
-  const columnHelper = createColumnHelper<TrainingType>();
-  const columns = [
-    columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('name', {
-      header: () => 'Name',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.display({
-      id: 'actions',
-      cell: (props) => renderRowActions(props.row.original),
-    }),
-  ];
-
-  // Define visibility of columns
-  const columnVisibility = { id: false };
 
   // Render row actions in the table component
   const renderRowActions = (rowData: TrainingType) => {
@@ -108,17 +82,23 @@ const Index = () => {
     );
   };
 
-  // fetch data for list of holidays
-  const {
-    data: swrTrainingTypes,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateTrainings,
-  } = useSWR('/trainings-seminars-types', fetcherEMS, {
-    // changed from trainings-and-seminars-types
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // Define table columns
+  const columnHelper = createColumnHelper<TrainingType>();
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('name', {
+      header: () => 'Name',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.display({
+      id: 'actions',
+      cell: (props) => renderRowActions(props.row.original),
+      enableColumnFilter: false,
+    }),
+  ];
 
   // Zustand initialization
   const {
@@ -153,9 +133,15 @@ const Index = () => {
     EmptyResponse: state.emptyResponse,
   }));
 
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: TrainingTypes,
+    columnVisibility: { id: false },
+  });
+
   // Initial zustand state update
   useEffect(() => {
-    EmptyResponse();
     if (swrIsLoading) {
       GetTrainingTypes(swrIsLoading);
     }
@@ -172,6 +158,7 @@ const Index = () => {
     }
   }, [swrTrainingTypes, swrError]);
 
+  // Get new updated data and clear responses from POST, UPDATE and DELETE
   useEffect(() => {
     if (
       !isEmpty(PostTrainingTypeResponse) ||
@@ -179,6 +166,10 @@ const Index = () => {
       !isEmpty(DeleteTrainingTypeResponse)
     ) {
       mutateTrainings();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 3000);
     }
   }, [
     PostTrainingTypeResponse,
@@ -221,32 +212,32 @@ const Index = () => {
         />
       ) : null}
 
-      <Card>
-        {IsLoading ? (
-          <LoadingSpinner size="lg" />
-        ) : (
-          <div className="flex flex-row flex-wrap">
-            <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                onClick={openAddActionModal}
-              >
-                <i className="bx bxs-plus-square"></i>&nbsp; Add Training Type
-              </button>
-            </div>
+      <div className="sm:mx-0 md:mx-0 lg:mx-5">
+        <Card>
+          {IsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <div className="flex flex-row flex-wrap">
+              <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                  onClick={openAddActionModal}
+                >
+                  <i className="bx bxs-plus-square"></i>&nbsp; Add Training Type
+                </button>
+              </div>
 
-            <DataTableHrms
-              // data={TypesMockData}
-              data={TrainingTypes}
-              columns={columns}
-              columnVisibility={columnVisibility}
-              paginate
-              showGlobalFilter
-            />
-          </div>
-        )}
-      </Card>
+              <DataTable
+                model={table}
+                showGlobalFilter={true}
+                showColumnFilter={false}
+                paginate={true}
+              />
+            </div>
+          )}
+        </Card>
+      </div>
 
       {/* Add modal */}
       <AddTrainingTypeModal
