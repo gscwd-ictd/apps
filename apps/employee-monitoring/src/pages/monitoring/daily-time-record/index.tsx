@@ -135,7 +135,6 @@ export default function Index() {
     }),
     columnHelper.display({
       header: () => 'Actions',
-      enableColumnFilter: false,
       id: 'actions',
       cell: (props) => renderRowActions(props.row.original),
     }),
