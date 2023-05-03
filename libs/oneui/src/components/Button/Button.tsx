@@ -19,6 +19,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...rest}
         className={buttonClass(props)}
         aria-disabled={props.disabled ? 'true' : undefined}
+        id="resetButton"
       >
         {children}
       </button>

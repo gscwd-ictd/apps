@@ -15,8 +15,8 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
   showColumnFilter = false,
   paginate = false,
 }) => {
-  const resetInputs = () => {
-    // model.setColumnFilters.
+  const resetFilterInputs = () => {
+    model.resetColumnFilters();
   };
 
   return (
@@ -30,7 +30,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
           <>
             <p className="pb-1 text-xs">Filters:</p>
             {model?.getHeaderGroups().map((headerGroup) => (
-              <div key={headerGroup.id} className="flex flex-wrap">
+              <div key={headerGroup.id} className="flex flex-wrap items-center">
                 {headerGroup.headers.map((header) => {
                   return header.isPlaceholder ? null : (
                     <div key={header.id}>
@@ -46,12 +46,19 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
                     </div>
                   );
                 })}
+
+                <div>
+                  <Button
+                    id="resetButton"
+                    onClick={() => resetFilterInputs()}
+                    variant="info"
+                  >
+                    <i className="bx bx-reset"></i>
+                  </Button>
+                  <div className="h-1" />
+                </div>
               </div>
             ))}
-
-            {/* <Button onClick={() => resetDateInputs()} variant="info">
-              <i className="bx bx-reset"></i>
-            </Button> */}
           </>
         ) : null}
       </div>
