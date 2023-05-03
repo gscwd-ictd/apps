@@ -159,7 +159,7 @@ export default function Approvals({
     mutate: mutatePassSlips,
   } = useSWR(passSlipUrl, fetchWithToken, {
     shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   // Initial zustand state update

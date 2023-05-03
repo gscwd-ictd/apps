@@ -1,7 +1,3 @@
-import { useEffect } from 'react';
-import useSWR from 'swr';
-import { fetchWithSession } from '../../../utils/hoc/fetcher';
-import { useEmployeeStore } from '../../../store/employee.store';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 import { AllApprovalsTab } from './AllApprovalsTab';
 
@@ -18,9 +14,6 @@ export const ApprovalsTabWindow = ({
 
   const selectedApprovalType = useApprovalStore(
     (state) => state.selectedApprovalType
-  );
-  const setSelectedApprovalType = useApprovalStore(
-    (state) => state.setSelectedApprovalType
   );
 
   const {

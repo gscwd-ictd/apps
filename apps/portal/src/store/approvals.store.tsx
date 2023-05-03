@@ -93,14 +93,6 @@ export type ApprovalState = {
   setPassSlipId: (value: string) => void;
   passSlipIndividualDetail: PassSlip;
   setPassSlipIndividualDetail: (PassSlip: PassSlip) => void;
-  // pendingPassSlipList: Array<PassSlip>;
-  // setPendingPassSlipList: (pendingPassSlipList: Array<PassSlip>) => void;
-  // approvedPassSlipList: Array<PassSlip>;
-  // setApprovedPassSlipList: (approvedPassSlipList: Array<PassSlip>) => void;
-  // disapprovedPassSlipList: Array<PassSlip>;
-  // setDisapprovedPassSlipList: (
-  //   disapprovedPassSlipList: Array<PassSlip>
-  // ) => void;
 
   getPassSlipList: (loading: boolean) => void;
   getPassSlipListSuccess: (loading: boolean, response) => void;
@@ -118,24 +110,6 @@ export type ApprovalState = {
   getLeaveList: (loading: boolean) => void;
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
-
-  // pendingLeaveList: Array<EmployeeLeaveDetails>;
-  // setPendingLeaveList: (pendingLeaveList: Array<EmployeeLeaveDetails>) => void;
-  // approvedLeaveList: Array<EmployeeLeaveDetails>;
-  // setApprovedLeaveList: (
-  //   approvedLeaveList: Array<EmployeeLeaveDetails>
-  // ) => void;
-  // disapprovedLeaveList: Array<EmployeeLeaveDetails>;
-  // setDisapprovedLeaveList: (
-  //   disapprovedLeaveList: Array<EmployeeLeaveDetails>
-  // ) => void;
-
-  // pendingIsLoaded: boolean;
-  // setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
-  // fulfilledIsLoaded: boolean;
-  // setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => void;
-  // isLoading: boolean;
-  // setIsLoading: (isLoading: boolean) => void;
 
   tab: number;
   setTab: (tab: number) => void;
@@ -194,16 +168,10 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
   // PASS SLIPS
   passSlipId: '',
   passSlipIndividualDetail: {} as PassSlip,
-  pendingPassSlipList: [],
-  approvedPassSlipList: [],
-  disapprovedPassSlipList: [],
 
   // LEAVES
   leaveId: '',
   leaveIndividualDetail: {} as EmployeeLeaveDetails,
-  pendingLeaveList: [],
-  approvedLeaveList: [],
-  disapprovedLeaveList: [],
 
   pendingIsLoaded: false,
   fulfilledIsLoaded: false,
@@ -228,36 +196,6 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
   },
   setPassSlipIndividualDetail: (passSlipIndividualDetail: PassSlip) => {
     set((state) => ({ ...state, passSlipIndividualDetail }));
-  },
-  setPendingPassSlipList: (pendingPassSlipList: Array<PassSlip>) => {
-    set((state) => ({ ...state, pendingPassSlipList }));
-  },
-  setApprovedPassSlipList: (approvedPassSlipList: Array<PassSlip>) => {
-    set((state) => ({ ...state, approvedPassSlipList }));
-  },
-  setDisapprovedPassSlipList: (disapprovedPassSlipList: Array<PassSlip>) => {
-    set((state) => ({ ...state, disapprovedPassSlipList }));
-  },
-  setPendingLeaveList: (pendingLeaveList: Array<EmployeeLeaveDetails>) => {
-    set((state) => ({ ...state, pendingLeaveList }));
-  },
-  setApprovedLeaveList: (approvedLeaveList: Array<EmployeeLeaveDetails>) => {
-    set((state) => ({ ...state, approvedLeaveList }));
-  },
-  setDisapprovedLeaveList: (
-    disapprovedLeaveList: Array<EmployeeLeaveDetails>
-  ) => {
-    set((state) => ({ ...state, disapprovedLeaveList }));
-  },
-
-  setPendingIsLoaded: (pendingIsLoaded: boolean) => {
-    set((state) => ({ ...state, pendingIsLoaded }));
-  },
-  setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => {
-    set((state) => ({ ...state, fulfilledIsLoaded }));
-  },
-  setIsLoading: (isLoading: boolean) => {
-    set((state) => ({ ...state, isLoading }));
   },
 
   setTab: (tab: number) => {

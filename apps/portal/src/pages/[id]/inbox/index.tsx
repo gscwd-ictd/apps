@@ -130,7 +130,7 @@ export default function Inbox({
           {}
         );
         console.log(res);
-        postMessageSuccess('test');
+        postMessageSuccess(res);
       } else {
         const res = await axios.patch(
           route +
@@ -143,7 +143,7 @@ export default function Inbox({
           }
         );
         console.log(res);
-        postMessageSuccess('test');
+        postMessageSuccess(res);
       }
 
       setAcknowledgments(swrMessages);
@@ -171,12 +171,12 @@ export default function Inbox({
       'You have been requested to become a member of the Personnel Selection Board for the scheduled interview stated below. Do you accept this task?'
     );
     setIsMessageOpen(true);
-    console.log(messageContent);
+    // console.log(messageContent);
   };
 
   return (
     <>
-      {/* Pass Slip List Load Failed Error */}
+      {/* Messages Load Failed Error */}
       {errorMessage ? (
         <ToastNotification
           toastType="error"
@@ -184,8 +184,16 @@ export default function Inbox({
         />
       ) : null}
 
+      {/* PSB Member Acknowledgement Failed Error */}
+      {errorResponse ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorResponse}: Failed to submit response.`}
+        />
+      ) : null}
+
       <Head>
-        <title>Messages</title>
+        <title>Inbox</title>
       </Head>
 
       <SideNav />
@@ -221,106 +229,104 @@ export default function Inbox({
               )
             ) : (
               <div className="flex flex-col items-center justify-center w-full h-full">
-                <label className="text-5xl opacity-50">NO MAIL</label>
+                <label className="text-5xl text-slate-300">NO MAIL</label>
               </div>
             )}
           </div>
           <div className="flex flex-col items-center w-full h-full pt-6 ml-4 mr-4 text-gray-700">
-            <div
-              className={`${
-                isMessageOpen ? 'w-100 p-8 flex flex-col bg-white' : 'hidden'
-              }`}
-            >
-              <label className="pb-2">{mailMessage}</label>
-              <div>
-                <label className="font-bold">Assignment: </label>
-                {messageContent?.assignment}
-              </div>
-              <div>
-                <label className="font-bold">Position: </label>
-                {messageContent?.positionTitle}
-              </div>
-              <div>
-                <label className="font-bold">Schedule: </label>
-                {messageContent?.schedule}
-              </div>
-              <div>
-                <label className="font-bold">Venue: </label>
-                {messageContent?.venue}
-              </div>
+            {isMessageOpen ? (
+              <div className={'w-100 p-8 flex flex-col bg-white'}>
+                <label className="pb-2">{mailMessage}</label>
+                <div>
+                  <label className="font-bold">Assignment: </label>
+                  {messageContent?.assignment}
+                </div>
+                <div>
+                  <label className="font-bold">Position: </label>
+                  {messageContent?.positionTitle}
+                </div>
+                <div>
+                  <label className="font-bold">Schedule: </label>
+                  {messageContent?.schedule}
+                </div>
+                <div>
+                  <label className="font-bold">Venue: </label>
+                  {messageContent?.venue}
+                </div>
 
-              <div className="pt-4">
-                {/* <label className="text-gray-700">Enter remarks before submitting response.</label> */}
-                <textarea
-                  className="w-full h-32 p-2 border"
-                  disabled={
+                <div className="pt-4">
+                  {/* <label className="text-gray-700">Enter remarks before submitting response.</label> */}
+                  <textarea
+                    className="w-full h-32 p-2 border"
+                    disabled={
+                      messageContent?.acknowledgedSchedule ||
+                      messageContent?.declinedSchedule
+                        ? true
+                        : false
+                    }
+                    defaultValue={
+                      messageContent?.declineReason
+                        ? messageContent?.declineReason
+                        : 'No Remarks'
+                    }
+                    placeholder={'Enter reason if you are to decline.'}
+                    onChange={(e) =>
+                      handleRemarks(e.target.value as unknown as string)
+                    }
+                  ></textarea>
+                </div>
+                <div
+                  className={`${
                     messageContent?.acknowledgedSchedule ||
                     messageContent?.declinedSchedule
-                      ? true
-                      : false
-                  }
-                  defaultValue={
-                    messageContent?.declineReason
-                      ? messageContent?.declineReason
-                      : 'No Remarks'
-                  }
-                  placeholder={'Enter reason if you are to decline.'}
-                  onChange={(e) =>
-                    handleRemarks(e.target.value as unknown as string)
-                  }
-                ></textarea>
-              </div>
-              <div
-                className={`${
-                  messageContent?.acknowledgedSchedule ||
-                  messageContent?.declinedSchedule
-                    ? 'hidden'
-                    : 'flex flex-row gap-4 items-center justify-end'
-                }`}
-              >
-                <button
-                  className={`w-20 h-8 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
-                  onClick={(e) =>
-                    handleResponse(messageContent?.vppId, 'accept', remarks)
-                  }
+                      ? 'hidden'
+                      : 'flex flex-row gap-4 items-center justify-end'
+                  }`}
                 >
-                  Accept
-                </button>
-                <button
+                  <button
+                    className={`w-20 h-8 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
+                    onClick={(e) =>
+                      handleResponse(messageContent?.vppId, 'accept', remarks)
+                    }
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className={`${
+                      remarks ? '' : 'cursor-not-allowed'
+                    } w-20 h-8 rounded bg-red-500 text-white hover:bg-red-600`}
+                    disabled={remarks ? false : true}
+                    onClick={(e) =>
+                      handleResponse(messageContent?.vppId, 'decline', remarks)
+                    }
+                  >
+                    Decline
+                  </button>
+                </div>
+                <div
                   className={`${
-                    remarks ? '' : 'cursor-not-allowed'
-                  } w-20 h-8 rounded bg-red-500 text-white hover:bg-red-600`}
-                  disabled={remarks ? false : true}
-                  onClick={(e) =>
-                    handleResponse(messageContent?.vppId, 'decline', remarks)
-                  }
+                    messageContent?.acknowledgedSchedule
+                      ? 'flex flex-row gap-4 items-center justify-center'
+                      : 'hidden'
+                  }`}
                 >
-                  Decline
-                </button>
+                  <label className="text-green-700">
+                    You have already accepted this assignment.
+                  </label>
+                </div>
+                <div
+                  className={`${
+                    messageContent?.declinedSchedule
+                      ? 'flex flex-row gap-4 items-center justify-center'
+                      : 'hidden'
+                  }`}
+                >
+                  <label className="text-rose-700">
+                    You have already declined this assignment.
+                  </label>
+                </div>
               </div>
-              <div
-                className={`${
-                  messageContent?.acknowledgedSchedule
-                    ? 'flex flex-row gap-4 items-center justify-center'
-                    : 'hidden'
-                }`}
-              >
-                <label className="text-green-700">
-                  You have already accepted this assignment.
-                </label>
-              </div>
-              <div
-                className={`${
-                  messageContent?.declinedSchedule
-                    ? 'flex flex-row gap-4 items-center justify-center'
-                    : 'hidden'
-                }`}
-              >
-                <label className="text-rose-700">
-                  You have already declined this assignment.
-                </label>
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </MainContainer>
