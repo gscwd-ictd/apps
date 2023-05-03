@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { debounce } from 'lodash';
+import React, { useEffect, useState, useMemo } from 'react';
+
+/** Refer to this link for the changes in debounced input https://dmitripavlutin.com/react-throttle-debounce/ */
 
 export const DebouncedInput = ({
   value: initialValue,
   onChange,
-  debounce = 500,
   ...props
 }: {
   value: string | number;
@@ -17,21 +19,16 @@ export const DebouncedInput = ({
     setValue(initialValue);
   }, [initialValue]);
 
+  // change handler
+  const changeHandler = (event: any) => {
+    onChange(event.target.value);
+  };
+
   // debounce
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-    // onChange(value);
-  }, [value, onChange, debounce]);
-
-  return (
-    <input
-      {...props}
-      value={value}
-      onChange={(e) => setValue(e.currentTarget.value)}
-    />
+  const debouncedChangeHandler = useMemo(
+    () => debounce(changeHandler, 500),
+    []
   );
+
+  return <input {...props} onChange={debouncedChangeHandler} />;
 };
