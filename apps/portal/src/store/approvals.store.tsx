@@ -4,13 +4,14 @@ import { ErrorState, ModalState } from '../types/modal.type';
 import {
   EmployeeLeave,
   EmployeeLeaveDetails,
+  MonitoringLeave,
 } from 'libs/utils/src/lib/types/leave-application.type';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 
 export type ApprovalLeaveList = {
-  onGoing: Array<EmployeeLeave>;
-  approved: Array<EmployeeLeave>;
-  disapproved: Array<EmployeeLeave>;
+  onGoing: Array<MonitoringLeave>;
+  approved: Array<MonitoringLeave>;
+  disapproved: Array<MonitoringLeave>;
 };
 
 export type ApprovalPassSlipList = {
@@ -30,9 +31,9 @@ export type ApprovalState = {
   setSelectedApprovalType: (value: number) => void;
 
   leaves: {
-    onGoing: Array<EmployeeLeave>;
-    approved: Array<EmployeeLeave>;
-    disapproved: Array<EmployeeLeave>;
+    onGoing: Array<MonitoringLeave>;
+    approved: Array<MonitoringLeave>;
+    disapproved: Array<MonitoringLeave>;
   };
 
   passSlips: {
@@ -92,14 +93,14 @@ export type ApprovalState = {
   setPassSlipId: (value: string) => void;
   passSlipIndividualDetail: PassSlip;
   setPassSlipIndividualDetail: (PassSlip: PassSlip) => void;
-  pendingPassSlipList: Array<PassSlip>;
-  setPendingPassSlipList: (pendingPassSlipList: Array<PassSlip>) => void;
-  approvedPassSlipList: Array<PassSlip>;
-  setApprovedPassSlipList: (approvedPassSlipList: Array<PassSlip>) => void;
-  disapprovedPassSlipList: Array<PassSlip>;
-  setDisapprovedPassSlipList: (
-    disapprovedPassSlipList: Array<PassSlip>
-  ) => void;
+  // pendingPassSlipList: Array<PassSlip>;
+  // setPendingPassSlipList: (pendingPassSlipList: Array<PassSlip>) => void;
+  // approvedPassSlipList: Array<PassSlip>;
+  // setApprovedPassSlipList: (approvedPassSlipList: Array<PassSlip>) => void;
+  // disapprovedPassSlipList: Array<PassSlip>;
+  // setDisapprovedPassSlipList: (
+  //   disapprovedPassSlipList: Array<PassSlip>
+  // ) => void;
 
   getPassSlipList: (loading: boolean) => void;
   getPassSlipListSuccess: (loading: boolean, response) => void;
@@ -118,23 +119,23 @@ export type ApprovalState = {
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
 
-  pendingLeaveList: Array<EmployeeLeaveDetails>;
-  setPendingLeaveList: (pendingLeaveList: Array<EmployeeLeaveDetails>) => void;
-  approvedLeaveList: Array<EmployeeLeaveDetails>;
-  setApprovedLeaveList: (
-    approvedLeaveList: Array<EmployeeLeaveDetails>
-  ) => void;
-  disapprovedLeaveList: Array<EmployeeLeaveDetails>;
-  setDisapprovedLeaveList: (
-    disapprovedLeaveList: Array<EmployeeLeaveDetails>
-  ) => void;
+  // pendingLeaveList: Array<EmployeeLeaveDetails>;
+  // setPendingLeaveList: (pendingLeaveList: Array<EmployeeLeaveDetails>) => void;
+  // approvedLeaveList: Array<EmployeeLeaveDetails>;
+  // setApprovedLeaveList: (
+  //   approvedLeaveList: Array<EmployeeLeaveDetails>
+  // ) => void;
+  // disapprovedLeaveList: Array<EmployeeLeaveDetails>;
+  // setDisapprovedLeaveList: (
+  //   disapprovedLeaveList: Array<EmployeeLeaveDetails>
+  // ) => void;
 
-  pendingIsLoaded: boolean;
-  setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
-  fulfilledIsLoaded: boolean;
-  setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => void;
-  isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
+  // pendingIsLoaded: boolean;
+  // setPendingIsLoaded: (pendingIsLoaded: boolean) => void;
+  // fulfilledIsLoaded: boolean;
+  // setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => void;
+  // isLoading: boolean;
+  // setIsLoading: (isLoading: boolean) => void;
 
   tab: number;
   setTab: (tab: number) => void;

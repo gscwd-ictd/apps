@@ -30,9 +30,10 @@ import { useApprovalStore } from '../../../../src/store/approvals.store';
 import useSWR, { mutate } from 'swr';
 import { ApprovalTypeSelect } from '../../../../src/components/fixed/approvals/ApprovalTypeSelect';
 import { employeeDummy } from '../../../../src/types/employee.type';
-import { ApprovalPendingLeaveModal } from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
+import ApprovalsPendingLeaveModal from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
+import ApprovalsPendingPassSlipModal from '../../../../src/components/fixed/approvals/ApprovalsPendingPassSlipModal';
 
 export default function Approvals({
   employeeDetails,
@@ -100,12 +101,6 @@ export default function Approvals({
   // get state for the modal
   const modal = useApprovalStore((state) => state.modal);
 
-  // get loading state from store
-  const isLoading = useApprovalStore((state) => state.isLoading);
-
-  // set loading state from store
-  const setIsLoading = useApprovalStore((state) => state.setIsLoading);
-
   // set state for the modal
   const setModal = useApprovalStore((state) => state.setModal);
 
@@ -122,16 +117,7 @@ export default function Approvals({
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
-    setIsLoading(true);
-  }, [employeeDetails, setEmployeeDetails, setIsLoading]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-    }
-  }, [isLoading, setIsLoading]);
+  }, [employeeDetails, setEmployeeDetails]);
 
   // cancel action for Pending Leave Application Modal
   const closePendingLeaveModal = async () => {
@@ -262,10 +248,17 @@ export default function Approvals({
           <SideNav />
 
           {/* Pending Leave Approval Modal */}
-          <ApprovalPendingLeaveModal
+          <ApprovalsPendingLeaveModal
             modalState={pendingLeaveModalIsOpen}
             setModalState={setPendingLeaveModalIsOpen}
             closeModalAction={closePendingLeaveModal}
+          />
+
+          {/* Pending Leave Approval Modal */}
+          <ApprovalsPendingPassSlipModal
+            modalState={pendingPassSlipModalIsOpen}
+            setModalState={setPendingPassSlipModalIsOpen}
+            closeModalAction={closePendingPassSlipModal}
           />
 
           <MainContainer>
@@ -310,18 +303,18 @@ export default function Approvals({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
 
-//   return { props: { employeeDetails } };
-// };
+  return { props: { employeeDetails } };
+};
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+//     return { props: { employeeDetails } };
+//   }
+// );

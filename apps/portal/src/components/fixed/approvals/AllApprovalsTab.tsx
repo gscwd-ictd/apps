@@ -2,7 +2,10 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 
-import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import {
+  EmployeeLeaveDetails,
+  MonitoringLeave,
+} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 import {
   PassSlip,
@@ -11,7 +14,7 @@ import {
 
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
-  leaves: Array<EmployeeLeaveDetails> | null;
+  leaves: Array<MonitoringLeave> | null;
   tab: number;
 };
 
@@ -80,8 +83,8 @@ export const AllApprovalsTab = ({
     }
   };
 
-  const onSelectLeave = (leave: EmployeeLeaveDetails) => {
-    setLeaveId(leave.leaveApplicationBasicInfo.id);
+  const onSelectLeave = (leave: MonitoringLeave) => {
+    setLeaveId(leave.id);
     if (tab === 2) {
       // PENDING APPROVAL LEAVES
       if (!pendingLeaveModalIsOpen) {
@@ -133,7 +136,7 @@ export const AllApprovalsTab = ({
         </ul>
       ) : leaves && leaves.length > 0 ? (
         <ul className="mt-4">
-          {leaves.map((item: EmployeeLeaveDetails, index: number) => {
+          {leaves.map((item: MonitoringLeave, index: number) => {
             return (
               <li
                 key={index}
@@ -142,20 +145,17 @@ export const AllApprovalsTab = ({
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-xl text-gray-600">
-                    {item.leaveApplicationBasicInfo.leaveName}
+                    {item.leaveName}
                   </h1>
                   {/* <p className="text-md text-gray-500"></p> */}
                   <p className="text-sm text-gray-500">
-                    Employee: {item.employeeDetails.assignment.name}
+                    Employee: {item.fullName}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Days: {item.leaveApplicationBasicInfo.leaveDates}
+                    Days: {item.leaveDates}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Filed on{' '}
-                    {dayjs(item.leaveApplicationBasicInfo.dateOfFiling).format(
-                      'MMMM d, YYYY'
-                    )}
+                    Filed on {dayjs(item.dateOfFiling).format('MMMM d, YYYY')}
                   </p>
                 </div>
               </li>

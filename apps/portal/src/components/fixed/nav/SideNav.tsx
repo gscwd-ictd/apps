@@ -27,7 +27,10 @@ export const SideNav = (): JSX.Element => {
             <ProfileMenuDropdown right />
           </li>
 
-          <SideNavLink icon={<HiOutlineHome className="w-6 h-6" />} destination={`/${router.query.id}`} />
+          <SideNavLink
+            icon={<HiOutlineHome className="w-6 h-6" />}
+            destination={`/${router.query.id}`}
+          />
 
           {/* <SideNavLink icon={<HiOutlinePresentationChartLine className="w-6 h-6" />} destination={`/${router.query.id}/prf`} /> */}
 
@@ -35,11 +38,17 @@ export const SideNav = (): JSX.Element => {
 
           {/* <SideNavLink icon={<HiOutlineClipboardList className="w-6 h-6" />} destination="/prf" /> */}
 
-          <SideNavLink icon={<HiOutlineBell className="w-6 h-6" />} destination={`/${router.query.id}/messages`} />
+          <SideNavLink
+            icon={<HiOutlineBell className="w-6 h-6" />}
+            destination={`/${router.query.id}/inbox`}
+          />
 
           {/* <SideNavLink icon={<HiOutlineChat className="w-6 h-6" />} destination="/prf" /> */}
 
-          <SideNavLink icon={<HiOutlineNewspaper className="w-6 h-6" />} destination={`/${router.query.id}/vacancies`} />
+          <SideNavLink
+            icon={<HiOutlineNewspaper className="w-6 h-6" />}
+            destination={`/${router.query.id}/vacancies`}
+          />
         </ul>
       </nav>
     </>

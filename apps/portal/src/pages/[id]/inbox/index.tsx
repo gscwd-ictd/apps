@@ -12,70 +12,151 @@ import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from '../../../store/employee.store';
+import { employeeDummy } from '../../../../src/types/employee.type';
+import { PsbMessageContent } from '../../../../src/types/inbox.type';
+import useSWR, { mutate } from 'swr';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
+import { useInboxStore } from '../../../../src/store/inbox.store';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
-type MessageContent = {
-  assignment: string;
-  numberOfPositions: number;
-  positionId: string;
-  positionTitle: string;
-  schedule: string;
-  venue: string;
-  vppId: string;
-  message: string;
-  acknowledgedSchedule: boolean;
-  declinedSchedule: boolean;
-  declineReason: string;
-};
-
-export default function Messages({
-  pendingAcknowledgements,
-  id,
+export default function Inbox({
+  employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const route = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/acknowledge-schedule/`;
 
   // const [vppId, setVppId] = useState<string>();
   // const [employeeId, setEmployeeId] = useState<string>(employee.employmentDetails.employeeId);
-  const [messageContent, setMessageContent] = useState<MessageContent>();
+  const [messageContent, setMessageContent] = useState<PsbMessageContent>();
   const [mailMessage, setMailMessage] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
   const [isMessageOpen, setIsMessageOpen] = useState<boolean>(false);
   const [acknowledgements, setAcknowledgments] = useState<
-    Array<MessageContent>
+    Array<PsbMessageContent>
   >([]);
-  // const id = '86de1dd4-de28-4930-bc82-b767e1f1ff62';
+
+  const {
+    loadingMessages,
+    loadingResponse,
+    errorMessage,
+    errorResponse,
+    responseApply,
+
+    getMessageList,
+    getMessageListSuccess,
+    getMessageListFail,
+
+    postMessage,
+    postMessageSuccess,
+    postMessageFail,
+  } = useInboxStore((state) => ({
+    loadingMessages: state.loading.loadingMessages,
+    loadingResponse: state.loading.loadingResponse,
+    errorMessage: state.error.errorMessages,
+    errorResponse: state.error.errorResponse,
+    responseApply: state.response.postResponseApply,
+
+    getMessageList: state.getMessageList,
+    getMessageListSuccess: state.getMessageListSuccess,
+    getMessageListFail: state.getMessageListFail,
+
+    postMessage: state.postMessage,
+    postMessageSuccess: state.postMessageSuccess,
+    postMessageFail: state.postMessageFail,
+  }));
+
+  const { setEmployeeDetails } = useEmployeeStore((state) => ({
+    setEmployeeDetails: state.setEmployeeDetails,
+  }));
+
+  // set the employee details on page load
+  useEffect(() => {
+    setEmployeeDetails(employeeDetails);
+  }, [employeeDetails]);
+
+  const unacknowledgedPsbUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/schedules/${employeeDetails.employmentDetails.userId}/unacknowledged`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrMessages,
+    isLoading: swrIsLoadingMessages,
+    error: swrError,
+    mutate: mutateMessages,
+  } = useSWR(unacknowledgedPsbUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoadingMessages) {
+      getMessageList(swrIsLoadingMessages);
+    }
+    console.log(swrMessages);
+  }, [swrIsLoadingMessages]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrMessages)) {
+      getMessageListSuccess(swrIsLoadingMessages, swrMessages);
+      console.log(swrMessages, 'test');
+    }
+
+    if (!isEmpty(swrError)) {
+      getMessageListFail(swrIsLoadingMessages, swrError.message);
+    }
+  }, [swrMessages, swrError]);
+
+  useEffect(() => {
+    if (!isEmpty(responseApply)) {
+      mutateMessages();
+    }
+  }, [responseApply]);
 
   async function handleResponse(
     selectedVppId: any,
     response: string,
     remarks: string
   ) {
+    postMessage();
     try {
       if (response == 'accept') {
         const res = await axios.patch(
-          route + selectedVppId + '/' + id + '/accept',
+          route +
+            selectedVppId +
+            '/' +
+            employeeDetails.employmentDetails.userId +
+            '/accept',
           {}
         );
-        // console.log(res);
+        console.log(res);
+        postMessageSuccess('test');
       } else {
         const res = await axios.patch(
-          route + selectedVppId + '/' + id + '/decline',
+          route +
+            selectedVppId +
+            '/' +
+            employeeDetails.employmentDetails.userId +
+            '/decline',
           {
             declineReason: remarks,
           }
         );
-        // console.log(res);
+        console.log(res);
+        postMessageSuccess('test');
       }
 
-      setAcknowledgments(pendingAcknowledgements);
+      setAcknowledgments(swrMessages);
       setIsMessageOpen(false);
     } catch (error) {
       console.log(error);
+      postMessageFail(error);
       return [];
     }
   }
 
   useEffect(() => {
-    setAcknowledgments(pendingAcknowledgements);
+    setAcknowledgments(swrMessages);
   }, []);
 
   //UPDATE REMARKS ON RESPONSE
@@ -83,7 +164,7 @@ export default function Messages({
     setRemarks(e);
   };
 
-  const handleMessage = (acknowledgement: MessageContent) => {
+  const handleMessage = (acknowledgement: PsbMessageContent) => {
     setMessageContent(acknowledgement);
     setRemarks('');
     setMailMessage(
@@ -95,6 +176,14 @@ export default function Messages({
 
   return (
     <>
+      {/* Pass Slip List Load Failed Error */}
+      {errorMessage ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorMessage}: Failed to load messages.`}
+        />
+      ) : null}
+
       <Head>
         <title>Messages</title>
       </Head>
@@ -104,9 +193,9 @@ export default function Messages({
         <div className="flex flex-row w-full h-full pb-10">
           <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
             Inbox
-            {acknowledgements.length > 0 ? (
-              acknowledgements.map(
-                (acknowledgement: MessageContent, messageIdx: number) => {
+            {swrMessages && swrMessages.length > 0 ? (
+              swrMessages.map(
+                (acknowledgement: PsbMessageContent, messageIdx: number) => {
                   return (
                     <div
                       key={messageIdx}
@@ -239,11 +328,27 @@ export default function Messages({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/schedules/${context.query.id}/unacknowledged`
-    );
-    return { props: { pendingAcknowledgements: data, id: context.query.id } };
-  }
-);
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const { data } = await axios.get(
+//       `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/schedules/${context.query.id}/unacknowledged`
+//     );
+//     return { props: { pendingAcknowledgements: data, id: context.query.id } };
+//   }
+// );
+
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
+
+  return { props: { employeeDetails } };
+};
+
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
+
+//     return { props: { employeeDetails } };
+//   }
+// );

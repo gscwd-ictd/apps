@@ -9,26 +9,26 @@ type ApprovalsTabsProps = {
 
 export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
   const setTab = useApprovalStore((state) => state.setTab);
-  const pendingPassSlipList = useApprovalStore(
-    (state) => state.pendingPassSlipList
-  );
-  const approvedPassSlipList = useApprovalStore(
-    (state) => state.approvedPassSlipList
-  );
-  const disapprovedPassSlipList = useApprovalStore(
-    (state) => state.disapprovedPassSlipList
-  );
-  const pendingLeaveList = useApprovalStore((state) => state.pendingLeaveList);
-  const approvedLeaveList = useApprovalStore(
-    (state) => state.approvedLeaveList
-  );
-  const disapprovedLeaveList = useApprovalStore(
-    (state) => state.disapprovedLeaveList
-  );
 
   const selectedApprovalType = useApprovalStore(
     (state) => state.selectedApprovalType
   );
+
+  const {
+    ongoingPassSlips,
+    approvedPassSlips,
+    disapprovedPassSlips,
+    ongoingLeaves,
+    approvedLeaves,
+    disapprovedLeaves,
+  } = useApprovalStore((state) => ({
+    ongoingPassSlips: state.passSlips.onGoing,
+    approvedPassSlips: state.passSlips.approved,
+    disapprovedPassSlips: state.passSlips.disapproved,
+    ongoingLeaves: state.leaves.onGoing,
+    approvedLeaves: state.leaves.approved,
+    disapprovedLeaves: state.leaves.disapproved,
+  }));
 
   return (
     <>
@@ -47,7 +47,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 icon={<HiOutlineCheckCircle size={26} />}
                 subtitle="Show all ongoing Pass Slips you applied for"
                 notificationCount={
-                  pendingPassSlipList ? pendingPassSlipList.length : 0
+                  ongoingPassSlips ? ongoingPassSlips.length : 0
                 }
                 className="bg-indigo-500"
               />
@@ -61,9 +61,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 title="Ongoing Leave Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
                 subtitle="Show all ongoing Pass Slips you applied for"
-                notificationCount={
-                  pendingLeaveList ? pendingLeaveList.length : 0
-                }
+                notificationCount={ongoingLeaves ? ongoingLeaves.length : 0}
                 className="bg-indigo-500"
               />
             </>
@@ -81,7 +79,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 icon={<HiCheck size={26} />}
                 subtitle="Show all approved Pass Slip applications"
                 notificationCount={
-                  approvedPassSlipList ? approvedPassSlipList.length : 0
+                  approvedPassSlips ? approvedPassSlips.length : 0
                 }
                 className="bg-gray-500"
               />
@@ -95,9 +93,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 title="Approved Leaves"
                 icon={<HiCheck size={26} />}
                 subtitle="Show all approved Pass Slip applications"
-                notificationCount={
-                  approvedLeaveList ? approvedLeaveList.length : 0
-                }
+                notificationCount={approvedLeaves ? approvedLeaves.length : 0}
                 className="bg-gray-500"
               />
             </>
@@ -116,7 +112,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 icon={<HiCheck size={26} />}
                 subtitle="Show all disapproved Pass Slip applications"
                 notificationCount={
-                  disapprovedPassSlipList ? disapprovedPassSlipList.length : 0
+                  disapprovedPassSlips ? disapprovedPassSlips.length : 0
                 }
                 className="bg-gray-500"
               />
@@ -131,7 +127,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 icon={<HiCheck size={26} />}
                 subtitle="Show all disapproved Pass Slip applications"
                 notificationCount={
-                  disapprovedLeaveList ? disapprovedLeaveList.length : 0
+                  disapprovedLeaves ? disapprovedLeaves.length : 0
                 }
                 className="bg-gray-500"
               />
