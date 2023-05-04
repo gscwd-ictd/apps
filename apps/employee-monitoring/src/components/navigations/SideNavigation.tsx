@@ -18,7 +18,10 @@ export const SideNavigation = () => {
   const { pathname } = useRouter();
 
   return (
-    <Sidebar className="relative w-full" background="bg-gray-800">
+    <Sidebar
+      className="relative w-full transition-all"
+      background="bg-gray-800"
+    >
       <Sidebar.Header>
         <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
           <section className="">

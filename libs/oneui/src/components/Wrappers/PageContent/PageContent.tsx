@@ -84,7 +84,9 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
         },
       }}
     >
-      <div className="block w-full h-screen bg-slate-100 ">{children}</div>
+      <div className="block w-full h-screen transition-all bg-slate-100 ">
+        {children}
+      </div>
     </PageContentContext.Provider>
   );
 };
