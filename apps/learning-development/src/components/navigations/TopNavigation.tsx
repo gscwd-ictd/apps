@@ -24,7 +24,7 @@ export const TopNavigation = () => {
   return (
     <header
       id="page-topbar"
-      className={`fixed top-0 right-0 z-50 h-16 text-center left-16 bg-white shadow-xl transition-all ${
+      className={`fixed top-0 right-0 z-50 h-16 text-center left-16 bg-slate-50 shadow-xl transition-all ${
         isCollapsed
           ? 'sm:left-16 md:left-16 lg:left-16'
           : 'sm:left-16 md:left-64 lg:left-64'

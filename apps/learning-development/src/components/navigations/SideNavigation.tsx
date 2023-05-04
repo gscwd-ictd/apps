@@ -15,14 +15,11 @@ export const SideNavigation = () => {
   }, []);
 
   return (
-    <Sidebar
-      className="relative w-full transition-all"
-      background="bg-slate-200"
-    >
+    <Sidebar className="relative w-full transition-all" background="bg-white">
       <Sidebar.Header>
         <div className="flex items-center justify-center w-full gap-2 py-4 text-white">
           <section className="">
-            <div className="text-sky-600">
+            <div className="text-sky-700/80">
               {/* <i className="text-4xl bx bxs-book-open"></i> */}
               {/* <i className="text-5xl bx bxs-graduation"></i> */}
               <i className="text-5xl bx bxs-book-content"></i>
