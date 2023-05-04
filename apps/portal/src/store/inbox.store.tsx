@@ -18,6 +18,9 @@ export type InboxState = {
     errorResponse: string;
   };
 
+  submitModalIsOpen: boolean;
+  setSubmitModalIsOpen: (submitModalIsOpen: boolean) => void;
+
   getMessageList: (loading: boolean) => void;
   getMessageListSuccess: (loading: boolean, response) => void;
   getMessageListFail: (loading: boolean, error: string) => void;
@@ -42,6 +45,11 @@ export const useInboxStore = create<InboxState>()(
     error: {
       errorMessages: '',
       errorResponse: '',
+    },
+
+    submitModalIsOpen: false,
+    setSubmitModalIsOpen: (submitModalIsOpen: boolean) => {
+      set((state) => ({ ...state, submitModalIsOpen }));
     },
 
     //GET INBOX MESSAGES

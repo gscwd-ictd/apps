@@ -261,7 +261,7 @@ export default function Vacancies({
         ) : null
       }
 
-      {errorIfApplied ? (
+      {!isEmpty(errorIfApplied) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorIfApplied}`}

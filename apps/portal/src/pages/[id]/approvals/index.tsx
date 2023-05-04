@@ -225,7 +225,7 @@ export default function Approvals({
     <>
       <>
         {/* Pass Slip List Load Failed Error */}
-        {errorPassSlip ? (
+        {!isEmpty(errorPassSlip) ? (
           <ToastNotification
             toastType="error"
             notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`}
@@ -233,7 +233,7 @@ export default function Approvals({
         ) : null}
 
         {/* Leave List Load Failed Error */}
-        {errorLeave ? (
+        {!isEmpty(errorLeave) ? (
           <ToastNotification
             toastType="error"
             notifMessage={`${errorLeave}: Failed to load Leaves.`}
@@ -303,18 +303,18 @@ export default function Approvals({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

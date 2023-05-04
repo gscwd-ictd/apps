@@ -7,33 +7,40 @@ import {
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { HiMail } from 'react-icons/hi';
-import { withCookieSession, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
-import { PsbMessageContent } from '../../../../src/types/inbox.type';
+import {
+  PsbMembers,
+  PsbMessageContent,
+} from '../../../../src/types/inbox.type';
 import useSWR, { mutate } from 'swr';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useInboxStore } from '../../../../src/store/inbox.store';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  Modal,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 
 export default function Inbox({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const route = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/acknowledge-schedule/`;
-
-  // const [vppId, setVppId] = useState<string>();
-  // const [employeeId, setEmployeeId] = useState<string>(employee.employmentDetails.employeeId);
   const [messageContent, setMessageContent] = useState<PsbMessageContent>();
   const [mailMessage, setMailMessage] = useState<string>('');
-  const [remarks, setRemarks] = useState<string>('');
   const [isMessageOpen, setIsMessageOpen] = useState<boolean>(false);
-  const [acknowledgements, setAcknowledgments] = useState<
-    Array<PsbMessageContent>
-  >([]);
+  const [isAccepted, setIsAccepted] = useState<boolean>(false);
+  const [selectedVppId, setSelectedVppId] = useState<string>(''); // store selected PSB VPP Id for POST
+  const [remarks, setRemarks] = useState<string>(''); // store remarks for declining assignment for POST
 
   const {
     loadingMessages,
@@ -49,6 +56,9 @@ export default function Inbox({
     postMessage,
     postMessageSuccess,
     postMessageFail,
+
+    submitModalIsOpen,
+    setSubmitModalIsOpen,
   } = useInboxStore((state) => ({
     loadingMessages: state.loading.loadingMessages,
     loadingResponse: state.loading.loadingResponse,
@@ -63,6 +73,9 @@ export default function Inbox({
     postMessage: state.postMessage,
     postMessageSuccess: state.postMessageSuccess,
     postMessageFail: state.postMessageFail,
+
+    submitModalIsOpen: state.submitModalIsOpen,
+    setSubmitModalIsOpen: state.setSubmitModalIsOpen,
   }));
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -92,18 +105,19 @@ export default function Inbox({
     if (swrIsLoadingMessages) {
       getMessageList(swrIsLoadingMessages);
     }
-    console.log(swrMessages);
+    console.log(swrMessages, 'test');
   }, [swrIsLoadingMessages]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrMessages)) {
       getMessageListSuccess(swrIsLoadingMessages, swrMessages);
-      console.log(swrMessages, 'test');
+      console.log(swrMessages, 'success');
     }
 
     if (!isEmpty(swrError)) {
       getMessageListFail(swrIsLoadingMessages, swrError.message);
+      console.log(swrMessages, 'error');
     }
   }, [swrMessages, swrError]);
 
@@ -113,16 +127,14 @@ export default function Inbox({
     }
   }, [responseApply]);
 
-  async function handleResponse(
-    selectedVppId: any,
-    response: string,
-    remarks: string
-  ) {
+  const submitResponseRoute = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/acknowledge-schedule/`;
+
+  async function handleResponse() {
     postMessage();
     try {
-      if (response == 'accept') {
+      if (isAccepted === true) {
         const res = await axios.patch(
-          route +
+          submitResponseRoute +
             selectedVppId +
             '/' +
             employeeDetails.employmentDetails.userId +
@@ -131,9 +143,11 @@ export default function Inbox({
         );
         console.log(res);
         postMessageSuccess(res);
+        setRemarks('');
+        closeSubmitModalAction();
       } else {
         const res = await axios.patch(
-          route +
+          submitResponseRoute +
             selectedVppId +
             '/' +
             employeeDetails.employmentDetails.userId +
@@ -144,20 +158,17 @@ export default function Inbox({
         );
         console.log(res);
         postMessageSuccess(res);
+        setRemarks('');
+        closeSubmitModalAction();
       }
 
-      setAcknowledgments(swrMessages);
       setIsMessageOpen(false);
     } catch (error) {
       console.log(error);
       postMessageFail(error);
-      return [];
+      closeSubmitModalAction();
     }
   }
-
-  useEffect(() => {
-    setAcknowledgments(swrMessages);
-  }, []);
 
   //UPDATE REMARKS ON RESPONSE
   const handleRemarks = (e: string) => {
@@ -174,10 +185,23 @@ export default function Inbox({
     // console.log(messageContent);
   };
 
+  const closeSubmitModalAction = async () => {
+    setSubmitModalIsOpen(false);
+  };
+
+  const openSubmitModalAction = async (
+    selectedVppId: any,
+    response: boolean
+  ) => {
+    setSelectedVppId(selectedVppId);
+    setIsAccepted(response);
+    setSubmitModalIsOpen(true);
+  };
+
   return (
     <>
       {/* Messages Load Failed Error */}
-      {errorMessage ? (
+      {!isEmpty(errorMessage) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorMessage}: Failed to load messages.`}
@@ -185,10 +209,18 @@ export default function Inbox({
       ) : null}
 
       {/* PSB Member Acknowledgement Failed Error */}
-      {errorResponse ? (
+      {!isEmpty(errorResponse) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorResponse}: Failed to submit response.`}
+        />
+      ) : null}
+
+      {/* PSB Member Acknowledgement Success */}
+      {!isEmpty(responseApply) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage={`Response submitted.`}
         />
       ) : null}
 
@@ -197,6 +229,55 @@ export default function Inbox({
       </Head>
 
       <SideNav />
+      <Modal
+        size={'sm'}
+        open={submitModalIsOpen}
+        setOpen={setSubmitModalIsOpen}
+      >
+        <Modal.Header>
+          <h3 className="font-semibold text-xl text-gray-700">
+            <div className="px-5 flex justify-between">
+              <span>PSB Member Acknowledgement</span>
+              {/* <button
+                className="hover:bg-slate-100 px-1 rounded-full"
+                onClick={closeSubmitModalAction}
+              >
+                <HiX />
+              </button> */}
+            </div>
+          </h3>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
+            {isAccepted
+              ? 'Are you sure you want accept?'
+              : 'Are you sure you want decline?'}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end gap-2">
+            <div className="min-w-[6rem] max-w-auto flex gap-4">
+              <Button
+                variant={'primary'}
+                size={'lg'}
+                loading={false}
+                onClick={(e) => handleResponse()}
+              >
+                Yes
+              </Button>
+              <Button
+                variant={'danger'}
+                size={'lg'}
+                loading={false}
+                onClick={closeSubmitModalAction}
+              >
+                No
+              </Button>
+            </div>
+          </div>
+        </Modal.Footer>
+      </Modal>
+
       <MainContainer>
         <div className="flex flex-row w-full h-full pb-10">
           <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
@@ -208,8 +289,8 @@ export default function Inbox({
                     <div
                       key={messageIdx}
                       className={`${
-                        acknowledgement.acknowledgedSchedule ||
-                        acknowledgement.declinedSchedule
+                        acknowledgement.details.acknowledgedSchedule ||
+                        acknowledgement.details.declinedSchedule
                           ? 'opacity-50'
                           : ''
                       }`}
@@ -217,8 +298,8 @@ export default function Inbox({
                       <MessageCard
                         icon={<HiMail className="w-6 h-6 text-green-800" />}
                         color={`green`}
-                        title={'Pending Acknowledgement'}
-                        description={'Personnel Selection Board'}
+                        title={'PSB Member Acknowledgement'}
+                        description={`Position: ${acknowledgement.details.positionTitle}`}
                         // children={<></>}
                         linkType={'router'}
                         onClick={() => handleMessage(acknowledgement)}
@@ -229,47 +310,101 @@ export default function Inbox({
               )
             ) : (
               <div className="flex flex-col items-center justify-center w-full h-full">
-                <label className="text-5xl text-slate-300">NO MAIL</label>
+                <label className="text-5xl text-slate-300">EMPTY</label>
               </div>
             )}
           </div>
           <div className="flex flex-col items-center w-full h-full pt-6 ml-4 mr-4 text-gray-700">
             {isMessageOpen ? (
-              <div className={'w-100 p-8 flex flex-col bg-white'}>
+              <div className={'w-100 pl-8 pr-8 pt-1 flex flex-col bg-white'}>
+                {messageContent?.details.acknowledgedSchedule ? (
+                  <AlertNotification
+                    alertType="success"
+                    notifMessage={'You have accepted this assignment'}
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {messageContent?.details.declinedSchedule ? (
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage={'You have declined this assignment'}
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {!messageContent?.details.acknowledgedSchedule &&
+                !messageContent?.details.declinedSchedule ? (
+                  <AlertNotification
+                    alertType="warning"
+                    notifMessage={'Awaiting action'}
+                    dismissible={false}
+                  />
+                ) : null}
+
                 <label className="pb-2">{mailMessage}</label>
                 <div>
                   <label className="font-bold">Assignment: </label>
-                  {messageContent?.assignment}
+                  {messageContent?.details.assignment}
                 </div>
                 <div>
                   <label className="font-bold">Position: </label>
-                  {messageContent?.positionTitle}
+                  {messageContent?.details.positionTitle}
                 </div>
                 <div>
                   <label className="font-bold">Schedule: </label>
-                  {messageContent?.schedule}
+                  {messageContent?.details.schedule}
                 </div>
                 <div>
                   <label className="font-bold">Venue: </label>
-                  {messageContent?.venue}
+                  {messageContent?.details.venue}
+                </div>
+                <div>
+                  <label className="font-bold">PSB Members: </label>
+                  <ul>
+                    {messageContent.psbMembers.map(
+                      (member: PsbMembers, messageIdx: number) => {
+                        return (
+                          <li className="indent-4" key={messageIdx}>
+                            {member.fullName}
+                          </li>
+                        );
+                      }
+                    )}
+                  </ul>
                 </div>
 
-                <div className="pt-4">
-                  {/* <label className="text-gray-700">Enter remarks before submitting response.</label> */}
+                <div className="pt-2">
+                  <label className="font-bold">
+                    Remarks:{' '}
+                    {messageContent?.details.acknowledgedSchedule ||
+                    messageContent?.details.declinedSchedule ? null : (
+                      <label className={`font-normal text-sm text-red-500`}>
+                        * required if declined
+                      </label>
+                    )}
+                  </label>
+
                   <textarea
-                    className="w-full h-32 p-2 border"
+                    className={`
+                        w-full h-32 p-2 border resize-none
+                    `}
                     disabled={
-                      messageContent?.acknowledgedSchedule ||
-                      messageContent?.declinedSchedule
+                      messageContent?.details.acknowledgedSchedule ||
+                      messageContent?.details.declinedSchedule
                         ? true
                         : false
                     }
-                    defaultValue={
-                      messageContent?.declineReason
-                        ? messageContent?.declineReason
-                        : 'No Remarks'
+                    value={
+                      messageContent?.details.acknowledgedSchedule
+                        ? 'N/A'
+                        : messageContent?.details.declinedSchedule
+                        ? messageContent.details.declineReason
+                        : remarks
                     }
-                    placeholder={'Enter reason if you are to decline.'}
+                    placeholder={
+                      'If declining, please state reason and indicate personnel you recommend to be your replacement.'
+                    }
                     onChange={(e) =>
                       handleRemarks(e.target.value as unknown as string)
                     }
@@ -277,56 +412,41 @@ export default function Inbox({
                 </div>
                 <div
                   className={`${
-                    messageContent?.acknowledgedSchedule ||
-                    messageContent?.declinedSchedule
+                    messageContent?.details.acknowledgedSchedule ||
+                    messageContent?.details.declinedSchedule
                       ? 'hidden'
                       : 'flex flex-row gap-4 items-center justify-end'
                   }`}
                 >
-                  <button
-                    className={`w-20 h-8 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
                     onClick={(e) =>
-                      handleResponse(messageContent?.vppId, 'accept', remarks)
+                      openSubmitModalAction(messageContent?.details.vppId, true)
                     }
                   >
                     Accept
-                  </button>
-                  <button
-                    className={`${
-                      remarks ? '' : 'cursor-not-allowed'
-                    } w-20 h-8 rounded bg-red-500 text-white hover:bg-red-600`}
+                  </Button>
+                  <Button
+                    variant={'danger'}
+                    size={'md'}
                     disabled={remarks ? false : true}
                     onClick={(e) =>
-                      handleResponse(messageContent?.vppId, 'decline', remarks)
+                      openSubmitModalAction(
+                        messageContent?.details.vppId,
+                        false
+                      )
                     }
                   >
                     Decline
-                  </button>
-                </div>
-                <div
-                  className={`${
-                    messageContent?.acknowledgedSchedule
-                      ? 'flex flex-row gap-4 items-center justify-center'
-                      : 'hidden'
-                  }`}
-                >
-                  <label className="text-green-700">
-                    You have already accepted this assignment.
-                  </label>
-                </div>
-                <div
-                  className={`${
-                    messageContent?.declinedSchedule
-                      ? 'flex flex-row gap-4 items-center justify-center'
-                      : 'hidden'
-                  }`}
-                >
-                  <label className="text-rose-700">
-                    You have already declined this assignment.
-                  </label>
+                  </Button>
                 </div>
               </div>
-            ) : null}
+            ) : (
+              <div className="flex flex-col items-center justify-center w-full h-full">
+                <label className="text-5xl text-slate-300">NO DATA</label>
+              </div>
+            )}
           </div>
         </div>
       </MainContainer>
@@ -334,27 +454,18 @@ export default function Inbox({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const { data } = await axios.get(
-//       `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/schedules/${context.query.id}/unacknowledged`
-//     );
-//     return { props: { pendingAcknowledgements: data, id: context.query.id } };
-//   }
-// );
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+//   return { props: { employeeDetails } };
+// };
 
-  return { props: { employeeDetails } };
-};
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
-
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

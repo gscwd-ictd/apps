@@ -146,7 +146,7 @@ export default function PassSlip({
     <>
       <>
         {/* Pass Slip List Load Failed Error */}
-        {errorPassSlips ? (
+        {!isEmpty(errorPassSlips) ? (
           <ToastNotification
             toastType="error"
             notifMessage={`${errorPassSlips}: Failed to load Pass Slips.`}
