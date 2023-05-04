@@ -15,8 +15,8 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
   showColumnFilter = false,
   paginate = false,
 }) => {
-  const resetInputs = () => {
-    // model.setColumnFilters.
+  const resetFilterInputs = () => {
+    model.resetColumnFilters();
   };
 
   return (
@@ -25,17 +25,17 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
         {showGlobalFilter ? <GlobalFilter model={model} /> : null}
       </div>
 
-      <div className="order-3 w-full search-box-wrapper py-5">
+      <div className="order-3 w-full py-5 search-box-wrapper">
         {showColumnFilter ? (
           <>
-            <p className="text-xs pb-1">Filters:</p>
+            <p className="pb-1 text-xs">Filters:</p>
             {model?.getHeaderGroups().map((headerGroup) => (
-              <div key={headerGroup.id} className="flex flex-wrap">
+              <div key={headerGroup.id} className="flex flex-wrap items-center">
                 {headerGroup.headers.map((header) => {
                   return header.isPlaceholder ? null : (
                     <div key={header.id}>
                       {header.column.getCanFilter() ? (
-                        <div className=" w-1/4 pr-2">
+                        <div className="w-1/4 pr-2">
                           <ColumnFilter
                             column={header.column}
                             model={model}
@@ -46,12 +46,19 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
                     </div>
                   );
                 })}
+
+                <div>
+                  <Button
+                    id="resetButton"
+                    onClick={() => resetFilterInputs()}
+                    variant="info"
+                  >
+                    <i className="bx bx-reset"></i>
+                  </Button>
+                  <div className="h-1" />
+                </div>
               </div>
             ))}
-
-            <Button onClick={() => resetDateInputs()} variant="info">
-              <i className="bx bx-reset"></i>
-            </Button>
           </>
         ) : null}
       </div>

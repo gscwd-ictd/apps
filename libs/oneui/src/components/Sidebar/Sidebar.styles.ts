@@ -24,18 +24,23 @@ export const itemClass = (
 
 export const linkClass = (
   collapsed: boolean,
-  selected: boolean | undefined
+  selected: boolean | undefined,
+  isDarkMode: boolean | undefined
 ) => {
   return cls(
-    'flex items-center hover:text-slate-50  font-medium py-3 duration-100 ease-in-out transition-all',
+    'flex items-center   font-medium py-3 duration-100 ease-in-out transition-all',
     {
       'justify-center hover:pl-1': collapsed,
 
       'pl-4 gap-5': !collapsed,
 
-      'text-slate-300/70': !selected,
+      'text-slate-300/70 hover:text-slate-50': !selected && isDarkMode,
 
-      'text-slate-200': selected,
+      'text-slate-200 hover:text-slate-50': selected && isDarkMode,
+
+      'text-slate-800 hover:text-slate-900': !selected && !isDarkMode,
+
+      'text-slate-600 hover:text-slate-900': selected && !isDarkMode,
     }
   );
 };

@@ -10,18 +10,65 @@ import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-
 import axios from 'axios';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { ActionDropdown } from 'apps/employee-monitoring/src/components/dropdown/ActionDropdown';
+import { isEmpty } from 'lodash';
+import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 
-export default function Index({
-  employees,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [allEmployees, setAllEmployees] = useState<Array<EmployeeRowData>>([]);
+export default function Index() {
+  // const [allEmployees, setAllEmployees] = useState<Array<EmployeeRowData>>([]);
+
+  const {
+    employees,
+    getDtrEmployees,
+    getDtrEmployeesFail,
+    getDtrEmployeesSuccess,
+  } = useDtrStore((state) => ({
+    employees: state.employees,
+    getDtrEmployees: state.getDtrEmployees,
+    getDtrEmployeesFail: state.getDtrEmployeesFail,
+    getDtrEmployeesSuccess: state.getDtrEmployeesSuccess,
+  }));
+
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const [currentRowData, setCurrentRowData] = useState<EmployeeRowData>(
     {} as EmployeeRowData
   );
 
-  const { data } = useSWR(`/employees`, fetcherHRIS);
+  const {
+    data: swrEmployees,
+    isLoading: swrIsLoading,
+    error: swrError,
+    mutate: swrMutate,
+  } = useSWR(`/employees`, fetcherHRIS);
+
+  // initialize loading swr
+  useEffect(() => {
+    if (swrIsLoading) {
+      getDtrEmployees();
+    }
+  }, [swrIsLoading]);
+
+  // useSWR data
+  useEffect(() => {
+    if (!isEmpty(swrEmployees)) {
+      const employeesDetails: Array<EmployeeRowData> = swrEmployees.data.map(
+        (employeeDetails: EmployeeProfile) => {
+          const { employmentDetails, personalDetails } = employeeDetails;
+
+          return {
+            id: employmentDetails.employeeId,
+            fullName: personalDetails.fullName,
+            assignment: employmentDetails.assignment,
+            positionTitle: employmentDetails.positionTitle,
+          };
+        }
+      );
+
+      getDtrEmployeesSuccess(employeesDetails);
+    }
+
+    if (!isEmpty(swrError)) getDtrEmployeesFail(swrError);
+  }, [swrEmployees, swrError]);
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -53,18 +100,17 @@ export default function Index({
     setModalIsOpen(true);
   };
 
-    // render row actions in the table component
-    const renderRowActions = (rowData: EmployeeRowData) => {
-      return (
-        <>
-          <div className="flex items-center justify-start">
-            <ActionDropdown />
-          </div>
-        </>
-      );
-    };
+  // render row actions in the table component
+  const renderRowActions = (rowData: EmployeeRowData) => {
+    return (
+      <>
+        <div className="flex items-center justify-start">
+          <ActionDropdown />
+        </div>
+      </>
+    );
+  };
 
-    
   // define table columns
   const columnHelper = createColumnHelper<EmployeeRowData>();
 
@@ -97,30 +143,9 @@ export default function Index({
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: allEmployees,
+    data: employees,
     columnVisibility: { id: false },
   });
-
-
-  useEffect(() => {
-    if (employees) {
-      // console.log(employees);
-      const employeesDetails: Array<EmployeeRowData> = employees.map(
-        (employeeDetails) => {
-          const { employmentDetails, personalDetails } = employeeDetails;
-
-          return {
-            id: employmentDetails.employeeId,
-            fullName: personalDetails.fullName,
-            assignment: employmentDetails.assignment,
-            positionTitle: employmentDetails.positionTitle,
-          };
-        }
-      );
-
-      setAllEmployees(employeesDetails);
-    }
-  }, []);
 
   return (
     <>
@@ -162,14 +187,14 @@ export default function Index({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees`
-    );
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   try {
+//     const response = await axios.get(
+//       `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees`
+//     );
 
-    return { props: { employees: response.data } };
-  } catch (error) {
-    return { props: { employees: [] } };
-  }
-};
+//     return { props: { employees: response.data } };
+//   } catch (error) {
+//     return { props: { employees: [] } };
+//   }
+// };

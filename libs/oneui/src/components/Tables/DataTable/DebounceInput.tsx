@@ -12,26 +12,23 @@ export const DebouncedInput = ({
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) => {
   const [value, setValue] = useState(initialValue);
 
-  // setValue if any initialValue changes
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
-  // debounce
   useEffect(() => {
     const timeout = setTimeout(() => {
       onChange(value);
     }, debounce);
 
     return () => clearTimeout(timeout);
-    // onChange(value);
-  }, [value, onChange, debounce]);
+  }, [value]);
 
   return (
     <input
       {...props}
       value={value}
-      onChange={(e) => setValue(e.currentTarget.value)}
+      onChange={(e) => setValue(e.target.value)}
     />
   );
 };

@@ -80,13 +80,16 @@ const Item: FunctionComponent<ItemProps> = ({
   hasSubItem = false,
 }) => {
   const {
-    aside: { isCollapsed },
+    aside: { isCollapsed, isDarkMode },
   } = useContext(PageContentContext);
 
   return (
     <li className={itemClass(className, selected, hasSubItem)}>
       {!hasSubItem ? (
-        <Link href={path} className={linkClass(isCollapsed, selected)}>
+        <Link
+          href={path}
+          className={linkClass(isCollapsed, selected, isDarkMode)}
+        >
           {icon}
           <AnimatePresence initial={false}>
             {!isCollapsed && (
@@ -101,7 +104,9 @@ const Item: FunctionComponent<ItemProps> = ({
         </Link>
       ) : (
         <Accordion className="flex flex-col justify-center w-full">
-          <Accordion.Button className={linkClass(isCollapsed, selected)}>
+          <Accordion.Button
+            className={linkClass(isCollapsed, selected, isDarkMode)}
+          >
             <div
               className={`flex w-full ${
                 isCollapsed ? 'gap-0' : 'gap-5'
