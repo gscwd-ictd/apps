@@ -7,6 +7,7 @@ import { TopNavigation } from '../components/navigations/TopNavigation';
 import { AbilityContext } from '../context/casl/Can';
 import ability from '../context/casl/Ability';
 import '../styles/tailwind.css';
+import '../styles/custom.css';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (

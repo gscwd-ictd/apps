@@ -2,7 +2,7 @@ export const Footer = () => {
   return (
     <footer
       id="page-bottombar"
-      className={`relative overflow-x-hidden flex px-5 py-5 bg-gray-200/70 `}
+      className={`relative overflow-x-hidden flex px-5 py-5 bg-white `}
     >
       <div className={`flex justify-between w-full`}>
         <span className="text-xs font-light text-gray-500">
