@@ -11,7 +11,17 @@ module.exports = {
     join(__dirname, '../../libs/oneui/src/**/*.{tsx,jsx,ts,js}'),
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-8deg)' },
+          '50%': { transform: 'rotate(8deg)' },
+        },
+      },
+      animation: {
+        wiggle: 'wiggle 0.3s ease-in-out infinite',
+      },
+    },
     screens: {
       xs: '200px',
 
