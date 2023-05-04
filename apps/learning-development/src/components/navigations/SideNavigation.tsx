@@ -1,29 +1,28 @@
 import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Paths } from '../../../utils/constants/route';
-import {
-  MyCalendarClockIcon,
-  MyCalendarHeartIcon,
-  MyCalendarPlusIcon,
-  MyCalendarRangeIcon,
-  MyLightBulbIcon,
-} from '../icons/MyLucideIcons';
 
 export const SideNavigation = () => {
   const {
-    aside: { isCollapsed },
+    aside: { isCollapsed, setIsDarkMode },
   } = useContext(PageContentContext);
 
   const { pathname } = useRouter();
 
+  useEffect(() => {
+    setIsDarkMode(false);
+  }, []);
+
   return (
-    <Sidebar className="relative w-full" background="bg-gray-800">
+    <Sidebar className="relative w-full" background="bg-slate-200">
       <Sidebar.Header>
         <div className="flex items-center justify-center w-full gap-2 py-4 text-white">
           <section className="">
-            <div className="text-sky-300/40">
-              <i className="text-4xl bx bxs-book-open"></i>
+            <div className="text-sky-600">
+              {/* <i className="text-4xl bx bxs-book-open"></i> */}
+              {/* <i className="text-5xl bx bxs-graduation"></i> */}
+              <i className="text-5xl bx bxs-book-content"></i>
             </div>
           </section>
 
@@ -32,8 +31,8 @@ export const SideNavigation = () => {
               isCollapsed ? 'hidden' : ''
             } flex flex-col text-center items-start select-none`}
           >
-            <span className="text-5xl font-medium text-sky-300">HRMS</span>
-            <span className="text-xs font-light text-sky-300">
+            <span className="text-5xl font-medium text-sky-600">HRMS</span>
+            <span className="text-xs font-light text-sky-600">
               Learning & Development
             </span>
           </section>
