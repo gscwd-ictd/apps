@@ -19,6 +19,8 @@ type PageContentContextState = {
     setPreviousState: (state: boolean) => void;
     isMobile: boolean;
     setIsMobile: (state: boolean) => void;
+    isDarkMode: boolean;
+    setIsDarkMode: (state: boolean) => void;
   };
   // header: {},
   // footer: {},
@@ -44,6 +46,7 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
 }) => {
   const windowWidth = useWidth();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const [previousState, setPreviousState] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -55,6 +58,11 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
       setIsMobile(false);
     }
   }, [windowWidth]);
+
+  // this use effect listens if the user clicked the (dark mode button)
+  // useEffect(() => {
+  //   setIsCollapsed(!isDarkMode);
+  // }, [isDarkMode]);
 
   // this use effect listens if the user clicked the collapse button while the window width is greater that 1024
   useEffect(() => {
@@ -71,6 +79,8 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
           setPreviousState,
           isMobile,
           setIsMobile,
+          isDarkMode,
+          setIsDarkMode,
         },
       }}
     >
