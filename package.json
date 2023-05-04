@@ -10,10 +10,13 @@
     "ems:prod": "nx serve employee-monitoring --prod --port 3009 --hostname 0.0.0.0",
     "portal": "nx serve portal --port 3102 --hostname 0.0.0.0",
     "kiosk": "nx serve kiosk --port 3102 --hostname 0.0.0.0",
+    "lnd": "nx serve learning-development --port 3110 --hostname 0.0.0.0",
+    "lnd:prod": "nx serve learning-development --prod --port 3010 --hostname 0.0.0.0",
     "pds": "nx serve pds --port 3105 --hostname 0.0.0.0",
-    "build portal": "nx portal",
-    "build pds": "nx pds",
-    "build ems": "nx build employee-monitoring"
+    "build portal": "nx build portal",
+    "build pds": "nx build pds",
+    "build ems": "nx build employee-monitoring",
+    "build lnd": "nx build learning-development"
   },
   "private": true,
   "dependencies": {

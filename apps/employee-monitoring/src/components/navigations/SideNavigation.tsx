@@ -1,6 +1,6 @@
 import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import {
   MyCalendarClockIcon,
   MyCalendarHeartIcon,
