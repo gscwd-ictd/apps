@@ -35,7 +35,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
                   return header.isPlaceholder ? null : (
                     <div key={header.id}>
                       {header.column.getCanFilter() ? (
-                        <div className="w-1/4 pr-2 ">
+                        <div className="w-1/4 pr-2">
                           <ColumnFilter
                             column={header.column}
                             model={model}
