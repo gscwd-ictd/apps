@@ -43,7 +43,7 @@ export const ProfileMenuDropdown = ({
         setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
       } catch (error) {
         // router.reload();
-        // handleLogout();
+        handleLogout();
       }
     }
   }, []);
