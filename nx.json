@@ -47,6 +47,5 @@
         "linter": "eslint"
       }
     }
-  },
-  "defaultProject": "ims"
+  }
 }
