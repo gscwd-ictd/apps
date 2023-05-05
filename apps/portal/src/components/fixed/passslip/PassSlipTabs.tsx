@@ -24,7 +24,6 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
             tab={tab}
             tabIndex={1}
             onClick={() => {
-              // setIsLoading(true);
               setTab(1);
             }}
             title="Ongoing Pass Slips"
@@ -37,7 +36,6 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
             tab={tab}
             tabIndex={2}
             onClick={() => {
-              // setIsLoading(true);
               setTab(2);
             }}
             title="Completed Pass Slips"
@@ -53,7 +51,3 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
     </>
   );
 };
-
-{
-  /* <div className="flex justify-center pt-20"><h1 className="text-4xl text-gray-300">No pending endorsement list at the moment</h1></div> */
-}

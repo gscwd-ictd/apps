@@ -1,7 +1,6 @@
 import { usePassSlipStore } from '../../../store/passslip.store';
 import dayjs from 'dayjs';
 import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 type AllPassSlipListTabProps = {
   passslips: Array<PassSlip> | null;
@@ -69,9 +68,7 @@ export const AllPassSlipListTab = ({
                   </p>
 
                   <p className="text-xs text-indigo-500">
-
                     Status: {item.status}
-
                   </p>
                 </div>
               </li>

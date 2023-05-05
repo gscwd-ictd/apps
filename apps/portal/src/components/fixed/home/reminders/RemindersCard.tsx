@@ -38,7 +38,7 @@ export const RemindersCard: React.FC<Props> = ({ reminders = '' }) => {
 
       {reminderstemp.map((reminder) => {
         return (
-          <a href="/test/test" key={reminder.id}>
+          <a key={reminder.id}>
             <div className="px-1 flex gap-2 justify-between items-center cursor-pointer hover:bg-slate-200">
               <div className="flex flex-row gap-2 items-center justify-start">
                 <HiCheckCircle className="w-4 h-4 text-indigo-500" />

@@ -22,7 +22,6 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             tab={tab}
             tabIndex={1}
             onClick={() => {
-              // setIsLoading(true);
               setTab(1);
             }}
             title="Ongoing Leave Application"
@@ -35,7 +34,6 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             tab={tab}
             tabIndex={2}
             onClick={() => {
-              // setIsLoading(true);
               setTab(2);
             }}
             title="Completed Leave Applications"
@@ -49,7 +47,3 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
     </>
   );
 };
-
-{
-  /* <div className="flex justify-center pt-20"><h1 className="text-4xl text-gray-300">No pending endorsement list at the moment</h1></div> */
-}

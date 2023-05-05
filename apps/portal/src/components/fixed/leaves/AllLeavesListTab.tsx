@@ -12,28 +12,18 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
   const {
     pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen,
-    leaveId,
     setLeaveId,
 
     setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen,
-    getLeaveIndividualDetail,
-    getLeaveIndividualDetailSuccess,
-    getLeaveIndividualDetailFail,
   } = useLeaveStore((state) => ({
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
-    leaveId: state.leaveId,
 
     setLeaveId: state.setLeaveId,
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
-    getLeaveIndividualDetail: state.getLeaveIndividualDetail,
-    getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
-    getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
   }));
-
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const OnSelect = (leaveId: string) => {
     setLeaveId(leaveId);

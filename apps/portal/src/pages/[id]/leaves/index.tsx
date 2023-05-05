@@ -12,7 +12,6 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
-// import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import {
   getUserDetails,
   withCookieSession,
@@ -277,9 +276,7 @@ export default function Leaves({
                       <LeavesTabs tab={tab} />
                     </div>
                     <div className="w-full">
-                      <LeavesTabWindow
-                      // employeeId={employeeDummy.employmentDetails.userId}
-                      />
+                      <LeavesTabWindow />
                     </div>
                   </div>
                 </>

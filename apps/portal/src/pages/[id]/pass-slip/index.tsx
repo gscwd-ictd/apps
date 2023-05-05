@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect } from 'react';
-import { HiDocumentAdd, HiX } from 'react-icons/hi';
+import { HiDocumentAdd } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -13,7 +13,7 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
@@ -126,7 +126,6 @@ export default function PassSlip({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    // console.log(swrPassSlips);
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
     }
@@ -241,18 +240,18 @@ export default function PassSlip({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
 
-//   return { props: { employeeDetails } };
-// };
+  return { props: { employeeDetails } };
+};
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+//     return { props: { employeeDetails } };
+//   }
+// );

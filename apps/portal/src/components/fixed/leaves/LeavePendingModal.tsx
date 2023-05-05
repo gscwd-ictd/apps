@@ -25,7 +25,6 @@ export const LeavePendingModal = ({
     errorLeaveDetails,
     pendingLeaveModalIsOpen,
 
-    setLeaveId,
     getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail,
@@ -36,7 +35,6 @@ export const LeavePendingModal = ({
     errorLeaveDetails: state.error.errorIndividualLeave,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
 
-    setLeaveId: state.setLeaveId,
     getLeaveIndividualDetail: state.getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
@@ -106,14 +104,6 @@ export const LeavePendingModal = ({
                   {leaveIndividualDetail.leaveApplicationBasicInfo ? (
                     <AlertNotification
                       alertType="warning"
-                      // notifMessage={
-                      //   leaveIndividualDetail.leaveApplicationBasicInfo?.status
-                      //     .charAt(0)
-                      //     .toUpperCase() +
-                      //   leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
-                      //     1
-                      //   )
-                      // }
                       notifMessage={'Awaiting approval'}
                       dismissible={false}
                     />

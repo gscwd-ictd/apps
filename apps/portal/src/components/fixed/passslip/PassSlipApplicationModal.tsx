@@ -4,9 +4,7 @@ import {
   Button,
   LoadingSpinner,
   Modal,
-  ToastNotification,
 } from '@gscwd-apps/oneui';
-import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -56,27 +54,18 @@ export const PassSlipApplicationModal = ({
 
   //zustand initialization to access pass slip store
   const {
-    postResponseApply,
     loadingResponse,
-    errorResponse,
 
     postPassSlipList,
     postPassSlipListSuccess,
     postPassSlipListFail,
   } = usePassSlipStore((state) => ({
-    postResponseApply: state.response.postResponseApply,
     loadingResponse: state.loading.loadingResponse,
-    errorResponse: state.error.errorResponse,
 
     postPassSlipList: state.postPassSlipList,
     postPassSlipListSuccess: state.postPassSlipListSuccess,
     postPassSlipListFail: state.postPassSlipListFail,
   }));
-
-  // set state for employee store
-  // const [empId, setEmpId] = useState<string>(
-  //   employeeDetails.employmentDetails.assignment.id
-  // );
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } =
@@ -112,7 +101,6 @@ export const PassSlipApplicationModal = ({
   ) => {
     handlePostResult(data);
     postPassSlipList();
-    // console.log(data);
   };
 
   const handlePostResult = async (data: PassSlipApplicationForm) => {
@@ -287,16 +275,6 @@ export const PassSlipApplicationModal = ({
               >
                 Apply Pass Slip
               </Button>
-
-              {/* <Link
-                href={`/${router.query.id}/pass-slip/${employeeDetail.employmentDetails.userId}`}
-                target={'_blank'}
-                className={`${modal.page == 3 ? '' : 'hidden'}`}
-              >
-                <Button variant={'primary'} size={'md'} loading={false}>
-                  View
-                </Button>
-              </Link> */}
             </div>
           </div>
         </Modal.Footer>

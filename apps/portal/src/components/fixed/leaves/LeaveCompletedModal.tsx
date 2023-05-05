@@ -27,7 +27,6 @@ export const LeaveCompletedModal = ({
     errorLeaveDetails,
     completedLeaveModalIsOpen,
 
-    setLeaveId,
     getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail,
@@ -38,7 +37,6 @@ export const LeaveCompletedModal = ({
     errorLeaveDetails: state.error.errorIndividualLeave,
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
 
-    setLeaveId: state.setLeaveId,
     getLeaveIndividualDetail: state.getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
