@@ -40,3 +40,8 @@ Thumbs.db
 
 # Next.js
 .next
+
+# ENV
+/apps/employee-monitoring/.env
+/apps/pds/.env
+/apps/portal/.env
