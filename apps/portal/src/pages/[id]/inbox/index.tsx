@@ -105,19 +105,19 @@ export default function Inbox({
     if (swrIsLoadingMessages) {
       getMessageList(swrIsLoadingMessages);
     }
-    console.log(swrMessages, 'test');
+    // console.log(swrMessages, 'test');
   }, [swrIsLoadingMessages]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrMessages)) {
       getMessageListSuccess(swrIsLoadingMessages, swrMessages);
-      console.log(swrMessages, 'success');
+      // console.log(swrMessages, 'success');
     }
 
     if (!isEmpty(swrError)) {
       getMessageListFail(swrIsLoadingMessages, swrError.message);
-      console.log(swrMessages, 'error');
+      // console.log(swrMessages, 'error');
     }
   }, [swrMessages, swrError]);
 
