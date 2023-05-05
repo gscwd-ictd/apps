@@ -47,11 +47,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      //  ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   } else if (
     isEqual(
@@ -67,11 +66,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      //  ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER)
@@ -85,11 +83,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      // ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.BOARD_MEMBER)
@@ -103,11 +100,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      // ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   } else if (
     isEqual(
@@ -123,11 +119,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      // ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   } else if (
     isEqual(
@@ -143,11 +138,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      //  ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   } else if (
     isEqual(
@@ -163,11 +157,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      //  ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   } else if (
     isEqual(
@@ -184,11 +177,10 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
-      // ||
-      // card.destination === 'dtr' ||
+        card.destination === 'pass-slip' ||
+        // card.destination === 'dtr' ||
 
-      // card.destination === 'approvals'
+        card.destination === 'approvals'
     );
   }
 

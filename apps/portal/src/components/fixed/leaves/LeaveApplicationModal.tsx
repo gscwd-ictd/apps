@@ -119,16 +119,14 @@ export const LeaveApplicationModal = ({
 }: LeaveApplicationModalProps) => {
   //zustand initialization to access Leave store
   const {
-    postResponseApply,
     loadingResponse,
-    errorResponse,
-    errorLeaveTypes,
+
     leaveDates,
     applyLeaveModalIsOpen,
     vacationLeave,
     forcedLeave,
     sickLeave,
-    unavailableDates,
+
     leaveDateFrom,
     leaveDateTo,
     overlappingLeaveCount,
@@ -145,16 +143,14 @@ export const LeaveApplicationModal = ({
     setLeaveDateFrom,
     setLeaveDateTo,
   } = useLeaveStore((state) => ({
-    postResponseApply: state.response.postResponseApply,
     loadingResponse: state.loading.loadingResponse,
-    errorResponse: state.error.errorResponse,
-    errorLeaveTypes: state.error.errorLeaveTypes,
+
     leaveDates: state.leaveDates,
     applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
     vacationLeave: state.leaveCredits.vacation,
     forcedLeave: state.leaveCredits.forced,
     sickLeave: state.leaveCredits.sick,
-    unavailableDates: state.unavailableDates,
+
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
     overlappingLeaveCount: state.overlappingLeaveCount,
@@ -228,7 +224,6 @@ export const LeaveApplicationModal = ({
     useForm<LeaveApplicationForm>({
       mode: 'onChange',
       defaultValues: {
-        // employeeId: employeeDetails.employmentDetails.userId,
         typeOfLeaveDetails: {
           id: '',
           leaveName: '',
@@ -238,10 +233,6 @@ export const LeaveApplicationModal = ({
         studyLeaveOther: null,
       },
     });
-
-  // useEffect(() => {
-  //   console.log(unavailableDates, 'overlapping leaves');
-  // }, [leaveDateFrom, leaveDateTo, watch('typeOfLeaveDetails.leaveName')]);
 
   const handleTypeOfLeave = (e: string) => {
     setLeaveObject(e);
@@ -379,9 +370,6 @@ export const LeaveApplicationModal = ({
     ) {
       handlePostResult(dataToSend);
       postLeave();
-      // console.log(dataToSend);
-      // console.log(unavailableDates);
-      // console.log(numberOfHolidays, 'holidays');
     }
   };
 
@@ -391,7 +379,6 @@ export const LeaveApplicationModal = ({
     if (error) {
       postLeaveFail(result);
     } else {
-      console.log(result, 'result of POST');
       postLeaveSuccess(result);
       reset();
       setLeaveObject('');
@@ -428,8 +415,6 @@ export const LeaveApplicationModal = ({
           <form id="ApplyLeaveForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
-                {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
-
                 <div className="flex flex-row justify-between items-center w-full">
                   <div className="flex flex-row justify-between items-center w-full">
                     <label className="pt-2 text-slate-500 text-xl font-medium">
@@ -440,12 +425,9 @@ export const LeaveApplicationModal = ({
 
                   <div className="flex gap-2 w-full items-center">
                     <select
-                      // id="typeOfLeave"
                       className="text-slate-500 w-full h-14 rounded text-lg border-slate-300"
                       required
                       defaultValue={''}
-                      // {...register('typeOfLeave')}
-                      // disabled={swrIsLoading ? true : false}
                       onChange={(e) =>
                         handleTypeOfLeave(e.target.value as unknown as string)
                       }

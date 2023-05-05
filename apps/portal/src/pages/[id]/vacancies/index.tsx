@@ -24,7 +24,6 @@ import {
 import {
   getUserDetails,
   withCookieSession,
-  withSession,
 } from '../../../utils/helpers/session';
 import { isEmpty } from 'lodash';
 import {
@@ -72,7 +71,6 @@ export default function Vacancies({
     responseApply,
 
     setErrorJobOpening,
-    setErrorIfApplied,
     setErrorWorkExperience,
     setErrorApplyJob,
     setErrorCaptcha,
@@ -88,7 +86,6 @@ export default function Vacancies({
     responseApply: state.response.responseApplyJob,
 
     setErrorJobOpening: state.setErrorJobOpening,
-    setErrorIfApplied: state.setErrorIfApplied,
     setErrorWorkExperience: state.setErrorWorkExperience,
     setErrorApplyJob: state.setErrorApplyJob,
     setErrorCaptcha: state.setErrorCaptcha,
@@ -261,7 +258,7 @@ export default function Vacancies({
         ) : null
       }
 
-      {errorIfApplied ? (
+      {!isEmpty(errorIfApplied) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorIfApplied}`}
@@ -346,15 +343,6 @@ export default function Vacancies({
               <div className="flex flex-col w-full">
                 {modal.page === 1 ? (
                   <div className="flex flex-col items-end w-full">
-                    {/* <div
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'bg-green-500 p-2 text-white rounded w-full text-center'
-                          : 'hidden'
-                      }`}
-                    >
-                      <label>You have applied for this position.</label>
-                    </div> */}
                     <Button
                       className={`${
                         isApplied || hasApplied ? 'hidden' : 'h-10'
@@ -366,16 +354,6 @@ export default function Vacancies({
                   </div>
                 ) : modal.page === 2 ? (
                   <div className="flex items-center justify-between w-full h-10">
-                    {/* <div
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'bg-green-500 p-2 text-white rounded w-full text-center'
-                          : 'hidden'
-                      }`}
-                    >
-                      <label>You have applied for this position.</label>
-                    </div> */}
-
                     <div
                       className={`${
                         isApplied || hasApplied
@@ -398,15 +376,7 @@ export default function Vacancies({
                         Warning: Going back or closing the window will reset
                         your entries.
                       </div>
-                      {/* <div
-                        className={`${
-                          isApplied || hasApplied
-                            ? 'hidden'
-                            : 'flex justify-end items-center text-xs'
-                        }`}
-                      >
-                        Generate and enter the correct Captcha to apply.
-                      </div> */}
+
                       <div className="flex flex-row justify-end gap-2">
                         <Button variant="danger" onClick={getCaptcha}>
                           Generate Captcha

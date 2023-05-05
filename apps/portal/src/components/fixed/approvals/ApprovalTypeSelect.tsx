@@ -4,9 +4,9 @@ import { useApprovalStore } from '../../../../src/store/approvals.store';
 type ApprovalType = { type: string; code: number };
 
 export const ApprovalTypeSelect = () => {
-  const selectedApprovalType = useApprovalStore(
-    (state) => state.selectedApprovalType
-  );
+  // const selectedApprovalType = useApprovalStore(
+  //   (state) => state.selectedApprovalType
+  // );
   const setSelectedApprovalType = useApprovalStore(
     (state) => state.setSelectedApprovalType
   );

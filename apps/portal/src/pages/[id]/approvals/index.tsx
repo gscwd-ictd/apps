@@ -30,9 +30,10 @@ import { useApprovalStore } from '../../../../src/store/approvals.store';
 import useSWR, { mutate } from 'swr';
 import { ApprovalTypeSelect } from '../../../../src/components/fixed/approvals/ApprovalTypeSelect';
 import { employeeDummy } from '../../../../src/types/employee.type';
-import { ApprovalPendingLeaveModal } from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
+import ApprovalsPendingLeaveModal from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
+import ApprovalsPendingPassSlipModal from '../../../../src/components/fixed/approvals/ApprovalsPendingPassSlipModal';
 
 export default function Approvals({
   employeeDetails,
@@ -100,12 +101,6 @@ export default function Approvals({
   // get state for the modal
   const modal = useApprovalStore((state) => state.modal);
 
-  // get loading state from store
-  const isLoading = useApprovalStore((state) => state.isLoading);
-
-  // set loading state from store
-  const setIsLoading = useApprovalStore((state) => state.setIsLoading);
-
   // set state for the modal
   const setModal = useApprovalStore((state) => state.setModal);
 
@@ -122,16 +117,7 @@ export default function Approvals({
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
-    setIsLoading(true);
-  }, [employeeDetails, setEmployeeDetails, setIsLoading]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-    }
-  }, [isLoading, setIsLoading]);
+  }, [employeeDetails, setEmployeeDetails]);
 
   // cancel action for Pending Leave Application Modal
   const closePendingLeaveModal = async () => {
@@ -173,7 +159,7 @@ export default function Approvals({
     mutate: mutatePassSlips,
   } = useSWR(passSlipUrl, fetchWithToken, {
     shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   // Initial zustand state update
@@ -239,7 +225,7 @@ export default function Approvals({
     <>
       <>
         {/* Pass Slip List Load Failed Error */}
-        {errorPassSlip ? (
+        {!isEmpty(errorPassSlip) ? (
           <ToastNotification
             toastType="error"
             notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`}
@@ -247,7 +233,7 @@ export default function Approvals({
         ) : null}
 
         {/* Leave List Load Failed Error */}
-        {errorLeave ? (
+        {!isEmpty(errorLeave) ? (
           <ToastNotification
             toastType="error"
             notifMessage={`${errorLeave}: Failed to load Leaves.`}
@@ -262,10 +248,17 @@ export default function Approvals({
           <SideNav />
 
           {/* Pending Leave Approval Modal */}
-          <ApprovalPendingLeaveModal
+          <ApprovalsPendingLeaveModal
             modalState={pendingLeaveModalIsOpen}
             setModalState={setPendingLeaveModalIsOpen}
             closeModalAction={closePendingLeaveModal}
+          />
+
+          {/* Pending Leave Approval Modal */}
+          <ApprovalsPendingPassSlipModal
+            modalState={pendingPassSlipModalIsOpen}
+            setModalState={setPendingPassSlipModalIsOpen}
+            closeModalAction={closePendingPassSlipModal}
           />
 
           <MainContainer>

@@ -16,17 +16,17 @@ import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification } from '@gscwd-apps/oneui';
 import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 
-type ApprovalPendingLeaveModalProps = {
+type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-export const ApprovalPendingLeaveModal = ({
+export const ApprovalsPendingLeaveModal = ({
   modalState,
   setModalState,
   closeModalAction,
-}: ApprovalPendingLeaveModalProps) => {
+}: ApprovalsPendingLeaveModalProps) => {
   const {
     leaveIndividualDetail,
     leaveId,
@@ -469,3 +469,5 @@ export const ApprovalPendingLeaveModal = ({
     </>
   );
 };
+
+export default ApprovalsPendingLeaveModal;

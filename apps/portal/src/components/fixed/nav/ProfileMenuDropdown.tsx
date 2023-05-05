@@ -42,7 +42,8 @@ export const ProfileMenuDropdown = ({
       try {
         setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
       } catch (error) {
-        router.reload();
+        // router.reload();
+        // handleLogout();
       }
     }
   }, []);

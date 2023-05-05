@@ -12,7 +12,6 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
-// import { getUserDetails, withSession } from '../../../utils/helpers/session';
 import {
   getUserDetails,
   withCookieSession,
@@ -183,7 +182,7 @@ export default function Leaves({
         ) : null}
 
         {/* Leave List Load Failed Error */}
-        {errorLeaves ? (
+        {!isEmpty(errorLeaves) ? (
           <ToastNotification
             toastType="error"
             notifMessage={`${errorLeaves}.`}
@@ -277,9 +276,7 @@ export default function Leaves({
                       <LeavesTabs tab={tab} />
                     </div>
                     <div className="w-full">
-                      <LeavesTabWindow
-                      // employeeId={employeeDummy.employmentDetails.userId}
-                      />
+                      <LeavesTabWindow />
                     </div>
                   </div>
                 </>
