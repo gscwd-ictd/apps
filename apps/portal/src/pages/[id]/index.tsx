@@ -25,6 +25,7 @@ import { ProfileCard } from '../../components/fixed/home/profile/ProfileCard';
 import { RemindersCard } from '../../components/fixed/home/reminders/RemindersCard';
 import { AttendanceCard } from '../../components/fixed/home/attendance/AttendanceCard';
 import { StatsCard } from '../../components/fixed/home/stats/StatsCard';
+import { employeeDummy } from '../../types/employee.type';
 
 export default function Dashboard({
   userDetails,
@@ -131,6 +132,14 @@ export default function Dashboard({
     </>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const userDetails = employeeDummy;
+
+//   return { props: { userDetails } };
+// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
