@@ -1,7 +1,5 @@
 const { join } = require('path');
 
-console.log(join(__dirname, '../../libs/oneui/src/**/*.{tsx,jsx,ts,js}'));
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
