@@ -50,6 +50,18 @@ export const Duties = () => {
   const duties = useWorkExpSheetStore((state) => state.duties);
   const setDuties = useWorkExpSheetStore((state) => state.setDuties);
 
+  const renderRowActions = (index: number) => {
+    return (
+      <button
+        onClick={() => handleRemove(index)}
+        className="items-center w-full"
+        type="button"
+      >
+        <HiXCircle size={25} className="text-red-500" />
+      </button>
+    );
+  };
+
   const columns = [
     columnHelper.accessor('duty', {
       cell: (info) => info.getValue(),
@@ -71,16 +83,6 @@ export const Duties = () => {
 
   const openDutiesModal = () => {
     setDutiesModalIsOpen(true);
-  };
-
-  const renderRowActions = (index: number) => {
-    <button
-      onClick={() => handleRemove(index)}
-      className="items-center w-full"
-      type="button"
-    >
-      <HiXCircle size={25} className="text-red-500" />
-    </button>;
   };
 
   const dutiesOnSubmit = handleSubmit((duty: Duty, e: any) => {
