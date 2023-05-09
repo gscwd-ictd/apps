@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import useSWR from 'swr';

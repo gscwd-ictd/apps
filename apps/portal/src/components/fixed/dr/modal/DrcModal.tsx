@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useAlertConfirmationStore } from 'apps/portal/src/store/alert.store';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';

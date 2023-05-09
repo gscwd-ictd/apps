@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import {
   FormEvent,

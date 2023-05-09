@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { isEmpty, isEqual } from 'lodash';

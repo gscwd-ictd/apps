@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { ElemEducation } from 'apps/pds/src/types/data/family.type';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';

@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Alert, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import {

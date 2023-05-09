@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Alert } from '@gscwd-apps/oneui';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';

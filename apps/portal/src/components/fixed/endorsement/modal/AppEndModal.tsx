@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
 import { FunctionComponent } from 'react';

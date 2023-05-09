@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { VoluntaryWork } from 'apps/pds/src/types/data/vol-work.type';
 import { isEmpty } from 'lodash';
 

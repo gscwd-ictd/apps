@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Publication } from 'apps/portal/src/types/publication.type';
 import { FormEvent, MutableRefObject, useEffect, useRef } from 'react';
 import { HiOutlineSearch, HiXCircle } from 'react-icons/hi';
