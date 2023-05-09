@@ -1,7 +1,10 @@
-import React from 'react'
-import { Text, View, StyleSheet, Font, Svg, Path } from '@react-pdf/renderer'
-import { PersonalInfo, GovernmentIssuedIds } from '../../types/data/basic-info.type'
-import { Address } from '../../types/data/address.type'
+import React from 'react';
+import { Text, View, StyleSheet, Font, Svg, Path } from '@react-pdf/renderer';
+import {
+  PersonalInfo,
+  GovernmentIssuedIds,
+} from 'apps/job-portal/utils/types/data/basic-info.type';
+import { Address } from 'apps/job-portal/utils/types/data/address.type';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -69,30 +72,30 @@ const styles = StyleSheet.create({
   w28: { width: '28%' },
   w26_5: { width: '26.5%' },
   w17_1: { width: '17.1%' },
-})
+});
 
 Font.register({
   family: 'ArialNarrow',
   src: '/assets/fonts/arial-narrow.ttf',
-})
+});
 
 Font.register({
   family: 'ArialNarrowItalic',
   src: '/assets/fonts/arial-narrow-italic.ttf',
-})
+});
 
 Font.register({
   family: 'ArialNarrowBoldItalic',
   src: '/assets/fonts/arial-narrow-bold-italic.ttf',
-})
+});
 
 type PersonalInformationPdfProps = {
-  formatDate: any
-  personalInfo: PersonalInfo
-  permanentAddress: Address
-  residentialAddress: Address
-  governmentIssuedIds: GovernmentIssuedIds
-}
+  formatDate: any;
+  personalInfo: PersonalInfo;
+  permanentAddress: Address;
+  residentialAddress: Address;
+  governmentIssuedIds: GovernmentIssuedIds;
+};
 
 export const PersonalInformationPdf = ({
   formatDate,
@@ -122,7 +125,14 @@ export const PersonalInformationPdf = ({
         <View style={[styles.borderRight, styles.inputKey, styles.w17_1]}>
           <Text>&nbsp;&nbsp;&nbsp;&nbsp;FIRST NAME</Text>
         </View>
-        <View style={[styles.w59, styles.inputValue, styles.borderRight, styles.borderTop]}>
+        <View
+          style={[
+            styles.w59,
+            styles.inputValue,
+            styles.borderRight,
+            styles.borderTop,
+          ]}
+        >
           <Text>{personalInfo.firstName || 'N/A'}</Text>
         </View>
         <View
@@ -138,7 +148,9 @@ export const PersonalInformationPdf = ({
           ]}
         >
           <Text>NAME EXTENSION (JR., SR)</Text>
-          <Text style={{ padding: '4 10', fontSize: 5.7 }}>{personalInfo.nameExtension || 'N/A'}</Text>
+          <Text style={{ padding: '4 10', fontSize: 5.7 }}>
+            {personalInfo.nameExtension || 'N/A'}
+          </Text>
         </View>
       </View>
 
@@ -166,11 +178,24 @@ export const PersonalInformationPdf = ({
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w38, { padding: '4 8 0 5' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w38,
+              { padding: '4 8 0 5' },
+            ]}
+          >
             <Text>16. CITIZENSHIP</Text>
           </View>
 
-          <View style={[styles.inputValue, styles.w62, { flexDirection: 'row', padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.inputValue,
+              styles.w62,
+              { flexDirection: 'row', padding: '4 8 0 8' },
+            ]}
+          >
             <View style={{ flexDirection: 'row' }}>
               {personalInfo.citizenship === 'Filipino' ? (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
@@ -181,7 +206,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Filipino</Text>
@@ -197,7 +225,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Dual Citizenship</Text>
@@ -209,14 +240,41 @@ export const PersonalInformationPdf = ({
       {/* Line 14 __ */}
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.w42]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w40_7, { padding: 0 }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w40_7,
+              { padding: 0 },
+            ]}
+          ></View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: 0 }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: 0 },
+            ]}
+          ></View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w38, { padding: 0 }]}></View>
-          <View style={[styles.inputValue, styles.w62, { flexDirection: 'row', padding: 0 }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w38,
+              { padding: 0 },
+            ]}
+          ></View>
+          <View
+            style={[
+              styles.inputValue,
+              styles.w62,
+              { flexDirection: 'row', padding: 0 },
+            ]}
+          >
             <View style={{ flexDirection: 'row', paddingLeft: 75 }}>
               {personalInfo.citizenshipType === 'By birth' ? (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
@@ -227,7 +285,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;By birth</Text>
@@ -243,7 +304,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;By naturalization</Text>
@@ -265,7 +329,14 @@ export const PersonalInformationPdf = ({
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w38, { padding: '4 8 0 8', textAlign: 'center' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w38,
+              { padding: '4 8 0 8', textAlign: 'center' },
+            ]}
+          >
             <Text>If holder of dual citizenship,</Text>
           </View>
 
@@ -291,7 +362,14 @@ export const PersonalInformationPdf = ({
             <Text>5. SEX</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { flexDirection: 'row', padding: '4 8 0 8' },
+            ]}
+          >
             <View style={{ flexDirection: 'row' }}>
               {personalInfo.sex === 'Male' ? (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
@@ -302,7 +380,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Male</Text>
@@ -318,7 +399,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Female</Text>
@@ -327,7 +411,14 @@ export const PersonalInformationPdf = ({
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w38, { padding: '4 8 0 8', textAlign: 'center' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w38,
+              { padding: '4 8 0 8', textAlign: 'center' },
+            ]}
+          >
             <Text>please indicate the details.</Text>
           </View>
 
@@ -354,7 +445,14 @@ export const PersonalInformationPdf = ({
             <Text>6. CIVIL STATUS</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { flexDirection: 'row', padding: '4 8 0 8' },
+            ]}
+          >
             <View style={{ flexDirection: 'row' }}>
               {personalInfo.civilStatus === 'Single' ? (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
@@ -365,7 +463,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Single</Text>
@@ -381,7 +482,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Married</Text>
@@ -390,7 +494,14 @@ export const PersonalInformationPdf = ({
         </View>
 
         <View style={[styles.lineContainer, styles.borderTop, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 5' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 5' },
+            ]}
+          >
             <Text>17. RESIDENTIAL ADDRESS</Text>
           </View>
 
@@ -405,8 +516,12 @@ export const PersonalInformationPdf = ({
               },
             ]}
           >
-            <Text style={[styles.w50]}>{residentialAddress.houseNumber || 'N/A'}</Text>
-            <Text style={[styles.w50]}>{residentialAddress.street || 'N/A'}</Text>
+            <Text style={[styles.w50]}>
+              {residentialAddress.houseNumber || 'N/A'}
+            </Text>
+            <Text style={[styles.w50]}>
+              {residentialAddress.street || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -414,9 +529,18 @@ export const PersonalInformationPdf = ({
       {/* Line 18 */}
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.w42]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}></View>
+          <View
+            style={[styles.borderRight, styles.inputKey, styles.w40_7]}
+          ></View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { flexDirection: 'row', padding: '0 8' },
+            ]}
+          >
             <View style={{ flexDirection: 'row' }}>
               {personalInfo.civilStatus === 'Widowed' ? (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
@@ -427,7 +551,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Widowed</Text>
@@ -443,7 +570,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Separated</Text>
@@ -452,7 +582,14 @@ export const PersonalInformationPdf = ({
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -480,7 +617,14 @@ export const PersonalInformationPdf = ({
             <Text></Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '3 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { flexDirection: 'row', padding: '3 8 0 8' },
+            ]}
+          >
             <View style={{ flexDirection: 'row' }}>
               {personalInfo.civilStatus === 'Others' ? (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
@@ -491,7 +635,10 @@ export const PersonalInformationPdf = ({
                 </Svg>
               ) : (
                 <Svg viewBox="0 0 24 24" width={7} height={7}>
-                  <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
+                  <Path
+                    d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"
+                    stroke="black"
+                  />
                 </Svg>
               )}
               <Text>&nbsp;&nbsp;Other/s</Text>
@@ -500,7 +647,14 @@ export const PersonalInformationPdf = ({
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -516,8 +670,12 @@ export const PersonalInformationPdf = ({
               },
             ]}
           >
-            <Text style={[styles.w50]}>{residentialAddress.subdivision || 'N/A'}</Text>
-            <Text style={[styles.w50]}>{residentialAddress.barangay || 'N/A'}</Text>
+            <Text style={[styles.w50]}>
+              {residentialAddress.subdivision || 'N/A'}
+            </Text>
+            <Text style={[styles.w50]}>
+              {residentialAddress.barangay || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -525,12 +683,28 @@ export const PersonalInformationPdf = ({
       {/* Line 20 */}
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.w42]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w40_7, { padding: '4 8 0 8' }]}></View>
-          <View style={[styles.borderRight, styles.w59_3, { padding: '0' }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w40_7,
+              { padding: '4 8 0 8' },
+            ]}
+          ></View>
+          <View
+            style={[styles.borderRight, styles.w59_3, { padding: '0' }]}
+          ></View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          ></View>
 
           <View
             style={[
@@ -556,13 +730,27 @@ export const PersonalInformationPdf = ({
             <Text>7. HEIGHT (m)</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text>{personalInfo.height || 'N/A'}</Text>
           </View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -579,7 +767,9 @@ export const PersonalInformationPdf = ({
             ]}
           >
             <Text style={[styles.w50]}>{residentialAddress.city || 'N/A'}</Text>
-            <Text style={[styles.w50]}>{residentialAddress.province || 'N/A'}</Text>
+            <Text style={[styles.w50]}>
+              {residentialAddress.province || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -587,12 +777,28 @@ export const PersonalInformationPdf = ({
       {/* Line 23 */}
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.w42]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w40_7, { padding: '4 8 0 8' }]}></View>
-          <View style={[styles.borderRight, styles.w59_3, { padding: '0' }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w40_7,
+              { padding: '4 8 0 8' },
+            ]}
+          ></View>
+          <View
+            style={[styles.borderRight, styles.w59_3, { padding: '0' }]}
+          ></View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          ></View>
 
           <View
             style={[
@@ -618,13 +824,27 @@ export const PersonalInformationPdf = ({
             <Text>8. WEIGHT (kg)</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text>{personalInfo.weight || 'N/A'}</Text>
           </View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8', textAlign: 'center' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8', textAlign: 'center' },
+            ]}
+          >
             <Text>ZIP CODE</Text>
           </View>
 
@@ -639,7 +859,9 @@ export const PersonalInformationPdf = ({
               },
             ]}
           >
-            <Text style={[styles.w100]}>{residentialAddress.zipCode || 'N/A'}</Text>
+            <Text style={[styles.w100]}>
+              {residentialAddress.zipCode || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -651,13 +873,27 @@ export const PersonalInformationPdf = ({
             <Text>9. BLOOD TYPE</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { flexDirection: 'row', padding: '4 8 0 8' },
+            ]}
+          >
             <Text>{personalInfo.bloodType || 'N/A'}</Text>
           </View>
         </View>
 
         <View style={[styles.lineContainer, styles.borderTop, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 5' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 5' },
+            ]}
+          >
             <Text>18. PERMANENT ADDRESS</Text>
           </View>
 
@@ -672,7 +908,9 @@ export const PersonalInformationPdf = ({
               },
             ]}
           >
-            <Text style={[styles.w50]}>{permanentAddress.houseNumber || 'N/A'}</Text>
+            <Text style={[styles.w50]}>
+              {permanentAddress.houseNumber || 'N/A'}
+            </Text>
             <Text style={[styles.w50]}>{permanentAddress.street || 'N/A'}</Text>
           </View>
         </View>
@@ -681,13 +919,29 @@ export const PersonalInformationPdf = ({
       {/* Line 26 */}
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.w42]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}></View>
+          <View
+            style={[styles.borderRight, styles.inputKey, styles.w40_7]}
+          ></View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '0 8' }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '0 8' },
+            ]}
+          ></View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -715,13 +969,27 @@ export const PersonalInformationPdf = ({
             <Text>10. GSIS ID NO.</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { flexDirection: 'row', padding: '4 8 0 8' },
+            ]}
+          >
             <Text>{governmentIssuedIds.gsisNumber || 'N/A'}</Text>
           </View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -737,8 +1005,12 @@ export const PersonalInformationPdf = ({
               },
             ]}
           >
-            <Text style={[styles.w50]}>{permanentAddress.subdivision || 'N/A'}</Text>
-            <Text style={[styles.w50]}>{permanentAddress.barangay || 'N/A'}</Text>
+            <Text style={[styles.w50]}>
+              {permanentAddress.subdivision || 'N/A'}
+            </Text>
+            <Text style={[styles.w50]}>
+              {permanentAddress.barangay || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -746,13 +1018,29 @@ export const PersonalInformationPdf = ({
       {/* Line 28 */}
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.w42]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}></View>
+          <View
+            style={[styles.borderRight, styles.inputKey, styles.w40_7]}
+          ></View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '0 8' }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '0 8' },
+            ]}
+          ></View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -780,13 +1068,27 @@ export const PersonalInformationPdf = ({
             <Text>11. PAG-IBIG ID NO.</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { flexDirection: 'row', padding: '4 8 0 8' },
+            ]}
+          >
             <Text>{governmentIssuedIds.pagibigNumber || 'N/A'}</Text>
           </View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -803,7 +1105,9 @@ export const PersonalInformationPdf = ({
             ]}
           >
             <Text style={[styles.w50]}>{permanentAddress.city || 'N/A'}</Text>
-            <Text style={[styles.w50]}>{permanentAddress.province || 'N/A'}</Text>
+            <Text style={[styles.w50]}>
+              {permanentAddress.province || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -811,13 +1115,29 @@ export const PersonalInformationPdf = ({
       {/* Line 30 */}
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.w42]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}></View>
+          <View
+            style={[styles.borderRight, styles.inputKey, styles.w40_7]}
+          ></View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '0 8' }]}></View>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '0 8' },
+            ]}
+          ></View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text></Text>
           </View>
 
@@ -845,13 +1165,27 @@ export const PersonalInformationPdf = ({
             <Text>12. PHILHEALTH NO.</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '4 8 0 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '4 8 0 8' },
+            ]}
+          >
             <Text>{governmentIssuedIds.philhealthNumber || 'N/A'}</Text>
           </View>
         </View>
 
         <View style={[styles.lineContainer, styles.w58]}>
-          <View style={[styles.borderRight, styles.inputKey, styles.w26_5, { padding: '4 8 0 8', textAlign: 'center' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputKey,
+              styles.w26_5,
+              { padding: '4 8 0 8', textAlign: 'center' },
+            ]}
+          >
             <Text>ZIP CODE</Text>
           </View>
 
@@ -866,7 +1200,9 @@ export const PersonalInformationPdf = ({
               },
             ]}
           >
-            <Text style={[styles.w100]}>{permanentAddress.zipCode || 'N/A'}</Text>
+            <Text style={[styles.w100]}>
+              {permanentAddress.zipCode || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -878,7 +1214,14 @@ export const PersonalInformationPdf = ({
             <Text>13. SSS NO.</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '4 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '4 8' },
+            ]}
+          >
             <Text>{governmentIssuedIds.sssNumber || 'N/A'}</Text>
           </View>
         </View>
@@ -889,7 +1232,9 @@ export const PersonalInformationPdf = ({
           </View>
 
           <View style={[styles.inputValue, styles.w73_5, { padding: '4 8' }]}>
-            <Text style={[styles.w100]}>{personalInfo.telephoneNumber || 'N/A'}</Text>
+            <Text style={[styles.w100]}>
+              {personalInfo.telephoneNumber || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -901,7 +1246,14 @@ export const PersonalInformationPdf = ({
             <Text>14. TIN NO.</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '4 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '4 8' },
+            ]}
+          >
             <Text>{governmentIssuedIds.tinNumber || 'N/A'}</Text>
           </View>
         </View>
@@ -912,7 +1264,9 @@ export const PersonalInformationPdf = ({
           </View>
 
           <View style={[styles.inputValue, styles.w73_5, { padding: '4 8' }]}>
-            <Text style={[styles.w100]}>{personalInfo.mobileNumber || 'N/A'}</Text>
+            <Text style={[styles.w100]}>
+              {personalInfo.mobileNumber || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -924,7 +1278,14 @@ export const PersonalInformationPdf = ({
             <Text>15. AGENCY EMPLOYEE NO.</Text>
           </View>
 
-          <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '4 8' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w59_3,
+              { padding: '4 8' },
+            ]}
+          >
             <Text>{governmentIssuedIds.agencyNumber || 'N/A'}</Text>
           </View>
         </View>
@@ -940,7 +1301,7 @@ export const PersonalInformationPdf = ({
         </View>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default PersonalInformationPdf
+export default PersonalInformationPdf;

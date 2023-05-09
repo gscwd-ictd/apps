@@ -17,7 +17,7 @@ function UseRenderObTransportation(value: ObTransportation | null | '') {
             ? 'Private/Personal'
             : null
         }
-        textColor="text-black"
+        textColor="text-white"
         bgColor="bg-blue-300"
       />
     );

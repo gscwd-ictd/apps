@@ -1,19 +1,23 @@
-import { Address, PermaAddress } from '../../src/types/data/address.type'
-import { BasicInfo, GovernmentIssuedIds, PersonalInfo } from '../../src/types/data/basic-info.type'
-import { EducationInfo } from '../../src/types/data/education.type'
-import { Spouse, Parent, Child } from '../../src/types/data/family.type'
+import { Address, PermaAddress } from '../types/data/address.type';
 import {
-  OfficeRelation,
-  GuiltyCharged,
-  Convicted,
-  SeparatedService,
+  BasicInfo,
+  GovernmentIssuedIds,
+  PersonalInfo,
+} from '../types/data/basic-info.type';
+import { EducationInfo } from '../types/data/education.type';
+import { Child, Parent, Spouse } from '../types/data/family.type';
+import {
   CandidateResigned,
+  Convicted,
+  GovernmentIssuedId,
+  GuiltyCharged,
   Immigrant,
   IndigenousPwdSoloParent,
-  SupportingDetails,
-  GovernmentIssuedId,
+  OfficeRelation,
   Reference,
-} from '../../src/types/data/supporting-info.type'
+  SeparatedService,
+  SupportingDetails,
+} from '../types/data/supporting-info.type';
 
 //BASIC INFO
 export const BASIC_INFO: BasicInfo = {
@@ -69,7 +73,7 @@ export const BASIC_INFO: BasicInfo = {
     tinNumber: '',
     agencyNumber: '',
   },
-}
+};
 
 //PERSONAL_INFO
 export const PERSONAL_INFO: PersonalInfo = {
@@ -90,7 +94,7 @@ export const PERSONAL_INFO: PersonalInfo = {
   citizenship: 'Filipino',
   citizenshipType: '',
   country: 'Philippines',
-}
+};
 
 //GOVERNMENT_ID
 export const GOVERNMENT_ID: GovernmentIssuedIds = {
@@ -100,7 +104,7 @@ export const GOVERNMENT_ID: GovernmentIssuedIds = {
   sssNumber: '',
   tinNumber: '',
   agencyNumber: '',
-}
+};
 
 //ADDRESS
 export const ADDRESS: Address = {
@@ -114,7 +118,7 @@ export const ADDRESS: Address = {
   cityCode: '',
   provCode: '',
   brgyCode: '',
-}
+};
 
 export const PERMA_ADDRESS: PermaAddress = {
   houseNumber: '',
@@ -128,7 +132,7 @@ export const PERMA_ADDRESS: PermaAddress = {
   provCode: '',
   brgyCode: '',
   checkboxAddress: false,
-}
+};
 
 //SPOUSE_INFO
 export const SPOUSE_INFO: Spouse = {
@@ -140,7 +144,7 @@ export const SPOUSE_INFO: Spouse = {
   nameExtension: '',
   businessAddress: '',
   occupation: '',
-}
+};
 
 // export const FATHER_INFO: Father = {
 //   fatherFirstName: '',
@@ -165,12 +169,12 @@ export const PARENTS_INFO: Parent = {
   motherMiddleName: '',
   motherLastName: '',
   // motherMaidenName: '',
-}
+};
 
 export const CHILDREN_INFO: Child = {
   childName: '',
   birthDate: '',
-}
+};
 
 export const ELEMENTARY: EducationInfo = {
   schoolName: '',
@@ -180,7 +184,7 @@ export const ELEMENTARY: EducationInfo = {
   to: 0,
   yearGraduated: 0,
   awards: '',
-}
+};
 
 export const SECONDARY: EducationInfo = {
   schoolName: '',
@@ -190,7 +194,7 @@ export const SECONDARY: EducationInfo = {
   to: 0,
   yearGraduated: 0,
   awards: '',
-}
+};
 
 export const COLLEGE: EducationInfo = {
   schoolName: '',
@@ -200,7 +204,7 @@ export const COLLEGE: EducationInfo = {
   to: 0,
   yearGraduated: 0,
   awards: '',
-}
+};
 
 // export const PDS_INFO: PDSInfo = {
 //   basicInfo: BASIC_INFO,
@@ -211,7 +215,7 @@ export const OFFICE_REL: OfficeRelation = {
   withinThirdDegree: false,
   withinFourthDegree: false,
   details: '',
-}
+};
 
 export const GUILTY_CHARGED: GuiltyCharged = {
   isGuilty: false,
@@ -219,29 +223,29 @@ export const GUILTY_CHARGED: GuiltyCharged = {
   isCharged: false,
   chargedDateFiled: '',
   chargedCaseStatus: '',
-}
+};
 
 export const CONVICTED: Convicted = {
   isConvicted: false,
   details: '',
-}
+};
 
 export const SEP_SERV: SeparatedService = {
   isSeparated: false,
   details: '',
-}
+};
 
 export const CAND_RES: CandidateResigned = {
   isCandidate: false,
   candidateDetails: '',
   isResigned: false,
   resignedDetails: '',
-}
+};
 
 export const IMMIGRANT: Immigrant = {
   isImmigrant: false,
   details: '',
-}
+};
 
 export const IND_PWD_SOLO: IndigenousPwdSoloParent = {
   isIndigenousMember: false,
@@ -250,7 +254,7 @@ export const IND_PWD_SOLO: IndigenousPwdSoloParent = {
   pwdIdNumber: '',
   isSoloParent: false,
   soloParentIdNumber: '',
-}
+};
 
 export const SUPPORTING_DETAILS: SupportingDetails = {
   officeRelation: OFFICE_REL,
@@ -260,17 +264,17 @@ export const SUPPORTING_DETAILS: SupportingDetails = {
   candidateResigned: CAND_RES,
   immigrant: IMMIGRANT,
   indigenousPwdSoloParent: IND_PWD_SOLO,
-}
+};
 
 export const REFERENCES: Reference = {
   name: '',
   address: '',
   telephoneNumber: '',
-}
+};
 
 export const GOVT_ISSUED_ID: GovernmentIssuedId = {
   issuedId: '',
   idNumber: '',
   issueDate: '',
   issuePlace: '',
-}
+};

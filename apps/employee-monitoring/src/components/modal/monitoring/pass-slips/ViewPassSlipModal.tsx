@@ -36,7 +36,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
           </div>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full">
+          <div className="w-full min-h-[14rem]">
             <div className="flex flex-col w-full gap-4 px-5">
               {/* Date of Application */}
 

@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { isEmpty } from 'lodash';
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
 
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
@@ -89,7 +89,8 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
   };
 
   const handlePatchResult = async (data: Holiday) => {
-    const { error, result } = await patchEmpMonitoring('/holidays', data);
+    console.log(data);
+    const { error, result } = await putEmpMonitoring('/holidays', data);
 
     if (error) {
       UpdateHolidayFail(result);
@@ -109,7 +110,7 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
       // traverse to each object and setValue
       keys.forEach((key: HolidayKeys) => {
         if (key === 'holidayDate') {
-          setValue(key, ConvertFullMonthNameToDigit(rowData[key]), {
+          setValue('holidayDate', ConvertFullMonthNameToDigit(rowData[key]), {
             shouldValidate: true,
             shouldDirty: true,
           });
@@ -128,7 +129,7 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600"></span>
+            <span className="text-2xl text-gray-600">Edit Holiday</span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -200,7 +201,7 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
               variant="info"
               type="submit"
               form="editHolidayForm"
-              className="text-gray-400 ml-1 disabled:cursor-not-allowed"
+              className="ml-1 text-gray-400 disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>

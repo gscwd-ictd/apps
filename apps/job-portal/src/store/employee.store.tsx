@@ -1,45 +1,45 @@
-import create from "zustand"
-import { EmployeeDetails } from "../types/data/employee.type"
+import { EmployeeDetails } from 'apps/job-portal/utils/types/data/employee.type';
+import { create } from 'zustand';
 
 export type EmployeeState = {
-    employeeDetails: EmployeeDetails
-    setEmployeeDetails: (employeeDetails: EmployeeDetails) => void
-}
+  employeeDetails: EmployeeDetails;
+  setEmployeeDetails: (employeeDetails: EmployeeDetails) => void;
+};
 
 export const EMPLOYEE_DATA: EmployeeDetails = {
-    user: {
-        _id: '',
-        email: ''
+  user: {
+    _id: '',
+    email: '',
+  },
+  profile: {
+    _id: '',
+    companyId: null,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    nameExt: '',
+    sex: '',
+    birthDate: '',
+    mobile: '',
+    email: '',
+    photoUrl: '',
+  },
+  employmentDetails: {
+    userId: '',
+    companyId: null,
+    assignment: {
+      id: '',
+      name: '',
+      positionId: '',
+      positionTitle: '',
     },
-    profile: {
-        _id: '',
-        companyId: null,
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        nameExt: '',
-        sex: '',
-        birthDate: '',
-        mobile: '',
-        email: '',
-        photoUrl: ''
-    },
-    employmentDetails: {
-        userId: '',
-        companyId: null,
-        assignment: {
-            id: '',
-            name: '',
-            positionId: '',
-            positionTitle: ''
-        },
-        userRole: ''
-    }
-}
+    userRole: '',
+  },
+};
 
 export const useEmployeeStore = create<EmployeeState>((set) => ({
-    employeeDetails: EMPLOYEE_DATA,
-    setEmployeeDetails: (employeeDetails: EmployeeDetails) => {
-        set((state) => ({ ...state, employeeDetails }))
-    }
-}))
+  employeeDetails: EMPLOYEE_DATA,
+  setEmployeeDetails: (employeeDetails: EmployeeDetails) => {
+    set((state) => ({ ...state, employeeDetails }));
+  },
+}));

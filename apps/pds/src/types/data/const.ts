@@ -1,7 +1,7 @@
 export const slAppVariant = {
   form: 'rounded-md border border-gray-200 pt-3.5 pb-5',
   modal: 'rounded-md border border-gray-50 bg-gray-50 pt-3 pb-3',
-}
+};
 
 export const mySelectListDisplay = {
   appointmentStatus: 'Select...',
@@ -19,12 +19,20 @@ export const mySelectListDisplay = {
   lndType: 'Select...',
   salaryGrade: 'Select...',
   seniorhighschool: '*Select highest level in Senior Highschool',
-}
+};
 
 export const selectListVariant = {
-  appointmentStatus: ['CASUAL', 'CONTRACTUAL', 'JOB ORDER', 'PERMANENT', 'PROBATIONARY', 'REGULAR', 'SELF-EMPLOYED'],
+  appointmentStatus: [
+    'CASUAL',
+    'CONTRACTUAL',
+    'JOB ORDER',
+    'PERMANENT',
+    'PROBATIONARY',
+    'REGULAR',
+    'SELF-EMPLOYED',
+  ],
   bloodType: ['AB+', 'AB-', 'A+', 'A-', 'B+', 'B-', 'O+', 'O-'],
-  civilStatus: ['Single', 'Married', 'Divorced', 'Widowed'],
+  civilStatus: ['Single', 'Married', 'Divorced', 'Widowed', 'Annulled'],
   country: ['Philippines', 'Foreign Country 1', 'Foreign Country 2'],
   dualCitizenshipType: ['By Birth', 'By Naturalization'],
   eligibility: [`Driver's License`, `Civil Service Professional`],
@@ -63,7 +71,7 @@ export const selectListVariant = {
   seniorhighschool: ['Graduated', 'Grade 11'],
   lndType: ['Managerial', 'Supervisory', 'Technical', 'Foundational'],
   salaryGrade: [''],
-}
+};
 
 export const newSelectListVariant = {
   appointmentStatus: [
@@ -97,7 +105,10 @@ export const newSelectListVariant = {
   ],
   eligibility: [
     { label: `Driver's License`, value: 'DRIVERS_LICENSE' },
-    { label: 'Civil Service Professional', value: 'CIVIL_SERVICE_PROFESSIONAL' },
+    {
+      label: 'Civil Service Professional',
+      value: 'CIVIL_SERVICE_PROFESSIONAL',
+    },
   ],
   gender: [
     { label: 'Male', value: 'MALE' },
@@ -107,4 +118,4 @@ export const newSelectListVariant = {
     { label: 'Yes', value: true },
     { label: 'No', value: false },
   ],
-}
+};

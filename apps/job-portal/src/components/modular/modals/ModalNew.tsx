@@ -1,22 +1,33 @@
-import { Transition, Dialog } from '@headlessui/react'
-import { Dispatch, Fragment, MouseEventHandler, ReactChild, ReactChildren, SetStateAction } from 'react'
-import { Button } from '../buttons/Button'
+import { Transition, Dialog } from '@headlessui/react';
+import { Dispatch, Fragment, MouseEventHandler, SetStateAction } from 'react';
+import { Button } from '../buttons/Button';
 
 type FormModalProps = {
-  title?: string
-  subtitle?: string
-  children?: React.ReactNode | React.ReactNode[]
-  modalSize?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'xxxxxxl' | 'xxxxxxxl' | 'full'
-  isOpen: boolean
-  verticalCenter?: boolean
-  isStatic?: boolean
-  actionLabel?: string
-  withCancelBtn?: boolean
-  cancelLabel?: string
-  cancelAction?: MouseEventHandler<HTMLButtonElement>
-  setIsOpen: Dispatch<SetStateAction<boolean>>
-  action: MouseEventHandler<HTMLButtonElement>
-}
+  title?: string;
+  subtitle?: string;
+  children?: React.ReactNode | React.ReactNode[];
+  modalSize?:
+    | 'sm'
+    | 'md'
+    | 'lg'
+    | 'xl'
+    | 'xxl'
+    | 'xxxl'
+    | 'xxxxl'
+    | 'xxxxxl'
+    | 'xxxxxxl'
+    | 'xxxxxxxl'
+    | 'full';
+  isOpen: boolean;
+  verticalCenter?: boolean;
+  isStatic?: boolean;
+  actionLabel?: string;
+  withCancelBtn?: boolean;
+  cancelLabel?: string;
+  cancelAction?: MouseEventHandler<HTMLButtonElement>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  action: MouseEventHandler<HTMLButtonElement>;
+};
 
 const size = {
   sm: 'max-w-sm',
@@ -30,7 +41,7 @@ const size = {
   xxxxxxl: 'max-w-6xl',
   xxxxxxxl: 'max-w-7xl',
   full: 'max-w-full',
-}
+};
 
 export const ModalNew = ({
   title = 'Modal Title',
@@ -50,7 +61,11 @@ export const ModalNew = ({
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 z-50" onClose={isStatic ? () => null : () => setIsOpen(false)}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-50"
+          onClose={isStatic ? () => null : () => setIsOpen(false)}
+        >
           <div className="min-h-screen px-4 text-center">
             <Transition.Child
               as={Fragment}
@@ -61,12 +76,17 @@ export const ModalNew = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className={`fixed inset-0 bg-black bg-opacity-20 transition-opacity`} />
+              <Dialog.Overlay
+                className={`fixed inset-0 bg-black bg-opacity-20 transition-opacity`}
+              />
             </Transition.Child>
 
             {verticalCenter ? (
               <>
-                <span className="inline-block h-screen align-middle" aria-hidden="true">
+                <span
+                  className="inline-block h-screen align-middle"
+                  aria-hidden="true"
+                >
                   &#8203;
                 </span>
               </>
@@ -86,7 +106,10 @@ export const ModalNew = ({
               >
                 <header className="mb-3">
                   <section className="flex items-center justify-between">
-                    <Dialog.Title as="h3" className="text-2xl font-medium leading-6 text-gray-600">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-2xl font-medium leading-6 text-gray-600"
+                    >
                       {title}
                     </Dialog.Title>
 
@@ -94,7 +117,10 @@ export const ModalNew = ({
                   </section>
 
                   <section>
-                    <Dialog.Title as="p" className="text-sm leading-6 text-gray-500">
+                    <Dialog.Title
+                      as="p"
+                      className="text-sm leading-6 text-gray-500"
+                    >
                       {subtitle}
                     </Dialog.Title>
                   </section>
@@ -120,5 +146,5 @@ export const ModalNew = ({
         </Dialog>
       </Transition>
     </>
-  )
-}
+  );
+};

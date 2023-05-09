@@ -128,7 +128,8 @@ export const SideNavigation = () => {
           />
 
           {/** Monitoring Trainings */}
-          <Sidebar.Item
+          {/**! REMOVED TRAINING */}
+          {/* <Sidebar.Item
             display="Trainings & Seminars"
             path={Paths[4]}
             selected={pathname === Paths[4] ? true : false}
@@ -138,7 +139,7 @@ export const SideNavigation = () => {
                 <i className="text-xl bx bx-chalkboard"></i>
               </>
             }
-          />
+          /> */}
 
           {/** Monitoring Travel Order */}
           <Sidebar.Item
@@ -292,7 +293,9 @@ export const SideNavigation = () => {
                   }
                   path={Paths[11]}
                 />
-                <Sidebar.Item
+
+                {/** REMOVED */}
+                {/* <Sidebar.Item
                   display="Training & Seminar Types"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
                   selected={pathname === Paths[12] ? true : false}
@@ -302,7 +305,7 @@ export const SideNavigation = () => {
                     </>
                   }
                   path={Paths[12]}
-                />
+                /> */}
               </>
             }
           />

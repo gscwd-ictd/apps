@@ -1,15 +1,14 @@
-
-import create from "zustand"
-import { Publication } from "../types/data/publication-type"
+import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
+import { create } from 'zustand';
 
 type PublicationState = {
-    publication: Publication
-    setPublication: (publication: Publication) => void
-}
+  publication: Publication;
+  setPublication: (publication: Publication) => void;
+};
 
 export const usePublicationStore = create<PublicationState>((set) => ({
-    publication: {} as Publication,
-    setPublication: (publication: Publication) => {
-        set((state) => ({ ...state, publication }))
-    }
-}))
+  publication: {} as Publication,
+  setPublication: (publication: Publication) => {
+    set((state) => ({ ...state, publication }));
+  },
+}));

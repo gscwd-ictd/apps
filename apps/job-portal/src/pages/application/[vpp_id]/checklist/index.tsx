@@ -269,10 +269,8 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
             </div>
           </Alert.Description>
           <Alert.Footer alignEnd>
-            <div className="w-[6rem]">
+            <div className="flex gap-2">
               <Button onClick={() => setAlertSubmitIsOpen(false)}>No</Button>
-            </div>
-            <div className="w-[6rem]">
               <Button onClick={onSubmit}>Yes</Button>
             </div>
           </Alert.Footer>
@@ -371,7 +369,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
               <div className="flex w-full">
                 <table className="">
                   <thead>
-                    <tr className="border-b-4  text-slate-700">
+                    <tr className="border-b-4 text-slate-700">
                       <th className="w-[5%] py-5"></th>
                       <th className="w-[50%] py-5 text-left text-xl font-medium">
                         Checklist

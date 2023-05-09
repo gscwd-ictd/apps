@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Text, View, StyleSheet, Font } from '@react-pdf/renderer'
-import { LearningDevelopment } from '../../types/data/lnd.type'
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { LearningDevelopment } from 'apps/job-portal/utils/types/data/lnd.type';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -58,38 +58,66 @@ const styles = StyleSheet.create({
   w23_8: { width: '23.8%' },
   w18: { width: '18%' },
   w6: { width: '6%' },
-})
+});
 
 Font.register({
   family: 'ArialNarrow',
   src: '/assets/fonts/arial-narrow.ttf',
-})
+});
 
 Font.register({
   family: 'ArialNarrowBoldItalic',
   src: '/assets/fonts/arial-narrow-bold-italic.ttf',
-})
+});
 
 type LearningAndDevelopmentPdfProps = {
-  formatDate: any
-  learningDevelopment: Array<LearningDevelopment>
-}
+  formatDate: any;
+  learningDevelopment: Array<LearningDevelopment>;
+};
 
-export const LearningAndDevelopmentPdf = ({ formatDate, learningDevelopment }: LearningAndDevelopmentPdfProps): JSX.Element => {
-  const [emptyLearningDevRows, setEmptyLearningDevRows] = useState(21)
+export const LearningAndDevelopmentPdf = ({
+  formatDate,
+  learningDevelopment,
+}: LearningAndDevelopmentPdfProps): JSX.Element => {
+  const [emptyLearningDevRows, setEmptyLearningDevRows] = useState(21);
 
   const renderLearningDevelopmentRows = () => {
-    var content = learningDevelopment.slice(0, 21).map((training, index) => (
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+    const content = learningDevelopment.slice(0, 21).map((training, index) => (
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+        key={index}
+      >
         {/* Title of Learning and Development */}
-        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+        <View
+          style={[
+            styles.inputValue,
+            styles.borderRight,
+            styles.horizontalCenter,
+            styles.w46_2,
+          ]}
+        >
           <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
         </View>
 
         {/* Inclusive Dates of Attendance */}
-        <View style={[styles.horizontalCenter, styles.borderRight, styles.inputValue, styles.w18, { padding: '0', flexDirection: 'row' }]}>
-          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View
+            style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
+          >
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+              {formatDate(training.from) || 'N/A'}
+            </Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
             <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -99,49 +127,95 @@ export const LearningAndDevelopmentPdf = ({ formatDate, learningDevelopment }: L
         </View>
 
         {/* Hours */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { padding: '5.5 3' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{training.numberOfHours || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Type of L&D */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { padding: '5.5 3' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{training.type || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Sponsored By */}
-        <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+        <View
+          style={[
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w23_8,
+            { padding: 0 },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{training.conductedBy || 'N/A'}</Text>
           </View>
         </View>
       </View>
-    ))
+    ));
 
-    return content
-  }
+    return content;
+  };
 
   const renderEmptyLearningDevelopmentRows = () => {
-    let content = []
-    const rowToRender = emptyLearningDevRows - learningDevelopment.length
+    const content = [];
+    const rowToRender = emptyLearningDevRows - learningDevelopment.length;
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={i}>
+        <View
+          style={[
+            styles.borderTop,
+            { flexDirection: 'row', alignItems: 'stretch' },
+          ]}
+          key={i}
+        >
           {/* Title of Learning and Development */}
-          <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+          <View
+            style={[
+              styles.inputValue,
+              styles.borderRight,
+              styles.horizontalCenter,
+              styles.w46_2,
+            ]}
+          >
             <Text style={[styles.verticalCenter]}>N/A</Text>
           </View>
 
           {/* Inclusive Dates of Attendance */}
           <View
-            style={[styles.horizontalCenter, styles.borderRight, styles.inputValue, styles.w18, { padding: '0', flexDirection: 'row' }]}
+            style={[
+              styles.horizontalCenter,
+              styles.borderRight,
+              styles.inputValue,
+              styles.w18,
+              { padding: '0', flexDirection: 'row' },
+            ]}
           >
-            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>N/A</Text>
+            <View
+              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
+            >
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+                N/A
+              </Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -151,55 +225,111 @@ export const LearningAndDevelopmentPdf = ({ formatDate, learningDevelopment }: L
           </View>
 
           {/* Hours */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w6,
+              { padding: '5.5 3' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Type of L&D */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w6,
+              { padding: '5.5 3' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Sponsored By */}
-          <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+          <View
+            style={[
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w23_8,
+              { padding: 0 },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
         </View>
-      )
+      );
     }
 
-    return content
-  }
+    return content;
+  };
 
   return (
     <View>
       <View style={[styles.sectionTitleContainer, styles.borderTop]}>
-        <Text style={styles.sectionTitleText}>VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING PROGRAMS ATTENDED</Text>
+        <Text style={styles.sectionTitleText}>
+          VII. LEARNING AND DEVELOPMENT (L&D) INTERVENTIONS/TRAINING PROGRAMS
+          ATTENDED
+        </Text>
         <Text style={styles.sectionSubtitleText}>
-          (Start from the most recent L&D/training program and include only the relevant L&D/training taken for the last five (5) years for
-          Division Chief/Executive/Managerial positions)
+          (Start from the most recent L&D/training program and include only the
+          relevant L&D/training taken for the last five (5) years for Division
+          Chief/Executive/Managerial positions)
         </Text>
       </View>
 
       {/* Learning and Development header */}
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+      >
         {/* Title of Learning and Development */}
-        <View style={[styles.inputKey, styles.borderRight, styles.horizontalCenter, styles.w46_2, { flexDirection: 'row' }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.borderRight,
+            styles.horizontalCenter,
+            styles.w46_2,
+            { flexDirection: 'row' },
+          ]}
+        >
           <Text style={[styles.verticalCenter]}>30.</Text>
-          <View style={[styles.verticalCenter, styles.horizontalCenter, { padding: '3 10', width: '100%' }]}>
-            <Text>TITLE OF LEARNING AND DEVELOPMENT INTERVENTIONS/TRAINING PROGRAMS</Text>
+          <View
+            style={[
+              styles.verticalCenter,
+              styles.horizontalCenter,
+              { padding: '3 10', width: '100%' },
+            ]}
+          >
+            <Text>
+              TITLE OF LEARNING AND DEVELOPMENT INTERVENTIONS/TRAINING PROGRAMS
+            </Text>
             <Text>(Write in full)</Text>
           </View>
         </View>
 
         {/* Inclusive Dates of Attendance */}
-        <View style={[styles.horizontalCenter, styles.borderRight, styles.inputKey, styles.w18, { padding: '0' }]}>
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputKey,
+            styles.w18,
+            { padding: '0' },
+          ]}
+        >
           <View style={[styles.w100, { textAlign: 'center', padding: '4 6' }]}>
             <Text>INCLUSIVE DATES OF</Text>
             <Text>ATTENDANCE</Text>
@@ -207,8 +337,12 @@ export const LearningAndDevelopmentPdf = ({ formatDate, learningDevelopment }: L
           </View>
 
           <View style={[styles.borderTop, { flexDirection: 'row' }]}>
-            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>From</Text>
+            <View
+              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
+            >
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+                From
+              </Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -219,14 +353,30 @@ export const LearningAndDevelopmentPdf = ({ formatDate, learningDevelopment }: L
         </View>
 
         {/* Hours */}
-        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w6,
+            { padding: '5.5 3' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text style={{ fontSize: 5.7 }}>NUMBER OF HOURS</Text>
           </View>
         </View>
 
         {/* Type of L&D */}
-        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w6,
+            { padding: '5.5 3' },
+          ]}
+        >
           <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
             <Text>Type of LD</Text>
             <Text> (Managerial/ Supervisory/ Technical/etc)</Text>
@@ -234,7 +384,14 @@ export const LearningAndDevelopmentPdf = ({ formatDate, learningDevelopment }: L
         </View>
 
         {/* Sponsored By */}
-        <View style={[styles.inputKey, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w23_8,
+            { padding: 0 },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>CONDUCTED/ SPONSORED BY</Text>
             <Text>(Write in full)</Text>
@@ -244,15 +401,19 @@ export const LearningAndDevelopmentPdf = ({ formatDate, learningDevelopment }: L
 
       {renderLearningDevelopmentRows()}
 
-      {learningDevelopment.length < 21 ? <>{renderEmptyLearningDevelopmentRows()}</> : null}
+      {learningDevelopment.length < 21 ? (
+        <>{renderEmptyLearningDevelopmentRows()}</>
+      ) : null}
 
       <View style={[styles.borderTop]}>
         <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>
-          <Text style={styles.warningText}>(Continue on separate sheet if necessary)</Text>
+          <Text style={styles.warningText}>
+            (Continue on separate sheet if necessary)
+          </Text>
         </View>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default LearningAndDevelopmentPdf
+export default LearningAndDevelopmentPdf;

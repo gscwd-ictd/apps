@@ -1,5 +1,5 @@
 import { WorkExperience } from 'apps/job-portal/utils/types/data/work.type';
-import create from 'zustand';
+import { create } from 'zustand';
 
 export type Accomplishment = {
   _id: string;

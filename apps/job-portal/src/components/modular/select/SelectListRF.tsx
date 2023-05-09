@@ -1,9 +1,9 @@
-import { MyTextFieldComponentVariant } from '../../../types/components/attributes'
+import { MyTextFieldComponentVariant } from 'apps/job-portal/utils/types/components/attributes';
 
 const slAppVariant = {
   form: 'border pt-5 pb-6 shadow shadow-slate-300',
   modal: 'border border-slate-300',
-}
+};
 
 const background = {
   default: '',
@@ -13,7 +13,7 @@ const background = {
   danger: 'bg-rose-50',
   light: 'bg-white',
   simple: 'bg-white',
-}
+};
 
 const border = {
   default: 'rounded-md border border-gray-200',
@@ -23,7 +23,7 @@ const border = {
   danger: 'rounded-md border-2 border-rose-600',
   light: 'rounded-md border border-gray-200',
   simple: 'rounded-md border border-gray-200 ',
-}
+};
 
 const focus = {
   default: 'focus:ring focus:border-gray-500 focus:ring-gray-100',
@@ -33,49 +33,56 @@ const focus = {
   danger: 'focus:ring focus:border-2 focus:border-rose-600 focus:ring-rose-100',
   light: 'focus:border-indigo-800 focus:ring-1 focus:ring-indigo-100',
   simple: 'focus:border-indigo-800 focus:ring-1 focus:ring-indigo-100',
-}
+};
 
 const focusWithin = {
-  default: 'focus-within:ring-1 focus-within:border focus-within:border-gray-500 focus-within:ring-gray-100',
-  primary: 'focus-within:ring-1  focus-within:border focus-within:border-indigo-700 focus-within:ring-indigo-100',
-  secondary: 'focus-within:ring-1 focus-within:border focus-within:border-emerald-600 focus-within:ring-green-100',
-  warning: 'focus-within:ring-1 focus-within:border focus-within:border-orange-500 focus-within:ring-orange-100',
-  danger: 'focus-within:ring-1 focus-within:border focus-within:border-rose-600 focus-within:ring-rose-100',
-  light: 'focus-within:ring-0 focus-within:border focus-within:border-indigo-500 focus-within:ring-indigo-100',
+  default:
+    'focus-within:ring-1 focus-within:border focus-within:border-gray-500 focus-within:ring-gray-100',
+  primary:
+    'focus-within:ring-1  focus-within:border focus-within:border-indigo-700 focus-within:ring-indigo-100',
+  secondary:
+    'focus-within:ring-1 focus-within:border focus-within:border-emerald-600 focus-within:ring-green-100',
+  warning:
+    'focus-within:ring-1 focus-within:border focus-within:border-orange-500 focus-within:ring-orange-100',
+  danger:
+    'focus-within:ring-1 focus-within:border focus-within:border-rose-600 focus-within:ring-rose-100',
+  light:
+    'focus-within:ring-0 focus-within:border focus-within:border-indigo-500 focus-within:ring-indigo-100',
   simple: 'focus-within:ring-0',
-}
+};
 
 const size = {
   xs: 'px-4 py-1 text-xs font-light',
   sm: 'px-4 py-2 text-sm',
   md: 'px-4 py-3 text-base',
   lg: 'px-4 py-4 text-lg',
-}
+};
 
 type Item = {
-  label: string
-  value: any
-}
+  label: string;
+  value: any;
+};
 
-type SelectListAppearance = 'form' | 'modal'
+type SelectListAppearance = 'form' | 'modal';
 
-interface MySelectListRFProps extends React.InputHTMLAttributes<HTMLSelectElement> {
-  id: string
-  name?: string
-  className?: string
-  selectList: Array<any>
-  defaultOption: string
-  listHeight?: string
-  muted?: boolean
-  variant?: MyTextFieldComponentVariant
-  controller: any
-  appearance: SelectListAppearance
-  withLabel?: boolean
-  label?: string
-  withShadow?: boolean
-  labelIsRequired?: boolean
-  isError?: boolean
-  errorMessage?: string
+interface MySelectListRFProps
+  extends React.InputHTMLAttributes<HTMLSelectElement> {
+  id: string;
+  name?: string;
+  className?: string;
+  selectList: Array<any>;
+  defaultOption: string;
+  listHeight?: string;
+  muted?: boolean;
+  variant?: MyTextFieldComponentVariant;
+  controller: any;
+  appearance: SelectListAppearance;
+  withLabel?: boolean;
+  label?: string;
+  withShadow?: boolean;
+  labelIsRequired?: boolean;
+  isError?: boolean;
+  errorMessage?: any | unknown;
 }
 
 export const SelectListRF: React.FC<MySelectListRFProps> = ({
@@ -109,11 +116,15 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
         id={id}
         {...controller}
         disabled={muted}
-        className={`${muted ? 'cursor-not-allowed bg-slate-100' : `${background[variant]}`} fluid w-full cursor-pointer  appearance-none  ${
+        className={`${
+          muted ? 'cursor-not-allowed bg-slate-100' : `${background[variant]}`
+        } fluid w-full cursor-pointer  appearance-none  ${
           slAppVariant[appearance]
-        } cursor-pointer ${appearance === 'form' ? 'rounded-md border px-4 focus:border ' : 'rounded-xl border'} ${
-          isError ? border['danger'] : border[variant]
-        } 
+        } cursor-pointer ${
+          appearance === 'form'
+            ? 'rounded-md border px-4 focus:border '
+            : 'rounded-xl border'
+        } ${isError ? border['danger'] : border[variant]} 
         ${isError ? background['danger'] : background[variant]}
         ${isError ? focus['danger'] : focus[variant]}
               ${isError ? focusWithin['danger'] : focusWithin[variant]}
@@ -132,7 +143,9 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
           </option>
         ))}
       </select>
-      {errorMessage && <span className="text-xs text-red-600">{errorMessage}</span>}
+      {errorMessage && (
+        <span className="text-xs text-red-600">{errorMessage}</span>
+      )}
     </>
-  )
-}
+  );
+};

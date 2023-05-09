@@ -11,6 +11,7 @@ export const civilStatus = [
   { label: 'Divorced', value: 'Divorced' },
   { label: 'Separated', value: 'Separated' },
   { label: 'Widowed', value: 'Widowed' },
+  { label: 'Annulled', value: 'Annulled' },
 ];
 
 // blood type object
@@ -92,7 +93,7 @@ export const apptStatus = [
   { label: 'Contractual', value: 'Contractual' },
   { label: 'Coterminous', value: 'Coterminous' },
   { label: 'Job Order', value: 'Job Order' },
-  // { label: 'Probationary', value: 'PROBATIONARY' },
+  { label: 'Apprenticeship', value: 'Apprenticeship' },
   { label: 'Regular', value: 'Regular' },
   { label: 'Self-Employed', value: 'Self-Employed' },
   { label: 'Temporary', value: 'Temporary' },
@@ -102,6 +103,7 @@ export const apptStatus = [
 export const govtApptStatus = [
   { label: 'Casual', value: 'Casual' },
   { label: 'Permanent', value: 'Permanent' },
+  { label: 'Temporary Permanent', value: 'Temporary Permanent' },
   // {label: '', value:''}
 ];
 
@@ -119,6 +121,8 @@ export const govtIds = [
   { label: `e-Card / UMID`, value: `e-Card / UMID` },
   { label: `Employee's ID/Office ID`, value: `Employee's ID/Office ID` },
   { label: `Firearms License`, value: `Firearms License` },
+  { label: 'GSIS', value: 'GSIS' },
+
   {
     label: `Integrated Bar of the Philippines (IBP) ID`,
     value: `Integrated Bar of the Philippines (IBP) ID`,

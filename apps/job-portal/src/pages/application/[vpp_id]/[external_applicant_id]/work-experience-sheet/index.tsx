@@ -183,10 +183,8 @@ export default function WorkSheetPanel({
               </div>
             </Alert.Description>
             <Alert.Footer alignEnd>
-              <div className="w-[6rem]">
+              <div className="flex gap-2">
                 <Button onClick={() => setCancelAlertIsOpen(false)}>No</Button>
-              </div>
-              <div className="w-[6rem]">
                 <Button onClick={goBack}>Yes</Button>
               </div>
             </Alert.Footer>
@@ -201,10 +199,8 @@ export default function WorkSheetPanel({
               </div>
             </Alert.Description>
             <Alert.Footer alignEnd>
-              <div className="w-[6rem]">
+              <div className="flex gap-2">
                 <Button onClick={onRemoveCancel}>No</Button>
-              </div>
-              <div className="w-[6rem]">
                 <Button onClick={() => onRemoveAction(indexToRemove)}>
                   Yes
                 </Button>
