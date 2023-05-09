@@ -1,37 +1,41 @@
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { SpinnerCircularFixed } from 'spinners-react'
-import { useApplicantStore, ApplicantFormData } from '../../../store/applicant.store'
-import { usePageStore } from '../../../store/page.store'
-import schema from '../../../schema/Applicant'
-import { StyledButton } from '../../modular/buttons/StyledButton'
-import { useRouter } from 'next/router'
-import { FloatingLabelInputRF } from '../../modular/inputs/FloatingLabelInputRF'
-import { usePublicationStore } from '../../../store/publication.store'
-import { ApplicantDetails } from '../../../types/data/applicant.type'
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { SpinnerCircularFixed } from 'spinners-react';
+import {
+  useApplicantStore,
+  ApplicantFormData,
+} from '../../../store/applicant.store';
+import { usePageStore } from '../../../store/page.store';
+import schema from '../../../schema/Applicant';
+import { StyledButton } from '../../modular/buttons/StyledButton';
+import { useRouter } from 'next/router';
+import { FloatingLabelInputRF } from '../../modular/inputs/FloatingLabelInputRF';
+import { usePublicationStore } from '../../../store/publication.store';
 
 export const ApplicantForm = () => {
-  const router = useRouter()
-  const applicant = useApplicantStore((state) => state.applicant)
-  const isLoading = usePageStore((state) => state.isLoading)
-  const setApplicant = useApplicantStore((state) => state.setApplicant)
-  const setIsLoading = usePageStore((state) => state.setIsLoading)
-  const publication = usePublicationStore((state) => state.publication)
+  const router = useRouter();
+  const applicant = useApplicantStore((state) => state.applicant);
+  const isLoading = usePageStore((state) => state.isLoading);
+  const setApplicant = useApplicantStore((state) => state.setApplicant);
+  const setIsLoading = usePageStore((state) => state.setIsLoading);
+  const publication = usePublicationStore((state) => state.publication);
 
   async function onSubmit(applicant: ApplicantFormData) {
     // const { checkbox, ...rest } = applicant
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      localStorage.setItem('applicant', JSON.stringify(applicant))
+      localStorage.setItem('applicant', JSON.stringify(applicant));
 
-      await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`)
+      await router.push(
+        `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    return setIsLoading(false)
+    return setIsLoading(false);
   }
 
   const {
@@ -41,14 +45,20 @@ export const ApplicantForm = () => {
   } = useForm<ApplicantFormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
-  })
+  });
 
   return (
     <>
-      <form id="applicantInfo" className="mt-10 w-full px-12" onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-10 flex w-full justify-start text-2xl font-semibold">Applicant Information</div>
+      <form
+        id="applicantInfo"
+        className="w-full px-12 mt-10"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="flex justify-start w-full mb-10 text-2xl font-semibold">
+          Applicant Information
+        </div>
 
-        <div className="mb-5 w-full">
+        <div className="w-full mb-5">
           <FloatingLabelInputRF
             id="firstName"
             type="text"
@@ -70,7 +80,7 @@ export const ApplicantForm = () => {
           />
         </div>
 
-        <div className="mb-5 w-full">
+        <div className="w-full mb-5">
           <FloatingLabelInputRF
             id="middleName"
             type="text"
@@ -92,7 +102,7 @@ export const ApplicantForm = () => {
           />
         </div>
 
-        <div className="mb-5 w-full ">
+        <div className="w-full mb-5 ">
           <FloatingLabelInputRF
             id="lastName"
             type="text"
@@ -114,7 +124,7 @@ export const ApplicantForm = () => {
           />
         </div>
 
-        <div className="mb-5 w-full">
+        <div className="w-full mb-5">
           <FloatingLabelInputRF
             id="nameExtension"
             placeholder="Name Extension / Suffix"
@@ -136,7 +146,7 @@ export const ApplicantForm = () => {
           />
         </div>
 
-        <div className="mb-5 w-full">
+        <div className="w-full mb-5">
           <FloatingLabelInputRF
             id="email"
             placeholder="Email"
@@ -159,18 +169,20 @@ export const ApplicantForm = () => {
           />
         </div>
 
-        <div className="mb-5 flex w-full items-center gap-2 text-xs text-gray-500">
+        <div className="flex items-center w-full gap-2 mb-5 text-xs text-gray-500">
           <input
             type="Checkbox"
             id="agree"
             className="rounded hover:cursor-pointer active:bg-slate-200"
             {...register('checkbox', {
               value: applicant.checkbox,
-              onChange: () => setApplicant({ ...applicant, checkbox: !applicant.checkbox }),
+              onChange: () =>
+                setApplicant({ ...applicant, checkbox: !applicant.checkbox }),
             })}
           />
           <label htmlFor="agree" className="hover:cursor-pointer">
-            By ticking, you are confirming that you have read, understood and agree to GSCWD Terms and Conditions.
+            By ticking, you are confirming that you have read, understood and
+            agree to GSCWD Terms and Conditions.
           </label>
         </div>
 
@@ -197,5 +209,5 @@ export const ApplicantForm = () => {
         </div>
       </form>
     </>
-  )
-}
+  );
+};

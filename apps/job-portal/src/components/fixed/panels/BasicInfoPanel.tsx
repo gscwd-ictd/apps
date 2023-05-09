@@ -1,32 +1,40 @@
-import { useContext, useEffect } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { Page } from '../../modular/pages/Page'
-import { AddressBI } from './basic-info/Address'
-import { GovernmentIDsBI, PersonalInfoBI } from './basic-info/_index'
-import { yupResolver } from '@hookform/resolvers/yup'
-import schema from '../../../schema/BasicInfo'
-import { ErrorState } from '../../../context/types/state'
-import { NextButton } from '../navigation/button/NextButton'
-import { isEmpty } from 'lodash'
-import { ErrorContext } from '../../../context/ErrorContext'
-import { useTabStore } from '../../../store/tab.store'
-import { usePdsStore } from '../../../store/pds.store'
-import { HeadContainer } from '../head/Head'
+import { useContext, useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Page } from '../../modular/pages/Page';
+import { AddressBI } from './basic-info/Address';
+import { GovernmentIDsBI, PersonalInfoBI } from './basic-info/_index';
+import { yupResolver } from '@hookform/resolvers/yup';
+import schema from '../../../schema/BasicInfo';
+import { ErrorState } from '../../../context/types/state';
+import { NextButton } from '../navigation/button/NextButton';
+import { isEmpty } from 'lodash';
+import { ErrorContext } from '../../../context/ErrorContext';
+import { useTabStore } from '../../../store/tab.store';
+import { usePdsStore } from '../../../store/pds.store';
+import { HeadContainer } from '../head/Head';
 
 export const BasicInfoPanel = (): JSX.Element => {
-  const selectedTab = useTabStore((state) => state.selectedTab)
-  const handleNextTab = useTabStore((state) => state.handleNextTab)
+  const selectedTab = useTabStore((state) => state.selectedTab);
+  const handleNextTab = useTabStore((state) => state.handleNextTab);
 
   // residential and permanent address object from pds store
-  const residentialAddress = usePdsStore((state) => state.residentialAddress)
+  const residentialAddress = usePdsStore((state) => state.residentialAddress);
 
-  const permanentAddress = usePdsStore((state) => state.permanentAddress)
+  const permanentAddress = usePdsStore((state) => state.permanentAddress);
   // set address error and reference from error context
-  const { resAddrError, permaAddrError, permaAddrRef, resAddrRef, shake, setShake, setResAddrError, setPermaAddrError } =
-    useContext<ErrorState>(ErrorContext)
+  const {
+    resAddrError,
+    permaAddrError,
+    permaAddrRef,
+    resAddrRef,
+    shake,
+    setShake,
+    setResAddrError,
+    setPermaAddrError,
+  } = useContext<ErrorState>(ErrorContext);
 
   // assign the useform hook to 'methods', set the resolver to yup resolver schema, mode is set to onchange
-  const methods = useForm({ resolver: yupResolver(schema), mode: 'onChange' })
+  const methods = useForm({ resolver: yupResolver(schema), mode: 'onChange' });
 
   // assigned to next button which also functions as a submit button somehow
   const onSubmit = () => {
@@ -45,8 +53,8 @@ export const BasicInfoPanel = (): JSX.Element => {
       isEmpty(residentialAddress.brgyCode) ||
       isEmpty(residentialAddress.zipCode)
     ) {
-      setResAddrError(true)
-      setShake(true)
+      setResAddrError(true);
+      setShake(true);
       // resAddrRef.current.focus()
     }
 
@@ -65,8 +73,8 @@ export const BasicInfoPanel = (): JSX.Element => {
       isEmpty(permanentAddress.brgyCode) ||
       isEmpty(permanentAddress.zipCode)
     ) {
-      setPermaAddrError(true)
-      setShake(true)
+      setPermaAddrError(true);
+      setShake(true);
       // permaAddrRef.current.focus()
     }
     /**
@@ -92,42 +100,38 @@ export const BasicInfoPanel = (): JSX.Element => {
     ) {
       // invokes the handle next tab function
       // and passes the value of selected tab as a prop to the function
-      handleNextTab()
+      handleNextTab();
     }
-  }
+  };
 
   // invokes focus for residential address error
   useEffect(() => {
-    if (resAddrError && shake) resAddrRef.current.focus()
-  }, [shake, resAddrError])
+    if (resAddrError && shake) resAddrRef.current.focus();
+  }, [shake, resAddrError]);
 
   // invokes focus for permanent address error
   useEffect(() => {
-    if (permaAddrError && shake) permaAddrRef.current.focus()
-  }, [shake, permaAddrError])
+    if (permaAddrError && shake) permaAddrRef.current.focus();
+  }, [shake, permaAddrError]);
 
   return (
     <>
       <HeadContainer title="PDS - Basic Information" />
 
       {/* Basic Info Page */}
-      <Page
-        title="Basic Information"
-        subtitle=""
-        children={
-          <>
-            <FormProvider {...methods} key="basicInfo">
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="basicInfo">
-                <PersonalInfoBI />
-                <GovernmentIDsBI />
-                <AddressBI />
-              </form>
-            </FormProvider>
-          </>
-        }
-      />
+      <Page title="Basic Information" subtitle="">
+        <>
+          <FormProvider {...methods} key="basicInfo">
+            <form onSubmit={methods.handleSubmit(onSubmit)} id="basicInfo">
+              <PersonalInfoBI />
+              <GovernmentIDsBI />
+              <AddressBI />
+            </form>
+          </FormProvider>
+        </>
+      </Page>
       {/* NEXT BUTTON */}
       <NextButton formId="basicInfo" />
     </>
-  )
-}
+  );
+};

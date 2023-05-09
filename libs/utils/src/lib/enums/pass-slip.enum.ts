@@ -12,8 +12,10 @@ export enum ObTransportation {
 }
 
 export enum PassSlipStatus {
-  ONGOING = 'Ongoing',
-  APPROVED = 'Approved',
-  DISAPPROVED = 'Disapproved',
-  CANCELLED = 'Cancelled',
+  FOR_APPROVAL = 'for approval',
+  DISAPPROVED = 'disapproved',
+  CANCELLED = 'cancelled',
+  APPROVED = 'approved',
+  ONGOING = 'ongoing',
+  USED = 'used',
 }

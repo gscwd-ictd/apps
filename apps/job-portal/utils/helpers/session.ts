@@ -1,11 +1,11 @@
-import axios from 'axios'
-import { ServerResponse } from 'http'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import { Pds } from '../../src/store/pds.store'
-import { EmployeeDetails } from '../../src/types/data/employee.type'
+import axios from 'axios';
+import { ServerResponse } from 'http';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { Pds } from '../../src/store/pds.store';
+import { EmployeeDetails } from '../types/data/employee.type';
 
-var userDetails = {} as EmployeeDetails
-var pdsDetails = {} as Pds
+let userDetails = {} as EmployeeDetails;
+let pdsDetails = {} as Pds;
 
 const setPdsDetails = ({
   candidateResigned,
@@ -66,18 +66,22 @@ const setPdsDetails = ({
     vocational,
     voluntaryWork,
     workExperience,
-  }
-  return pdsDetails
-}
+  };
+  return pdsDetails;
+};
 
-const setUserDetails = ({ user, profile, employmentDetails }: EmployeeDetails) => {
-  userDetails = { user, profile, employmentDetails }
+const setUserDetails = ({
+  user,
+  profile,
+  employmentDetails,
+}: EmployeeDetails) => {
+  userDetails = { user, profile, employmentDetails };
 
-  return userDetails
-}
+  return userDetails;
+};
 
-export const getUserDetails = () => userDetails
-export const getPdsDetails = () => pdsDetails
+export const getUserDetails = () => userDetails;
+export const getPdsDetails = () => pdsDetails;
 
 /**
  * Require authentication via session cookies to protect page routes.
@@ -93,18 +97,21 @@ export function withSession(serverSideProps: GetServerSideProps) {
           permanent: false,
           destination: '/404',
         },
-      }
+      };
     } else {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
-        withCredentials: true,
-        headers: { Cookie: `${context?.req.headers.cookie}` },
-      })
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
+        {
+          withCredentials: true,
+          headers: { Cookie: `${context?.req.headers.cookie}` },
+        }
+      );
 
-      setUserDetails(data)
+      setUserDetails(data);
 
-      return await serverSideProps(context)
+      return await serverSideProps(context);
     }
-  }
+  };
 }
 
 export function withCookie(serverSideProps: GetServerSideProps) {
@@ -115,20 +122,26 @@ export function withCookie(serverSideProps: GetServerSideProps) {
           permanent: false,
           destination: '/404',
         },
-      }
+      };
     } else {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`, {
-        withCredentials: true,
-        headers: { Cookie: `${context?.req.headers.cookie}` },
-      })
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`,
+        {
+          withCredentials: true,
+          headers: { Cookie: `${context?.req.headers.cookie}` },
+        }
+      );
 
-      setPdsDetails(data)
+      setPdsDetails(data);
 
-      return await serverSideProps(context)
+      return await serverSideProps(context);
     }
-  }
+  };
 }
 
 export function invalidateSession(response: ServerResponse) {
-  response.setHeader('Set-Cookie', 'ssid=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+  response.setHeader(
+    'Set-Cookie',
+    'ssid=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+  );
 }

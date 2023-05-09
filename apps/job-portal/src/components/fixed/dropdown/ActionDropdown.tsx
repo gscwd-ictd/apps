@@ -1,34 +1,36 @@
-import { Menu, Transition } from '@headlessui/react'
+import { Menu, Transition } from '@headlessui/react';
+import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
 
-import { Fragment } from 'react'
-import { useJobOpeningsStore } from '../../../store/job-openings.store'
-import { usePublicationStore } from '../../../store/publication.store'
-import { Publication } from '../../../types/data/publication-type'
+import { Fragment } from 'react';
+import { useJobOpeningsStore } from '../../../store/job-openings.store';
+import { usePublicationStore } from '../../../store/publication.store';
 
 type ActionDropDownProps = {
-  publication: Publication
-}
+  publication: Publication;
+};
 
-const menuItems = ['Position Details', 'Apply']
+const menuItems = ['Position Details', 'Apply'];
 
 export const ActionDropDown = ({ publication }: ActionDropDownProps) => {
-  const modal = useJobOpeningsStore((state) => state.modal)
+  const modal = useJobOpeningsStore((state) => state.modal);
 
-  const setModal = useJobOpeningsStore((state) => state.setModal)
+  const setModal = useJobOpeningsStore((state) => state.setModal);
 
-  const setActionSelection = useJobOpeningsStore((state) => state.setActionSelection)
+  const setActionSelection = useJobOpeningsStore(
+    (state) => state.setActionSelection
+  );
 
-  const setPublication = usePublicationStore((state) => state.setPublication)
+  const setPublication = usePublicationStore((state) => state.setPublication);
 
   const handleSelectAction = (item: string) => {
-    setActionSelection(item)
+    setActionSelection(item);
 
     if (item === 'Apply') {
-      setPublication(publication)
+      setPublication(publication);
       //   localStorage.setItem('publication', JSON.stringify(publication))
-      setModal({ ...modal, isOpen: true })
+      setModal({ ...modal, isOpen: true });
     }
-  }
+  };
 
   return (
     <>
@@ -66,11 +68,11 @@ export const ActionDropDown = ({ publication }: ActionDropDownProps) => {
                     )}
                   </Menu.Item>
                 </div>
-              )
+              );
             })}
           </Menu.Items>
         </Transition>
       </Menu>
     </>
-  )
-}
+  );
+};

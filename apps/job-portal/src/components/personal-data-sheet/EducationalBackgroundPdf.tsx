@@ -1,7 +1,7 @@
-import React from 'react'
-import { Text, View, StyleSheet, Font } from '@react-pdf/renderer'
-import { isEmpty } from 'lodash'
-import { EducationInfo } from '../../types/data/education.type'
+import React from 'react';
+import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { isEmpty } from 'lodash';
+import { EducationInfo } from 'apps/job-portal/utils/types/data/education.type';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -61,25 +61,25 @@ const styles = StyleSheet.create({
   w12: { width: '12%' },
   w8_9: { width: '8.9%' },
   w7_45: { width: '7.45%' },
-})
+});
 
 Font.register({
   family: 'ArialNarrow',
   src: '/assets/fonts/arial-narrow.ttf',
-})
+});
 
 Font.register({
   family: 'ArialNarrowBoldItalic',
   src: '/assets/fonts/arial-narrow-bold-italic.ttf',
-})
+});
 
 type EducationalBackgroundPdfProps = {
-  elementary: EducationInfo
-  secondary: EducationInfo
-  vocational: Array<EducationInfo>
-  college: Array<EducationInfo>
-  graduate: Array<EducationInfo>
-}
+  elementary: EducationInfo;
+  secondary: EducationInfo;
+  vocational: Array<EducationInfo>;
+  college: Array<EducationInfo>;
+  graduate: Array<EducationInfo>;
+};
 
 export const EducationalBackgroundPdf = ({
   elementary,
@@ -95,15 +95,36 @@ export const EducationalBackgroundPdf = ({
       </View>
 
       {/* Educational Background Header */}
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+      >
         {/* Level */}
-        <View style={[styles.inputKey, styles.borderRight, styles.w17_2, { flexDirection: 'row' }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.borderRight,
+            styles.w17_2,
+            { flexDirection: 'row' },
+          ]}
+        >
           <Text style={[styles.verticalCenter]}>26.</Text>
-          <Text style={[styles.verticalCenter, { paddingLeft: 28 }]}>LEVEL</Text>
+          <Text style={[styles.verticalCenter, { paddingLeft: 28 }]}>
+            LEVEL
+          </Text>
         </View>
 
         {/* Name of School */}
-        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w24_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w24_5,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>NAME OF SCHOOL</Text>
             <Text>(Write in full)</Text>
@@ -111,7 +132,14 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Degree/Course */}
-        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w22_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w22_5,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>BASIC EDUCATION/DEGREE/COURSE</Text>
             <Text>(Write in full)</Text>
@@ -119,13 +147,23 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Period of Attendance */}
-        <View style={[styles.borderRight, styles.horizontalCenter, styles.inputKey, styles.w12, { padding: '0' }]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.horizontalCenter,
+            styles.inputKey,
+            styles.w12,
+            { padding: '0' },
+          ]}
+        >
           <View style={[{ margin: 'auto 0', padding: '6 1' }]}>
             <Text style={{ fontSize: 6 }}>PERIOD OF ATTENDANCE</Text>
           </View>
 
           <View style={[styles.borderTop, { flexDirection: 'row' }]}>
-            <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
+            <View
+              style={[styles.borderRight, styles.w50, styles.horizontalCenter]}
+            >
               <Text style={{ lineHeight: 1.4, paddingTop: 0.8 }}>From</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
@@ -135,7 +173,15 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Units earned */}
-        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w8_9, { padding: '0 2' }]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w8_9,
+            { padding: '0 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter, { fontSize: 6 }]}>
             <Text>HIGHEST LEVEL/ UNITS EARNED</Text>
             <Text>(if not graduated)</Text>
@@ -143,14 +189,31 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Year graduated */}
-        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w7_45, { padding: '0 2' }]}>
-          <View style={[styles.verticalCenter, { padding: '0 4', fontSize: 6 }]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w7_45,
+            { padding: '0 2' },
+          ]}
+        >
+          <View
+            style={[styles.verticalCenter, { padding: '0 4', fontSize: 6 }]}
+          >
             <Text>YEAR GRADUATED</Text>
           </View>
         </View>
 
         {/* Scholarship/Honors */}
-        <View style={[styles.inputKey, styles.horizontalCenter, styles.w7_45, { padding: '0 2' }]}>
+        <View
+          style={[
+            styles.inputKey,
+            styles.horizontalCenter,
+            styles.w7_45,
+            { padding: '0 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter, { fontSize: 6 }]}>
             <Text>SCHOLARSHIP/ ACADEMIC HONORS RECEIVED</Text>
           </View>
@@ -158,7 +221,12 @@ export const EducationalBackgroundPdf = ({
       </View>
 
       {/* Elementary */}
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+      >
         {/* Level */}
         <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
           <Text style={[styles.verticalCenter]}>ELEMENTARY</Text>
@@ -179,31 +247,60 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Period of Attendance */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-          <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{elementary.from || 'N/A'}</Text>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w12,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View
+            style={[styles.borderRight, styles.w50, styles.horizontalCenter]}
+          >
+            <Text style={[styles.verticalCenter]}>
+              {elementary.from || 'N/A'}
+            </Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{elementary.to || 'N/A'}</Text>
+            <Text style={[styles.verticalCenter]}>
+              {elementary.to || 'N/A'}
+            </Text>
           </View>
         </View>
 
         {/* Units earned */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w8_9,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{elementary.units || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Year graduated */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7_45,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{elementary.yearGraduated || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Scholarship/Honors */}
-        <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+        <View
+          style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{elementary.awards || 'N/A'}</Text>
           </View>
@@ -211,7 +308,12 @@ export const EducationalBackgroundPdf = ({
       </View>
 
       {/* Secondary */}
-      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+      <View
+        style={[
+          styles.borderTop,
+          { flexDirection: 'row', alignItems: 'stretch' },
+        ]}
+      >
         {/* Level */}
         <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
           <Text style={[styles.verticalCenter]}>SECONDARY</Text>
@@ -232,9 +334,20 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Period of Attendance */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-          <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{secondary.from || 'N/A'}</Text>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w12,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View
+            style={[styles.borderRight, styles.w50, styles.horizontalCenter]}
+          >
+            <Text style={[styles.verticalCenter]}>
+              {secondary.from || 'N/A'}
+            </Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
             <Text style={[styles.verticalCenter]}>{secondary.to || 'N/A'}</Text>
@@ -242,21 +355,37 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Units earned */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w8_9,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{secondary.units || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Year graduated */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7_45,
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{secondary.yearGraduated || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Scholarship/Honors */}
-        <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+        <View
+          style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{secondary.awards || 'N/A'}</Text>
           </View>
@@ -267,52 +396,101 @@ export const EducationalBackgroundPdf = ({
       {!isEmpty(vocational) ? (
         <>
           {vocational.slice(0, 1).map((vocation, index) => (
-            <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+            <View
+              style={[
+                styles.borderTop,
+                { flexDirection: 'row', alignItems: 'stretch' },
+              ]}
+              key={index}
+            >
               {/* Level */}
               <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
-                <Text style={[styles.verticalCenter]}>VOCATIONAL/TRADE COURSE</Text>
+                <Text style={[styles.verticalCenter]}>
+                  VOCATIONAL/TRADE COURSE
+                </Text>
               </View>
 
               {/* Name of School */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+              <View
+                style={[styles.borderRight, styles.inputValue, styles.w24_5]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{vocation.schoolName || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Degree/Course */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+              <View
+                style={[styles.borderRight, styles.inputValue, styles.w22_5]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{vocation.degree || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Period of Attendance */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-                <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-                  <Text style={[styles.verticalCenter]}>{vocation.from || 'N/A'}</Text>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w12,
+                  { padding: '0', flexDirection: 'row' },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.borderRight,
+                    styles.w50,
+                    styles.horizontalCenter,
+                  ]}
+                >
+                  <Text style={[styles.verticalCenter]}>
+                    {vocation.from || 'N/A'}
+                  </Text>
                 </View>
                 <View style={[styles.w50, styles.horizontalCenter]}>
-                  <Text style={[styles.verticalCenter]}>{vocation.to || 'N/A'}</Text>
+                  <Text style={[styles.verticalCenter]}>
+                    {vocation.to || 'N/A'}
+                  </Text>
                 </View>
               </View>
 
               {/* Units earned */}
-              <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w8_9,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{vocation.units || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Year graduated */}
-              <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w7_45,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{vocation.yearGraduated || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Scholarship/Honors */}
-              <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+              <View
+                style={[
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w7_45,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{vocation.awards || 'N/A'}</Text>
                 </View>
@@ -321,7 +499,12 @@ export const EducationalBackgroundPdf = ({
           ))}
         </>
       ) : (
-        <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+        <View
+          style={[
+            styles.borderTop,
+            { flexDirection: 'row', alignItems: 'stretch' },
+          ]}
+        >
           {/* Level */}
           <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
             <Text style={[styles.verticalCenter]}>VOCATIONAL/TRADE COURSE</Text>
@@ -342,8 +525,17 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Period of Attendance */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-            <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w12,
+              { padding: '0', flexDirection: 'row' },
+            ]}
+          >
+            <View
+              style={[styles.borderRight, styles.w50, styles.horizontalCenter]}
+            >
               <Text style={[styles.verticalCenter]}>N/A</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
@@ -352,21 +544,37 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Units earned */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w8_9,
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Year graduated */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w7_45,
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Scholarship/Honors */}
-          <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View
+            style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -378,52 +586,99 @@ export const EducationalBackgroundPdf = ({
       {!isEmpty(college) ? (
         <>
           {college.slice(0, 1).map((college, index) => (
-            <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+            <View
+              style={[
+                styles.borderTop,
+                { flexDirection: 'row', alignItems: 'stretch' },
+              ]}
+              key={index}
+            >
               {/* Level */}
               <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
                 <Text style={[styles.verticalCenter]}>COLLEGE</Text>
               </View>
 
               {/* Name of School */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+              <View
+                style={[styles.borderRight, styles.inputValue, styles.w24_5]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{college.schoolName || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Degree/Course */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+              <View
+                style={[styles.borderRight, styles.inputValue, styles.w22_5]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{college.degree || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Period of Attendance */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-                <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-                  <Text style={[styles.verticalCenter]}>{college.from || 'N/A'}</Text>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w12,
+                  { padding: '0', flexDirection: 'row' },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.borderRight,
+                    styles.w50,
+                    styles.horizontalCenter,
+                  ]}
+                >
+                  <Text style={[styles.verticalCenter]}>
+                    {college.from || 'N/A'}
+                  </Text>
                 </View>
                 <View style={[styles.w50, styles.horizontalCenter]}>
-                  <Text style={[styles.verticalCenter]}>{college.to || 'N/A'}</Text>
+                  <Text style={[styles.verticalCenter]}>
+                    {college.to || 'N/A'}
+                  </Text>
                 </View>
               </View>
 
               {/* Units earned */}
-              <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w8_9,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{college.units || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Year graduated */}
-              <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w7_45,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{college.yearGraduated || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Scholarship/Honors */}
-              <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+              <View
+                style={[
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w7_45,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{college.awards || 'N/A'}</Text>
                 </View>
@@ -432,7 +687,12 @@ export const EducationalBackgroundPdf = ({
           ))}
         </>
       ) : (
-        <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+        <View
+          style={[
+            styles.borderTop,
+            { flexDirection: 'row', alignItems: 'stretch' },
+          ]}
+        >
           {/* Level */}
           <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
             <Text style={[styles.verticalCenter]}>COLLEGE</Text>
@@ -453,8 +713,17 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Period of Attendance */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-            <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w12,
+              { padding: '0', flexDirection: 'row' },
+            ]}
+          >
+            <View
+              style={[styles.borderRight, styles.w50, styles.horizontalCenter]}
+            >
               <Text style={[styles.verticalCenter]}>N/A</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
@@ -463,21 +732,37 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Units earned */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w8_9,
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Year graduated */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w7_45,
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Scholarship/Honors */}
-          <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View
+            style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -489,52 +774,99 @@ export const EducationalBackgroundPdf = ({
       {!isEmpty(graduate) ? (
         <>
           {graduate.slice(0, 1).map((graduate, index) => (
-            <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+            <View
+              style={[
+                styles.borderTop,
+                { flexDirection: 'row', alignItems: 'stretch' },
+              ]}
+              key={index}
+            >
               {/* Level */}
               <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
                 <Text style={[styles.verticalCenter]}>GRADUATE STUDIES</Text>
               </View>
 
               {/* Name of School */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+              <View
+                style={[styles.borderRight, styles.inputValue, styles.w24_5]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{graduate.schoolName || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Degree/Course */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+              <View
+                style={[styles.borderRight, styles.inputValue, styles.w22_5]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{graduate.degree || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Period of Attendance */}
-              <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-                <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-                  <Text style={[styles.verticalCenter]}>{graduate.from || 'N/A'}</Text>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w12,
+                  { padding: '0', flexDirection: 'row' },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.borderRight,
+                    styles.w50,
+                    styles.horizontalCenter,
+                  ]}
+                >
+                  <Text style={[styles.verticalCenter]}>
+                    {graduate.from || 'N/A'}
+                  </Text>
                 </View>
                 <View style={[styles.w50, styles.horizontalCenter]}>
-                  <Text style={[styles.verticalCenter]}>{graduate.to || 'N/A'}</Text>
+                  <Text style={[styles.verticalCenter]}>
+                    {graduate.to || 'N/A'}
+                  </Text>
                 </View>
               </View>
 
               {/* Units earned */}
-              <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w8_9,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{graduate.units || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Year graduated */}
-              <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+              <View
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w7_45,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{graduate.yearGraduated || 'N/A'}</Text>
                 </View>
               </View>
 
               {/* Scholarship/Honors */}
-              <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+              <View
+                style={[
+                  styles.inputValue,
+                  styles.horizontalCenter,
+                  styles.w7_45,
+                ]}
+              >
                 <View style={[styles.verticalCenter]}>
                   <Text>{graduate.awards || 'N/A'}</Text>
                 </View>
@@ -543,7 +875,12 @@ export const EducationalBackgroundPdf = ({
           ))}
         </>
       ) : (
-        <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
+        <View
+          style={[
+            styles.borderTop,
+            { flexDirection: 'row', alignItems: 'stretch' },
+          ]}
+        >
           {/* Level */}
           <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
             <Text style={[styles.verticalCenter]}>GRADUATE STUDIES</Text>
@@ -564,8 +901,17 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Period of Attendance */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-            <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w12,
+              { padding: '0', flexDirection: 'row' },
+            ]}
+          >
+            <View
+              style={[styles.borderRight, styles.w50, styles.horizontalCenter]}
+            >
               <Text style={[styles.verticalCenter]}>N/A</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
@@ -574,21 +920,37 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Units earned */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w8_9,
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Year graduated */}
-          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w7_45,
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Scholarship/Honors */}
-          <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View
+            style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -598,11 +960,13 @@ export const EducationalBackgroundPdf = ({
 
       <View style={[styles.borderTop]}>
         <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>
-          <Text style={styles.warningText}>(Continue on separate sheet if necessary)</Text>
+          <Text style={styles.warningText}>
+            (Continue on separate sheet if necessary)
+          </Text>
         </View>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default EducationalBackgroundPdf
+export default EducationalBackgroundPdf;

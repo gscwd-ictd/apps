@@ -1,5 +1,54 @@
-import { m } from 'framer-motion'
-import create from 'zustand'
+import { Address } from 'apps/job-portal/utils/types/data/address.type';
+import {
+  PersonalInfo,
+  GovernmentIssuedIds,
+} from 'apps/job-portal/utils/types/data/basic-info.type';
+import { EducationInfo } from 'apps/job-portal/utils/types/data/education.type';
+import {
+  Eligibility,
+  EligibilityState,
+} from 'apps/job-portal/utils/types/data/eligibility.type';
+import {
+  Spouse,
+  Parent,
+  Child,
+} from 'apps/job-portal/utils/types/data/family.type';
+import {
+  LearningDevelopment,
+  LNDState,
+} from 'apps/job-portal/utils/types/data/lnd.type';
+import {
+  Skill,
+  Recognition,
+  Organization,
+  OtherInfoState,
+} from 'apps/job-portal/utils/types/data/other-info.type';
+import {
+  BasicInfoState,
+  FamilyState,
+  EducationState,
+} from 'apps/job-portal/utils/types/data/store.type';
+import {
+  OfficeRelation,
+  GuiltyCharged,
+  Convicted,
+  SeparatedService,
+  CandidateResigned,
+  Immigrant,
+  IndigenousPwdSoloParent,
+  GovernmentIssuedId,
+  SupportingDetailsState,
+  Reference,
+} from 'apps/job-portal/utils/types/data/supporting-info.type';
+import {
+  VoluntaryWork,
+  VolWorkState,
+} from 'apps/job-portal/utils/types/data/vol-work.type';
+import {
+  WorkExperience,
+  WorkExpState,
+} from 'apps/job-portal/utils/types/data/work.type';
+import { create } from 'zustand';
 import {
   PERSONAL_INFO,
   GOVERNMENT_ID,
@@ -16,60 +65,38 @@ import {
   CAND_RES,
   IMMIGRANT,
   IND_PWD_SOLO,
-} from '../../utils/constants/pds'
-import { Address } from '../types/data/address.type'
-import { PersonalInfo, GovernmentIssuedIds } from '../types/data/basic-info.type'
-import { EducationInfo } from '../types/data/education.type'
-import { Eligibility, EligibilityState } from '../types/data/eligibility.type'
-import { Spouse, Child, Parent } from '../types/data/family.type'
-import { LearningDevelopment, LNDState } from '../types/data/lnd.type'
-import { Organization, OtherInfoState, Recognition, Skill } from '../types/data/other-info.type'
-import { BasicInfoState, EducationState, FamilyState } from '../types/data/store.type'
-import {
-  CandidateResigned,
-  Convicted,
-  GovernmentIssuedId,
-  GuiltyCharged,
-  Immigrant,
-  IndigenousPwdSoloParent,
-  OfficeRelation,
-  Reference,
-  SeparatedService,
-  SupportingDetailsState,
-} from '../types/data/supporting-info.type'
-import { VoluntaryWork, VolWorkState } from '../types/data/vol-work.type'
-import { WorkExperience, WorkExpState } from '../types/data/work.type'
+} from '../../utils/constants/pds';
 
 export type Pds = {
-  personalInfo: PersonalInfo
-  permanentAddress: Address
-  residentialAddress: Address
-  governmentIssuedIds: GovernmentIssuedIds
-  spouse: Spouse
-  parents: Parent
-  children: Array<Child>
-  elementary: EducationInfo
-  secondary: EducationInfo
-  vocational: Array<EducationInfo>
-  college: Array<EducationInfo>
-  graduate: Array<EducationInfo>
-  eligibility: Array<Eligibility>
-  workExperience: Array<WorkExperience>
-  voluntaryWork: Array<VoluntaryWork>
-  learningDevelopment: Array<LearningDevelopment>
-  skills: Array<Skill>
-  recognitions: Array<Recognition>
-  organizations: Array<Organization>
-  officeRelation: OfficeRelation
-  guiltyCharged: GuiltyCharged
-  convicted: Convicted
-  separatedService: SeparatedService
-  candidateResigned: CandidateResigned
-  immigrant: Immigrant
-  indigenousPwdSoloParent: IndigenousPwdSoloParent
-  references: Array<Reference>
-  governmentIssuedId: GovernmentIssuedId
-}
+  personalInfo: PersonalInfo;
+  permanentAddress: Address;
+  residentialAddress: Address;
+  governmentIssuedIds: GovernmentIssuedIds;
+  spouse: Spouse;
+  parents: Parent;
+  children: Array<Child>;
+  elementary: EducationInfo;
+  secondary: EducationInfo;
+  vocational: Array<EducationInfo>;
+  college: Array<EducationInfo>;
+  graduate: Array<EducationInfo>;
+  eligibility: Array<Eligibility>;
+  workExperience: Array<WorkExperience>;
+  voluntaryWork: Array<VoluntaryWork>;
+  learningDevelopment: Array<LearningDevelopment>;
+  skills: Array<Skill>;
+  recognitions: Array<Recognition>;
+  organizations: Array<Organization>;
+  officeRelation: OfficeRelation;
+  guiltyCharged: GuiltyCharged;
+  convicted: Convicted;
+  separatedService: SeparatedService;
+  candidateResigned: CandidateResigned;
+  immigrant: Immigrant;
+  indigenousPwdSoloParent: IndigenousPwdSoloParent;
+  references: Array<Reference>;
+  governmentIssuedId: GovernmentIssuedId;
+};
 
 const PDS_INFO = {
   personalInfo: PERSONAL_INFO,
@@ -100,7 +127,7 @@ const PDS_INFO = {
   indigenousPwdSoloParent: IND_PWD_SOLO,
   references: [],
   governmentIssuedId: GOVT_ISSUED_ID,
-}
+};
 
 export type PDSState = BasicInfoState & //* Basic Information
   FamilyState & //* Family Information
@@ -112,37 +139,45 @@ export type PDSState = BasicInfoState & //* Basic Information
   OtherInfoState & //* Other information (Skills, Organization, Recognitions)
   SupportingDetailsState & {
     //* Supporting Details
-    checkboxAddress: boolean
-    setCheckboxAddress: (checkboxAddress: boolean) => void
-    checkboxAddressInitialState: boolean
-    setCheckboxAddressInitialState: (checkboxAddressInitialState: boolean) => void
-    initialPdsState: Pds
-    setInitialPdsState: (initialPdsState: Pds) => void
-    deletedChildren: Array<Child>
-    setDeletedChildren: (deletedChildren: Array<Child>) => void
-    deletedVocationals: Array<EducationInfo>
-    setDeletedVocationals: (deletedVocationals: Array<EducationInfo>) => void
-    deletedColleges: Array<EducationInfo>
-    setDeletedColleges: (deletedColleges: Array<EducationInfo>) => void
-    deletedGraduates: Array<EducationInfo>
-    setDeletedGraduates: (deletedGraduates: Array<EducationInfo>) => void
-    deletedEligibilities: Array<Eligibility>
-    setDeletedEligibilities: (deletedEligibilities: Array<Eligibility>) => void
-    deletedWorkExperiences: Array<WorkExperience>
-    setDeletedWorkExperiences: (deletedWorkExperiences: Array<WorkExperience>) => void
-    deletedVolWorks: Array<VoluntaryWork>
-    setDeletedVolWorks: (deletedVolWorks: Array<VoluntaryWork>) => void
-    deletedLearningDevelopments: Array<LearningDevelopment>
-    setDeletedLearningDevelopments: (deletedLearningDevelopments: Array<LearningDevelopment>) => void
-    deletedSkills: Array<Skill>
-    setDeletedSkills: (deletedSkills: Array<Skill>) => void
-    deletedOrganizations: Array<Organization>
-    setDeletedOrganizations: (deletedOrganizations: Array<Organization>) => void
-    deletedRecognitions: Array<Recognition>
-    setDeletedRecognitions: (deletedRecognitions: Array<Recognition>) => void
-    deletedReferences: Array<Reference>
-    setDeletedReferences: (deletedReferences: Array<Reference>) => void
-  }
+    checkboxAddress: boolean;
+    setCheckboxAddress: (checkboxAddress: boolean) => void;
+    checkboxAddressInitialState: boolean;
+    setCheckboxAddressInitialState: (
+      checkboxAddressInitialState: boolean
+    ) => void;
+    initialPdsState: Pds;
+    setInitialPdsState: (initialPdsState: Pds) => void;
+    deletedChildren: Array<Child>;
+    setDeletedChildren: (deletedChildren: Array<Child>) => void;
+    deletedVocationals: Array<EducationInfo>;
+    setDeletedVocationals: (deletedVocationals: Array<EducationInfo>) => void;
+    deletedColleges: Array<EducationInfo>;
+    setDeletedColleges: (deletedColleges: Array<EducationInfo>) => void;
+    deletedGraduates: Array<EducationInfo>;
+    setDeletedGraduates: (deletedGraduates: Array<EducationInfo>) => void;
+    deletedEligibilities: Array<Eligibility>;
+    setDeletedEligibilities: (deletedEligibilities: Array<Eligibility>) => void;
+    deletedWorkExperiences: Array<WorkExperience>;
+    setDeletedWorkExperiences: (
+      deletedWorkExperiences: Array<WorkExperience>
+    ) => void;
+    deletedVolWorks: Array<VoluntaryWork>;
+    setDeletedVolWorks: (deletedVolWorks: Array<VoluntaryWork>) => void;
+    deletedLearningDevelopments: Array<LearningDevelopment>;
+    setDeletedLearningDevelopments: (
+      deletedLearningDevelopments: Array<LearningDevelopment>
+    ) => void;
+    deletedSkills: Array<Skill>;
+    setDeletedSkills: (deletedSkills: Array<Skill>) => void;
+    deletedOrganizations: Array<Organization>;
+    setDeletedOrganizations: (
+      deletedOrganizations: Array<Organization>
+    ) => void;
+    deletedRecognitions: Array<Recognition>;
+    setDeletedRecognitions: (deletedRecognitions: Array<Recognition>) => void;
+    deletedReferences: Array<Reference>;
+    setDeletedReferences: (deletedReferences: Array<Reference>) => void;
+  };
 
 // & PdsState
 // & {
@@ -217,198 +252,204 @@ export const usePdsStore = create<PDSState>((set) => ({
   deletedRecognitions: [],
   deletedReferences: [],
   setPersonalInfo: (personalInfo: PersonalInfo) => {
-    set((state) => ({ ...state, personalInfo }))
+    set((state) => ({ ...state, personalInfo }));
   },
   setPersonalInfoOnEdit: (personalInfoOnEdit: boolean) => {
-    set((state) => ({ ...state, personalInfoOnEdit }))
+    set((state) => ({ ...state, personalInfoOnEdit }));
   },
   setGovernmentIssuedIds: (governmentIssuedIds: GovernmentIssuedIds) => {
-    set((state) => ({ ...state, governmentIssuedIds }))
+    set((state) => ({ ...state, governmentIssuedIds }));
   },
   setGovernmentIssuedIdsOnEdit: (governmentIssuedIdsOnEdit: boolean) => {
-    set((state) => ({ ...state, governmentIssuedIdsOnEdit }))
+    set((state) => ({ ...state, governmentIssuedIdsOnEdit }));
   },
   setResidentialAddress: (residentialAddress: Address) => {
-    set((state) => ({ ...state, residentialAddress }))
+    set((state) => ({ ...state, residentialAddress }));
   },
   setResidentialAddressOnEdit: (residentialAddressOnEdit: boolean) => {
-    set((state) => ({ ...state, residentialAddressOnEdit }))
+    set((state) => ({ ...state, residentialAddressOnEdit }));
   },
   setPermanentAddress: (permanentAddress: Address) => {
-    set((state) => ({ ...state, permanentAddress }))
+    set((state) => ({ ...state, permanentAddress }));
   },
   setPermanentAddressOnEdit: (permanentAddressOnEdit: boolean) => {
-    set((state) => ({ ...state, permanentAddressOnEdit }))
+    set((state) => ({ ...state, permanentAddressOnEdit }));
   },
   setSpouse: (spouse: Spouse) => {
-    set((state) => ({ ...state, spouse }))
+    set((state) => ({ ...state, spouse }));
   },
   setChildren: (children: Array<Child>) => {
-    set((state) => ({ ...state, children }))
+    set((state) => ({ ...state, children }));
   },
   setParents: (parents: Parent) => {
-    set((state) => ({ ...state, parents }))
+    set((state) => ({ ...state, parents }));
   },
   setElementary: (elementary: EducationInfo) => {
-    set((state) => ({ ...state, elementary }))
+    set((state) => ({ ...state, elementary }));
   },
   setSecondary: (secondary: EducationInfo) => {
-    set((state) => ({ ...state, secondary }))
+    set((state) => ({ ...state, secondary }));
   },
   setCollege: (college: Array<EducationInfo>) => {
-    set((state) => ({ ...state, college }))
+    set((state) => ({ ...state, college }));
   },
   setGraduate: (graduate: Array<EducationInfo>) => {
-    set((state) => ({ ...state, graduate }))
+    set((state) => ({ ...state, graduate }));
   },
   setVocational: (vocational: Array<EducationInfo>) => {
-    set((state) => ({ ...state, vocational }))
+    set((state) => ({ ...state, vocational }));
   },
   setEligibility: (eligibility: Array<Eligibility>) => {
-    set((state) => ({ ...state, eligibility }))
+    set((state) => ({ ...state, eligibility }));
   },
   setWorkExperience: (workExperience: Array<WorkExperience>) => {
-    set((state) => ({ ...state, workExperience }))
+    set((state) => ({ ...state, workExperience }));
   },
   setVoluntaryWork: (voluntaryWork: Array<VoluntaryWork>) => {
-    set((state) => ({ ...state, voluntaryWork }))
+    set((state) => ({ ...state, voluntaryWork }));
   },
   setLearningDevelopment: (learningDevelopment: Array<LearningDevelopment>) => {
-    set((state) => ({ ...state, learningDevelopment }))
+    set((state) => ({ ...state, learningDevelopment }));
   },
   setSkills: (skills: Array<Skill>) => {
-    set((state) => ({ ...state, skills }))
+    set((state) => ({ ...state, skills }));
   },
   setRecognitions: (recognitions: Array<Recognition>) => {
-    set((state) => ({ ...state, recognitions }))
+    set((state) => ({ ...state, recognitions }));
   },
   setOrganizations: (organizations: Array<Organization>) => {
-    set((state) => ({ ...state, organizations }))
+    set((state) => ({ ...state, organizations }));
   },
   setOfficeRelation: (officeRelation: OfficeRelation) => {
-    set((state) => ({ ...state, officeRelation }))
+    set((state) => ({ ...state, officeRelation }));
   },
   setGuiltyCharged: (guiltyCharged: GuiltyCharged) => {
-    set((state) => ({ ...state, guiltyCharged }))
+    set((state) => ({ ...state, guiltyCharged }));
   },
   setConvicted: (convicted: Convicted) => {
-    set((state) => ({ ...state, convicted }))
+    set((state) => ({ ...state, convicted }));
   },
   setSeparatedService: (separatedService: SeparatedService) => {
-    set((state) => ({ ...state, separatedService }))
+    set((state) => ({ ...state, separatedService }));
   },
   setCandidateResigned: (candidateResigned: CandidateResigned) => {
-    set((state) => ({ ...state, candidateResigned }))
+    set((state) => ({ ...state, candidateResigned }));
   },
   setImmigrant: (immigrant: Immigrant) => {
-    set((state) => ({ ...state, immigrant }))
+    set((state) => ({ ...state, immigrant }));
   },
-  setIndigenousPwdSoloParent: (indigenousPwdSoloParent: IndigenousPwdSoloParent) => {
-    set((state) => ({ ...state, indigenousPwdSoloParent }))
+  setIndigenousPwdSoloParent: (
+    indigenousPwdSoloParent: IndigenousPwdSoloParent
+  ) => {
+    set((state) => ({ ...state, indigenousPwdSoloParent }));
   },
   setReferences: (references: Array<Reference>) => {
-    set((state) => ({ ...state, references }))
+    set((state) => ({ ...state, references }));
   },
   setGovernmentIssuedId: (governmentIssuedId: GovernmentIssuedId) => {
-    set((state) => ({ ...state, governmentIssuedId }))
+    set((state) => ({ ...state, governmentIssuedId }));
   },
   setCheckboxAddress: (checkboxAddress: boolean) => {
-    set((state) => ({ ...state, checkboxAddress }))
+    set((state) => ({ ...state, checkboxAddress }));
   },
   setInitialPdsState: (initialPdsState: Pds) => {
-    set((state) => ({ ...state, initialPdsState }))
+    set((state) => ({ ...state, initialPdsState }));
   },
   setCheckboxAddressInitialState: (checkboxAddressInitialState: boolean) => {
-    set((state) => ({ ...state, checkboxAddressInitialState }))
+    set((state) => ({ ...state, checkboxAddressInitialState }));
   },
   setSpouseOnEdit: (spouseOnEdit: boolean) => {
-    set((state) => ({ ...state, spouseOnEdit }))
+    set((state) => ({ ...state, spouseOnEdit }));
   },
   setMotherOnEdit: (motherOnEdit: boolean) => {
-    set((state) => ({ ...state, motherOnEdit }))
+    set((state) => ({ ...state, motherOnEdit }));
   },
   setFatherOnEdit: (fatherOnEdit: boolean) => {
-    set((state) => ({ ...state, fatherOnEdit }))
+    set((state) => ({ ...state, fatherOnEdit }));
   },
   setChildrenOnEdit: (childrenOnEdit: boolean) => {
-    set((state) => ({ ...state, childrenOnEdit }))
+    set((state) => ({ ...state, childrenOnEdit }));
   },
   setElementaryOnEdit: (elementaryOnEdit: boolean) => {
-    set((state) => ({ ...state, elementaryOnEdit }))
+    set((state) => ({ ...state, elementaryOnEdit }));
   },
   setSecondaryOnEdit: (secondaryOnEdit: boolean) => {
-    set((state) => ({ ...state, secondaryOnEdit }))
+    set((state) => ({ ...state, secondaryOnEdit }));
   },
   setVocationalOnEdit: (vocationalOnEdit: boolean) => {
-    set((state) => ({ ...state, vocationalOnEdit }))
+    set((state) => ({ ...state, vocationalOnEdit }));
   },
   setCollegeOnEdit: (collegeOnEdit: boolean) => {
-    set((state) => ({ ...state, collegeOnEdit }))
+    set((state) => ({ ...state, collegeOnEdit }));
   },
   setGraduateOnEdit: (graduateOnEdit: boolean) => {
-    set((state) => ({ ...state, graduateOnEdit }))
+    set((state) => ({ ...state, graduateOnEdit }));
   },
   setEligibilityOnEdit: (eligibilityOnEdit: boolean) => {
-    set((state) => ({ ...state, eligibilityOnEdit }))
+    set((state) => ({ ...state, eligibilityOnEdit }));
   },
   setWorkExperienceOnEdit: (workExperienceOnEdit: boolean) => {
-    set((state) => ({ ...state, workExperienceOnEdit }))
+    set((state) => ({ ...state, workExperienceOnEdit }));
   },
   setVoluntaryWorkOnEdit: (voluntaryWorkOnEdit: boolean) => {
-    set((state) => ({ ...state, voluntaryWorkOnEdit }))
+    set((state) => ({ ...state, voluntaryWorkOnEdit }));
   },
   setLearningDevelopmentOnEdit: (learningDevelopmentOnEdit: boolean) => {
-    set((state) => ({ ...state, learningDevelopmentOnEdit }))
+    set((state) => ({ ...state, learningDevelopmentOnEdit }));
   },
   setSkillsOnEdit: (skillsOnEdit: boolean) => {
-    set((state) => ({ ...state, skillsOnEdit }))
+    set((state) => ({ ...state, skillsOnEdit }));
   },
   setOrganizationsOnEdit: (organizationsOnEdit: boolean) => {
-    set((state) => ({ ...state, organizationsOnEdit }))
+    set((state) => ({ ...state, organizationsOnEdit }));
   },
   setRecognitionsOnEdit: (recognitionsOnEdit: boolean) => {
-    set((state) => ({ ...state, recognitionsOnEdit }))
+    set((state) => ({ ...state, recognitionsOnEdit }));
   },
   setGovernmentIssuedIdOnEdit: (governmentIssuedIdOnEdit: boolean) => {
-    set((state) => ({ ...state, governmentIssuedIdOnEdit }))
+    set((state) => ({ ...state, governmentIssuedIdOnEdit }));
   },
   setReferencesOnEdit: (referencesOnEdit: boolean) => {
-    set((state) => ({ ...state, referencesOnEdit }))
+    set((state) => ({ ...state, referencesOnEdit }));
   },
   setDeletedChildren: (deletedChildren: Array<Child>) => {
-    set((state) => ({ ...state, deletedChildren }))
+    set((state) => ({ ...state, deletedChildren }));
   },
   setDeletedVocationals: (deletedVocationals: Array<EducationInfo>) => {
-    set((state) => ({ ...state, deletedVocationals }))
+    set((state) => ({ ...state, deletedVocationals }));
   },
   setDeletedColleges: (deletedColleges: Array<EducationInfo>) => {
-    set((state) => ({ ...state, deletedColleges }))
+    set((state) => ({ ...state, deletedColleges }));
   },
   setDeletedGraduates: (deletedGraduates: Array<EducationInfo>) => {
-    set((state) => ({ ...state, deletedGraduates }))
+    set((state) => ({ ...state, deletedGraduates }));
   },
   setDeletedEligibilities: (deletedEligibilities: Array<Eligibility>) => {
-    set((state) => ({ ...state, deletedEligibilities }))
+    set((state) => ({ ...state, deletedEligibilities }));
   },
-  setDeletedWorkExperiences: (deletedWorkExperiences: Array<WorkExperience>) => {
-    set((state) => ({ ...state, deletedWorkExperiences }))
+  setDeletedWorkExperiences: (
+    deletedWorkExperiences: Array<WorkExperience>
+  ) => {
+    set((state) => ({ ...state, deletedWorkExperiences }));
   },
   setDeletedVolWorks: (deletedVolWorks: Array<VoluntaryWork>) => {
-    set((state) => ({ ...state, deletedVolWorks }))
+    set((state) => ({ ...state, deletedVolWorks }));
   },
-  setDeletedLearningDevelopments: (deletedLearningDevelopments: Array<LearningDevelopment>) => {
-    set((state) => ({ ...state, deletedLearningDevelopments }))
+  setDeletedLearningDevelopments: (
+    deletedLearningDevelopments: Array<LearningDevelopment>
+  ) => {
+    set((state) => ({ ...state, deletedLearningDevelopments }));
   },
   setDeletedSkills: (deletedSkills: Array<Skill>) => {
-    set((state) => ({ ...state, deletedSkills }))
+    set((state) => ({ ...state, deletedSkills }));
   },
   setDeletedOrganizations: (deletedOrganizations: Array<Organization>) => {
-    set((state) => ({ ...state, deletedOrganizations }))
+    set((state) => ({ ...state, deletedOrganizations }));
   },
   setDeletedRecognitions: (deletedRecognitions: Array<Recognition>) => {
-    set((state) => ({ ...state, deletedRecognitions }))
+    set((state) => ({ ...state, deletedRecognitions }));
   },
   setDeletedReferences: (deletedReferences: Array<Reference>) => {
-    set((state) => ({ ...state, deletedReferences }))
+    set((state) => ({ ...state, deletedReferences }));
   },
-}))
+}));

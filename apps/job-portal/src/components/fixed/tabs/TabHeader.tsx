@@ -1,20 +1,21 @@
-import { FC, MouseEventHandler } from 'react'
-import { HiBadgeCheck } from 'react-icons/hi'
+/* eslint-disable react/jsx-no-target-blank */
+import { FC, MouseEventHandler } from 'react';
+import { HiBadgeCheck } from 'react-icons/hi';
 
 type TabHeaderProps = {
-  tab: number
-  tabIndex: number
-  onClick?: MouseEventHandler<HTMLLIElement | HTMLAnchorElement>
-  href?: string
-  positionTitle: string
-  companyName: string
-  duration: string
-  icon?: any
-  notificationCount?: number
-  className?: string
-  selected?: boolean
-  invert?: boolean
-}
+  tab: number;
+  tabIndex: number;
+  onClick?: MouseEventHandler<HTMLLIElement | HTMLAnchorElement>;
+  href?: string;
+  positionTitle: string;
+  companyName: string;
+  duration: string;
+  icon?: any;
+  notificationCount?: number;
+  className?: string;
+  selected?: boolean;
+  invert?: boolean;
+};
 
 export const TabHeader: FC<TabHeaderProps> = ({
   tab,
@@ -44,12 +45,24 @@ export const TabHeader: FC<TabHeaderProps> = ({
 
         border-b  border-gray-200 bg-white py-2 pt-1 transition-all ease-in-out  hover:drop-shadow-lg`}
       >
-        <div className={`${icon ? 'visible' : 'invisible'} flex w-[10%] justify-center `}>
-          <div className={`h-[1rem] w-[1rem] items-center rounded-full ${selected ? 'bg-green-600' : 'bg-slate-400'}`}>{icon}</div>
+        <div
+          className={`${
+            icon ? 'visible' : 'invisible'
+          } flex w-[10%] justify-center `}
+        >
+          <div
+            className={`h-[1rem] w-[1rem] items-center rounded-full ${
+              selected ? 'bg-green-600' : 'bg-slate-400'
+            }`}
+          >
+            {icon}
+          </div>
         </div>
         <div className="flex w-[80%] flex-col">
           <p
-            className={`select-none  text-xl font-semibold ${tab === tabIndex ? 'text-white' : 'text-black'} transition-colors ease-in-out`}
+            className={`select-none  text-xl font-semibold ${
+              tab === tabIndex ? 'text-white' : 'text-black'
+            } transition-colors ease-in-out`}
           >
             {positionTitle}
           </p>
@@ -74,10 +87,10 @@ export const TabHeader: FC<TabHeaderProps> = ({
               selected ? 'visible' : 'invisible'
             } flex-grow-0 select-none justify-center text-sm text-white`}
           >
-            {<HiBadgeCheck size={100} className=" text-green-500" />}
+            {<HiBadgeCheck size={100} className="text-green-500 " />}
           </div>
         </div>
       </a>
     </>
-  )
-}
+  );
+};

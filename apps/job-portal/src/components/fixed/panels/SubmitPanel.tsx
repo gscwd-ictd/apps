@@ -284,27 +284,19 @@ export default function SubmitPanel(): JSX.Element {
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
-            <div className="w-[5rem]">
-              <Button
-                onClick={() => setAlertConfirmation(false)}
-                disabled={isDisabled ? true : false}
-              >
-                No
-              </Button>
-            </div>
+            <Button
+              onClick={() => setAlertConfirmation(false)}
+              disabled={isDisabled ? true : false}
+            >
+              No
+            </Button>
 
-            <div className="max-w-auto min-w-[5rem]">
-              <Button
-                onClick={alertConfirmationAction}
-                disabled={isDisabled ? true : false}
-              >
-                {isLoading ? (
-                  <div className="text-white">Submitting</div>
-                ) : (
-                  'Yes'
-                )}
-              </Button>
-            </div>
+            <Button
+              onClick={alertConfirmationAction}
+              disabled={isDisabled ? true : false}
+            >
+              {isLoading ? <div className="text-white">Submitting</div> : 'Yes'}
+            </Button>
           </div>
         </Alert.Footer>
       </Alert>

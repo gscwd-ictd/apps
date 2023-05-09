@@ -13,7 +13,11 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
           ? 'error'
           : status === PassSlipStatus.ONGOING
           ? 'warning'
+          : status === PassSlipStatus.FOR_APPROVAL
+          ? 'warning'
           : status === PassSlipStatus.CANCELLED
+          ? 'default'
+          : status === PassSlipStatus.USED
           ? 'default'
           : null
       }
@@ -24,8 +28,12 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
           ? 'Disapproved'
           : status === PassSlipStatus.ONGOING
           ? 'Ongoing'
+          : status === PassSlipStatus.FOR_APPROVAL
+          ? 'For Approval'
           : status === PassSlipStatus.CANCELLED
           ? 'Cancelled'
+          : status === PassSlipStatus.USED
+          ? 'Used'
           : ''
       }
     />

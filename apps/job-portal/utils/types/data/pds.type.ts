@@ -1,188 +1,189 @@
-import { Pds } from '../../store/pds.store'
+/* eslint-disable @typescript-eslint/ban-types */
+import { Pds } from 'apps/job-portal/src/store/pds.store';
 
 export type Eligibility = {
-  name: string
-  rating: number
-  examDate: string
-  examPlace: string
-  licenseNumber: string
-  validity: Date
-}
+  name: string;
+  rating: number;
+  examDate: string;
+  examPlace: string;
+  licenseNumber: string;
+  validity: Date;
+};
 
 export type Address = {
-  houseNumber: string
-  street: string
-  subdivision: string
-  barangay: string
-  city: string
-  province: string
-  zipCode: string
-}
+  houseNumber: string;
+  street: string;
+  subdivision: string;
+  barangay: string;
+  city: string;
+  province: string;
+  zipCode: string;
+};
 
 export type Child = {
-  childName: string
-  birthDate: Date
-}
+  childName: string;
+  birthDate: Date | string;
+};
 
 export type Education = {
-  schoolName: string
-  from: number
-  to: number
-  yearGraduated: number
-  awards: string
-  units: string
-  degree: string
-}
+  schoolName: string;
+  from: number;
+  to: number;
+  yearGraduated: number;
+  awards: string;
+  units: string;
+  degree: string;
+};
 
 export type WorkExperience = {
-  positionTitle: string
-  companyName: string
-  monthlySalary: number
-  appointmentStatus: string
-  isGovernmentService: boolean
-  salaryGrade: string
-  from: Date
-  to: Date
-}
+  positionTitle: string;
+  companyName: string;
+  monthlySalary: number;
+  appointmentStatus: string;
+  isGovernmentService: boolean;
+  salaryGrade: string;
+  from: Date;
+  to: Date;
+};
 
 export type VoluntaryWork = {
-  _id: string
-  organizationName: string
-  position: string
-  from: Date
-  to: Date
-  numberOfHours: number
-}
+  _id: string;
+  organizationName: string;
+  position: string;
+  from: Date;
+  to: Date;
+  numberOfHours: number;
+};
 
 export type LearningDevelopment = {
-  title: string
-  conductedBy: string
-  type: string
-  from: Date
-  to: Date
-  numberOfHours: number
-}
+  title: string;
+  conductedBy: string;
+  type: string;
+  from: Date;
+  to: Date;
+  numberOfHours: number;
+};
 
 export type References = {
-  name: string
-  address: string
-  telephoneNumber: string
-}
+  name: string;
+  address: string;
+  telephoneNumber: string;
+};
 
 export type BasicInfo = {
   personalInfo: {
-    email: string
-    firstName: string
-    middleName: string
-    lastName: string
-    nameExtension: string
-    birthDate: Date
-    birthPlace: string
-    sex: string
-    civilStatus: string
-    height: number
-    weight: number
-    bloodType: string
-    mobileNumber: string
-    telephoneNumber: string
-    citizenship: string
-    citizenshipType: string
-    country: string
-  }
+    email: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    nameExtension: string;
+    birthDate: Date;
+    birthPlace: string;
+    sex: string;
+    civilStatus: string;
+    height: number;
+    weight: number;
+    bloodType: string;
+    mobileNumber: string;
+    telephoneNumber: string;
+    citizenship: string;
+    citizenshipType: string;
+    country: string;
+  };
   address: {
-    permanentAddress: Address
-    residentialAddress: Address
-  }
+    permanentAddress: Address;
+    residentialAddress: Address;
+  };
   governmentIssuedIds: {
-    gsisNumber: string
-    pagibigNumber: string
-    philhealthNumber: string
-    sssNumber: string
-    tinNumber: string
-    agencyNumber: string
-  }
-}
+    gsisNumber: string;
+    pagibigNumber: string;
+    philhealthNumber: string;
+    sssNumber: string;
+    tinNumber: string;
+    agencyNumber: string;
+  };
+};
 
 export type Family = {
   spouse: {
-    firstName: string
-    middleName: string
-    lastName: string
-    nameExtension: string
-    occupation: string
-    employer: string
-    businessAddress: string
-    telephoneNumber: string
-  }
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    nameExtension: string;
+    occupation: string;
+    employer: string;
+    businessAddress: string;
+    telephoneNumber: string;
+  };
   parents: {
     mother: {
-      motherFirstName: string
-      motherMiddleName: string
-      motherLastName: string
-      motherMaidenName: string
-    }
+      motherFirstName: string;
+      motherMiddleName: string;
+      motherLastName: string;
+      motherMaidenName: string;
+    };
     father: {
-      fatherFirstName: string
-      fatherMiddleName: string
-      fatherLastName: string
-      fatherNameExtension: string
-    }
-  }
-  children: Array<Child>
-}
+      fatherFirstName: string;
+      fatherMiddleName: string;
+      fatherLastName: string;
+      fatherNameExtension: string;
+    };
+  };
+  children: Array<Child>;
+};
 
 export type OtherInfo = {
-  skills: string[]
-  recognitions: string[]
-  organizations: string[]
+  skills: string[];
+  recognitions: string[];
+  organizations: string[];
   supportingDetails: {
     officeRelation: {
-      withinThirdDegree: boolean
-      withinFourthDegree: boolean
-      details: string
-    }
+      withinThirdDegree: boolean;
+      withinFourthDegree: boolean;
+      details: string;
+    };
     guiltyCharged: {
-      isGuilty: boolean
-      guiltyDetails: string
-      isCharged: boolean
-      chargedDateFiled: Date
-      chargedCaseStatus: string
-    }
+      isGuilty: boolean;
+      guiltyDetails: string;
+      isCharged: boolean;
+      chargedDateFiled: Date;
+      chargedCaseStatus: string;
+    };
     convicted: {
-      isConvicted: boolean
-      details: string
-    }
+      isConvicted: boolean;
+      details: string;
+    };
     separatedService: {
-      isSeparated: boolean
-      details: string
-    }
+      isSeparated: boolean;
+      details: string;
+    };
     candidateResigned: {
-      isCandidate: boolean
-      candidateDetails: string
-      isResigned: boolean
-      resignedDetails: string
-    }
+      isCandidate: boolean;
+      candidateDetails: string;
+      isResigned: boolean;
+      resignedDetails: string;
+    };
     immigrant: {
-      isImmigrant: boolean
-      details: string
-    }
+      isImmigrant: boolean;
+      details: string;
+    };
     indigenousPwdSoloParent: {
-      isIndigenousMember: boolean
-      indigenousMemberDetails: string
-      isPwd: boolean
-      pwdIdNumber: string
-      isSoloParent: boolean
-      soloParentIdNumber: string
-    }
-  }
-  references: Array<References>
+      isIndigenousMember: boolean;
+      indigenousMemberDetails: string;
+      isPwd: boolean;
+      pwdIdNumber: string;
+      isSoloParent: boolean;
+      soloParentIdNumber: string;
+    };
+  };
+  references: Array<References>;
   governmentIssuedId: {
-    issuedId: string
-    idNumber: string
-    issueDate: Date
-    issuePlace: string
-  }
-}
+    issuedId: string;
+    idNumber: string;
+    issueDate: Date;
+    issuePlace: string;
+  };
+};
 
 // export type PDS = {
 //   basicInfo: BasicInfo
@@ -202,6 +203,6 @@ export type OtherInfo = {
 // }
 
 export type Data = {
-  formatDate: Function
-  pds: Pds
-}
+  formatDate: Function;
+  pds: Pds;
+};

@@ -1,24 +1,41 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Dispatch, Fragment, MouseEventHandler, ReactChild, ReactChildren, SetStateAction, useRef, useState } from 'react'
-import { MyButtonComponentVariant } from '../../../types/components/attributes'
-import { Button } from '../../modular/buttons/Button'
+import { Dialog, Transition } from '@headlessui/react';
+import { MyButtonComponentVariant } from 'apps/job-portal/utils/types/components/attributes';
+import {
+  Dispatch,
+  Fragment,
+  MouseEventHandler,
+  SetStateAction,
+  useRef,
+} from 'react';
+import { Button } from '../../modular/buttons/Button';
 
 type ModalRemoveActionProps = {
-  actionLabel?: string
-  cancelLabel?: string
-  isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
-  action: MouseEventHandler<HTMLButtonElement>
-  verticalCenter?: boolean
-  children?: React.ReactNode | React.ReactNode[]
-  modalSize?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'xxxxxxl' | 'xxxxxxxl' | 'full'
-  title?: string
-  subtitle?: string
-  btnSubmitVariant?: MyButtonComponentVariant
-  btnCancelColor?: MyButtonComponentVariant
-  titleColor?: string
-  className?: string
-}
+  actionLabel?: string;
+  cancelLabel?: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  action: MouseEventHandler<HTMLButtonElement>;
+  verticalCenter?: boolean;
+  children?: React.ReactNode | React.ReactNode[];
+  modalSize?:
+    | 'sm'
+    | 'md'
+    | 'lg'
+    | 'xl'
+    | 'xxl'
+    | 'xxxl'
+    | 'xxxxl'
+    | 'xxxxxl'
+    | 'xxxxxxl'
+    | 'xxxxxxxl'
+    | 'full';
+  title?: string;
+  subtitle?: string;
+  btnSubmitVariant?: MyButtonComponentVariant;
+  btnCancelColor?: MyButtonComponentVariant;
+  titleColor?: string;
+  className?: string;
+};
 
 const size = {
   sm: 'max-w-sm',
@@ -32,7 +49,7 @@ const size = {
   xxxxxxl: 'max-w-6xl',
   xxxxxxxl: 'max-w-7xl',
   full: 'max-w-full',
-}
+};
 
 export const ModalAction = ({
   actionLabel = 'Yes',
@@ -50,12 +67,16 @@ export const ModalAction = ({
   btnCancelColor = 'light',
   className = 'transition-all',
 }: ModalRemoveActionProps): JSX.Element => {
-  const actionBtnRef = useRef<any>(null)
+  const actionBtnRef = useRef<any>(null);
 
   return (
     <>
       <Transition.Root appear show={isOpen} as={Fragment}>
-        <Dialog open={isOpen} onClose={() => setIsOpen(false)} className={`fixed inset-0 z-50 overflow-y-auto ${className}`}>
+        <Dialog
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          className={`fixed inset-0 z-50 overflow-y-auto ${className}`}
+        >
           <Dialog.Panel>
             <div className="min-h-screen px-4 text-center">
               <Transition.Child
@@ -67,11 +88,16 @@ export const ModalAction = ({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Dialog.Overlay className={`pointer-events-none fixed inset-0 bg-black bg-opacity-25 transition-opacity`} />
+                <Dialog.Overlay
+                  className={`pointer-events-none fixed inset-0 bg-black bg-opacity-25 transition-opacity`}
+                />
               </Transition.Child>
               {verticalCenter ? (
                 <>
-                  <span className="inline-block h-screen align-middle" aria-hidden="true">
+                  <span
+                    className="inline-block h-screen align-middle"
+                    aria-hidden="true"
+                  >
                     &#8203;
                   </span>
                 </>
@@ -88,15 +114,21 @@ export const ModalAction = ({
                 <div
                   className={`${size[modalSize]} z-50 my-8 inline-block w-full transform overflow-visible rounded-lg bg-white p-10 text-left align-middle shadow-xl transition-all`}
                 >
-                  <header className="mb-3 px-5 ">
+                  <header className="px-5 mb-3 ">
                     <section className="flex items-center justify-between">
-                      <Dialog.Title as="h3" className={`text-2xl font-medium leading-6 ${titleColor}`}>
+                      <Dialog.Title
+                        as="h3"
+                        className={`text-2xl font-medium leading-6 ${titleColor}`}
+                      >
                         {title}
                       </Dialog.Title>
                     </section>
 
                     <section>
-                      <Dialog.Title as="p" className={`mt-2 rounded-sm  border-gray-200  px-5 text-sm leading-6 text-gray-500`}>
+                      <Dialog.Title
+                        as="p"
+                        className={`mt-2 rounded-sm  border-gray-200  px-5 text-sm leading-6 text-gray-500`}
+                      >
                         {subtitle}
                       </Dialog.Title>
                     </section>
@@ -116,7 +148,13 @@ export const ModalAction = ({
                       >
                         <span className="text-gray-500 ">{cancelLabel}</span>
                       </button> */}
-                      <Button btnLabel="No" variant={btnCancelColor} onClick={() => setIsOpen(false)} type="button" tabIndex={1} />
+                      <Button
+                        btnLabel="No"
+                        variant={btnCancelColor}
+                        onClick={() => setIsOpen(false)}
+                        type="button"
+                        tabIndex={1}
+                      />
 
                       <Button
                         className="text-center "
@@ -138,5 +176,5 @@ export const ModalAction = ({
         </Dialog>
       </Transition.Root>
     </>
-  )
-}
+  );
+};
