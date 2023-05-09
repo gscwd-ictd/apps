@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { FunctionComponent } from 'react';
 import { isEmpty } from 'lodash';
 import { SubmitHandler, useForm } from 'react-hook-form';

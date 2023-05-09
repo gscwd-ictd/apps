@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Card } from '../../../modular/cards/Card';
 import { useFormContext } from 'react-hook-form';
 import { FloatingLabelInputRF } from '../../../modular/inputs/FloatingLabelInputRF';

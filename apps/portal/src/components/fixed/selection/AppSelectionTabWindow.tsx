@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { AllSelectionPublicationListTab } from './AllSelectionPublicationListTab';

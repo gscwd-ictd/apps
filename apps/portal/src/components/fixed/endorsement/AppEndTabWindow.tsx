@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { FunctionComponent } from 'react';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { AllPublicationListTab } from './AllPublicationListTab';

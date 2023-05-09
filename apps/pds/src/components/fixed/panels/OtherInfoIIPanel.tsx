@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Page } from '../../modular/pages/Page';
 import { SupportingDetails } from './other-info/SupportingDetails';
 import { OIGovtID } from './other-info/GovernmentIssuedId';

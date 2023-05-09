@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect } from 'react';
 import useSWR from 'swr';
@@ -26,7 +26,6 @@ export const AllApplicantsList = () => {
     `/applicant-endorsement/${vppId}/all`,
     fetcherHRIS
   );
-
 
   // on select
   const onSelect = (sequenceNo: number) => {

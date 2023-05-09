@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { Competency, DutyResponsibility } from 'apps/portal/src/types/dr.type';
 import { FormEvent } from 'react';
