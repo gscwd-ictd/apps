@@ -251,7 +251,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
               <span className="text-md">
                 <br />
                 The following details will be submitted for the{' '}
-                <span className="font-black text-black">
+                <span className="font-bold text-black">
                   {positionTitle}
                 </span>{' '}
                 position:
@@ -269,8 +269,15 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
           </Alert.Description>
           <Alert.Footer alignEnd>
             <div className="flex gap-2">
-              <Button onClick={() => setAlertSubmitIsOpen(false)}>No</Button>
-              <Button onClick={onSubmit}>Yes</Button>
+              <Button
+                onClick={() => setAlertSubmitIsOpen(false)}
+                className="w-[6rem]"
+              >
+                No
+              </Button>
+              <Button onClick={onSubmit} className="w-[6rem]">
+                Yes
+              </Button>
             </div>
           </Alert.Footer>
         </Alert>

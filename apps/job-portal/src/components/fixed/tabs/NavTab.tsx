@@ -57,10 +57,14 @@ export const NavTab = (): JSX.Element => {
           </div>
         </Alert.Description>
         <Alert.Footer alignEnd>
-          <div className="w-[6rem]">
-            <Button onClick={() => setCancelAlertIsOpen(false)}>No</Button>
-          </div>
-          <div className="w-[6rem]">
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setCancelAlertIsOpen(false)}
+              className="w-[6rem]"
+            >
+              No
+            </Button>
+
             <Button
               onClick={() => {
                 router.push(
@@ -69,6 +73,7 @@ export const NavTab = (): JSX.Element => {
                 setCancelAlertIsOpen(false);
                 setSelectedTab(1);
               }}
+              className="w-[6rem]"
             >
               Yes
             </Button>
