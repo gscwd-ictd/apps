@@ -53,7 +53,7 @@ export const Duties = () => {
   const columns = [
     columnHelper.accessor('duty', {
       cell: (info) => info.getValue(),
-      header: 'duty title',
+      header: 'Duty title',
     }),
     columnHelper.display({
       header: 'Actions',

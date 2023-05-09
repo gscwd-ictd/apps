@@ -16,7 +16,6 @@ import TopNavigation from '../../../../components/page-header/TopNavigation';
 import { useApplicantStore } from '../../../../store/applicant.store';
 import { usePageStore } from '../../../../store/page.store';
 import { Pds } from '../../../../store/pds.store';
-import { usePublicationStore } from '../../../../store/publication.store';
 import { useWorkExpSheetStore } from '../../../../store/work-experience-sheet.store';
 
 type ChecklistProps = {
@@ -568,11 +567,11 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                             submission.hasSubmitted === false ? (
                             <>
                               <div className="w-[6rem]">
-                                <Button onClick={onClickWorkExpSheet}>
-                                  <div className="font-medium text-md text-slate-700">
+                                <button onClick={onClickWorkExpSheet}>
+                                  <div className="font-medium bg-white border py-2 w-[6rem] rounded text-md text-slate-700">
                                     Select
                                   </div>
-                                </Button>
+                                </button>
                               </div>
                             </>
                           ) : progress.secondStep === false ? (
@@ -709,19 +708,21 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
           </div>
         </main>
         <footer>
-          <div className="flex w-full justify-end sm:px-2 lg:px-[21.5%]">
-            {progress.firstStep &&
-              progress.secondStep &&
-              progress.thirdStep &&
-              submission.hasSubmitted === false && (
+          {progress.firstStep &&
+            progress.secondStep &&
+            progress.thirdStep &&
+            submission.hasSubmitted === false && (
+              <div className="flex w-full justify-center sm:px-2 md:px-2 lg:px-[21.5%]">
                 <Button
                   onClick={() => setAlertSubmitIsOpen(true)}
                   type="button"
+                  className="w-full bg-blue-600"
                 >
                   Submit Application
                 </Button>
-              )}
-          </div>
+              </div>
+            )}
+
           {/* <Button onClick={() => console.log(progress, submission, hasPds)}>Log</Button> */}
         </footer>
       </div>

@@ -51,7 +51,7 @@ export const Accomplishments = () => {
   const columns = [
     columnHelper.accessor('accomplishment', {
       cell: (info) => info.getValue(),
-      header: 'accomplishment title',
+      header: 'Accomplishment title',
     }),
     columnHelper.display({
       header: 'Actions',
