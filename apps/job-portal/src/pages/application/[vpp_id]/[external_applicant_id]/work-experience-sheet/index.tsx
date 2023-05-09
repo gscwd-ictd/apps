@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Alert, Button } from '@gscwd-apps/oneui';
 import { WorkExperience } from 'apps/job-portal/utils/types/data/work.type';
 import axios from 'axios';
@@ -184,8 +185,15 @@ export default function WorkSheetPanel({
             </Alert.Description>
             <Alert.Footer alignEnd>
               <div className="flex gap-2">
-                <Button onClick={() => setCancelAlertIsOpen(false)}>No</Button>
-                <Button onClick={goBack}>Yes</Button>
+                <Button
+                  onClick={() => setCancelAlertIsOpen(false)}
+                  className="w-[6rem]"
+                >
+                  No
+                </Button>
+                <Button onClick={goBack} className="w-[6rem]">
+                  Yes
+                </Button>
               </div>
             </Alert.Footer>
           </Alert>
@@ -200,8 +208,13 @@ export default function WorkSheetPanel({
             </Alert.Description>
             <Alert.Footer alignEnd>
               <div className="flex gap-2">
-                <Button onClick={onRemoveCancel}>No</Button>
-                <Button onClick={() => onRemoveAction(indexToRemove)}>
+                <Button onClick={onRemoveCancel} className="w-[6rem]">
+                  No
+                </Button>
+                <Button
+                  onClick={() => onRemoveAction(indexToRemove)}
+                  className="w-[6rem]"
+                >
                   Yes
                 </Button>
               </div>
