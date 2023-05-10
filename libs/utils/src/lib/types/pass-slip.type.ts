@@ -21,7 +21,7 @@ export type PassSlipApplicationForm = {
 // List of pass slips per employee
 export type EmployeePassSlipList = {
   completed: Array<PassSlip>;
-  ongoing: Array<PassSlip>;
+  forApproval: Array<PassSlip>;
 };
 
 // Single row type for individual or collated employees pass slip

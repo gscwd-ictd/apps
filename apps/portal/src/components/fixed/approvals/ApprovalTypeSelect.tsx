@@ -54,16 +54,6 @@ export const ApprovalTypeSelect = () => {
         listDef={list}
         onSelect={(selectedItem) => onChangeType(selectedItem.code)}
       />
-      {/*     
-      <Button
-        variant={'primary'}
-        size={'sm'}
-        loading={false}
-        onClick={(e) => searchDtr(e)}
-        type="submit"
-      >
-        <HiOutlineSearch className="w-5 h-5" />
-      </Button> */}
     </div>
   );
 };

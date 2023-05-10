@@ -1,23 +1,27 @@
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
 import { ErrorState, ModalState } from '../types/modal.type';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   EmployeeLeave,
   EmployeeLeaveDetails,
   MonitoringLeave,
-} from 'libs/utils/src/lib/types/leave-application.type';
-import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
+} from '../../../../libs/utils/src/lib/types/leave-application.type';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 
 export type ApprovalLeaveList = {
-  onGoing: Array<MonitoringLeave>;
+  forApproval: Array<MonitoringLeave>;
   approved: Array<MonitoringLeave>;
   disapproved: Array<MonitoringLeave>;
 };
 
 export type ApprovalPassSlipList = {
-  onGoing: Array<PassSlip>;
-  approved: Array<PassSlip>;
-  disapproved: Array<PassSlip>;
+  completed: {
+    approved: Array<PassSlip>;
+    disapproved: Array<PassSlip>;
+  };
+  forApproval: Array<PassSlip>;
 };
 
 export type ApprovalState = {
@@ -31,18 +35,20 @@ export type ApprovalState = {
   setSelectedApprovalType: (value: number) => void;
 
   leaves: {
-    onGoing: Array<MonitoringLeave>;
+    forApproval: Array<MonitoringLeave>;
     approved: Array<MonitoringLeave>;
     disapproved: Array<MonitoringLeave>;
   };
 
   passSlips: {
-    onGoing: Array<PassSlip>;
-    approved: Array<PassSlip>;
-    disapproved: Array<PassSlip>;
+    completed: {
+      approved: Array<PassSlip>;
+      disapproved: Array<PassSlip>;
+    };
+    forApproval: Array<PassSlip>;
   };
   response: {
-    postResponsePassSlip: PassSlip;
+    patchResponsePassSlip: PassSlip;
     postResponseLeave: EmployeeLeaveDetails;
   };
   loading: {
@@ -75,6 +81,9 @@ export type ApprovalState = {
     disapprovedLeaveModalIsOpen: boolean
   ) => void;
 
+  otpPassSlipModalIsOpen: boolean;
+  setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => void;
+
   pendingPassSlipModalIsOpen: boolean;
   setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
 
@@ -97,6 +106,10 @@ export type ApprovalState = {
   getPassSlipList: (loading: boolean) => void;
   getPassSlipListSuccess: (loading: boolean, response) => void;
   getPassSlipListFail: (loading: boolean, error: string) => void;
+
+  patchPassSlip: () => void;
+  patchPassSlipSuccess: (response) => void;
+  patchPassSlipFail: (error: string) => void;
 
   // LEAVES
   leaveId: string;
@@ -122,19 +135,21 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
   selectedApprovalType: 1,
 
   leaves: {
-    onGoing: [],
+    forApproval: [],
     approved: [],
     disapproved: [],
   },
 
   passSlips: {
-    onGoing: [],
-    approved: [],
-    disapproved: [],
+    completed: {
+      approved: [],
+      disapproved: [],
+    },
+    forApproval: [],
   },
 
   response: {
-    postResponsePassSlip: {} as PassSlip,
+    patchResponsePassSlip: {} as PassSlip,
     postResponseLeave: {} as EmployeeLeaveDetails,
   },
 
@@ -156,6 +171,8 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
     errorPassSlipResponse: '',
     errorIndividualPassSlip: '',
   },
+
+  otpPassSlipModalIsOpen: false,
 
   pendingLeaveModalIsOpen: false,
   approvedLeaveModalIsOpen: false,
@@ -202,6 +219,10 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
     set((state) => ({ ...state, tab }));
   },
 
+  setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => {
+    set((state) => ({ ...state, otpPassSlipModalIsOpen }));
+  },
+
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => {
     set((state) => ({ ...state, pendingLeaveModalIsOpen }));
   },
@@ -238,7 +259,7 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
       ...state,
       leaves: {
         ...state.leaves,
-        onGoing: [],
+        forApproval: [],
         approved: [],
         disapproved: [],
       },
@@ -257,7 +278,7 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
       ...state,
       leaves: {
         ...state.leaves,
-        onGoing: response.onGoing,
+        forApproval: response.forApproval,
         approved: response.approved,
         disapproved: response.disapproved,
       },
@@ -329,9 +350,11 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
       ...state,
       passSlips: {
         ...state.passSlips,
-        onGoing: [],
-        approved: [],
-        disapproved: [],
+        completed: {
+          approved: [],
+          disapproved: [],
+        },
+        forApproval: [],
       },
       loading: {
         ...state.loading,
@@ -351,9 +374,11 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
       ...state,
       passSlips: {
         ...state.passSlips,
-        onGoing: response.onGoing,
-        approved: response.approved,
-        disapproved: response.disapproved,
+        completed: {
+          approved: response.completed.approved,
+          disapproved: response.completed.disapproved,
+        },
+        forApproval: response.forApproval,
       },
       loading: {
         ...state.loading,
@@ -371,6 +396,50 @@ export const useApprovalStore = create<ApprovalState>((set) => ({
       error: {
         ...state.error,
         errorPassSlips: error,
+      },
+    }));
+  },
+  //PATCH PASS SLIP ACTIONS
+  patchPassSlip: () => {
+    set((state) => ({
+      ...state,
+      response: {
+        ...state.response,
+        patchResponsePassSlip: {} as PassSlip,
+      },
+      loading: {
+        ...state.loading,
+        loadingPassSlipResponse: true,
+      },
+      error: {
+        ...state.error,
+        errorPassSlipResponse: '',
+      },
+    }));
+  },
+  patchPassSlipSuccess: (response: PassSlip) => {
+    set((state) => ({
+      ...state,
+      response: {
+        ...state.response,
+        patchResponsePassSlip: response,
+      },
+      loading: {
+        ...state.loading,
+        loadingPassSlipResponse: false,
+      },
+    }));
+  },
+  patchPassSlipFail: (error: string) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingPassSlipResponse: false,
+      },
+      error: {
+        ...state.error,
+        errorPassSlipResponse: error,
       },
     }));
   },

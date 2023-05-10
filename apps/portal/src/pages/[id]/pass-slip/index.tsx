@@ -126,6 +126,7 @@ export default function PassSlip({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
+    console.log(swrPassSlips, 'passslips');
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
     }
@@ -240,18 +241,18 @@ export default function PassSlip({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
 
-//   return { props: { employeeDetails } };
-// };
+  return { props: { employeeDetails } };
+};
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+//     return { props: { employeeDetails } };
+//   }
+// );

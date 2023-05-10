@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
@@ -30,8 +31,6 @@ export const AllApprovalsTab = ({
     pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
-    postResponsePassSlip,
-    postResponseLeave,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -49,8 +48,6 @@ export const AllApprovalsTab = ({
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
-    postResponsePassSlip: state.response.postResponsePassSlip,
-    postResponseLeave: state.response.postResponseLeave,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -73,7 +70,7 @@ export const AllApprovalsTab = ({
     } else if (tab === 3) {
       // APPROVED PASS SLIP
       if (!approvedPassSlipModalIsOpen) {
-        setPendingPassSlipModalIsOpen(true);
+        setApprovedPassSlipModalIsOpen(true);
       }
     } else if (tab === 5) {
       // DISAPPROVED PASS SLIP

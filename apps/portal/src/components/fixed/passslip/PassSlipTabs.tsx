@@ -8,9 +8,9 @@ type PassSlipTabsProps = {
 
 export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
   //zustand initialization to access pass slip store
-  const { passSlipsOnGoing, passSlipsCompleted, setTab } = usePassSlipStore(
+  const { passSlipsforApproval, passSlipsCompleted, setTab } = usePassSlipStore(
     (state) => ({
-      passSlipsOnGoing: state.passSlips.onGoing,
+      passSlipsforApproval: state.passSlips.forApproval,
       passSlipsCompleted: state.passSlips.completed,
       setTab: state.setTab,
     })
@@ -26,10 +26,12 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
             onClick={() => {
               setTab(1);
             }}
-            title="Ongoing Pass Slips"
+            title="For Approval Pass Slips"
             icon={<HiOutlineCheckCircle size={26} />}
-            subtitle="Show all ongoing Pass Slips you applied for"
-            notificationCount={passSlipsOnGoing ? passSlipsOnGoing.length : 0}
+            subtitle="Show all for approval Pass Slips you applied for"
+            notificationCount={
+              passSlipsforApproval ? passSlipsforApproval.length : 0
+            }
             className="bg-indigo-500"
           />
           <TabHeader

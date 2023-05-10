@@ -28,7 +28,7 @@ export const PassSlipPendingModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Ongoing Pass Slip</span>
+              <span>For Approval Pass Slip</span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}

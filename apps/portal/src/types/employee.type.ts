@@ -78,7 +78,7 @@ export const employeeDummy: EmployeeDetails = {
     nameExt: 'Jr',
     sex: 'Male',
     birthDate: '1991-08-14',
-    mobile: '09238045092',
+    mobile: '09235197604',
     email: 'ericsison003@gmail.com',
     photoUrl: '/avatars/avatar4.png',
   },
