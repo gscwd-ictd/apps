@@ -50,7 +50,7 @@ const AppEndModal: FunctionComponent = () => {
     <Modal
       open={modal.isOpen}
       setOpen={openModal}
-      size={modal.page === 1 ? 'lg' : modal.page === 3 ? 'lg' : 'xl'}
+      size={modal.page === 1 ? 'lg' : modal.page === 3 ? 'lg' : 'full'}
       steady
     >
       <Modal.Header>
