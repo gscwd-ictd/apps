@@ -887,8 +887,7 @@ export default function ReviewPanel(): JSX.Element {
                         const {
                           name,
                           rating,
-                          examDateFrom,
-                          examDateTo,
+                          examDate,
                           examPlace,
                           licenseNumber,
                           validity,
@@ -908,11 +907,11 @@ export default function ReviewPanel(): JSX.Element {
                             />
                             <LabelFieldPreview
                               label="Exam Date From:"
-                              field={examDateFrom ? examDateFrom : 'N/A'}
+                              field={examDate.from ? examDate.from : 'N/A'}
                             />
                             <LabelFieldPreview
                               label="Exam Date To:"
-                              field={examDateTo ? examDateTo : 'N/A'}
+                              field={examDate.to ? examDate.to : 'N/A'}
                             />
                             <LabelFieldPreview
                               label="Place of Examination:"
