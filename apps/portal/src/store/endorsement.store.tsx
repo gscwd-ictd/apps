@@ -3,6 +3,7 @@ import { AlertState } from '../types/alert.type';
 import { Applicant, PostingApplicantId } from '../types/applicant.type';
 import { ErrorState, ModalState } from '../types/modal.type';
 import { Publication } from '../types/publication.type';
+import { devtools } from 'zustand/middleware';
 
 type PublicationLoading = {
   loadingPendingPublications: boolean;
@@ -19,6 +20,8 @@ type PublicationError = {
 };
 
 type PublicationShortList = Pick<Publication, 'vppId'> & PostingApplicantId;
+
+type ApplicantDetails = Pick<Applicant, 'postingApplicantId' | 'applicantType'>;
 
 type PublicationResponse = {
   updateResponse: Array<PublicationShortList>;
@@ -60,6 +63,10 @@ export type EndorsementState = {
   setSelectedPublicationId: (value: string) => void;
   selectedPublication: Publication;
   setSelectedPublication: (publication: Publication) => void;
+  selectedApplicantDetails: ApplicantDetails;
+  setSelectedApplicantDetails: (
+    selectedApplicantDetails: ApplicantDetails
+  ) => void;
   applicantList: Array<Applicant>;
   setApplicantList: (applicants: Array<Applicant>) => void;
   filteredApplicantList: Array<Applicant>;
@@ -113,232 +120,252 @@ export type EndorsementState = {
   setSearchValue: (searchValue: string) => void;
 };
 
-export const useAppEndStore = create<EndorsementState>((set) => ({
-  alert: { isOpen: false, page: 1 },
-  modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
-  action: '',
-  error: { isError: false, errorMessage: '' },
-  selectedPublicationId: '',
-  selectedPublication: {} as Publication,
-  applicantList: [],
-  publicationList: [],
-  filteredApplicantList: [],
-  filteredPublicationList: [],
-  selectedApplicants: [],
-  pendingIsLoaded: false,
-  fulfilledIsLoaded: false,
-  isLoading: false,
-  pendingPublicationList: [],
-  fulfilledPublicationList: [],
-  publicationError: {
-    errorFulfilledPublications: '',
-    errorPendingPublications: '',
-    errorPublications: '',
-    errorPublication: '',
-  },
-  publicationLoading: {
-    loadingPendingPublications: false,
-    loadingFulfilledPublications: false,
-    loadingPublications: false,
-    loadingPublication: false,
-  },
-  publicationResponse: { updateResponse: [] },
+export const useAppEndStore = create<EndorsementState>()(
+  devtools((set) => ({
+    alert: { isOpen: false, page: 1 },
+    modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
+    action: '',
+    error: { isError: false, errorMessage: '' },
+    selectedPublicationId: '',
+    selectedPublication: {} as Publication,
+    applicantList: [],
+    publicationList: [],
+    filteredApplicantList: [],
+    filteredPublicationList: [],
+    selectedApplicants: [],
+    pendingIsLoaded: false,
+    fulfilledIsLoaded: false,
+    isLoading: false,
+    pendingPublicationList: [],
+    fulfilledPublicationList: [],
+    publicationError: {
+      errorFulfilledPublications: '',
+      errorPendingPublications: '',
+      errorPublications: '',
+      errorPublication: '',
+    },
+    publicationLoading: {
+      loadingPendingPublications: false,
+      loadingFulfilledPublications: false,
+      loadingPublications: false,
+      loadingPublication: false,
+    },
+    publicationResponse: { updateResponse: [] },
 
-  searchValue: '',
+    searchValue: '',
+    selectedApplicantDetails: {} as ApplicantDetails,
 
-  tab: 1,
-  setAlert: (alert: AlertState) => {
-    set((state) => ({ ...state, alert }));
-  },
-  setModal: (modal: ModalState) => {
-    set((state) => ({ ...state, modal }));
-  },
-  setAction: (action: string) => {
-    set((state) => ({ ...state, action }));
-  },
-  setError: (error: ErrorState) => {
-    set((state) => ({ ...state, error }));
-  },
-  setSelectedPublicationId: (selectedPublicationId: string) => {
-    set((state) => ({ ...state, selectedPublicationId }));
-  },
-  setSelectedPublication: (selectedPublication: Publication) => {
-    set((state) => ({ ...state, selectedPublication }));
-  },
-  setApplicantList: (applicantList: Array<Applicant>) => {
-    set((state) => ({ ...state, applicantList }));
-  },
-  setPublicationList: (publicationList: Array<Publication>) => {
-    set((state) => ({ ...state, publicationList }));
-  },
-  setFilteredApplicantList: (filteredApplicantList: Array<Applicant>) => {
-    set((state) => ({ ...state, filteredApplicantList }));
-  },
-  setFilteredPublicationList: (filteredPublicationList: Array<Publication>) => {
-    set((state) => ({ ...state, filteredPublicationList }));
-  },
-  setSelectedApplicants: (selectedApplicants: Array<Applicant>) => {
-    set((state) => ({ ...state, selectedApplicants }));
-  },
-  setPendingIsLoaded: (pendingIsLoaded: boolean) => {
-    set((state) => ({ ...state, pendingIsLoaded }));
-  },
-  setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => {
-    set((state) => ({ ...state, fulfilledIsLoaded }));
-  },
-  setIsLoading: (isLoading: boolean) => {
-    set((state) => ({ ...state, isLoading }));
-  },
-  setPendingPublicationList: (pendingPublicationList: Array<Publication>) => {
-    set((state) => ({ ...state, pendingPublicationList }));
-  },
-  setFulfilledPublicationList: (
-    fulfilledPublicationList: Array<Publication>
-  ) => {
-    set((state) => ({ ...state, fulfilledPublicationList }));
-  },
-  setTab: (tab: number) => {
-    set((state) => ({ ...state, tab }));
-  },
+    tab: 1,
+    setAlert: (alert: AlertState) => {
+      set((state) => ({ ...state, alert }));
+    },
+    setModal: (modal: ModalState) => {
+      set((state) => ({ ...state, modal }));
+    },
+    setAction: (action: string) => {
+      set((state) => ({ ...state, action }));
+    },
+    setError: (error: ErrorState) => {
+      set((state) => ({ ...state, error }));
+    },
+    setSelectedPublicationId: (selectedPublicationId: string) => {
+      set((state) => ({ ...state, selectedPublicationId }));
+    },
+    setSelectedPublication: (selectedPublication: Publication) => {
+      set((state) => ({ ...state, selectedPublication }));
+    },
+    setApplicantList: (applicantList: Array<Applicant>) => {
+      set((state) => ({ ...state, applicantList }));
+    },
+    setPublicationList: (publicationList: Array<Publication>) => {
+      set((state) => ({ ...state, publicationList }));
+    },
+    setFilteredApplicantList: (filteredApplicantList: Array<Applicant>) => {
+      set((state) => ({ ...state, filteredApplicantList }));
+    },
+    setFilteredPublicationList: (
+      filteredPublicationList: Array<Publication>
+    ) => {
+      set((state) => ({ ...state, filteredPublicationList }));
+    },
+    setSelectedApplicants: (selectedApplicants: Array<Applicant>) => {
+      set((state) => ({ ...state, selectedApplicants }));
+    },
+    setPendingIsLoaded: (pendingIsLoaded: boolean) => {
+      set((state) => ({ ...state, pendingIsLoaded }));
+    },
+    setFulfilledIsLoaded: (fulfilledIsLoaded: boolean) => {
+      set((state) => ({ ...state, fulfilledIsLoaded }));
+    },
+    setIsLoading: (isLoading: boolean) => {
+      set((state) => ({ ...state, isLoading }));
+    },
+    setPendingPublicationList: (pendingPublicationList: Array<Publication>) => {
+      set((state) => ({ ...state, pendingPublicationList }));
+    },
+    setFulfilledPublicationList: (
+      fulfilledPublicationList: Array<Publication>
+    ) => {
+      set((state) => ({ ...state, fulfilledPublicationList }));
+    },
+    setTab: (tab: number) => {
+      set((state) => ({ ...state, tab }));
+    },
 
-  getPendingPublications: () =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPendingPublications: true,
-      },
-      pendingPublicationList: [],
-      publicationError: {
-        ...state.publicationError,
-        errorPendingPublications: '',
-      },
-    })),
+    setSelectedApplicantDetails: (
+      selectedApplicantDetails: ApplicantDetails
+    ) => {
+      set((state) => ({ ...state, selectedApplicantDetails }));
+    },
 
-  getPendingPublicationsSuccess: (response: Array<Publication>) =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPendingPublications: false,
-      },
-      pendingPublicationList: response,
-    })),
+    getPendingPublications: () =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPendingPublications: true,
+        },
+        pendingPublicationList: [],
+        publicationError: {
+          ...state.publicationError,
+          errorPendingPublications: '',
+        },
+      })),
 
-  getPendingPublicationsFail: (error: string) =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPendingPublications: false,
-      },
-      publicationError: {
-        ...state.publicationError,
-        errorPendingPublications: error,
-      },
-    })),
+    getPendingPublicationsSuccess: (response: Array<Publication>) =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPendingPublications: false,
+        },
+        pendingPublicationList: response,
+      })),
 
-  getFulfilledPublications: () =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingFulfilledPublications: true,
-      },
-      fulfilledPublicationList: [],
-      publicationError: {
-        ...state.publicationError,
-        errorFulfilledPublications: '',
-      },
-    })),
+    getPendingPublicationsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPendingPublications: false,
+        },
+        publicationError: {
+          ...state.publicationError,
+          errorPendingPublications: error,
+        },
+      })),
 
-  getFulfilledPublicationsSuccess: (response: Array<Publication>) =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingFulfilledPublications: false,
-      },
-      fulfilledPublicationList: response,
-    })),
+    getFulfilledPublications: () =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingFulfilledPublications: true,
+        },
+        fulfilledPublicationList: [],
+        publicationError: {
+          ...state.publicationError,
+          errorFulfilledPublications: '',
+        },
+      })),
 
-  getFulfilledPublicationsFail: (error: string) =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingFulfilledPublications: false,
-      },
-      publicationError: {
-        ...state.publicationError,
-        errorFulfilledPublications: error,
-      },
-    })),
+    getFulfilledPublicationsSuccess: (response: Array<Publication>) =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingFulfilledPublications: false,
+        },
+        fulfilledPublicationList: response,
+      })),
 
-  getPublications: () =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPublications: true,
-      },
-      publicationList: [],
-      filteredPublicationList: [],
-      publicationError: { ...state.publicationError, errorPublications: '' },
-    })),
+    getFulfilledPublicationsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingFulfilledPublications: false,
+        },
+        publicationError: {
+          ...state.publicationError,
+          errorFulfilledPublications: error,
+        },
+      })),
 
-  getPublicationsSuccess: (response: Array<Publication>) =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPublications: false,
-      },
-      publicationList: response,
-      filteredPublicationList: response,
-    })),
+    getPublications: () =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPublications: true,
+        },
+        publicationList: [],
+        filteredPublicationList: [],
+        publicationError: { ...state.publicationError, errorPublications: '' },
+      })),
 
-  getPublicationsFail: (error: string) =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPublications: false,
-      },
-      publicationError: { ...state.publicationError, errorPublications: error },
-    })),
+    getPublicationsSuccess: (response: Array<Publication>) =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPublications: false,
+        },
+        publicationList: response,
+        filteredPublicationList: response,
+      })),
 
-  updatePublication: () =>
-    set((state) => ({
-      ...state,
-      publicationResponse: { ...state.publicationResponse, updateResponse: [] },
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPublication: true,
-      },
-      publicationError: { ...state.publicationError, errorPublication: '' },
-    })),
+    getPublicationsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPublications: false,
+        },
+        publicationError: {
+          ...state.publicationError,
+          errorPublications: error,
+        },
+      })),
 
-  updatePublicationSuccess: (response: Array<PublicationShortList>) =>
-    set((state) => ({
-      ...state,
-      publicationResponse: { updateResponse: response },
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPublication: false,
-      },
-    })),
+    updatePublication: () =>
+      set((state) => ({
+        ...state,
+        publicationResponse: {
+          ...state.publicationResponse,
+          updateResponse: [],
+        },
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPublication: true,
+        },
+        publicationError: { ...state.publicationError, errorPublication: '' },
+      })),
 
-  updatePublicationFail: (error: string) =>
-    set((state) => ({
-      ...state,
-      publicationLoading: {
-        ...state.publicationLoading,
-        loadingPublication: false,
-      },
-      publicationError: { ...state.publicationError, errorPublication: error },
-    })),
+    updatePublicationSuccess: (response: Array<PublicationShortList>) =>
+      set((state) => ({
+        ...state,
+        publicationResponse: { updateResponse: response },
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPublication: false,
+        },
+      })),
 
-  setSearchValue: (searchValue: string) =>
-    set((state) => ({ ...state, searchValue })),
-}));
+    updatePublicationFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        publicationLoading: {
+          ...state.publicationLoading,
+          loadingPublication: false,
+        },
+        publicationError: {
+          ...state.publicationError,
+          errorPublication: error,
+        },
+      })),
+
+    setSearchValue: (searchValue: string) =>
+      set((state) => ({ ...state, searchValue })),
+  }))
+);

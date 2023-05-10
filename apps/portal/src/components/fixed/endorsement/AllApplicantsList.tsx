@@ -18,13 +18,13 @@ export const AllApplicantsList = () => {
 
   const setApplicantList = useAppEndStore((state) => state.setApplicantList);
 
-  // initialize url to get applicant
-  // const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/${vppId}/all`;
-
   // use swr
   const { data: swrApplicants } = useSWR(
     `/applicant-endorsement/${vppId}/all`,
-    fetcherHRIS
+    fetcherHRIS,
+    {
+      revalidateOnFocus: false,
+    }
   );
 
   // on select
