@@ -79,21 +79,18 @@ const AppEndModal: FunctionComponent = () => {
       <Modal.Footer>
         <div className="flex justify-end gap-2">
           {modal.page !== 4 ? (
-            <div className="w-[6rem]">
-              <Button variant="info" onClick={modalCancel}>
-                {modal.page === 1 ? 'Close' : 'Cancel'}
-              </Button>
-            </div>
+            <Button variant="info" onClick={modalCancel} className="w-[6rem]">
+              {modal.page === 1 ? 'Close' : 'Cancel'}
+            </Button>
           ) : null}
           {modal.page !== 1 && modal.page !== 3 && (
-            <div className="min-w-[6rem] max-w-auto">
-              <Button
-                onClick={modalAction}
-                disabled={modal.page === 2 && selectedApplicants.length < 1}
-              >
-                {modal.page !== 4 ? 'Confirm' : 'Got it, Thanks!'}
-              </Button>
-            </div>
+            <Button
+              onClick={modalAction}
+              disabled={modal.page === 2 && selectedApplicants.length < 1}
+              className="min-w-[6rem] max-w-auto"
+            >
+              {modal.page !== 4 ? 'Confirm' : 'Got it, Thanks!'}
+            </Button>
           )}
         </div>
       </Modal.Footer>

@@ -128,21 +128,18 @@ const AppEndAlert = () => {
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             {alert.page === 1 && (
-              <div className="min-w-[5rem] max-w-auto">
-                <Button
-                  variant="info"
-                  onClick={() => setAlert({ ...alert, isOpen: false })}
-                  className="w-full"
-                >
-                  No
-                </Button>
-              </div>
-            )}
-            <div className="min-w-[5rem] max-w-auto">
-              <Button onClick={alertAction} className="w-full">
-                {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
+              <Button
+                variant="info"
+                onClick={() => setAlert({ ...alert, isOpen: false })}
+                className="min-w-[5rem] max-w-auto"
+              >
+                No
               </Button>
-            </div>
+            )}
+
+            <Button onClick={alertAction} className="min-w-[5rem] max-w-auto">
+              {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
+            </Button>
           </div>
         </Alert.Footer>
       </Alert>

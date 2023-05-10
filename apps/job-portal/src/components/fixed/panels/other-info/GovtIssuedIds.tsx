@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { GovtIssuedIdForm } from 'apps/job-portal/utils/types/data/supporting-info.type';
 import { useFormContext } from 'react-hook-form';
 import { govtIds } from '../../../../../utils/constants/constants';
