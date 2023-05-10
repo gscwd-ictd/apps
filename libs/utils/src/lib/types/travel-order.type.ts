@@ -1,4 +1,3 @@
-import { type } from 'os';
 import { EmployeeAsOption } from './employee.type';
 
 export type TravelOrder = {

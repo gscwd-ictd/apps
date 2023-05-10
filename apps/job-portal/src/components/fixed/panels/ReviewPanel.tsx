@@ -693,13 +693,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to.toString()) &&
-                                      isEmpty(yearGraduated.toString())
+                                      (isEmpty(to.toString()) || to === null) &&
+                                      (isEmpty(yearGraduated.toString()) ||
+                                        yearGraduated === null)
                                         ? 'Present'
-                                        : !isEmpty(to.toString()) &&
-                                          !isEmpty(yearGraduated.toString())
-                                        ? yearGraduated
-                                        : 'N/A'
+                                        : to
                                     }
                                   />
                                   <LabelFieldPreview
@@ -769,13 +767,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to.toString()) &&
-                                      isEmpty(yearGraduated.toString())
+                                      (isEmpty(to.toString()) || to === null) &&
+                                      (isEmpty(yearGraduated.toString()) ||
+                                        yearGraduated === null)
                                         ? 'Present'
-                                        : !isEmpty(to.toString()) &&
-                                          !isEmpty(yearGraduated.toString())
-                                        ? yearGraduated
-                                        : 'N/A'
+                                        : to
                                     }
                                   />
                                   <LabelFieldPreview
@@ -845,13 +841,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to.toString()) &&
-                                      isEmpty(yearGraduated.toString())
+                                      (isEmpty(to.toString()) || to === null) &&
+                                      (isEmpty(yearGraduated.toString()) ||
+                                        yearGraduated === null)
                                         ? 'Present'
-                                        : !isEmpty(to.toString()) &&
-                                          !isEmpty(yearGraduated.toString())
-                                        ? yearGraduated
-                                        : 'N/A'
+                                        : to
                                     }
                                   />
                                   <LabelFieldPreview
@@ -980,7 +974,7 @@ export default function ReviewPanel(): JSX.Element {
                               />
                               <LabelFieldPreview
                                 label="Date To:"
-                                field={to ? to : 'N/A'}
+                                field={to ? to : 'Present'}
                               />
                               <LabelFieldPreview
                                 label="Monthly Salary:"
@@ -1059,7 +1053,7 @@ export default function ReviewPanel(): JSX.Element {
                             />
                             <LabelFieldPreview
                               label="Date To:"
-                              field={to ? to : 'N/A'}
+                              field={to ? to : 'Present'}
                             />
                             <LabelFieldPreview
                               label="Number of Hours:"
