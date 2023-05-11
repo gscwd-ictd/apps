@@ -1,9 +1,11 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
 import { Applicant, PostingApplicantId } from '../types/applicant.type';
 import { ErrorState, ModalState } from '../types/modal.type';
 import { Publication } from '../types/publication.type';
 import { devtools } from 'zustand/middleware';
+import { Pds } from 'apps/pds/src/store/pds.store';
 
 type PublicationLoading = {
   loadingPendingPublications: boolean;
@@ -51,6 +53,8 @@ export const PUBLICATION: Publication = {
 };
 
 export type EndorsementState = {
+  pds: Pds;
+  setPds: (pds: Pds) => void;
   alert: AlertState;
   setAlert: (alert: AlertState) => void;
   modal: ModalState;
@@ -59,6 +63,8 @@ export type EndorsementState = {
   setAction: (value: string) => void;
   error: ErrorState;
   setError: (error: ErrorState) => void;
+  showPds: boolean;
+  setShowPds: (showPds: boolean) => void;
   selectedPublicationId: string;
   setSelectedPublicationId: (value: string) => void;
   selectedPublication: Publication;
@@ -122,6 +128,7 @@ export type EndorsementState = {
 
 export const useAppEndStore = create<EndorsementState>()(
   devtools((set) => ({
+    pds: {} as Pds,
     alert: { isOpen: false, page: 1 },
     modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
     action: '',
@@ -138,6 +145,7 @@ export const useAppEndStore = create<EndorsementState>()(
     isLoading: false,
     pendingPublicationList: [],
     fulfilledPublicationList: [],
+    showPds: false,
     publicationError: {
       errorFulfilledPublications: '',
       errorPendingPublications: '',
@@ -156,6 +164,15 @@ export const useAppEndStore = create<EndorsementState>()(
     selectedApplicantDetails: {} as ApplicantDetails,
 
     tab: 1,
+
+    setPds: (pds: Pds) => {
+      set((state) => ({ ...state, pds }));
+    },
+
+    setShowPds: (showPds: boolean) => {
+      set((state) => ({ ...state, showPds }));
+    },
+
     setAlert: (alert: AlertState) => {
       set((state) => ({ ...state, alert }));
     },
