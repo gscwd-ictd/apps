@@ -38,12 +38,13 @@ export const AppEndSelectApplicants = () => {
             className="text-sm font-medium text-indigo-700"
             onClick={() => setShowPds(!showPds)}
           >
-            {showPds ? 'Hide PDS' : 'Show PDS'}
+            {showPds ? 'Hide PDS Section' : 'Show PDS Section'}
           </button>
         </div>
       </div>
       <div className="flex grid w-full grid-cols-12 gap-5 border rounded-md border-gray-50">
         {/** FIRST SECTION */}
+
         <section className="w-full col-span-3">
           <div className="flex justify-end py-2 mb-1 text-sm">
             {applicantList.length > 0 ? (
@@ -67,6 +68,7 @@ export const AppEndSelectApplicants = () => {
             <AllApplicantsList />
           </div>
         </section>
+
         {/** SECOND SECTION */}
         <section
           className={`${
@@ -89,14 +91,16 @@ export const AppEndSelectApplicants = () => {
             </>
           )}
         </section>
+
         {/** THIRD SECTION */}
 
-        <section className="w-full h-[36rem] bg-gray-100 shadow-md rounded overflow-y-auto col-span-4">
-          {/** PDS COMPONENT */}
-          {showPds ? (
+        {showPds ? (
+          <section className="w-full h-[36rem] bg-gray-100 shadow-md rounded overflow-y-auto col-span-4">
+            {/** PDS COMPONENT */}
+
             <AppEndPds applicantDetails={selectedApplicantDetails} />
-          ) : null}
-        </section>
+          </section>
+        ) : null}
       </div>
     </>
   );

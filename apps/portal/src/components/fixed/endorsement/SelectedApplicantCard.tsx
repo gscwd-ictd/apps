@@ -19,7 +19,7 @@ export const SelectedApplicantCard = ({
         selectedApplicants.map((applicant, index: number) => {
           return (
             <div
-              className="p-5 my-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100"
+              className="p-5 mt-2 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100"
               key={index}
             >
               <div className="flex items-center justify-between">
