@@ -1,4 +1,4 @@
-import { HiEye, HiUserCircle } from 'react-icons/hi';
+import { HiUserCircle } from 'react-icons/hi';
 import { useAppEndStore } from '../../../store/endorsement.store';
 
 type SelectedApplicantCardProps = {
@@ -8,12 +8,10 @@ type SelectedApplicantCardProps = {
 export const SelectedApplicantCard = ({
   showPds,
 }: SelectedApplicantCardProps): JSX.Element => {
-  const { selectedApplicants, setSelectedApplicantDetails } = useAppEndStore(
-    (state) => ({
-      selectedApplicants: state.selectedApplicants,
-      setSelectedApplicantDetails: state.setSelectedApplicantDetails,
-    })
-  );
+  const { selectedApplicants } = useAppEndStore((state) => ({
+    selectedApplicants: state.selectedApplicants,
+    setSelectedApplicantDetails: state.setSelectedApplicantDetails,
+  }));
 
   return (
     <>
@@ -33,9 +31,9 @@ export const SelectedApplicantCard = ({
                     {applicant.applicantName}
                   </div>
                 </section>
-                <section>
+                {/* <section className="flex justify-end w-full">
                   {showPds ? (
-                    <div className="flex items-center justify-center w-12 h-10 rounded bg-indigo-50">
+                    <div className="flex items-center justify-center h-10 px-2 py-2 rounded w-max bg-indigo-50 ">
                       <button
                         onClick={() =>
                           setSelectedApplicantDetails({
@@ -44,11 +42,16 @@ export const SelectedApplicantCard = ({
                           })
                         }
                       >
-                        <HiEye className="w-6 h-6 text-indigo-500" />
+                        <div className="flex items-center w-full gap-2">
+                          <HiEye className="w-6 h-6 text-indigo-500" />
+                          <div className="text-xs text-indigo-400">
+                            View PDS
+                          </div>
+                        </div>
                       </button>
                     </div>
                   ) : null}
-                </section>
+                </section> */}
               </div>
             </div>
           );

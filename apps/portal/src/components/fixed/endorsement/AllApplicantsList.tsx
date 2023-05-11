@@ -16,7 +16,15 @@ export const AllApplicantsList = () => {
     (state) => state.setSelectedApplicants
   );
 
+  const showPds = useAppEndStore((state) => state.showPds);
+
+  const setShowPds = useAppEndStore((state) => state.setShowPds);
+
   const setApplicantList = useAppEndStore((state) => state.setApplicantList);
+
+  const setSelectedApplicantDetails = useAppEndStore(
+    (state) => state.setSelectedApplicantDetails
+  );
 
   // use swr
   const { data: swrApplicants } = useSWR(
@@ -81,23 +89,48 @@ export const AllApplicantsList = () => {
             return (
               <li
                 key={index}
-                onClick={() => onSelect(applicant.sequenceNo!)}
-                className="flex cursor-pointer items-center justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
+                className="flex w-full items-center pr-2 border-b border-l-[5px] border-b-gray-100 border-l-transparent hover:border-l-indigo-500 hover:bg-indigo-50"
               >
-                <div>
-                  <p className="font-medium text-gray-600">
-                    {applicant.applicantName}
-                  </p>
-                </div>
-                <input
-                  type="checkbox"
-                  onChange={() => (applicant: Applicant) => {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    applicant.state;
+                <div
+                  className="flex items-center justify-between w-full p-5 transition-colors ease-in-out cursor-pointer"
+                  key={index}
+                  onClick={() => {
+                    onSelect(applicant.sequenceNo!);
+                    // setSelectedApplicantDetails({
+                    //   applicantId: applicant.applicantId,
+                    //   applicantType: applicant.applicantType,
+                    // });
                   }}
-                  checked={applicant.state ? true : false}
-                  className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
-                />
+                >
+                  <div>
+                    <p className="font-medium text-gray-600">
+                      {applicant.applicantName}
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    onChange={() => (applicant: Applicant) => {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                      applicant.state;
+                    }}
+                    checked={applicant.state ? true : false}
+                    className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
+                  />
+                </div>
+                <div className="flex items-center justify-center text-indigo-400 border border-indigo-200 rounded h-7 bg-indigo-50 hover:bg-indigo-500 hover:text-white">
+                  <button
+                    className="w-[4rem] flex items-center justify-center"
+                    onClick={() => {
+                      setSelectedApplicantDetails({
+                        applicantId: applicant.applicantId,
+                        applicantType: applicant.applicantType,
+                      });
+                      setShowPds(true);
+                    }}
+                  >
+                    <div className="text-xs ">View PDS</div>
+                  </button>
+                </div>
               </li>
             );
           })}

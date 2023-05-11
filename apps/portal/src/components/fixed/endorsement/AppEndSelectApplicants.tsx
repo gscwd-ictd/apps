@@ -1,5 +1,3 @@
-import { isEmpty } from 'lodash';
-import { useState } from 'react';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { UndrawSelecting } from '../undraw/Selecting';
 import { AllApplicantsList } from './AllApplicantsList';
@@ -8,21 +6,21 @@ import { SelectedApplicantCard } from './SelectedApplicantCard';
 import { SelectedPublication } from './SelectedPublication';
 
 export const AppEndSelectApplicants = () => {
-  const selectedPublication = useAppEndStore(
-    (state) => state.selectedPublication
-  );
-
-  const selectedApplicants = useAppEndStore(
-    (state) => state.selectedApplicants
-  );
-
-  const selectedApplicantDetails = useAppEndStore(
-    (state) => state.selectedApplicantDetails
-  );
-
   const applicantList = useAppEndStore((state) => state.applicantList);
 
-  const [showPds, setShowPds] = useState<boolean>(false);
+  const {
+    showPds,
+    selectedPublication,
+    selectedApplicantDetails,
+    selectedApplicants,
+    setShowPds,
+  } = useAppEndStore((state) => ({
+    showPds: state.showPds,
+    setShowPds: state.setShowPds,
+    selectedApplicants: state.selectedApplicants,
+    selectedApplicantDetails: state.selectedApplicantDetails,
+    selectedPublication: state.selectedPublication,
+  }));
 
   return (
     <>
@@ -37,17 +35,17 @@ export const AppEndSelectApplicants = () => {
           <button
             type="button"
             tabIndex={-1}
-            className=""
+            className="text-sm font-medium text-indigo-700"
             onClick={() => setShowPds(!showPds)}
           >
             {showPds ? 'Hide PDS' : 'Show PDS'}
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-12 border rounded-md border-gray-50">
+      <div className="flex grid w-full grid-cols-12 gap-5 border rounded-md border-gray-50">
         {/** FIRST SECTION */}
         <section className="w-full col-span-3">
-          <div className="flex justify-end px-5 py-2 mb-1 text-sm">
+          <div className="flex justify-end py-2 mb-1 text-sm">
             {applicantList.length > 0 ? (
               <>
                 {' '}
@@ -92,12 +90,13 @@ export const AppEndSelectApplicants = () => {
           )}
         </section>
         {/** THIRD SECTION */}
-        {showPds && selectedApplicantDetails ? (
-          <section className="w-full h-[32rem] bg-gray-100 shadow-md rounded overflow-y-auto col-span-4">
-            {/** PDS COMPONENT */}
+
+        <section className="w-full h-[36rem] bg-gray-100 shadow-md rounded overflow-y-auto col-span-4">
+          {/** PDS COMPONENT */}
+          {showPds ? (
             <AppEndPds applicantDetails={selectedApplicantDetails} />
-          </section>
-        ) : null}
+          ) : null}
+        </section>
       </div>
     </>
   );

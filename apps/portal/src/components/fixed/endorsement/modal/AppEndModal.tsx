@@ -1,26 +1,35 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
+import { Pds } from 'apps/pds/src/store/pds.store';
 import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { AppEndModalController } from '../AppEndListController';
 
 const AppEndModal: FunctionComponent = () => {
   const {
     modal,
     alert,
+    showPds,
     selectedApplicants,
     setModal,
     setAlert,
     setAction,
     setSelectedApplicants,
+    setSelectedApplicantDetails,
+    setShowPds,
+    setPds,
   } = useAppEndStore((state) => ({
     modal: state.modal,
+    showPds: state.showPds,
     setModal: state.setModal,
     alert: state.alert,
     setAlert: state.setAlert,
     selectedApplicants: state.selectedApplicants,
     setAction: state.setAction,
     setSelectedApplicants: state.setSelectedApplicants,
+    setSelectedApplicantDetails: state.setSelectedApplicantDetails,
+    setShowPds: state.setShowPds,
+    setPds: state.setPds,
   }));
 
   // open the modal
@@ -38,19 +47,44 @@ const AppEndModal: FunctionComponent = () => {
     if (modal.page === 1) {
       setModal({ ...modal, isOpen: false });
     } else if (modal.page === 2) {
+      setSelectedApplicantDetails({});
+      setPds({} as Pds);
       setModal({ ...modal, page: 1 });
+      setShowPds(false);
       setSelectedApplicants([]);
     } else if (modal.page === 3) {
+      setSelectedApplicantDetails({});
+      setPds({} as Pds);
       setModal({ ...modal, page: 1 });
+      setShowPds(false);
       setAction('');
     }
   };
+
+  useEffect(() => {
+    if (modal.isOpen === false) {
+      setShowPds(false);
+      setPds({} as Pds);
+    }
+  }, [modal]);
 
   return (
     <Modal
       open={modal.isOpen}
       setOpen={openModal}
-      size={modal.page === 1 ? 'lg' : modal.page === 3 ? 'lg' : 'full'}
+      size={
+        modal.page === 1
+          ? 'lg'
+          : modal.page === 2 && !showPds
+          ? 'full'
+          : modal.page === 2 && showPds
+          ? 'full'
+          : modal.page === 3 && !showPds
+          ? 'md'
+          : modal.page === 3 && showPds
+          ? 'lg'
+          : 'md'
+      }
       steady
     >
       <Modal.Header>
@@ -59,15 +93,17 @@ const AppEndModal: FunctionComponent = () => {
             <h3 className="text-xl font-semibold text-gray-700">
               {modal.page === 1
                 ? 'Applicant Endorsement'
+                : modal.page === 2
+                ? 'Endorsed Applicants'
                 : modal.page === 3
                 ? 'Endorsement Summary'
                 : null}
             </h3>
-            <p>
-              {modal.page == 1
+            <p className="text-gray-500">
+              {modal.page === 1
                 ? 'Select an endorsement'
                 : modal.page === 2
-                ? 'Select applicant(s)'
+                ? 'Select from the list of endorsed applicants'
                 : null}
             </p>
           </div>
