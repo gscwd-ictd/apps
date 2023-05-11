@@ -21,7 +21,7 @@ type PublicationError = {
 
 type PublicationShortList = Pick<Publication, 'vppId'> & PostingApplicantId;
 
-type ApplicantDetails = Pick<Applicant, 'postingApplicantId' | 'applicantType'>;
+type ApplicantDetails = Pick<Applicant, 'applicantId' | 'applicantType'>;
 
 type PublicationResponse = {
   updateResponse: Array<PublicationShortList>;

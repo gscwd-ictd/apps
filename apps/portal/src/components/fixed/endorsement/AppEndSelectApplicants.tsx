@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useState } from 'react';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { UndrawSelecting } from '../undraw/Selecting';
@@ -91,7 +92,7 @@ export const AppEndSelectApplicants = () => {
           )}
         </section>
         {/** THIRD SECTION */}
-        {showPds ? (
+        {showPds && selectedApplicantDetails ? (
           <section className="w-full h-[32rem] bg-gray-100 shadow-md rounded overflow-y-auto col-span-4">
             {/** PDS COMPONENT */}
             <AppEndPds applicantDetails={selectedApplicantDetails} />

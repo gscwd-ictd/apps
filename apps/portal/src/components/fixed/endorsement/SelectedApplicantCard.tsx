@@ -39,7 +39,7 @@ export const SelectedApplicantCard = ({
                       <button
                         onClick={() =>
                           setSelectedApplicantDetails({
-                            postingApplicantId: applicant.postingApplicantId,
+                            applicantId: applicant.applicantId,
                             applicantType: applicant.applicantType,
                           })
                         }
