@@ -89,7 +89,7 @@ export const AllApplicantsList = () => {
             return (
               <li
                 key={index}
-                className="flex w-full items-center pr-2 border-b border-l-[5px] border-b-gray-100 border-l-transparent hover:border-l-indigo-500 hover:bg-indigo-50"
+                className="flex w-full py-3 items-center pr-2 border-b border-l-[5px] border-b-gray-100 border-l-transparent hover:border-l-indigo-500 hover:bg-indigo-50"
               >
                 <div
                   className="flex items-center justify-between w-full p-5 transition-colors ease-in-out cursor-pointer"
