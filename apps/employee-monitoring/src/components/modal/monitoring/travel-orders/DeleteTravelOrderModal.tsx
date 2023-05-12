@@ -41,10 +41,10 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
 
   const onSubmit: SubmitHandler<TravelOrder> = () => {
     if (!isEmpty(rowData.id)) {
-      // DeleteTravelOrder();
+      DeleteTravelOrder();
 
-      // handleDeleteResult();
-      console.log(rowData.id);
+      handleDeleteResult();
+      // console.log(rowData.id);
     }
   };
 
@@ -79,9 +79,9 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
           <form onSubmit={handleSubmit(onSubmit)} id="deleteTravelOrderForm">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
-                <p className="px-2 mt-5 text-md font-medium text-center text-gray-600">
+                <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
                   Are you sure you want to delete entry
-                  <span className="px-2 text-md text-center font-bold">
+                  <span className="px-2 font-bold text-center text-md">
                     {JSON.stringify(rowData.travelOrderNo)}
                   </span>
                   ?

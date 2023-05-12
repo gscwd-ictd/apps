@@ -221,6 +221,7 @@ export default function Index() {
   useEffect(() => {
     // success
     if (!isEmpty(swrPassSlips)) {
+      console.log(swrPassSlips.data);
       getPassSlipsSuccess(swrPassSlips.data);
     }
 

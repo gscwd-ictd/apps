@@ -3,16 +3,20 @@ import { EmployeeAsOption } from './employee.type';
 export type TravelOrder = {
   id: string;
   employee: EmployeeAsOption;
+  // employeeId: string;
   travelOrderNo: string;
   purposeOfTravel: string;
+  dateFrom: string;
+  dateTo: string;
+  itinerary: Array<Itinerary>;
   dateRequested: string;
-  itineraryOfTravel: Array<Itinerary>;
+  isPtrRequired: boolean;
 };
 
 export type Itinerary = {
   id?: string;
-  scheduledDate: string;
-  scheduledPlace: string;
+  scheduleDate: string;
+  schedulePlace: string;
 };
 
 export type TravelOrderForm = Omit<TravelOrder, 'employee'> & {

@@ -41,7 +41,7 @@ export default function Toggle({
           <span
             className={`${
               enabled ? 'translate-x-6' : 'translate-x-1'
-            }  inline-block h-4 w-4 transform rounded-full bg-white transition`}
+            }  inline-block items-center h-4 w-4 transform rounded-full bg-white transition`}
           />
         </Switch>
         <Switch.Label className="text-xs font-medium text-gray-900 hover:cursor-pointer">
