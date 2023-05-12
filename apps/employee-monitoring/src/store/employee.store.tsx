@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import {

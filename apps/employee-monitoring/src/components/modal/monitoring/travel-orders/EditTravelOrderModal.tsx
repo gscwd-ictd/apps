@@ -7,13 +7,17 @@ import { isEmpty } from 'lodash';
 import {
   getEmpMonitoring,
   patchEmpMonitoring,
+  putEmpMonitoring,
 } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import {
   TravelOrder,
   TravelOrderForm,
 } from 'libs/utils/src/lib/types/travel-order.type';
-import { EmployeeAsOption } from 'libs/utils/src/lib/types/employee.type';
+import {
+  EmployeeAsOption,
+  EmployeeProfile,
+} from 'libs/utils/src/lib/types/employee.type';
 import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 
@@ -26,15 +30,9 @@ import {
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
-
-// Mock data REMOVE later
-const TypesMockData: Array<EmployeeAsOption> = [
-  { employeeId: '001', fullName: 'Allyn Cubero' },
-  { employeeId: '002', fullName: 'Alexis Aponesto' },
-  { employeeId: '003', fullName: 'Ricardo Vicente Supremo' },
-  { employeeId: '004', fullName: 'Mikhail Sebua' },
-  { employeeId: '005', fullName: 'Eric Sison' },
-];
+import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
+import { getHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
+import Toggle from '../../../switch/Toggle';
 
 type EditModalProps = {
   modalState: boolean;
@@ -46,10 +44,30 @@ type EditModalProps = {
 enum TravelOrderKeys {
   EMPLOYEE = 'employee',
   TRAVEL_NO = 'travelOrderNo',
-  PURPOSE_OF_TRAVEL = 'purposeOfTravel',
   DATE_REQUESTED = 'dateRequested',
-  ITINERARY = 'itineraryOfTravel',
+  PURPOSE_OF_TRAVEL = 'purposeOfTravel',
+  DATE_FROM = 'dateFrom',
+  DATE_TO = 'dateTo',
+  ITINERARY = 'itinerary',
+  IS_PTR_REQUIRED = 'isPtrRequired',
 }
+
+// yup error handling initialization
+const yupSchema = yup
+  .object({
+    travelOrderNo: yup.string().required('Travel Order No is required'),
+    employee: yup
+      .object()
+      .shape({ employeeId: yup.string().required('Employee is required') }),
+    dateRequested: yup.string().required('Date requested is required'),
+    itinerary: yup.array().of(
+      yup.object().shape({
+        scheduleDate: yup.string().required('Date of visit is required'),
+        schedulePlace: yup.string().required('Place of visit is required'),
+      })
+    ),
+  })
+  .required();
 
 const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
   modalState,
@@ -64,18 +82,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
   // value from combobox input
   const [employeeQuery, setEmployeeQuery] = useState('');
 
-  // filter employee list based on query value
-  const filteredEmployee =
-    employeeQuery === ''
-      ? TypesMockData
-      : // ? EmployeeAsOptions
-        TypesMockData.filter((employee) =>
-          // : EmployeeAsOptions.filter((employee) =>
-          employee.fullName
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(employeeQuery.toLowerCase().replace(/\s+/g, ''))
-        );
+  const [isPtrRequired, setIsPtrRequired] = useState<boolean>(false);
 
   // zustand store initialization for travel order
   const {
@@ -86,7 +93,6 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     UpdateTravelOrderFail,
   } = useTravelOrderStore((state) => ({
     IsLoading: state.loading.loadingTravelOrder,
-
     UpdateTravelOrder: state.updateTravelOrder,
     UpdateTravelOrderSuccess: state.updateTravelOrderSuccess,
     UpdateTravelOrderFail: state.updateTravelOrderFail,
@@ -111,20 +117,18 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     GetEmployeeAsOptionsFail: state.getEmployeeAsOptionsFail,
   }));
 
-  // yup error handling initialization
-  const yupSchema = yup
-    .object({
-      travelOrderNo: yup.string().required('Travel Order No is required'),
-      employeeId: yup.string().required('Employee is required'),
-      dateRequested: yup.string().required('Date requested is required'),
-      itineraryOfTravel: yup.array().of(
-        yup.object().shape({
-          scheduledDate: yup.string().required('Date of visit is required'),
-          scheduledPlace: yup.string().required('Place of visit is required'),
-        })
-      ),
-    })
-    .required();
+  // filter employee list based on query value
+  const filteredEmployee =
+    employeeQuery === ''
+      ? EmployeeAsOptions
+      : // ? EmployeeAsOptions
+        EmployeeAsOptions.filter((employee) =>
+          // : EmployeeAsOptions.filter((employee) =>
+          employee.fullName
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .includes(employeeQuery.toLowerCase().replace(/\s+/g, ''))
+        );
 
   // React hook form
   const {
@@ -136,7 +140,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     clearErrors,
     getValues,
     formState: { errors },
-  } = useForm<TravelOrderForm>({
+  } = useForm<TravelOrder>({
     mode: 'onChange',
 
     resolver: yupResolver(yupSchema),
@@ -145,20 +149,20 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
   // dynamic fields in the itinerary
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'itineraryOfTravel',
+    name: 'itinerary',
   });
 
   // form submission
-  const onSubmit: SubmitHandler<TravelOrderForm> = (data: TravelOrderForm) => {
+  const onSubmit: SubmitHandler<TravelOrder> = (data: TravelOrder) => {
     // set loading to true
-    // UpdateTravelOrder();
 
-    // handlePatchResult(data);
-    console.log(data);
+    UpdateTravelOrder();
+
+    handlePatchResult(data);
   };
 
-  const handlePatchResult = async (data: TravelOrderForm) => {
-    const { error, result } = await patchEmpMonitoring('/travel-order', data);
+  const handlePatchResult = async (data: TravelOrder) => {
+    const { error, result } = await putEmpMonitoring('/travel-order', data);
 
     if (error) {
       UpdateTravelOrderFail(result);
@@ -172,20 +176,33 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
 
   // asynchronous request to fetch employee list
   const fetchEmployeeList = async () => {
-    const { error, result } = await getEmpMonitoring('/employee');
+    const { error, result } = await getHRIS('/employees');
 
     if (error) {
       GetEmployeeAsOptionsFail(result);
     } else {
-      GetEmployeeAsOptionsSuccess(result);
+      const employeesDetails: Array<EmployeeAsOption> = result.map(
+        (employeeDetails: EmployeeProfile) => {
+          const { employmentDetails, personalDetails } = employeeDetails;
+
+          return {
+            employeeId: employmentDetails.employeeId,
+            fullName: personalDetails.fullName,
+            assignment: employmentDetails.assignment,
+            positionTitle: employmentDetails.positionTitle,
+          };
+        }
+      );
+
+      GetEmployeeAsOptionsSuccess(employeesDetails);
     }
   };
 
   // If modal is open, set action to fetch for employee list
   useEffect(() => {
     if (modalState) {
-      // fetchEmployeeList();
-      // GetEmployeeAsOptions();
+      fetchEmployeeList();
+      GetEmployeeAsOptions();
     } else {
       reset();
       setSelectedEmployee({} as EmployeeAsOption);
@@ -194,28 +211,42 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
 
   // Set employeeId value upon change on selectedEmployee state
   useEffect(() => {
-    // console.log(selectedEmployee);
     if (!isEmpty(selectedEmployee)) {
-      setValue('employeeId', selectedEmployee.employeeId);
-      clearErrors('employeeId');
+      setValue('employee.employeeId', selectedEmployee.employeeId);
+      setValue('employee.fullName', selectedEmployee.fullName);
+      clearErrors('employee');
     }
   }, [selectedEmployee]);
 
   // Set default values in the form
+
   useEffect(() => {
-    if (!isEmpty(rowData)) {
+    if (modalState === true && !isEmpty(rowData)) {
       const keys = Object.keys(rowData);
 
       // traverse to each object and setValue
       keys.forEach((key: TravelOrderKeys) => {
         if (key === 'employee') {
-          setValue('employeeId', rowData[key].employeeId, {
+          setValue('employee.employeeId', rowData[key].employeeId, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+          setValue('employee.fullName', rowData[key].fullName, {
             shouldValidate: true,
             shouldDirty: true,
           });
 
           // set local state of select field
           setSelectedEmployee(rowData[key]);
+        } else if (key === 'dateFrom') {
+          setValue('dateFrom', ConvertFullMonthNameToDigit(rowData[key]));
+        } else if (key === 'dateTo') {
+          setValue('dateTo', ConvertFullMonthNameToDigit(rowData[key]));
+        } else if (key === 'dateRequested') {
+          setValue('dateRequested', ConvertFullMonthNameToDigit(rowData[key]));
+        } else if (key === 'isPtrRequired') {
+          setValue('isPtrRequired', Boolean(rowData[key]));
+          setIsPtrRequired(Boolean(rowData[key]));
         } else {
           setValue(key, rowData[key], {
             shouldValidate: true,
@@ -225,14 +256,18 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
       });
       setValue('deleted', []);
     }
-  }, [rowData]);
+  }, [rowData, modalState]);
+
+  useEffect(() => {
+    setValue('isPtrRequired', isPtrRequired);
+  }, [isPtrRequired]);
 
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600"></span>
+            <span className="text-2xl text-gray-600">Edit Travel Order</span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -268,7 +303,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                   />
                 </div>
 
-                {/* Date requested input */}
+                {/* Date Requested */}
                 <div className="mb-6">
                   <LabelInput
                     id={'dateRequested'}
@@ -281,110 +316,156 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                 </div>
               </div>
 
-              {/* Employee select input */}
-              <div className="mb-6">
-                <label
-                  htmlFor="countries"
-                  className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                >
-                  Employee
-                </label>
-                <Combobox
-                  value={selectedEmployee}
-                  onChange={setSelectedEmployee}
-                  disabled={IsLoadingEAO ? true : false}
-                >
-                  <div className="relative mt-1">
-                    <div className="relative w-full overflow-hidden text-left bg-white rounded-lg cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-                      <Combobox.Input
-                        className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
+              <div className="grid md:grid-cols-2 md:gap-6">
+                {/** Employee */}
+                <div className="z-20 mb-6">
+                  <label
+                    htmlFor="countries"
+                    className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
+                  >
+                    Employee
+                  </label>
+                  <Combobox
+                    value={selectedEmployee}
+                    onChange={setSelectedEmployee}
+                    disabled={IsLoadingEAO ? true : false}
+                  >
+                    <div className="relative mt-1">
+                      <div className="relative w-full overflow-hidden text-left bg-white rounded-lg cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                        <Combobox.Input
+                          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
                         block p-2.5
                         bg-gray-50 border ${
-                          errors.employeeId
+                          errors.employee
                             ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
                             : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         }`}
-                        displayValue={(selectedEmployee: EmployeeAsOption) =>
-                          selectedEmployee.fullName
-                        }
-                        onChange={(event) => {
-                          setEmployeeQuery(event.target.value);
-                        }}
-                      />
-                      <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                        {IsLoadingEAO ? (
-                          <LoadingSpinner size="xs" />
-                        ) : (
-                          <ChevronDownIcon
-                            className="w-5 h-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </Combobox.Button>
-                    </div>
+                          displayValue={(selectedEmployee: EmployeeAsOption) =>
+                            selectedEmployee.fullName
+                          }
+                          onChange={(event) => {
+                            setEmployeeQuery(event.target.value);
+                          }}
+                        />
+                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                          {IsLoadingEAO ? (
+                            <LoadingSpinner size="xs" />
+                          ) : (
+                            <ChevronDownIcon
+                              className="w-5 h-5 text-gray-400"
+                              aria-hidden="true"
+                            />
+                          )}
+                        </Combobox.Button>
+                      </div>
 
-                    <Transition
-                      as={Fragment}
-                      leave="transition ease-in duration-100"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
-                      afterLeave={() => setEmployeeQuery('')}
-                    >
-                      <Combobox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-30 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                        {filteredEmployee.length === 0 &&
-                        employeeQuery !== '' ? (
-                          <div className="relative px-4 py-2 text-gray-700 cursor-default select-none">
-                            Nothing found.
-                          </div>
-                        ) : (
-                          filteredEmployee.map((employee) => (
-                            <Combobox.Option
-                              key={employee.employeeId}
-                              className={({ active }) =>
-                                `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                  active
-                                    ? 'bg-gray-500 text-white'
-                                    : 'text-gray-900'
-                                }`
-                              }
-                              value={employee}
-                            >
-                              {({ selected, active }) => (
-                                <>
-                                  <span
-                                    className={`block truncate ${
-                                      selected ? 'text-sm' : 'text-xs'
-                                    }`}
-                                  >
-                                    {employee.fullName}
-                                  </span>
-
-                                  {selected ? (
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                        afterLeave={() => setEmployeeQuery('')}
+                      >
+                        <Combobox.Options
+                          className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-30 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm
+                        max-h-[14rem]"
+                        >
+                          {filteredEmployee.length === 0 &&
+                          employeeQuery !== '' ? (
+                            <div className="relative px-4 py-2 text-gray-700 cursor-default select-none">
+                              Nothing found.
+                            </div>
+                          ) : (
+                            filteredEmployee.map((employee) => (
+                              <Combobox.Option
+                                key={employee.employeeId}
+                                className={({ active }) =>
+                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                    active
+                                      ? 'bg-gray-500 text-white'
+                                      : 'text-gray-900'
+                                  }`
+                                }
+                                value={employee}
+                              >
+                                {({ selected, active }) => (
+                                  <>
                                     <span
-                                      className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                        active ? 'text-white' : 'text-blue-400'
+                                      className={`block truncate ${
+                                        selected ? 'text-sm' : 'text-xs'
                                       }`}
                                     >
-                                      <CheckIcon
-                                        className="w-5 h-5"
-                                        aria-hidden="true"
-                                      />
+                                      {employee.fullName}
                                     </span>
-                                  ) : null}
-                                </>
-                              )}
-                            </Combobox.Option>
-                          ))
-                        )}
-                      </Combobox.Options>
-                    </Transition>
-                  </div>
-                </Combobox>
-                {errors.employeeId ? (
-                  <div className="mt-1 text-xs text-red-400">
-                    {errors.employeeId?.message}
-                  </div>
-                ) : null}
+
+                                    {selected ? (
+                                      <span
+                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                          active
+                                            ? 'text-white'
+                                            : 'text-blue-400'
+                                        }`}
+                                      >
+                                        <CheckIcon
+                                          className="w-5 h-5"
+                                          aria-hidden="true"
+                                        />
+                                      </span>
+                                    ) : null}
+                                  </>
+                                )}
+                              </Combobox.Option>
+                            ))
+                          )}
+                        </Combobox.Options>
+                      </Transition>
+                    </div>
+                  </Combobox>
+                  {errors.employee ? (
+                    <div className="mt-1 text-xs text-red-400">
+                      {errors.employee?.message}
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="mb-6">
+                  <LabelInput
+                    id={'purposeOfTravel'}
+                    label={'Purpose of Travel'}
+                    type="text"
+                    controller={{ ...register('purposeOfTravel') }}
+                    isError={errors.purposeOfTravel ? true : false}
+                    errorMessage={errors.purposeOfTravel?.message}
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 md:gap-6">
+                {/* Date From*/}
+                <div className="mb-6">
+                  <LabelInput
+                    id={'dateFrom'}
+                    label={'Date From'}
+                    type="date"
+                    controller={{ ...register('dateFrom') }}
+                    isError={errors.dateFrom ? true : false}
+                    errorMessage={errors.dateFrom?.message}
+                    disabled={true}
+                  />
+                </div>
+
+                {/* Date To*/}
+                <div className="mb-6">
+                  <LabelInput
+                    id={'dateTo'}
+                    label={'Date To'}
+                    type="date"
+                    controller={{ ...register('dateTo') }}
+                    isError={errors.dateTo ? true : false}
+                    errorMessage={errors.dateTo?.message}
+                    disabled={true}
+                  />
+                </div>
               </div>
 
               {/* Itinerary dynamic fields */}
@@ -398,69 +479,52 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                       className="grid pb-1 md:grid-cols-11 md:gap-3"
                       key={item.id}
                     >
-                      {/* Date of visit */}
                       <div className="col-span-5">
                         <input
                           type="date"
                           className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
                           block p-2.5
                           bg-gray-50 border ${
-                            errors?.itineraryOfTravel?.[index]?.scheduledDate
+                            errors?.itinerary?.[index]?.scheduleDate
                               ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
                               : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                           }`}
-                          {...register(
-                            `itineraryOfTravel.${index}.scheduledDate`
-                          )}
+                          {...register(`itinerary.${index}.scheduleDate`)}
                         />
-                        {errors?.itineraryOfTravel?.[index]?.scheduledDate ? (
+                        {errors?.itinerary?.[index]?.scheduleDate ? (
                           <div className="mt-1 text-xs text-red-400">
-                            {
-                              errors?.itineraryOfTravel?.[index]?.scheduledDate
-                                ?.message
-                            }
+                            {errors?.itinerary?.[index]?.scheduleDate?.message}
                           </div>
                         ) : null}
                       </div>
 
-                      {/* Place to visit  */}
                       <div className="col-span-5">
                         <input
                           type="text"
                           className={`col-span-5 rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
                         block p-2.5
                         bg-gray-50 border ${
-                          errors?.itineraryOfTravel?.[index]?.scheduledPlace
+                          errors?.itinerary?.[index]?.schedulePlace
                             ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
                             : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                         }`}
                           placeholder="Place"
-                          {...register(
-                            `itineraryOfTravel.${index}.scheduledPlace`
-                          )}
+                          {...register(`itinerary.${index}.schedulePlace`)}
                         />
 
-                        {errors?.itineraryOfTravel?.[index]?.scheduledPlace ? (
+                        {errors?.itinerary?.[index]?.schedulePlace ? (
                           <div className="mt-1 text-xs text-red-400">
-                            {
-                              errors?.itineraryOfTravel?.[index]?.scheduledPlace
-                                ?.message
-                            }
+                            {errors?.itinerary?.[index]?.schedulePlace?.message}
                           </div>
                         ) : null}
                       </div>
 
-                      {/* Add or Remove button */}
                       {index === 0 ? (
                         <Button
                           variant="info"
                           type="button"
                           onClick={() => {
-                            append({
-                              id: '',
-                              scheduledDate: '',
-                              scheduledPlace: '',
-                            });
+                            append({ scheduleDate: '', schedulePlace: '' });
                           }}
                         >
                           <i className="bx bx-plus"></i>
@@ -469,18 +533,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                         <Button
                           variant="danger"
                           type="button"
-                          onClick={() => {
-                            if (
-                              getValues(`itineraryOfTravel.${index}.id`) !== ''
-                            ) {
-                              setValue('deleted', [
-                                ...getValues('deleted'),
-                                getValues(`itineraryOfTravel.${index}.id`),
-                              ]);
-                            }
-
-                            remove(index);
-                          }}
+                          onClick={() => remove(index)}
                         >
                           <i className="bx bx-minus"></i>
                         </Button>
@@ -488,6 +541,42 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                     </div>
                   );
                 })}
+              </div>
+
+              {/* IS PTR Required */}
+              <div className="flex items-center gap-2 mb-6 text-start">
+                <Toggle
+                  labelPosition="right"
+                  enabled={isPtrRequired}
+                  setEnabled={setIsPtrRequired}
+                  label={'Post-training report required: '}
+                  disabled={IsLoading ? true : false}
+                />
+                <div
+                  className={`text-xs items-center ${
+                    isPtrRequired ? 'text-blue-400' : 'text-gray-400'
+                  }`}
+                >
+                  {isPtrRequired ? (
+                    <button
+                      onClick={() => setIsPtrRequired((prev) => !prev)}
+                      className="underline "
+                      type="button"
+                      disabled={IsLoading ? true : false}
+                    >
+                      <span>Yes</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsPtrRequired((prev) => !prev)}
+                      className="underline"
+                      type="button"
+                      disabled={IsLoading ? true : false}
+                    >
+                      <span>No</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </form>
           </div>

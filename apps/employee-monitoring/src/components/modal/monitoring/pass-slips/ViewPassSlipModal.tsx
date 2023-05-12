@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Modal } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
@@ -25,6 +26,8 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
           <div className="flex gap-1 px-5 text-lg font-medium text-gray-700">
             {rowData.status === PassSlipStatus.ONGOING
               ? 'Ongoing'
+              : rowData.status === PassSlipStatus.FOR_APPROVAL
+              ? 'For Approval'
               : rowData.status === PassSlipStatus.APPROVED
               ? 'Completed'
               : rowData.status === PassSlipStatus.DISAPPROVED
@@ -98,6 +101,8 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                 alertType={
                   rowData.status === PassSlipStatus.ONGOING
                     ? 'warning'
+                    : rowData.status === PassSlipStatus.FOR_APPROVAL
+                    ? 'warning'
                     : rowData.status === PassSlipStatus.APPROVED
                     ? 'success'
                     : rowData.status === PassSlipStatus.DISAPPROVED
@@ -108,9 +113,11 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                 }
                 notifMessage={
                   rowData.status === PassSlipStatus.ONGOING
-                    ? 'Awaiting Supervisor Approval'
+                    ? 'Pass Slip is being used as of the moment'
                     : rowData.status === PassSlipStatus.APPROVED
                     ? 'Approved'
+                    : rowData.status === PassSlipStatus.FOR_APPROVAL
+                    ? 'Awaiting Supervisor Approval'
                     : rowData.status === PassSlipStatus.DISAPPROVED
                     ? 'Disapproved'
                     : rowData.status === PassSlipStatus.CANCELLED

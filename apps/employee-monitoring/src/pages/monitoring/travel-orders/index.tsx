@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
@@ -19,76 +20,7 @@ import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import AddTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/AddTravelOrderModal';
 import DeleteTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/DeleteTravelOrderModal';
 import EditTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/EditTravelOrderModal';
-
-// Mock Data REMOVE later
-const TypesMockData: Array<TravelOrder> = [
-  {
-    id: 'travelorder001',
-    employee: {
-      employeeId: '001',
-      fullName: 'Allyn Cubero',
-    },
-    travelOrderNo: '2023-001',
-    purposeOfTravel: 'Sample purpose of travel',
-    dateRequested: '2023-04-10',
-    itineraryOfTravel: [
-      {
-        id: 'itinerary001',
-        scheduledDate: '2023-04-20',
-        scheduledPlace: 'Place 1',
-      },
-    ],
-  },
-  {
-    id: 'travelorder002',
-    employee: {
-      employeeId: '002',
-      fullName: 'Alexis Aponesto',
-    },
-    travelOrderNo: '2023-002',
-    purposeOfTravel: 'Sample purpose of travel',
-    dateRequested: '2023-04-11',
-    itineraryOfTravel: [
-      {
-        id: 'itinerary001',
-        scheduledDate: '2023-04-21',
-        scheduledPlace: 'Place 1',
-      },
-      {
-        id: 'itinerary002',
-        scheduledDate: '2023-04-22',
-        scheduledPlace: 'Place 2',
-      },
-      {
-        id: 'itinerary003',
-        scheduledDate: '2023-04-23',
-        scheduledPlace: 'Place 3',
-      },
-    ],
-  },
-  {
-    id: 'travelorder003',
-    employee: {
-      employeeId: '003',
-      fullName: 'Ricardo Vicente Supremo',
-    },
-    travelOrderNo: '2023-003',
-    purposeOfTravel: 'Sample purpose of travel',
-    dateRequested: '2023-04-11',
-    itineraryOfTravel: [
-      {
-        id: 'itinerary001',
-        scheduledDate: '2023-04-21',
-        scheduledPlace: 'Place 1',
-      },
-      {
-        id: 'itinerary002',
-        scheduledDate: '2023-04-22',
-        scheduledPlace: 'Place 2',
-      },
-    ],
-  },
-];
+import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -166,9 +98,21 @@ const Index = () => {
       header: 'Employee Name',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('dateRequested', {
-      header: 'Date',
+
+    columnHelper.accessor('purposeOfTravel', {
+      enableSorting: false,
+      header: 'Purpose of Travel',
       cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('dateFrom', {
+      header: 'Date From',
+      cell: (info) => ConvertFullMonthNameToDigit(info.getValue()),
+      enableColumnFilter: false,
+    }),
+
+    columnHelper.accessor('dateTo', {
+      header: 'Date To',
+      cell: (info) => ConvertFullMonthNameToDigit(info.getValue()),
       enableColumnFilter: false,
     }),
     columnHelper.display({
@@ -214,7 +158,8 @@ const Index = () => {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: TypesMockData,
+    // data: TypesMockData,
+    data: TravelOrders,
     columnVisibility: { id: false },
   });
 
@@ -228,6 +173,7 @@ const Index = () => {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTravelOrder)) {
+      console.log(swrTravelOrder.data);
       GetTravelOrdersSuccess(swrIsLoading, swrTravelOrder.data);
     }
 

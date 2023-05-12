@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Button, DataTable, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
