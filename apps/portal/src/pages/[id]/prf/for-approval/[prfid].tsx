@@ -15,17 +15,22 @@ import {
   getEmployeeDetailsFromHr,
   getEmployeeProfile,
 } from '../../../../utils/helpers/http-requests/employee-requests';
-import { getPrfById } from '../../../../utils/helpers/prf.requests';
+import { approvePrf, getPrfById } from '../../../../utils/helpers/prf.requests';
 import {
   EmployeeDetailsPrf,
   EmployeeProfile,
   employeeDummy,
 } from '../../../../types/employee.type';
-import { Position, PrfDetailsForApproval } from '../../../../types/prf.types';
+import {
+  Position,
+  PrfDetailsForApproval,
+  PrfStatus,
+} from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../../src/utils/helpers/session';
-import { OtpModal } from '@gscwd-apps/oneui';
+import { Modal, OtpModal } from '@gscwd-apps/oneui';
 import { PrfOtpContents } from '../../../../../src/components/fixed/prf/prfOtp/PrfOtpContents';
 import { usePrfStore } from '../../../../../src/store/prf.store';
+import { useState } from 'react';
 
 type ForApprovalProps = {
   profile: EmployeeProfile;
@@ -44,9 +49,19 @@ export default function ForApproval({
   }));
 
   const router = useRouter();
+  const [isDeclineModalOpen, setIsDeclineModalOpen] = useState<boolean>(false);
+  const [remarks, setRemarks] = useState<string>('');
 
   const handleOtpModal = () => {
     setPrfOtpModalIsOpen(true);
+  };
+  const handleDecline = () => {
+    approvePrf(
+      `${router.query.prfid}`,
+      PrfStatus.DISAPPROVED,
+      employee.userId,
+      remarks
+    );
   };
 
   return (
@@ -68,6 +83,56 @@ export default function ForApproval({
           remarks={''}
         />
       </OtpModal>
+
+      <Modal
+        size={'sm'}
+        open={isDeclineModalOpen}
+        setOpen={setIsDeclineModalOpen}
+      >
+        <Modal.Header>
+          <h3 className="font-semibold text-xl text-gray-700">
+            <div className="px-5 flex justify-between">
+              <span>Decline Position Request</span>
+            </div>
+          </h3>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="w-full h-full flex flex-col gap-2 text-md ">
+            {'Please indicate reason for declining this position request:'}
+            <form id="declinePrfForm">
+              <textarea
+                required
+                placeholder="Reason for decline"
+                className={`
+                        w-full h-32 p-2 border resize-none
+                    `}
+                onChange={(e) =>
+                  setRemarks(e.target.value as unknown as string)
+                }
+              ></textarea>
+            </form>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end gap-2">
+            <div className="min-w-[6rem] max-w-auto flex gap-4">
+              <Button
+                form="declinePrfForm"
+                variant={'primary'}
+                onClick={(e) => handleDecline()}
+                btnLabel={'Submit'}
+              ></Button>
+              <Button
+                variant={'danger'}
+                onClick={() => {
+                  setIsDeclineModalOpen(false);
+                }}
+                btnLabel={'Cancel'}
+              ></Button>
+            </div>
+          </div>
+        </Modal.Footer>
+      </Modal>
 
       <div className="flex flex-col w-screen h-screen py-10 overflow-hidden px-36">
         <button
@@ -123,7 +188,7 @@ export default function ForApproval({
                 )}
               </section>
 
-              <section className="mt-10">
+              <section className="mt-10 flex flex-col gap-2">
                 <Button
                   btnLabel={'Approve Request'}
                   fluid
@@ -134,10 +199,13 @@ export default function ForApproval({
                 />
                 <Button
                   btnLabel={'Disapprove Request'}
+                  variant="danger"
                   fluid
                   strong
                   // eslint-disable-next-line @typescript-eslint/no-empty-function
-                  onClick={() => {}}
+                  onClick={() => {
+                    setIsDeclineModalOpen(true);
+                  }}
                 />
               </section>
             </aside>
@@ -202,11 +270,11 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     // console.log(context.query.prfid);
     try {
-      // const employee = await getEmployeeDetailsFromHr(context);
-      // const profile = await getEmployeeProfile(employee.userId);
+      const employee = await getEmployeeDetailsFromHr(context);
+      const profile = await getEmployeeProfile(employee.userId);
 
-      const employee = employeeDummy;
-      const profile = await getEmployeeProfile(employee.user._id);
+      // const employee = employeeDummy;
+      // const profile = await getEmployeeProfile(employee.user._id);
 
       // get prf details
       const prfDetails = await getPrfById(`${context.query.prfid}`, context);

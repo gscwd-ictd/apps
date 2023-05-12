@@ -164,12 +164,12 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     // console.log(context.query.prfid);
 
     try {
-      // const employee = await getEmployeeDetailsFromHr(context);
+      const employee = await getEmployeeDetailsFromHr(context);
 
-      // const profile = await getEmployeeProfile(employee.userId);
+      const profile = await getEmployeeProfile(employee.userId);
 
-      const employee = employeeDummy;
-      const profile = await getEmployeeProfile(employee.user._id);
+      // const employee = employeeDummy;
+      // const profile = await getEmployeeProfile(employee.user._id);
 
       // get prf details
       const prfDetails = await getPrfById(`${context.query.prfid}`, context);

@@ -240,8 +240,8 @@ export default function Prf({
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async () => {
-    // const employee = getUserDetails();
-    const employee = employeeDummy;
+    const employee = getUserDetails();
+    // const employee = employeeDummy;
     // get user details
     //const user = await getUserDetails(employee.userId);
 
