@@ -1,7 +1,11 @@
+import { getOtpSms } from '../../../../src/utils/helpers/http-requests/sms-requests';
 import { add, format } from 'date-fns';
-import { getOtpSms } from '../../../../utils/helpers/http-requests/sms-requests';
 
-export async function requestOtpCode(mobileNumber: string, id: any) {
+export async function requestOtpCode(
+  mobileNumber: string,
+  id: any,
+  otpName: string
+) {
   //error if empty mobile number
   if (!mobileNumber) {
     return {
@@ -17,9 +21,9 @@ export async function requestOtpCode(mobileNumber: string, id: any) {
     const data = await getOtpSms(mobileNumber); //send otp request
 
     if (data && data.otpToken) {
-      localStorage.setItem(`passSlipOtpToken_${id}`, data.otpToken); //save token to local storage
+      localStorage.setItem(`${otpName}OtpToken_${id}`, data.otpToken); //save token to local storage
       localStorage.setItem(
-        `passSlipOtpEndTime_${id}`,
+        `${otpName}OtpEndTime_${id}`,
         `${format(add(new Date(), { minutes: 5 }), 'yyyy-MM-dd HH:mm:ss')}`
       );
       return {

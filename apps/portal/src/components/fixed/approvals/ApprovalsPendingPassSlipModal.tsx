@@ -1,13 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { useEffect } from 'react';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { OtpPassSlipModal } from './ApprovalOtp/OtpModal';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
+import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -46,6 +46,12 @@ export const ApprovalsPendingPassSlipModal = ({
     setValue('passSlipId', passSlip.id);
   }, [passSlip.id]);
 
+  useEffect(() => {
+    if (!modalState) {
+      setValue('status', null);
+    }
+  }, [modalState]);
+
   const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
     setValue('passSlipId', passSlip.id);
     console.log(watch('status'), 'status');
@@ -62,16 +68,6 @@ export const ApprovalsPendingPassSlipModal = ({
 
   return (
     <>
-      <OtpPassSlipModal
-        mobile={employeeDetail.profile.mobile}
-        employeeId={employeeDetail.user._id}
-        passSlipAction={watch('status')}
-        passSlipid={passSlip.id}
-        modalState={otpPassSlipModalIsOpen}
-        setModalState={setOtpPassSlipModalIsOpen}
-        closeModalAction={closeOtpModal}
-      />
-
       <Modal size={'lg'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
@@ -88,6 +84,8 @@ export const ApprovalsPendingPassSlipModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
+            {/* OTP Modal */}
+
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <AlertNotification
                 alertType="warning"
@@ -198,6 +196,20 @@ export const ApprovalsPendingPassSlipModal = ({
               </div>
             </div>
           </div>
+          <OtpModal
+            modalState={otpPassSlipModalIsOpen}
+            setModalState={setOtpPassSlipModalIsOpen}
+            title={'PASS SLIP OTP'}
+          >
+            {/* contents */}
+            <ApprovalOtpContents
+              mobile={employeeDetail.profile.mobile}
+              employeeId={employeeDetail.user._id}
+              action={watch('status')}
+              tokenId={passSlip.id}
+              otpName={'passSlipApproval'}
+            />
+          </OtpModal>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">

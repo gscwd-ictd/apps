@@ -1,7 +1,11 @@
-import { differenceInSeconds, format, parse, parseISO } from 'date-fns';
+import { differenceInSeconds, format, parse } from 'date-fns';
 
-export function getCountDown(id: any, countingDown: boolean) {
-  const targetDate: any = localStorage.getItem(`passSlipOtpEndTime_${id}`);
+export function getCountDown(
+  id: string,
+  countingDown: boolean,
+  otpName: string
+) {
+  const targetDate: any = localStorage.getItem(`${otpName}OtpEndTime_${id}`);
   if (countingDown === true) {
     const now = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
     const difference = differenceInSeconds(

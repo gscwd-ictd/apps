@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { useEffect } from 'react';
-import { HiX } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -20,14 +19,12 @@ import {
 } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { ApprovalsTabs } from '../../../../src/components/fixed/approvals/ApprovalsTabs';
 import { ApprovalsTabWindow } from '../../../../src/components/fixed/approvals/ApprovalsTabWindow';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { ApprovalTypeSelect } from '../../../../src/components/fixed/approvals/ApprovalTypeSelect';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import ApprovalsPendingLeaveModal from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
@@ -98,15 +95,6 @@ export default function Approvals({
     getLeaveListSuccess: state.getLeaveListSuccess,
     getLeaveListFail: state.getLeaveListFail,
   }));
-
-  // get state for the modal
-  const modal = useApprovalStore((state) => state.modal);
-
-  // set state for the modal
-  const setModal = useApprovalStore((state) => state.setModal);
-
-  const setAction = useApprovalStore((state) => state.setAction);
-  const action = useApprovalStore((state) => state.action);
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
@@ -325,18 +313,18 @@ export default function Approvals({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

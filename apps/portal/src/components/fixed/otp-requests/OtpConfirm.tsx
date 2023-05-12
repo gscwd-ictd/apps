@@ -1,6 +1,6 @@
-import { confirmOtpSms } from '../../../../utils/helpers/http-requests/sms-requests';
+import { confirmOtpSms } from '../../../utils/helpers/http-requests/sms-requests';
 
-export async function confirmOtpCode(otpCode: string, id: any) {
+export async function confirmOtpCode(otpCode: string, id: any, otpName) {
   //check first if otp field is not empty
   if (otpCode === null || !otpCode || otpCode === '') {
     return {
@@ -12,7 +12,7 @@ export async function confirmOtpCode(otpCode: string, id: any) {
     };
   } else {
     //check if otp token exists
-    if (!localStorage.getItem(`passSlipOtpToken_${id}`)) {
+    if (!localStorage.getItem(`${otpName}OtpToken_${id}`)) {
       return {
         otpComplete: false,
         otpFieldError: true,
@@ -22,15 +22,15 @@ export async function confirmOtpCode(otpCode: string, id: any) {
       };
     } else {
       const otpTokenLocal: string = localStorage.getItem(
-        `passSlipOtpToken_${id}`
+        `${otpName}OtpToken_${id}`
       );
       const data = await confirmOtpSms(otpTokenLocal, otpCode);
       if (data) {
         if (data.status && data.status === 200) {
           //otp good
           try {
-            localStorage.removeItem(`passSlipOtpToken_${data.id}`);
-            localStorage.removeItem(`passSlipOtpEndTime_${data.id}`);
+            localStorage.removeItem(`${otpName}OtpToken_${data.id}`);
+            localStorage.removeItem(`${otpName}OtpEndTime_${data.id}`);
             return {
               otpComplete: true,
               otpFieldError: false,

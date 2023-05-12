@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect } from 'react';
-import { HiDocumentAdd, HiX } from 'react-icons/hi';
+import { HiDocumentAdd } from 'react-icons/hi';
 import { SideNav } from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -20,7 +20,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
 import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
-import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
@@ -290,18 +290,18 @@ export default function Leaves({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

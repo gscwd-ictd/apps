@@ -21,6 +21,7 @@ import {
 import {
   EmployeeDetailsPrf,
   EmployeeProfile,
+  employeeDummy,
 } from '../../../../types/employee.type';
 import { Position, PrfDetails, PrfTrail } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../../src/utils/helpers/session';
@@ -160,12 +161,15 @@ export default function PendingPrf({
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
-    console.log(context.query.prfid);
+    // console.log(context.query.prfid);
 
     try {
-      const employee = await getEmployeeDetailsFromHr(context);
+      // const employee = await getEmployeeDetailsFromHr(context);
 
-      const profile = await getEmployeeProfile(employee.userId);
+      // const profile = await getEmployeeProfile(employee.userId);
+
+      const employee = employeeDummy;
+      const profile = await getEmployeeProfile(employee.user._id);
 
       // get prf details
       const prfDetails = await getPrfById(`${context.query.prfid}`, context);

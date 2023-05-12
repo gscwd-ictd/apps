@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
 import {
   AlertNotification,

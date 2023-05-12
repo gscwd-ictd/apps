@@ -31,9 +31,14 @@ export type PrfState = {
 
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
+
+  prfOtpModalIsOpen: boolean;
+  setPrfOtpModalIsOpen: (prfOtpModalIsOpen: boolean) => void;
 };
 
 export const usePrfStore = create<PrfState>((set) => ({
+  prfOtpModalIsOpen: false,
+
   error: { status: false, message: '' },
 
   isModalOpen: false,
@@ -55,6 +60,10 @@ export const usePrfStore = create<PrfState>((set) => ({
   activeItem: 0,
 
   isLoading: false,
+
+  setPrfOtpModalIsOpen: (prfOtpModalIsOpen: boolean) => {
+    set((state) => ({ ...state, prfOtpModalIsOpen }));
+  },
 
   setIsLoading: (isLoading: boolean) => {
     set((state) => ({ ...state, isLoading }));
