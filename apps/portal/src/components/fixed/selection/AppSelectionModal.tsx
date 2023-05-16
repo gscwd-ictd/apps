@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
 import { AppSelectionModalController } from './AppSelectionListController';
@@ -74,7 +75,6 @@ export const AppSelectionModal = ({
         </Modal.Header>
 
         <Modal.Body>
-          {/* <Button onClick={() => console.log(selectedApplicants)}>Log Selected Applicants</Button> */}
           <AppSelectionModalController page={modal.page} />
         </Modal.Body>
         <Modal.Footer>

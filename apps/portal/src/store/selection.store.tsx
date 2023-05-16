@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { ModalState, ErrorState } from '../types/modal.type';
 import {
@@ -8,6 +9,8 @@ import {
 import { Publication, PublicationDetails } from '../types/publication.type';
 import { AlertState } from '../types/alert.type';
 import { devtools } from 'zustand/middleware';
+import { Applicant } from '../types/applicant.type';
+import { Pds } from 'apps/pds/src/store/pds.store';
 
 export const RANKING: Ranking = {
   ranking: [],
@@ -19,6 +22,8 @@ export const RANKING: Ranking = {
   interviewDone: '',
   allPsbSubmitted: '',
 };
+
+type ApplicantDetails = Pick<Applicant, 'applicantId' | 'applicantType'>;
 
 export type SelectionState = {
   response: {
@@ -55,7 +60,8 @@ export type SelectionState = {
 
   appSelectionModalIsOpen: boolean;
   setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => void;
-
+  pds: Pds;
+  setPds: (pds: Pds) => void;
   alert: AlertState;
   setAlert: (alert: AlertState) => void;
   modal: ModalState;
@@ -79,9 +85,10 @@ export type SelectionState = {
   applicantList: Array<ApplicantWithScores>;
   setApplicantList: (applicants: Array<ApplicantWithScores>) => void;
   filteredPublicationList: Array<Publication>;
-  // setFilteredPublicationList: (
-  //   filteredPublications: Array<Publication>
-  // ) => void;
+  selectedApplicantDetails: ApplicantDetails;
+  setSelectedApplicantDetails: (
+    selectedApplicantDetails: ApplicantDetails
+  ) => void;
   publicationDetails: PublicationDetails;
   setPublicationDetails: (publicationDetails: PublicationDetails) => void;
   applicantScores: Array<PsbScores>;
@@ -89,13 +96,7 @@ export type SelectionState = {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   pendingPublicationList: Array<Publication>;
-  // setPendingPublicationList: (
-  //   pendingPublicationList: Array<Publication>
-  // ) => void;
   fulfilledPublicationList: Array<Publication>;
-  // setFulfilledPublicationList: (
-  //   fulfilledPublicationList: Array<Publication>
-  // ) => void;
   tab: number;
   setTab: (tab: number) => void;
 };
@@ -116,6 +117,17 @@ export const useAppSelectionStore = create<SelectionState>()(
       errorPendingPublicationList: '',
       errorFulfilledPublicationList: '',
       errorResponse: '',
+    },
+    selectedApplicantDetails: { applicantId: '', applicantType: '' },
+
+    setSelectedApplicantDetails: (
+      selectedApplicantDetails: ApplicantDetails
+    ) => {
+      set((state) => ({ ...state, selectedApplicantDetails }));
+    },
+    pds: {} as Pds,
+    setPds: (pds: Pds) => {
+      set((state) => ({ ...state, pds }));
     },
 
     appSelectionModalIsOpen: false,

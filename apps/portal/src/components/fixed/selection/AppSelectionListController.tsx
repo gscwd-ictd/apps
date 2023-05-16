@@ -21,9 +21,6 @@ export const AppSelectionModalController = ({
   page,
 }: AppPlaceListControllerProps) => {
   const {
-    loadingPublicationList,
-    errorPublicationList,
-
     getPublicationList,
     getPublicationListSuccess,
     getPublicationListFail,
@@ -66,7 +63,6 @@ export const AppSelectionModalController = ({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPublications)) {
-      console.log(swrPublications);
       getPublicationListSuccess(swrPublicationIsLoading, swrPublications);
     }
 
@@ -78,11 +74,11 @@ export const AppSelectionModalController = ({
   return (
     <>
       {swrPublicationIsLoading ? (
-        <div className="w-full static flex flex-col justify-items-center items-center place-items-center">
+        <div className="static flex flex-col items-center w-full justify-items-center place-items-center">
           <SpinnerDotted
             speed={70}
             thickness={70}
-            className="w-full flex h-full transition-all "
+            className="flex w-full h-full transition-all "
             color="slateblue"
             size={100}
           />
