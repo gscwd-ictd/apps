@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { AppSelectionModalController } from './AppSelectionListController';
 import { useAppSelectionStore } from '../../../../src/store/selection.store';
 import { PublicationPostingStatus } from '../../../../src/types/publication.type';
+import { isEmpty } from 'lodash';
 
 type AppSelectionModalProps = {
   modalState: boolean;
@@ -65,11 +66,17 @@ export const AppSelectionModal = ({
         steady
       >
         <Modal.Header>
-          <h3 className="text-xl font-semibold text-gray-700">
-            <div className="px-5">
+          <h3 className="font-semibold text-gray-700">
+            <div className="px-5 text-xl">
               {modal.page === 1
                 ? 'Select a publication'
-                : modal.page === 2 && 'Select Applicants'}
+                : modal.page === 2 && isEmpty(selectedPublication)
+                ? 'Select Applicant(s)'
+                : modal.page === 2 &&
+                  selectedPublication.postingStatus ===
+                    PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
+                ? 'Selected Applicant(s)'
+                : null}
             </div>
           </h3>
         </Modal.Header>

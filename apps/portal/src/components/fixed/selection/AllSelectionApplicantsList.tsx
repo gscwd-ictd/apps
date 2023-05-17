@@ -318,7 +318,7 @@ export const AllSelectionApplicantsList = () => {
                       className="flex items-center w-full grid-cols-5 gap-4 justify-left"
                     >
                       <div className="w-[5%]">
-                        <div className="flex items-center justify-center w-full font-medium text-gray-600 hover:cursor-pointer">
+                        <div className="flex items-center justify-center w-full font-medium text-gray-600 border-b hover:cursor-pointer">
                           <button
                             className="px-1 text-white bg-indigo-500 rounded"
                             onClick={() => {
