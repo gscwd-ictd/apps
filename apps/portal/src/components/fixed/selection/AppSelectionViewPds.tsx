@@ -2,22 +2,23 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { Pds } from 'apps/pds/src/store/pds.store';
-import { NotApplicableVisual } from '../visuals/NotApplicableVisual';
-import { CardPreview } from '../../modular/cards/CardPreview';
 import { Page } from '../pages/Page';
-import { Child } from 'apps/pds/src/types/data/family.type';
-import { EducationInfo } from 'apps/pds/src/types/data/education.type';
+
+import { CardPreview } from '../../modular/cards/CardPreview';
+import { NotApplicableVisual } from '../visuals/NotApplicableVisual';
+import { Reference } from 'apps/pds/src/types/data/supporting-info.type';
 import { isEmpty } from 'lodash';
-import { WorkExperience } from 'apps/pds/src/types/data/work.type';
-import { VoluntaryWork } from 'apps/pds/src/types/data/vol-work.type';
-import { LearningDevelopment } from 'apps/pds/src/types/data/lnd.type';
 import {
   Organization,
   Recognition,
   Skill,
 } from 'apps/pds/src/types/data/other-info.type';
-import { Reference } from 'apps/pds/src/types/data/supporting-info.type';
+import { LearningDevelopment } from 'apps/pds/src/types/data/lnd.type';
+import { VoluntaryWork } from 'apps/pds/src/types/data/vol-work.type';
+import { WorkExperience } from 'apps/pds/src/types/data/work.type';
 import { Eligibility } from 'apps/pds/src/types/data/eligibility.type';
+import { EducationInfo } from 'apps/pds/src/types/data/education.type';
+import { Child } from 'apps/pds/src/types/data/family.type';
 import { LabelFieldPreview } from '../cards/LabelFieldPreview';
 import { CardContainer } from '../cards/CardContainer';
 import { CardQuestion, LabelQNA } from '../cards/CardQNA';
@@ -26,18 +27,19 @@ type AppEndViewPdsProps = {
   pds: Pds;
 };
 
-export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
+export const AppSelectionViewPds = ({ pds }: AppEndViewPdsProps) => {
   const [appInfoIsOpen, setAppInfoIsOpen] = useState<boolean>(true);
 
   return (
     <>
       <div className="flex flex-col justify-center">
-        <div className="fixed top-0 flex items-center justify-between w-full h-12 px-8 font-semibold text-center text-indigo-900 bg-indigo-200 md:justify-center md:static">
+        <div className="fixed top-0 flex items-center justify-between w-full h-12 px-8 text-2xl font-semibold text-center text-indigo-900 bg-indigo-200 md:justify-center md:static">
           PERSONAL DATA SHEET
         </div>
-        {pds && pds.permanentAddress ? (
-          <>
-            <Page title="" subtitle="" pageClassName="pt-5 h-[46rem]">
+        {
+          // WILL ONLY DISPLAY APPLICANT DETAILS IF ITS NOT EMPTY (NORMALLY DUE TO INVALID/NON EXISTING APPLICANT ID)
+          pds && pds.permanentAddress ? (
+            <Page title="" subtitle="" pageClassName="pt-5 h-[46rem] ">
               <>
                 <div className="min-w-full">
                   <CardContainer
@@ -1801,18 +1803,18 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                 </div>
               </>
             </Page>
-          </>
-        ) : (
-          <div
-            className={`${
-              appInfoIsOpen ? 'block' : 'hidden'
-            } flex flex-col justify-center items-center text-4xl text-slate-400 m-2 h-screen md:flex -mt-14 md:-mt-12`}
-          >
-            <label className="text-lg uppercase">
-              Applicant not yet selected
-            </label>
-          </div>
-        )}
+          ) : (
+            <div
+              className={`${
+                appInfoIsOpen ? 'block' : 'hidden'
+              } flex flex-col justify-center items-center text-4xl text-slate-400 m-2 h-screen md:flex -mt-14 md:-mt-12`}
+            >
+              <label className="text-lg uppercase">
+                Applicant not yet selected
+              </label>
+            </div>
+          )
+        }
       </div>
     </>
   );

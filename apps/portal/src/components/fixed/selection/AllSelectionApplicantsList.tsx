@@ -1,38 +1,48 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+import { Pds } from 'apps/pds/src/store/pds.store';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Applicant } from '../../../types/applicant.type';
 import { ApplicantWithScores, PsbScores } from '../../../types/selection.type';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { AppSelectionPdsAlert } from './AppSelectionPdsAlert';
 
 export const AllSelectionApplicantsList = () => {
   const [applicantListIsLoaded, setApplicantListIsLoaded] =
     useState<boolean>(false);
 
+  // for the alert component for pds
+  const [pdsAlertState, setPdsAlertState] = useState<boolean>(false);
+
   // use this to assign as a parameter in useSWR
-  const random = useRef(Date.now());
-  const applicantList = useAppSelectionStore((state) => state.applicantList);
-  const applicantScores = useAppSelectionStore(
-    (state) => state.applicantScores
-  );
-  const setSelectedApplicants = useAppSelectionStore(
-    (state) => state.setSelectedApplicants
-  );
-  const setApplicantList = useAppSelectionStore(
-    (state) => state.setApplicantList
-  );
-  const setPublicationDetails = useAppSelectionStore(
-    (state) => state.setPublicationDetails
-  );
-  const setApplicantScores = useAppSelectionStore(
-    (state) => state.setApplicantScores
-  );
-  const selectedPublicationId = useAppSelectionStore(
-    (state) => state.selectedPublicationId
-  );
+
+  const {
+    applicantList,
+    applicantScores,
+    selectedApplicantDetails,
+    selectedPublication,
+    selectedPublicationId,
+    setApplicantList,
+    setApplicantScores,
+    setPublicationDetails,
+    setSelectedApplicantDetails,
+    setSelectedApplicants,
+    setPds,
+  } = useAppSelectionStore((state) => ({
+    applicantList: state.applicantList,
+    applicantScores: state.applicantScores,
+    selectedPublicationId: state.selectedPublicationId,
+    selectedApplicantDetails: state.selectedApplicantDetails,
+    selectedPublication: state.selectedPublication,
+    setPds: state.setPds,
+    setApplicantScores: state.setApplicantScores,
+    setPublicationDetails: state.setPublicationDetails,
+    setApplicantList: state.setApplicantList,
+    setSelectedApplicants: state.setSelectedApplicants,
+    setSelectedApplicantDetails: state.setSelectedApplicantDetails,
+  }));
 
   const { patchResponseApply } = useAppSelectionStore((state) => ({
     patchResponseApply: state.response.patchResponseApply,
@@ -51,6 +61,10 @@ export const AllSelectionApplicantsList = () => {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
+
+  const pdsAlertCloseAction = () => {
+    setPds({} as Pds);
+  };
 
   //mutate publications when patchResponseApply is updated
   useEffect(() => {
@@ -74,7 +88,7 @@ export const AllSelectionApplicantsList = () => {
     });
 
     setApplicantList(updatedApplicantList);
-    console.log(updatedApplicantList, 'updated applicants');
+
     addToSelectedApplicants();
   };
 
@@ -93,7 +107,6 @@ export const AllSelectionApplicantsList = () => {
   };
 
   useEffect(() => {
-    console.log(swrApplicants, 'swrapplicants');
     if (swrApplicants && applicantListIsLoaded === false) {
       const fetchedData: any = [...swrApplicants.data.ranking]; //! changed --added data
 
@@ -159,189 +172,306 @@ export const AllSelectionApplicantsList = () => {
   }, [swrApplicants, applicantListIsLoaded]);
 
   return (
-    <div className="min-h-auto max-h-[24rem] overflow-y-auto bg-slate-100 py-5 rounded-md">
-      {applicantList.length > 0 ? (
-        <div className="px-5">
-          <div className="flex w-full grid-cols-3 gap-4 border-b border-gray-400">
-            <div className="col-span-1 w-[5%] flex justify-center">
-              <p className="font-light">Rank</p>
-            </div>
-            <div className="col-span-1 w-[20%]">
-              <p className="font-light">Name of Applicants</p>
-            </div>
-            <div className="col-span-1 w-[70%]">
-              <div className="flex w-full">
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 1</p>
-                </div>
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 2</p>
-                </div>
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 3</p>
-                </div>
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 4</p>
-                </div>
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 5</p>
-                </div>
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 6</p>
-                </div>
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 7</p>
-                </div>
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">PSB 8</p>
-                </div>
-                {/* {applicantScores && applicantScores.map((appScore, index: number) => {
-                                    return (<div key={index} className="flex items-center justify-center w-full">
+    <>
+      <AppSelectionPdsAlert
+        alertState={pdsAlertState}
+        setAlertState={setPdsAlertState}
+        closeAlertAction={pdsAlertCloseAction}
+      />
+      <div className="min-h-auto max-h-[24rem] overflow-y-auto bg-slate-100 py-5 rounded-md">
+        {applicantList.length > 0 ? (
+          <div className="px-5">
+            <div className="flex w-full grid-cols-5 gap-4 border-b border-gray-400">
+              <div className="col-span-1 w-[5%] flex justify-center items-center">
+                <p className="text-xs font-light">View PDS</p>
+              </div>
+              <div className="col-span-1 w-[5%] flex justify-center items-center">
+                <p className="font-light">Rank</p>
+              </div>
+              <div className="col-span-1 w-[20%]  flex justify-left">
+                <p className="font-light">Name of Applicants</p>
+              </div>
+
+              <div className="col-span-1 w-[65%]">
+                {selectedPublication.salaryGradeLevel &&
+                selectedPublication.salaryGradeLevel <= 23 ? (
+                  <div className="flex w-full">
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 1</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 2</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 3</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 4</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 5</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 6</p>
+                    </div>
+
+                    {/* {applicantScores && applicantScores.map((appScore, index: number) => {
+                                    return (<div key={index} className="flex items-center w-full justify-left">
                                         <p className="font-light">PSB {index + 1}</p>
                                     </div>)
                                 })} */}
 
-                <div className="flex items-center justify-center w-full">
-                  <p className="font-light">Average</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-span-1 w-[5%]">
-              <p className="font-light"></p>
-            </div>
-          </div>
-          <ul>
-            {applicantList.map(
-              (applicant: ApplicantWithScores, index: number) => {
-                console.log(applicant.isSelectedByAppointingAuthority);
-                return (
-                  <li
-                    key={index}
-                    onClick={() =>
-                      swrApplicants.data.positionDetails.postingStatus ===
-                      'Appointing authority selection'
-                        ? onSelect(applicant.sequenceNo!)
-                        : {}
-                    }
-                    className={`flex grid-cols-3 items-center border-b gap-4 ${
-                      applicant.state && 'bg-slate-300'
-                    } w-full hover:cursor-pointer border-b-gray-100 border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-100`}
-                  >
-                    <div className="w-[5%] flex justify-center items-center">
-                      {/* <RankingPopover data={applicant} /> */}
-                      {applicant.rank}
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">Average</p>
                     </div>
-                    <div className="w-[20%] ">
-                      <p className="font-medium text-gray-600">
-                        {applicant.applicantName}
-                      </p>
+                  </div>
+                ) : selectedPublication.salaryGradeLevel &&
+                  selectedPublication.salaryGradeLevel === 24 ? (
+                  <div className="flex w-full">
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 1</p>
                     </div>
-                    <div className="w-[70%] ">
-                      <div className="flex w-full">
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_1)
-                              ? `0.00`
-                              : applicant.psb_1}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_2)
-                              ? `0.00`
-                              : applicant.psb_2}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_3)
-                              ? `0.00`
-                              : applicant.psb_3}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_4)
-                              ? `0.00`
-                              : applicant.psb_4}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_5)
-                              ? `0.00`
-                              : applicant.psb_5}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_6)
-                              ? `0.00`
-                              : applicant.psb_6}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_7)
-                              ? `0.00`
-                              : applicant.psb_7}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">
-                            {isEmpty(applicant.psb_8)
-                              ? `0.00`
-                              : applicant.psb_8}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center w-full">
-                          <p className="font-normal">{applicant.average}</p>
-                        </div>
-                      </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 2</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 3</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 4</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 5</p>
                     </div>
 
-                    <div className="w-[5%] flex justify-end">
-                      <input
-                        type="checkbox"
-                        onChange={() => (applicant: Applicant) => {
-                          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                          applicant.state;
-                        }}
-                        checked={
-                          swrApplicants?.data.positionDetails.postingStatus ===
-                          'Appointing authority selection'
-                            ? applicant.state
-                              ? true
-                              : false
-                            : applicant.isSelectedByAppointingAuthority === 1
-                            ? true
-                            : false
-                        }
-                        className={`${
-                          swrApplicants?.data.positionDetails.postingStatus ===
-                          'Appointing authority selection'
-                            ? applicant.state
-                              ? ''
-                              : ''
-                            : applicant.isSelectedByAppointingAuthority === 1
-                            ? ''
-                            : 'hidden'
-                        } p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
-                      />
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 6</p>
                     </div>
-                  </li>
-                );
-              }
-            )}
-          </ul>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-center w-full h-full text-gray-500 uppercase animate-pulse">
-            No Applicant Data
+
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 7</p>
+                    </div>
+
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 8</p>
+                    </div>
+
+                    {/* {applicantScores && applicantScores.map((appScore, index: number) => {
+                                    return (<div key={index} className="flex items-center w-full justify-left">
+                                        <p className="font-light">PSB {index + 1}</p>
+                                    </div>)
+                                })} */}
+
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">Average</p>
+                    </div>
+                  </div>
+                ) : selectedPublication.salaryGradeLevel &&
+                  selectedPublication.salaryGradeLevel >= 25 ? (
+                  <div className="flex w-full">
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 1</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 2</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 3</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 4</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 5</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 6</p>
+                    </div>
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">PSB 7</p>
+                    </div>
+
+                    {/* {applicantScores && applicantScores.map((appScore, index: number) => {
+                                    return (<div key={index} className="flex items-center w-full justify-left">
+                                        <p className="font-light">PSB {index + 1}</p>
+                                    </div>)
+                                })} */}
+
+                    <div className="flex items-center w-full justify-left">
+                      <p className="font-light">Average</p>
+                    </div>
+                  </div>
+                ) : (
+                  <>No Records Found</>
+                )}
+              </div>
+              <div className="col-span-1 w-[5%]">
+                <p className="font-light"></p>
+              </div>
+            </div>
+            <ul>
+              {applicantList.map(
+                (applicant: ApplicantWithScores, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center w-full grid-cols-5 gap-4 justify-left"
+                    >
+                      <div className="w-[5%]">
+                        <div className="flex items-center justify-center w-full font-medium text-gray-600 border-b hover:cursor-pointer">
+                          <button
+                            className="px-1 text-white bg-indigo-500 rounded"
+                            onClick={() => {
+                              setSelectedApplicantDetails({
+                                applicantId: applicant.applicantId,
+                                applicantType: applicant.applicantType,
+                              });
+                              setPdsAlertState(true);
+                            }}
+                          >
+                            ...
+                          </button>
+                        </div>
+                      </div>
+                      <li
+                        onClick={() =>
+                          swrApplicants.data.positionDetails.postingStatus ===
+                          'Appointing authority selection'
+                            ? onSelect(applicant.sequenceNo!)
+                            : {}
+                        }
+                        className={`flex grid-cols-3 items-center border-b gap-4 ${
+                          applicant.state && 'bg-slate-300'
+                        } w-[95%] hover:cursor-pointer border-b-gray-100 border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-100`}
+                      >
+                        <div className="w-[5%] flex justify-center items-center">
+                          {/* <RankingPopover data={applicant} /> */}
+                          {applicant.rank}
+                        </div>
+                        <div className="w-[20%] ">
+                          <p className="font-medium text-gray-600">
+                            {applicant.applicantName}
+                          </p>
+                        </div>
+
+                        <div className="w-[65%]">
+                          <div className="flex w-full gap-4">
+                            <div className="flex items-center w-full justify-left">
+                              <p className="font-normal">
+                                {isEmpty(applicant.psb_1)
+                                  ? `0.00`
+                                  : applicant.psb_1}
+                              </p>
+                            </div>
+                            <div className="flex items-center w-full justify-left">
+                              <p className="font-normal">
+                                {isEmpty(applicant.psb_2)
+                                  ? `0.00`
+                                  : applicant.psb_2}
+                              </p>
+                            </div>
+                            <div className="flex items-center w-full justify-left">
+                              <p className="font-normal">
+                                {isEmpty(applicant.psb_3)
+                                  ? `0.00`
+                                  : applicant.psb_3}
+                              </p>
+                            </div>
+                            <div className="flex items-center w-full justify-left">
+                              <p className="font-normal">
+                                {isEmpty(applicant.psb_4)
+                                  ? `0.00`
+                                  : applicant.psb_4}
+                              </p>
+                            </div>
+                            <div className="flex items-center w-full justify-left">
+                              <p className="font-normal">
+                                {isEmpty(applicant.psb_5)
+                                  ? `0.00`
+                                  : applicant.psb_5}
+                              </p>
+                            </div>
+                            {selectedPublication.salaryGradeLevel <= 23 && (
+                              <div className="flex items-center w-full justify-left">
+                                <p className="font-normal">
+                                  {isEmpty(applicant.psb_6)
+                                    ? `0.00`
+                                    : applicant.psb_6}
+                                </p>
+                              </div>
+                            )}
+                            {selectedPublication.salaryGradeLevel >= 25 && (
+                              <div className="flex items-center w-full justify-left">
+                                <p className="font-normal">
+                                  {isEmpty(applicant.psb_7)
+                                    ? `0.00`
+                                    : applicant.psb_7}
+                                </p>
+                              </div>
+                            )}
+                            {selectedPublication.salaryGradeLevel == 24 && (
+                              <div className="flex items-center w-full justify-left">
+                                <p className="font-normal">
+                                  {isEmpty(applicant.psb_8)
+                                    ? `0.00`
+                                    : applicant.psb_8}
+                                </p>
+                              </div>
+                            )}
+                            <div className="flex items-center w-full justify-left">
+                              <p className="font-normal">{applicant.average}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="w-[5%] flex justify-center">
+                          <input
+                            type="checkbox"
+                            onChange={() => (applicant: Applicant) => {
+                              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                              applicant.state;
+                            }}
+                            checked={
+                              swrApplicants?.data.positionDetails
+                                .postingStatus ===
+                              'Appointing authority selection'
+                                ? applicant.state
+                                  ? true
+                                  : false
+                                : applicant.isSelectedByAppointingAuthority ===
+                                  1
+                                ? true
+                                : false
+                            }
+                            className={`${
+                              swrApplicants?.data.positionDetails
+                                .postingStatus ===
+                              'Appointing authority selection'
+                                ? applicant.state
+                                  ? ''
+                                  : ''
+                                : applicant.isSelectedByAppointingAuthority ===
+                                  1
+                                ? ''
+                                : 'hidden'
+                            } p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
+                          />
+                        </div>
+                      </li>
+                    </div>
+                  );
+                }
+              )}
+            </ul>
           </div>
-        </>
-      )}
-    </div>
+        ) : (
+          <>
+            <div className="flex items-center w-full h-full text-gray-500 uppercase justify-left animate-pulse">
+              No Applicant Data
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
