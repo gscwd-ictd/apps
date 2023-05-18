@@ -5,7 +5,7 @@ import {
 } from 'next';
 
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import TopNavigation from '../components/page-header/TopNavigation';
 import JobOpeningsTable from '../components/table/JobOpeningsTable';
@@ -15,6 +15,8 @@ import { DataPrivacyAct } from '../components/fixed/data-privacy-act/DataPrivacy
 import { useJobOpeningsStore } from '../store/job-openings.store';
 import { usePageStore } from '../store/page.store';
 import { usePublicationStore } from '../store/publication.store';
+import { Modal } from '@gscwd-apps/oneui';
+import { ViewJobDetailsModal } from '../components/fixed/modals/ViewJobDetailsModal';
 
 const Home: NextPage = ({
   jobOpenings,
@@ -33,6 +35,8 @@ const Home: NextPage = ({
   const setActionSelection = useJobOpeningsStore(
     (state) => state.setActionSelection
   );
+
+  const [openDetailsModal, setOpenDetailsModal] = useState<boolean>(false);
 
   const openModal = () => {
     setModal({ ...modal, page: 1, isOpen: true });
@@ -78,9 +82,13 @@ const Home: NextPage = ({
   };
 
   useEffect(() => {
+    if (actionSelection === 'Position Details') setOpenDetailsModal(true);
+  }, [actionSelection]);
+
+  useEffect(() => {
     setCheckboxTerms(false);
     // localStorage.clear()
-    removeCookie();
+    // removeCookie();
   }, []);
 
   return (
@@ -112,11 +120,7 @@ const Home: NextPage = ({
           onCancel={onCancelModal}
           onClose={onCloseModal}
           modalSize="xxxxxxxl"
-          title={
-            actionSelection === 'Apply'
-              ? 'Data Privacy Act of 2012'
-              : 'Position Details'
-          }
+          title={'Data Privacy Act of 2012'}
           cancelBtnVariant="info"
           subtitle=""
           actionLabel={
@@ -144,6 +148,16 @@ const Home: NextPage = ({
             <div className="mt-5"></div>
           </div>
         </FormModal>
+      </section>
+      <section>
+        <ViewJobDetailsModal
+          modalState={openDetailsModal}
+          setModalState={setOpenDetailsModal}
+          closeModalAction={() => {
+            setActionSelection('');
+            setOpenDetailsModal(false);
+          }}
+        />
       </section>
     </div>
   );

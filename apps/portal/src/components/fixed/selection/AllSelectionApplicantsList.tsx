@@ -320,6 +320,7 @@ export const AllSelectionApplicantsList = () => {
                       <div className="w-[5%]">
                         <div className="flex items-center justify-center w-full font-medium text-gray-600 border-b hover:cursor-pointer">
                           <button
+                            tabIndex={-1}
                             className="px-1 text-white bg-indigo-500 rounded"
                             onClick={() => {
                               setSelectedApplicantDetails({
