@@ -18,7 +18,7 @@ export const ViewJobDetailsModal = ({
   const publication = usePublicationStore((state) => state.publication);
 
   return (
-    <Modal open={modalState} setOpen={setModalState} size="lg">
+    <Modal open={modalState} setOpen={setModalState} size="xl" steady>
       <Modal.Header>
         <div className="flex justify-between w-full px-5">
           <div className="text-3xl font-semibold">Position Details</div>

@@ -17,9 +17,9 @@ const JobOpeningsTable: NextComponentType<
 > = ({ jobOpenings }: JobOpeningsProps) => {
   return (
     <>
-      <div className="mx-auto max-w-7xl">
-        <div className="inline-block min-w-full py-2 align-middle">
-          <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+      <div className="mx-auto max-w-7xl ">
+        <div className="inline-block min-w-full py-2 align-middle ">
+          <div className="rounded-lg shadow ring-1 ring-black ring-opacity-5">
             {!isEmpty(jobOpenings) ? (
               <>
                 <table className="min-w-full overflow-visible divide-y divide-gray-300">

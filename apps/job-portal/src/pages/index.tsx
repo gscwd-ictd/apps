@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import {
   NextPage,
   GetServerSideProps,
@@ -10,31 +11,43 @@ import axios from 'axios';
 import TopNavigation from '../components/page-header/TopNavigation';
 import JobOpeningsTable from '../components/table/JobOpeningsTable';
 import { FormModal } from '../components/modular/common/overlays/FormModal';
-import { SpinnerCircularFixed, SpinnerDotted } from 'spinners-react';
+import { SpinnerCircularFixed } from 'spinners-react';
 import { DataPrivacyAct } from '../components/fixed/data-privacy-act/DataPrivacyAct';
 import { useJobOpeningsStore } from '../store/job-openings.store';
 import { usePageStore } from '../store/page.store';
 import { usePublicationStore } from '../store/publication.store';
-import { Modal } from '@gscwd-apps/oneui';
 import { ViewJobDetailsModal } from '../components/fixed/modals/ViewJobDetailsModal';
+import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
 
 const Home: NextPage = ({
   jobOpenings,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
-  const modal = useJobOpeningsStore((state) => state.modal);
-  const checkboxTerms = useJobOpeningsStore((state) => state.checkboxTerms);
-  const actionSelection = useJobOpeningsStore((state) => state.actionSelection);
   const isLoading = usePageStore((state) => state.isLoading);
-  const publication = usePublicationStore((state) => state.publication);
-  const setModal = useJobOpeningsStore((state) => state.setModal);
-  const setCheckboxTerms = useJobOpeningsStore(
-    (state) => state.setCheckboxTerms
-  );
+  const { publication, setPublication } = usePublicationStore((state) => ({
+    publication: state.publication,
+    setPublication: state.setPublication,
+  }));
+
   const setIsLoading = usePageStore((state) => state.setIsLoading);
-  const setActionSelection = useJobOpeningsStore(
-    (state) => state.setActionSelection
-  );
+
+  const {
+    actionSelection,
+    checkboxTerms,
+    modal,
+    setActionSelection,
+    setCheckboxTerms,
+    setModal,
+    setPositionTab,
+  } = useJobOpeningsStore((state) => ({
+    modal: state.modal,
+    checkboxTerms: state.checkboxTerms,
+    actionSelection: state.actionSelection,
+    setActionSelection: state.setActionSelection,
+    setPositionTab: state.setPositionTab,
+    setCheckboxTerms: state.setCheckboxTerms,
+    setModal: state.setModal,
+  }));
 
   const [openDetailsModal, setOpenDetailsModal] = useState<boolean>(false);
 
@@ -66,6 +79,13 @@ const Home: NextPage = ({
     setModal({ ...modal, isOpen: false, page: 1 });
     setActionSelection('');
     setCheckboxTerms(false);
+  };
+
+  const onCloseJobDetailsModal = () => {
+    setPositionTab(0);
+    setPublication({} as Publication);
+    setActionSelection('');
+    setOpenDetailsModal(false);
   };
 
   // removes the ssid_hrms cookie on page load
@@ -153,10 +173,7 @@ const Home: NextPage = ({
         <ViewJobDetailsModal
           modalState={openDetailsModal}
           setModalState={setOpenDetailsModal}
-          closeModalAction={() => {
-            setActionSelection('');
-            setOpenDetailsModal(false);
-          }}
+          closeModalAction={onCloseJobDetailsModal}
         />
       </section>
     </div>
