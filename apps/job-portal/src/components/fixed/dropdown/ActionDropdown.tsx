@@ -1,6 +1,6 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
 import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
-
 import { Fragment } from 'react';
 import { useJobOpeningsStore } from '../../../store/job-openings.store';
 import { usePublicationStore } from '../../../store/publication.store';
@@ -25,11 +25,9 @@ export const ActionDropDown = ({ publication }: ActionDropDownProps) => {
   const handleSelectAction = (item: string) => {
     setActionSelection(item);
 
-    if (item === 'Apply') {
-      setPublication(publication);
-      //   localStorage.setItem('publication', JSON.stringify(publication))
-      setModal({ ...modal, isOpen: true });
-    }
+    if (item === 'Apply') setModal({ ...modal, isOpen: true });
+
+    setPublication(publication);
   };
 
   return (

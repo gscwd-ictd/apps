@@ -4,8 +4,9 @@ import { JobOpeningDetails } from 'apps/job-portal/utils/types/data/vacancies.ty
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { PositionTab } from '../fixed/tabs/PositionTab';
 import fetcher from '../modular/fetcher/Fetcher';
+import { JobDetailsTabPanel } from './JobDetailsTabPanel';
+import { JobDetailsTitle } from './JobDetailsTitle';
 
 type JobDetailsProps = {
   publication: Publication;
@@ -47,37 +48,9 @@ export const JobDetails = ({ publication }: JobDetailsProps) => {
     <>
       {swrIsLoading ? null : !isEmpty(jobOpeningDetails) ? (
         <>
-          <div className="w-full h-[44rem] flex flex-col max-h-[44rem] px-5 text-gray-700">
-            <div className="text-xl">
-              {jobOpeningDetails && jobOpeningDetails.jobDescription.itemNumber}
-            </div>
-            <div className="text-2xl">
-              {jobOpeningDetails &&
-                jobOpeningDetails.jobDescription.positionTitle}
-            </div>
-
-            <div className="text-lg">
-              {jobOpeningDetails &&
-              !isEmpty(jobOpeningDetails.jobDescription.assignedTo.division)
-                ? jobOpeningDetails.jobDescription.assignedTo.division.name
-                : isEmpty(
-                    jobOpeningDetails.jobDescription.assignedTo.division
-                  ) &&
-                  !isEmpty(
-                    jobOpeningDetails.jobDescription.assignedTo.department
-                  )
-                ? jobOpeningDetails.jobDescription.assignedTo.department.name
-                : isEmpty(
-                    jobOpeningDetails.jobDescription.assignedTo.division
-                  ) &&
-                  isEmpty(
-                    jobOpeningDetails.jobDescription.assignedTo.department
-                  ) &&
-                  !isEmpty(jobOpeningDetails.jobDescription.assignedTo.office)
-                ? jobOpeningDetails.jobDescription.assignedTo.office.name
-                : null}
-              <PositionTab title="Competency" />
-            </div>
+          <div className="w-full h-[44rem] flex flex-col max-h-[44rem] px-5 ">
+            <JobDetailsTitle jobOpeningDetails={jobOpeningDetails} />
+            <JobDetailsTabPanel jobOpeningDetails={jobOpeningDetails} />
           </div>
         </>
       ) : null}
