@@ -21,7 +21,7 @@ export const SideNav = (): JSX.Element => {
 
   return (
     <>
-      <nav className="fixed z-10 flex justify-center w-24 h-full">
+      <nav className="fixed z-20 flex justify-center w-24 h-full">
         <ul className="flex flex-col items-center gap-5 text-gray-600 mt-14">
           <li className="mb-5">
             <ProfileMenuDropdown right />

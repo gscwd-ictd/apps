@@ -16,7 +16,7 @@ interface OtpProps {
   mobile: string;
   employeeId: string;
   action: string; // approve or disapprove
-  tokenId: string; //like pass Slip Id, leave Id etc.
+  tokenId: string; //like prf Id
   otpName: string;
   remarks?: string;
 }

@@ -26,6 +26,7 @@ import { RemindersCard } from '../../components/fixed/home/reminders/RemindersCa
 import { AttendanceCard } from '../../components/fixed/home/attendance/AttendanceCard';
 import { StatsCard } from '../../components/fixed/home/stats/StatsCard';
 import { employeeDummy } from '../../types/employee.type';
+import useWindowDimensions from '../../components/fixed/window-size/useWindowDimensions';
 
 export default function Dashboard({
   userDetails,
@@ -53,6 +54,7 @@ export default function Dashboard({
   }, []);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
+  const { width, height } = useWindowDimensions();
 
   return (
     <>
@@ -75,57 +77,119 @@ export default function Dashboard({
               </div>
             </>
           ) : (
-            <div className="flex flex-row w-full h-full gap-4 pb-24 overflow-x-hidden">
-              <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-1">
-                {/* <img className="w-2/4 overflow-hidden" src="/gwdlogo.png"></img> */}
-                <Image
-                  src={'/gwdlogo.png'}
-                  className="w-2/4 "
-                  alt={''}
-                  width={'500'}
-                  height={'500'}
-                />
-              </div>
-              <div className="w-2/5 h-full mt-1">
-                <Carousel />
-              </div>
-              <div className="z-10 flex flex-col w-full h-full gap-5 mt-1 ">
-                {/* 3 PANELS */}
-                <div>
-                  <div className="flex flex-row gap-5">
-                    <StatsCard name={'Total Lates'} count={10} />
-                    <StatsCard name={'Total Absents'} count={10} />
-                    <StatsCard name={'Total Leaves'} count={10} />
+            <>
+              {width && width > 1024 ? (
+                <>
+                  {/* desktop */}
+                  <div className="flex flex-row w-full h-full gap-4 pb-24 overflow-x-hidden">
+                    <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-1">
+                      <Image
+                        src={'/gwdlogo.png'}
+                        className="w-2/4 "
+                        alt={''}
+                        width={'500'}
+                        height={'500'}
+                      />
+                    </div>
+                    <div className="w-2/5 h-full mt-1">
+                      <Carousel />
+                    </div>
+                    <div className="z-10 flex flex-col w-full h-full gap-5 mt-1 ">
+                      {/* 3 PANELS */}
+                      <div>
+                        <div className="flex flex-row gap-5">
+                          <StatsCard name={'Total Lates'} count={10} />
+                          <StatsCard name={'Total Absents'} count={10} />
+                          <StatsCard name={'Total Leaves'} count={10} />
+                        </div>
+                      </div>
+                      {/* ATTENDANCE */}
+                      <AttendanceCard
+                        timeIn={'8:04 AM'}
+                        lunchOut={'12:05 PM'}
+                        lunchIn={'12:32 PM'}
+                        timeOut={'5:11 PM'}
+                        dateNow={`${new Date()}`}
+                      />
+                      {/* REMINDERS */}
+                      <RemindersCard reminders={''} />
+                      {/* CALENDAR */}
+                      <div className="flex flex-col w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
+                        <EmployeeCalendar />
+                      </div>
+                    </div>
+                    <div className="z-20 flex flex-col w-1/5 h-screen gap-5 mt-1 mb-20">
+                      <ProfileCard
+                        firstName={userDetails.profile.firstName}
+                        lastName={userDetails.profile.lastName}
+                        position={
+                          userDetails.employmentDetails.assignment.positionTitle
+                        }
+                        division={userDetails.employmentDetails.assignment.name}
+                        photoUrl={userDetails.profile.photoUrl}
+                      />
+                      <EmployeeDashboard />
+                    </div>
                   </div>
-                </div>
-                {/* ATTENDANCE */}
-                <AttendanceCard
-                  timeIn={'8:04 AM'}
-                  lunchOut={'12:05 PM'}
-                  lunchIn={'12:32 PM'}
-                  timeOut={'5:11 PM'}
-                  dateNow={`${new Date()}`}
-                />
-                {/* REMINDERS */}
-                <RemindersCard reminders={''} />
-                {/* CALENDAR */}
-                <div className="flex flex-col w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
-                  <EmployeeCalendar />
-                </div>
-              </div>
-              <div className="z-20 flex flex-col w-1/5 h-screen gap-5 mt-1 mb-20">
-                <ProfileCard
-                  firstName={userDetails.profile.firstName}
-                  lastName={userDetails.profile.lastName}
-                  position={
-                    userDetails.employmentDetails.assignment.positionTitle
-                  }
-                  division={userDetails.employmentDetails.assignment.name}
-                  photoUrl={userDetails.profile.photoUrl}
-                />
-                <EmployeeDashboard />
-              </div>
-            </div>
+                </>
+              ) : (
+                <>
+                  {/* mobile */}
+                  <div className="flex flex-col w-full h-full gap-10 overflow-x-hidden">
+                    <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-0">
+                      <Image
+                        src={'/gwdlogo.png'}
+                        className="w-2/4 "
+                        alt={''}
+                        width={'500'}
+                        height={'500'}
+                      />
+                    </div>
+
+                    <div className="z-10 flex flex-col gap-5">
+                      <ProfileCard
+                        firstName={userDetails.profile.firstName}
+                        lastName={userDetails.profile.lastName}
+                        position={
+                          userDetails.employmentDetails.assignment.positionTitle
+                        }
+                        division={userDetails.employmentDetails.assignment.name}
+                        photoUrl={userDetails.profile.photoUrl}
+                      />
+                      <EmployeeDashboard />
+                    </div>
+
+                    <div className="z-10 flex flex-col w-full h-full gap-5 pr-4">
+                      {/* 3 PANELS */}
+                      <div>
+                        <div className="flex flex-row gap-5">
+                          <StatsCard name={'Total Lates'} count={10} />
+                          <StatsCard name={'Total Absents'} count={10} />
+                          <StatsCard name={'Total Leaves'} count={10} />
+                        </div>
+                      </div>
+                      {/* ATTENDANCE */}
+                      <AttendanceCard
+                        timeIn={'8:04 AM'}
+                        lunchOut={'12:05 PM'}
+                        lunchIn={'12:32 PM'}
+                        timeOut={'5:11 PM'}
+                        dateNow={`${new Date()}`}
+                      />
+                      {/* REMINDERS */}
+                      <RemindersCard reminders={''} />
+                      {/* CALENDAR */}
+                      <div className="w-full h-full p-4 mb-2 bg-white rounded-md shadow z-10">
+                        <EmployeeCalendar />
+                      </div>
+                      <div className="w-full h-full">
+                        <Carousel />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
           )}
         </>
       </MainContainer>
@@ -133,18 +197,18 @@ export default function Dashboard({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const userDetails = employeeDummy;
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const userDetails = employeeDummy;
 
-//   return { props: { userDetails } };
-// };
+  return { props: { userDetails } };
+};
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const userDetails = getUserDetails();
-    // console.log(userDetails);
-    return { props: { userDetails } };
-  }
-);
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const userDetails = getUserDetails();
+//     // console.log(userDetails);
+//     return { props: { userDetails } };
+//   }
+// );
