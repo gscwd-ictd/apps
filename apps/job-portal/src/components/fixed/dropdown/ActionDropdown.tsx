@@ -26,7 +26,6 @@ export const ActionDropDown = ({ publication }: ActionDropDownProps) => {
     setActionSelection(item);
 
     if (item === 'Apply') setModal({ ...modal, isOpen: true });
-
     setPublication(publication);
   };
 

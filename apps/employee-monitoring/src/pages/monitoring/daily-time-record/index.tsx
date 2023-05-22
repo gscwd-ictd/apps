@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, DataTable, useDataTable } from '@gscwd-apps/oneui';
+import { DataTable, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
@@ -8,28 +8,36 @@ import useSWR from 'swr';
 import fetcherHRIS from '../../../utils/fetcher/FetcherHRIS';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
-import axios from 'axios';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { ActionDropdown } from 'apps/employee-monitoring/src/components/dropdown/ActionDropdown';
 import { isEmpty } from 'lodash';
-import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
+import {
+  EmployeeSchedule,
+  useDtrStore,
+} from 'apps/employee-monitoring/src/store/dtr.store';
+import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/ViewEmployeeSchedule';
 
 export default function Index() {
-  // const [allEmployees, setAllEmployees] = useState<Array<EmployeeRowData>>([]);
-
   const {
     employees,
+    postResponse,
+    dropdownAction,
+    selectedEmployee,
     getDtrEmployees,
     getDtrEmployeesFail,
     getDtrEmployeesSuccess,
+    setEmployeeWithSchedule,
+    setDropdownAction,
   } = useDtrStore((state) => ({
     employees: state.employees,
+    selectedEmployee: state.selectedEmployee,
+    dropdownAction: state.dropdownAction,
+    postResponse: state.employeeDtr.postResponse,
     getDtrEmployees: state.getDtrEmployees,
+    setEmployeeWithSchedule: state.setEmployeeWithSchedule,
     getDtrEmployeesFail: state.getDtrEmployeesFail,
     getDtrEmployeesSuccess: state.getDtrEmployeesSuccess,
+    setDropdownAction: state.setDropdownAction,
   }));
-
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const [currentRowData, setCurrentRowData] = useState<EmployeeRowData>(
     {} as EmployeeRowData
@@ -42,47 +50,17 @@ export default function Index() {
     mutate: swrMutate,
   } = useSWR(`/employees`, fetcherHRIS);
 
-  // initialize loading swr
-  useEffect(() => {
-    if (swrIsLoading) {
-      getDtrEmployees();
-    }
-  }, [swrIsLoading]);
-
-  // useSWR data
-  useEffect(() => {
-    if (!isEmpty(swrEmployees)) {
-      const employeesDetails: Array<EmployeeRowData> = swrEmployees.data.map(
-        (employeeDetails: EmployeeProfile) => {
-          const { employmentDetails, personalDetails } = employeeDetails;
-
-          return {
-            id: employmentDetails.employeeId,
-            fullName: personalDetails.fullName,
-            assignment: employmentDetails.assignment,
-            positionTitle: employmentDetails.positionTitle,
-          };
-        }
-      );
-
-      getDtrEmployeesSuccess(employeesDetails);
-    }
-
-    if (!isEmpty(swrError)) getDtrEmployeesFail(swrError);
-  }, [swrEmployees, swrError]);
-
-  // Add modal function
-  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
-  const openAddActionModal = () => setAddModalIsOpen(true);
-  const closeAddActionModal = () => setAddModalIsOpen(false);
-
   // Edit modal function
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
   const openEditActionModal = (rowData: EmployeeRowData) => {
     setEditModalIsOpen(true);
     setCurrentRowData(rowData);
   };
-  const closeEditActionModal = () => setEditModalIsOpen(false);
+  const closeEditActionModal = () => {
+    setDropdownAction('');
+    setEditModalIsOpen(false);
+    setEmployeeWithSchedule({} as EmployeeSchedule);
+  };
 
   // Delete modal function
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
@@ -92,21 +70,12 @@ export default function Index() {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  // when edit action is clicked
-  const editAction = async (employee: EmployeeProfile, idx: number) => {
-    // setAction(ModalActions.UPDATE);/
-    // setScheduleForEdit(sched);
-    // setSelectedRestDays(await transformRestDays(sched.restDays));
-    // loadNewDefaultValues(sched);
-    setModalIsOpen(true);
-  };
-
   // render row actions in the table component
   const renderRowActions = (rowData: EmployeeRowData) => {
     return (
       <>
         <div className="flex items-center justify-start">
-          <ActionDropdown />
+          <ActionDropdown employee={rowData} />
         </div>
       </>
     );
@@ -148,6 +117,43 @@ export default function Index() {
     columnVisibility: { id: false },
   });
 
+  // initialize loading swr
+  useEffect(() => {
+    if (swrIsLoading) {
+      getDtrEmployees();
+    }
+  }, [swrIsLoading]);
+
+  // useSWR data
+  useEffect(() => {
+    if (!isEmpty(swrEmployees)) {
+      const employeesDetails: Array<EmployeeRowData> = swrEmployees.data.map(
+        (employeeDetails: EmployeeProfile) => {
+          const { employmentDetails, personalDetails } = employeeDetails;
+
+          return {
+            id: employmentDetails.employeeId,
+            fullName: personalDetails.fullName,
+            assignment: employmentDetails.assignment,
+            positionTitle: employmentDetails.positionTitle,
+          };
+        }
+      );
+      getDtrEmployeesSuccess(employeesDetails);
+    }
+
+    if (!isEmpty(swrError)) getDtrEmployeesFail(swrError);
+  }, [swrEmployees, swrError]);
+
+  //
+  useEffect(() => {
+    if (dropdownAction === 'View Daily Time Record') {
+      //
+    } else if (dropdownAction === 'Schedule') {
+      openEditActionModal(selectedEmployee);
+    }
+  }, [dropdownAction, selectedEmployee]);
+
   return (
     <>
       <div className="w-full">
@@ -166,13 +172,12 @@ export default function Index() {
           <Card>
             {/** Top Card */}
             <div className="flex flex-col flex-wrap ">
-              {/* <DataTableHrms
-                data={allEmployees}
-                columns={columns}
-                columnVisibility={columnVisibility}
-                paginate
-                showGlobalFilter
-              /> */}
+              <ViewEmployeeSchedule
+                modalState={editModalIsOpen}
+                setModalState={setEditModalIsOpen}
+                closeAction={closeEditActionModal}
+                employee={currentRowData}
+              />
 
               <DataTable
                 model={table}
@@ -187,15 +192,3 @@ export default function Index() {
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   try {
-//     const response = await axios.get(
-//       `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees`
-//     );
-
-//     return { props: { employees: response.data } };
-//   } catch (error) {
-//     return { props: { employees: [] } };
-//   }
-// };

@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react/no-unescaped-entities */
 import { SupportingDetailsForm } from 'apps/job-portal/utils/types/data/supporting-info.type';
 import React, { useEffect } from 'react';
@@ -778,8 +779,8 @@ export const SupportingDetails = (): JSX.Element => {
                     ? false
                     : true
                 }
-                isError={errors.candidateDetails ? true : false}
-                errorMessage={errors.candidateDetails?.message}
+                isError={errors.resignedDetails ? true : false}
+                errorMessage={errors.resignedDetails?.message}
               />
             </div>
           </div>

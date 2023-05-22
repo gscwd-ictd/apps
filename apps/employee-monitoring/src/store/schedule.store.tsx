@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Schedule, ScheduleId } from 'libs/utils/src/lib/types/schedule.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
