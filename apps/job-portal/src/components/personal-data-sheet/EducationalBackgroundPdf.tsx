@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { isEmpty } from 'lodash';
 import { EducationInfo } from 'apps/job-portal/utils/types/data/education.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArialNarrow',
     fontSize: 6.7,
     padding: '4 8',
+    textTransform: 'uppercase',
   },
   warningText: {
     fontFamily: 'ArialNarrowBoldItalic',
@@ -233,14 +235,28 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Name of School */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w24_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{elementary.schoolName || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Degree/Course */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w22_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{elementary.degree || 'N/A'}</Text>
           </View>
@@ -264,7 +280,7 @@ export const EducationalBackgroundPdf = ({
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
             <Text style={[styles.verticalCenter]}>
-              {elementary.to || 'N/A'}
+              {elementary.to || 'PRESENT'}
             </Text>
           </View>
         </View>
@@ -299,10 +315,17 @@ export const EducationalBackgroundPdf = ({
 
         {/* Scholarship/Honors */}
         <View
-          style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          style={[
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7_45,
+            { fontSize: 6.2, padding: '4 2' },
+          ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{elementary.awards || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {elementary.awards || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -320,14 +343,28 @@ export const EducationalBackgroundPdf = ({
         </View>
 
         {/* Name of School */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w24_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{secondary.schoolName || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Degree/Course */}
-        <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.w22_5,
+            { padding: '4 2' },
+          ]}
+        >
           <View style={[styles.verticalCenter]}>
             <Text>{secondary.degree || 'N/A'}</Text>
           </View>
@@ -350,7 +387,9 @@ export const EducationalBackgroundPdf = ({
             </Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{secondary.to || 'N/A'}</Text>
+            <Text style={[styles.verticalCenter]}>
+              {secondary.to || 'PRESENT'}
+            </Text>
           </View>
         </View>
 
@@ -384,10 +423,17 @@ export const EducationalBackgroundPdf = ({
 
         {/* Scholarship/Honors */}
         <View
-          style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+          style={[
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7_45,
+            { fontSize: 6.2, padding: '4 2' },
+          ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{secondary.awards || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {secondary.awards || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -412,7 +458,12 @@ export const EducationalBackgroundPdf = ({
 
               {/* Name of School */}
               <View
-                style={[styles.borderRight, styles.inputValue, styles.w24_5]}
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w24_5,
+                  { padding: '4 2' },
+                ]}
               >
                 <View style={[styles.verticalCenter]}>
                   <Text>{vocation.schoolName || 'N/A'}</Text>
@@ -421,7 +472,12 @@ export const EducationalBackgroundPdf = ({
 
               {/* Degree/Course */}
               <View
-                style={[styles.borderRight, styles.inputValue, styles.w22_5]}
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w22_5,
+                  { padding: '4 2' },
+                ]}
               >
                 <View style={[styles.verticalCenter]}>
                   <Text>{vocation.degree || 'N/A'}</Text>
@@ -450,7 +506,7 @@ export const EducationalBackgroundPdf = ({
                 </View>
                 <View style={[styles.w50, styles.horizontalCenter]}>
                   <Text style={[styles.verticalCenter]}>
-                    {vocation.to || 'N/A'}
+                    {vocation.to || 'PRESENT'}
                   </Text>
                 </View>
               </View>
@@ -465,7 +521,13 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{vocation.units || 'N/A'}</Text>
+                  <Text>
+                    {vocation.yearGraduated !== null
+                      ? 'GRADUATED'
+                      : vocation.units === '' && vocation.yearGraduated === null
+                      ? 'N/A'
+                      : vocation.units}
+                  </Text>
                 </View>
               </View>
 
@@ -476,6 +538,7 @@ export const EducationalBackgroundPdf = ({
                   styles.inputValue,
                   styles.horizontalCenter,
                   styles.w7_45,
+                  { fontSize: 6.2, padding: '4 2' },
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
@@ -489,10 +552,13 @@ export const EducationalBackgroundPdf = ({
                   styles.inputValue,
                   styles.horizontalCenter,
                   styles.w7_45,
+                  { fontSize: 6.2, padding: '4 2' },
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{vocation.awards || 'N/A'}</Text>
+                  <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+                    {vocation.awards || 'N/A'}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -511,14 +577,28 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Name of School */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w24_5,
+              { padding: '4 2' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Degree/Course */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w22_5,
+              { padding: '4 2' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -573,7 +653,12 @@ export const EducationalBackgroundPdf = ({
 
           {/* Scholarship/Honors */}
           <View
-            style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+            style={[
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w7_45,
+              { fontSize: 6.2, padding: '4 2' },
+            ]}
           >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
@@ -600,7 +685,12 @@ export const EducationalBackgroundPdf = ({
 
               {/* Name of School */}
               <View
-                style={[styles.borderRight, styles.inputValue, styles.w24_5]}
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w24_5,
+                  { padding: '4 2' },
+                ]}
               >
                 <View style={[styles.verticalCenter]}>
                   <Text>{college.schoolName || 'N/A'}</Text>
@@ -609,7 +699,12 @@ export const EducationalBackgroundPdf = ({
 
               {/* Degree/Course */}
               <View
-                style={[styles.borderRight, styles.inputValue, styles.w22_5]}
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w22_5,
+                  { padding: '4 2' },
+                ]}
               >
                 <View style={[styles.verticalCenter]}>
                   <Text>{college.degree || 'N/A'}</Text>
@@ -638,7 +733,7 @@ export const EducationalBackgroundPdf = ({
                 </View>
                 <View style={[styles.w50, styles.horizontalCenter]}>
                   <Text style={[styles.verticalCenter]}>
-                    {college.to || 'N/A'}
+                    {college.to || 'PRESENT'}
                   </Text>
                 </View>
               </View>
@@ -653,7 +748,13 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{college.units || 'N/A'}</Text>
+                  <Text>
+                    {college.yearGraduated !== null
+                      ? 'GRADUATED'
+                      : college.units === '' && college.yearGraduated === null
+                      ? 'N/A'
+                      : college.units}
+                  </Text>
                 </View>
               </View>
 
@@ -677,10 +778,13 @@ export const EducationalBackgroundPdf = ({
                   styles.inputValue,
                   styles.horizontalCenter,
                   styles.w7_45,
+                  { fontSize: 6.2, padding: '4 2' },
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{college.awards || 'N/A'}</Text>
+                  <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+                    {college.awards || 'N/A'}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -699,14 +803,28 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Name of School */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w24_5,
+              { padding: '4 2' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Degree/Course */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w22_5,
+              { padding: '4 2' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -761,7 +879,12 @@ export const EducationalBackgroundPdf = ({
 
           {/* Scholarship/Honors */}
           <View
-            style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+            style={[
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w7_45,
+              { fontSize: 6.2, padding: '4 2' },
+            ]}
           >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
@@ -788,7 +911,12 @@ export const EducationalBackgroundPdf = ({
 
               {/* Name of School */}
               <View
-                style={[styles.borderRight, styles.inputValue, styles.w24_5]}
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w24_5,
+                  { padding: '4 2' },
+                ]}
               >
                 <View style={[styles.verticalCenter]}>
                   <Text>{graduate.schoolName || 'N/A'}</Text>
@@ -797,7 +925,12 @@ export const EducationalBackgroundPdf = ({
 
               {/* Degree/Course */}
               <View
-                style={[styles.borderRight, styles.inputValue, styles.w22_5]}
+                style={[
+                  styles.borderRight,
+                  styles.inputValue,
+                  styles.w22_5,
+                  { padding: '4 2' },
+                ]}
               >
                 <View style={[styles.verticalCenter]}>
                   <Text>{graduate.degree || 'N/A'}</Text>
@@ -826,7 +959,7 @@ export const EducationalBackgroundPdf = ({
                 </View>
                 <View style={[styles.w50, styles.horizontalCenter]}>
                   <Text style={[styles.verticalCenter]}>
-                    {graduate.to || 'N/A'}
+                    {graduate.to || 'PRESENT'}
                   </Text>
                 </View>
               </View>
@@ -841,7 +974,13 @@ export const EducationalBackgroundPdf = ({
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{graduate.units || 'N/A'}</Text>
+                  <Text>
+                    {graduate.yearGraduated !== null
+                      ? 'GRADUATED'
+                      : graduate.units === '' && graduate.yearGraduated === null
+                      ? 'N/A'
+                      : graduate.units}
+                  </Text>
                 </View>
               </View>
 
@@ -865,10 +1004,13 @@ export const EducationalBackgroundPdf = ({
                   styles.inputValue,
                   styles.horizontalCenter,
                   styles.w7_45,
+                  { fontSize: 6.2, padding: '4 2' },
                 ]}
               >
                 <View style={[styles.verticalCenter]}>
-                  <Text>{graduate.awards || 'N/A'}</Text>
+                  <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+                    {graduate.awards || 'N/A'}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -887,14 +1029,28 @@ export const EducationalBackgroundPdf = ({
           </View>
 
           {/* Name of School */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w24_5]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w24_5,
+              { padding: '4 2' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Degree/Course */}
-          <View style={[styles.borderRight, styles.inputValue, styles.w22_5]}>
+          <View
+            style={[
+              styles.borderRight,
+              styles.inputValue,
+              styles.w22_5,
+              { padding: '4 2' },
+            ]}
+          >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -949,7 +1105,12 @@ export const EducationalBackgroundPdf = ({
 
           {/* Scholarship/Honors */}
           <View
-            style={[styles.inputValue, styles.horizontalCenter, styles.w7_45]}
+            style={[
+              styles.inputValue,
+              styles.horizontalCenter,
+              styles.w7_45,
+              { fontSize: 6.2, padding: '4 2' },
+            ]}
           >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>

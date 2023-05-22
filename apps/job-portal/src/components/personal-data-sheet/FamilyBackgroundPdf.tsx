@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArialNarrow',
     fontSize: 6.7,
     padding: '4 8',
+    textTransform: 'uppercase',
   },
   inputAddressKey: {
     fontFamily: 'ArialNarrowItalic',
@@ -383,9 +384,7 @@ export const FamilyBackgroundPdf = ({
                 styles.w70_1,
                 { padding: '4 8' },
               ]}
-            >
-              <Text>{parents.motherMaidenName || 'N/A'}</Text>
-            </View>
+            ></View>
           </View>
 
           {/* Line 47 Mother Surname */}

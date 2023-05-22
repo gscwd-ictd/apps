@@ -1,38 +1,44 @@
-import { Dispatch, FunctionComponent, SetStateAction, useContext } from 'react'
-import { HiCheck, HiStop } from 'react-icons/hi'
+import { Dispatch, FunctionComponent, SetStateAction, useContext } from 'react';
+import { HiCheck, HiStop } from 'react-icons/hi';
 
 export type TabType = {
-  title: string
-  nodeText: any
-  tabIndex: number
-}
+  title: string;
+  nodeText: any;
+  tabIndex: number;
+};
 
 type FormWizardProps = {
-  selectedTab: number
-  setSelectedTab: any
-  tabsLength: number
-  tabs: Array<TabType>
-  onClick?: any
-}
+  selectedTab: number;
+  setSelectedTab: any;
+  tabsLength: number;
+  tabs: Array<TabType>;
+  onClick?: any;
+};
 
 type FormNodeProps = {
-  title: string
-  nodeText: string
-  width?: number
-  index: number
-  selected: boolean
+  title: string;
+  nodeText: string;
+  width?: number;
+  index: number;
+  selected: boolean;
   // setSelected: Dispatch<SetStateAction<boolean>>
-  isDone?: boolean
-  startingIndex?: boolean
-  endingIndex?: boolean
-}
+  isDone?: boolean;
+  startingIndex?: boolean;
+  endingIndex?: boolean;
+};
 
-export const FormWizard: FunctionComponent<FormWizardProps> = ({ selectedTab, setSelectedTab, onClick, tabsLength, tabs }) => {
+export const FormWizard: FunctionComponent<FormWizardProps> = ({
+  selectedTab,
+  setSelectedTab,
+  onClick,
+  tabsLength,
+  tabs,
+}) => {
   return (
     <>
       <div className="flex">
         {tabs.map((tab: TabType) => {
-          const { nodeText, title, tabIndex } = tab
+          const { nodeText, title, tabIndex } = tab;
           return (
             <div key={tabIndex}>
               <FormNode
@@ -45,12 +51,12 @@ export const FormWizard: FunctionComponent<FormWizardProps> = ({ selectedTab, se
                 endingIndex={tabIndex === tabsLength ? true : false}
               />
             </div>
-          )
+          );
         })}
       </div>
     </>
-  )
-}
+  );
+};
 export const FormNode: FunctionComponent<FormNodeProps> = ({
   title = 'something',
   nodeText,
@@ -65,9 +71,13 @@ export const FormNode: FunctionComponent<FormNodeProps> = ({
     <>
       <div>
         <main className={`flex flex-col `}>
-          <div className={`flex items-center sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}>
+          <div
+            className={`flex items-center sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}
+          >
             <section
-              className={`z-0 h-[0.25rem] w-[80%]  ${isDone || selected ? `bg-green-600` : `bg-gray-300`}   border-indigo-400 ${
+              className={`z-0 h-[0.25rem] w-[80%]  ${
+                isDone || selected ? `bg-green-600` : `bg-gray-300`
+              }   border-indigo-400 ${
                 startingIndex ? `invisible` : `visible`
               } `}
             />
@@ -82,18 +92,22 @@ export const FormNode: FunctionComponent<FormNodeProps> = ({
               } shrink-0 rounded-full`}
             >
               <span
-                className={`flex select-none flex-row justify-center justify-items-center    ${
-                  isDone || selected ? 'text-lg text-white' : 'text-xs text-gray-400'
+                className={`flex select-none flex-row justify-center justify-items-center text-xs   ${
+                  isDone || selected ? 'text-white' : 'text-gray-400'
                 }`}
               >
                 {isDone ? <HiCheck /> : nodeText}
               </span>
             </button>
             <section
-              className={`z-10 h-[0.25rem] w-[80%]  ${isDone ? `bg-green-600` : `bg-gray-300`} ${endingIndex ? `invisible` : `visible`}  `}
+              className={`z-10 h-[0.25rem] w-[80%]  ${
+                isDone ? `bg-green-600` : `bg-gray-300`
+              } ${endingIndex ? `invisible` : `visible`}  `}
             />
           </div>
-          <div className={`flex justify-center pb-1 sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}>
+          <div
+            className={`flex justify-center pb-1 sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}
+          >
             <p className="w-[80%] select-none truncate px-1 text-center text-xs font-light text-black sm:w-full sm:whitespace-nowrap  lg:w-[80%] lg:whitespace-normal">
               {title}
             </p>
@@ -101,5 +115,5 @@ export const FormNode: FunctionComponent<FormNodeProps> = ({
         </main>
       </div>
     </>
-  )
-}
+  );
+};

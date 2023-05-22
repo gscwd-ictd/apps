@@ -85,9 +85,9 @@ export const OtherInformationPdf = ({
   recognitions,
   organizations,
 }: OtherInformationPdfProps): JSX.Element => {
-  const [emptySkillRows, setEmptySkillRows] = useState(7);
-  const [emptyRecognitionRows, setEmptyRecognitionRows] = useState(7);
-  const [emptyOrgRows, setEmptyOrgRows] = useState(7);
+  const [emptySkillRows] = useState(7);
+  const [emptyRecognitionRows] = useState(7);
+  const [emptyOrgRows] = useState(7);
 
   const renderSpecialSkillRows = () => {
     const content = skills.slice(0, 7).map((skill, index) => (

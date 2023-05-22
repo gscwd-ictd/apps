@@ -17,7 +17,7 @@ import { isEmpty } from 'lodash';
 
 import useSWR from 'swr';
 import { axiosFetcher } from '../../../../../../components/modular/fetcher/Fetcher';
-import { Applicant } from 'apps/job-portal/utils/types/data/wes.type';
+import { Applicant } from 'apps/job-portal/utils/types/data/types';
 
 const WorkExperienceSheetPdf: NextPage = ({
   applicantWes,
@@ -80,7 +80,7 @@ const WorkExperienceSheetPdf: NextPage = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="flex justify-center w-full h-full">
+        <div className="flex justify-center w-full h-screen">
           <WesDocument
             formatDate={formatDate}
             workExperiencesSheet={

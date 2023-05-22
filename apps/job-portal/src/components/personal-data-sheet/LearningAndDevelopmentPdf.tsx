@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { LearningDevelopment } from 'apps/job-portal/utils/types/data/lnd.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArialNarrow',
     fontSize: 6.7,
     padding: '4 8',
+    textTransform: 'uppercase',
   },
   warningText: {
     fontFamily: 'ArialNarrowBoldItalic',
@@ -79,10 +81,10 @@ export const LearningAndDevelopmentPdf = ({
   formatDate,
   learningDevelopment,
 }: LearningAndDevelopmentPdfProps): JSX.Element => {
-  const [emptyLearningDevRows, setEmptyLearningDevRows] = useState(21);
+  const [emptyLearningDevRows] = useState(18);
 
   const renderLearningDevelopmentRows = () => {
-    const content = learningDevelopment.slice(0, 21).map((training, index) => (
+    const content = learningDevelopment.slice(0, 18).map((training, index) => (
       <View
         style={[
           styles.borderTop,
@@ -148,11 +150,13 @@ export const LearningAndDevelopmentPdf = ({
             styles.inputValue,
             styles.horizontalCenter,
             styles.w6,
-            { padding: '5.5 3' },
+            { fontSize: 5, padding: '5.5 3' },
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{training.type || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {training.type || 'N/A'}
+            </Text>
           </View>
         </View>
 
@@ -166,7 +170,9 @@ export const LearningAndDevelopmentPdf = ({
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{training.conductedBy || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {training.conductedBy || 'N/A'}
+            </Text>
           </View>
         </View>
       </View>
@@ -401,7 +407,7 @@ export const LearningAndDevelopmentPdf = ({
 
       {renderLearningDevelopmentRows()}
 
-      {learningDevelopment.length < 21 ? (
+      {learningDevelopment.length < 19 ? (
         <>{renderEmptyLearningDevelopmentRows()}</>
       ) : null}
 

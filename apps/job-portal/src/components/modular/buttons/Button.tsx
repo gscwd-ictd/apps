@@ -27,9 +27,7 @@ export const Button = ({
         {...props}
         ref={innerRef}
         disabled={muted}
-        className={`${
-          muted ? 'cursor-not-allowed bg-slate-50' : `${background[variant]}`
-        }
+        className={`${muted ? 'cursor-not-allowed' : `${background[variant]}`}
         ${className} whitespace-nowrap ${fluid ? 'w-full' : ''} ${
           background[variant]
         } ${size[btnSize]} ${focus[variant]} ${hover[variant]}  ${

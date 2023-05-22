@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArialNarrow',
     fontSize: 6.7,
     padding: '4 8',
+    textTransform: 'uppercase',
   },
   warningText: {
     fontFamily: 'ArialNarrowBoldItalic',
@@ -79,10 +80,10 @@ export const VoluntaryWorkPdf = ({
   formatDate,
   voluntaryWork,
 }: VoluntaryWorkPdfProps): JSX.Element => {
-  const [emptyVoluntaryWorkRows, setEmptyVoluntaryWorkRows] = useState(7);
+  const [emptyVoluntaryWorkRows] = useState(5);
 
   const renderVoluntaryWorkRows = () => {
-    const content = voluntaryWork.slice(0, 7).map((work, index) => (
+    const content = voluntaryWork.slice(0, 5).map((work, index) => (
       <View
         style={[
           styles.borderTop,
@@ -345,7 +346,7 @@ export const VoluntaryWorkPdf = ({
 
       {renderVoluntaryWorkRows()}
 
-      {voluntaryWork.length < 28 ? <>{renderEmptyVoluntaryWorkRows()}</> : null}
+      {voluntaryWork.length < 6 ? <>{renderEmptyVoluntaryWorkRows()}</> : null}
 
       <View style={[styles.borderTop]}>
         <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>
