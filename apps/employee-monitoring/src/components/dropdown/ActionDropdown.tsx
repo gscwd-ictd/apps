@@ -1,23 +1,25 @@
 import { Menu, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Fragment, FunctionComponent } from 'react';
 import { useDtrStore } from '../../store/dtr.store';
+import { EmployeeRowData } from '../../utils/types/table-row-types/monitoring/employee.type';
+
+type ActionDropdownProps = {
+  employee: EmployeeRowData;
+};
 
 const actionItems = ['Schedule', 'View Daily Time Record'];
 
-export const ActionDropdown = () => {
-  const { dropdownAction, setDropdownAction } = useDtrStore((state) => ({
-    dropdownAction: state.dropdownAction,
+export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
+  employee,
+}) => {
+  const { setDropdownAction, setSelectedEmployee } = useDtrStore((state) => ({
     setDropdownAction: state.setDropdownAction,
+    setSelectedEmployee: state.setSelectedEmployee,
   }));
 
   const handleSelectAction = (item: string) => {
     setDropdownAction(item);
-
-    if (item === 'Employees') {
-      //  setPublication(publication);
-      //   localStorage.setItem('publication', JSON.stringify(publication))
-      //  setModal({ ...modal, isOpen: true });
-    }
+    setSelectedEmployee(employee);
   };
 
   return (

@@ -1,5 +1,4 @@
 import { Transition, Dialog } from '@headlessui/react';
-
 import { Dispatch, Fragment, MouseEventHandler, SetStateAction } from 'react';
 import { HiOutlineX } from 'react-icons/hi';
 import { StyledButton } from '../../buttons/StyledButton';
