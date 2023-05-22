@@ -19,6 +19,7 @@ import { usePdsStore } from '../../../../store/pds.store';
 import schema from '../../../../schema/Eligibility';
 import { useApplicantStore } from '../../../../store/applicant.store';
 import { Eligibility } from 'apps/job-portal/utils/types/data/eligibility.type';
+import dayjs from 'dayjs';
 
 export const CSEligibility = (): JSX.Element => {
   // initialize useref and assign it to examDateToRef
@@ -277,7 +278,7 @@ export const CSEligibility = (): JSX.Element => {
                       name="eligLicensenumber"
                       label="License Number"
                       placeholder="Leave blank if not applicable."
-                      type="number"
+                      type="text"
                       withHelpButton
                       helpContent="Specify the license number if eligibility is under R.A. 1080"
                       controller={{
@@ -390,7 +391,11 @@ export const CSEligibility = (): JSX.Element => {
                           <TableDimension
                             isText={true}
                             className="px-1"
-                            label={elig.validity ? elig.validity : 'N/A'}
+                            label={
+                              elig.validity
+                                ? dayjs(elig.validity).format('YYYY-MM-DD')
+                                : 'N/A'
+                            }
                           />
                           <TableDimension
                             isText={false}

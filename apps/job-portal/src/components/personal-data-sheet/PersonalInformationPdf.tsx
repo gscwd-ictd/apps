@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArialNarrow',
     fontSize: 6.7,
     padding: '4 8',
+    textTransform: 'uppercase',
   },
   inputAddressKey: {
     fontFamily: 'ArialNarrowItalic',

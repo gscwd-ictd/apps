@@ -224,7 +224,7 @@ export const usePdsStore = create<PDSState>((set) => ({
   spouseOnEdit: false,
   motherOnEdit: false,
   fatherOnEdit: false,
-  childrenOnEdit: false,
+  childrenOnEdit: true,
   elementaryOnEdit: false,
   secondaryOnEdit: false,
   vocationalOnEdit: false,

@@ -1,13 +1,3 @@
-// export type Publication = {
-//   positionId: string;
-//   numberOfPositions: number;
-//   positionTitle: string;
-//   itemNumber: string;
-//   placeOfAssignment: string;
-//   vppId: string;
-//   postingDeadline: string;
-// };
-
 export type Publication = {
   vppId: string;
   postingDate: string;

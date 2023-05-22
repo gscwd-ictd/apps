@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { Pds } from 'apps/job-portal/src/store/pds.store';
 
 export type Eligibility = {

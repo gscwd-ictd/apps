@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     borderBottom: '0.5 solid #000000',
     padding: '1 5 2 5',
     textAlign: 'center',
+    fontSize: 7,
   },
   iDText: {
     fontFamily: 'ArialRegular',
@@ -95,11 +96,13 @@ const styles = StyleSheet.create({
   w65: { width: '65%' },
   w60: { width: '60%' },
   w50: { width: '50%' },
+  w45: { width: '45%' },
   w40: { width: '40%' },
   w35: { width: '35%' },
   w30: { width: '30%' },
   w25: { width: '25%' },
   w20: { width: '20%' },
+  w15: { width: '15%' },
 });
 
 Font.register({
@@ -149,14 +152,14 @@ export const QuestionsPdf = ({
   references,
   governmentIssuedId,
 }: QuestionsPdfProps): JSX.Element => {
-  const [emptyReferenceRows, setEmptyReferenceRows] = useState(3);
+  const [emptyReferenceRows] = useState(3);
 
   const renderReferenceRows = () => {
     const content = references.slice(0, 3).map((reference, index) => (
       <View style={[styles.borderTop, { flexDirection: 'row' }]} key={index}>
         <View
           style={[
-            styles.w50,
+            styles.w40,
             styles.borderRight,
             styles.inputAnswers,
             { textAlign: 'center', fontSize: 8 },
@@ -166,17 +169,19 @@ export const QuestionsPdf = ({
         </View>
         <View
           style={[
-            styles.w30,
+            styles.w45,
             styles.borderRight,
             styles.inputAnswers,
-            { textAlign: 'center', fontSize: 8 },
+            { textAlign: 'center', fontSize: 6.5 },
           ]}
         >
-          <Text>{reference.address}</Text>
+          <Text style={{ textTransform: 'capitalize' }}>
+            {reference.address}
+          </Text>
         </View>
         <View
           style={[
-            styles.w20,
+            styles.w15,
             styles.borderRight,
             styles.inputAnswers,
             { textAlign: 'center', fontSize: 8 },
@@ -211,7 +216,7 @@ export const QuestionsPdf = ({
               styles.w30,
               styles.borderRight,
               styles.inputAnswers,
-              { textAlign: 'center', fontSize: 8 },
+              { textAlign: 'center', fontSize: 6.5 },
             ]}
           >
             <Text>N/A</Text>
@@ -1136,7 +1141,7 @@ export const QuestionsPdf = ({
           <View style={[styles.borderTop, { flexDirection: 'row' }]}>
             <View
               style={[
-                styles.w50,
+                styles.w40,
                 styles.borderRight,
                 styles.inputQuestions,
                 { textAlign: 'center', fontSize: 8 },
@@ -1146,7 +1151,7 @@ export const QuestionsPdf = ({
             </View>
             <View
               style={[
-                styles.w30,
+                styles.w45,
                 styles.borderRight,
                 styles.inputQuestions,
                 { textAlign: 'center', fontSize: 8 },
@@ -1156,7 +1161,7 @@ export const QuestionsPdf = ({
             </View>
             <View
               style={[
-                styles.w20,
+                styles.w15,
                 styles.borderRight,
                 styles.inputQuestions,
                 { textAlign: 'center', fontSize: 8 },
