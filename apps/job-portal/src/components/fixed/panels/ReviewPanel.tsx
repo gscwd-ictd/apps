@@ -693,7 +693,7 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      (isEmpty(to.toString()) || to === null) &&
+                                      to === null &&
                                       (isEmpty(yearGraduated.toString()) ||
                                         yearGraduated === null)
                                         ? 'Present'
@@ -767,7 +767,7 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      (isEmpty(to.toString()) || to === null) &&
+                                      to === null &&
                                       (isEmpty(yearGraduated.toString()) ||
                                         yearGraduated === null)
                                         ? 'Present'
@@ -841,7 +841,7 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      (isEmpty(to.toString()) || to === null) &&
+                                      to === null &&
                                       (isEmpty(yearGraduated.toString()) ||
                                         yearGraduated === null)
                                         ? 'Present'

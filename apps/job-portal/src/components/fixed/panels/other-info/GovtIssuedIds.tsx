@@ -75,7 +75,7 @@ export const OIGovtID = (): JSX.Element => {
             <FloatingLabelInputRF
               id="issueDate"
               value={governmentIssuedId.issueDate}
-              isRequired
+              // isRequired
               placeholder="Issued Date"
               type="date"
               controller={{

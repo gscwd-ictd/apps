@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { WorkExperience } from 'apps/job-portal/utils/types/data/work.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArialNarrow',
     fontSize: 6.7,
     padding: '5.5 8',
+    textTransform: 'uppercase',
   },
   warningText: {
     fontFamily: 'ArialNarrowBoldItalic',
@@ -112,7 +114,7 @@ export const WorkExperiencePdf = ({
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
             <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-              <Text>{formatDate(experience.to) || 'N/A'}</Text>
+              <Text>{formatDate(experience.to) || 'PRESENT'}</Text>
             </View>
           </View>
         </View>
@@ -189,11 +191,13 @@ export const WorkExperiencePdf = ({
             styles.inputValue,
             styles.horizontalCenter,
             styles.w7,
-            { padding: 0 },
+            { fontSize: 6.2, padding: 0 },
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>{experience.appointmentStatus || 'N/A'}</Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
+              {experience.appointmentStatus || 'N/A'}
+            </Text>
           </View>
         </View>
 
@@ -325,7 +329,7 @@ export const WorkExperiencePdf = ({
               styles.inputValue,
               styles.horizontalCenter,
               styles.w7,
-              { padding: 0 },
+              { fontSize: 6.2, padding: 0 },
             ]}
           >
             <View style={[styles.verticalCenter]}>

@@ -204,11 +204,11 @@ export const WesDocument = ({
   return (
     <>
       {isClient && (
-        <PDFViewer width={'100%'} height={760} showToolbar>
+        <PDFViewer width={'100%'} height={'100%'} showToolbar>
           <Document
             author="General Santos City Water District"
-            subject="CS Form No. 212. Revised 2017"
-            title="Personal Data Sheet"
+            subject="Attachment to CS Form No. 212."
+            title="Work Exoerience Sheet"
           >
             {/* Page 1 */}
             <Page size={[612.3, 935.4]} style={styles.page}>

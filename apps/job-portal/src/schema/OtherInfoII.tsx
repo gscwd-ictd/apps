@@ -1,5 +1,5 @@
-import dayjs from 'dayjs'
-import * as yup from 'yup'
+import dayjs from 'dayjs';
+import * as yup from 'yup';
 
 // yup schema validation
 const schema = yup.object().shape({
@@ -8,10 +8,11 @@ const schema = yup.object().shape({
   govtIdNo: yup.string().required().label('This'),
   issueDate: yup
     .string()
-    .required()
-    .test('Date', 'Please choose a valid date', (value) => {
-      return dayjs().diff(dayjs(value), 'hours') >= 0
-    })
+    .notRequired()
+    .nullable()
+    // .test('Date', 'Please choose a valid date', (value) => {
+    //   return dayjs().diff(dayjs(value), 'hours') >= 0;
+    // })
     .label('This'),
   issuePlace: yup.string().required().label('This'),
   offRelThird: yup.number().required().label('This'),
@@ -32,7 +33,10 @@ const schema = yup.object().shape({
   isGuilty: yup.number().required().label('This'),
   guiltyDetails: yup.string().when('isGuilty', {
     is: 1,
-    then: yup.string().nullable(false).required('Please provide administrative offense details'),
+    then: yup
+      .string()
+      .nullable(false)
+      .required('Please provide administrative offense details'),
     otherwise: yup.string().nullable(true).notRequired(),
   }),
   isCharged: yup.number().required().label('This'),
@@ -88,6 +92,6 @@ const schema = yup.object().shape({
     then: yup.string().nullable(false).required('Please provide details'),
     otherwise: yup.string().nullable(true).notRequired(),
   }),
-})
+});
 
-export default schema
+export default schema;

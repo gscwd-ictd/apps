@@ -856,7 +856,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderVoluntaryWorkExtraPage = () => {
-    const content = pds.voluntaryWork.slice(6).map((voluntaryWork, index) => (
+    const content = pds.voluntaryWork.slice(5).map((voluntaryWork, index) => (
       <View
         style={[
           styles.borderTop,
@@ -2229,7 +2229,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             ) : null}
 
             {/* Voluntary Work Extra Page */}
-            {pds.voluntaryWork && pds.voluntaryWork.length > 7 ? (
+            {pds.voluntaryWork && pds.voluntaryWork.length > 5 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
@@ -2353,7 +2353,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             ) : null}
 
             {/* Learning and Development Extra Pages */}
-            {pds.learningDevelopment && pds.learningDevelopment.length > 19 ? (
+            {pds.learningDevelopment && pds.learningDevelopment.length > 18 ? (
               <Page size={[612.3, 935.4]} style={styles.page}>
                 <View style={styles.bodyBorder}>
                   <View
