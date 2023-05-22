@@ -54,7 +54,7 @@ export default function Dashboard({
   }, []);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
-  const { width, height } = useWindowDimensions();
+  const { windowWidth } = useWindowDimensions();
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function Dashboard({
             </>
           ) : (
             <>
-              {width && width > 1024 ? (
+              {windowWidth && windowWidth > 1024 ? (
                 <>
                   {/* desktop */}
                   <div className="flex flex-row w-full h-full gap-4 pb-24 overflow-x-hidden">
@@ -135,7 +135,7 @@ export default function Dashboard({
               ) : (
                 <>
                   {/* mobile */}
-                  <div className="flex flex-col w-full h-full gap-10 overflow-x-hidden">
+                  <div className="flex flex-col pl-20 w-full h-full gap-10 overflow-x-hidden">
                     <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-0">
                       <Image
                         src={'/gwdlogo.png'}

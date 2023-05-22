@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import { useRouter } from 'next/router';
+import useWindowDimensions from '../window-size/useWindowDimensions';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -20,10 +21,15 @@ export const PassSlipCompletedModal = ({
   }));
 
   const router = useRouter();
+  const { windowWidth } = useWindowDimensions();
 
   return (
     <>
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1024 ? 'lg' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">

@@ -31,6 +31,7 @@ import {
   getUserDetails,
   withCookieSession,
 } from '../../../../src/utils/helpers/session';
+import useWindowDimensions from '../../../../src/components/fixed/window-size/useWindowDimensions';
 
 export default function PassSlip({
   employeeDetails,
@@ -142,6 +143,8 @@ export default function PassSlip({
     }
   }, [responseApply, responseCancel]);
 
+  const { windowWidth } = useWindowDimensions();
+
   return (
     <>
       <>
@@ -196,14 +199,19 @@ export default function PassSlip({
         />
 
         <MainContainer>
-          <div className="w-full h-full px-32">
+          <div
+            className={`w-full h-full  ${
+              windowWidth > 1024 ? 'pl-32 pr-32 ' : 'pl-24 pr-4'
+            }`}
+          >
             <ContentHeader
               title="Employee Pass Slips"
               subtitle="Apply for pass slip"
             >
               <Button onClick={openApplyPassSlipModal}>
                 <div className="flex items-center w-full gap-2">
-                  <HiDocumentAdd /> Apply Pass Slip
+                  <HiDocumentAdd />{' '}
+                  {windowWidth > 1024 ? 'Apply Pass Slip' : ''}
                 </div>
               </Button>
             </ContentHeader>
@@ -221,14 +229,20 @@ export default function PassSlip({
             ) : (
               <ContentBody>
                 <>
-                  <div className="w-full flex">
-                    <div className="w-[58rem]">
+                  <div
+                    className={`w-full ${
+                      windowWidth > 1024 ? 'flex' : 'flex-col'
+                    }`}
+                  >
+                    <div
+                      className={` ${
+                        windowWidth > 1024 ? 'w-[58rem]' : 'w-full'
+                      }`}
+                    >
                       <PassSlipTabs tab={tab} />
                     </div>
                     <div className="w-full">
-                      <PassSlipTabWindow
-                      // employeeId={employeeDetails.employmentDetails.userId}
-                      />
+                      <PassSlipTabWindow />
                     </div>
                   </div>
                 </>

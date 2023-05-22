@@ -1,6 +1,7 @@
 import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import { TabHeader } from '../tab/TabHeader';
+import useWindowDimensions from '../window-size/useWindowDimensions';
 
 type PassSlipTabsProps = {
   tab: number;
@@ -15,10 +16,14 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
       setTab: state.setTab,
     })
   );
-
+  const { windowWidth } = useWindowDimensions();
   return (
     <>
-      <div className="w-full h-[44rem] px-5 overflow-y-auto">
+      <div
+        className={`${
+          windowWidth > 1024 ? 'h-[40rem]' : 'h-full py-10'
+        } w-full  px-5 overflow-y-auto`}
+      >
         <ul className="flex flex-col text-gray-500">
           <TabHeader
             tab={tab}

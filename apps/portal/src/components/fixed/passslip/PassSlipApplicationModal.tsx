@@ -14,6 +14,7 @@ import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
 import { HiX } from 'react-icons/hi';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { format } from 'date-fns';
+import useWindowDimensions from '../window-size/useWindowDimensions';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -116,10 +117,14 @@ export const PassSlipApplicationModal = ({
       closeModalAction();
     }
   };
-
+  const { windowWidth } = useWindowDimensions();
   return (
     <>
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1024 ? 'lg' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">

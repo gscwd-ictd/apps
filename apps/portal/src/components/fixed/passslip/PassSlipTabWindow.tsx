@@ -1,5 +1,6 @@
 import { AllPassSlipListTab } from './AllPassSlipListTab';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
+import useWindowDimensions from '../window-size/useWindowDimensions';
 
 export const PassSlipTabWindow = (): JSX.Element => {
   //zustand initialization to access pass slip store
@@ -10,10 +11,12 @@ export const PassSlipTabWindow = (): JSX.Element => {
       passSlipsCompleted: state.passSlips.completed,
     })
   );
-
+  const { windowWidth } = useWindowDimensions();
   return (
     <>
-      <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
+      <div
+        className={`w-full bg-inherit rounded px-5 h-screen overflow-y-auto`}
+      >
         {tab === 1 && (
           <AllPassSlipListTab passslips={passSlipsforApproval} tab={tab} />
         )}

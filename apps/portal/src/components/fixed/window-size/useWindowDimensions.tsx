@@ -5,20 +5,20 @@
 import { useEffect, useState } from 'react';
 
 type WindowDimentions = {
-  width: number | undefined;
-  height: number | undefined;
+  windowWidth: number | undefined;
+  windowHeight: number | undefined;
 };
 
 const useWindowDimensions = (): WindowDimentions => {
   const [windowDimensions, setWindowDimensions] = useState<WindowDimentions>({
-    width: undefined,
-    height: undefined,
+    windowWidth: undefined,
+    windowHeight: undefined,
   });
   useEffect(() => {
     function handleResize(): void {
       setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
       });
     }
     handleResize();
