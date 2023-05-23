@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { HiDocumentAdd } from 'react-icons/hi';
@@ -31,7 +32,7 @@ import {
   getUserDetails,
   withCookieSession,
 } from '../../../../src/utils/helpers/session';
-import useWindowDimensions from '../../../../src/components/fixed/window-size/useWindowDimensions';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export default function PassSlip({
   employeeDetails,
@@ -143,7 +144,7 @@ export default function PassSlip({
     }
   }, [responseApply, responseCancel]);
 
-  const { windowWidth } = useWindowDimensions();
+  const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
@@ -258,18 +259,18 @@ export default function PassSlip({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);
