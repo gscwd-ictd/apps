@@ -137,12 +137,6 @@ export default function SubmitPanel(): JSX.Element {
       reference,
     };
   };
-
-  const alertConfirmationAction = async () => {
-    await handleSubmit();
-    setAlertConfirmation(false);
-  };
-
   // fire submit
   const handleSubmit = async () => {
     // set disabled button to true
@@ -152,19 +146,24 @@ export default function SubmitPanel(): JSX.Element {
     setIsLoading(true);
 
     // set timeout callback function and sets the loading to false after the timeout
-    setTimeout(async () => {
+
+    const applicantData = await postApplicantData();
+
+    setIsConfirmationPressed(true);
+
+    return { error: applicantData.error, result: applicantData.result };
+  };
+
+  const alertConfirmationAction = async () => {
+    const submitResponse = await handleSubmit();
+
+    if (submitResponse.error === true) {
+      setIsError(true);
       setIsLoading(false);
-
-      const postApplicantPds = await postApplicantData();
-
-      if (postApplicantPds?.error === true) {
-        setIsError(true);
-      } else if (postApplicantPds?.error === false) {
-        setIsError(false);
-      }
-
-      setIsConfirmationPressed(true);
-    }, 3000); // timeout is set to 3 secs
+    } else if (submitResponse.error === false) {
+      setIsError(false);
+      setIsLoading(false);
+    }
   };
 
   // post data
@@ -256,21 +255,29 @@ export default function SubmitPanel(): JSX.Element {
     }
 
     setAlertSuccess(false);
-    setIsLoading(false);
   };
 
   const alertFailedAction = () => {
-    setAlertConfirmation(false);
+    // setAlertConfirmation(false);
     setAlertFailed(false);
   };
 
   useEffect(() => {
     setIsDisabled(false);
     if (isError === true && isConfirmationPressed) {
-      setAlertFailed(true);
+      setAlertConfirmation(false);
+      setTimeout(() => {
+        setAlertFailed(true);
+      }, 300);
     } else if (isError === false && isConfirmationPressed) {
-      setAlertSuccess(true);
+      setAlertConfirmation(false);
+      setTimeout(() => {
+        setAlertSuccess(true);
+      }, 300);
     }
+    setIsDisabled(false);
+    setIsError(false);
+    setIsConfirmationPressed(false);
   }, [isError, isConfirmationPressed]);
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { Eligibility } from 'apps/job-portal/utils/types/data/eligibility.type';
+import { chunkSubstr } from './PdsDocument';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArialNarrow',
     fontSize: 6.7,
     padding: '5.5 8',
+    textTransform: 'uppercase',
   },
   warningText: {
     fontFamily: 'ArialNarrowBoldItalic',
@@ -130,10 +132,13 @@ export const EligibilityPdf = ({
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text>
-              {eligibility.examDate.from + ' to ' + eligibility.examDate.to ||
-                'N/A'}
-            </Text>
+            {eligibility.examDate.from && eligibility.examDate.to ? (
+              <Text style={{ textTransform: 'lowercase' }}>
+                {eligibility.examDate.from + ' to ' + eligibility.examDate.to}
+              </Text>
+            ) : (
+              <Text>{eligibility.examDate.from}</Text>
+            )}
           </View>
         </View>
 
@@ -163,7 +168,10 @@ export const EligibilityPdf = ({
           <View
             style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
           >
-            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
+            <Text
+              style={[styles.verticalCenter, { padding: '3 0' }]}
+              hyphenationCallback={(e) => chunkSubstr(e)}
+            >
               {eligibility.licenseNumber || 'N/A'}
             </Text>
           </View>
@@ -280,7 +288,7 @@ export const EligibilityPdf = ({
         </Text>
       </View>
 
-      {/* Eligiblity Header */}
+      {/* Eligibility Header */}
       <View
         style={[
           styles.borderTop,
@@ -386,7 +394,7 @@ export const EligibilityPdf = ({
         </View>
       </View>
 
-      {/* Eligiblities */}
+      {/* Eligibilities */}
       {renderEligibilityRows()}
 
       {eligibility.length < 7 ? <>{renderEmptyEligibilityRows()}</> : null}

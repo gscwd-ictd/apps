@@ -245,7 +245,7 @@ export const VolWorkExp = (): JSX.Element => {
                     helpContent="Indicate the number of hours of voluntary work rendered."
                     type="number"
                     muted={getIsCurrentlyVol}
-                    labelIsRequired={!getIsCurrentlyVol}
+                    labelIsRequired={false}
                     controller={{
                       ...register('numberOfHours', {
                         required: true,
