@@ -330,7 +330,9 @@ export const AllSelectionApplicantsList = () => {
                               setPdsAlertState(true);
                             }}
                           >
-                            ...
+                            <span className="text-indigo-600 underline">
+                              Pds
+                            </span>
                           </button>
                         </div>
                       </div>

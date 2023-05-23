@@ -1,5 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  LoadingSpinner,
+  Modal,
+} from '@gscwd-apps/oneui';
 import {
   EmployeeSchedule,
   useDtrStore,
@@ -45,6 +50,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
   closeAction,
   employee,
 }) => {
+  const [employeeId, setEmployeeId] = useState<string>('');
   const [listOfSchedules, setListOfSchedules] = useState<
     Array<SelectOption & { scheduleBase: string }>
   >([]);
@@ -57,6 +63,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
   const {
     selectedEmployee,
     employeeWithSchedule,
+    loadingEmployeeWithSchedule,
     defineSchedule,
     defineScheduleFail,
     defineScheduleSuccess,
@@ -72,6 +79,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     getEmployeeSchedule: state.getEmployeeSchedule,
     getEmployeeScheduleFail: state.getEmployeeScheduleFail,
     getEmployeeScheduleSuccess: state.getEmployeeScheduleSuccess,
+    loadingEmployeeWithSchedule: state.loading.loadingEmployeeWithSchedule,
   }));
 
   // schedule store
@@ -92,20 +100,28 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     register,
     clearErrors,
     formState: { errors },
-  } = useForm<EmployeeWithSchedule>({ mode: 'onChange' });
+  } = useForm<EmployeeWithSchedule>({
+    mode: 'onChange',
+    defaultValues: {
+      employeeId: '',
+      employeeName: '',
+      scheduleBase: null,
+      scheduleId: '',
+    },
+  });
 
+  // initial swr : get the employee schedule first priority
   // swr employee with schedule
   const {
     data: swrEmployeeWithSchedule,
     isLoading: swrEwsIsLoading,
     error: swrEwsError,
-  } = useSWR(`/employee-schedule/${employee.id}`, fetcherEMS, {
+  } = useSWR(`/employee-schedule/${employeeId}`, fetcherEMS, {
     revalidateOnFocus: false,
     shouldRetryOnError: false,
   });
 
-  // swr schedules
-  // use SWR
+  // swr schedules: get the list of all schedules second priority
   const {
     data: swrSchedules,
     isLoading: swrSchedulesIsLoading,
@@ -116,12 +132,23 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     revalidateOnFocus: false,
   });
 
+  // fire submit
   const onSubmit = (data: EmployeeWithSchedule) => {
     const { employeeName, scheduleBase, ...rest } = data;
+
     defineSchedule();
     handlePostResult(rest);
   };
 
+  const closeModal = () => {
+    // set the employee id to empty every time the modal is closed
+    setEmployeeId('');
+
+    reset();
+    closeAction();
+  };
+
+  // post route for submitting the data to the db
   const handlePostResult = async (data: any) => {
     const { error, result } = await postEmpMonitoring(
       '/employee-schedule',
@@ -137,7 +164,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
       //   mutate('/holidays');
 
       reset();
-      closeAction();
+      closeModal();
     }
   };
 
@@ -146,12 +173,19 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     if (!isEmpty(employeeWithSchedule)) {
       setValue('employeeId', employeeWithSchedule.employeeId);
       setValue('employeeName', employeeWithSchedule.employeeName);
+
+      // if schedules are fetched using swr, load the default values
       if (!isEmpty(schedules)) {
         setValue('scheduleBase', employeeWithSchedule.schedule.scheduleBase);
-        setValue('scheduleId', employeeWithSchedule.schedule.id);
       }
     }
   }, [employeeWithSchedule, schedules]);
+
+  // after schedule base is changed
+  useEffect(() => {
+    if (!isEmpty(filteredSchedules))
+      setValue('scheduleId', employeeWithSchedule.schedule.id);
+  }, [filteredSchedules]);
 
   // employee schedule loading
   useEffect(() => {
@@ -182,7 +216,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     if (swrEwsError) {
       getEmployeeScheduleFail(swrEwsError);
     }
-  }, [swrEwsError, swrEmployeeWithSchedule, employee]);
+  }, [swrEwsError, swrEmployeeWithSchedule]);
 
   // set schedules swr
   useEffect(() => {
@@ -220,6 +254,13 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     }
   }, [listOfSchedules, watch('scheduleBase')]);
 
+  // this is needed to re-run swr every time the modal opens
+  useEffect(() => {
+    if (modalState) {
+      setEmployeeId(employee.id);
+    }
+  }, [modalState]);
+
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady>
@@ -229,7 +270,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
             <div>
               <button
                 className="px-2 py-1 rounded hover:bg-gray-200"
-                onClick={closeAction}
+                onClick={closeModal}
               >
                 x
               </button>
@@ -237,58 +278,68 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
           </div>
         </Modal.Header>
         <Modal.Body>
-          {swrEwsIsLoading ? (
-            <>
-              <LoadingSpinner size="lg" />
-            </>
-          ) : (
-            <>
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                id="setEmployeeScheduleModal"
-              >
-                <div className="w-full my-5">
-                  <div className="flex flex-col w-full gap-5">
-                    <LabelInput
-                      id={'employeeScheduleName'}
-                      type="text"
-                      label={'Employee Name'}
-                      controller={{ ...register('employeeName') }}
-                      isError={errors.employeeName ? true : false}
-                      errorMessage={errors.employeeName?.message}
-                      disabled={true}
-                    />
+          <>
+            {/* Notification */}
+            {loadingEmployeeWithSchedule ? (
+              <div className="fixed z-50 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                <AlertNotification
+                  logo={<LoadingSpinner size="xs" />}
+                  alertType="info"
+                  notifMessage="Submitting request"
+                  dismissible={false}
+                />
+              </div>
+            ) : null}
 
-                    {/** Schedule Base  */}
-                    <SelectListRF
-                      id="scheduleBase"
-                      selectList={scheduleBaseSelection}
-                      controller={{
-                        ...register('scheduleBase', { required: true }),
-                      }}
-                      label="Schedule Base"
-                      isError={errors.scheduleBase ? true : false}
-                      errorMessage={errors.scheduleBase?.message}
-                      disabled={swrEwsIsLoading ? true : false}
-                    />
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              id="setEmployeeScheduleModal"
+            >
+              <div className="w-full my-5">
+                <div className="flex flex-col w-full gap-5">
+                  <LabelInput
+                    id={'employeeScheduleName'}
+                    type="text"
+                    label={'Employee Name'}
+                    controller={{ ...register('employeeName') }}
+                    isError={errors.employeeName ? true : false}
+                    errorMessage={errors.employeeName?.message}
+                    disabled={true}
+                  />
 
-                    {/** Schedule Base  */}
-                    <SelectListRF
-                      id="scheduleName"
-                      selectList={filteredSchedules}
-                      controller={{
-                        ...register('scheduleId', { required: true }),
-                      }}
-                      label="Schedule Name"
-                      isError={errors.scheduleId ? true : false}
-                      errorMessage={errors.scheduleId?.message}
-                      disabled={swrEwsIsLoading ? true : false}
-                    />
-                  </div>
+                  {/** Schedule Base  */}
+                  <SelectListRF
+                    id="scheduleBase"
+                    selectList={scheduleBaseSelection}
+                    controller={{
+                      ...register('scheduleBase', { required: true }),
+                    }}
+                    label="Schedule Base"
+                    isError={errors.scheduleBase ? true : false}
+                    errorMessage={errors.scheduleBase?.message}
+                    disabled={swrEwsIsLoading ? true : false}
+                  />
+
+                  {/** Schedule Base  */}
+                  <SelectListRF
+                    id="scheduleName"
+                    selectList={filteredSchedules}
+                    defaultValue={getValues('scheduleId')}
+                    controller={{
+                      ...register('scheduleId', {
+                        required: true,
+                        onChange: (e) => setValue('scheduleId', e.target.value),
+                      }),
+                    }}
+                    label="Schedule Name"
+                    isError={errors.scheduleId ? true : false}
+                    errorMessage={errors.scheduleId?.message}
+                    disabled={swrEwsIsLoading ? true : false}
+                  />
                 </div>
-              </form>
-            </>
-          )}
+              </div>
+            </form>
+          </>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end w-full">

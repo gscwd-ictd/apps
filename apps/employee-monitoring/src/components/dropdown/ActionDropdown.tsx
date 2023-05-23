@@ -26,10 +26,7 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
     <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button
-            className="h-full whitespace-nowrap rounded-md border-2 border-slate-100 bg-slate-300 px-3 py-[0.2rem] text-gray-700 transition-colors ease-in-out hover:bg-slate-200 active:bg-slate-300"
-            // className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-black rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-          >
+          <Menu.Button className="h-full whitespace-nowrap rounded-md border-2 border-slate-100 bg-slate-300 px-3 py-[0.2rem] text-gray-700 transition-colors ease-in-out hover:bg-slate-200 active:bg-slate-300">
             <span>...</span>
           </Menu.Button>
         </div>
@@ -43,21 +40,28 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
           leaveTo="transform opacity-0 scale-95"
         >
           <Menu.Items
+            as="div"
             className={`shadow-gray absolute right-0 z-50 mb-2 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-gray-100 ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
             {actionItems.map((item: string, idx: number) => {
               return (
                 <div key={idx}>
-                  <Menu.Item>
+                  <Menu.Item as="section">
                     {({ active }) => (
-                      <button
+                      <a
+                        href={
+                          item === 'View Daily Time Record'
+                            ? `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_FE_DOMAIN}/monitoring/daily-time-record/employee?id=${employee.id}`
+                            : null
+                        }
+                        rel="noreferrer"
                         onClick={() => handleSelectAction(item)}
                         className={`${
                           active ? 'bg-slate-50 text-white' : 'text-gray-500'
                         } hover:bg-slate-600 group flex w-full items-center rounded py-3 px-4`}
                       >
                         {item}
-                      </button>
+                      </a>
                     )}
                   </Menu.Item>
                 </div>
