@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CardPreview } from '../../modular/cards/CardPreview';
 import { CardContainer } from '../card/CardContainer';
 import { LabelFieldPreview } from '../card/LabelFieldPreview';
@@ -693,9 +694,7 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      (isEmpty(to.toString()) || to === null) &&
-                                      (isEmpty(yearGraduated.toString()) ||
-                                        yearGraduated === null)
+                                      to === null && yearGraduated === null
                                         ? 'Present'
                                         : to
                                     }
@@ -767,9 +766,7 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      (isEmpty(to.toString()) || to === null) &&
-                                      (isEmpty(yearGraduated.toString()) ||
-                                        yearGraduated === null)
+                                      to === null && yearGraduated === null
                                         ? 'Present'
                                         : to
                                     }
@@ -841,9 +838,7 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      (isEmpty(to.toString()) || to === null) &&
-                                      (isEmpty(yearGraduated.toString()) ||
-                                        yearGraduated === null)
+                                      to === null && yearGraduated === null
                                         ? 'Present'
                                         : to
                                     }

@@ -33,6 +33,7 @@ export type DailyTimeRecordState = {
   selectedEmployee: EmployeeRowData;
   setSelectedEmployee: (selectedEmployee: EmployeeRowData) => void;
   employees: Array<EmployeeRowData>;
+
   employeeWithSchedule: EmployeeSchedule;
   setEmployeeWithSchedule: (employeeWithSchedule: EmployeeSchedule) => void;
   loading: LoadingDtrEmployee;
@@ -50,6 +51,8 @@ export type DailyTimeRecordState = {
   defineSchedule: () => void;
   defineScheduleSuccess: (response: EmployeeSchedule) => void;
   defineScheduleFail: (error: string) => void;
+
+  emptyErrorsAndResponse: () => void;
 };
 
 export const useDtrStore = create<DailyTimeRecordState>((set) => ({
@@ -60,6 +63,13 @@ export const useDtrStore = create<DailyTimeRecordState>((set) => ({
   employeeWithSchedule: {} as EmployeeSchedule,
   selectedEmployee: {} as EmployeeRowData,
   employeeDtr: { postResponse: {} as EmployeeSchedule },
+
+  emptyErrorsAndResponse: () =>
+    set((state) => ({
+      ...state,
+      error: { errorEmployeesAsOption: '', errorEmployeeWithSchedule: '' },
+      employeeDtr: { postResponse: {} as EmployeeSchedule },
+    })),
   setEmployeeWithSchedule: (employeeWithSchedule: EmployeeSchedule) =>
     set((state) => ({ ...state, employeeWithSchedule })),
 
@@ -89,14 +99,14 @@ export const useDtrStore = create<DailyTimeRecordState>((set) => ({
   defineScheduleSuccess: (response: EmployeeSchedule) =>
     set((state) => ({
       ...state,
-      loading: { ...state.loading, loadingEmployeeWithSchedule: true },
+      loading: { ...state.loading, loadingEmployeeWithSchedule: false },
       employeeDtr: { ...state.employeeDtr, postResponse: response },
     })),
 
   defineScheduleFail: (error: string) =>
     set((state) => ({
       ...state,
-      loading: { ...state.loading, loadingEmployeeWithSchedule: true },
+      loading: { ...state.loading, loadingEmployeeWithSchedule: false },
       error: { ...state.error, errorEmployeeWithSchedule: error },
     })),
 

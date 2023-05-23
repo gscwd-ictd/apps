@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, useDataTable } from '@gscwd-apps/oneui';
+import { DataTable, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
@@ -18,22 +18,26 @@ import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/sideba
 
 export default function Index() {
   const {
+    errorEmployeeWithSchedule,
     employees,
     postResponse,
     dropdownAction,
     selectedEmployee,
     getDtrEmployees,
     getDtrEmployeesFail,
+    emptyErrorsAndResponse,
     getDtrEmployeesSuccess,
     setEmployeeWithSchedule,
     setDropdownAction,
   } = useDtrStore((state) => ({
     employees: state.employees,
-    selectedEmployee: state.selectedEmployee,
     dropdownAction: state.dropdownAction,
+    selectedEmployee: state.selectedEmployee,
     postResponse: state.employeeDtr.postResponse,
+    errorEmployeeWithSchedule: state.error.errorEmployeeWithSchedule,
     getDtrEmployees: state.getDtrEmployees,
     setEmployeeWithSchedule: state.setEmployeeWithSchedule,
+    emptyErrorsAndResponse: state.emptyErrorsAndResponse,
     getDtrEmployeesFail: state.getDtrEmployeesFail,
     getDtrEmployeesSuccess: state.getDtrEmployeesSuccess,
     setDropdownAction: state.setDropdownAction,
@@ -54,6 +58,7 @@ export default function Index() {
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
   const openEditActionModal = (rowData: EmployeeRowData) => {
     setEditModalIsOpen(true);
+
     setCurrentRowData(rowData);
   };
   const closeEditActionModal = () => {
@@ -136,6 +141,7 @@ export default function Index() {
             fullName: personalDetails.fullName,
             assignment: employmentDetails.assignment,
             positionTitle: employmentDetails.positionTitle,
+            companyId: employeeDetails.employmentDetails.companyId,
           };
         }
       );
@@ -154,6 +160,16 @@ export default function Index() {
     }
   }, [dropdownAction, selectedEmployee]);
 
+  // mutate from swr
+  useEffect(() => {
+    if (!isEmpty(postResponse) || !isEmpty(errorEmployeeWithSchedule)) {
+      swrMutate();
+      setTimeout(() => {
+        emptyErrorsAndResponse();
+      }, 3000);
+    }
+  }, [postResponse, errorEmployeeWithSchedule]);
+
   return (
     <>
       <div className="w-full">
@@ -168,6 +184,22 @@ export default function Index() {
           ]}
         />
 
+        {/* Notification error */}
+        {!isEmpty(errorEmployeeWithSchedule) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={errorEmployeeWithSchedule}
+          />
+        ) : null}
+
+        {/* Notification Success */}
+        {!isEmpty(postResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully Added!"
+          />
+        ) : null}
+
         <div className="mx-5">
           <Card>
             {/** Top Card */}
@@ -181,7 +213,6 @@ export default function Index() {
 
               <DataTable
                 model={table}
-                showGlobalFilter={true}
                 showColumnFilter={true}
                 paginate={true}
               />
