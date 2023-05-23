@@ -1,6 +1,5 @@
 import { AllPassSlipListTab } from './AllPassSlipListTab';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
-import useWindowDimensions from '../window-size/useWindowDimensions';
 
 export const PassSlipTabWindow = (): JSX.Element => {
   //zustand initialization to access pass slip store
@@ -11,7 +10,7 @@ export const PassSlipTabWindow = (): JSX.Element => {
       passSlipsCompleted: state.passSlips.completed,
     })
   );
-  const { windowWidth } = useWindowDimensions();
+
   return (
     <>
       <div

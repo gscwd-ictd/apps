@@ -1,7 +1,9 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import * as React from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import { useState } from 'react';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export default function Carousel() {
   const [next, setNext] = useState(false);
@@ -47,6 +49,7 @@ export default function Carousel() {
     ]
   );
 
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
       <div
@@ -58,14 +61,17 @@ export default function Carousel() {
             <label className="text-lg text-slate-600 uppercase">
               GSIS Touch
             </label>
-            <label className="text-sm text-slate-500 text-justify">
-              To the employees who have not created their GSIS Touch Account,
-              please install and create an account now. This is for your
-              convenience in applying for loan and in viewing your member
-              record. In case you have trouble creating your account, please
-              approach us in the HR office so we can assist you. Deadline is
-              until Tuesday, May 9.
-            </label>
+            {windowWidth > 1024 ? (
+              <label className="text-sm text-slate-500 text-justify">
+                To the employees who have not created their GSIS Touch Account,
+                please install and create an account now. This is for your
+                convenience in applying for loan and in viewing your member
+                record. In case you have trouble creating your account, please
+                approach us in the HR office so we can assist you. Deadline is
+                until Tuesday, May 9.
+              </label>
+            ) : null}
+
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
@@ -82,9 +88,12 @@ export default function Carousel() {
             <label className="text-lg text-slate-600 uppercase">
               Congratulations
             </label>
-            <label className="text-sm text-slate-500 text-justify">
-              {`Congratulations to our newly hired Job Order Employees!`}
-            </label>
+            {windowWidth > 1024 ? (
+              <label className="text-sm text-slate-500 text-justify">
+                {`Congratulations to our newly hired Job Order Employees!`}
+              </label>
+            ) : null}
+
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
@@ -101,14 +110,17 @@ export default function Carousel() {
             <label className="text-lg text-slate-600 uppercase">
               Month of May Birthday Celebrants
             </label>
-            <label className="text-sm text-slate-500 text-justify">
-              {`Happy Birthday to all May Celebrants! Here's a short poem for you!
+            {windowWidth > 1024 ? (
+              <label className="text-sm text-slate-500 text-justify">
+                {`Happy Birthday to all May Celebrants! Here's a short poem for you!
               Unforgettable Birthday I'm wishing you a birthday You never will
               forget, A day packed full of pleasure, Your very best birthday
               yet. And when your birthday's over, I'm wishing quite sincerely
               That happiness and joy and fun Will fill your birthdays yearly! By
               Joanna Fuchs`}
-            </label>
+              </label>
+            ) : null}
+
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"

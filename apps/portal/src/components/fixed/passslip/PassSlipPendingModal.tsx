@@ -1,7 +1,8 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
-import useWindowDimensions from '../window-size/useWindowDimensions';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -22,7 +23,7 @@ export const PassSlipPendingModal = ({
   const modalAction = async (e) => {
     e.preventDefault();
   };
-  const { windowWidth } = useWindowDimensions();
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
       <Modal

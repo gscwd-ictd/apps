@@ -9,7 +9,7 @@ type WindowDimentions = {
   windowHeight: number | undefined;
 };
 
-const useWindowDimensions = (): WindowDimentions => {
+const UseWindowDimensions = (): WindowDimentions => {
   const [windowDimensions, setWindowDimensions] = useState<WindowDimentions>({
     windowWidth: undefined,
     windowHeight: undefined,
@@ -29,4 +29,4 @@ const useWindowDimensions = (): WindowDimentions => {
   return windowDimensions;
 };
 
-export default useWindowDimensions;
+export default UseWindowDimensions;

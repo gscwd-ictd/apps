@@ -1,16 +1,21 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 // import { postData } from '../../../../utils/hoc/axios';
 // import { deleteCookie } from 'cookies-next'
 import {
+  HiOutlineBell,
   HiOutlineCheck,
   HiOutlineClipboardCheck,
   HiOutlineCog,
   HiOutlineDocumentDuplicate,
+  HiOutlineHome,
   HiOutlineLogout,
+  HiOutlineNewspaper,
 } from 'react-icons/hi';
 import axios from 'axios';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -66,9 +71,15 @@ export const ProfileMenuDropdown = ({
     // reload the page to redirect back to login
     router.reload();
   };
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Menu as="div" className="relative inline-block text-left">
+      <Menu
+        as="div"
+        className={`${
+          windowWidth < 1024 ? '-mt-10 -ml-8 fixed' : 'relative'
+        } inline-block text-left`}
+      >
         <div>
           <Menu.Button
             className={`${className} h-10 w-10 rounded bg-indigo-500 outline-none transition-colors ease-in-out hover:bg-indigo-600 `}
@@ -114,16 +125,20 @@ export const ProfileMenuDropdown = ({
               </Menu.Item>
             </div>
             <div>
-              <Menu.Item>
-                <button
-                  className={`group flex w-full items-center gap-3 bg-emerald-50 px-3 py-3 text-sm`}
-                >
-                  <HiOutlineCheck className="h-5 w-5 text-emerald-600" />
-                  <span className="text-sm font-medium tracking-tight text-emerald-600">
-                    Terms & Conditions
-                  </span>
-                </button>
-              </Menu.Item>
+              {windowWidth < 1024 ? null : (
+                <>
+                  <Menu.Item>
+                    <button
+                      className={`group flex w-full items-center gap-3 bg-emerald-50 px-3 py-3 text-sm`}
+                    >
+                      <HiOutlineCheck className="h-5 w-5 text-emerald-600" />
+                      <span className="text-sm font-medium tracking-tight text-emerald-600">
+                        Terms & Conditions
+                      </span>
+                    </button>
+                  </Menu.Item>
+                </>
+              )}
 
               {/* <Menu.Item>
                 {({ active }) => (
@@ -142,6 +157,66 @@ export const ProfileMenuDropdown = ({
                   </button>
                 )}
               </Menu.Item> */}
+
+              {windowWidth < 1024 ? (
+                <>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? 'bg-slate-100' : 'text-gray-900'
+                        } group flex w-full items-center gap-3 rounded-md px-3 py-3 text-sm`}
+                        onClick={() => router.push(`/${router.query.id}`)}
+                      >
+                        <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                        <div className="flex w-full items-end justify-between">
+                          <span className="text-sm tracking-tight text-slate-500">
+                            Dashboard
+                          </span>
+                        </div>
+                      </button>
+                    )}
+                  </Menu.Item>
+
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? 'bg-slate-100' : 'text-gray-900'
+                        } group flex w-full items-center gap-3 rounded-md px-3 py-3 text-sm`}
+                        onClick={() => router.push(`/${router.query.id}/inbox`)}
+                      >
+                        <HiOutlineBell className="h-5 w-5 text-slate-600" />
+                        <div className="flex w-full items-end justify-between">
+                          <span className="text-sm tracking-tight text-slate-500">
+                            Notifications
+                          </span>
+                        </div>
+                      </button>
+                    )}
+                  </Menu.Item>
+
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? 'bg-slate-100' : 'text-gray-900'
+                        } group flex w-full items-center gap-3 rounded-md px-3 py-3 text-sm`}
+                        onClick={() =>
+                          router.push(`/${router.query.id}/vacancies`)
+                        }
+                      >
+                        <HiOutlineNewspaper className="h-5 w-5 text-slate-600" />
+                        <div className="flex w-full items-end justify-between">
+                          <span className="text-sm tracking-tight text-slate-500">
+                            Vacancies
+                          </span>
+                        </div>
+                      </button>
+                    )}
+                  </Menu.Item>
+                </>
+              ) : null}
 
               {/* <Menu.Item>
                 {({ active }) => (

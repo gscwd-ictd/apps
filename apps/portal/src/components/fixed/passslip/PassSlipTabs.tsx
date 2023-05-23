@@ -1,7 +1,8 @@
 import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import { TabHeader } from '../tab/TabHeader';
-import useWindowDimensions from '../window-size/useWindowDimensions';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PassSlipTabsProps = {
   tab: number;
@@ -16,7 +17,7 @@ export const PassSlipTabs = ({ tab }: PassSlipTabsProps) => {
       setTab: state.setTab,
     })
   );
-  const { windowWidth } = useWindowDimensions();
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
       <div

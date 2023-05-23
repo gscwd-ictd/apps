@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { DebouncedInput } from './DebounceInput';
 import { Column, Table } from '@tanstack/react-table';
-import { UseCapitalizer } from 'libs/utils/src/lib/functions/Capitalizer';
 
 export const ColumnFilter = ({
   column,

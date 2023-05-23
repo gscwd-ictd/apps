@@ -208,7 +208,10 @@ export default function PassSlip({
               title="Employee Pass Slips"
               subtitle="Apply for pass slip"
             >
-              <Button onClick={openApplyPassSlipModal}>
+              <Button
+                size={`${windowWidth > 1024 ? 'md' : 'lg'}`}
+                onClick={openApplyPassSlipModal}
+              >
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd />{' '}
                   {windowWidth > 1024 ? 'Apply Pass Slip' : ''}

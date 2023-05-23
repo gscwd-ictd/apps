@@ -1,9 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import { useRouter } from 'next/router';
-import useWindowDimensions from '../window-size/useWindowDimensions';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -21,7 +22,7 @@ export const PassSlipCompletedModal = ({
   }));
 
   const router = useRouter();
-  const { windowWidth } = useWindowDimensions();
+  const { windowWidth } = UseWindowDimensions();
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { FC, MouseEventHandler } from 'react';
+import useWindowDimensions from '../window-size/useWindowDimensions';
 
 type TabHeaderProps = {
   tab: number;
@@ -23,6 +24,7 @@ export const TabHeader: FC<TabHeaderProps> = ({
   className,
   onClick,
 }) => {
+  const { windowWidth } = useWindowDimensions();
   return (
     <>
       <a
@@ -45,11 +47,15 @@ export const TabHeader: FC<TabHeaderProps> = ({
           <p className="text-xl font-normal text-black transition-colors ease-in-out select-none">
             {title}
           </p>
-          <p className="text-sm font-normal transition-colors ease-in-out select-none ">
+          <p
+            className={`${
+              windowWidth > 1024 ? '' : 'hidden'
+            } text-sm font-normal transition-colors ease-in-out select-none `}
+          >
             {subtitle}
           </p>
         </div>
-        <div className="w-[10%] px-4">
+        <div className="w-[10%] px-10">
           <div
             className={`rounded-md min-w-[1.5rem] max-w-full flex ${className} ${
               notificationCount === 0 ? 'invisible' : 'visible'

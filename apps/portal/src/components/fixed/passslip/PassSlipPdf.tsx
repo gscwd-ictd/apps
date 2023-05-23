@@ -8,6 +8,7 @@ import {
   View,
   Image,
 } from '@react-pdf/renderer';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import React, { useEffect, useState } from 'react';
 import { EmployeeDetails } from '../../../../src/types/employee.type';

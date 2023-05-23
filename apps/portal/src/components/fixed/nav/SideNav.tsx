@@ -1,13 +1,13 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
 import {
   HiOutlineBell,
-  HiOutlineChat,
   HiOutlineHome,
   HiOutlineNewspaper,
-  HiOutlinePresentationChartLine,
 } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -18,7 +18,7 @@ export type EmployeeLocalStorage = {
 
 export const SideNav = (): JSX.Element => {
   const router = useRouter();
-
+  const { windowWidth } = UseWindowDimensions(); //get screen width and height
   return (
     <>
       <nav className="fixed z-20 flex justify-center w-24 h-full">
@@ -27,28 +27,24 @@ export const SideNav = (): JSX.Element => {
             <ProfileMenuDropdown right />
           </li>
 
-          <SideNavLink
-            icon={<HiOutlineHome className="w-6 h-6" />}
-            destination={`/${router.query.id}`}
-          />
+          {windowWidth > 1024 ? (
+            <>
+              <SideNavLink
+                icon={<HiOutlineHome className="w-6 h-6" />}
+                destination={`/${router.query.id}`}
+              />
 
-          {/* <SideNavLink icon={<HiOutlinePresentationChartLine className="w-6 h-6" />} destination={`/${router.query.id}/prf`} /> */}
+              <SideNavLink
+                icon={<HiOutlineBell className="w-6 h-6" />}
+                destination={`/${router.query.id}/inbox`}
+              />
 
-          {/* <SideNavLink icon={<HiOutlineChartPie className="w-6 h-6" />} destination="/prf" /> */}
-
-          {/* <SideNavLink icon={<HiOutlineClipboardList className="w-6 h-6" />} destination="/prf" /> */}
-
-          <SideNavLink
-            icon={<HiOutlineBell className="w-6 h-6" />}
-            destination={`/${router.query.id}/inbox`}
-          />
-
-          {/* <SideNavLink icon={<HiOutlineChat className="w-6 h-6" />} destination="/prf" /> */}
-
-          <SideNavLink
-            icon={<HiOutlineNewspaper className="w-6 h-6" />}
-            destination={`/${router.query.id}/vacancies`}
-          />
+              <SideNavLink
+                icon={<HiOutlineNewspaper className="w-6 h-6" />}
+                destination={`/${router.query.id}/vacancies`}
+              />
+            </>
+          ) : null}
         </ul>
       </nav>
     </>

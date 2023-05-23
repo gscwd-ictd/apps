@@ -1,5 +1,6 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { ReactNode } from 'react';
-import useWindowDimensions from '../../../fixed/window-size/useWindowDimensions';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type MainContentProps = {
   children: ReactNode;
@@ -8,13 +9,13 @@ type MainContentProps = {
 export const MainContainer: React.FC<MainContentProps> = ({
   children,
 }): JSX.Element => {
-  const { windowWidth } = useWindowDimensions(); //get screen width and height
+  const { windowWidth } = UseWindowDimensions(); //get screen width and height
   return (
     <>
       <div
         className={`${
-          windowWidth < 1024 ? 'pl-0' : 'pl-24'
-        }  h-screen overflow-y-auto pt-14`}
+          windowWidth < 1024 ? 'pl-0 pt-16' : 'pl-24 pt-12'
+        }  h-screen overflow-y-auto `}
       >
         {children}
       </div>

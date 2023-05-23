@@ -24,7 +24,7 @@ const VerticalLayout = (): JSX.Element => {
 
   return (
     <div className="flex">
-      <section className="h-100vh w-full lg:w-[28rem] pr-5">
+      <section className="h-100vh w-full lg:w-[28rem]">
         {/**
          * Map list of selection
          */}
