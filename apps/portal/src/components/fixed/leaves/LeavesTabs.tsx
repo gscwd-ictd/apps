@@ -24,9 +24,9 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             onClick={() => {
               setTab(1);
             }}
-            title="Ongoing Leave Application"
+            title="For Approval Leave Application"
             icon={<HiOutlineCheckCircle size={26} />}
-            subtitle="Show all ongoing Leaves you applied for"
+            subtitle="Show all for approval Leaves you applied for"
             notificationCount={leavesOnGoing ? leavesOnGoing.length : 0}
             className="bg-indigo-500"
           />

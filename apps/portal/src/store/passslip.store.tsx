@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import {
   PassSlip,
@@ -9,7 +10,7 @@ import { devtools } from 'zustand/middleware';
 export type PassSlipState = {
   //PASS SLIP TO SUBMIT
   passSlips: {
-    onGoing: Array<PassSlip>;
+    forApproval: Array<PassSlip>;
     completed: Array<PassSlip>;
   };
   response: {
@@ -54,7 +55,7 @@ export type PassSlipState = {
 export const usePassSlipStore = create<PassSlipState>()(
   devtools((set) => ({
     passSlips: {
-      onGoing: [],
+      forApproval: [],
       completed: [],
     },
     response: {
@@ -112,7 +113,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         ...state,
         passSlips: {
           ...state.passSlips,
-          onGoing: [],
+          forApproval: [],
           completed: [],
         },
         loading: {
@@ -133,7 +134,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         ...state,
         passSlips: {
           ...state.passSlips,
-          onGoing: response.ongoing,
+          forApproval: response.forApproval,
           completed: response.completed,
         },
         loading: {

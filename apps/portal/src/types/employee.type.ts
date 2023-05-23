@@ -78,13 +78,13 @@ export const employeeDummy: EmployeeDetails = {
     nameExt: 'Jr',
     sex: 'Male',
     birthDate: '1991-08-14',
-    mobile: '09238045092',
+    mobile: '09235197604',
     email: 'ericsison003@gmail.com',
-    photoUrl: '/avatars/avatar4.png',
+    photoUrl: '/profile.jpg',
   },
   employmentDetails: {
     userId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-    companyId: null,
+    companyId: '2020-008',
     assignment: {
       id: '928bb2b7-f048-11ec-8d31-c4bde5a04065',
       name: 'Mainline Expansion, Rehabitation and Civil Works Division',

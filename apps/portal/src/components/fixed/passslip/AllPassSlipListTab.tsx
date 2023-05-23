@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { usePassSlipStore } from '../../../store/passslip.store';
 import dayjs from 'dayjs';
 import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
@@ -80,7 +81,7 @@ export const AllPassSlipListTab = ({
           <h1 className="text-4xl text-gray-300">
             No{' '}
             {tab === 1
-              ? 'ongoing pass slip application list'
+              ? 'for approval pass slip application list'
               : tab === 2
               ? 'completed pass slip application list'
               : ''}{' '}

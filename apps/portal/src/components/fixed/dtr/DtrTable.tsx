@@ -202,10 +202,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
         </table>
       </div>
       <div className="w-full flex justify-end pt-4">
-        <Link
-          href={`/${employeeDetails.profile._id}/dtr/${date}`}
-          target={'_blank'}
-        >
+        <Link href={`/123/dtr/${date}`} target={'_blank'}>
           <Button variant={'primary'} size={'md'} loading={false}>
             View
           </Button>

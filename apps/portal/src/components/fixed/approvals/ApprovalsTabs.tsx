@@ -15,17 +15,17 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
   );
 
   const {
-    ongoingPassSlips,
+    forApprovalPassSlips,
     approvedPassSlips,
     disapprovedPassSlips,
-    ongoingLeaves,
+    forApprovalLeaves,
     approvedLeaves,
     disapprovedLeaves,
   } = useApprovalStore((state) => ({
-    ongoingPassSlips: state.passSlips.onGoing,
-    approvedPassSlips: state.passSlips.approved,
-    disapprovedPassSlips: state.passSlips.disapproved,
-    ongoingLeaves: state.leaves.onGoing,
+    forApprovalPassSlips: state.passSlips.forApproval,
+    approvedPassSlips: state.passSlips.completed.approved,
+    disapprovedPassSlips: state.passSlips.completed.disapproved,
+    forApprovalLeaves: state.leaves.forApproval,
     approvedLeaves: state.leaves.approved,
     disapprovedLeaves: state.leaves.disapproved,
   }));
@@ -43,11 +43,11 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                   // setIsLoading(true);
                   setTab(1);
                 }}
-                title="Ongoing Pass Slip Approvals"
+                title="Pass Slip Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
-                subtitle="Show all ongoing Pass Slips you applied for"
+                subtitle="Show all Pass Slips that require your approval"
                 notificationCount={
-                  ongoingPassSlips ? ongoingPassSlips.length : 0
+                  forApprovalPassSlips ? forApprovalPassSlips.length : 0
                 }
                 className="bg-indigo-500"
               />
@@ -58,10 +58,12 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                   // setIsLoading(true);
                   setTab(2);
                 }}
-                title="Ongoing Leave Approvals"
+                title="Leave Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
-                subtitle="Show all ongoing Pass Slips you applied for"
-                notificationCount={ongoingLeaves ? ongoingLeaves.length : 0}
+                subtitle="Show all Leaves that require your approval"
+                notificationCount={
+                  forApprovalLeaves ? forApprovalLeaves.length : 0
+                }
                 className="bg-indigo-500"
               />
             </>
@@ -92,7 +94,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Approved Leaves"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all approved Pass Slip applications"
+                subtitle="Show all approved Leave applications"
                 notificationCount={approvedLeaves ? approvedLeaves.length : 0}
                 className="bg-gray-500"
               />
@@ -125,7 +127,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Disapproved Leaves"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all disapproved Pass Slip applications"
+                subtitle="Show all disapproved Leave applications"
                 notificationCount={
                   disapprovedLeaves ? disapprovedLeaves.length : 0
                 }

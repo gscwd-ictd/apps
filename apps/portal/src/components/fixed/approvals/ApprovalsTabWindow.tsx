@@ -17,17 +17,17 @@ export const ApprovalsTabWindow = ({
   );
 
   const {
-    ongoingPassSlips,
+    forApprovalPassSlips,
     approvedPassSlips,
     disapprovedPassSlips,
-    ongoingLeaves,
+    forApprovalLeaves,
     approvedLeaves,
     disapprovedLeaves,
   } = useApprovalStore((state) => ({
-    ongoingPassSlips: state.passSlips.onGoing,
-    approvedPassSlips: state.passSlips.approved,
-    disapprovedPassSlips: state.passSlips.disapproved,
-    ongoingLeaves: state.leaves.onGoing,
+    forApprovalPassSlips: state.passSlips.forApproval,
+    approvedPassSlips: state.passSlips.completed.approved,
+    disapprovedPassSlips: state.passSlips.completed.disapproved,
+    forApprovalLeaves: state.leaves.forApproval,
     approvedLeaves: state.leaves.approved,
     disapprovedLeaves: state.leaves.disapproved,
   }));
@@ -36,10 +36,18 @@ export const ApprovalsTabWindow = ({
     <>
       <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
         {tab === 1 && selectedApprovalType === 1 && (
-          <AllApprovalsTab passslips={ongoingPassSlips} tab={tab} leaves={[]} />
+          <AllApprovalsTab
+            passslips={forApprovalPassSlips}
+            tab={tab}
+            leaves={[]}
+          />
         )}
         {tab === 2 && selectedApprovalType === 1 && (
-          <AllApprovalsTab passslips={[]} tab={tab} leaves={ongoingLeaves} />
+          <AllApprovalsTab
+            passslips={[]}
+            tab={tab}
+            leaves={forApprovalLeaves}
+          />
         )}
         {tab === 3 && selectedApprovalType === 2 && (
           <AllApprovalsTab

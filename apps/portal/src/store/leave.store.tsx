@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { LeaveBenefitOptions } from '../../../../libs/utils/src/lib/types/leave-benefits.type';
 import {

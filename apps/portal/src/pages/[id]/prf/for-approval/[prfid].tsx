@@ -1,8 +1,6 @@
-import { Dialog, Transition } from '@headlessui/react';
 import dayjs from 'dayjs';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
 import {
   HiArrowSmLeft,
   HiOutlineUser,
@@ -10,14 +8,8 @@ import {
   HiOutlineCalendar,
   HiOutlinePencil,
 } from 'react-icons/hi';
-// import { confirmOtpCode } from '../../../components/fixed/otp/OtpConfirm';
-// import { getCountDown } from '../../../components/fixed/otp/OtpCountDown';
-import { OtpModal } from '../../../../components/fixed/otp/OtpModal';
-// import { requestOtpCode } from '../../../components/fixed/otp/OtpRequest';
-// import PortalSVG from '../../../components/fixed/svg/PortalSvg';
-// import { Notice } from '../../../components/modular/alerts/Notice';
+
 import { Button } from '../../../../components/modular/forms/buttons/Button';
-// import { TextField } from '../../../components/modular/forms/TextField';
 import { PageTitle } from '../../../../components/modular/html/PageTitle';
 import {
   getEmployeeDetailsFromHr,
@@ -27,6 +19,7 @@ import { approvePrf, getPrfById } from '../../../../utils/helpers/prf.requests';
 import {
   EmployeeDetailsPrf,
   EmployeeProfile,
+  employeeDummy,
 } from '../../../../types/employee.type';
 import {
   Position,
@@ -34,6 +27,10 @@ import {
   PrfStatus,
 } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../../src/utils/helpers/session';
+import { Modal, OtpModal } from '@gscwd-apps/oneui';
+import { PrfOtpContents } from '../../../../../src/components/fixed/prf/prfOtp/PrfOtpContents';
+import { usePrfStore } from '../../../../../src/store/prf.store';
+import { useState } from 'react';
 
 type ForApprovalProps = {
   profile: EmployeeProfile;
@@ -46,70 +43,96 @@ export default function ForApproval({
   employee,
   prfDetails,
 }: ForApprovalProps) {
-  const router = useRouter();
+  const { prfOtpModalIsOpen, setPrfOtpModalIsOpen } = usePrfStore((state) => ({
+    prfOtpModalIsOpen: state.prfOtpModalIsOpen,
+    setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
+  }));
 
-  const [isOpen, setIsOpen] = useState(false); //FOR OPENING CONFIRMATION  DIALOG BOX
-  const [otpFieldError, setOtpFieldError] = useState<boolean>(false);
-  const [wiggleEffect, setWiggleEffect] = useState(false);
-  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const router = useRouter();
+  const [isDeclineModalOpen, setIsDeclineModalOpen] = useState<boolean>(false);
+  const [remarks, setRemarks] = useState<string>('');
 
   const handleOtpModal = () => {
-    setOtpFieldError(false);
-    setIsOpen(true);
-    setWiggleEffect(false);
+    setPrfOtpModalIsOpen(true);
+  };
+  const handleDecline = () => {
+    approvePrf(
+      `${router.query.prfid}`,
+      PrfStatus.DISAPPROVED,
+      employee.userId,
+      remarks
+    );
   };
 
   return (
     <>
       <PageTitle title={prfDetails.prfNo} />
 
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          onClose={() => setIsOpen(isSubmitLoading ? true : false)}
-          className="fixed inset-0 z-10 overflow-y-auto"
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+      <OtpModal
+        modalState={prfOtpModalIsOpen}
+        setModalState={setPrfOtpModalIsOpen}
+        title={'PRF OTP'}
+      >
+        {/* contents */}
+        <PrfOtpContents
+          mobile={profile.mobileNumber}
+          employeeId={employee.userId}
+          action={'approved'}
+          tokenId={`${router.query.prfid}`}
+          otpName={'prf'}
+          remarks={''}
+        />
+      </OtpModal>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-full p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
-                  <div className={`w-100 relative bg-white rounded max-w-sm`}>
-                    <Dialog.Title className="flex items-center justify-center w-full h-12 px-10 py-8 font-bold text-center text-white bg-indigo-600">
-                      APPROVE PRF
-                    </Dialog.Title>
-                    <OtpModal
-                      mobile={profile.mobileNumber}
-                      isModalOpen={setIsOpen}
-                      employeeId={employee.userId}
-                      remarks={''}
-                    />
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
+      <Modal
+        size={'sm'}
+        open={isDeclineModalOpen}
+        setOpen={setIsDeclineModalOpen}
+      >
+        <Modal.Header>
+          <h3 className="font-semibold text-xl text-gray-700">
+            <div className="px-5 flex justify-between">
+              <span>Decline Position Request</span>
+            </div>
+          </h3>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="w-full h-full flex flex-col gap-2 text-md ">
+            {'Please indicate reason for declining this position request:'}
+            <form id="declinePrfForm">
+              <textarea
+                required
+                placeholder="Reason for decline"
+                className={`
+                        w-full h-32 p-2 border resize-none
+                    `}
+                onChange={(e) =>
+                  setRemarks(e.target.value as unknown as string)
+                }
+              ></textarea>
+            </form>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end gap-2">
+            <div className="min-w-[6rem] max-w-auto flex gap-4">
+              <Button
+                form="declinePrfForm"
+                variant={'primary'}
+                onClick={(e) => handleDecline()}
+                btnLabel={'Submit'}
+              ></Button>
+              <Button
+                variant={'danger'}
+                onClick={() => {
+                  setIsDeclineModalOpen(false);
+                }}
+                btnLabel={'Cancel'}
+              ></Button>
             </div>
           </div>
-        </Dialog>
-      </Transition>
+        </Modal.Footer>
+      </Modal>
 
       <div className="flex flex-col w-screen h-screen py-10 overflow-hidden px-36">
         <button
@@ -165,13 +188,23 @@ export default function ForApproval({
                 )}
               </section>
 
-              <section className="mt-10">
+              <section className="mt-10 flex flex-col gap-2">
                 <Button
                   btnLabel={'Approve Request'}
                   fluid
                   strong
                   onClick={() => {
                     handleOtpModal();
+                  }}
+                />
+                <Button
+                  btnLabel={'Disapprove Request'}
+                  variant="danger"
+                  fluid
+                  strong
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                  onClick={() => {
+                    setIsDeclineModalOpen(true);
                   }}
                 />
               </section>
@@ -235,17 +268,19 @@ export default function ForApproval({
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
-    console.log(context.query.prfid);
+    // console.log(context.query.prfid);
     try {
       const employee = await getEmployeeDetailsFromHr(context);
-
       const profile = await getEmployeeProfile(employee.userId);
+
+      // const employee = employeeDummy;
+      // const profile = await getEmployeeProfile(employee.user._id);
 
       // get prf details
       const prfDetails = await getPrfById(`${context.query.prfid}`, context);
 
       // return the result
-      console.log(prfDetails);
+      // console.log(prfDetails);
       return { props: { profile, employee, prfDetails } };
     } catch (error) {
       return { notFound: true };

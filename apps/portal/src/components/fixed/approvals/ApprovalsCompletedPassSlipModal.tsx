@@ -1,10 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
-import { usePassSlipStore } from '../../../store/passslip.store';
-import { useRouter } from 'next/router';
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { useEffect, useState } from 'react';
+import { useApprovalStore } from '../../../store/approvals.store';
+import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { patchPortal } from '../../../utils/helpers/portal-axios-helper';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -12,29 +13,22 @@ type PassSlipCompletedModalProps = {
   closeModalAction: () => void;
 };
 
-export const PassSlipCompletedModal = ({
+export const ApprovalsPendingPassSlipModal = ({
   modalState,
   setModalState,
   closeModalAction,
 }: PassSlipCompletedModalProps) => {
-  const { passSlip } = usePassSlipStore((state) => ({
-    passSlip: state.passSlip,
+  const { passSlip } = useApprovalStore((state) => ({
+    passSlip: state.passSlipIndividualDetail,
   }));
-
-  const router = useRouter();
-  const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
-      <Modal
-        size={windowWidth > 1024 ? 'lg' : 'full'}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Completed Pass Slip</span>
+              <span>Pass Slip for Approval</span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}
@@ -47,21 +41,23 @@ export const PassSlipCompletedModal = ({
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {passSlip.status === 'Approved' ? (
-                <AlertNotification
-                  alertType="info"
-                  notifMessage="Approved"
-                  dismissible={false}
-                />
-              ) : null}
+              <AlertNotification
+                alertType="info"
+                notifMessage={`This Pass Slip is ${passSlip.status}`}
+                dismissible={false}
+              />
 
-              {passSlip.status === 'Disapproved' ? (
-                <AlertNotification
-                  alertType="info"
-                  notifMessage="Disapproved"
-                  dismissible={false}
-                />
-              ) : null}
+              <div className="flex gap-2 justify-between items-center">
+                <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                  Employee Name:
+                </label>
+
+                <div className="w-96">
+                  <label className="text-slate-500 h-12 w-96  text-lg ">
+                    {passSlip.employeeName}
+                  </label>
+                </div>
+              </div>
 
               <div className="flex gap-2 justify-between items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
@@ -101,10 +97,8 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
               ) : null}
-              <div
-                className={` flex flex-col gap-2
-            `}
-              >
+
+              <div className={` flex flex-col gap-2`}>
                 <div className="flex gap-2 justify-between items-center">
                   <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                     Estimated Hours:
@@ -128,7 +122,7 @@ export const PassSlipCompletedModal = ({
                     'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
                   }
                   value={passSlip.purposeDestination}
-                  rows={4}
+                  rows={3}
                   disabled={true}
                 ></textarea>
               </div>
@@ -138,14 +132,15 @@ export const PassSlipCompletedModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Link
-                href={`/${router.query.id}/pass-slip/${passSlip.id}`}
-                target={'_blank'}
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => closeModalAction()}
+                type="submit"
               >
-                <Button variant={'primary'} size={'md'} loading={false}>
-                  Print PDF
-                </Button>
-              </Link>
+                Close
+              </Button>
             </div>
           </div>
         </Modal.Footer>
@@ -154,4 +149,4 @@ export const PassSlipCompletedModal = ({
   );
 };
 
-export default PassSlipCompletedModal;
+export default ApprovalsPendingPassSlipModal;

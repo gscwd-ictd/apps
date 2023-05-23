@@ -25,6 +25,7 @@ import Link from 'next/link';
 import { DtrDateSelect } from '../../../../src/components/fixed/dtr/DtrDateSelect';
 import { useDtrStore } from '../../../../src/store/dtr.store';
 import { DtrTable } from '../../../../src/components/fixed/dtr/DtrTable';
+import { employeeDummy } from '../../../../src/types/employee.type';
 
 export default function DailyTimeRecord({
   employeeDetails,
@@ -92,10 +93,18 @@ export default function DailyTimeRecord({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const userDetails = employeeDummy;
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { userDetails } };
+};
+
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
+
+//     return { props: { employeeDetails } };
+//   }
+// );

@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { useEffect } from 'react';
 
-import { EmployeeDetails } from '../../../types/employee.type';
+import { EmployeeDetails, employeeDummy } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
 import { PrfDetails } from '../../../types/prf.types';
 
@@ -171,7 +171,7 @@ export default function Prf({
 
     // make the modal visible
     setIsOpen(true);
-    console.log(employeeDetail, 'employee store');
+    // console.log(employeeDetail, 'employee store');
   };
 
   return (

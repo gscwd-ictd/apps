@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -26,6 +27,10 @@ import { RemindersCard } from '../../components/fixed/home/reminders/RemindersCa
 import { AttendanceCard } from '../../components/fixed/home/attendance/AttendanceCard';
 import { StatsCard } from '../../components/fixed/home/stats/StatsCard';
 import { employeeDummy } from '../../types/employee.type';
+import { fetchWithToken } from '../../utils/hoc/fetcher';
+import useSWR from 'swr';
+import { format } from 'date-fns';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export default function Dashboard({
   userDetails,
@@ -53,6 +58,21 @@ export default function Dashboard({
   }, []);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
+  const { windowWidth } = UseWindowDimensions();
+
+  const faceScanUrl = `${
+    process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
+  }/v1/daily-time-record/single-employee/${
+    userDetails.employmentDetails.companyId
+  }/${format(new Date(), 'yyyy-MM-dd')}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrFaceScan,
+    isLoading: swrFaceScanIsLoading,
+    error: swrFaceScanError,
+    mutate: mutateFaceScanUrl,
+  } = useSWR(faceScanUrl, fetchWithToken, {});
 
   return (
     <>
@@ -75,57 +95,119 @@ export default function Dashboard({
               </div>
             </>
           ) : (
-            <div className="flex flex-row w-full h-full gap-4 pb-24 overflow-x-hidden">
-              <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-1">
-                {/* <img className="w-2/4 overflow-hidden" src="/gwdlogo.png"></img> */}
-                <Image
-                  src={'/gwdlogo.png'}
-                  className="w-2/4 "
-                  alt={''}
-                  width={'500'}
-                  height={'500'}
-                />
-              </div>
-              <div className="w-2/5 h-full mt-1">
-                <Carousel />
-              </div>
-              <div className="z-10 flex flex-col w-full h-full gap-5 mt-1 ">
-                {/* 3 PANELS */}
-                <div>
-                  <div className="flex flex-row gap-5">
-                    <StatsCard name={'Total Lates'} count={10} />
-                    <StatsCard name={'Total Absents'} count={10} />
-                    <StatsCard name={'Total Leaves'} count={10} />
+            <>
+              {windowWidth && windowWidth > 1024 ? (
+                <>
+                  {/* desktop */}
+                  <div className="flex flex-row w-full h-full gap-4 pb-24 overflow-x-hidden">
+                    <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-1">
+                      <Image
+                        src={'/gwdlogo.png'}
+                        className="w-2/4 "
+                        alt={''}
+                        width={'500'}
+                        height={'500'}
+                      />
+                    </div>
+                    <div className="w-2/5 h-full mt-1">
+                      <Carousel />
+                    </div>
+                    <div className="z-10 flex flex-col w-full h-full gap-5 mt-1 ">
+                      {/* 3 PANELS */}
+                      <div>
+                        <div className="flex flex-row gap-5">
+                          <StatsCard name={'Total Lates'} count={10} />
+                          <StatsCard name={'Total Absents'} count={10} />
+                          <StatsCard name={'Total Leaves'} count={10} />
+                        </div>
+                      </div>
+                      {/* ATTENDANCE */}
+                      <AttendanceCard
+                        timeIn={swrFaceScan ? swrFaceScan.timeIn : '-'}
+                        lunchOut={swrFaceScan ? swrFaceScan.lunchOut : '-'}
+                        lunchIn={swrFaceScan ? swrFaceScan.lunchIn : '-'}
+                        timeOut={swrFaceScan ? swrFaceScan.timeOut : '-'}
+                        dateNow={`${new Date()}`}
+                      />
+                      {/* REMINDERS */}
+                      <RemindersCard reminders={''} />
+                      {/* CALENDAR */}
+                      <div className="flex flex-col w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
+                        <EmployeeCalendar />
+                      </div>
+                    </div>
+                    <div className="z-20 flex flex-col w-1/5 h-screen gap-5 pr-5 mt-1 mb-20">
+                      <ProfileCard
+                        firstName={userDetails.profile.firstName}
+                        lastName={userDetails.profile.lastName}
+                        position={
+                          userDetails.employmentDetails.assignment.positionTitle
+                        }
+                        division={userDetails.employmentDetails.assignment.name}
+                        photoUrl={userDetails.profile.photoUrl}
+                      />
+                      <EmployeeDashboard />
+                    </div>
                   </div>
-                </div>
-                {/* ATTENDANCE */}
-                <AttendanceCard
-                  timeIn={'8:04 AM'}
-                  lunchOut={'12:05 PM'}
-                  lunchIn={'12:32 PM'}
-                  timeOut={'5:11 PM'}
-                  dateNow={`${new Date()}`}
-                />
-                {/* REMINDERS */}
-                <RemindersCard reminders={''} />
-                {/* CALENDAR */}
-                <div className="flex flex-col w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
-                  <EmployeeCalendar />
-                </div>
-              </div>
-              <div className="z-20 flex flex-col w-1/5 h-screen gap-5 mt-1 mb-20">
-                <ProfileCard
-                  firstName={userDetails.profile.firstName}
-                  lastName={userDetails.profile.lastName}
-                  position={
-                    userDetails.employmentDetails.assignment.positionTitle
-                  }
-                  division={userDetails.employmentDetails.assignment.name}
-                  photoUrl={userDetails.profile.photoUrl}
-                />
-                <EmployeeDashboard />
-              </div>
-            </div>
+                </>
+              ) : (
+                <>
+                  {/* mobile */}
+                  <div className="flex flex-col px-4 w-full h-full gap-10 overflow-x-hidden">
+                    <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-0">
+                      <Image
+                        src={'/gwdlogo.png'}
+                        className="w-2/4 "
+                        alt={''}
+                        width={'500'}
+                        height={'500'}
+                      />
+                    </div>
+                    <div className="flex flex-col z-10 gap-5">
+                      <ProfileCard
+                        firstName={userDetails.profile.firstName}
+                        lastName={userDetails.profile.lastName}
+                        position={
+                          userDetails.employmentDetails.assignment.positionTitle
+                        }
+                        division={userDetails.employmentDetails.assignment.name}
+                        photoUrl={userDetails.profile.photoUrl}
+                      />
+                      {/* ATTENDANCE */}
+                      <AttendanceCard
+                        timeIn={swrFaceScan && swrFaceScan.timeIn}
+                        lunchOut={swrFaceScan && swrFaceScan.lunchOut}
+                        lunchIn={swrFaceScan && swrFaceScan.lunchIn}
+                        timeOut={swrFaceScan && swrFaceScan.timeOut}
+                        dateNow={`${new Date()}`}
+                      />
+                      <EmployeeDashboard />
+                    </div>
+
+                    <div className="z-10 flex flex-col w-full h-full gap-5 ">
+                      {/* 3 PANELS */}
+                      <div>
+                        <div className="flex flex-row gap-5">
+                          <StatsCard name={'Total Lates'} count={10} />
+                          <StatsCard name={'Total Absents'} count={10} />
+                          <StatsCard name={'Total Leaves'} count={10} />
+                        </div>
+                      </div>
+
+                      {/* REMINDERS */}
+                      <RemindersCard reminders={''} />
+                      {/* CALENDAR */}
+                      <div className="w-full h-full p-4 mb-2 bg-white rounded-md shadow z-10">
+                        <EmployeeCalendar />
+                      </div>
+                      <div className="w-full h-full">
+                        <Carousel />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
           )}
         </>
       </MainContainer>

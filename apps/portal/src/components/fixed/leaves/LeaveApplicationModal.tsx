@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import {
@@ -10,7 +11,7 @@ import {
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
-import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';

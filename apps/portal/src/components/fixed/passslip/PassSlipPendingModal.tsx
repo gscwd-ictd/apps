@@ -1,6 +1,8 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -21,14 +23,18 @@ export const PassSlipPendingModal = ({
   const modalAction = async (e) => {
     e.preventDefault();
   };
-
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1024 ? 'lg' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Ongoing Pass Slip</span>
+              <span>For Approval Pass Slip</span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}

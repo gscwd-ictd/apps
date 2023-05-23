@@ -1,7 +1,13 @@
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+/* eslint-disable @nx/enforce-module-boundaries */
+import { AlertNotification, Button, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { usePassSlipStore } from '../../../store/passslip.store';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useApprovalStore } from '../../../../src/store/approvals.store';
+import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEmployeeStore } from '../../../../src/store/employee.store';
+import { passSlipAction } from 'apps/portal/src/types/approvals.type';
+import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -9,29 +15,55 @@ type PassSlipPendingModalProps = {
   closeModalAction: () => void;
 };
 
+const approvalAction: Array<SelectOption> = [
+  { label: 'Approve', value: 'approved' },
+  { label: 'Disapprove', value: 'disapproved' },
+];
+
 export const ApprovalsPendingPassSlipModal = ({
   modalState,
   setModalState,
   closeModalAction,
 }: PassSlipPendingModalProps) => {
-  const { passSlip } = usePassSlipStore((state) => ({
-    passSlip: state.passSlip,
-  }));
+  const { passSlip, otpPassSlipModalIsOpen, setOtpPassSlipModalIsOpen } =
+    useApprovalStore((state) => ({
+      passSlip: state.passSlipIndividualDetail,
+      otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
+      setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+    }));
 
-  const modalAction = async (e) => {
-    e.preventDefault();
+  // React hook form
+  const { reset, register, handleSubmit, watch, setValue } =
+    useForm<passSlipAction>({
+      mode: 'onChange',
+      defaultValues: {
+        passSlipId: passSlip.id,
+        status: null,
+      },
+    });
+
+  useEffect(() => {
+    setValue('passSlipId', passSlip.id);
+  }, [passSlip.id]);
+
+  useEffect(() => {
+    if (!modalState) {
+      setValue('status', null);
+    }
+  }, [modalState]);
+
+  const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
+    setValue('passSlipId', passSlip.id);
+    console.log(watch('status'), 'status');
+    console.log(watch('passSlipId'), 'passslip Id');
+    setOtpPassSlipModalIsOpen(true);
   };
 
-  const [reason, setReason] = useState<string>('');
-  const [action, setAction] = useState<string>('');
+  // set state for employee store
+  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
-  const onChangeType = (action: string) => {
-    setAction(action);
-    console.log(action);
-  };
-
-  const handleReason = (e: string) => {
-    setReason(e);
+  const closeOtpModal = async () => {
+    setOtpPassSlipModalIsOpen(false);
   };
 
   return (
@@ -40,7 +72,7 @@ export const ApprovalsPendingPassSlipModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Ongoing Pass Slip</span>
+              <span>Pass Slip for Approval</span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}
@@ -52,12 +84,26 @@ export const ApprovalsPendingPassSlipModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
+            {/* OTP Modal */}
+
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <AlertNotification
                 alertType="warning"
                 notifMessage="Awaiting Supervisor Approval"
                 dismissible={false}
               />
+
+              <div className="flex gap-2 justify-between items-center">
+                <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                  Employee Name:
+                </label>
+
+                <div className="w-96">
+                  <label className="text-slate-500 h-12 w-96  text-lg ">
+                    {passSlip.employeeName}
+                  </label>
+                </div>
+              </div>
 
               <div className="flex gap-2 justify-between items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
@@ -122,48 +168,53 @@ export const ApprovalsPendingPassSlipModal = ({
                     'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
                   }
                   value={passSlip.purposeDestination}
-                  rows={4}
+                  rows={3}
                   disabled={true}
                 ></textarea>
               </div>
-              <div className="w-full flex gap-2 justify-start items-center pt-12">
+              <div className="w-full flex gap-2 justify-start items-center pt-4">
                 <span className="text-slate-500 text-xl font-medium">
                   Action:
                 </span>
-                <select
-                  className={`text-slate-500 w-100 h-10 rounded text-md border border-slate-200'
-                  
-              `}
-                  onChange={(e) =>
-                    onChangeType(e.target.value as unknown as string)
-                  }
-                >
-                  <option>Approve</option>
-                  <option>Disapprove</option>
-                </select>
+                <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
+                  <select
+                    id="action"
+                    className="text-slate-500 h-12 w-42 rounded text-lg border-slate-300"
+                    required
+                    {...register('status')}
+                  >
+                    <option value="" disabled>
+                      Select Action
+                    </option>
+                    {approvalAction.map((item: SelectOption, idx: number) => (
+                      <option value={item.value} key={idx}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </form>
               </div>
-              <form id="DisapproveForm">
-                {action === 'Disapprove' ? (
-                  <textarea
-                    required={true}
-                    className={
-                      'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
-                    }
-                    placeholder="Enter Reason"
-                    rows={3}
-                    onChange={(e) =>
-                      handleReason(e.target.value as unknown as string)
-                    }
-                  ></textarea>
-                ) : null}
-              </form>
             </div>
           </div>
+          <OtpModal
+            modalState={otpPassSlipModalIsOpen}
+            setModalState={setOtpPassSlipModalIsOpen}
+            title={'PASS SLIP OTP'}
+          >
+            {/* contents */}
+            <ApprovalOtpContents
+              mobile={employeeDetail.profile.mobile}
+              employeeId={employeeDetail.user._id}
+              action={watch('status')}
+              tokenId={passSlip.id}
+              otpName={'passSlipApproval'}
+            />
+          </OtpModal>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Button
+              {/* <Button
                 variant={'warning'}
                 size={'md'}
                 loading={false}
@@ -171,15 +222,15 @@ export const ApprovalsPendingPassSlipModal = ({
                 type="submit"
               >
                 Disapprove
-              </Button>
+              </Button> */}
               <Button
                 variant={'primary'}
                 size={'md'}
                 loading={false}
-                onClick={(e) => modalAction(e)}
+                form="PassSlipAction"
                 type="submit"
               >
-                Approve
+                Submit
               </Button>
             </div>
           </div>
