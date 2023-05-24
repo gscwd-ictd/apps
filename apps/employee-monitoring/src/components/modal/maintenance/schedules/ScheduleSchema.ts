@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 const ScheduleSchema = yup.object().shape({
   id: yup.string().notRequired().trim(),
-  scheduleType: yup.string().nullable().required().label('Schedule type'),
+  scheduleType: yup.string().nullable().label('Schedule type'),
   name: yup.string().nullable(false).required().trim().label('Name'),
   timeIn: yup.string().nullable().required().label('Time in'),
   timeOut: yup.string().nullable().required().label('Time out'),

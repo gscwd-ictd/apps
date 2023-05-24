@@ -1,5 +1,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment, FunctionComponent } from 'react';
+import { createPortal } from 'react-dom';
 import { useDtrStore } from '../../store/dtr.store';
 import { EmployeeRowData } from '../../utils/types/table-row-types/monitoring/employee.type';
 
@@ -30,6 +31,7 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
             <span>...</span>
           </Menu.Button>
         </div>
+
         <Transition
           as={Fragment}
           enter="transition ease-out duration-100"

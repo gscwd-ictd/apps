@@ -161,7 +161,7 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addoffmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="addfieldmodal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/** name */}
@@ -243,7 +243,7 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addoffmodal"
+              form="addfieldmodal"
               className="disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
