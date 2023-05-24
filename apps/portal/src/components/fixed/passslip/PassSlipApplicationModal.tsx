@@ -159,21 +159,17 @@ export const PassSlipApplicationModal = ({
                 </div>
 
                 <div
-                  className={`${
-                    windowWidth > 1024
-                      ? 'flex-row items-center'
-                      : 'flex-col items-start'
-                  } flex gap-4 justify-between `}
+                  className={`md:flex-row lg:items-center flex-col items-start flex gap-4 justify-between `}
                 >
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                     Select Nature of Business:
                     <span className="text-red-600">*</span>
                   </label>
 
-                  <div className="w-80">
+                  <div className="w-full md:w-80">
                     <select
                       id="natureOfBusiness"
-                      className="text-slate-500 h-12 w-80 rounded text-md border-slate-300"
+                      className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                       required
                       {...register('natureOfBusiness')}
                     >
@@ -192,21 +188,17 @@ export const PassSlipApplicationModal = ({
                 {watch('natureOfBusiness') === 'Official Business' ? (
                   <>
                     <div
-                      className={`${
-                        windowWidth > 1024
-                          ? 'flex-row items-center'
-                          : 'flex-col items-start'
-                      } flex gap-3 justify-between`}
+                      className={`md:flex-row lg:items-center flex-col items-start flex gap-3 justify-between`}
                     >
                       <label className="text-slate-500 text-md whitespace-nowrap font-medium">
                         Select Mode of Transportation:
                         <span className="text-red-600">*</span>
                       </label>
-                      <div className="w-80">
+                      <div className="w-full md:w-80">
                         <select
                           id="obTransportation"
                           required
-                          className="text-slate-500 h-12 w-80 rounded text-md border-slate-300"
+                          className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                           {...register('obTransportation')}
                         >
                           <option value="" disabled>
@@ -229,22 +221,18 @@ export const PassSlipApplicationModal = ({
                   <>
                     <div className="flex flex-col gap-2">
                       <div
-                        className={`${
-                          windowWidth > 1024
-                            ? 'flex-row items-center'
-                            : 'flex-col items-start'
-                        } flex gap-3 justify-between`}
+                        className={`md:flex-row lg:items-center flex-col items-start flex gap-3 justify-between`}
                       >
                         <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                           Estimated Hours:
                           <span className="text-red-600">*</span>
                         </label>
-                        <div className="w-80">
+                        <div className="w-full md:w-80">
                           <input
                             type="number"
                             name="passSlip_estimatedHours"
                             id="estimateHours"
-                            className="border-slate-300 text-slate-500 h-12 text-md w-80 rounded"
+                            className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                             placeholder="Enter number of hours "
                             required
                             defaultValue={0}
@@ -293,7 +281,6 @@ export const PassSlipApplicationModal = ({
                 variant={'primary'}
                 size={'md'}
                 loading={false}
-                // onClick={(e) => modalAction(e)}
                 form="ApplyPassSlipForm"
                 type="submit"
               >
