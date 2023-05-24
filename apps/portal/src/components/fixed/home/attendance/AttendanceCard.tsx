@@ -34,7 +34,7 @@ export const AttendanceCard: React.FC<Props> = ({
             TIME IN
           </label>
           <label className="text-md text-green-600">
-            {UseTwelveHourFormat(timeIn)}
+            {timeIn ? UseTwelveHourFormat(timeIn) : '-'}
           </label>
           {/* <label className="text-md text-green-600">-</label> */}
         </div>
@@ -47,7 +47,7 @@ export const AttendanceCard: React.FC<Props> = ({
             LUNCH OUT
           </label>
           <label className="text-md text-green-600">
-            {UseTwelveHourFormat(lunchOut)}
+            {lunchOut ? UseTwelveHourFormat(lunchOut) : '-'}
           </label>
           {/* <label className="text-md text-green-600">-</label> */}
         </div>
@@ -60,7 +60,7 @@ export const AttendanceCard: React.FC<Props> = ({
             LUNCH IN
           </label>
           <label className="text-md text-green-600">
-            {UseTwelveHourFormat(lunchIn)}
+            {lunchIn ? UseTwelveHourFormat(lunchIn) : '-'}
           </label>
           {/* <label className="text-md text-green-600">-</label> */}
         </div>
