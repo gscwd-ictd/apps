@@ -9,7 +9,7 @@ const size = {
 
 type CardContainerProps = {
   title: string;
-  children: React.ReactNode | React.ReactNode[];
+  children?: React.ReactNode | React.ReactNode[];
   titleClassName?: string;
   className?: string;
   isArray?: boolean;
