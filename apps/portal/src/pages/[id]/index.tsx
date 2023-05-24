@@ -31,6 +31,8 @@ import { fetchWithToken } from '../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { format } from 'date-fns';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { ToastNotification } from '@gscwd-apps/oneui';
+import { isEmpty } from 'lodash';
 
 export default function Dashboard({
   userDetails,
@@ -76,13 +78,20 @@ export default function Dashboard({
 
   return (
     <>
+      {!isEmpty(swrFaceScanError) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`Face Scans: ${swrFaceScanError.message}.`}
+        />
+      ) : null}
+
       <Head>
         <title>{employeeName}</title>
       </Head>
       <SideNav />
       <MainContainer>
         <>
-          {isLoading ? (
+          {swrFaceScanIsLoading ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -96,7 +105,67 @@ export default function Dashboard({
             </>
           ) : (
             <>
-              {windowWidth && windowWidth > 1024 ? (
+              <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-0">
+                <Image
+                  src={'/gwdlogo.png'}
+                  className="w-2/4 "
+                  alt={''}
+                  width={'500'}
+                  height={'500'}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 px-4">
+                <div className="col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
+                  <Carousel />
+                </div>
+
+                <div className="col-span-1 md:col-span-3 lg:col-span-3 order-1 lg:order-2 z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 ">
+                    <div className="col-span-2 order-3 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
+                      <div className="flex flex-row gap-4">
+                        <StatsCard name={'Total Lates'} count={10} />
+                        <StatsCard name={'Total Absents'} count={10} />
+                        <StatsCard name={'Total Leaves'} count={10} />
+                      </div>
+                    </div>
+                    <div className="col-span-2 order-1 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
+                      <ProfileCard
+                        firstName={userDetails.profile.firstName}
+                        lastName={userDetails.profile.lastName}
+                        position={
+                          userDetails.employmentDetails.assignment.positionTitle
+                        }
+                        division={userDetails.employmentDetails.assignment.name}
+                        photoUrl={userDetails.profile.photoUrl}
+                      />
+                    </div>
+                    <div className="col-span-2 order-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-3">
+                      <AttendanceCard
+                        timeIn={swrFaceScan ? swrFaceScan.timeIn : '-'}
+                        lunchOut={swrFaceScan ? swrFaceScan.lunchOut : '-'}
+                        lunchIn={swrFaceScan ? swrFaceScan.lunchIn : '-'}
+                        timeOut={swrFaceScan ? swrFaceScan.timeOut : '-'}
+                        dateNow={`${new Date()}`}
+                      />
+                    </div>
+                    <div className="col-span-2 order-5 md:order-4 md:col-span-2 lg:col-span-2 lg:order-4">
+                      <RemindersCard reminders={''} />
+                    </div>
+
+                    <div className="col-span-2 row-span-3 order-4 md:col-span-1 md:order-5 lg:col-span-1 lg:order-5">
+                      <EmployeeDashboard />
+                    </div>
+                    <div className="col-span-2 order-6">
+                      <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
+                        <EmployeeCalendar />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ORIGINAL DESKTOP */}
+              {isLoading ? (
                 <>
                   {/* desktop */}
                   <div className="flex flex-row w-full h-full gap-4 pb-24 overflow-x-hidden">
@@ -150,63 +219,7 @@ export default function Dashboard({
                     </div>
                   </div>
                 </>
-              ) : (
-                <>
-                  {/* mobile */}
-                  <div className="flex flex-col px-4 w-full h-full gap-10 overflow-x-hidden">
-                    <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-0">
-                      <Image
-                        src={'/gwdlogo.png'}
-                        className="w-2/4 "
-                        alt={''}
-                        width={'500'}
-                        height={'500'}
-                      />
-                    </div>
-                    <div className="flex flex-col z-10 gap-5">
-                      <ProfileCard
-                        firstName={userDetails.profile.firstName}
-                        lastName={userDetails.profile.lastName}
-                        position={
-                          userDetails.employmentDetails.assignment.positionTitle
-                        }
-                        division={userDetails.employmentDetails.assignment.name}
-                        photoUrl={userDetails.profile.photoUrl}
-                      />
-                      {/* ATTENDANCE */}
-                      <AttendanceCard
-                        timeIn={swrFaceScan && swrFaceScan.timeIn}
-                        lunchOut={swrFaceScan && swrFaceScan.lunchOut}
-                        lunchIn={swrFaceScan && swrFaceScan.lunchIn}
-                        timeOut={swrFaceScan && swrFaceScan.timeOut}
-                        dateNow={`${new Date()}`}
-                      />
-                      <EmployeeDashboard />
-                    </div>
-
-                    <div className="z-10 flex flex-col w-full h-full gap-5 ">
-                      {/* 3 PANELS */}
-                      <div>
-                        <div className="flex flex-row gap-5">
-                          <StatsCard name={'Total Lates'} count={10} />
-                          <StatsCard name={'Total Absents'} count={10} />
-                          <StatsCard name={'Total Leaves'} count={10} />
-                        </div>
-                      </div>
-
-                      {/* REMINDERS */}
-                      <RemindersCard reminders={''} />
-                      {/* CALENDAR */}
-                      <div className="w-full h-full p-4 mb-2 bg-white rounded-md shadow z-10">
-                        <EmployeeCalendar />
-                      </div>
-                      <div className="w-full h-full">
-                        <Carousel />
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
+              ) : null}
             </>
           )}
         </>
@@ -215,18 +228,18 @@ export default function Dashboard({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const userDetails = employeeDummy;
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const userDetails = employeeDummy;
 
-//   return { props: { userDetails } };
-// };
+  return { props: { userDetails } };
+};
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const userDetails = getUserDetails();
-    // console.log(userDetails);
-    return { props: { userDetails } };
-  }
-);
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const userDetails = getUserDetails();
+//     // console.log(userDetails);
+//     return { props: { userDetails } };
+//   }
+// );

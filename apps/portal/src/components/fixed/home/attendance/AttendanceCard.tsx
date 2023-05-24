@@ -27,48 +27,40 @@ export const AttendanceCard: React.FC<Props> = ({
       <div className="flex flex-row justify-around items-center">
         <div className="flex flex-col justify-center items-center">
           <label
-            className={`${
-              windowWidth > 1024 ? 'text-xl' : 'text-sm'
-            } font-bold text-gray-400 text-center`}
+            className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
           >
             TIME IN
           </label>
           <label className="text-md text-green-600">
-            {UseTwelveHourFormat(timeIn)}
+            {timeIn ? UseTwelveHourFormat(timeIn) : '-'}
           </label>
           {/* <label className="text-md text-green-600">-</label> */}
         </div>
         <div className="flex flex-col justify-center items-center">
           <label
-            className={`${
-              windowWidth > 1024 ? 'text-xl' : 'text-sm'
-            } font-bold text-gray-400 text-center`}
+            className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
           >
             LUNCH OUT
           </label>
           <label className="text-md text-green-600">
-            {UseTwelveHourFormat(lunchOut)}
+            {lunchOut ? UseTwelveHourFormat(lunchOut) : '-'}
           </label>
           {/* <label className="text-md text-green-600">-</label> */}
         </div>
         <div className="flex flex-col justify-center items-center">
           <label
-            className={`${
-              windowWidth > 1024 ? 'text-xl' : 'text-sm'
-            } font-bold text-gray-400 text-center`}
+            className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
           >
             LUNCH IN
           </label>
           <label className="text-md text-green-600">
-            {UseTwelveHourFormat(lunchIn)}
+            {lunchIn ? UseTwelveHourFormat(lunchIn) : '-'}
           </label>
           {/* <label className="text-md text-green-600">-</label> */}
         </div>
         <div className="flex flex-col justify-center items-center">
           <label
-            className={`${
-              windowWidth > 1024 ? 'text-xl' : 'text-sm'
-            } font-bold text-gray-400 text-center`}
+            className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
           >
             TIME OUT
           </label>

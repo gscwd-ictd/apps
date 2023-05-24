@@ -27,39 +27,36 @@ export const StatsCard: React.FC<Props> = ({ count, name }) => {
       </div>
       {/* <label className="text-7xl text-stone-500">{count}</label> */}
       <label className="text-7xl text-stone-500">10</label>
-      {windowWidth > 1024 ? (
-        <>
-          <label className="text-xs text-stone-500">{name}</label>
 
-          <div className="w-full h-3 rounded bg-stone-300">
-            <div
-              className={`${
-                count >= 10
-                  ? 'w-full'
-                  : count == 9
-                  ? 'w-11/12'
-                  : count == 8
-                  ? 'w-4/5'
-                  : count == 7
-                  ? 'w-9/12'
-                  : count == 6
-                  ? 'w-3/5'
-                  : count == 5
-                  ? 'w-1/2'
-                  : count == 4
-                  ? 'w-2/5'
-                  : count == 3
-                  ? 'w-1/3'
-                  : count == 2
-                  ? 'w-1/5'
-                  : count == 1
-                  ? 'w-1/12'
-                  : 'w-px'
-              } h-3 rounded bg-indigo-500`}
-            ></div>
-          </div>
-        </>
-      ) : null}
+      <label className="hidden md:block text-xs text-stone-500">{name}</label>
+
+      <div className="hidden md:block w-full h-3 rounded bg-stone-300">
+        <div
+          className={`${
+            count >= 10
+              ? 'w-full'
+              : count == 9
+              ? 'w-11/12'
+              : count == 8
+              ? 'w-4/5'
+              : count == 7
+              ? 'w-9/12'
+              : count == 6
+              ? 'w-3/5'
+              : count == 5
+              ? 'w-1/2'
+              : count == 4
+              ? 'w-2/5'
+              : count == 3
+              ? 'w-1/3'
+              : count == 2
+              ? 'w-1/5'
+              : count == 1
+              ? 'w-1/12'
+              : 'w-px'
+          } h-3 rounded bg-indigo-500`}
+        ></div>
+      </div>
     </div>
   );
 };

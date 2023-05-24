@@ -54,7 +54,7 @@ export default function Carousel() {
     <>
       <div
         ref={sliderRef}
-        className="keen-slider w-full h-screen pb-10 rounded-lg shadow bg-gray-100"
+        className="keen-slider w-full h-[150%] md:h-[280%] lg:h-screen pb-10 rounded-lg shadow bg-gray-100"
       >
         <div className="keen-slider__slide number-slide1 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
