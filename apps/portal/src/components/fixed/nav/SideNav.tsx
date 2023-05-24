@@ -21,7 +21,7 @@ export const SideNav = (): JSX.Element => {
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
   return (
     <>
-      <nav className="fixed z-20 flex justify-center w-24 h-full">
+      <nav className="fixed z-20 flex justify-center w-24 h-auto">
         <ul className="flex flex-col items-center gap-5 text-gray-600 mt-14">
           <li className="mb-5">
             <ProfileMenuDropdown right />
