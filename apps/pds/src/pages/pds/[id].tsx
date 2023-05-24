@@ -19,6 +19,7 @@ import { pdsToSubmit } from '../../../utils/helpers/pds.helper';
 import { tabs, tabsHasPds } from '../../../utils/constants/tabs';
 import axios from 'axios';
 import { useTabStore } from '../../store/tab.store';
+import { useRouter } from 'next/router';
 
 dayjs.extend(utc);
 
@@ -49,6 +50,8 @@ export default function Dashboard({
   const permanentAddressOnEdit = usePdsStore(
     (state) => state.permanentAddressOnEdit
   );
+
+  const router = useRouter();
 
   const {
     personalInfo,
@@ -397,6 +400,11 @@ export default function Dashboard({
       }
     }
   }, [isLoading, residentialAddress, permanentAddress]);
+
+  // redirect to closed page
+  useEffect(() => {
+    router.push(`${process.env.NEXT_PUBLIC_PERSONAL_DATA_SHEET}/closed`);
+  }, []);
 
   return (
     <>
