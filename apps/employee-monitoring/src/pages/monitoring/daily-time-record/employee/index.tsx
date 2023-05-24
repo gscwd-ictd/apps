@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { Fragment } from 'react';
+import { DtrDateSelect } from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/employee/DtrDateSelect';
+import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 
 type EmployeeAttendance = {
   id: number;
@@ -80,7 +82,7 @@ const dtrDummy: Array<EmployeeAttendance> = [
 export default function Index() {
   const router = useRouter();
 
-  const date = '01-01-2023';
+  const { date } = useDtrStore((state) => ({ date: state.date }));
 
   // const {
   //   data: swrEmployeeDtr,
@@ -121,9 +123,10 @@ export default function Index() {
             {/** Top Card */}
             <div className="flex flex-col flex-wrap ">
               <Card className="rounded-t bg-slate-200">
-                <span className="px-8 text-lg text-center text-gray-700">
+                {/* <span className="px-8 text-lg text-center text-gray-700">
                   Employee Name
-                </span>
+                </span> */}
+                <DtrDateSelect />
               </Card>
               {/* EMPLOYEE DTR TABLE */}
               <div className="flex w-full rounded shadow">
@@ -172,7 +175,7 @@ export default function Index() {
                           return (
                             <Fragment key={logs.id}>
                               <tr>
-                                <td colSpan={6}></td>
+                                <td colSpan={8}></td>
                               </tr>
                               <tr className="text-xs">
                                 <td className="py-2 text-center border">
@@ -212,7 +215,7 @@ export default function Index() {
                         })
                     ) : (
                       <tr className="border-0">
-                        <td colSpan={6}>NO DATA FOUND</td>
+                        <td colSpan={8}>NO DATA FOUND</td>
                       </tr>
                     )}
                   </tbody>

@@ -1,0 +1,124 @@
+import { Button, ListDef, Select } from '@gscwd-apps/oneui';
+import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
+import { format } from 'date-fns';
+import { HiOutlineSearch } from 'react-icons/hi';
+
+type Month = { month: string; code: string };
+type Year = { year: string };
+
+export const DtrDateSelect = () => {
+  const selectedMonth = useDtrStore((state) => state.selectedMonth);
+  const selectedYear = useDtrStore((state) => state.selectedYear);
+  const date = useDtrStore((state) => state.date);
+
+  const setSelectedMonth = useDtrStore((state) => state.setSelectedMonth);
+  const setSelectedYear = useDtrStore((state) => state.setSelectedYear);
+  const setDate = useDtrStore((state) => state.setDate);
+
+  const monthNow = format(new Date(), 'M');
+  const yearNow = format(new Date(), 'yyyy');
+
+  const months = [
+    { month: 'January', code: '01' },
+    { month: 'February', code: '02' },
+    { month: 'March', code: '03' },
+    { month: 'April', code: '04' },
+    { month: 'May', code: '05' },
+    { month: 'June', code: '06' },
+    { month: 'July', code: '07' },
+    { month: 'August', code: '08' },
+    { month: 'September', code: '09' },
+    { month: 'October', code: '10' },
+    { month: 'November', code: '11' },
+    { month: 'December', code: '12' },
+  ] as Month[];
+
+  const years = [
+    // { year: `${Number(yearNow) + 10}` },
+    // { year: `${Number(yearNow) + 9}` },
+    // { year: `${Number(yearNow) + 8}` },
+    // { year: `${Number(yearNow) + 7}` },
+    // { year: `${Number(yearNow) + 6}` },
+    // { year: `${Number(yearNow) + 5}` },
+    // { year: `${Number(yearNow) + 4}` },
+    // { year: `${Number(yearNow) + 3}` },
+    // { year: `${Number(yearNow) + 2}` },
+    // { year: `${Number(yearNow) + 1}` },
+    { year: `${yearNow}` },
+    { year: `${Number(yearNow) - 1}` },
+  ] as Year[];
+
+  //month select
+  const list: ListDef<Month> = {
+    key: 'month',
+    render: (info, state) => (
+      <div
+        className={`${
+          state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''
+        } pl-2 cursor-pointer`}
+      >
+        {info.month}
+      </div>
+    ),
+  };
+
+  //year select
+  const yearList: ListDef<Year> = {
+    key: 'year',
+    render: (info, state) => (
+      <div
+        className={`${
+          state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''
+        } pl-4 cursor-pointer`}
+      >
+        {info.year}
+      </div>
+    ),
+  };
+
+  const onChangeMonth = (month: string) => {
+    setSelectedMonth(month);
+  };
+
+  const onChangeYear = (year: string) => {
+    setSelectedYear(year);
+  };
+
+  const searchDtr = (e) => {
+    e.preventDefault();
+    setDate(
+      `${selectedMonth ? selectedMonth : monthNow}-01-${
+        selectedYear ? selectedYear : yearNow
+      }`
+    );
+  };
+
+  return (
+    <form className="flex justify-end gap-2">
+      <Select
+        className="w-40"
+        data={months}
+        initial={months[Number(monthNow) - 1]}
+        listDef={list}
+        onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
+      />
+      <Select
+        className="w-28 "
+        data={years}
+        initial={years[0]}
+        listDef={yearList}
+        onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
+      />
+
+      <Button
+        variant={'info'}
+        size={'sm'}
+        loading={false}
+        onClick={(e) => searchDtr(e)}
+        type="submit"
+      >
+        <HiOutlineSearch className="w-5 h-5" />
+      </Button>
+    </form>
+  );
+};

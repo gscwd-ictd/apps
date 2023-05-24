@@ -162,10 +162,6 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
     if (modalState === true) resetToDefaultValues();
   }, [modalState]);
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="md">
@@ -197,7 +193,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addoffmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="addstationmodal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/** name */}
@@ -268,7 +264,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addoffmodal"
+              form="addstationmodal"
               className="disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >

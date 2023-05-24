@@ -99,7 +99,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     reset,
     register,
     clearErrors,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<EmployeeWithSchedule>({
     mode: 'onChange',
     defaultValues: {
@@ -337,6 +337,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
                     disabled={swrEwsIsLoading ? true : false}
                   />
                 </div>
+                <div></div>
               </div>
             </form>
           </>
@@ -348,7 +349,15 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
               type="submit"
               form="setEmployeeScheduleModal"
               className="disabled:cursor-not-allowed"
-              disabled={swrEwsIsLoading ? true : false}
+              disabled={
+                swrEwsIsLoading
+                  ? true
+                  : !isDirty
+                  ? true
+                  : !isValid
+                  ? true
+                  : false
+              }
             >
               <span className="text-xs font-normal">Set</span>
             </Button>

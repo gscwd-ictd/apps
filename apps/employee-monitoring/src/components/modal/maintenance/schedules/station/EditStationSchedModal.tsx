@@ -66,6 +66,7 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('id', sched.id);
     setValue('name', sched.name);
     setValue('scheduleType', sched.scheduleType);
+    setValue('withLunch', false);
     setValue('timeIn', sched.timeIn);
     setValue('timeOut', sched.timeOut);
     setValue('lunchIn', sched.lunchIn);
@@ -173,7 +174,7 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addoffmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="editstationmodal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/** name */}
@@ -244,7 +245,7 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addoffmodal"
+              form="editstationmodal"
               className="disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
