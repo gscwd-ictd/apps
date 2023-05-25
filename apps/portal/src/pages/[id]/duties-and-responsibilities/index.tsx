@@ -12,6 +12,7 @@ import { MainContainer } from 'apps/portal/src/components/modular/custom/contain
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { employeeDummy } from 'apps/portal/src/types/employee.type';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import {
   getUserDetails,
@@ -131,21 +132,30 @@ export default function DutiesResponsibilities({
       <DrcAlertSuccess />
 
       <MainContainer>
-        <div className="w-full h-full px-32">
+        <div
+          className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32 '
+            `}
+        >
           <ContentHeader
             title="Position Duties, Responsibilities, & Competencies"
             subtitle="Set or Update"
           >
-            <Button onClick={openModal}>
+            <Button onClick={openModal} className="hidden lg:block" size={`md`}>
               <div className="flex items-center w-full gap-2">
                 <HiSearch /> Find Position
+              </div>
+            </Button>
+
+            <Button onClick={openModal} className="block lg:hidden" size={`lg`}>
+              <div className="flex items-center w-full gap-2">
+                <HiSearch />
               </div>
             </Button>
           </ContentHeader>
           <ContentBody>
             <>
-              <div className="flex w-full">
-                <div className="w-[58rem]">
+              <div className={`w-full flex lg:flex-row flex-col`}>
+                <div className={`lg:w-[58rem] w-full`}>
                   <DrcTabs
                     positions={{
                       unfilled: unfilledPositions,
@@ -164,6 +174,14 @@ export default function DutiesResponsibilities({
     </>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
+
+//   return { props: { employeeDetails } };
+// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
