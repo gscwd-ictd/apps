@@ -5,82 +5,91 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { DtrDateSelect } from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/employee/DtrDateSelect';
-import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
+import {
+  EmployeeAttendance,
+  useDtrStore,
+} from 'apps/employee-monitoring/src/store/dtr.store';
+import EditDailySchedModal from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/employee/EditOfficeDtrModall';
 
-type EmployeeAttendance = {
-  id: number;
-  date: string;
-  timeIn: string;
-  timeOut: string;
-  lunchIn: string;
-  lunchOut: string;
-  schedule: string;
-  remarks?: string;
-};
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+var localizedFormat = require('dayjs/plugin/localizedFormat');
+
+dayjs.extend(localizedFormat, customParseFormat);
 
 const dtrDummy: Array<EmployeeAttendance> = [
   {
     id: 1,
     date: '01-10-2023',
-    timeIn: '7:30AM',
-    timeOut: '12:29PM',
-    lunchIn: '12:31PM',
-    lunchOut: '5:30PM',
+    timeIn: '07:30:00',
+    timeOut: '17:29:00',
+    lunchIn: '12:31:00',
+    lunchOut: '12:01:00',
     schedule: '8:00AM - 5:00PM',
     remarks: 'Altered by user002 on 01-12-2023',
   },
   {
     id: 2,
     date: '01-11-2023',
-    timeIn: '7:30AM',
-    timeOut: '12:29PM',
-    lunchIn: '12:31PM',
-    lunchOut: '5:30PM',
+    timeIn: '07:30:00',
+    timeOut: '17:29:00',
+    lunchIn: '12:31:00',
+    lunchOut: '12:01:00',
     schedule: '8:00AM - 5:00PM',
   },
   {
     id: 3,
     date: '01-12-2023',
-    timeIn: '7:30AM',
-    timeOut: '12:29PM',
-    lunchIn: '12:31PM',
-    lunchOut: '5:30PM',
+    timeIn: '07:30:00',
+    timeOut: '17:29:00',
+    lunchIn: '12:31:00',
+    lunchOut: '12:01:00',
     schedule: '8:00AM - 5:00PM',
   },
   {
     id: 4,
     date: '01-13-2023',
-    timeIn: '7:30AM',
-    timeOut: '12:29PM',
-    lunchIn: '12:31PM',
-    lunchOut: '5:30PM',
+    timeIn: '07:30:00',
+    timeOut: '17:29:00',
+    lunchIn: '12:31:00',
+    lunchOut: '12:01:00',
     schedule: '8:00AM - 5:00PM',
     remarks: 'Change requested by user005, Approved on 01-15-2023 by user002',
   },
   {
     id: 5,
     date: '01-14-2023',
-    timeIn: '7:30AM',
-    timeOut: '12:29PM',
-    lunchIn: '12:31PM',
-    lunchOut: '5:30PM',
+    timeIn: '07:30:00',
+    timeOut: '17:29:00',
+    lunchIn: '12:31:00',
+    lunchOut: '12:01:00',
     schedule: '8:00AM - 5:00PM',
   },
   {
     id: 6,
     date: '01-15-2023',
-    timeIn: '7:30AM',
-    timeOut: '12:29PM',
-    lunchIn: '12:31PM',
-    lunchOut: '5:30PM',
+    timeIn: '07:30:00',
+    timeOut: '17:29:00',
+    lunchIn: '12:31:00',
+    lunchOut: '12:01:00',
     schedule: '8:00AM - 5:00PM',
   },
 ];
 
 export default function Index() {
   const router = useRouter();
+
+  // Edit modal function
+  const [currentRowData, setCurrentRowData] = useState<EmployeeAttendance>(
+    {} as EmployeeAttendance
+  );
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+  const openEditActionModal = (rowData: EmployeeAttendance) => {
+    setEditModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeEditActionModal = () => setEditModalIsOpen(false);
 
   const { date } = useDtrStore((state) => ({ date: state.date }));
 
@@ -101,6 +110,12 @@ export default function Index() {
   // month day and year
   const formatDateInWords = (date: string) => {
     return dayjs(date).format('MMMM DD, YYYY');
+  };
+
+  // time only with AM or PM
+  const formatTime = (date: string | null) => {
+    if (date === null) return '-';
+    else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
   };
 
   return (
@@ -182,16 +197,22 @@ export default function Index() {
                                   {formatDateInWords(logs.date)}
                                 </td>
                                 <td className="py-2 text-center border">
-                                  {logs.timeIn}
+                                  {logs.timeIn ? formatTime(logs.timeIn) : '-'}
                                 </td>
                                 <td className="py-2 text-center border">
-                                  {logs.lunchOut}
+                                  {logs.lunchOut
+                                    ? formatTime(logs.lunchOut)
+                                    : '-'}
                                 </td>
                                 <td className="py-2 text-center border">
-                                  {logs.lunchIn}
+                                  {logs.lunchIn
+                                    ? formatTime(logs.lunchIn)
+                                    : '-'}
                                 </td>
                                 <td className="py-2 text-center border">
-                                  {logs.timeOut}
+                                  {logs.timeOut
+                                    ? formatTime(logs.timeOut)
+                                    : '-'}
                                 </td>
                                 <td className="py-2 text-center border">
                                   {logs.schedule}
@@ -203,7 +224,10 @@ export default function Index() {
                                   <div>
                                     <button
                                       className=""
-                                      onClick={() => console.log(logs)}
+                                      onClick={() => {
+                                        setCurrentRowData(logs);
+                                        setEditModalIsOpen(true);
+                                      }}
                                     >
                                       <i className="text-xl text-green-500 bx bxs-edit"></i>
                                     </button>
@@ -224,6 +248,13 @@ export default function Index() {
             </div>
           </Card>
         </div>
+
+        <EditDailySchedModal
+          modalState={editModalIsOpen}
+          setModalState={setEditModalIsOpen}
+          closeModalAction={closeEditActionModal}
+          rowData={currentRowData}
+        />
       </div>
     </>
   );

@@ -21,9 +21,9 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 }) => {
   return (
     <>
-      <Modal open={modalState} setOpen={setModalState} size="lg">
+      <Modal open={modalState} setOpen={setModalState} size="md">
         <Modal.Header withCloseBtn>
-          <div className="flex gap-1 px-5 text-lg font-medium text-gray-700">
+          <div className="flex gap-1 px-5 text-2xl font-semibold text-gray-800">
             {rowData.status === PassSlipStatus.ONGOING
               ? 'Ongoing'
               : rowData.status === PassSlipStatus.FOR_APPROVAL
@@ -40,61 +40,80 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full min-h-[14rem]">
-            <div className="flex flex-col w-full gap-4 px-5">
-              {/* Date of Application */}
-
-              <div className="flex flex-col gap-2 px-5 py-2 bg-gray-100 rounded">
-                <div className="sm:flex sm:flex-col md:gap-2 md:flex md:flex-col lg:flex lg:flex-row lg:justify-between">
-                  {/* <div className="flex items-center gap-2 ">
-                    <i className="text-blue-500 bx bxs-user"></i>
-
-                    <div className="font-medium text-gray-600 text-md">
-                      {rowData.employeeName}
-                    </div>
+            <div className="flex flex-col w-full gap-4 px-2">
+              <div className="flex flex-col gap-4 px-5 py-2 rounded bg-gray-50">
+                <div className="grid mt-2 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2">
+                  <div className="pr-10 sm:order-2 md:order-2 lg:order-1">
+                    <LabelValue
+                      label="Assignment"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={
+                        rowData.assignmentName ? rowData.assignmentName : 'N/A'
+                      }
+                    />
                   </div>
+                  <div className="sm:order-1 md:order-1 lg:order-2">
+                    <LabelValue
+                      label="Pass Slip Date"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={dayjs(rowData.dateOfApplication).format(
+                        'MMMM DD, YYYY'
+                      )}
+                    />
+                  </div>
+                </div>
 
-                  <div className="items-center text-sm text-gray-600">
-                    Information, Communications & Technology
-                  </div> */}
+                <hr />
+                <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                  <div className="pr-10">
+                    <LabelValue
+                      label="Employee Name"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={rowData.employeeName}
+                    />
+                  </div>
                   <LabelValue
-                    label="Employee Name: "
-                    textSize="sm"
-                    value={rowData.employeeName}
+                    label="Supervisor Name"
+                    direction="top-to-bottom"
+                    textSize="md"
+                    value={rowData.supervisorName}
                   />
                 </div>
-                <div className="gap-0 sm:gap-2 sm:flex sm:flex-col md:gap-2 md:flex md:flex-col lg:flex lg:flex-row lg:justify-between ">
+
+                <hr />
+
+                <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
-                    label="Nature of Business: "
-                    textSize="sm"
+                    label="Nature of Business"
+                    direction="top-to-bottom"
+                    textSize="md"
                     value={rowData.natureOfBusiness}
                   />
                   <LabelValue
-                    label="Date of Application: "
-                    textSize="sm"
-                    value={dayjs(rowData.dateOfApplication).format(
-                      'MMMM DD, YYYY'
-                    )}
+                    label="Estimated Hours"
+                    direction="top-to-bottom"
+                    textSize="md"
+                    value={rowData.estimateHours}
                   />
                 </div>
-                <div className="sm:flex sm:flex-col md:gap-2 md:flex md:flex-col lg:flex lg:flex-row lg:justify-between ">
+                <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
-                    label="Mode of Transportation: "
-                    textSize="sm"
+                    label="Mode of Transportation"
+                    direction="top-to-bottom"
+                    textSize="md"
                     value={rowData.obTransportation ?? 'N/A'}
                   />
 
                   <LabelValue
-                    label="Estimated Hours: "
-                    textSize="sm"
-                    value={rowData.estimateHours}
+                    label="Purpose or Destination"
+                    direction="top-to-bottom"
+                    textSize="md"
+                    value={rowData.purposeDestination}
                   />
                 </div>
-
-                <LabelValue
-                  label="Purpose or Destination: "
-                  textSize="sm"
-                  value={rowData.purposeDestination}
-                />
               </div>
 
               <AlertNotification

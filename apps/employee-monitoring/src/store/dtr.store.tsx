@@ -23,6 +23,19 @@ export type EmployeeSchedule = {
   schedule: Schedule;
 };
 
+export type EmployeeAttendance = {
+  employeeId?: string;
+  employeeName?: string;
+  id: number;
+  date: string;
+  timeIn: string;
+  timeOut: string;
+  lunchIn: string;
+  lunchOut: string;
+  schedule: string;
+  remarks?: string;
+};
+
 export type DailyTimeRecordState = {
   selectedMonth: string;
   setSelectedMonth: (value: string) => void;
@@ -70,6 +83,12 @@ export const useDtrStore = create<DailyTimeRecordState>((set) => ({
   selectedEmployee: {} as EmployeeRowData,
   employeeDtr: { postResponse: {} as EmployeeSchedule },
   date: '',
+  error: { errorEmployeesAsOption: '', errorEmployeeWithSchedule: '' },
+  loading: {
+    loadingEmployeesAsOption: false,
+    loadingEmployeeWithSchedule: false,
+  },
+
   selectedMonth: '',
   selectedYear: '',
 
@@ -126,12 +145,6 @@ export const useDtrStore = create<DailyTimeRecordState>((set) => ({
       loading: { ...state.loading, loadingEmployeeWithSchedule: false },
       error: { ...state.error, errorEmployeeWithSchedule: error },
     })),
-
-  loading: {
-    loadingEmployeesAsOption: false,
-    loadingEmployeeWithSchedule: false,
-  },
-  error: { errorEmployeesAsOption: '', errorEmployeeWithSchedule: '' },
 
   getDtrEmployees: () =>
     set((state) => ({

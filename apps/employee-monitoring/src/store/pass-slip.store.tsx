@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
@@ -25,6 +26,8 @@ type PassSlipState = {
   cancelPassSlip: () => void;
   cancelPassSlipSuccess: (response: PassSlip) => void;
   cancelPassSlipFail: (error: string) => void;
+
+  emptyErrorsAndResponse: () => void;
 };
 
 export const usePassSlipStore = create<PassSlipState>()(
@@ -33,6 +36,13 @@ export const usePassSlipStore = create<PassSlipState>()(
     passSlips: [],
     loading: { loadingPassSlip: false, loadingPassSlips: false },
     error: { errorPassSlip: '', errorPassSlips: '' },
+
+    emptyErrorsAndResponse: () =>
+      set((state) => ({
+        ...state,
+        error: { errorPassSlip: '', errorPassSlips: '' },
+        passSlip: {} as PassSlip,
+      })),
 
     getPassSlips: () =>
       set((state) => ({
