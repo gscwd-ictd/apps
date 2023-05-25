@@ -4,6 +4,7 @@ import { Pds } from 'apps/pds/src/store/pds.store';
 import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
 import { FunctionComponent, useEffect } from 'react';
 import { AppEndModalController } from '../AppEndListController';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 const AppEndModal: FunctionComponent = () => {
   const {
@@ -68,22 +69,26 @@ const AppEndModal: FunctionComponent = () => {
     }
   }, [modal]);
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <Modal
       open={modal.isOpen}
       setOpen={openModal}
       size={
-        modal.page === 1
-          ? 'lg'
-          : modal.page === 2 && !showPds
-          ? 'full'
-          : modal.page === 2 && showPds
-          ? 'full'
-          : modal.page === 3 && !showPds
-          ? 'md'
-          : modal.page === 3 && showPds
-          ? 'lg'
-          : 'md'
+        windowWidth > 1024 //md
+          ? modal.page === 1
+            ? 'lg'
+            : modal.page === 2 && !showPds
+            ? 'full'
+            : modal.page === 2 && showPds
+            ? 'full'
+            : modal.page === 3 && !showPds
+            ? 'md'
+            : modal.page === 3 && showPds
+            ? 'lg'
+            : 'md'
+          : 'full'
       }
       steady
     >

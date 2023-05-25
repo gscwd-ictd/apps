@@ -62,7 +62,7 @@ export default function DailyTimeRecord({
           <SideNav />
 
           <MainContainer>
-            <div className="w-full h-full px-32">
+            <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
               <ContentHeader
                 title="Daily Time Record"
                 subtitle="View schedules, time in and time out"
@@ -93,18 +93,18 @@ export default function DailyTimeRecord({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const userDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const userDetails = employeeDummy;
 
-  return { props: { userDetails } };
-};
+//   return { props: { userDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

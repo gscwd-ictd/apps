@@ -74,7 +74,10 @@ export default function Dashboard({
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(faceScanUrl, fetchWithToken, {});
+  } = useSWR(faceScanUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   return (
     <>
