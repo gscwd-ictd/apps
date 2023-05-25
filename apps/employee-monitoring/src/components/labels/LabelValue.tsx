@@ -17,11 +17,11 @@ export const LabelValue: FunctionComponent<LabelValueProps> = ({
     <>
       <div
         className={`${
-          direction === 'left-to-right' ? 'flex' : 'flex flex-col'
-        } items-start gap-1 text-${textSize} text-gray-600 `}
+          direction === 'left-to-right' ? 'flex gap-1' : 'flex flex-col gap-0'
+        } items-start text-${textSize} text-gray-600 `}
       >
-        <span className="font-medium">{label}</span>
-        <span className="font-normal text-gray-500">{value}</span>
+        <span className="font-normal text-gray-500">{label}</span>
+        <span className="font-semibold text-black">{value}</span>
       </div>
     </>
   );

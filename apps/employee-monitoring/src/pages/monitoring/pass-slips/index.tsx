@@ -1,5 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, useDataTable } from '@gscwd-apps/oneui';
+import {
+  DataTable,
+  LoadingSpinner,
+  ToastNotification,
+  useDataTable,
+} from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import ViewPassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/ViewPassSlipModal';
@@ -108,13 +113,23 @@ import useSWR from 'swr';
 // ];
 
 export default function Index() {
-  const { passSlips, getPassSlips, getPassSlipsFail, getPassSlipsSuccess } =
-    usePassSlipStore((state) => ({
-      passSlips: state.passSlips,
-      getPassSlips: state.getPassSlips,
-      getPassSlipsSuccess: state.getPassSlipsSuccess,
-      getPassSlipsFail: state.getPassSlipsFail,
-    }));
+  const {
+    passSlip,
+    passSlips,
+    errorPassSlips,
+    getPassSlips,
+    getPassSlipsFail,
+    getPassSlipsSuccess,
+    emptyErrorsAndResponse,
+  } = usePassSlipStore((state) => ({
+    passSlip: state.passSlip,
+    passSlips: state.passSlips,
+    getPassSlips: state.getPassSlips,
+    getPassSlipsSuccess: state.getPassSlipsSuccess,
+    getPassSlipsFail: state.getPassSlipsFail,
+    errorPassSlips: state.error.errorPassSlips,
+    emptyErrorsAndResponse: state.emptyErrorsAndResponse,
+  }));
 
   const [currentRowData, setCurrentRowData] = useState<PassSlip>(
     {} as PassSlip
@@ -148,14 +163,6 @@ export default function Index() {
         >
           <i className="bx bx-show"></i>
         </button>
-
-        {/* <button
-          type="button"
-          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
-        >
-          <i className="bx bx-trash-alt"></i>
-        </button> */}
       </>
     );
   };
@@ -212,6 +219,13 @@ export default function Index() {
     }),
   ];
 
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: passSlips,
+    columnVisibility: { id: false },
+  });
+
   // initialize loading
   useEffect(() => {
     if (swrIsLoading) getPassSlips();
@@ -220,21 +234,18 @@ export default function Index() {
   // get passlips success or fail
   useEffect(() => {
     // success
-    if (!isEmpty(swrPassSlips)) {
-      console.log(swrPassSlips.data);
-      getPassSlipsSuccess(swrPassSlips.data);
-    }
+    if (!isEmpty(swrPassSlips)) getPassSlipsSuccess(swrPassSlips.data);
 
     // fail
-    if (!isEmpty(swrError)) getPassSlipsFail(swrError);
+    if (!isEmpty(swrError)) {
+      getPassSlipsFail(swrError.message);
+    }
   }, [swrPassSlips, swrError]);
 
-  // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: passSlips,
-    columnVisibility: { id: false },
-  });
+  // if error getting pass slips
+  useEffect(() => {
+    if (!isEmpty(errorPassSlips) || !isEmpty(passSlip)) emptyErrorsAndResponse;
+  }, [errorPassSlips]);
 
   return (
     <>
@@ -250,6 +261,11 @@ export default function Index() {
           ]}
         />
 
+        {/* Fetch employees error */}
+        {!isEmpty(errorPassSlips) ? (
+          <ToastNotification toastType="error" notifMessage={errorPassSlips} />
+        ) : null}
+
         {/* view modal */}
         <ViewPassSlipModal
           modalState={viewModalIsOpen}
@@ -261,14 +277,18 @@ export default function Index() {
         <Can I="access" this="Pass_slips">
           <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
             <Card>
-              <div className="flex flex-row flex-wrap ">
-                <DataTable
-                  model={table}
-                  showGlobalFilter={true}
-                  showColumnFilter={true}
-                  paginate={true}
-                />
-              </div>
+              {swrIsLoading ? (
+                <LoadingSpinner size="lg" />
+              ) : (
+                <div className="flex flex-row flex-wrap ">
+                  <DataTable
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={true}
+                    paginate={true}
+                  />
+                </div>
+              )}
             </Card>
           </div>
         </Can>

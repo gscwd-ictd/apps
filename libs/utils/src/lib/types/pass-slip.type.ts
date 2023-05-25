@@ -33,6 +33,7 @@ export type PassSlip = {
   employeeName: string;
   supervisorName: string;
   supervisorId: string;
+  assignmentName?: string;
   status: PassSlipStatus;
 } & PassSlipApplicationForm;
 

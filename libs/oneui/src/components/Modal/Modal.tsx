@@ -53,7 +53,7 @@ export const Modal: FunctionComponent<ModalProps> & ModalComposition = (
             as="div"
             open={open}
             onClose={onClose}
-            className="relative z-40"
+            className="relative z-50"
           >
             <Dialog.Overlay
               as={m.div}

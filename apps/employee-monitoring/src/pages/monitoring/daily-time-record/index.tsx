@@ -1,11 +1,15 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
+import {
+  DataTable,
+  LoadingSpinner,
+  ToastNotification,
+  useDataTable,
+} from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
 import { EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import useSWR from 'swr';
-import fetcherHRIS from '../../../utils/fetcher/FetcherHRIS';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
 import { ActionDropdown } from 'apps/employee-monitoring/src/components/dropdown/ActionDropdown';
@@ -15,6 +19,7 @@ import {
   useDtrStore,
 } from 'apps/employee-monitoring/src/store/dtr.store';
 import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/ViewEmployeeSchedule';
+import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 
 export default function Index() {
   const {
@@ -23,6 +28,7 @@ export default function Index() {
     postResponse,
     dropdownAction,
     selectedEmployee,
+    errorEmployeeAsOption,
     getDtrEmployees,
     getDtrEmployeesFail,
     emptyErrorsAndResponse,
@@ -35,6 +41,7 @@ export default function Index() {
     selectedEmployee: state.selectedEmployee,
     postResponse: state.employeeDtr.postResponse,
     errorEmployeeWithSchedule: state.error.errorEmployeeWithSchedule,
+    errorEmployeeAsOption: state.error.errorEmployeesAsOption,
     getDtrEmployees: state.getDtrEmployees,
     setEmployeeWithSchedule: state.setEmployeeWithSchedule,
     emptyErrorsAndResponse: state.emptyErrorsAndResponse,
@@ -52,7 +59,10 @@ export default function Index() {
     isLoading: swrIsLoading,
     error: swrError,
     mutate: swrMutate,
-  } = useSWR(`/employees`, fetcherHRIS);
+  } = useSWR(`/employees`, fetcherHRMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Edit modal function
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
@@ -148,7 +158,9 @@ export default function Index() {
       getDtrEmployeesSuccess(employeesDetails);
     }
 
-    if (!isEmpty(swrError)) getDtrEmployeesFail(swrError);
+    if (!isEmpty(swrError)) {
+      getDtrEmployeesFail(swrError.message);
+    }
   }, [swrEmployees, swrError]);
 
   //
@@ -162,13 +174,21 @@ export default function Index() {
 
   // mutate from swr
   useEffect(() => {
-    if (!isEmpty(postResponse) || !isEmpty(errorEmployeeWithSchedule)) {
+    if (
+      !isEmpty(errorEmployeeWithSchedule) ||
+      !isEmpty(errorEmployeeAsOption)
+    ) {
+      setTimeout(() => {
+        emptyErrorsAndResponse();
+      }, 3000);
+    }
+    if (!isEmpty(postResponse)) {
       swrMutate();
       setTimeout(() => {
         emptyErrorsAndResponse();
       }, 3000);
     }
-  }, [postResponse, errorEmployeeWithSchedule]);
+  }, [postResponse, errorEmployeeWithSchedule, errorEmployeeAsOption]);
 
   return (
     <>
@@ -183,6 +203,14 @@ export default function Index() {
             },
           ]}
         />
+
+        {/* Fetch employees error */}
+        {!isEmpty(errorEmployeeAsOption) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={errorEmployeeAsOption}
+          />
+        ) : null}
 
         {/* Notification error */}
         {!isEmpty(errorEmployeeWithSchedule) ? (
@@ -202,21 +230,25 @@ export default function Index() {
 
         <div className="mx-5">
           <Card>
-            {/** Top Card */}
-            <div className="flex flex-col flex-wrap ">
-              <ViewEmployeeSchedule
-                modalState={editModalIsOpen}
-                setModalState={setEditModalIsOpen}
-                closeAction={closeEditActionModal}
-                employee={currentRowData}
-              />
+            {swrIsLoading ? (
+              <LoadingSpinner size="lg" />
+            ) : (
+              <div className="flex flex-col flex-wrap ">
+                {/** Top Card */}
+                <ViewEmployeeSchedule
+                  modalState={editModalIsOpen}
+                  setModalState={setEditModalIsOpen}
+                  closeAction={closeEditActionModal}
+                  employee={currentRowData}
+                />
 
-              <DataTable
-                model={table}
-                showColumnFilter={true}
-                paginate={true}
-              />
-            </div>
+                <DataTable
+                  model={table}
+                  showColumnFilter={true}
+                  paginate={true}
+                />
+              </div>
+            )}
           </Card>
         </div>
       </div>
