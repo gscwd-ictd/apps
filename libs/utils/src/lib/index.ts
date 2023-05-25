@@ -21,3 +21,5 @@ export * from './types/travel-order.type';
 export * from './functions/Capitalizer';
 export * from './functions/TwelveHourFormatter';
 export * from './functions/WindowDimensions';
+export * from './functions/UndertimeChecker';
+export * from './functions/LateChecker';

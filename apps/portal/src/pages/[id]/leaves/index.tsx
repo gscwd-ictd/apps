@@ -248,14 +248,31 @@ export default function Leaves({
         />
 
         <MainContainer>
-          <div className="w-full h-full px-32">
+          <div
+            className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32 '
+            `}
+          >
             <ContentHeader
               title="Employee Leaves"
               subtitle="Apply for company leave"
             >
-              <Button onClick={openApplyLeaveModal}>
+              <Button
+                onClick={openApplyLeaveModal}
+                className="hidden lg:block"
+                size={`md`}
+              >
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd /> Apply for Leave
+                </div>
+              </Button>
+
+              <Button
+                onClick={openApplyLeaveModal}
+                className="block lg:hidden"
+                size={`lg`}
+              >
+                <div className="flex items-center w-full gap-2">
+                  <HiDocumentAdd />
                 </div>
               </Button>
             </ContentHeader>
@@ -272,8 +289,8 @@ export default function Leaves({
             ) : (
               <ContentBody>
                 <>
-                  <div className="w-full flex">
-                    <div className="w-[58rem]">
+                  <div className={`w-full flex lg:flex-row flex-col`}>
+                    <div className={`lg:w-[58rem] w-full`}>
                       <LeavesTabs tab={tab} />
                     </div>
                     <div className="w-full">

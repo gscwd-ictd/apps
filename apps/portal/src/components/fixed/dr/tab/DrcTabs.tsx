@@ -22,8 +22,10 @@ export const DrcTabs = ({ positions }: DrcTabsProps) => {
 
   return (
     <>
-      <div className="w-full h-[44rem] px-5 overflow-y-auto">
-        <ul className="flex flex-col text-gray-500">
+      <div
+        className={`lg:h-auto lg:pt-0 lg:pb-10 max-h-[44rem] py-4 w-full px-5 overflow-y-auto`}
+      >
+        <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500">
           <TabHeader
             tab={tab}
             tabIndex={1}
