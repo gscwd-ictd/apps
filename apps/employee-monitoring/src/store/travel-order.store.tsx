@@ -1,9 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import {
   TravelOrder,
   TravelOrderId,
-} from '../../../../libs/utils/src/lib/types/travel-order.type';
+} from 'libs/utils/src/lib/types/travel-order.type';
 
 type ResponseTravelOrder = {
   postResponse: TravelOrder;
