@@ -5,7 +5,6 @@ import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
 import { FunctionComponent, useEffect } from 'react';
 import { AppEndModalController } from '../AppEndListController';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 const AppEndModal: FunctionComponent = () => {
   const {
