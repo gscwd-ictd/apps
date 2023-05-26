@@ -27,6 +27,7 @@ import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import AppEndAlert from 'apps/portal/src/components/fixed/endorsement/alert/AppEndAlert';
 import AppEndModal from 'apps/portal/src/components/fixed/endorsement/modal/AppEndModal';
+import { employeeDummy } from '../../../../src/types/employee.type';
 
 export default function ApplicantEndorsement({
   employeeDetails,
@@ -190,6 +191,14 @@ export default function ApplicantEndorsement({
     </>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
+
+//   return { props: { employeeDetails } };
+// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {

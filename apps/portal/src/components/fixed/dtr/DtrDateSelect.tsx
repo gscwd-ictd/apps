@@ -93,7 +93,7 @@ export const DtrDateSelect = () => {
         onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
       />
       <Select
-        className="w-28"
+        className="w-36 md:w-28"
         data={years}
         initial={years[0]}
         listDef={yearList}

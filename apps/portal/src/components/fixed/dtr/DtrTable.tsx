@@ -186,7 +186,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                       </tr>
                       <tr key={logs.id}>
                         <td className="border text-center py-2">{logs.Date}</td>
-                        <td className="border text-center py-2">
+                        <td className="border text-center py-2 ">
                           {logs.TimeIn}
                         </td>
                         <td className="border text-center py-2">
