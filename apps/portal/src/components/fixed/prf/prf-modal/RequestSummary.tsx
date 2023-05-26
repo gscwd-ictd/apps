@@ -29,7 +29,7 @@ export const RequestSummary: FunctionComponent = () => {
 
   return (
     <>
-      <div className="h-full flex gap-5 scale-90">
+      <div className="h-full flex flex-col lg:flex-row gap-5 scale-90">
         <header className="shrink-0 w-[18rem]">
           <div className="space-y-1">
             <header className="mb-7 pb-2 space-y-1">

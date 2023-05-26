@@ -37,7 +37,11 @@ export const Modal: FunctionComponent<ModalProps> = ({
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => setIsOpen(false)}>
+        <Dialog
+          as="div"
+          className="relative z-20"
+          onClose={() => setIsOpen(false)}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -91,10 +95,14 @@ export const Modal: FunctionComponent<ModalProps> = ({
                   <div className="w-full h-full">
                     {/** Modal title goes here */}
                     <header
-                      className={`${title && subtitle ? 'h-[8rem]' : 'h-[5rem]'} px-10 pt-10 flex justify-between`}
+                      className={`${
+                        title && subtitle ? 'h-[8rem]' : 'h-[5rem]'
+                      } px-10 pt-10 flex justify-between`}
                     >
                       <section>
-                        <h3 className="text-lg font-semibold text-gray-600">{title}</h3>
+                        <h3 className="text-lg font-semibold text-gray-600">
+                          {title}
+                        </h3>
                         <p className="text-sm text-gray-600">{subtitle}</p>
                       </section>
 
@@ -111,7 +119,9 @@ export const Modal: FunctionComponent<ModalProps> = ({
                     {/** Modal content goes here */}
                     <main
                       className={`${
-                        title && subtitle ? 'h-[calc(100%-14rem)]' : 'h-[calc(100%-11rem)]'
+                        title && subtitle
+                          ? 'h-[calc(100%-14rem)]'
+                          : 'h-[calc(100%-11rem)]'
                       } px-5 overflow-hidden`}
                     >
                       {child}
@@ -119,8 +129,17 @@ export const Modal: FunctionComponent<ModalProps> = ({
 
                     {/** Modal actions go here */}
                     <footer className="h-[6rem] flex justify-end items-center px-10 gap-2">
-                      <Button isDisabled={isCancelDisabled} btnLabel={cancelLabel} variant="white" onClick={onCancel} />
-                      <Button isDisabled={isConfirmDisabled} btnLabel={confirmLabel} onClick={onConfirm} />
+                      <Button
+                        isDisabled={isCancelDisabled}
+                        btnLabel={cancelLabel}
+                        variant="white"
+                        onClick={onCancel}
+                      />
+                      <Button
+                        isDisabled={isConfirmDisabled}
+                        btnLabel={confirmLabel}
+                        onClick={onConfirm}
+                      />
                     </footer>
                   </div>
                 </Dialog.Panel>

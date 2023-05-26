@@ -197,10 +197,7 @@ export default function PassSlip({
         />
 
         <MainContainer>
-          <div
-            className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32 '
-            `}
-          >
+          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader
               title="Employee Pass Slips"
               subtitle="Apply for pass slip"

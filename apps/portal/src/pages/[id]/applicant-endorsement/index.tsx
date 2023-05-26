@@ -27,6 +27,7 @@ import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import AppEndAlert from 'apps/portal/src/components/fixed/endorsement/alert/AppEndAlert';
 import AppEndModal from 'apps/portal/src/components/fixed/endorsement/modal/AppEndModal';
+import { employeeDummy } from '../../../../src/types/employee.type';
 
 export default function ApplicantEndorsement({
   employeeDetails,
@@ -145,22 +146,36 @@ export default function ApplicantEndorsement({
           <AppEndAlert />
 
           <MainContainer>
-            <div className="w-full h-full px-32">
+            <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Applicant Endorsement"
                 subtitle="Select a list of endorsed applicants"
               >
-                <Button onClick={openModal}>
+                <Button
+                  onClick={openModal}
+                  className="hidden lg:block"
+                  size={`md`}
+                >
                   <div className="flex items-center w-full gap-2">
                     <HiSearch /> Find an Endorsement
+                  </div>
+                </Button>
+
+                <Button
+                  onClick={openModal}
+                  className="block lg:hidden"
+                  size={`lg`}
+                >
+                  <div className="flex items-center w-full gap-2">
+                    <HiSearch />
                   </div>
                 </Button>
               </ContentHeader>
 
               <ContentBody>
                 <>
-                  <div className="flex w-full">
-                    <div className="w-[58rem]">
+                  <div className={`w-full flex lg:flex-row flex-col`}>
+                    <div className={`lg:w-[58rem] w-full`}>
                       <AppEndTabs tab={tab} />
                     </div>
                     <div className="w-full">
@@ -176,6 +191,14 @@ export default function ApplicantEndorsement({
     </>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
+
+//   return { props: { employeeDetails } };
+// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {

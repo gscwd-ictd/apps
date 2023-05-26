@@ -44,7 +44,7 @@ export default function PendingPrf({
     <>
       <PageTitle title={prfDetails.prfNo} />
 
-      <div className="flex flex-col w-screen h-screen py-10 overflow-hidden px-36">
+      <div className="flex flex-col w-screen h-screen py-10 overflow-hidden pl-4 pr-4 lg:pl-32 lg:pr-32">
         <button
           className="flex items-center gap-2 text-gray-700 transition-colors ease-in-out hover:text-gray-700"
           onClick={() => router.back()}
@@ -61,12 +61,12 @@ export default function PendingPrf({
           </section>
         </header>
 
-        <section className="w-full py-5 scale-75">
+        <section className="w-full py-5 scale-[60%] lg:scale-75">
           <PrfTimeline prfTrail={prfTrail} />
         </section>
 
         <main>
-          <main className="flex h-full">
+          <main className="flex flex-col lg:flex-row h-full">
             <aside className="shrink-0 w-[20rem]">
               <section className="flex items-center gap-4">
                 <HiOutlineUser className="text-gray-700 shrink-0" />
@@ -102,7 +102,7 @@ export default function PendingPrf({
                 )}
               </section>
             </aside>
-            <section className="w-full">
+            <section className="w-full pt-4 lg:pt-0">
               <main className="scale-95 h-[24rem] w-full overflow-y-auto px-5">
                 {prfDetails.prfPositions.map(
                   (position: Position, index: number) => {

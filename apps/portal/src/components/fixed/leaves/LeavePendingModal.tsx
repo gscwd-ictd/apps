@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../store/leave.store';
 import { HiX } from 'react-icons/hi';
@@ -6,6 +7,7 @@ import { useEffect } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -68,9 +70,15 @@ export const LeavePendingModal = ({
     e.preventDefault();
   };
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={`${windowWidth > 768 ? 'lg' : 'full'}`}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
@@ -110,7 +118,7 @@ export const LeavePendingModal = ({
                   ) : null}
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-center w-full">
                       <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                         Leave Type:
                       </label>
@@ -192,12 +200,12 @@ export const LeavePendingModal = ({
                       </div>
 
                       <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                           <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                             Leave Dates:
                           </label>
 
-                          <div className="w-96 ">
+                          <div className="w-full md:w-96 ">
                             <label className="text-slate-500 w-full text-lg ">
                               {leaveIndividualDetail.leaveApplicationBasicInfo
                                 .leaveName === 'Maternity Leave' ||

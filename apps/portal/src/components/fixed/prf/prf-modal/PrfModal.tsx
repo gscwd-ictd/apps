@@ -51,12 +51,12 @@ export const PrfModal: FunctionComponent = () => {
   return (
     <>
       {modalPage === 1 && (
-        <div className="flex h-full">
-          <section className="w-[70%]">
+        <div className="flex-col lg:flex-row flex h-full">
+          <section className="w-full py-2 lg:py-0 lg:w-[70%]">
             <PositionsList />
           </section>
 
-          <section className="w-[100%]">
+          <section className="w-full ">
             <SelectedPositions />
           </section>
         </div>

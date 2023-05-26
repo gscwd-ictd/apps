@@ -272,7 +272,7 @@ export default function Approvals({
           />
 
           <MainContainer>
-            <div className="w-full h-full px-32">
+            <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Approvals"
                 subtitle="Approve Employee Pass Slips & Leaves"
@@ -292,13 +292,13 @@ export default function Approvals({
               ) : (
                 <ContentBody>
                   <>
-                    <div className="w-full flex">
-                      <div className="w-[58rem]">
+                    <div className={`w-full flex lg:flex-row flex-col`}>
+                      <div className={`lg:w-[58rem] w-full`}>
                         <ApprovalsTabs tab={tab} />
                       </div>
                       <div className="w-full">
                         <ApprovalsTabWindow
-                          employeeId={employeeDummy.employmentDetails.userId}
+                          employeeId={employeeDetails.employmentDetails.userId}
                         />
                       </div>
                     </div>

@@ -132,10 +132,7 @@ export default function DutiesResponsibilities({
       <DrcAlertSuccess />
 
       <MainContainer>
-        <div
-          className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32 '
-            `}
-        >
+        <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
           <ContentHeader
             title="Position Duties, Responsibilities, & Competencies"
             subtitle="Set or Update"
