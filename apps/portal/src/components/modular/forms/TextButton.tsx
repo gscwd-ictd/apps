@@ -4,7 +4,10 @@ interface TextButtonProps extends InputHTMLAttributes<HTMLInputElement> {
   btnLabel: string;
 }
 
-export const TextButton: FunctionComponent<TextButtonProps> = ({ btnLabel, ...props }) => {
+export const TextButton: FunctionComponent<TextButtonProps> = ({
+  btnLabel,
+  ...props
+}) => {
   return (
     <>
       <div className="flex items-center">

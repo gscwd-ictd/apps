@@ -7,12 +7,15 @@ type PrfTimelineProps = {
   createdAt?: Date;
 };
 
-export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, createdAt }) => {
+export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({
+  prfTrail,
+  createdAt,
+}) => {
   const { division, department, agm, admin, gm } = prfTrail;
 
   return (
     <>
-      <div className="flex gap-1 w-full">
+      <div className="flex gap-1 w-full justify-center">
         {division.name !== 'N/A' && (
           <PrfTimelineNode
             status={division.status}

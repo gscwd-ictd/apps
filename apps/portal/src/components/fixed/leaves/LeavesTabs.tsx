@@ -26,7 +26,7 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             onClick={() => {
               setTab(1);
             }}
-            title="For Approval Leave Application"
+            title="For Approval Leaves"
             icon={<HiOutlineCheckCircle size={26} />}
             subtitle="Show all for approval Leaves you applied for"
             notificationCount={leavesOnGoing ? leavesOnGoing.length : 0}
@@ -38,7 +38,7 @@ export const LeavesTabs = ({ tab }: LeavesTabsProps) => {
             onClick={() => {
               setTab(2);
             }}
-            title="Completed Leave Applications"
+            title="Completed Leaves"
             icon={<HiCheck size={26} />}
             subtitle="Show all fulfilled Leave applications"
             notificationCount={leavesCompleted ? leavesCompleted.length : 0}

@@ -32,8 +32,8 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
 
   return (
     <>
-      <div className="w-full h-[44rem] px-5 overflow-y-auto">
-        <ul className="flex flex-col text-gray-500">
+      <div className="lg:h-auto lg:pt-0 lg:pb-10 h-full py-4 w-full px-5 overflow-y-auto">
+        <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500">
           {selectedApprovalType === 1 && (
             <>
               <TabHeader

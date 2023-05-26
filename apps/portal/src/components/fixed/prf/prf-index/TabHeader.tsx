@@ -45,7 +45,7 @@ export const TabHeader: FunctionComponent = () => {
   ];
 
   return (
-    <div className="scale-95">
+    <div className=" flex flex-col md:py-5 md:flex-row lg:flex-col">
       {headerItems.map((item: TabHeaderItemProps, index: number) => {
         return (
           <React.Fragment key={index}>
@@ -75,7 +75,7 @@ const TabHeaderItem: FunctionComponent<TabHeaderItemProps> = ({
   ...props
 }) => {
   return (
-    <div className="w-[26rem]">
+    <div className="w-[90%] lg:w-[26rem]">
       <div
         {...props}
         className={`${

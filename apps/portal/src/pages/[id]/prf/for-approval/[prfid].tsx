@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
@@ -31,6 +32,7 @@ import { Modal, OtpModal } from '@gscwd-apps/oneui';
 import { PrfOtpContents } from '../../../../../src/components/fixed/prf/prfOtp/PrfOtpContents';
 import { usePrfStore } from '../../../../../src/store/prf.store';
 import { useState } from 'react';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type ForApprovalProps = {
   profile: EmployeeProfile;
@@ -63,6 +65,7 @@ export default function ForApproval({
       remarks
     );
   };
+  const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
@@ -85,7 +88,7 @@ export default function ForApproval({
       </OtpModal>
 
       <Modal
-        size={'sm'}
+        size={`${windowWidth > 1024 ? 'sm' : 'xl'}`}
         open={isDeclineModalOpen}
         setOpen={setIsDeclineModalOpen}
       >
@@ -134,7 +137,7 @@ export default function ForApproval({
         </Modal.Footer>
       </Modal>
 
-      <div className="flex flex-col w-screen h-screen py-10 overflow-hidden px-36">
+      <div className="flex flex-col w-screen h-screen py-10 overflow-hidden pl-4 pr-4 lg:pl-32 lg:pr-32">
         <button
           className="flex items-center gap-2 text-gray-700 transition-colors ease-in-out hover:text-gray-700"
           onClick={() => router.back()}
@@ -152,7 +155,7 @@ export default function ForApproval({
         </header>
 
         <main className="mt-16">
-          <main className="flex h-full">
+          <main className="flex flex-col md:flex-row h-full items-center md:items-start">
             <aside className="shrink-0 w-[20rem]">
               <section className="flex items-center gap-4">
                 <HiOutlineUser className="text-gray-700 shrink-0" />
@@ -188,7 +191,7 @@ export default function ForApproval({
                 )}
               </section>
 
-              <section className="mt-10 flex flex-col gap-2">
+              <section className="mt-10 flex flex-col w-full  gap-2">
                 <Button
                   btnLabel={'Approve Request'}
                   fluid

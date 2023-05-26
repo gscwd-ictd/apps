@@ -48,7 +48,7 @@ export const ApprovalTypeSelect = () => {
   return (
     <div className="flex justify-end gap-2">
       <Select
-        className="w-52"
+        className="w-40 md:w-52"
         data={selection}
         initial={selection[0]}
         listDef={list}

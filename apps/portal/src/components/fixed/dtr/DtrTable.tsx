@@ -146,12 +146,24 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
         <table className="w-full bg-slate-50 border-spacing-0 border-0 border-separate">
           <thead className="border-0">
             <tr>
-              <th className="border text-center py-2 px-6">Date</th>
-              <th className="border text-center py-2 px-5">Time In</th>
-              <th className="border text-center py-2 px-5">Lunch Out</th>
-              <th className="border text-center py-2 px-5">Lunch In</th>
-              <th className="border text-center py-2 px-5">Time Out</th>
-              <th className="border text-center py-2 px-5">Schedule</th>
+              <th className="border text-center py-2 px-2 md:px-6 text-sm md:text-lg">
+                Date
+              </th>
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+                Time In
+              </th>
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+                Lunch Out
+              </th>
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+                Lunch In
+              </th>
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+                Time Out
+              </th>
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+                Schedule
+              </th>
             </tr>
           </thead>
           <tbody className="text-center text-sm ">

@@ -22,6 +22,7 @@ import {
   CalendarDate,
   LeaveApplicationForm,
 } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -387,9 +388,15 @@ export const LeaveApplicationModal = ({
     }
   };
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
-      <Modal size={'xl'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={`${windowWidth > 768 ? 'xl' : 'full'}`}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">

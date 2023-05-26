@@ -8,6 +8,7 @@ import { isEqual } from 'lodash';
 import { FunctionComponent } from 'react';
 import { CompetencyChecker, DrcChecker } from '../utils/functions';
 import { DrcModalController } from './DrcModalController';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 const DrcModal: FunctionComponent = () => {
   // use modal store
@@ -135,14 +136,14 @@ const DrcModal: FunctionComponent = () => {
       return true;
     else return false;
   };
-
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
       <Modal
         open={modal.isOpen}
         setOpen={() => setModal({ ...modal })}
         steady
-        size="xl"
+        size={`${windowWidth > 1024 ? 'xl' : 'full'}`}
       >
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full px-5">

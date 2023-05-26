@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps } from 'next';
 import { useEffect } from 'react';
 
@@ -21,22 +22,21 @@ import { PrfModal } from '../../../components/fixed/prf/prf-modal/PrfModal';
 import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingPrfList';
 import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
 import { TabHeader } from '../../../components/fixed/prf/prf-index/TabHeader';
-
 import { SideNav } from '../../../../src/components/fixed/nav/SideNav';
 import { MainContainer } from '../../../../src/components/modular/custom/containers/MainContainer';
 import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
 import { SpinnerDotted } from 'spinners-react';
-
 import {
   getUserDetails,
   withCookieSession,
 } from '../../../../src/utils/helpers/session';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
-
-import { Button } from '../../../components/modular/forms/buttons/Button';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
+import { Button } from '@gscwd-apps/oneui';
+import { HiDocumentAdd } from 'react-icons/hi';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PrfPageProps = {
   user: User;
@@ -174,13 +174,15 @@ export default function Prf({
     // console.log(employeeDetail, 'employee store');
   };
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
       <Modal
         title="Position Request"
         subtitle="Request for new personnel"
         isOpen={isOpen}
-        size="xl"
+        size={`${windowWidth > 1300 ? 'xl' : 'full'}`}
         child={<PrfModal />}
         cancelLabel={modalPage === 1 ? 'Cancel' : 'Go Back'}
         confirmLabel={modalPage === 2 ? 'Confirm' : 'Proceed'}
@@ -194,17 +196,30 @@ export default function Prf({
       <PageTitle title="Position Request" />
       <SideNav />
       <MainContainer>
-        <div className="w-full h-full px-32">
+        <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
           <ContentHeader
             title="Position Request"
             subtitle="Request for new personnel"
           >
             <Button
-              btnLabel="Create Request"
-              shadow
-              strong
+              className="hidden lg:block"
+              size={`md`}
               onClick={handleOpen}
-            />
+            >
+              <div className="flex items-center w-full gap-2">
+                <HiDocumentAdd /> Create Request
+              </div>
+            </Button>
+
+            <Button
+              className="block lg:hidden"
+              size={`lg`}
+              onClick={handleOpen}
+            >
+              <div className="flex items-center w-full gap-2">
+                <HiDocumentAdd />
+              </div>
+            </Button>
           </ContentHeader>
           {isLoading ? (
             <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -219,8 +234,8 @@ export default function Prf({
           ) : (
             <ContentBody>
               <>
-                <div className="flex w-full">
-                  <div className="w-[58rem]">
+                <div className={`w-full flex lg:flex-row flex-col`}>
+                  <div className={`lg:w-[58rem] w-full md:w-[95%]`}>
                     <TabHeader />
                   </div>
                   <div className="w-full">

@@ -74,7 +74,12 @@ export default function Dashboard({
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(faceScanUrl, fetchWithToken, {});
+  } = useSWR(faceScanUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  console.log(swrFaceScan);
 
   return (
     <>
@@ -192,7 +197,7 @@ export default function Dashboard({
                       </div>
                       {/* ATTENDANCE */}
                       <AttendanceCard
-                        timeIn={swrFaceScan ? swrFaceScan.timeIn : '-'}
+                        timeIn={swrFaceScan ? swrFaceScan.timeIn : '08:04:20'}
                         lunchOut={swrFaceScan ? swrFaceScan.lunchOut : '-'}
                         lunchIn={swrFaceScan ? swrFaceScan.lunchIn : '-'}
                         timeOut={swrFaceScan ? swrFaceScan.timeOut : '-'}

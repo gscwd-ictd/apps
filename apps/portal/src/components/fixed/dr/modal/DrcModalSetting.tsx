@@ -302,8 +302,8 @@ export const DrcModalSetting = () => {
         {/** HERE */}
         <div className="flex flex-col mt-5">
           <section>
-            <div className="flex items-end justify-between ">
-              <p className="flex min-w-[22rem] max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col md:flex-row items-end justify-between ">
+              <p className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
                 Core Duties, Responsibilities, & Competencies
                 <HiPuzzle />
               </p>
@@ -318,7 +318,7 @@ export const DrcModalSetting = () => {
                       : '+ Add Core'
                   }
                   btnVariant="white"
-                  className="min-w-[16rem] border-none text-indigo-600 "
+                  className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
                   isDisabled={availableDnrs.length === 0 ? true : false}
                   onClick={() => openDrcModalSelection(DrcTypes.CORE)}
                 />
@@ -354,8 +354,8 @@ export const DrcModalSetting = () => {
             </div>
           </section>
           <section>
-            <div className="flex items-end justify-between ">
-              <p className="flex min-w-[22rem] max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col md:flex-row items-end justify-between ">
+              <p className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
                 Support Duties, Responsibilities, & Competencies <HiPuzzle />
               </p>
 
@@ -370,7 +370,7 @@ export const DrcModalSetting = () => {
                   }
                   btnVariant="white"
                   isDisabled={availableDnrs.length === 0 ? true : false}
-                  className="min-w-[16rem] border-none text-indigo-600"
+                  className="w-auto lg:min-w-[16rem] border-none text-indigo-600"
                   onClick={() => openDrcModalSelection(DrcTypes.SUPPORT)}
                 />
               )}

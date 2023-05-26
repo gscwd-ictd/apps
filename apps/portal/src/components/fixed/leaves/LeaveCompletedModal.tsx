@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { HiX } from 'react-icons/hi';
@@ -8,6 +9,7 @@ import { useEffect } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import axios from 'axios';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type LeaveCompletedModalProps = {
   modalState: boolean;
@@ -66,9 +68,15 @@ export const LeaveCompletedModal = ({
   }, [completedLeaveModalIsOpen, leaveId]);
 
   const router = useRouter();
+
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={`${windowWidth > 768 ? 'lg' : 'full'}`}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
@@ -115,7 +123,7 @@ export const LeaveCompletedModal = ({
                   ) : null}
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-center w-full">
                       <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                         Leave Type:
                       </label>
@@ -197,7 +205,7 @@ export const LeaveCompletedModal = ({
                       </div>
 
                       <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                           <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                             Leave Dates:
                           </label>
