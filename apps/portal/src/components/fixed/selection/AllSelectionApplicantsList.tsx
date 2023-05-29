@@ -183,7 +183,7 @@ export const AllSelectionApplicantsList = () => {
           <div className="px-5">
             <div className="flex w-full grid-cols-5 gap-4 border-b border-gray-400">
               <div className="col-span-1 w-[5%] flex justify-center items-center">
-                <p className="text-xs font-light">View PDS</p>
+                <p className="text-xs font-light"></p>
               </div>
               <div className="col-span-1 w-[5%] flex justify-center items-center">
                 <p className="font-light">Rank</p>
@@ -330,7 +330,7 @@ export const AllSelectionApplicantsList = () => {
                               setPdsAlertState(true);
                             }}
                           >
-                            <span className="text-indigo-600 underline">
+                            <span className="text-indigo-600 underline uppercase">
                               Pds
                             </span>
                           </button>

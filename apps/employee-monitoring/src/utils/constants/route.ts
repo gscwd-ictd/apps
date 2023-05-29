@@ -17,4 +17,7 @@ export const Paths = [
   '/maintenance/schedules/office', // 15
   '/maintenance/schedules/field', // 16
   '/maintenance/schedules/pumping-station', // 17
+  '/monitoring/scheduling-sheet/office', // 18
+  '/monitoring/scheduling-sheet/field', // 19
+  '/monitoring/scheduling-sheet/station', // 20
 ];

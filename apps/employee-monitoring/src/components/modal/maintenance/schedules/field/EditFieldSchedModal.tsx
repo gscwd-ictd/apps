@@ -79,10 +79,11 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     reset,
     register,
     clearErrors,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
   } = useForm<Schedule>({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
+    reValidateMode: 'onSubmit',
     defaultValues: {
       id: rowData.id,
       name: rowData.name,
@@ -180,19 +181,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
                   disabled={IsLoading ? true : false}
                 />
 
-                {/** Schedule type */}
-                <SelectListRF
-                  id="scheduleCategory"
-                  selectList={categorySelection}
-                  controller={{
-                    ...register('scheduleType', { required: true }),
-                  }}
-                  label="Category"
-                  isError={errors.scheduleType ? true : false}
-                  errorMessage={errors.scheduleType?.message}
-                  disabled={IsLoading ? true : false}
-                />
-
                 {/** Time in */}
                 <LabelInput
                   id={'scheduleTimeIn'}
@@ -251,7 +239,9 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
               type="submit"
               form="addfieldmodal"
               className="disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : false}
+              disabled={
+                IsLoading ? true : !isValid ? true : !isDirty ? true : false
+              }
             >
               <span className="text-xs font-normal">Update</span>
             </Button>
