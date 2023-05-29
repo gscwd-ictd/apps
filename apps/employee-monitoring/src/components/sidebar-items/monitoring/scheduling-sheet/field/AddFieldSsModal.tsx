@@ -145,10 +145,9 @@ const AddFieldSsModal: FunctionComponent<AddFieldGsModalProps> = ({
               setModalState={setSelectScheduleModalIsopen}
               closeModalAction={closeSelectScheduleModal}
             />
-            <form id="AddFieldSsForm">
+            <form id="addFieldSsForm">
               <div className="">
-                <form id="AddFieldGsModal">
-                  <div className="flex w-full grid-cols-3 gap-2 mb-6 ">
+                   <div className="flex w-full grid-cols-3 gap-2 mb-6 ">
                     {/* Effectivity */}
                     <section className="p-2 bg-gray-200 border rounded">
                       <p className="flex items-center justify-center w-full font-semibold">
@@ -272,7 +271,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldGsModalProps> = ({
                       </div>
                     </section>
                   </div>
-                </form>
+              
               </div>
             </form>
           </>
@@ -289,7 +288,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldGsModalProps> = ({
             <button
               className="px-3 py-2 text-white bg-blue-500 rounded text-md disabled:cursor-not-allowed hover:bg-blue-400"
               type="submit"
-              form="AddFieldGsModal"
+              form="addFieldSsForm"
             >
               Submit
             </button>
