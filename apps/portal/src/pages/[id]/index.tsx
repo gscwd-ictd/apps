@@ -60,7 +60,6 @@ export default function Dashboard({
   }, []);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
-  const { windowWidth } = UseWindowDimensions();
 
   const faceScanUrl = `${
     process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
@@ -234,18 +233,18 @@ export default function Dashboard({
 }
 
 //use for dummy login only
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const userDetails = employeeDummy;
-//   return { props: { userDetails } };
-// };
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const userDetails = employeeDummy;
+  return { props: { userDetails } };
+};
 
 //use for official user
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const userDetails = getUserDetails();
-    // console.log(userDetails);
-    return { props: { userDetails } };
-  }
-);
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const userDetails = getUserDetails();
+//     // console.log(userDetails);
+//     return { props: { userDetails } };
+//   }
+// );

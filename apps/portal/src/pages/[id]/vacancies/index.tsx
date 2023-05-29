@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import axios from 'axios';
 import {
   GetServerSideProps,
@@ -36,6 +37,8 @@ import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsP
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
+import { employeeDummy } from '../../../../src/types/employee.type';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export default function Vacancies({
   data,
@@ -246,6 +249,8 @@ export default function Vacancies({
     }
   };
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
       {
@@ -301,7 +306,7 @@ export default function Vacancies({
           </Head>
 
           <Modal
-            size={'xl'}
+            size={`${windowWidth > 768 ? 'xl' : 'full'}`}
             open={modal.isOpen}
             setOpen={() => setModal({ ...modal })}
           >
@@ -339,8 +344,10 @@ export default function Vacancies({
               />
             </Modal.Body>
 
-            <Modal.Footer>
-              <div className="flex flex-col w-full">
+            <Modal.Footer
+              className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}
+            >
+              <div className="flex flex-col justify-center w-full h-full">
                 {modal.page === 1 ? (
                   <div className="flex flex-col items-end w-full">
                     <Button
@@ -358,34 +365,35 @@ export default function Vacancies({
                       className={`${
                         isApplied || hasApplied
                           ? 'hidden'
-                          : 'w-full h-10 flex flex-row gap-3 justify-between'
+                          : 'w-full h-10 flex flex-row gap-3 justify-between items-center'
                       }`}
                     >
-                      <div className="flex flex-row gap-2">
-                        <Button onClick={(e) => changeModalPage(1)}>
-                          Back
-                        </Button>
-                      </div>
+                      <Button onClick={(e) => changeModalPage(1)}>Back</Button>
+
                       <div
                         className={`${
                           isApplied || hasApplied
                             ? 'hidden'
-                            : 'flex justify-start items-center text-xs text-red-600'
+                            : 'hidden lg:flex justify-start items-center text-xs text-red-600'
                         }`}
                       >
                         Warning: Going back or closing the window will reset
                         your entries.
                       </div>
 
-                      <div className="flex flex-row justify-end gap-2">
-                        <Button variant="danger" onClick={getCaptcha}>
+                      <div className="flex w-36 md:w-auto flex-col md:flex-row justify-end gap-2">
+                        <Button
+                          variant="danger"
+                          onClick={getCaptcha}
+                          size={`${windowWidth > 768 ? 'md' : 'sm'}`}
+                        >
                           Generate Captcha
                         </Button>
                         {/* captcha */}
                         <div
                           className={`${
                             pwdArray ? '' : 'animate-pulse'
-                          } select-none h-full  px-4 transition-all duration-150 bg-slate-200 text-xl flex flex-row justify-center items-center gap-1`}
+                          } select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex lex-rowf justify-center items-center gap-1`}
                         >
                           <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
                             {pwdArray && pwdArray[0]}
@@ -416,110 +424,26 @@ export default function Vacancies({
                             isCaptchaError
                               ? 'border-red-600'
                               : 'border-stone-200'
-                          }  w-32 border text-xs`}
+                          }  md:w-28 border text-xs`}
                           onAnimationEnd={() => setWiggleEffect(false)}
                           onChange={(e) =>
                             handlePassword(e.target.value as unknown as string)
                           }
                         />
-                        <Button onClick={modalAction}>Apply</Button>
                       </div>
+                      <Button onClick={modalAction}>Apply</Button>
                     </div>
                   </div>
-                ) : (
-                  <div className="flex flex-col items-end w-full">
-                    <label
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'hidden'
-                          : 'pt-2 pb-2 right-0 pr-12'
-                      }`}
-                    >
-                      Generate and enter the correct Captcha to apply.
-                    </label>
-
-                    <div
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'bg-green-500 p-2 text-white rounded w-full text-center'
-                          : 'hidden'
-                      }`}
-                    >
-                      <label>You have applied for this position.</label>
-                    </div>
-
-                    <div
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'hidden'
-                          : 'w-full h-10 flex flex-row gap-2 justify-between'
-                      }`}
-                    >
-                      <div className="flex flex-row gap-2">
-                        <Button onClick={(e) => changeModalPage(2)}>
-                          Back
-                        </Button>
-                      </div>
-
-                      <div className="flex flex-row justify-end w-2/6 gap-2">
-                        <Button variant="danger" onClick={getCaptcha}>
-                          Generate
-                        </Button>
-                        {/* captcha */}
-                        <div
-                          className={`${
-                            pwdArray ? '' : 'animate-pulse'
-                          } select-none h-full  px-4 transition-all duration-150 bg-slate-200 text-xl flex flex-row justify-center items-center gap-1`}
-                        >
-                          <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
-                            {pwdArray && pwdArray[0]}
-                          </div>
-                          <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">
-                            {pwdArray && pwdArray[1]}
-                          </div>
-                          <div className="w-4 font-light text-red-800 scale-105 rotate-45">
-                            {pwdArray && pwdArray[2]}
-                          </div>
-                          <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
-                            {pwdArray && pwdArray[3]}
-                          </div>
-                          <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">
-                            {pwdArray && pwdArray[4]}
-                          </div>
-                          <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">
-                            {pwdArray && pwdArray[5]}
-                          </div>
-                        </div>
-                        <input
-                          type="text"
-                          defaultValue=""
-                          placeholder="Captcha"
-                          className={`${
-                            wiggleEffect && 'animate-shake border-red-600'
-                          } ${
-                            isCaptchaError
-                              ? 'border-red-600'
-                              : 'border-stone-200'
-                          }  w-24 border`}
-                          onAnimationEnd={() => setWiggleEffect(false)}
-                          onChange={(e) =>
-                            handlePassword(e.target.value as unknown as string)
-                          }
-                        />
-                        <Button onClick={modalAction}>Apply</Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                ) : null}
               </div>
             </Modal.Footer>
           </Modal>
 
           <SideNav />
           <MainContainer>
-            <div className="flex flex-row w-full h-full pb-10">
-              <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
-                Job Vacancies
+            <div className="flex flex-col md:flex-row w-full h-full pb-10 px-4 md:px-0">
+              <div className="flex flex-col w-full pb-5 px-8 md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20 overflow-y-auto">
+                <label className="pb-4">Job Vacancies</label>
                 {data && data.length > 0 ? (
                   data.map((vacancies: VacancyDetails, messageIdx: number) => {
                     return (
@@ -538,7 +462,7 @@ export default function Vacancies({
                     );
                   })
                 ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full">
+                  <div className="bg-slate-50 flex flex-col justify-center items-center w-full pb-5 px-8 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20 overflow-y-auto">
                     <label className="w-full text-4xl text-center text-gray-400 ">
                       NO VACANCIES
                     </label>
@@ -546,11 +470,11 @@ export default function Vacancies({
                 )}
               </div>
               {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                <div className="flex flex-col items-center w-full h-full pt-6 ml-4 mr-4 text-gray-700">
+                <div className="flex flex-col items-center w-full h-1/2 md:h-full pt-1 md:pt-6 md:ml-4 md:mr-4 text-gray-700">
                   <div
                     className={`${
                       isMessageOpen
-                        ? 'w-full ml-10  mr-10 p-8 flex flex-col bg-white'
+                        ? 'w-full md:ml-10 md:mr-10 p-8 flex flex-col bg-white'
                         : 'hidden'
                     }`}
                   >
@@ -582,8 +506,8 @@ export default function Vacancies({
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center w-full h-full pt-6 ml-4 mr-4 text-4xl text-gray-400">
-                  NO DATA FOUND
+                <div className="text-center flex flex-col items-center justify-center w-full h-1/2 md:h-full pt-1 md:pt-6 md:ml-4 md:mr-4 text-4xl text-gray-400">
+                  NO JOB POSTING SELECTED
                 </div>
               )}
             </div>
@@ -594,21 +518,40 @@ export default function Vacancies({
   );
 }
 
-//get list of all posted job positions
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    try {
-      const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
-      );
-      if (data) {
-        return { props: { data, employeeId: userDetails.user._id } };
-      } else {
-        return { props: {} };
-      }
-    } catch (error) {
+//use for dummy login only
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    const userDetails = employeeDummy;
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
+    );
+    if (data) {
+      return { props: { data, employeeId: userDetails.user._id } };
+    } else {
       return { props: {} };
     }
+  } catch (error) {
+    return { props: {} };
   }
-);
+};
+
+//get list of all posted job positions
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     try {
+//       const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
+//       const { data } = await axios.get(
+//         `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
+//       );
+//       if (data) {
+//         return { props: { data, employeeId: userDetails.user._id } };
+//       } else {
+//         return { props: {} };
+//       }
+//     } catch (error) {
+//       return { props: {} };
+//     }
+//   }
+// );
