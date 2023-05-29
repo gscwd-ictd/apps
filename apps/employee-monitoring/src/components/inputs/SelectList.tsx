@@ -166,7 +166,7 @@ export function MySelectList({
         <ul
           className={`${
             isOpen ? 'block' : 'hidden'
-          } border absolute  rounded  max-h-[12em] bg-whibte z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
+          } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
         >
           {options.map((option, index) => (
             <li
