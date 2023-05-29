@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import 'react-toastify/dist/ReactToastify.css';
 import { WorkExperiencePds } from '../../../../src/types/workexp.type';
 import { NumericFormat } from 'react-number-format';
@@ -6,6 +7,7 @@ import { Button, Modal, TextField, ToastNotification } from '@gscwd-apps/oneui';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
 import { HiPencil, HiPlus, HiTrash, HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export const VacancyWorkExperience = (props: {
   data: WorkExperiencePds;
@@ -196,6 +198,8 @@ export const VacancyWorkExperience = (props: {
       page: pageNumber,
     });
   };
+
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
       {!isEmpty(errorAccomplishment) ? (
@@ -210,7 +214,7 @@ export const VacancyWorkExperience = (props: {
       ) : null}
 
       <Modal
-        size={'lg'}
+        size={`${windowWidth > 768 ? 'lg' : 'full'}`}
         open={modal.isOpen}
         setOpen={() => setModal({ ...modal })}
       >

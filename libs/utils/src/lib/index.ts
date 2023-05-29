@@ -18,6 +18,7 @@ export * from './types/select.type';
 export * from './types/training-type.type';
 export * from './types/training.type';
 export * from './types/travel-order.type';
+export * from './types/dtr.type';
 export * from './functions/Capitalizer';
 export * from './functions/TwelveHourFormatter';
 export * from './functions/WindowDimensions';

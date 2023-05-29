@@ -44,12 +44,18 @@ export const ProfileMenuDropdown = ({
 
   useEffect(() => {
     if (typeof window !== undefined) {
-      try {
-        setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
-      } catch (error) {
-        // router.reload();
-        // handleLogout();
+      if (localStorage.getItem('employee')) {
+        setEmployeeDetails(JSON.parse(localStorage.getItem('employee')));
+      } else {
+        setEmployeeDetails(JSON.parse(localStorage.getItem('')));
       }
+      // try {
+      //   // setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
+      //   setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
+      // } catch (error) {
+      //   // router.reload();
+      //   // handleLogout();
+      // }
     }
   }, []);
 
@@ -76,9 +82,8 @@ export const ProfileMenuDropdown = ({
     <>
       <Menu
         as="div"
-        className={`${
-          windowWidth < 1024 ? '-mt-10 -ml-8 fixed' : 'relative'
-        } inline-block text-left`}
+        className={`-mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0
+         inline-block text-left`}
       >
         <div>
           <Menu.Button

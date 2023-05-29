@@ -66,15 +66,15 @@ export type EmployeeProfile = {
 
 export const employeeDummy: EmployeeDetails = {
   user: {
-    _id: '010a02be-5b3d-11ed-a08b-000c29f95a80',
+    _id: '86de1dd4-de28-4930-bc82-b767e1f1ff62',
     email: 'ericsison003@gmail.com',
   },
   profile: {
-    _id: '010a02be-5b3d-11ed-a08b-000c29f95a80',
+    _id: '86de1dd4-de28-4930-bc82-b767e1f1ff62',
     companyId: null,
-    firstName: 'Ricardo Vicente',
+    firstName: 'Ferdz Dummy',
     middleName: 'Dionaldo',
-    lastName: 'Narvaiza',
+    lastName: 'Ferrer',
     nameExt: 'Jr',
     sex: 'Male',
     birthDate: '1991-08-14',
@@ -83,8 +83,8 @@ export const employeeDummy: EmployeeDetails = {
     photoUrl: '/profile.jpg',
   },
   employmentDetails: {
-    userId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-    companyId: '2020-008',
+    userId: '86de1dd4-de28-4930-bc82-b767e1f1ff62',
+    companyId: '2002-004',
     assignment: {
       id: '928bb2b7-f048-11ec-8d31-c4bde5a04065',
       name: 'Mainline Expansion, Rehabitation and Civil Works Division',

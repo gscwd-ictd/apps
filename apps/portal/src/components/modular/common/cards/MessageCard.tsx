@@ -33,11 +33,10 @@ export const MessageCard: React.FC<MessageCardProps> = ({
   linkType = 'router',
   onClick,
 }): JSX.Element => {
-  const router = useRouter();
   return (
     <div
       onClick={() => onClick()}
-      className={`flex items-center w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-tr-none rounded-bl-none shadow-md cursor-pointer shadow-slate-100 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
+      className={`flex items-center w-full gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-tr-none rounded-bl-none shadow-md cursor-pointer shadow-slate-100 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
     >
       <div
         className={`flex h-10 w-10 items-center justify-center rounded-md ${bgColor[color]}`}
