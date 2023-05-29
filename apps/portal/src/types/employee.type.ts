@@ -84,7 +84,7 @@ export const employeeDummy: EmployeeDetails = {
   },
   employmentDetails: {
     userId: '86de1dd4-de28-4930-bc82-b767e1f1ff62',
-    companyId: '2020-008',
+    companyId: '2002-004',
     assignment: {
       id: '928bb2b7-f048-11ec-8d31-c4bde5a04065',
       name: 'Mainline Expansion, Rehabitation and Civil Works Division',

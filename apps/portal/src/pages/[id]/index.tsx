@@ -63,7 +63,7 @@ export default function Dashboard({
 
   const faceScanUrl = `${
     process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
-  }/v1/daily-time-record/single-employee/${
+  }/v1/daily-time-record/employees/${
     userDetails.employmentDetails.companyId
   }/${format(new Date(), 'yyyy-MM-dd')}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter

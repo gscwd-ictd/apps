@@ -44,12 +44,18 @@ export const ProfileMenuDropdown = ({
 
   useEffect(() => {
     if (typeof window !== undefined) {
-      try {
-        setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
-      } catch (error) {
-        // router.reload();
-        // handleLogout();
+      if (localStorage.getItem('employee')) {
+        setEmployeeDetails(JSON.parse(localStorage.getItem('employee')));
+      } else {
+        setEmployeeDetails(JSON.parse(localStorage.getItem('')));
       }
+      // try {
+      //   // setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
+      //   setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
+      // } catch (error) {
+      //   // router.reload();
+      //   // handleLogout();
+      // }
     }
   }, []);
 
