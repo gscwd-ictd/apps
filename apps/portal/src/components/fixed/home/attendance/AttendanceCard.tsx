@@ -4,25 +4,16 @@ import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { UseUndertimeChecker } from 'libs/utils/src/lib/functions/UndertimeChecker';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 
 interface Props {
-  timeIn: string;
-  lunchOut: string;
-  lunchIn: string;
-  timeOut: string;
-  dateNow: string;
+  timeLogData: EmployeeDtrWithSchedule;
 }
-export const AttendanceCard: React.FC<Props> = ({
-  timeIn,
-  lunchOut,
-  lunchIn,
-  timeOut,
-  dateNow,
-}) => {
+export const AttendanceCard: React.FC<Props> = ({ timeLogData }) => {
   const now = dayjs().toDate().toDateString();
-  const isLate = UseLateChecker(timeIn, '08:00:00'); //change to scheduled timeIn prop when ready
-  const isUnderTime = UseUndertimeChecker(timeOut, '05:00:00'); //change to scheduled timeOut prop when ready
-  console.log(timeIn);
+  const isLate = UseLateChecker(timeLogData.dtr.timeIn, '08:00:00'); //change to scheduled timeIn prop when ready
+  const isUnderTime = UseUndertimeChecker(timeLogData.dtr.timeOut, '05:00:00'); //change to scheduled timeOut prop when ready
+
   return (
     <div className="w-full h-auto shadow rounded-md bg-white flex flex-col p-4 gap-2">
       <label className="text-2xl text-gray-600 font-bold text-center">
@@ -37,12 +28,14 @@ export const AttendanceCard: React.FC<Props> = ({
           </label>
           <label
             className={`${
-              isLate && timeIn && timeIn != '-'
+              isLate && timeLogData.dtr.timeIn && timeLogData.dtr.timeIn != null
                 ? 'text-red-600'
                 : 'text-green-600'
             } text-md `}
           >
-            {timeIn && timeIn != '-' ? UseTwelveHourFormat(timeIn) : '-'}
+            {timeLogData.dtr.timeIn && timeLogData.dtr.timeIn != null
+              ? UseTwelveHourFormat(timeLogData.dtr.timeIn)
+              : '-'}
           </label>
         </div>
         <div className="flex flex-col justify-center items-center">
@@ -52,7 +45,9 @@ export const AttendanceCard: React.FC<Props> = ({
             LUNCH OUT
           </label>
           <label className="text-md text-green-600">
-            {lunchOut && lunchOut != '-' ? UseTwelveHourFormat(lunchOut) : '-'}
+            {timeLogData.dtr.lunchOut && timeLogData.dtr.lunchOut != null
+              ? UseTwelveHourFormat(timeLogData.dtr.lunchOut)
+              : '-'}
           </label>
         </div>
         <div className="flex flex-col justify-center items-center">
@@ -62,7 +57,9 @@ export const AttendanceCard: React.FC<Props> = ({
             LUNCH IN
           </label>
           <label className="text-md text-green-600">
-            {lunchIn && lunchIn != '-' ? UseTwelveHourFormat(lunchIn) : '-'}
+            {timeLogData.dtr.lunchIn && timeLogData.dtr.lunchIn != null
+              ? UseTwelveHourFormat(timeLogData.dtr.lunchIn)
+              : '-'}
           </label>
         </div>
         <div className="flex flex-col justify-center items-center">
@@ -73,12 +70,16 @@ export const AttendanceCard: React.FC<Props> = ({
           </label>
           <label
             className={`${
-              isUnderTime && timeOut && timeOut != '-'
+              isUnderTime &&
+              timeLogData.dtr.timeOut &&
+              timeLogData.dtr.timeOut != null
                 ? 'text-red-600'
                 : 'text-green-600'
             } text-md `}
           >
-            {timeOut && timeOut != '-' ? UseTwelveHourFormat(timeOut) : '-'}
+            {timeLogData.dtr.timeOut && timeLogData.dtr.timeOut != null
+              ? UseTwelveHourFormat(timeLogData.dtr.timeOut)
+              : '-'}
           </label>
         </div>
       </div>

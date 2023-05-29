@@ -519,39 +519,39 @@ export default function Vacancies({
 }
 
 //use for dummy login only
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  try {
-    const userDetails = employeeDummy;
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
-    );
-    if (data) {
-      return { props: { data, employeeId: userDetails.user._id } };
-    } else {
-      return { props: {} };
-    }
-  } catch (error) {
-    return { props: {} };
-  }
-};
-
-//get list of all posted job positions
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     try {
-//       const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
-//       const { data } = await axios.get(
-//         `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
-//       );
-//       if (data) {
-//         return { props: { data, employeeId: userDetails.user._id } };
-//       } else {
-//         return { props: {} };
-//       }
-//     } catch (error) {
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   try {
+//     const userDetails = employeeDummy;
+//     const { data } = await axios.get(
+//       `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
+//     );
+//     if (data) {
+//       return { props: { data, employeeId: userDetails.user._id } };
+//     } else {
 //       return { props: {} };
 //     }
+//   } catch (error) {
+//     return { props: {} };
 //   }
-// );
+// };
+
+//get list of all posted job positions
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    try {
+      const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
+      );
+      if (data) {
+        return { props: { data, employeeId: userDetails.user._id } };
+      } else {
+        return { props: {} };
+      }
+    } catch (error) {
+      return { props: {} };
+    }
+  }
+);

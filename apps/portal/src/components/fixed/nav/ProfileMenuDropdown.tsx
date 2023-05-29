@@ -82,9 +82,8 @@ export const ProfileMenuDropdown = ({
     <>
       <Menu
         as="div"
-        className={`${
-          windowWidth < 1024 ? '-mt-10 -ml-8 fixed' : 'relative'
-        } inline-block text-left`}
+        className={`-mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0
+         inline-block text-left`}
       >
         <div>
           <Menu.Button

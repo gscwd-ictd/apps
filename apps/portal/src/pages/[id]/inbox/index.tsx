@@ -453,217 +453,22 @@ export default function Inbox({
           )}
         </div>
       </MainContainer>
-
-      {/* <MainContainer>
-        <div className="flex flex-row w-full h-full pb-10">
-          {swrIsLoadingMessages ? (
-            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-              <SpinnerDotted
-                speed={70}
-                thickness={70}
-                className="w-full flex h-full transition-all "
-                color="slateblue"
-                size={100}
-              />
-            </div>
-          ) : (
-            <>
-              <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
-                Inbox
-                {swrMessages && swrMessages.length > 0 ? (
-                  swrMessages.map(
-                    (
-                      acknowledgement: PsbMessageContent,
-                      messageIdx: number
-                    ) => {
-                      return (
-                        <div
-                          key={messageIdx}
-                          className={`${
-                            acknowledgement.details.acknowledgedSchedule ||
-                            acknowledgement.details.declinedSchedule
-                              ? 'opacity-50'
-                              : ''
-                          }`}
-                        >
-                          <MessageCard
-                            icon={<HiMail className="w-6 h-6 text-green-800" />}
-                            color={`green`}
-                            title={'PSB Member Acknowledgement'}
-                            description={`Position: ${acknowledgement.details.positionTitle}`}
-                            // children={<></>}
-                            linkType={'router'}
-                            onClick={() => handleMessage(acknowledgement)}
-                          />
-                        </div>
-                      );
-                    }
-                  )
-                ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full">
-                    <label className="text-5xl text-slate-300">EMPTY</label>
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col items-center w-full h-full pt-6 ml-4 mr-4 text-gray-700">
-                {isMessageOpen ? (
-                  <div
-                    className={'w-100 pl-8 pr-8 pt-1 flex flex-col bg-white'}
-                  >
-                    {messageContent?.details.acknowledgedSchedule ? (
-                      <AlertNotification
-                        alertType="success"
-                        notifMessage={'You have accepted this assignment'}
-                        dismissible={false}
-                      />
-                    ) : null}
-
-                    {messageContent?.details.declinedSchedule ? (
-                      <AlertNotification
-                        alertType="info"
-                        notifMessage={'You have declined this assignment'}
-                        dismissible={false}
-                      />
-                    ) : null}
-
-                    {!messageContent?.details.acknowledgedSchedule &&
-                    !messageContent?.details.declinedSchedule ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage={'Awaiting action'}
-                        dismissible={false}
-                      />
-                    ) : null}
-
-                    <label className="pb-2">{mailMessage}</label>
-                    <div>
-                      <label className="font-bold">Assignment: </label>
-                      {messageContent?.details.assignment}
-                    </div>
-                    <div>
-                      <label className="font-bold">Position: </label>
-                      {messageContent?.details.positionTitle}
-                    </div>
-                    <div>
-                      <label className="font-bold">Schedule: </label>
-                      {messageContent?.details.schedule}
-                    </div>
-                    <div>
-                      <label className="font-bold">Venue: </label>
-                      {messageContent?.details.venue}
-                    </div>
-                    <div>
-                      <label className="font-bold">PSB Members: </label>
-                      <ul>
-                        {messageContent.psbMembers.map(
-                          (member: PsbMembers, messageIdx: number) => {
-                            return (
-                              <li className="indent-4" key={messageIdx}>
-                                {member.fullName}
-                              </li>
-                            );
-                          }
-                        )}
-                      </ul>
-                    </div>
-
-                    <div className="pt-2">
-                      <label className="font-bold">
-                        Remarks:{' '}
-                        {messageContent?.details.acknowledgedSchedule ||
-                        messageContent?.details.declinedSchedule ? null : (
-                          <label className={`font-normal text-sm text-red-500`}>
-                            * required if declined
-                          </label>
-                        )}
-                      </label>
-
-                      <textarea
-                        className={`
-                        w-full h-32 p-2 border resize-none
-                    `}
-                        disabled={
-                          messageContent?.details.acknowledgedSchedule ||
-                          messageContent?.details.declinedSchedule
-                            ? true
-                            : false
-                        }
-                        value={
-                          messageContent?.details.acknowledgedSchedule
-                            ? 'N/A'
-                            : messageContent?.details.declinedSchedule
-                            ? messageContent.details.declineReason
-                            : remarks
-                        }
-                        placeholder={
-                          'If declining, please state reason and indicate personnel you recommend to be your replacement.'
-                        }
-                        onChange={(e) =>
-                          handleRemarks(e.target.value as unknown as string)
-                        }
-                      ></textarea>
-                    </div>
-                    <div
-                      className={`${
-                        messageContent?.details.acknowledgedSchedule ||
-                        messageContent?.details.declinedSchedule
-                          ? 'hidden'
-                          : 'flex flex-row gap-4 items-center justify-end'
-                      }`}
-                    >
-                      <Button
-                        variant={'primary'}
-                        size={'md'}
-                        onClick={(e) =>
-                          openSubmitModalAction(
-                            messageContent?.details.vppId,
-                            true
-                          )
-                        }
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant={'danger'}
-                        size={'md'}
-                        disabled={remarks ? false : true}
-                        onClick={(e) =>
-                          openSubmitModalAction(
-                            messageContent?.details.vppId,
-                            false
-                          )
-                        }
-                      >
-                        Decline
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full">
-                    <label className="text-5xl text-slate-300">NO DATA</label>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-      </MainContainer> */}
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);
