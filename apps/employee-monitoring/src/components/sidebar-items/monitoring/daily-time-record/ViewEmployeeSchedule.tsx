@@ -15,7 +15,6 @@ import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/emp
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
 import { scheduleBaseSelection } from 'libs/utils/src/lib/constants/schedule-type';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
-import { EmployeeAsOption } from 'libs/utils/src/lib/types/employee.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import {
@@ -99,9 +98,10 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
     reset,
     register,
     clearErrors,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty, isValid, isValidating },
   } = useForm<EmployeeWithSchedule>({
     mode: 'onChange',
+    reValidateMode: 'onSubmit',
     defaultValues: {
       employeeId: '',
       employeeName: '',
@@ -355,6 +355,8 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
                   : !isDirty
                   ? true
                   : !isValid
+                  ? true
+                  : isValidating
                   ? true
                   : false
               }

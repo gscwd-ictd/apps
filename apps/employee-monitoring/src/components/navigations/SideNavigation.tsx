@@ -88,6 +88,53 @@ export const SideNavigation = () => {
             path={Paths[1]}
           />
 
+          {/**Monitoring Scheduling Sheet */}
+          <Sidebar.Item
+            display="Scheduling Sheet"
+            className="text-xs"
+            icon={<i className="text-xl bx bxs-spreadsheet"></i>}
+            path=""
+            hasSubItem
+            selected={pathname === Paths[18] || pathname === Paths[19]}
+            subItems={
+              <>
+                <Sidebar.Item
+                  display="Office"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[18] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-xl bx bxs-hard-hat"></i>
+                    </>
+                  }
+                  path={Paths[18]}
+                />
+                <Sidebar.Item
+                  display="Field"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[19] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-xl bx bxs-hard-hat"></i>
+                    </>
+                  }
+                  path={Paths[19]}
+                />
+                <Sidebar.Item
+                  display="Station"
+                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
+                  selected={pathname === Paths[20] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-xl bx bxs-factory"></i>
+                    </>
+                  }
+                  path={Paths[20]}
+                />
+              </>
+            }
+          />
+
           {/**LEAVE BENEFITS */}
           <Sidebar.Item
             display="Leave Applications"

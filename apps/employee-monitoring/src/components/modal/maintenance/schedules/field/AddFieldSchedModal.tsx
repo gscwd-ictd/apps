@@ -60,10 +60,11 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
     reset,
     register,
     clearErrors,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<Schedule>({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
+    reValidateMode: 'onSubmit',
     defaultValues: {
       scheduleType: null,
       timeIn: '',
@@ -174,19 +175,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
                   disabled={IsLoading ? true : false}
                 />
 
-                {/** schedule type */}
-                <SelectListRF
-                  id="scheduleCategory"
-                  selectList={categorySelection}
-                  controller={{
-                    ...register('scheduleType', { required: true }),
-                  }}
-                  label="Category"
-                  disabled={IsLoading ? true : false}
-                  isError={errors.scheduleType ? true : false}
-                  errorMessage={errors.scheduleType?.message}
-                />
-
                 {/** Time in */}
                 <LabelInput
                   id={'scheduleTimeIn'}
@@ -245,7 +233,7 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
               type="submit"
               form="addfieldmodal"
               className="disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : false}
+              disabled={IsLoading ? true : !isValid ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>

@@ -100,10 +100,11 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
     handleSubmit,
     reset,
     register,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<Schedule>({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
+    reValidateMode: 'onSubmit',
     defaultValues: {
       scheduleType: null,
       timeIn: '',
@@ -266,7 +267,7 @@ const AddStationSchedModal: FunctionComponent<AddModalProps> = ({
               type="submit"
               form="addstationmodal"
               className="disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : false}
+              disabled={IsLoading ? true : !isValid ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>

@@ -63,10 +63,11 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
     watch,
     reset,
     register,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<Schedule>({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
+    reValidateMode: 'onSubmit',
     defaultValues: {
       name: '',
       scheduleType: null,
@@ -322,7 +323,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
               type="submit"
               form="addoffmodal"
               className="disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : false}
+              disabled={IsLoading ? true : !isValid ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>

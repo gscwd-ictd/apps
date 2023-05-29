@@ -87,10 +87,11 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
     reset,
     register,
     clearErrors,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
   } = useForm<Schedule>({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
+    reValidateMode: 'onSubmit',
     defaultValues: {
       id: rowData.id,
       name: rowData.name,
@@ -247,7 +248,9 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
               type="submit"
               form="editstationmodal"
               className="disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : false}
+              disabled={
+                IsLoading ? true : !isValid ? true : !isDirty ? true : false
+              }
             >
               <span className="text-xs font-normal">Update</span>
             </Button>
