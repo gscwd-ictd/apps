@@ -14,13 +14,13 @@ import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import SelectFieldSchedSsModal from './SelectFieldSchedSsModal';
 
-type AddFieldGsModalProps = {
+type AddFieldSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-const AddFieldSsModal: FunctionComponent<AddFieldGsModalProps> = ({
+const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
   modalState,
   closeModalAction,
   setModalState,
