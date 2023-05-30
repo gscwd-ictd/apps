@@ -33,7 +33,7 @@ export const AppSelectionViewPds = ({ pds }: AppEndViewPdsProps) => {
   return (
     <>
       <div className="flex flex-col justify-center">
-        <div className="fixed top-0 flex items-center justify-between w-full h-12 px-8 text-2xl font-semibold text-center text-indigo-900 bg-indigo-200 md:justify-center md:static">
+        <div className="top-0 flex items-center justify-center w-full h-12 px-8 text-2xl font-semibold text-center text-indigo-900 bg-indigo-200 md:justify-center md:static">
           PERSONAL DATA SHEET
         </div>
         {

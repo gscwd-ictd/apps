@@ -3,6 +3,7 @@ import { Alert, Modal } from '@gscwd-apps/oneui';
 import { useAppSelectionStore } from 'apps/portal/src/store/selection.store';
 import { useEffect } from 'react';
 import { AppSelectionPds } from './AppSelectionPds';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type AppSelectionPdsAlertProps = {
   alertState: boolean;
@@ -23,8 +24,14 @@ export const AppSelectionPdsAlert = ({
     if (!alertState) closeAlertAction();
   }, [alertState]);
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
-    <Modal open={alertState} setOpen={setAlertState} size="lg">
+    <Modal
+      open={alertState}
+      setOpen={setAlertState}
+      size={`${windowWidth > 1024 ? 'lg' : 'xl'}`}
+    >
       <Modal.Body>
         <AppSelectionPds
           applicantDetails={{

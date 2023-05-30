@@ -123,7 +123,7 @@ export const AppEndSelectPublication = () => {
                 <AllPublicationList />
               ) : (
                 <>
-                  <div className="flex justify-center w-full h-full text-3xl font-medium text-gray-600 place-items-center justify-items-center">
+                  <div className="flex justify-center w-full h-full text-3xl font-medium text-gray-600 place-items-center text-center justify-items-center">
                     NO ENDORSEMENTS FOUND
                   </div>
                 </>

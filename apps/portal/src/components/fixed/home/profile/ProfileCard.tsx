@@ -21,11 +21,11 @@ export const ProfileCard: React.FC<Props> = ({
         src={photoUrl ? photoUrl : photoUrl_temp}
         alt={'sample'}
       ></img>
-      <label className="text-xl font-medium text-stone-900 pt-2">
+      <label className="text-xl font-medium text-gray-800 pt-2">
         {firstName} {lastName}
       </label>
-      <label className="text-md font-medium text-stone-400">{position}</label>
-      <label className="text-xs font-medium text-stone-400">{division}</label>
+      <label className="text-md font-medium text-gray-400">{position}</label>
+      <label className="text-xs font-medium text-gray-400">{division}</label>
     </div>
   );
 };

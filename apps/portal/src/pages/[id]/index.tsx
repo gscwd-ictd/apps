@@ -33,6 +33,7 @@ import { format } from 'date-fns';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
+import { useTimeLogStore } from '../../store/timelogs.store';
 
 export default function Dashboard({
   userDetails,
@@ -61,6 +62,26 @@ export default function Dashboard({
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
 
+  const {
+    dtr,
+    schedule,
+    loadingTimeLogs,
+    errorTimeLogs,
+    getTimeLogs,
+    getTimeLogsSuccess,
+    getTimeLogsFail,
+  } = useTimeLogStore((state) => ({
+    dtr: state.dtr,
+    schedule: state.schedule,
+    loadingTimeLogs: state.loading.loadingTimeLogs,
+
+    errorTimeLogs: state.error.errorTimeLogs,
+
+    getTimeLogs: state.getTimeLogs,
+    getTimeLogsSuccess: state.getTimeLogsSuccess,
+    getTimeLogsFail: state.getTimeLogsFail,
+  }));
+
   const faceScanUrl = `${
     process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
   }/v1/daily-time-record/employees/${
@@ -78,7 +99,24 @@ export default function Dashboard({
     revalidateOnFocus: true,
   });
 
-  console.log(swrFaceScan);
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrFaceScanIsLoading) {
+      getTimeLogs(swrFaceScanIsLoading);
+    }
+  }, [swrFaceScanIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrFaceScan)) {
+      console.log(swrFaceScan);
+      getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
+    }
+
+    if (!isEmpty(swrFaceScanError)) {
+      getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
+    }
+  }, [swrFaceScan, swrFaceScanError]);
 
   return (
     <>

@@ -234,8 +234,8 @@ export default function Prf({
           ) : (
             <ContentBody>
               <>
-                <div className="flex w-full">
-                  <div className="w-[58rem]">
+                <div className={`w-full flex lg:flex-row flex-col`}>
+                  <div className={`lg:w-[58rem] w-full`}>
                     <TabHeader />
                   </div>
                   <div className="w-full">

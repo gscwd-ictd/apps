@@ -39,7 +39,7 @@ export const Modal: FunctionComponent<ModalProps> = ({
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-20"
+          className="relative z-30"
           onClose={() => setIsOpen(false)}
         >
           <Transition.Child
