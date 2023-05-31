@@ -8,6 +8,7 @@ import {
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { useEffect, useState } from 'react';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -16,15 +17,38 @@ export type EmployeeLocalStorage = {
   email: string;
 };
 
+type EmployeeDetails = {
+  fullName: string;
+  initials: string;
+  profile: string;
+};
+
 export const SideNav = (): JSX.Element => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
+
+  // set value for employee details
+  const [employeeDetails, setEmployeeDetails] = useState<EmployeeDetails>(
+    {} as EmployeeDetails
+  );
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      try {
+        setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
+      } catch (error) {
+        // router.reload();
+        // handleLogout();
+      }
+    }
+  }, []);
+
   return (
     <>
       <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
         <ul className="z-30 flex flex-col items-center gap-5 text-gray-600 mt-14">
           <li className="mb-3 lg:mb-5 ml-10 lg:ml-0">
-            <ProfileMenuDropdown right />
+            <ProfileMenuDropdown right employeeDetails={employeeDetails} />
           </li>
 
           {windowWidth > 1024 ? (

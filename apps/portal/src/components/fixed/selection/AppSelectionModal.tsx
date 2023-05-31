@@ -5,6 +5,7 @@ import { AppSelectionModalController } from './AppSelectionListController';
 import { useAppSelectionStore } from '../../../../src/store/selection.store';
 import { PublicationPostingStatus } from '../../../../src/types/publication.type';
 import { isEmpty } from 'lodash';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type AppSelectionModalProps = {
   modalState: boolean;
@@ -57,12 +58,14 @@ export const AppSelectionModal = ({
     }
   };
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
       <Modal
         open={modalState}
         setOpen={setModalState}
-        size={modal.page === 2 ? 'xl' : 'lg'}
+        size={windowWidth > 1024 ? (modal.page === 2 ? 'xl' : 'lg') : 'full'}
         steady
       >
         <Modal.Header>

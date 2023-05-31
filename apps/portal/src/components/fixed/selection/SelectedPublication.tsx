@@ -10,8 +10,8 @@ export const SelectedPlacementPublication = ({
   return (
     <>
       <div className="w-full">
-        <div className="bg-indigo-800 h-auto rounded p-4 flex">
-          <section className="w-[50%] ">
+        <div className="bg-indigo-800 h-auto rounded p-4 flex flex-col lg:flex-row">
+          <section className="w-full lg:w-[50%] ">
             <div className="flex w-full align-text-top pt-[0.2rem]">
               <p className="flex justify-start font-normal text-xs text-gray-100 w-[25%]">
                 Position title:
@@ -41,30 +41,30 @@ export const SelectedPlacementPublication = ({
             </div>
           </section>
 
-          <section className="w-[50%] pl-28">
+          <section className="w-full lg:w-[50%] lg:pl-28">
             <div className="flex w-full align-text-top pt-[0.2rem]">
-              <p className="flex justify-start font-normal text-xs text-gray-100 w-[75%] pl-10">
+              <p className="flex justify-start font-normal text-xs text-gray-100 w-[25%] lg:w-[75%] lg:pl-10">
                 PRF No:
               </p>
-              <p className="flex justify-start font-normal text-sm text-white w-[25%]">
+              <p className="flex justify-start font-normal text-sm text-white w-[75%] lg:w-[25%] pl-10 lg:pl-0">
                 {publication.prfNo}
               </p>
             </div>
 
             <div className="flex w-full align-text-top pt-[0.2rem]">
-              <p className="flex justify-start font-normal text-xs text-gray-100 w-[75%] pl-10">
+              <p className="flex justify-start font-normal text-xs text-gray-100 w-[25%] lg:w-[75%] lg:pl-10">
                 With Exam:
               </p>
-              <p className="flex justify-start font-normal text-sm text-white w-[25%]">
+              <p className="flex justify-start font-normal text-sm text-white w-[75%] lg:w-[25%] pl-10 lg:pl-0">
                 {Boolean(publication.withExam) === false ? 'No' : 'Yes'}
               </p>
             </div>
 
             <div className="flex w-full align-text-top pt-[0.2rem]">
-              <p className="flex justify-start font-normal text-xs text-gray-100 w-[75%]  pl-10">
+              <p className="flex justify-start font-normal text-xs text-gray-100 w-[25%] lg:w-[75%] lg:pl-10">
                 No. of positions needed:
               </p>
-              <p className="flex justify-start font-normal text-sm text-white w-[25%]">
+              <p className="flex justify-start font-normal text-sm text-white w-[75%] lg:w-[25%] pl-10 lg:pl-0">
                 {publication.numberOfPositions}
               </p>
             </div>

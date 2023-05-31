@@ -67,9 +67,9 @@ export const DrcAllDrcsList = (): JSX.Element => {
               <li
                 key={index}
                 onClick={() => onSelect(dr.sequenceNo)}
-                className="flex cursor-pointer items-center justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
+                className="flex cursor-pointer items-center justify-start lg:justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
               >
-                <div>
+                <div className="hidden lg:block">
                   <p className="font-normal text-md text-gray-600 truncate w-auto lg:w-[24rem]">
                     {dr.description}
                   </p>
@@ -81,6 +81,11 @@ export const DrcAllDrcsList = (): JSX.Element => {
                   className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
                   type="checkbox"
                 />
+                <div className="block lg:hidden">
+                  <p className="font-normal text-md text-gray-600 w-auto lg:w-[24rem]">
+                    {dr.description}
+                  </p>
+                </div>
               </li>
             );
           })}

@@ -389,14 +389,20 @@ export default function AppPosAppointment({
       </Alert>
 
       <MainContainer>
-        <div className="w-full h-full px-32">
+        <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
           <ContentHeader
             title="Appointing Authority Selection"
             subtitle="Select an applicant for the position"
           >
-            <Button onClick={openModal}>
+            <Button onClick={openModal} className="hidden lg:block" size={`md`}>
               <div className="flex items-center w-full gap-2">
                 <HiSearch /> Find a Publication
+              </div>
+            </Button>
+
+            <Button onClick={openModal} className="block lg:hidden" size={`lg`}>
+              <div className="flex items-center w-full gap-2">
+                <HiSearch />
               </div>
             </Button>
           </ContentHeader>
@@ -414,8 +420,8 @@ export default function AppPosAppointment({
           ) : (
             <ContentBody>
               <>
-                <div className="flex w-full">
-                  <div className="w-[58rem]">
+                <div className={`w-full flex lg:flex-row flex-col`}>
+                  <div className={`lg:w-[58rem] w-full`}>
                     <AppSelectionTabs tab={tab} />
                   </div>
                   <div className="w-full">

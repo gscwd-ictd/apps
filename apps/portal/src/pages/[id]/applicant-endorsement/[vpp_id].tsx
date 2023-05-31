@@ -66,6 +66,6 @@ export default function AppEndSummary({
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
   const publicationDetails = await getPublication(context.query.vpp_id); //get employeeId using context
-  console.log(context);
+  // console.log(context);
   return { props: { publicationDetails } };
 };
