@@ -1,8 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { HiDocumentAdd } from 'react-icons/hi';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -32,6 +32,8 @@ import {
   getUserDetails,
   withCookieSession,
 } from '../../../../src/utils/helpers/session';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function PassSlip({
   employeeDetails,
@@ -143,6 +145,19 @@ export default function PassSlip({
     }
   }, [responseApply, responseCancel]);
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
       <>
@@ -173,7 +188,7 @@ export default function PassSlip({
           <title>Employee Pass Slips</title>
         </Head>
 
-        <SideNav />
+        <SideNav navDetails={navDetails} />
 
         {/* Pass Slip Application Modal */}
         <PassSlipApplicationModal

@@ -16,7 +16,7 @@ import {
   withSession,
 } from '../../../utils/helpers/session';
 import { patchData } from '../../../utils/hoc/axios';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { AppSelAlertController } from '../../../components/fixed/selection/AppSelAlertController';
 import { AppSelectionModalController } from '../../../components/fixed/selection/AppSelectionListController';
 import { AppSelectionTabs } from '../../../components/fixed/selection/AppSelectionTabs';
@@ -35,6 +35,8 @@ import useSWR from 'swr';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import AppSelectionModal from '../../../../src/components/fixed/selection/AppSelectionModal';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function AppPosAppointment({
   employeeDetails,
@@ -314,6 +316,19 @@ export default function AppPosAppointment({
     }
   }, [patchResponseApply]);
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
       {!isEmpty(patchResponseApply) ? (
@@ -355,7 +370,7 @@ export default function AppPosAppointment({
         <title>Appointing Authority Selection</title>
       </Head>
 
-      <SideNav />
+      <SideNav navDetails={navDetails} />
 
       <AppSelectionModal
         modalState={appSelectionModalIsOpen}

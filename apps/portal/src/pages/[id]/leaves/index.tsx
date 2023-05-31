@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { HiDocumentAdd } from 'react-icons/hi';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -29,6 +29,8 @@ import { isEmpty } from 'lodash';
 import { LeaveApplicationModal } from '../../../../src/components/fixed/leaves/LeaveApplicationModal';
 import { LeavePendingModal } from '../../../components/fixed/leaves/LeavePendingModal';
 import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCompletedModal';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function Leaves({
   employeeDetails,
@@ -149,6 +151,18 @@ export default function Leaves({
     }
   }, [responseApply, responseCancel]);
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
   return (
     <>
       <>
@@ -224,7 +238,7 @@ export default function Leaves({
           <title>Employee Leaves</title>
         </Head>
 
-        <SideNav />
+        <SideNav navDetails={navDetails} />
 
         {/* Pass Slip Application Modal */}
         <LeaveApplicationModal

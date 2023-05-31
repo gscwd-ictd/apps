@@ -18,37 +18,26 @@ export type EmployeeLocalStorage = {
 };
 
 type EmployeeDetails = {
-  fullName: string;
-  initials: string;
-  profile: string;
+  navDetails: {
+    fullName: string;
+    initials: string;
+    profile: string;
+  };
 };
 
-export const SideNav = (): JSX.Element => {
+export default function SideNav(navDetails: EmployeeDetails) {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
-
-  // set value for employee details
-  const [employeeDetails, setEmployeeDetails] = useState<EmployeeDetails>(
-    {} as EmployeeDetails
-  );
-
-  useEffect(() => {
-    if (typeof window !== undefined) {
-      try {
-        setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
-      } catch (error) {
-        // router.reload();
-        // handleLogout();
-      }
-    }
-  }, []);
 
   return (
     <>
       <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
         <ul className="z-30 flex flex-col items-center gap-5 text-gray-600 mt-14">
           <li className="mb-3 lg:mb-5 ml-10 lg:ml-0">
-            <ProfileMenuDropdown right employeeDetails={employeeDetails} />
+            <ProfileMenuDropdown
+              right
+              employeeDetails={navDetails.navDetails}
+            />
           </li>
 
           {windowWidth > 1024 ? (
@@ -74,4 +63,4 @@ export const SideNav = (): JSX.Element => {
       </nav>
     </>
   );
-};
+}

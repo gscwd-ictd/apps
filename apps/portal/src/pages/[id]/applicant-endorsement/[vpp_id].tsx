@@ -2,12 +2,15 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { getPublication } from '../../../utils/hoc/publication';
 import { AllApplicantsListSummary } from '../../../components/fixed/endorsement/AllApplicantsListSummary';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Publication } from '../../../types/publication.type';
+import { useEffect, useState } from 'react';
+import { UseNameInitials } from '../../../../src/utils/hooks/useNameInitials';
+import { NavButtonDetails } from '../../../../../portal/src/types/nav.type';
 
 type AppEndSummaryProps = {
   employee: any;
@@ -21,13 +24,30 @@ export default function AppEndSummary({
 }: AppEndSummaryProps) {
   const publication = useAppEndStore((state) => state.selectedPublication);
   // const selectedApplicants = useAppEndStore((state) => state.selectedApplicants);
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
+  useEffect(() => {
+    // setNavDetails({
+    //   profile: userDetails.user.email,
+    //   fullName: `${userDetails.profile.firstName} ${userDetails.profile.lastName}`,
+    //   initials: UseNameInitials(
+    //     userDetails.profile.firstName,
+    //     userDetails.profile.lastName
+    //   ),
+    // });
+  }, []);
   return (
     <>
       <Head>
         <title>Applicant Endorsement Summary</title>
       </Head>
-      <SideNav />
+      <SideNav
+        navDetails={{
+          fullName: '',
+          initials: '',
+          profile: '',
+        }}
+      />
 
       <MainContainer>
         <div className="w-full h-full px-20">
