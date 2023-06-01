@@ -10,10 +10,7 @@ import {
   putEmpMonitoring,
 } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
-import {
-  TravelOrder,
-  TravelOrderForm,
-} from 'libs/utils/src/lib/types/travel-order.type';
+import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 import {
   EmployeeAsOption,
   EmployeeProfile,
@@ -42,12 +39,12 @@ type EditModalProps = {
 };
 
 enum TravelOrderKeys {
-  EMPLOYEE = 'employee',
   TRAVEL_NO = 'travelOrderNo',
-  DATE_REQUESTED = 'dateRequested',
+  EMPLOYEE = 'employee',
   PURPOSE_OF_TRAVEL = 'purposeOfTravel',
   DATE_FROM = 'dateFrom',
   DATE_TO = 'dateTo',
+  DATE_REQUESTED = 'dateRequested',
   ITINERARY = 'itinerary',
   IS_PTR_REQUIRED = 'isPtrRequired',
 }
@@ -121,9 +118,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
   const filteredEmployee =
     employeeQuery === ''
       ? EmployeeAsOptions
-      : // ? EmployeeAsOptions
-        EmployeeAsOptions.filter((employee) =>
-          // : EmployeeAsOptions.filter((employee) =>
+      : EmployeeAsOptions.filter((employee) =>
           employee.fullName
             .toLowerCase()
             .replace(/\s+/g, '')
@@ -142,7 +137,6 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     formState: { errors },
   } = useForm<TravelOrder>({
     mode: 'onChange',
-
     resolver: yupResolver(yupSchema),
   });
 
@@ -155,7 +149,6 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
   // form submission
   const onSubmit: SubmitHandler<TravelOrder> = (data: TravelOrder) => {
     // set loading to true
-
     UpdateTravelOrder();
 
     handlePatchResult(data);
@@ -214,12 +207,17 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     if (!isEmpty(selectedEmployee)) {
       setValue('employee.employeeId', selectedEmployee.employeeId);
       setValue('employee.fullName', selectedEmployee.fullName);
+
       clearErrors('employee');
     }
   }, [selectedEmployee]);
 
-  // Set default values in the form
+  // Set value if ptr is required
+  useEffect(() => {
+    setValue('isPtrRequired', isPtrRequired);
+  }, [isPtrRequired]);
 
+  // Set default values in the form
   useEffect(() => {
     if (modalState === true && !isEmpty(rowData)) {
       const keys = Object.keys(rowData);
@@ -254,13 +252,8 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
           });
         }
       });
-      setValue('deleted', []);
     }
   }, [rowData, modalState]);
-
-  useEffect(() => {
-    setValue('isPtrRequired', isPtrRequired);
-  }, [isPtrRequired]);
 
   return (
     <>
@@ -519,6 +512,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                         ) : null}
                       </div>
 
+                      {/* Add or Remove button */}
                       {index === 0 ? (
                         <Button
                           variant="info"

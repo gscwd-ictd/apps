@@ -9,10 +9,7 @@ import {
   postEmpMonitoring,
 } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
-import {
-  TravelOrder,
-  TravelOrderForm,
-} from 'libs/utils/src/lib/types/travel-order.type';
+import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 import {
   EmployeeAsOption,
   EmployeeProfile,

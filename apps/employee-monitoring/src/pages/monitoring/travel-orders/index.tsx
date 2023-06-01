@@ -173,7 +173,6 @@ const Index = () => {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTravelOrder)) {
-      console.log(swrTravelOrder.data);
       GetTravelOrdersSuccess(swrIsLoading, swrTravelOrder.data);
     }
 
