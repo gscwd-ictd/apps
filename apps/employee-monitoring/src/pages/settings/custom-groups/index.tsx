@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import useSWR from 'swr';
+import { isEmpty } from 'lodash';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
+import {
+  DataTable,
+  LoadingSpinner,
+  ToastNotification,
+  useDataTable,
+} from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { createColumnHelper } from '@tanstack/react-table';
+import AddCustomGroupModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/AddCustomGroupModal';
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -27,10 +35,23 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
+  // Add modal function
+  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
+  const openAddActionModal = () => setAddModalIsOpen(true);
+  const closeAddActionModal = () => setAddModalIsOpen(false);
+
   // Render row actions in the table component
   const renderRowActions = (rowData: CustomGroup) => {
     return (
       <div className="text-center">
+        <button
+          type="button"
+          className="text-white bg-green-400 hover:bg-green-500 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+          // onClick={() => openEditActionModal(rowData)}
+        >
+          <i className="bx bx-group"></i>
+        </button>
+
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
@@ -59,13 +80,11 @@ const Index = () => {
     columnHelper.accessor('name', {
       header: 'Name',
       cell: (info) => info.getValue(),
-      enableColumnFilter: false,
     }),
     columnHelper.accessor('description', {
       header: 'Description',
       cell: (info) => info.getValue(),
     }),
-
     columnHelper.display({
       id: 'actions',
       enableColumnFilter: false,
@@ -100,17 +119,112 @@ const Index = () => {
     // EmptyResponse: state.emptyResponse,
   }));
 
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: CustomGroups,
+    columnVisibility: { id: false },
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoading) {
+      GetCustomGroups(swrIsLoading);
+    }
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrCustomGroups)) {
+      GetCustomGroupsSuccess(swrIsLoading, swrCustomGroups.data);
+    }
+
+    if (!isEmpty(swrError)) {
+      GetCustomGroupsFail(swrIsLoading, swrError.message);
+    }
+  }, [swrCustomGroups, swrError]);
+
+  // Get new list of travel orders
+  // useEffect(() => {
+  //   if (
+  //     !isEmpty(PostTravelOrderResponse) ||
+  //     !isEmpty(UpdateTravelOrderResponse) ||
+  //     !isEmpty(DeleteTravelOrderResponse)
+  //   ) {
+  //     mutateTravelOrders();
+
+  //     setTimeout(() => {
+  //       EmptyResponse();
+  //     }, 3000);
+  //   }
+  // }, [
+  //   PostTravelOrderResponse,
+  //   UpdateTravelOrderResponse,
+  //   DeleteTravelOrderResponse,
+  // ]);
+
   return (
     <>
       <div className="w-full">
         <BreadCrumbs title="Custom Groups" />
 
+        {/* Error Notifications */}
+        {!isEmpty(ErrorCustomGroups) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={ErrorCustomGroups}
+          />
+        ) : null}
+        {!isEmpty(ErrorCustomGroup) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={ErrorCustomGroup}
+          />
+        ) : null}
+
+        {/* Success Notifications */}
+        {/* {!isEmpty(PostTravelOrderResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Travel order added successfully"
+        />
+      ) : null} */}
+
         <Can I="access" this="Custom Groups">
           <div className="mx-5">
             <Card>
-              <div className="flex flex-col w-full">TEST</div>
+              {IsLoading ? (
+                <LoadingSpinner size="lg" />
+              ) : (
+                <div className="flex flex-row flex-wrap">
+                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                    <button
+                      type="button"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                      // onClick={openAddActionModal}
+                    >
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Custom
+                      Group Order
+                    </button>
+                  </div>
+
+                  <DataTable
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={false}
+                    paginate={true}
+                  />
+                </div>
+              )}
             </Card>
           </div>
+
+          {/* Add modal */}
+          <AddCustomGroupModal
+            modalState={addModalIsOpen}
+            setModalState={setAddModalIsOpen}
+            closeModalAction={closeAddActionModal}
+          />
         </Can>
       </div>
     </>
