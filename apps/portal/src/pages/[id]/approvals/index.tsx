@@ -67,6 +67,7 @@ export default function Approvals({
     getLeaveList,
     getLeaveListSuccess,
     getLeaveListFail,
+    emptyResponseAndError,
   } = useApprovalStore((state) => ({
     tab: state.tab,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
@@ -96,6 +97,7 @@ export default function Approvals({
     getLeaveList: state.getLeaveList,
     getLeaveListSuccess: state.getLeaveListSuccess,
     getLeaveListFail: state.getLeaveListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   // set state for employee store
@@ -204,9 +206,15 @@ export default function Approvals({
   useEffect(() => {
     if (!isEmpty(patchResponsePassSlip)) {
       mutatePassSlips();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
     if (!isEmpty(postResponseLeave)) {
       mutateLeaves();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   }, [patchResponsePassSlip, postResponseLeave]);
 

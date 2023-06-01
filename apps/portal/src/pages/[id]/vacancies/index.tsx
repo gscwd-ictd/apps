@@ -82,6 +82,7 @@ export default function Vacancies({
     setErrorCaptcha,
     setErrorMessage,
     setResponseApply,
+    emptyResponseAndError,
   } = useWorkExpStore((state) => ({
     errorJobOpening: state.error.errorJobOpening,
     errorIfApplied: state.error.errorIfApplied,
@@ -97,6 +98,7 @@ export default function Vacancies({
     setErrorCaptcha: state.setErrorCaptcha,
     setErrorMessage: state.setErrorMessage,
     setResponseApply: state.setResponseApply,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   // set state for handling modal page
@@ -230,8 +232,14 @@ export default function Vacancies({
       setIsCaptchaError(false);
       setResponseApply('Application Successful!');
       changeModalPage(1);
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
     } else {
       setErrorApplyJob(data.error.response.data.message);
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   };
 

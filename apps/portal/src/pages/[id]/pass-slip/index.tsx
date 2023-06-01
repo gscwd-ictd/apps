@@ -145,7 +145,7 @@ export default function PassSlip({
       mutatePassSlips();
       setTimeout(() => {
         emptyResponseAndError();
-      }, 3000);
+      }, 5000);
     }
   }, [responseApply, responseCancel]);
 

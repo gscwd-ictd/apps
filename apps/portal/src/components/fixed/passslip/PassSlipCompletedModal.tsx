@@ -57,30 +57,30 @@ export const PassSlipCompletedModal = ({
 
               {passSlip.status === 'disapproved' ? (
                 <AlertNotification
-                  alertType="info"
+                  alertType="error"
                   notifMessage="Disapproved"
                   dismissible={false}
                 />
               ) : null}
 
-              <div className="flex gap-2 justify-between items-center">
+              <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                   Date of Application:
                 </label>
 
-                <div className="w-96">
+                <div className="w-auto md:w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
                     {passSlip.dateOfApplication}
                   </label>
                 </div>
               </div>
 
-              <div className="flex gap-2 justify-between items-center">
+              <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                   Nature of Business:
                 </label>
 
-                <div className="w-96">
+                <div className="w-auto md:w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
                     {passSlip.natureOfBusiness}
                   </label>
@@ -88,13 +88,13 @@ export const PassSlipCompletedModal = ({
               </div>
 
               {passSlip.natureOfBusiness === 'Official Business' ? (
-                <div className="flex gap-3 justify-between items-center">
+                <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label
                     className={`text-slate-500 text-lg whitespace-nowrap font-medium`}
                   >
                     Mode of Transportation:
                   </label>
-                  <div className="w-96">
+                  <div className="w-auto md:w-96">
                     <label className="text-slate-500 h-12 w-96  text-lg ">
                       {passSlip.obTransportation}
                     </label>
@@ -105,11 +105,11 @@ export const PassSlipCompletedModal = ({
                 className={` flex flex-col gap-2
             `}
               >
-                <div className="flex gap-2 justify-between items-center">
+                <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                     Estimated Hours:
                   </label>
-                  <div className="w-96">
+                  <div className="w-auto md:w-96">
                     <label className="text-slate-500 h-12 w-96  text-lg ">
                       {passSlip.estimateHours}
                     </label>

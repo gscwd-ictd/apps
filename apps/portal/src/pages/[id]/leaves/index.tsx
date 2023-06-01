@@ -56,6 +56,7 @@ export default function Leaves({
     getLeaveList,
     getLeaveListSuccess,
     getLeaveListFail,
+    emptyResponseAndError,
   } = useLeaveStore((state) => ({
     tab: state.tab,
     applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
@@ -79,6 +80,7 @@ export default function Leaves({
     getLeaveList: state.getLeaveList,
     getLeaveListSuccess: state.getLeaveListSuccess,
     getLeaveListFail: state.getLeaveListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   // open the modal
@@ -148,6 +150,9 @@ export default function Leaves({
   useEffect(() => {
     if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
       mutateLeaves();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   }, [responseApply, responseCancel]);
 

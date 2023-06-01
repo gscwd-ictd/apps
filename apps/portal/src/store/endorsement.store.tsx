@@ -124,6 +124,7 @@ export type EndorsementState = {
 
   searchValue: string;
   setSearchValue: (searchValue: string) => void;
+  emptyResponseAndError: () => void;
 };
 
 export const useAppEndStore = create<EndorsementState>()(
@@ -384,5 +385,19 @@ export const useAppEndStore = create<EndorsementState>()(
 
     setSearchValue: (searchValue: string) =>
       set((state) => ({ ...state, searchValue })),
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+
+        publicationError: {
+          errorFulfilledPublications: '',
+          errorPendingPublications: '',
+          errorPublications: '',
+          errorPublication: '',
+        },
+        publicationResponse: { updateResponse: [] },
+      }));
+    },
   }))
 );
