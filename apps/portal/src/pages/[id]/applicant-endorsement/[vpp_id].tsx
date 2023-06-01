@@ -26,16 +26,6 @@ export default function AppEndSummary({
   // const selectedApplicants = useAppEndStore((state) => state.selectedApplicants);
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
-  useEffect(() => {
-    // setNavDetails({
-    //   profile: userDetails.user.email,
-    //   fullName: `${userDetails.profile.firstName} ${userDetails.profile.lastName}`,
-    //   initials: UseNameInitials(
-    //     userDetails.profile.firstName,
-    //     userDetails.profile.lastName
-    //   ),
-    // });
-  }, []);
   return (
     <>
       <Head>
