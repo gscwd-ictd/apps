@@ -60,6 +60,8 @@ export type WorkExpState = {
     indexForEdit: number,
     newDuty: string
   ) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const useWorkExpStore = create<WorkExpState>()(
@@ -336,6 +338,20 @@ export const useWorkExpStore = create<WorkExpState>()(
         response: {
           ...state.response,
           responseApplyJob: response,
+        },
+      }));
+    },
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          responseApplyJob: '',
+        },
+        error: {
+          ...state.error,
+          errorApplyJob: '',
         },
       }));
     },

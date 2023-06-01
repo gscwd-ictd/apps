@@ -28,6 +28,8 @@ export type InboxState = {
   postMessage: () => void;
   postMessageSuccess: (response: any) => void;
   postMessageFail: (error: string) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const useInboxStore = create<InboxState>()(
@@ -139,6 +141,19 @@ export const useInboxStore = create<InboxState>()(
         error: {
           ...state.error,
           errorResponse: error,
+        },
+      }));
+    },
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: {},
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
         },
       }));
     },

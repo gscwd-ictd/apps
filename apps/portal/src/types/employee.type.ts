@@ -13,7 +13,7 @@ export type Profile = User & {
   nameExt: string;
   sex: string;
   birthDate: string | Date | null;
-  mobile: string;
+  mobileNumber: string;
 
   photoUrl: string;
 };
@@ -78,7 +78,7 @@ export const employeeDummy: EmployeeDetails = {
     nameExt: 'Jr',
     sex: 'Male',
     birthDate: '1991-08-14',
-    mobile: '09235197604',
+    mobileNumber: '09235197604',
     email: 'ericsison003@gmail.com',
     photoUrl: '/profile.jpg',
   },
