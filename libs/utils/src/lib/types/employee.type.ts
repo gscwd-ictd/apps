@@ -27,3 +27,9 @@ export type EmployeeId = Pick<EmploymentDetails, 'employeeId'>;
 
 export type EmployeeAsOption = Pick<EmploymentDetails, 'employeeId'> &
   Pick<PersonalDetails, 'fullName'>;
+
+export type EmployeeAsOptionWithPosition = Pick<
+  EmploymentDetails,
+  'employeeId' | 'positionTitle'
+> &
+  Pick<PersonalDetails, 'fullName'>;
