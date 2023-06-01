@@ -132,6 +132,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
   return (
     <>
       <Table
+        className=""
         tableHeader={
           <>
             <TableHeader

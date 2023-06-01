@@ -70,6 +70,7 @@ export default function ApplicantEndorsement({
     getFulfilledPublicationsFail,
     getFulfilledPublicationsSuccess,
     setModal,
+    emptyResponseAndError,
   } = useAppEndStore((state) => ({
     tab: state.tab,
     modal: state.modal,
@@ -81,6 +82,7 @@ export default function ApplicantEndorsement({
     getFulfilledPublicationsFail: state.getFulfilledPublicationsFail,
     updateResponse: state.publicationResponse.updateResponse,
     setModal: state.setModal,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   // set state for employee store
@@ -130,6 +132,9 @@ export default function ApplicantEndorsement({
     if (!isEmpty(updateResponse)) {
       swrPendingMutate();
       swrFulfilledMutate();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   }, [updateResponse]);
 

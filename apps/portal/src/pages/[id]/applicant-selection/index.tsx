@@ -65,6 +65,8 @@ export default function AppPosAppointment({
     patchPublication,
     patchPublicationSuccess,
     patchPublicationFail,
+
+    emptyResponseAndError,
   } = useAppSelectionStore((state) => ({
     loadingPublicationList: state.loading.loadingPublicationList,
     loadingFulfilledPublicationList:
@@ -93,6 +95,8 @@ export default function AppPosAppointment({
     patchPublication: state.patchPublication,
     patchPublicationSuccess: state.patchPublicationSuccess,
     patchPublicationFail: state.patchPublicationFail,
+
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   // get state for the modal
@@ -310,9 +314,11 @@ export default function AppPosAppointment({
   //mutate publications when patchResponseApply is updated
   useEffect(() => {
     if (!isEmpty(patchResponseApply)) {
-      console.log('mag mutate dapat');
       mutatePendingPublications();
       mutateFulfilledPublications();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   }, [patchResponseApply]);
 

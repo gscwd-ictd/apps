@@ -11,7 +11,7 @@ export const DrcModalSummary = () => {
 
   return (
     <>
-      <div className="flex flex-col w-full px-5 pt-2 mb-5 rounded">
+      <div className="flex flex-col w-full px-5 pt-2 mb-5 rounded ">
         <div className="min-h-[42rem]">
           <section className="flex justify-between grid-cols-2 text-gray-500">
             <div className="col-span-1">
@@ -30,7 +30,7 @@ export const DrcModalSummary = () => {
             </p>
             <div className="flex justify-center rounded bg-slate-50 min-h-[14rem]">
               {selectedDnrs.core.length > 0 ? (
-                <div className="flex flex-col justify-between w-full">
+                <div className="flex flex-col justify-between w-full ">
                   <TableConfirmation array={selectedDnrs.core} />
                   <div className="flex justify-center text-xl">
                     *** Nothing Follows ***
