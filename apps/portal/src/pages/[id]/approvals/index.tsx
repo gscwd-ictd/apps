@@ -162,7 +162,6 @@ export default function Approvals({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    console.log(swrPassSlips, 'test');
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
@@ -195,7 +194,6 @@ export default function Approvals({
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
-      // console.log(swrLeaves);
     }
 
     if (!isEmpty(swrLeaveError)) {

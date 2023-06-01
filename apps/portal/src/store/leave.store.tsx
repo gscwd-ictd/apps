@@ -93,6 +93,8 @@ export type LeavesState = {
 
   setIsGetLeaveLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const useLeaveStore = create<LeavesState>()(
@@ -456,6 +458,20 @@ export const useLeaveStore = create<LeavesState>()(
         error: {
           ...state.error,
           errorIndividualLeave: error,
+        },
+      }));
+    },
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: {} as LeaveApplicationForm,
+          deleteResponseCancel: {} as LeaveId,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
         },
       }));
     },

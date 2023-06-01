@@ -203,7 +203,7 @@ export const ApprovalsPendingPassSlipModal = ({
           >
             {/* contents */}
             <ApprovalOtpContents
-              mobile={employeeDetail.profile.mobile}
+              mobile={employeeDetail.profile.mobileNumber}
               employeeId={employeeDetail.user._id}
               action={watch('status')}
               tokenId={passSlip.id}

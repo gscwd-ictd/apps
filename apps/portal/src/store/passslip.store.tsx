@@ -31,7 +31,6 @@ export type PassSlipState = {
   pendingPassSlipModalIsOpen: boolean;
   completedPassSlipModalIsOpen: boolean;
   tab: number;
-  isGetPassSlipLoading: boolean;
 
   getPassSlipList: (loading: boolean) => void;
   getPassSlipListSuccess: (loading: boolean, response) => void;
@@ -48,8 +47,9 @@ export type PassSlipState = {
   ) => void;
 
   getPassSlip: (PassSlip: PassSlip) => void;
-  setIsGetPassSlipLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const usePassSlipStore = create<PassSlipState>()(
@@ -78,12 +78,7 @@ export const usePassSlipStore = create<PassSlipState>()(
     pendingPassSlipModalIsOpen: false,
     completedPassSlipModalIsOpen: false,
 
-    isGetPassSlipLoading: true,
     tab: 1,
-
-    setIsGetPassSlipLoading: (isGetPassSlipLoading: boolean) => {
-      set((state) => ({ ...state, isGetPassSlipLoading }));
-    },
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
@@ -154,6 +149,10 @@ export const usePassSlipStore = create<PassSlipState>()(
           ...state.error,
           errorPassSlips: error,
         },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
       }));
     },
 
@@ -198,6 +197,20 @@ export const usePassSlipStore = create<PassSlipState>()(
         error: {
           ...state.error,
           errorResponse: error,
+        },
+      }));
+    },
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: {} as PassSlip,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
         },
       }));
     },

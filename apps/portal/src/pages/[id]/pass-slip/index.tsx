@@ -56,6 +56,7 @@ export default function PassSlip({
     getPassSlipList,
     getPassSlipListSuccess,
     getPassSlipListFail,
+    emptyResponseAndError,
   } = usePassSlipStore((state) => ({
     tab: state.tab,
     applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
@@ -74,6 +75,7 @@ export default function PassSlip({
     getPassSlipList: state.getPassSlipList,
     getPassSlipListSuccess: state.getPassSlipListSuccess,
     getPassSlipListFail: state.getPassSlipListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -129,7 +131,6 @@ export default function PassSlip({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    console.log(swrPassSlips, 'passslips');
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
     }
@@ -142,6 +143,9 @@ export default function PassSlip({
   useEffect(() => {
     if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
       mutatePassSlips();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
     }
   }, [responseApply, responseCancel]);
 
