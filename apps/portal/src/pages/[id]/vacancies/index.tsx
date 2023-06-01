@@ -6,9 +6,9 @@ import {
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiNewspaper, HiX } from 'react-icons/hi';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import {
@@ -39,10 +39,13 @@ import { WorkExperiencePds } from '../../../types/workexp.type';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function Vacancies({
   data,
   employeeId,
+  employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [messageContent, setMessageContent] = useState<VacancyDetails>();
   const [mailMessage, setMailMessage] = useState<string>('');
@@ -251,6 +254,19 @@ export default function Vacancies({
 
   const { windowWidth } = UseWindowDimensions();
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
       {
@@ -439,7 +455,7 @@ export default function Vacancies({
             </Modal.Footer>
           </Modal>
 
-          <SideNav />
+          <SideNav navDetails={navDetails} />
           <MainContainer>
             <div className="flex flex-col md:flex-row w-full h-full pb-10 px-4 md:px-0">
               <div className="flex flex-col w-full pb-5 px-8 md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20 overflow-y-auto">
@@ -546,7 +562,13 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
         `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
       );
       if (data) {
-        return { props: { data, employeeId: userDetails.user._id } };
+        return {
+          props: {
+            data,
+            employeeId: userDetails.user._id,
+            employeeDetails: userDetails,
+          },
+        };
       } else {
         return { props: {} };
       }

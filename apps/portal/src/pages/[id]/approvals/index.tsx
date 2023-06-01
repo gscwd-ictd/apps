@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import { useEffect, useState } from 'react';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -32,6 +32,8 @@ import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import ApprovalsPendingPassSlipModal from '../../../../src/components/fixed/approvals/ApprovalsPendingPassSlipModal';
 import ApprovalsCompletedPassSlipModal from '../../../../src/components/fixed/approvals/ApprovalsCompletedPassSlipModal';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function Approvals({
   employeeDetails,
@@ -210,6 +212,19 @@ export default function Approvals({
     }
   }, [patchResponsePassSlip, postResponseLeave]);
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
       <>
@@ -242,7 +257,7 @@ export default function Approvals({
             <title>Approvals</title>
           </Head>
 
-          <SideNav />
+          <SideNav navDetails={navDetails} />
 
           {/* Pending Leave Approval Modal */}
           <ApprovalsPendingLeaveModal

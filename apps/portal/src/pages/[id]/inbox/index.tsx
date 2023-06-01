@@ -11,7 +11,7 @@ import {
   getUserDetails,
   withCookieSession,
 } from '../../../utils/helpers/session';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -33,6 +33,8 @@ import {
 import { SpinnerDotted } from 'spinners-react';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function Inbox({
   employeeDetails,
@@ -199,6 +201,19 @@ export default function Inbox({
 
   const { windowWidth } = UseWindowDimensions();
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
       {/* Messages Load Failed Error */}
@@ -229,7 +244,7 @@ export default function Inbox({
         <title>Inbox</title>
       </Head>
 
-      <SideNav />
+      <SideNav navDetails={navDetails} />
       <Modal
         size={`${windowWidth > 768 ? 'sm' : 'xl'}`}
         open={submitModalIsOpen}

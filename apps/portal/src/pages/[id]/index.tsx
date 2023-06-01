@@ -6,7 +6,7 @@ import {
 } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { SideNav } from '../../components/fixed/nav/SideNav';
+import SideNav from '../../components/fixed/nav/SideNav';
 import { MainContainer } from '../../components/modular/custom/containers/MainContainer';
 import { useAllowedModulesStore } from '../../store/allowed-modules.store';
 import {
@@ -34,6 +34,13 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
+import { UseNameInitials } from '../../utils/hooks/useNameInitials';
+
+export type NavDetails = {
+  fullName: string;
+  initials: string;
+  profile: string;
+};
 
 export default function Dashboard({
   userDetails,
@@ -43,9 +50,18 @@ export default function Dashboard({
   );
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [navDetails, setNavDetails] = useState<NavDetails>();
 
   async function hydration() {
-    setLocalStorage(userDetails);
+    // setLocalStorage(userDetails);
+    setNavDetails({
+      profile: userDetails.user.email,
+      fullName: `${userDetails.profile.firstName} ${userDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        userDetails.profile.firstName,
+        userDetails.profile.lastName
+      ),
+    });
 
     const modules = await setModules(userDetails);
 
@@ -74,9 +90,7 @@ export default function Dashboard({
     dtr: state.dtr,
     schedule: state.schedule,
     loadingTimeLogs: state.loading.loadingTimeLogs,
-
     errorTimeLogs: state.error.errorTimeLogs,
-
     getTimeLogs: state.getTimeLogs,
     getTimeLogsSuccess: state.getTimeLogsSuccess,
     getTimeLogsFail: state.getTimeLogsFail,
@@ -130,7 +144,8 @@ export default function Dashboard({
       <Head>
         <title>{employeeName}</title>
       </Head>
-      <SideNav />
+      <SideNav navDetails={navDetails} />
+
       <MainContainer>
         <>
           {swrFaceScanIsLoading ? (

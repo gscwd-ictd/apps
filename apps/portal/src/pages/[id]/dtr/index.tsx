@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -26,6 +26,8 @@ import { DtrDateSelect } from '../../../../src/components/fixed/dtr/DtrDateSelec
 import { useDtrStore } from '../../../../src/store/dtr.store';
 import { DtrTable } from '../../../../src/components/fixed/dtr/DtrTable';
 import { employeeDummy } from '../../../../src/types/employee.type';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function DailyTimeRecord({
   employeeDetails,
@@ -51,6 +53,19 @@ export default function DailyTimeRecord({
     }
   }, [isLoading]);
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
       <>
@@ -59,7 +74,7 @@ export default function DailyTimeRecord({
             <title>Daily Time Record</title>
           </Head>
 
-          <SideNav />
+          <SideNav navDetails={navDetails} />
 
           <MainContainer>
             <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>

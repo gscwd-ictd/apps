@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { EmployeeLeave } from '../../../../../../libs/utils/src/lib/types/leave-application.type';

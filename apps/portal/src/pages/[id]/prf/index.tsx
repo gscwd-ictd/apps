@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { EmployeeDetails, employeeDummy } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
@@ -22,7 +22,7 @@ import { PrfModal } from '../../../components/fixed/prf/prf-modal/PrfModal';
 import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingPrfList';
 import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
 import { TabHeader } from '../../../components/fixed/prf/prf-index/TabHeader';
-import { SideNav } from '../../../../src/components/fixed/nav/SideNav';
+import SideNav from '../../../../src/components/fixed/nav/SideNav';
 import { MainContainer } from '../../../../src/components/modular/custom/containers/MainContainer';
 import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
@@ -37,6 +37,8 @@ import { Modal } from '../../../components/modular/overlays/Modal';
 import { Button } from '@gscwd-apps/oneui';
 import { HiDocumentAdd } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 type PrfPageProps = {
   user: User;
@@ -176,6 +178,19 @@ export default function Prf({
 
   const { windowWidth } = UseWindowDimensions();
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: user.email,
+      fullName: `${employee.profile.firstName} ${employee.profile.lastName}`,
+      initials: UseNameInitials(
+        employee.profile.firstName,
+        employee.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
       <Modal
@@ -194,7 +209,7 @@ export default function Prf({
       />
 
       <PageTitle title="Position Request" />
-      <SideNav />
+      <SideNav navDetails={navDetails} />
       <MainContainer>
         <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
           <ContentHeader
