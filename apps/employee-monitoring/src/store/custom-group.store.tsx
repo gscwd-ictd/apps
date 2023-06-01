@@ -48,6 +48,8 @@ export type CustomGroupState = {
   deleteCustomGroup: () => void;
   deleteCustomGroupSuccess: (response: CustomGroupId) => void;
   deleteCustomGroupFail: (error: string) => void;
+
+  emptyResponse: () => void;
 };
 
 export const useCustomGroupStore = create<CustomGroupState>()(
@@ -56,7 +58,7 @@ export const useCustomGroupStore = create<CustomGroupState>()(
     customGroup: {
       postResponse: {} as CustomGroup,
       updateResponse: {} as CustomGroup,
-      deleteResponse: {} as CustomGroup,
+      deleteResponse: {} as CustomGroupId,
     },
     customGroupWithMembers: {} as CustomGroupWithMembers,
     loading: {
@@ -159,6 +161,23 @@ export const useCustomGroupStore = create<CustomGroupState>()(
         ...state,
         loading: { ...state.loading, loadingCustomGroup: false },
         error: { ...state.error, errorCustomGroup: error },
+      })),
+
+    // reset custom groups responses
+    emptyResponse: () =>
+      set((state) => ({
+        ...state,
+        customGroup: {
+          ...state.customGroup,
+          postResponse: {} as CustomGroup,
+          updateResponse: {} as CustomGroup,
+          deleteResponse: {} as CustomGroupId,
+        },
+        error: {
+          ...state.error,
+          errorCustomGroups: '',
+          errorCustomGroup: '',
+        },
       })),
   }))
 );

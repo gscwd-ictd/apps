@@ -17,6 +17,8 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
 import AddCustomGroupModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/AddCustomGroupModal';
+import DeleteCustomGroupModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/DeleteCustomGroupModal';
+import EditCustomGroupModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/EditCustomGroupModal';
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -40,6 +42,22 @@ const Index = () => {
   const openAddActionModal = () => setAddModalIsOpen(true);
   const closeAddActionModal = () => setAddModalIsOpen(false);
 
+  // Edit modal function
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+  const openEditActionModal = (rowData: CustomGroup) => {
+    setEditModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeEditActionModal = () => setEditModalIsOpen(false);
+
+  // Delete modal function
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+  const openDeleteActionModal = (rowData: CustomGroup) => {
+    setDeleteModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
+
   // Render row actions in the table component
   const renderRowActions = (rowData: CustomGroup) => {
     return (
@@ -55,7 +73,7 @@ const Index = () => {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openEditActionModal(rowData)}
+          onClick={() => openEditActionModal(rowData)}
         >
           <i className="bx bx-edit-alt"></i>
         </button>
@@ -63,7 +81,7 @@ const Index = () => {
         <button
           type="button"
           className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
+          onClick={() => openDeleteActionModal(rowData)}
         >
           <i className="bx bx-trash-alt"></i>
         </button>
@@ -95,6 +113,9 @@ const Index = () => {
   // Zustand initialization
   const {
     CustomGroups,
+    PostCustomGroupResponse,
+    UpdateCustomGroupResponse,
+    DeleteCustomGroupResponse,
 
     IsLoading,
     ErrorCustomGroups,
@@ -104,9 +125,12 @@ const Index = () => {
     GetCustomGroupsSuccess,
     GetCustomGroupsFail,
 
-    // EmptyResponse,
+    EmptyResponse,
   } = useCustomGroupStore((state) => ({
     CustomGroups: state.customGroups,
+    PostCustomGroupResponse: state.customGroup.postResponse,
+    UpdateCustomGroupResponse: state.customGroup.updateResponse,
+    DeleteCustomGroupResponse: state.customGroup.deleteResponse,
 
     IsLoading: state.loading.loadingCustomGroups,
     ErrorCustomGroups: state.error.errorCustomGroups,
@@ -116,7 +140,7 @@ const Index = () => {
     GetCustomGroupsSuccess: state.getCustomGroupsSuccess,
     GetCustomGroupsFail: state.getCustomGroupsFail,
 
-    // EmptyResponse: state.emptyResponse,
+    EmptyResponse: state.emptyResponse,
   }));
 
   // React Table initialization
@@ -144,30 +168,29 @@ const Index = () => {
     }
   }, [swrCustomGroups, swrError]);
 
-  // Get new list of travel orders
-  // useEffect(() => {
-  //   if (
-  //     !isEmpty(PostTravelOrderResponse) ||
-  //     !isEmpty(UpdateTravelOrderResponse) ||
-  //     !isEmpty(DeleteTravelOrderResponse)
-  //   ) {
-  //     mutateTravelOrders();
+  // Reset responses from all modal actions
+  useEffect(() => {
+    if (
+      !isEmpty(PostCustomGroupResponse) ||
+      !isEmpty(UpdateCustomGroupResponse) ||
+      !isEmpty(DeleteCustomGroupResponse)
+    ) {
+      mutateCustomGroups();
 
-  //     setTimeout(() => {
-  //       EmptyResponse();
-  //     }, 3000);
-  //   }
-  // }, [
-  //   PostTravelOrderResponse,
-  //   UpdateTravelOrderResponse,
-  //   DeleteTravelOrderResponse,
-  // ]);
+      setTimeout(() => {
+        EmptyResponse();
+      }, 3000);
+    }
+  }, [
+    PostCustomGroupResponse,
+    UpdateCustomGroupResponse,
+    DeleteCustomGroupResponse,
+  ]);
 
   return (
     <>
       <div className="w-full">
         <BreadCrumbs title="Custom Groups" />
-
         {/* Error Notifications */}
         {!isEmpty(ErrorCustomGroups) ? (
           <ToastNotification
@@ -183,12 +206,24 @@ const Index = () => {
         ) : null}
 
         {/* Success Notifications */}
-        {/* {!isEmpty(PostTravelOrderResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Travel order added successfully"
-        />
-      ) : null} */}
+        {!isEmpty(PostCustomGroupResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Custom group added successfully"
+          />
+        ) : null}
+        {!isEmpty(UpdateCustomGroupResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Custom group details updated successfully"
+          />
+        ) : null}
+        {!isEmpty(DeleteCustomGroupResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Custom group successfully deleted"
+          />
+        ) : null}
 
         <Can I="access" this="Custom Groups">
           <div className="mx-5">
@@ -201,7 +236,7 @@ const Index = () => {
                     <button
                       type="button"
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                      // onClick={openAddActionModal}
+                      onClick={openAddActionModal}
                     >
                       <i className="bx bxs-plus-square"></i>&nbsp; Add Custom
                       Group Order
@@ -224,6 +259,22 @@ const Index = () => {
             modalState={addModalIsOpen}
             setModalState={setAddModalIsOpen}
             closeModalAction={closeAddActionModal}
+          />
+
+          {/* Edit modal */}
+          <EditCustomGroupModal
+            modalState={editModalIsOpen}
+            setModalState={setEditModalIsOpen}
+            closeModalAction={closeEditActionModal}
+            rowData={currentRowData}
+          />
+
+          {/* Delete modal */}
+          <DeleteCustomGroupModal
+            modalState={deleteModalIsOpen}
+            setModalState={setDeleteModalIsOpen}
+            closeModalAction={closeDeleteActionModal}
+            rowData={currentRowData}
           />
         </Can>
       </div>

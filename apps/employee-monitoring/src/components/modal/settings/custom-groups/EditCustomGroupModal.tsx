@@ -3,104 +3,115 @@ import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { isEmpty } from 'lodash';
+import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
 import {
-  Modal,
   AlertNotification,
-  LoadingSpinner,
   Button,
+  LoadingSpinner,
+  Modal,
 } from '@gscwd-apps/oneui';
-import { LabelInput } from '../../../inputs/LabelInput';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
-type AddModalProps = {
+type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
+  rowData: CustomGroup;
 };
 
-// yup error handling initialization
-const yupSchema = yup
-  .object({
-    name: yup.string().required('Name is required'),
-    description: yup.string().required('Description is required'),
-  })
-  .required();
+enum CustomGroupKeys {
+  ID = 'id',
+  NAME = 'name',
+  DESCRIPTION = 'description',
+}
 
-const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({
+const EditCustomGroupModal: FunctionComponent<EditModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
+  rowData,
 }) => {
-  // zustand store initialization for travel order
+  // zustand store initialization
   const {
     IsLoading,
 
-    PostCustomGroup,
-    PostCustomGroupSuccess,
-    PostCustomGroupFail,
+    UpdateCustomGroup,
+    UpdateCustomGroupSuccess,
+    UpdateCustomGroupFail,
   } = useCustomGroupStore((state) => ({
     IsLoading: state.loading.loadingCustomGroup,
 
-    PostCustomGroup: state.postCustomGroup,
-    PostCustomGroupSuccess: state.postCustomGroupSuccess,
-    PostCustomGroupFail: state.postCustomGroupFail,
+    UpdateCustomGroup: state.updateCustomGroup,
+    UpdateCustomGroupSuccess: state.updateCustomGroupSuccess,
+    UpdateCustomGroupFail: state.updateCustomGroupFail,
   }));
+
+  // yup error handling initialization
+  const yupSchema = yup
+    .object({
+      name: yup.string().required('Name is required'),
+      description: yup.string().required('Description is required'),
+    })
+    .required();
 
   // React hook form
   const {
     reset,
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<CustomGroup>({
     mode: 'onChange',
-    defaultValues: {
-      name: '',
-      description: '',
-    },
     resolver: yupResolver(yupSchema),
   });
 
   // form submission
   const onSubmit: SubmitHandler<CustomGroup> = (data: CustomGroup) => {
-    // set loading to true
-    PostCustomGroup();
+    UpdateCustomGroup();
 
-    handlePostResult(data);
+    handlePatchResult(data);
   };
 
-  const handlePostResult = async (data: CustomGroup) => {
-    const { error, result } = await postEmpMonitoring('/custom-groups', data);
+  const handlePatchResult = async (data: CustomGroup) => {
+    const { error, result } = await patchEmpMonitoring(`/custom-groups/`, data);
 
     if (error) {
-      // request is done so set loading to false
-      PostCustomGroupFail(result);
+      UpdateCustomGroupFail(result);
     } else {
-      // request is done so set loading to false
-      PostCustomGroupSuccess(result);
+      UpdateCustomGroupSuccess(result);
 
       reset();
       closeModalAction();
     }
   };
 
-  // If modal is open, reset input values
+  // Set default values in the form
   useEffect(() => {
-    if (!modalState) {
-      reset();
+    if (!isEmpty(rowData)) {
+      const keys = Object.keys(rowData);
+
+      // traverse to each object and setValue
+      keys.forEach((key: CustomGroupKeys) => {
+        return setValue(key, rowData[key], {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      });
     }
-  }, [modalState]);
+  }, [rowData]);
 
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">Add Custom Group</span>
+            <span className="text-2xl text-gray-600"></span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -111,7 +122,6 @@ const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({
             </button>
           </div>
         </Modal.Header>
-
         <Modal.Body>
           <div>
             {/* Notifications */}
@@ -124,7 +134,7 @@ const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({
               />
             ) : null}
 
-            <form onSubmit={handleSubmit(onSubmit)} id="addCustomGroupForm">
+            <form onSubmit={handleSubmit(onSubmit)} id="editCustomGroupForm">
               {/* Name input */}
               <div className="mb-6">
                 <LabelInput
@@ -151,14 +161,13 @@ const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({
             </form>
           </div>
         </Modal.Body>
-
         <Modal.Footer>
           {/* Submit button */}
           <div className="flex justify-end w-full">
             <Button
               variant="info"
               type="submit"
-              form="addCustomGroupForm"
+              form="editCustomGroupForm"
               className="ml-1 text-gray-400 disabled:cursor-not-allowed"
               disabled={IsLoading ? true : false}
             >
@@ -171,4 +180,4 @@ const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddCustomGroupModal;
+export default EditCustomGroupModal;

@@ -182,6 +182,7 @@ const Index = () => {
     }
   }, [swrHolidays, swrError]);
 
+  // Reset responses from all modal actions
   useEffect(() => {
     if (
       !isEmpty(PostHolidayResponse) ||
