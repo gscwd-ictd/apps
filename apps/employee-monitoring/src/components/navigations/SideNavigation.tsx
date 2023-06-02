@@ -353,6 +353,19 @@ export const SideNavigation = () => {
               )}
             </span>
           </Sidebar.Header>
+
+          {/**Settings CUSTOM GROUPS */}
+          <Sidebar.Item
+            display="Custom Groups"
+            className="text-xs"
+            selected={pathname === Paths[21] ? true : false}
+            icon={
+              <>
+                <i className="text-xl bx bx-group"></i>
+              </>
+            }
+            path={Paths[21]}
+          />
         </ul>
       </Sidebar.Content>
       {/* <Sidebar.Footer>Footer</Sidebar.Footer> */}

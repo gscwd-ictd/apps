@@ -4,8 +4,8 @@ import { isEmpty } from 'lodash';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
-import { Holiday } from 'apps/employee-monitoring/src/utils/types/holiday.type';
-import { useHolidaysStore } from 'apps/employee-monitoring/src/store/holidays.store';
+import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
+import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 
@@ -13,10 +13,10 @@ type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: Holiday;
+  rowData: CustomGroup;
 };
 
-const DeleteHolidayModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -26,23 +26,23 @@ const DeleteHolidayModal: FunctionComponent<DeleteModalProps> = ({
   const {
     IsLoading,
 
-    DeleteHoliday,
-    DeleteHolidaySuccess,
-    DeleteHolidayFail,
-  } = useHolidaysStore((state) => ({
-    IsLoading: state.loading.loadingHoliday,
+    DeleteCustomGroup,
+    DeleteCustomGroupSuccess,
+    DeleteCustomGroupFail,
+  } = useCustomGroupStore((state) => ({
+    IsLoading: state.loading.loadingCustomGroup,
 
-    DeleteHoliday: state.deleteHoliday,
-    DeleteHolidaySuccess: state.deleteHolidaySuccess,
-    DeleteHolidayFail: state.deleteHolidayFail,
+    DeleteCustomGroup: state.deleteCustomGroup,
+    DeleteCustomGroupSuccess: state.deleteCustomGroupSuccess,
+    DeleteCustomGroupFail: state.deleteCustomGroupFail,
   }));
 
-  const { handleSubmit } = useForm<Holiday>();
+  const { handleSubmit } = useForm<CustomGroup>();
 
   // form submission
-  const onSubmit: SubmitHandler<Holiday> = () => {
+  const onSubmit: SubmitHandler<CustomGroup> = () => {
     if (!isEmpty(rowData.id)) {
-      DeleteHoliday();
+      DeleteCustomGroup();
 
       handleDeleteResult();
     }
@@ -50,13 +50,13 @@ const DeleteHolidayModal: FunctionComponent<DeleteModalProps> = ({
 
   const handleDeleteResult = async () => {
     const { error, result } = await deleteEmpMonitoring(
-      `/holidays/${rowData.id}`
+      `/custom-groups/${rowData.id}`
     );
 
     if (error) {
-      DeleteHolidayFail(result);
+      DeleteCustomGroupFail(result);
     } else {
-      DeleteHolidaySuccess(result);
+      DeleteCustomGroupSuccess(result);
 
       closeModalAction();
     }
@@ -76,7 +76,7 @@ const DeleteHolidayModal: FunctionComponent<DeleteModalProps> = ({
             />
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="deleteHolidayForm">
+          <form onSubmit={handleSubmit(onSubmit)} id="deleteCustomGroupForm">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 text-md font-medium text-center text-gray-600">
@@ -94,7 +94,7 @@ const DeleteHolidayModal: FunctionComponent<DeleteModalProps> = ({
           <div className="flex justify-between w-full gap-2">
             <button
               type="submit"
-              form="deleteHolidayForm"
+              form="deleteCustomGroupForm"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={IsLoading ? true : false}
             >
@@ -115,4 +115,4 @@ const DeleteHolidayModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteHolidayModal;
+export default DeleteCustomGroupModal;

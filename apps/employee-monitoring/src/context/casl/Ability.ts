@@ -24,6 +24,7 @@ export default defineAbility((can) => {
     { I: 'access', this: 'Pass_slips' },
     { I: 'access', this: 'Leave_benefits' },
     { I: 'access', this: 'Scheduling' },
+    { I: 'access', this: 'Custom Groups' },
   ];
 
   // cookies.get('isSuperUser')

@@ -7,6 +7,8 @@ export type CustomGroup = {
   description: string;
 };
 
+export type CustomGroupId = Pick<CustomGroup, 'id'>;
+
 export type CustomGroupWithMembers = CustomGroup & {
   members: Array<EmployeeAsOptionWithPosition>;
 };

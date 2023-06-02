@@ -20,4 +20,5 @@ export const Paths = [
   '/monitoring/scheduling-sheet/office', // 18
   '/monitoring/scheduling-sheet/field', // 19
   '/monitoring/scheduling-sheet/station', // 20
+  '/settings/custom-groups', //21
 ];
