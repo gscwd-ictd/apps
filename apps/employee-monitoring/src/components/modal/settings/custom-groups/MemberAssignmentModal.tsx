@@ -10,10 +10,15 @@ import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-g
 import {
   AlertNotification,
   Button,
+  DataTable,
   LoadingSpinner,
   Modal,
+  useDataTable,
 } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+import { createColumnHelper } from '@tanstack/react-table';
+import { EmployeeAsOptionWithPosition } from 'libs/utils/src/lib/types/employee.type';
+import { Card } from '../../../cards/Card';
 
 type EditModalProps = {
   modalState: boolean;
@@ -39,20 +44,59 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
     revalidateOnFocus: false,
   });
 
+  // Define table columns
+  const columnHelper = createColumnHelper<EmployeeAsOptionWithPosition>();
+  const columns = [
+    columnHelper.accessor('employeeId', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('companyId', {
+      header: 'Company ID',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('fullName', {
+      header: 'Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('positionTitle', {
+      header: 'Position',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('assignment', {
+      header: 'Assignment',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.display({
+      id: 'actions',
+      enableColumnFilter: false,
+      // cell: (props) => renderRowActions(props.row.original),
+    }),
+  ];
+
   // zustand store initialization
   const {
     IsLoading,
+    CustomGroupWithMembers,
 
     GetCustomGroupWithMembers,
     GetCustomGroupWithMembersSuccess,
     GetCustomGroupWithMembersFail,
   } = useCustomGroupStore((state) => ({
     IsLoading: state.loading.loadingCustomGroupWithMembers,
+    CustomGroupWithMembers: state.customGroupWithMembers,
 
     GetCustomGroupWithMembers: state.getCustomGroupWithMembers,
     GetCustomGroupWithMembersSuccess: state.getCustomGroupWithMembersSuccess,
     GetCustomGroupWithMembersFail: state.getCustomGroupWithMembersFail,
   }));
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: CustomGroupWithMembers.members,
+    enableRowSelection: true,
+    columnVisibility: { employeeId: false, assignment: false },
+  });
 
   // yup error handling initialization
   // const yupSchema = yup
@@ -119,7 +163,9 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="lg">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">Member Assignment</span>
+            <span className="text-2xl text-gray-600">
+              {CustomGroupWithMembers.customGroupDetails?.name}
+            </span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -142,7 +188,33 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
               />
             ) : null} */}
 
-            {JSON.stringify(swrCustomGroupWithMembers)}
+            <div className="mx-5">
+              <Card>
+                {IsLoading ? (
+                  <LoadingSpinner size="lg" />
+                ) : (
+                  <div className="flex flex-row flex-wrap">
+                    <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                      <button
+                        type="button"
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                        // onClick={openAddActionModal}
+                      >
+                        <i className="bx bxs-plus-square"></i>&nbsp; Assign
+                        Employees
+                      </button>
+                    </div>
+
+                    <DataTable
+                      model={table}
+                      showGlobalFilter={false}
+                      showColumnFilter={false}
+                      paginate={false}
+                    />
+                  </div>
+                )}
+              </Card>
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>

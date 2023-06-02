@@ -9,6 +9,6 @@ export type CustomGroup = {
 
 export type CustomGroupId = Pick<CustomGroup, 'id'>;
 
-export type CustomGroupWithMembers = CustomGroup & {
+export type CustomGroupWithMembers = { customGroupDetails: CustomGroup } & {
   members: Array<EmployeeAsOptionWithPosition>;
 };
