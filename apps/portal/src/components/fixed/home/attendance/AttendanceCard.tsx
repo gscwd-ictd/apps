@@ -32,63 +32,90 @@ export const AttendanceCard: React.FC<Props> = ({ timeLogData }) => {
           >
             TIME IN
           </label>
-          <label
-            className={`${
-              isLate &&
-              timeLogData?.dtr?.timeIn &&
-              timeLogData?.dtr?.timeIn != null
-                ? 'text-red-600'
-                : 'text-green-600'
-            } text-md `}
-          >
-            {timeLogData?.dtr?.timeIn && timeLogData?.dtr?.timeIn != null
-              ? UseTwelveHourFormat(timeLogData?.dtr?.timeIn)
-              : '-'}
-          </label>
+          {timeLogData?.schedule?.scheduleBase === 'Office' ? (
+            //if user is Office, include late checker
+            <label
+              className={`${
+                isLate &&
+                timeLogData?.dtr?.timeIn &&
+                timeLogData?.dtr?.timeIn != null
+                  ? 'text-red-600'
+                  : 'text-green-600'
+              } text-md `}
+            >
+              {timeLogData?.dtr?.timeIn && timeLogData?.dtr?.timeIn != null
+                ? UseTwelveHourFormat(timeLogData?.dtr?.timeIn)
+                : '-'}
+            </label>
+          ) : (
+            //else display timeIn with no late checker
+            <label className={`text-md text-gray-600`}>
+              {timeLogData?.dtr?.timeIn && timeLogData?.dtr?.timeIn != null
+                ? UseTwelveHourFormat(timeLogData?.dtr?.timeIn)
+                : '-'}
+            </label>
+          )}
         </div>
-        <div className="flex flex-col justify-center items-center">
-          <label
-            className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
-          >
-            LUNCH OUT
-          </label>
-          <label className="text-md text-green-600">
-            {timeLogData?.dtr?.lunchOut && timeLogData?.dtr?.lunchOut != null
-              ? UseTwelveHourFormat(timeLogData?.dtr?.lunchOut)
-              : '-'}
-          </label>
-        </div>
-        <div className="flex flex-col justify-center items-center">
-          <label
-            className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
-          >
-            LUNCH IN
-          </label>
-          <label className="text-md text-green-600">
-            {timeLogData?.dtr?.lunchIn && timeLogData?.dtr?.lunchIn != null
-              ? UseTwelveHourFormat(timeLogData?.dtr?.lunchIn)
-              : '-'}
-          </label>
-        </div>
+        {timeLogData?.schedule?.scheduleBase === 'Office' ? (
+          <>
+            <div className="flex flex-col justify-center items-center">
+              <label
+                className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
+              >
+                LUNCH OUT
+              </label>
+              <label className="text-md text-green-600">
+                {timeLogData?.dtr?.lunchOut &&
+                timeLogData?.dtr?.lunchOut != null
+                  ? UseTwelveHourFormat(timeLogData?.dtr?.lunchOut)
+                  : '-'}
+              </label>
+            </div>
+
+            <div className="flex flex-col justify-center items-center">
+              <label
+                className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
+              >
+                LUNCH IN
+              </label>
+              <label className="text-md text-green-600">
+                {timeLogData?.dtr?.lunchIn && timeLogData?.dtr?.lunchIn != null
+                  ? UseTwelveHourFormat(timeLogData?.dtr?.lunchIn)
+                  : '-'}
+              </label>
+            </div>
+          </>
+        ) : null}
+
         <div className="flex flex-col justify-center items-center">
           <label
             className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
           >
             TIME OUT
           </label>
-          <label
-            className={`${
-              isUnderTime &&
-              timeLogData?.dtr?.timeOut &&
-              timeLogData?.dtr?.timeOut != null
-                ? 'text-red-600'
-                : 'text-green-600'
-            } text-md `}
-          >
-            {timeLogData?.dtr?.timeOut && timeLogData?.dtr?.timeOut != null
-              ? UseTwelveHourFormat(timeLogData?.dtr?.timeOut)
-              : '-'}
-          </label>
+          {timeLogData?.schedule?.scheduleBase === 'Office' ? (
+            //if user is Office, include late checker
+            <label
+              className={`${
+                isUnderTime &&
+                timeLogData?.dtr?.timeOut &&
+                timeLogData?.dtr?.timeOut != null
+                  ? 'text-red-600'
+                  : 'text-green-600'
+              } text-md `}
+            >
+              {timeLogData?.dtr?.timeOut && timeLogData?.dtr?.timeOut != null
+                ? UseTwelveHourFormat(timeLogData?.dtr?.timeOut)
+                : '-'}
+            </label>
+          ) : (
+            //else display timeIn with no undertime checker
+            <label className={`text-md text-gray-600`}>
+              {timeLogData?.dtr?.timeOut && timeLogData?.dtr?.timeOut != null
+                ? UseTwelveHourFormat(timeLogData?.dtr?.timeOut)
+                : '-'}
+            </label>
+          )}
         </div>
       </div>
     </div>
