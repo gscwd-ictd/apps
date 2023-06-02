@@ -1,12 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import {
-  MutatedSsSelectOption,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
+import { Modal } from '@gscwd-apps/oneui';
+import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
+import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
+import { CustomGroupWithMembers } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import dayjs from 'dayjs';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
@@ -20,138 +17,121 @@ import {
 } from 'react';
 import Select from 'react-select';
 import useSWR from 'swr';
-import { LabelValue } from '../../../../labels/LabelValue';
 
-type SelectFieldSchedSsModalProps = {
+type SelectSchedSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-const SelectFieldSchedSsModal: FunctionComponent<
-  SelectFieldSchedSsModalProps
-> = ({ modalState, closeModalAction, setModalState }) => {
-  // use SWR
+const SelectStationGroupSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
+  modalState,
+  closeModalAction,
+  setModalState,
+}) => {
+  // use schedule sheet store
+  const { selectedGroupId, setSelectedGroupId } = useScheduleSheetStore(
+    (state) => ({
+      selectedGroupId: state.selectedGroupId,
+      setSelectedGroupId: state.setSelectedGroupId,
+    })
+  );
+
+  // use custom groups store
   const {
-    data: swrSchedules,
+    groups,
+    groupWithMembers,
+    getCustomGroups,
+    getCustomGroupsFail,
+    getCustomGroupsSuccess,
+  } = useCustomGroupStore((state) => ({
+    groups: state.customGroups,
+    groupWithMembers: state.customGroupWithMembers,
+    getCustomGroups: state.getCustomGroups,
+    getCustomGroupsSuccess: state.getCustomGroupsSuccess,
+    getCustomGroupsFail: state.getCustomGroupsFail,
+  }));
+
+  // local state for the selected group with members component
+  const [selectedGroup, setSelectedGroup] =
+    useState<CustomGroupWithMembers>(groupWithMembers);
+
+  // local state for the selected group id
+  const [localSelectedGroupId, setLocalSelectedGroupId] =
+    useState<string>(selectedGroupId);
+
+  // use SWR for all groups
+  const {
+    data: swrGroups,
     isLoading: swrIsLoading,
     error: swrError,
-  } = useSWR('/schedules?base=Field', fetcherEMS, {
+  } = useSWR('/groups', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
 
-  // use schedule sheet store
-  const { selectedScheduleId, setSelectedScheduleId } = useScheduleSheetStore(
-    (state) => ({
-      selectedScheduleId: state.selectedScheduleId,
-      setSelectedScheduleId: state.setSelectedScheduleId,
-    })
+  // use SWR for all groups
+  const {
+    data: swrGroupDetails,
+    isLoading: swrGroupDetailsIsLoading,
+    error: swrGroupDetailsError,
+  } = useSWR(
+    isEmpty(localSelectedGroupId) ? `/groups/${localSelectedGroupId}` : null,
+    fetcherEMS,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
   );
 
   // on submit
   const onSubmit = () => {
-    setSelectedScheduleId(selectedSchedule.value.toString());
+    // sets the store group id based on locally submitted group based on group id
+    setSelectedGroupId(localSelectedGroupId);
     closeModalAction();
   };
 
   // on cancel
   const onCancel = () => {
-    setSelectedScheduleId('');
+    setSelectedGroupId('');
     closeModalAction();
   };
-
-  // state for the transformed schedules for rendering
-  const [transformedScheds, setTransformedScheds] = useState<
-    Array<MutatedSsSelectOption>
-  >([]);
-
-  // state value for the mutated component
-  const [selectedSchedule, setSelectedSchedule] =
-    useState<MutatedSsSelectOption>({} as MutatedSsSelectOption);
-
-  //  schedule store
-  const { schedules, getSchedules, getSchedulesFail, getSchedulesSuccess } =
-    useScheduleStore((state) => ({
-      schedules: state.schedules,
-      getSchedules: state.getSchedules,
-      getSchedulesSuccess: state.getSchedulesSuccess,
-      getSchedulesFail: state.getSchedulesFail,
-    }));
-
-  // transform schedules
-  const transformSchedules = (schedules: Array<Schedule>) => {
-    const tempScheds = schedules.map((schedule) => {
-      return {
-        label: schedule.name,
-        value: schedule.id,
-        timeIn: schedule.timeIn,
-        lunchIn: schedule.lunchIn,
-        lunchOut: schedule.lunchOut,
-        timeOut: schedule.timeOut,
-        shift: schedule.shift,
-      };
-    });
-
-    setTransformedScheds(tempScheds);
-  };
-
-  // time only with AM or PM
-  const formatTime = (date: string | null) => {
-    if (date === null) return '-';
-    else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
-  };
-
-  // temporary
-  useEffect(() => {
-    if (transformedScheds) console.log(transformedScheds);
-  }, [transformedScheds]);
 
   // swr loading
   useEffect(() => {
     if (swrIsLoading) {
-      getSchedules();
+      getCustomGroups(true);
     }
   }, [modalState, swrIsLoading]);
+
+  // swr loading for the custom group details
+  useEffect(() => {
+    if (swrGroupDetailsIsLoading) {
+      //
+    }
+  }, [swrGroupDetailsIsLoading]);
 
   // swr success or error
   useEffect(() => {
     // if data
-    if (!isEmpty(swrSchedules)) {
-      getSchedulesSuccess(swrSchedules.data);
+    if (!isEmpty(swrGroups)) {
+      getCustomGroupsSuccess(swrIsLoading, swrGroups.data);
     }
 
     // if error
     if (!isEmpty(swrError)) {
-      getSchedulesFail(swrError.message);
+      getCustomGroupsFail(swrIsLoading, swrError.message);
     }
-  }, [swrSchedules, swrError]);
-
-  // if schedules is fetched, mutate it to be used by the dropdown select component
-  useEffect(() => {
-    if (!isEmpty(schedules)) transformSchedules(schedules);
-  }, [schedules]);
-
-  // load the selected schedule by the provided id
-  useEffect(() => {
-    if (!isEmpty(transformedScheds) && !isEmpty(selectedScheduleId)) {
-      //   setSelectedSchedule({ ...selectedSchedule, value: selectedScheduleId });
-      const filtered = transformedScheds.filter(
-        (sched) => sched.value === selectedScheduleId
-      );
-
-      setSelectedSchedule(filtered[0]);
-    }
-  }, [selectedScheduleId, transformedScheds]);
+  }, [swrGroups, swrError]);
 
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header>
-          <h1 className="text-2xl font-medium">Select a Station Schedule</h1>
+          <h1 className="text-2xl font-medium">Select a Group</h1>
         </Modal.Header>
         <Modal.Body>
-          {transformedScheds ? (
+          {/* {transformedScheds ? (
             <>
               <Select
                 id="customReactSchedule"
@@ -211,13 +191,13 @@ const SelectFieldSchedSsModal: FunctionComponent<
                 </div>
               ) : (
                 <div className="flex justify-center w-full mt-2 text-gray-400">
-                  --No selected schedule--
+                  --No selected group--
                 </div>
               )}
             </>
           ) : (
             <LoadingSpinner size="lg" />
-          )}
+          )} */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end w-full">
@@ -232,7 +212,7 @@ const SelectFieldSchedSsModal: FunctionComponent<
                 className="px-3 py-2 text-sm text-white bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400"
                 type="button"
                 onClick={onSubmit}
-                disabled={isEmpty(selectedSchedule) ? true : false}
+                // disabled={isEmpty(selectedSchedule) ? true : false}
               >
                 Submit
               </button>
@@ -244,4 +224,4 @@ const SelectFieldSchedSsModal: FunctionComponent<
   );
 };
 
-export default SelectFieldSchedSsModal;
+export default SelectStationGroupSsModal;

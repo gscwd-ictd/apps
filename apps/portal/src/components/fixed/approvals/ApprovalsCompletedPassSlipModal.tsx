@@ -6,6 +6,7 @@ import { useApprovalStore } from '../../../store/approvals.store';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { patchPortal } from '../../../utils/helpers/portal-axios-helper';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -22,9 +23,15 @@ export const ApprovalsPendingPassSlipModal = ({
     passSlip: state.passSlipIndividualDetail,
   }));
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1024 ? 'lg' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-2xl text-gray-700">
             <div className="px-5 flex justify-between">
@@ -47,36 +54,36 @@ export const ApprovalsPendingPassSlipModal = ({
                 dismissible={false}
               />
 
-              <div className="flex gap-2 justify-between items-center">
+              <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                   Employee Name:
                 </label>
 
-                <div className="w-96">
+                <div className="w-auto md:w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
                     {passSlip.employeeName}
                   </label>
                 </div>
               </div>
 
-              <div className="flex gap-2 justify-between items-center">
+              <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                   Date of Application:
                 </label>
 
-                <div className="w-96">
+                <div className="w-auto md:w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
                     {passSlip.dateOfApplication}
                   </label>
                 </div>
               </div>
 
-              <div className="flex gap-2 justify-between items-center">
+              <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                   Nature of Business:
                 </label>
 
-                <div className="w-96">
+                <div className="w-auto md:w-96">
                   <label className="text-slate-500 h-12 w-96  text-lg ">
                     {passSlip.natureOfBusiness}
                   </label>
@@ -84,13 +91,13 @@ export const ApprovalsPendingPassSlipModal = ({
               </div>
 
               {passSlip.natureOfBusiness === 'Official Business' ? (
-                <div className="flex gap-3 justify-between items-center">
+                <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label
                     className={`text-slate-500 text-lg whitespace-nowrap font-medium`}
                   >
                     Mode of Transportation:
                   </label>
-                  <div className="w-96">
+                  <div className="w-auto md:w-96">
                     <label className="text-slate-500 h-12 w-96  text-lg ">
                       {passSlip.obTransportation}
                     </label>
@@ -99,11 +106,11 @@ export const ApprovalsPendingPassSlipModal = ({
               ) : null}
 
               <div className={` flex flex-col gap-2`}>
-                <div className="flex gap-2 justify-between items-center">
+                <div className="flex flex-col md:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
                     Estimated Hours:
                   </label>
-                  <div className="w-96">
+                  <div className="w-auto md:w-96">
                     <label className="text-slate-500 h-12 w-96  text-lg ">
                       {passSlip.estimateHours}
                     </label>

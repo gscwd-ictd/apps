@@ -2,7 +2,7 @@
 import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import {
-  MutatedSelectOption,
+  MutatedSsSelectOption,
   useScheduleSheetStore,
 } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
@@ -65,13 +65,12 @@ const SelectStationSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
 
   // state for the transformed schedules for rendering
   const [transformedScheds, setTransformedScheds] = useState<
-    Array<MutatedSelectOption>
+    Array<MutatedSsSelectOption>
   >([]);
 
   // state value for the mutated component
-  const [selectedSchedule, setSelectedSchedule] = useState<MutatedSelectOption>(
-    {} as MutatedSelectOption
-  );
+  const [selectedSchedule, setSelectedSchedule] =
+    useState<MutatedSsSelectOption>({} as MutatedSsSelectOption);
 
   //  schedule store
   const { schedules, getSchedules, getSchedulesFail, getSchedulesSuccess } =
@@ -105,15 +104,10 @@ const SelectStationSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
     else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
   };
 
-  // temporary
-  useEffect(() => {
-    if (transformedScheds) console.log(transformedScheds);
-  }, [transformedScheds]);
-
   // swr loading
   useEffect(() => {
     if (swrIsLoading) {
-      getSchedules(true);
+      getSchedules();
     }
   }, [modalState, swrIsLoading]);
 

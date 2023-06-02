@@ -300,7 +300,7 @@ export const DrcModalSetting = () => {
         </span>
 
         {/** HERE */}
-        <div className="flex flex-col mt-5">
+        <div className="flex flex-col mt-5 w-full">
           <section>
             <div className="flex flex-col md:flex-row items-end justify-between ">
               <p className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
@@ -344,9 +344,9 @@ export const DrcModalSetting = () => {
                         </div>
                       </>
                     ) : (
-                      <>
+                      <div className="w-full">
                         <SelectedCoreDrcs />
-                      </>
+                      </div>
                     )}
                   </>
                 )}

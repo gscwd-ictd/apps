@@ -197,7 +197,7 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
   // schedules is loading
   useEffect(() => {
     if (swrSchedulesIsLoading) {
-      getSchedules(swrSchedulesIsLoading);
+      getSchedules();
     }
   }, [swrSchedulesIsLoading]);
 

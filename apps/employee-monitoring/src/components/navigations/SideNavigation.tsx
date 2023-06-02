@@ -104,7 +104,7 @@ export const SideNavigation = () => {
                   selected={pathname === Paths[18] ? true : false}
                   icon={
                     <>
-                      <i className="text-xl bx bxs-hard-hat"></i>
+                      <i className="text-xl bx bxs-buildings"></i>
                     </>
                   }
                   path={Paths[18]}
@@ -173,20 +173,6 @@ export const SideNavigation = () => {
             }
             path={Paths[6]}
           />
-
-          {/** Monitoring Trainings */}
-          {/**! REMOVED TRAINING */}
-          {/* <Sidebar.Item
-            display="Trainings & Seminars"
-            path={Paths[4]}
-            selected={pathname === Paths[4] ? true : false}
-            className="text-xs"
-            icon={
-              <>
-                <i className="text-xl bx bx-chalkboard"></i>
-              </>
-            }
-          /> */}
 
           {/** Monitoring Travel Order */}
           <Sidebar.Item

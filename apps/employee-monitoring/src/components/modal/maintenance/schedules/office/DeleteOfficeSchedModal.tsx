@@ -38,14 +38,14 @@ const DeleteOfficeSchedModal: FunctionComponent<DeleteModalProps> = ({
   const onSubmit: SubmitHandler<Schedule> = () => {
     if (!isEmpty(rowData.id)) {
       // set to true
-      DeleteSchedule(true);
+      DeleteSchedule();
 
       handleDeleteResult(rowData.id);
     }
   };
 
   const handleDeleteResult = async (id: string) => {
-    const { error, result } = await deleteEmpMonitoring(`/schedule/${id}`);
+    const { error, result } = await deleteEmpMonitoring(`/schedules/${id}`);
 
     if (error) {
       // request is done so set loading to false

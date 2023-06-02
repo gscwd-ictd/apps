@@ -479,9 +479,10 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                               <div className="w-[6rem]">
                                 <Button
                                   onClick={onClickPds}
+                                  type="button"
                                   disabled={submission.hasSubmitted}
                                 >
-                                  <div className="font-medium text-md text-slate-700">
+                                  <div className="font-medium text-white text-md">
                                     Create
                                   </div>
                                 </Button>

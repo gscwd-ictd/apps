@@ -20,7 +20,6 @@ export type Schedule = {
   timeIn: string;
   timeOut: string;
   shift: ScheduleShifts | null;
-  restDays: Array<number>;
   scheduleBase: ScheduleBases | null;
 } & (ScheduleWithLunch | ScheduleWithoutLunch);
 

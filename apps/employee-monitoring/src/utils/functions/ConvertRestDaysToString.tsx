@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 
 // converts the array of numbers(rest days) to its corresponding string

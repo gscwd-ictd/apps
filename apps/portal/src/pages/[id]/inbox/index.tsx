@@ -62,6 +62,7 @@ export default function Inbox({
 
     submitModalIsOpen,
     setSubmitModalIsOpen,
+    emptyResponseAndError,
   } = useInboxStore((state) => ({
     loadingResponse: state.loading.loadingResponse,
     errorMessage: state.error.errorMessages,
@@ -78,6 +79,7 @@ export default function Inbox({
 
     submitModalIsOpen: state.submitModalIsOpen,
     setSubmitModalIsOpen: state.setSubmitModalIsOpen,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -126,6 +128,9 @@ export default function Inbox({
   useEffect(() => {
     if (!isEmpty(responseApply)) {
       mutateMessages();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   }, [responseApply]);
 

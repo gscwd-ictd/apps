@@ -4,26 +4,18 @@ import {
   Button,
   LoadingSpinner,
   Modal,
-  ToastNotification,
 } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
-import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
-import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
-import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
 import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
-import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { isEmpty } from 'lodash';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ScheduleSchema from '../ScheduleSchema';
+import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 
 type EditModalProps = {
   modalState: boolean;
@@ -40,15 +32,11 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
 }) => {
   const {
     IsLoading,
-    Error,
     UpdateSchedule,
     UpdateScheduleFail,
     UpdateScheduleSuccess,
   } = useScheduleStore((state) => ({
-    SchedulePostResponse: state.schedule.postResponse,
     IsLoading: state.loading.loadingSchedule,
-    Error: state.error.errorSchedule,
-
     UpdateSchedule: state.updateSchedule,
     UpdateScheduleSuccess: state.updateScheduleSuccess,
     UpdateScheduleFail: state.updateScheduleFail,
@@ -65,13 +53,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
-    // setValue('restDays', sched.restDays);
-    setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
   };
-
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
-    []
-  );
 
   const {
     setValue,
@@ -94,30 +76,23 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
       shift: rowData.shift,
       lunchIn: rowData.lunchIn,
       lunchOut: rowData.lunchOut,
-      restDays: rowData.restDays,
     },
   });
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
-    UpdateSchedule(true);
+    UpdateSchedule();
 
     handleUpdateResult(sched);
   };
 
   const handleUpdateResult = async (data: Schedule) => {
-    const { error, result } = await putEmpMonitoring('/schedule', data);
+    const { error, result } = await putEmpMonitoring('/schedules', data);
 
     if (error) {
-      // request is done so set loading to false
-      UpdateSchedule(false);
-
       // set value for error message
       UpdateScheduleFail(result);
     } else {
-      // request is done so set loading to false
-      UpdateSchedule(false);
-
       // set value from returned response
       UpdateScheduleSuccess(result);
       //   mutate('/holidays');
@@ -126,11 +101,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
       closeModalAction();
     }
   };
-
-  // watch
-  useEffect(() => {
-    setValue('restDays', UseRestDaysOptionToNumberArray(selectedRestDays));
-  }, [selectedRestDays]);
 
   useEffect(() => {
     if (modalState === true) {
@@ -215,19 +185,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
                   errorMessage={errors.shift?.message}
                   disabled={IsLoading ? true : false}
                 />
-
-                {/** Rest Day */}
-                <div className="flex flex-col w-full min-h-[2.25rem]">
-                  <MySelectList
-                    id="scheduleRestDays"
-                    label="Rest Day(s)"
-                    multiple
-                    options={listOfRestDays}
-                    onChange={(o) => setSelectedRestDays(o)}
-                    value={selectedRestDays}
-                    disabled={IsLoading ? true : false}
-                  />
-                </div>
               </div>
             </div>
           </form>

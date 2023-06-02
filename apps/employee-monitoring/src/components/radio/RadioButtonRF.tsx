@@ -35,7 +35,7 @@ export const RadioButtonRF: React.FC<MyRadioBtnProps> = ({
         <label
           id={id}
           htmlFor={id}
-          className="px-1 -my-1 text-sm font-medium text-center text-gray-600 uppercase cursor-pointer select-none whitespace-nowrap"
+          className="px-1 -my-1 text-sm font-medium text-center text-gray-600 cursor-pointer select-none whitespace-nowrap"
         >
           {label}
         </label>

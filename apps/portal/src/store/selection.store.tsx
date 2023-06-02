@@ -99,6 +99,7 @@ export type SelectionState = {
   fulfilledPublicationList: Array<Publication>;
   tab: number;
   setTab: (tab: number) => void;
+  emptyResponseAndError: () => void;
 };
 
 export const useAppSelectionStore = create<SelectionState>()(
@@ -385,6 +386,23 @@ export const useAppSelectionStore = create<SelectionState>()(
         errors: {
           ...state.errors,
           errorResponse: error,
+        },
+      }));
+    },
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponseApply: {},
+        },
+        error: {
+          ...state.error,
+          errorPublicationList: '',
+          errorPendingPublicationList: '',
+          errorFulfilledPublicationList: '',
+          errorResponse: '',
         },
       }));
     },
