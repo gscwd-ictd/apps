@@ -4,7 +4,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { isEmpty } from 'lodash';
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import {
+  patchEmpMonitoring,
+  putEmpMonitoring,
+} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
@@ -74,12 +77,13 @@ const EditCustomGroupModal: FunctionComponent<EditModalProps> = ({
   // form submission
   const onSubmit: SubmitHandler<CustomGroup> = (data: CustomGroup) => {
     UpdateCustomGroup();
+    console.log(data);
 
     handlePatchResult(data);
   };
 
   const handlePatchResult = async (data: CustomGroup) => {
-    const { error, result } = await patchEmpMonitoring(`/custom-groups/`, data);
+    const { error, result } = await putEmpMonitoring(`/custom-groups`, data);
 
     if (error) {
       UpdateCustomGroupFail(result);

@@ -16,11 +16,13 @@ type ResponseCustomGroup = {
 type LoadingCustomGroup = {
   loadingCustomGroups: boolean;
   loadingCustomGroup: boolean;
+  loadingCustomGroupWithMembers: boolean;
 };
 
 type ErrorCustomGroup = {
   errorCustomGroups: string;
   errorCustomGroup: string;
+  errorCustomGroupWithMembers: string;
 };
 
 export type CustomGroupState = {
@@ -30,12 +32,13 @@ export type CustomGroupState = {
   loading: LoadingCustomGroup;
   error: ErrorCustomGroup;
 
-  getCustomGroups: (loading: boolean) => void;
-  getCustomGroupsSuccess: (
-    loading: boolean,
-    response: Array<CustomGroup>
-  ) => void;
-  getCustomGroupsFail: (loading: boolean, error: string) => void;
+  getCustomGroups: () => void;
+  getCustomGroupsSuccess: (response: Array<CustomGroup>) => void;
+  getCustomGroupsFail: (error: string) => void;
+
+  getCustomGroupWithMembers: () => void;
+  getCustomGroupWithMembersSuccess: (response: CustomGroupWithMembers) => void;
+  getCustomGroupWithMembersFail: (error: string) => void;
 
   postCustomGroup: () => void;
   postCustomGroupSuccess: (response: CustomGroup) => void;
@@ -64,31 +67,54 @@ export const useCustomGroupStore = create<CustomGroupState>()(
     loading: {
       loadingCustomGroups: false,
       loadingCustomGroup: false,
+      loadingCustomGroupWithMembers: false,
     },
     error: {
       errorCustomGroups: '',
       errorCustomGroup: '',
+      errorCustomGroupWithMembers: '',
     },
 
     // actions to get list of custom groups
-    getCustomGroups: (loading: boolean) =>
+    getCustomGroups: () =>
       set((state) => ({
         ...state,
         customGroups: [],
-        loading: { ...state.loading, loadingCustomGroups: loading },
+        loading: { ...state.loading, loadingCustomGroups: true },
         error: { ...state.error, errorCustomGroups: '' },
       })),
-    getCustomGroupsSuccess: (loading: boolean, response: Array<CustomGroup>) =>
+    getCustomGroupsSuccess: (response: Array<CustomGroup>) =>
       set((state) => ({
         ...state,
         customGroups: response,
-        loading: { ...state.loading, loadingCustomGroups: loading },
+        loading: { ...state.loading, loadingCustomGroups: false },
       })),
-    getCustomGroupsFail: (loading: boolean, error: string) =>
+    getCustomGroupsFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingCustomGroups: loading },
+        loading: { ...state.loading, loadingCustomGroups: false },
         error: { ...state.error, errorCustomGroups: error },
+      })),
+
+    // actions to get details of a single custom groups
+    getCustomGroupWithMembers: () =>
+      set((state) => ({
+        ...state,
+        customGroupWithMembers: {} as CustomGroupWithMembers,
+        loading: { ...state.loading, loadingCustomGroupWithMembers: true },
+        error: { ...state.error, errorCustomGroupWithMembers: '' },
+      })),
+    getCustomGroupWithMembersSuccess: (response: CustomGroupWithMembers) =>
+      set((state) => ({
+        ...state,
+        customGroupWithMembers: response,
+        loading: { ...state.loading, loadingCustomGroupWithMembers: false },
+      })),
+    getCustomGroupWithMembersFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingCustomGroupWithMembers: false },
+        error: { ...state.error, errorCustomGroupWithMembers: error },
       })),
 
     // actions to add new custom group

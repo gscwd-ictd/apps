@@ -19,6 +19,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import AddCustomGroupModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/AddCustomGroupModal';
 import DeleteCustomGroupModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/DeleteCustomGroupModal';
 import EditCustomGroupModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/EditCustomGroupModal';
+import MemberAssignmentModal from 'apps/employee-monitoring/src/components/modal/settings/custom-groups/MemberAssignmentModal';
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -58,6 +59,16 @@ const Index = () => {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
+  // Member assignment modal function
+  const [memberAssignmentModalIsOpen, setMemberAssignmentModalIsOpen] =
+    useState<boolean>(false);
+  const openMemberAssignmentActionModal = (rowData: CustomGroup) => {
+    setMemberAssignmentModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeMemberAssignmentActionModal = () =>
+    setMemberAssignmentModalIsOpen(false);
+
   // Render row actions in the table component
   const renderRowActions = (rowData: CustomGroup) => {
     return (
@@ -65,7 +76,7 @@ const Index = () => {
         <button
           type="button"
           className="text-white bg-green-400 hover:bg-green-500 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openEditActionModal(rowData)}
+          onClick={() => openMemberAssignmentActionModal(rowData)}
         >
           <i className="bx bx-group"></i>
         </button>
@@ -153,18 +164,18 @@ const Index = () => {
   // Initial zustand state update
   useEffect(() => {
     if (swrIsLoading) {
-      GetCustomGroups(swrIsLoading);
+      GetCustomGroups();
     }
   }, [swrIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrCustomGroups)) {
-      GetCustomGroupsSuccess(swrIsLoading, swrCustomGroups.data);
+      GetCustomGroupsSuccess(swrCustomGroups.data);
     }
 
     if (!isEmpty(swrError)) {
-      GetCustomGroupsFail(swrIsLoading, swrError.message);
+      GetCustomGroupsFail(swrError.message);
     }
   }, [swrCustomGroups, swrError]);
 
@@ -274,6 +285,14 @@ const Index = () => {
             modalState={deleteModalIsOpen}
             setModalState={setDeleteModalIsOpen}
             closeModalAction={closeDeleteActionModal}
+            rowData={currentRowData}
+          />
+
+          {/* Member assignment modal */}
+          <MemberAssignmentModal
+            modalState={memberAssignmentModalIsOpen}
+            setModalState={setMemberAssignmentModalIsOpen}
+            closeModalAction={closeMemberAssignmentActionModal}
             rowData={currentRowData}
           />
         </Can>
