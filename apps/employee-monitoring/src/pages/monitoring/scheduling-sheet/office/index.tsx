@@ -73,12 +73,9 @@ const Schedules: Array<Scheduling> = [
 export default function Index() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { selectedGroupId, setSelectedScheduleId } = useScheduleSheetStore(
-    (state) => ({
-      setSelectedScheduleId: state.setSelectedScheduleId,
-      selectedGroupId: state.selectedGroupId,
-    })
-  );
+  const { setSelectedScheduleId } = useScheduleSheetStore((state) => ({
+    setSelectedScheduleId: state.setSelectedScheduleId,
+  }));
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -212,11 +209,11 @@ export default function Index() {
             },
             {
               layerNo: 2,
-              layerText: 'Station',
+              layerText: 'Office',
               path: '',
             },
           ]}
-          title="Station Scheduling"
+          title="Office Scheduling"
         />
 
         <AddStationSsModal

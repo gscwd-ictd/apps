@@ -11,6 +11,7 @@ import { StyledButton } from '../../modular/buttons/StyledButton';
 import { useRouter } from 'next/router';
 import { FloatingLabelInputRF } from '../../modular/inputs/FloatingLabelInputRF';
 import { usePublicationStore } from '../../../store/publication.store';
+import axios from 'axios';
 
 export const ApplicantForm = () => {
   const router = useRouter();
@@ -24,9 +25,13 @@ export const ApplicantForm = () => {
     // const { checkbox, ...rest } = applicant
 
     setIsLoading(true);
-
+    localStorage.setItem('applicant', JSON.stringify(applicant));
     try {
-      localStorage.setItem('applicant', JSON.stringify(applicant));
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
 
       await router.push(
         `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`

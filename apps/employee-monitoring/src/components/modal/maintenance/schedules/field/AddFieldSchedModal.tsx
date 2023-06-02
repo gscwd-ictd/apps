@@ -75,7 +75,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
       lunchOut: null,
       name: '',
       shift: null,
-      restDays: [],
     },
   });
 
@@ -95,24 +94,18 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
-    PostSchedule(true);
+    PostSchedule();
 
     handlePostResult(sched);
   };
 
   const handlePostResult = async (data: Schedule) => {
-    const { error, result } = await postEmpMonitoring('/schedule', data);
+    const { error, result } = await postEmpMonitoring('/schedules', data);
 
     if (error) {
-      // request is done so set loading to false
-      PostSchedule(false);
-
       // set value for error message
       PostScheduleFail(result);
     } else {
-      // request is done so set loading to false
-      PostSchedule(false);
-
       // set value from returned response
       PostScheduleSuccess(result);
 
@@ -123,11 +116,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
       closeModalAction();
     }
   };
-
-  // watch
-  useEffect(() => {
-    setValue('restDays', useRestDayArrayToNumberArray(selectedRestDays));
-  }, [selectedRestDays]);
 
   // set to defaultValues during open
   useEffect(() => {

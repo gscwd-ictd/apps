@@ -14,13 +14,9 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { createColumnHelper } from '@tanstack/react-table';
 import useSWR from 'swr';
-import EditStationModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/station/EditStationSchedModal';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
 import UseRenderShiftType from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
-import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
-import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
-import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import UseRenderScheduleType from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
@@ -31,12 +27,8 @@ import DeleteStationSchedModal from 'apps/employee-monitoring/src/components/mod
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const setAction = useScheduleStore((state) => state.setAction);
-  const [withLunch, setWithLunch] = useState<boolean>(true);
   const [currentRowData, setCurrentRowData] = useState<Schedule>(
     {} as Schedule
-  );
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
-    []
   );
 
   const {
@@ -67,11 +59,7 @@ export default function Index() {
     EmptyErrors: state.emptyErrors,
   }));
 
-  const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
   const setModalIsOpen = useScheduleStore((state) => state.setModalIsOpen);
-
-  const schedules = useScheduleStore((state) => state.schedules);
-  const setSchedules = useScheduleStore((state) => state.setSchedules);
 
   // use SWR
   const {
@@ -79,7 +67,7 @@ export default function Index() {
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateSchedules,
-  } = useSWR('/schedule?base=Pumping%20Station', fetcherEMS, {
+  } = useSWR('/schedules?base=Pumping%20Station', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -108,21 +96,6 @@ export default function Index() {
 
   // close delete action
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // when edit action is clicked
-  const editAction = async (sched: Schedule, idx: number) => {
-    setAction(ModalActions.UPDATE);
-    setCurrentRowData(sched);
-    setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
-    // loadNewDefaultValues(sched);
-    setModalIsOpen(true);
-  };
-
-  // run this when modal is closed
-  const closeAction = () => {
-    setModalIsOpen(false);
-    // resetToDefaultValues();
-  };
 
   // Render row actions in the table component
   const renderRowActions = (rowData: Schedule) => {
@@ -201,12 +174,7 @@ export default function Index() {
         <div className="w-[6rem]">{UseRenderShiftType(info.getValue())}</div>
       ),
     }),
-    columnHelper.accessor('restDays', {
-      enableSorting: false,
-      header: () => 'Rest Day',
-      cell: (info) =>
-        UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
-    }),
+
     columnHelper.display({
       header: () => 'Actions',
       id: 'actions',
@@ -224,7 +192,7 @@ export default function Index() {
   // Initial zustand state update
   useEffect(() => {
     if (swrIsLoading) {
-      GetSchedules(swrIsLoading);
+      GetSchedules();
     }
   }, [swrIsLoading]);
 
