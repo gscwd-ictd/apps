@@ -11,18 +11,13 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import { Schedule } from '../../../../../../../libs/utils/src/lib/types/schedule.type';
 import React, { useEffect, useState } from 'react';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
-import { SelectOption } from '../../../../../../../libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
-import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { createColumnHelper } from '@tanstack/react-table';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
-import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToArray';
-import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
 import UseRenderScheduleType from 'apps/employee-monitoring/src/utils/functions/RenderScheduleType';
-import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import AddFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/AddFieldSchedModal';
 import UseRenderShiftType from 'apps/employee-monitoring/src/utils/functions/RenderShiftType';
 import EditFieldSchedModal from 'apps/employee-monitoring/src/components/modal/maintenance/schedules/field/EditFieldSchedModal';
@@ -30,13 +25,8 @@ import DeleteFieldSchedModal from 'apps/employee-monitoring/src/components/modal
 
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const setAction = useScheduleStore((state) => state.setAction);
-  const [withLunch, setWithLunch] = useState<boolean>(true);
   const [currentRowData, setCurrentRowData] = useState<Schedule>(
     {} as Schedule
-  );
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
-    []
   );
 
   const {
@@ -67,19 +57,13 @@ export default function Index() {
     EmptyErrors: state.emptyErrors,
   }));
 
-  const modalIsOpen = useScheduleStore((state) => state.modalIsOpen);
-  const setModalIsOpen = useScheduleStore((state) => state.setModalIsOpen);
-
-  const schedules = useScheduleStore((state) => state.schedules);
-  const setSchedules = useScheduleStore((state) => state.setSchedules);
-
   // use SWR
   const {
     data: swrSchedules,
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateSchedules,
-  } = useSWR('/schedule?base=Field', fetcherEMS, {
+  } = useSWR('/schedules?base=Field', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -186,12 +170,7 @@ export default function Index() {
         <div className="w-[6rem]">{UseRenderShiftType(info.getValue())}</div>
       ),
     }),
-    columnHelper.accessor('restDays', {
-      enableSorting: false,
-      header: () => 'Rest Day',
-      cell: (info) =>
-        UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
-    }),
+
     columnHelper.display({
       header: () => 'Actions',
       id: 'actions',
@@ -209,7 +188,7 @@ export default function Index() {
   // Initial zustand state update
   useEffect(() => {
     if (swrIsLoading) {
-      GetSchedules(swrIsLoading);
+      GetSchedules();
     }
   }, [swrIsLoading]);
 

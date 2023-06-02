@@ -27,19 +27,19 @@ export type ScheduleState = {
   loading: LoadingSchedule;
   error: ErrorSchedule;
 
-  getSchedules: (loading: boolean) => void;
+  getSchedules: () => void;
   getSchedulesSuccess: (response: Array<Schedule>) => void;
   getSchedulesFail: (error: string) => void;
 
-  postSchedule: (loading: boolean) => void;
+  postSchedule: () => void;
   postScheduleSuccess: (response: Schedule) => void;
   postScheduleFail: (error: string) => void;
 
-  updateSchedule: (loading: boolean) => void;
+  updateSchedule: () => void;
   updateScheduleSuccess: (response: Schedule) => void;
   updateScheduleFail: (error: string) => void;
 
-  deleteSchedule: (loading: boolean) => void;
+  deleteSchedule: () => void;
   deleteScheduleSuccess: (response: Schedule) => void;
   deleteScheduleFail: (error: string) => void;
 
@@ -67,11 +67,11 @@ export const useScheduleStore = create<ScheduleState>()(
     },
     error: { errorSchedules: '', errorSchedule: '' },
 
-    getSchedules: (loading: boolean) =>
+    getSchedules: () =>
       set((state) => ({
         ...state,
         schedules: [],
-        loading: { ...state.loading, loadingSchedules: loading },
+        loading: { ...state.loading, loadingSchedules: true },
         error: { ...state.error, errorSchedules: '' },
       })),
 
@@ -89,11 +89,11 @@ export const useScheduleStore = create<ScheduleState>()(
         error: { ...state.error, errorSchedules: error },
       })),
 
-    postSchedule: (loading: boolean) =>
+    postSchedule: () =>
       set((state) => ({
         ...state,
         schedule: { ...state.schedule, postResponse: {} as Schedule },
-        loading: { ...state.loading, loadingHoliday: loading },
+        loading: { ...state.loading, loadingHoliday: true },
         error: { ...state.error, errorSchedule: '' },
       })),
 
@@ -111,11 +111,11 @@ export const useScheduleStore = create<ScheduleState>()(
         error: { ...state.error, errorSchedule: error },
       })),
 
-    updateSchedule: (loading: boolean) =>
+    updateSchedule: () =>
       set((state) => ({
         ...state,
         schedule: { ...state.schedule, updateResponse: {} as Schedule },
-        loading: { ...state.loading, loadingSchedule: loading },
+        loading: { ...state.loading, loadingSchedule: true },
         error: { ...state.error, errorSchedule: '' },
       })),
 
@@ -133,11 +133,11 @@ export const useScheduleStore = create<ScheduleState>()(
         error: { ...state.error, errorSchedule: error },
       })),
 
-    deleteSchedule: (loading: boolean) =>
+    deleteSchedule: () =>
       set((state) => ({
         ...state,
         schedule: { ...state.schedule, deleteResponse: {} as Schedule },
-        loading: { ...state.loading, loadingSchedule: loading },
+        loading: { ...state.loading, loadingSchedule: true },
         error: { ...state.error, errorSchedule: '' },
       })),
 

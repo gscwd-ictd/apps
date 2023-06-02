@@ -74,14 +74,9 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
-    // setValue('restDays', sched.restDays);
-    setSelectedRestDays(UseConvertRestDaysToArray(sched.restDays));
   };
 
   const [withLunch, setWithLunch] = useState<boolean>(true);
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
-    []
-  );
 
   const {
     setValue,
@@ -108,24 +103,18 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
-    UpdateSchedule(true);
+    UpdateSchedule();
 
     handleUpdateResult(sched);
   };
 
   const handleUpdateResult = async (data: Schedule) => {
-    const { error, result } = await putEmpMonitoring('/schedule', data);
+    const { error, result } = await putEmpMonitoring('/schedules', data);
 
     if (error) {
-      // request is done so set loading to false
-      UpdateSchedule(false);
-
       // set value for error message
       UpdateScheduleFail(result);
     } else {
-      // request is done so set loading to false
-      UpdateSchedule(false);
-
       // set value from returned response
       UpdateScheduleSuccess(result);
       //   mutate('/holidays');
@@ -154,11 +143,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
       setValue('lunchOut', null);
     }
   }, [withLunch]);
-
-  // watch
-  useEffect(() => {
-    setValue('restDays', UseRestDaysOptionToNumberArray(selectedRestDays));
-  }, [selectedRestDays]);
 
   useEffect(() => {
     if (modalState === true) {
@@ -318,19 +302,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                   errorMessage={errors.shift?.message}
                   disabled={IsLoading ? true : false}
                 />
-
-                {/** Rest Day */}
-                <div className="flex flex-col w-full min-h-[2.25rem]">
-                  <MySelectList
-                    id="scheduleRestDays"
-                    label="Rest Day(s)"
-                    multiple
-                    options={listOfRestDays}
-                    onChange={(o) => setSelectedRestDays(o)}
-                    value={selectedRestDays}
-                    disabled={IsLoading ? true : false}
-                  />
-                </div>
               </div>
             </div>
           </form>
