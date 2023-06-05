@@ -35,34 +35,34 @@ type Item = {
   value: string;
 };
 
-// const typeOfLeave: Array<SelectOption> = [
-//   { label: 'Vacation Leave', value: '585e4746-e09b-4720-80ba-3f059daa2b5e' },
-//   { label: 'Forced Leave', value: '59d3f978-431d-4fbb-8949-19cfd7c5a218' },
-//   { label: 'Sick Leave', value: 'acdf4218-313c-4abc-a884-13f302b322f5' },
-//   { label: 'Maternity Leave', value: 'Maternity Leave_id_235345345' },
-//   { label: 'Paternity Leave', value: 'Paternity Leave_id_235345345' },
-//   {
-//     label: 'Special Privilege Leave',
-//     value: 'Special Privilege Leave_id_235345345',
-//   },
-//   { label: 'Solo Parent Leave', value: 'Solo Parent Leave_id_235345345' },
-//   { label: 'Study Leave', value: 'Study Leave_id_235345345' },
-//   { label: '10-Day VAWC Leave', value: '10-Day VAWC Leave_id_235345345' },
-//   {
-//     label: 'Rehabilitation Privilege',
-//     value: 'Rehabilitation Privilege_id_235345345',
-//   },
-//   {
-//     label: 'Special Leave Benefits for Women',
-//     value: 'Special Leave Benefits for Women_id_235345345',
-//   },
-//   {
-//     label: 'Special Emergency (Calamity) Leave',
-//     value: 'Special Emergency (Calamity) Leave_id_235345345',
-//   },
-//   { label: 'Adoption Leave', value: 'Adoption Leave' },
-//   { label: 'Others', value: 'Others_id_235345345' },
-// ];
+const typeOfLeave: Array<SelectOption> = [
+  { label: 'Vacation Leave', value: '585e4746-e09b-4720-80ba-3f059daa2b5e' },
+  { label: 'Forced Leave', value: '59d3f978-431d-4fbb-8949-19cfd7c5a218' },
+  { label: 'Sick Leave', value: 'acdf4218-313c-4abc-a884-13f302b322f5' },
+  { label: 'Maternity Leave', value: 'Maternity Leave_id_235345345' },
+  { label: 'Paternity Leave', value: 'Paternity Leave_id_235345345' },
+  {
+    label: 'Special Privilege Leave',
+    value: 'Special Privilege Leave_id_235345345',
+  },
+  { label: 'Solo Parent Leave', value: 'Solo Parent Leave_id_235345345' },
+  { label: 'Study Leave', value: 'Study Leave_id_235345345' },
+  { label: '10-Day VAWC Leave', value: '10-Day VAWC Leave_id_235345345' },
+  {
+    label: 'Rehabilitation Privilege',
+    value: 'Rehabilitation Privilege_id_235345345',
+  },
+  {
+    label: 'Special Leave Benefits for Women',
+    value: 'Special Leave Benefits for Women_id_235345345',
+  },
+  {
+    label: 'Special Emergency (Calamity) Leave',
+    value: 'Special Emergency (Calamity) Leave_id_235345345',
+  },
+  { label: 'Adoption Leave', value: 'Adoption Leave' },
+  { label: 'Others', value: 'Others_id_235345345' },
+];
 
 const leaveLocation: Array<SelectOption> = [
   { label: 'Within the Philippines', value: 'Philippines' },
@@ -393,7 +393,7 @@ export const LeaveApplicationModal = ({
   return (
     <>
       <Modal
-        size={`${windowWidth > 768 ? 'xl' : 'full'}`}
+        size={`${windowWidth > 1024 ? 'lg' : 'full'}`}
         open={modalState}
         setOpen={setModalState}
       >
@@ -423,9 +423,9 @@ export const LeaveApplicationModal = ({
           <form id="ApplyLeaveForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
-                <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-col md:flex-row justify-between items-center w-full">
                   <div className="flex flex-row justify-between items-center w-full">
-                    <label className="pt-2 text-slate-500 text-xl font-medium">
+                    <label className="pt-2 text-slate-500 text-md font-medium">
                       Leave Type:
                     </label>
                     {swrIsLoading ? <LoadingSpinner size="xs" /> : null}
@@ -433,7 +433,7 @@ export const LeaveApplicationModal = ({
 
                   <div className="flex gap-2 w-full items-center">
                     <select
-                      className="text-slate-500 w-full h-14 rounded text-lg border-slate-300"
+                      className="text-slate-500 w-full h-14 rounded text-md border-slate-300"
                       required
                       defaultValue={''}
                       onChange={(e) =>
@@ -457,13 +457,13 @@ export const LeaveApplicationModal = ({
                               )
                             )
                           : // typeOfLeave.map((item: Item, index: number) => (
-                            //   <option
-                            //     value={`{"leaveBenefitsId":"${item.value}", "leaveName":"${item.label}"}`}
-                            //     key={index}
-                            //   >
-                            //     {item.label}
-                            //   </option>
-                            // ))
+                            //     <option
+                            //       value={`{"leaveBenefitsId":"${item.value}", "leaveName":"${item.label}"}`}
+                            //       key={index}
+                            //     >
+                            //       {item.label}
+                            //     </option>
+                            //   ))
                             null
                       }
                     </select>
@@ -529,9 +529,9 @@ export const LeaveApplicationModal = ({
                     {/* <label className="-mb-2 text-slate-500 text-xl font-medium w-full">
                       Details of Leave:
                     </label> */}
-                    <div className="flex flex-row justify-between items-center w-full mt-1">
+                    <div className="flex flex-col md:flex-row justify-between items-center w-full mt-1">
                       <div className="flex flex-row justify-between items-center w-full">
-                        <label className="pt-2 text-slate-500 text-xl font-medium">
+                        <label className="pt-2 text-slate-500 text-md font-medium">
                           {watch('typeOfLeaveDetails.leaveName') ===
                             'Vacation Leave' ||
                           watch('typeOfLeaveDetails.leaveName') ===
@@ -557,7 +557,7 @@ export const LeaveApplicationModal = ({
                           <>
                             <select
                               id="inPhilippinesOrAbroad"
-                              className="text-slate-500 w-full h-14 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-14 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('inPhilippinesOrAbroad')}
@@ -579,7 +579,7 @@ export const LeaveApplicationModal = ({
                           <>
                             <select
                               id="hospital"
-                              className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('hospital')}
@@ -601,7 +601,7 @@ export const LeaveApplicationModal = ({
                           <>
                             <select
                               id="study"
-                              className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
                               // {...register('study')}
@@ -625,7 +625,7 @@ export const LeaveApplicationModal = ({
                           <>
                             <select
                               id="others"
-                              className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('other')}
@@ -648,7 +648,7 @@ export const LeaveApplicationModal = ({
                     watch('other') === 'Monetization of Leave Credits' ? (
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-row justify-between items-center w-full">
-                          <label className="pt-2 text-slate-500 text-xl font-medium">
+                          <label className="pt-2 text-slate-500 text-md font-medium">
                             Commutation
                           </label>
                         </div>
@@ -659,7 +659,7 @@ export const LeaveApplicationModal = ({
                             <div className="w-full">
                               <select
                                 id="commutation"
-                                className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                                className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                                 required
                                 defaultValue={''}
                                 {...register('commutation')}
@@ -723,7 +723,7 @@ export const LeaveApplicationModal = ({
                             ? 'Specify Study Leave Purpose'
                             : 'Specify Leave Details'
                         }`}
-                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-lg border-slate-300"
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                       ></textarea>
                     ) : null}
                   </>
@@ -731,7 +731,7 @@ export const LeaveApplicationModal = ({
 
                 {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
-                    <label className="pt-2 text-slate-500 text-xl font-medium">
+                    <label className="pt-2 text-slate-500 text-md font-medium">
                       Select Leave Dates:
                     </label>
                     {/* Notifications */}
@@ -823,7 +823,7 @@ export const LeaveApplicationModal = ({
                 ) : null}
 
                 <div className="w-full pb-4">
-                  <span className="text-slate-500 text-xl font-medium">
+                  <span className="text-slate-500 text-md font-medium">
                     Your current Leave Credits:
                   </span>
                   <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">

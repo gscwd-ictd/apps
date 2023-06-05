@@ -119,12 +119,12 @@ export const LeavePendingModal = ({
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                         Leave Type:
                       </label>
 
                       <div className="w-96 ">
-                        <label className="text-slate-500 w-full text-lg ">
+                        <label className="text-slate-500 w-full text-md ">
                           {
                             leaveIndividualDetail.leaveApplicationBasicInfo
                               ?.leaveName
@@ -138,7 +138,7 @@ export const LeavePendingModal = ({
                     ?.leaveName ? (
                     <>
                       <div className="flex flex-row justify-between items-center w-full">
-                        <label className="text-slate-500 text-lg font-medium">
+                        <label className="text-slate-500 text-md font-medium">
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Vacation Leave' ||
                           leaveIndividualDetail.leaveApplicationBasicInfo
@@ -161,7 +161,7 @@ export const LeavePendingModal = ({
                             .leaveName === 'Vacation Leave' ||
                           leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Special Privilege Leave' ? (
-                            <div className="text-slate-500 w-full text-lg">
+                            <div className="text-slate-500 w-full text-md">
                               {
                                 leaveIndividualDetail.leaveApplicationDetails
                                   .inPhilippinesOrAbroad
@@ -172,7 +172,7 @@ export const LeavePendingModal = ({
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Sick Leave' ? (
                             <>
-                              <div className="text-slate-500 w-full text-lg">
+                              <div className="text-slate-500 w-full text-md">
                                 {
                                   leaveIndividualDetail.leaveApplicationDetails
                                     .hospital
@@ -184,7 +184,7 @@ export const LeavePendingModal = ({
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Study Leave' ? (
                             <>
-                              <div className="text-slate-500 w-full text-lg">
+                              <div className="text-slate-500 w-full text-md">
                                 {leaveIndividualDetail.leaveApplicationDetails
                                   .forBarBoardReview === '1'
                                   ? 'For BAR/Board Examination Review '
@@ -201,12 +201,12 @@ export const LeavePendingModal = ({
 
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                          <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                             Leave Dates:
                           </label>
 
                           <div className="w-full md:w-96 ">
-                            <label className="text-slate-500 w-full text-lg ">
+                            <label className="text-slate-500 w-full text-md ">
                               {leaveIndividualDetail.leaveApplicationBasicInfo
                                 .leaveName === 'Maternity Leave' ||
                               leaveIndividualDetail.leaveApplicationBasicInfo
@@ -283,14 +283,14 @@ export const LeavePendingModal = ({
                           .studyLeaveOther) ? (
                         <div className="flex flex-col justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
-                            <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                            <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                               Specific Details:
                             </label>
                           </div>
                           <textarea
                             disabled
                             rows={2}
-                            className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-lg border-slate-300"
+                            className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                             value={
                               leaveIndividualDetail.leaveApplicationBasicInfo
                                 .leaveName === 'Vacation Leave' ||
@@ -324,7 +324,7 @@ export const LeavePendingModal = ({
                   ) : null}
 
                   <div className="w-full pb-4">
-                    <span className="text-slate-500 text-xl font-medium">
+                    <span className="text-slate-500 text-md font-medium">
                       Your current Leave Credits:
                     </span>
                     <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">

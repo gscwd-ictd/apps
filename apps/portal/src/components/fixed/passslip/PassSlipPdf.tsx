@@ -12,6 +12,7 @@ import {
 import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import React, { useEffect, useState } from 'react';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
+import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({
   page: {
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
 
 type PassSlipPdfProps = {
   employeeDetails: EmployeeDetails;
-  passSlipDetails: PassSlip;
+  passSlipDetails: Array<PassSlip>;
 };
 
 export const PassSlipPdf = ({
@@ -101,6 +102,7 @@ export const PassSlipPdf = ({
 
   useEffect(() => {
     setIsClient(true);
+    console.log(passSlipDetails, 'test');
   }, []);
 
   return (
@@ -143,7 +145,7 @@ export const PassSlipPdf = ({
                       marginTop: 10,
                     }}
                   >
-                    {passSlipDetails.createdAt}
+                    {dayjs(passSlipDetails[0]?.createdAt).format('MM-DD-YYYY')}
                   </Text>
                   <Text>DEPARTMENT: _________________</Text>
                   <Text
@@ -180,7 +182,7 @@ export const PassSlipPdf = ({
                       }}
                     >
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness ===
+                        {passSlipDetails[0]?.natureOfBusiness ===
                         'Personal Business'
                           ? 'X'
                           : null}
@@ -189,7 +191,7 @@ export const PassSlipPdf = ({
                     </View>
                     <View style={styles.checkboxLabelFlex}>
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness === 'Half Day'
+                        {passSlipDetails[0]?.natureOfBusiness === 'Half Day'
                           ? 'X'
                           : null}
                       </Text>
@@ -197,7 +199,7 @@ export const PassSlipPdf = ({
                     </View>
                     <View style={styles.checkboxLabelFlex}>
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness === 'Undertime'
+                        {passSlipDetails[0]?.natureOfBusiness === 'Undertime'
                           ? 'X'
                           : null}
                       </Text>
@@ -225,7 +227,7 @@ export const PassSlipPdf = ({
                       }}
                     >
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness ===
+                        {passSlipDetails[0]?.natureOfBusiness ===
                         'Official Business'
                           ? 'X'
                           : null}
@@ -242,7 +244,8 @@ export const PassSlipPdf = ({
                     <View style={styles.checkboxFlex}>
                       <View style={styles.checkboxLabelFlex}>
                         <Text style={styles.checkbox}>
-                          {passSlipDetails.obTransportation === 'Office Vehicle'
+                          {passSlipDetails[0]?.obTransportation ===
+                          'Office Vehicle'
                             ? 'X'
                             : null}
                         </Text>
@@ -250,7 +253,7 @@ export const PassSlipPdf = ({
                       </View>
                       <View style={styles.checkboxLabelFlex}>
                         <Text style={styles.checkbox}>
-                          {passSlipDetails.obTransportation ===
+                          {passSlipDetails[0]?.obTransportation ===
                           'Private/Personal Vehicle'
                             ? 'X'
                             : null}
@@ -259,7 +262,8 @@ export const PassSlipPdf = ({
                       </View>
                       <View style={styles.checkboxLabelFlex}>
                         <Text style={styles.checkbox}>
-                          {passSlipDetails.obTransportation === 'Public Vehicle'
+                          {passSlipDetails[0]?.obTransportation ===
+                          'Public Vehicle'
                             ? 'X'
                             : null}
                         </Text>
@@ -277,7 +281,7 @@ export const PassSlipPdf = ({
                       fontSize: 10,
                     }}
                   >
-                    {passSlipDetails.estimateHours}
+                    {passSlipDetails[0]?.estimateHours}
                   </Text>
                   <Text
                     style={{
@@ -307,7 +311,7 @@ export const PassSlipPdf = ({
                       Almera and will pimp it to have jet boosters. I will also
                       install Trans Am system and install Quantum Burst System
                       and Shield Bits and Ultra Magnetic Tops. */}
-                      {passSlipDetails.purposeDestination}
+                      {passSlipDetails[0]?.purposeDestination}
                     </Text>
                   </View>
                 </View>
@@ -338,7 +342,7 @@ export const PassSlipPdf = ({
                         fontSize: 9,
                       }}
                     >
-                      {passSlipDetails.supervisorName}
+                      {passSlipDetails[0]?.supervisorName}
                     </Text>
                     <Text style={{ marginTop: 7 }}>
                       _____________________________
@@ -346,7 +350,7 @@ export const PassSlipPdf = ({
                     <Text>Department Manager / Supervisor</Text>
                   </View>
                   <View style={styles.flexColumnJustifyBetween}>
-                    <Text>X</Text>
+                    {/* <Text>X</Text> */}
                   </View>
                 </View>
               </View>

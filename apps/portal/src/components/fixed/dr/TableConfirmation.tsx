@@ -20,9 +20,9 @@ export const TableConfirmation = ({ array }: TableConfirmationProps) => {
               <div className="w-[40%] ">
                 <p className="w-full pr-1"> {dr.description}</p>
               </div>
-              <div className="w-[5%]">{dr.competency.code}</div>
+              <div className="w-[8%]">{dr.competency.code}</div>
               <div className="w-[20%]">{dr.competency.name}</div>
-              <div className="w-[15%] flex justify-center">
+              <div className="w-[12%] flex justify-center">
                 {dr.competency.level}
               </div>
               <div className="flex flex-row items-center justify-center w-[15%]">

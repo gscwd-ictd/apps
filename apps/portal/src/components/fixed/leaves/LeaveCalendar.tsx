@@ -178,41 +178,51 @@ export default function Calendar({
   return (
     <>
       {type === 'range' ? (
-        <div className="flex flex-row gap-2 items-center">
-          <label className="text-slate-500 text-lg border-slate-300">
-            From
-          </label>
-          <input
-            required
-            type="date"
-            className="text-slate-500 text-lg border-slate-300"
-            onChange={(e) =>
-              setLeaveDateFrom(e.target.value as unknown as string)
-            }
-          />
-          <label className="text-slate-500 text-lg border-slate-300">To</label>
-          <input
-            required
-            type="date"
-            className="text-slate-500 text-lg border-slate-300"
-            onChange={(e) =>
-              setLeaveDateTo(e.target.value as unknown as string)
-            }
-          />
-          <label className="text-slate-500 text-md border-slate-300">
+        <div className="flex flex-col md:flex-row gap-2 items-center">
+          <div className="flex gap-2 md:w-[30%] items-center">
+            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">
+              From
+            </label>
+            <input
+              required
+              type="date"
+              className="text-slate-500 text-md border-slate-300"
+              onChange={(e) =>
+                setLeaveDateFrom(e.target.value as unknown as string)
+              }
+            />
+          </div>
+
+          <div className="flex gap-2 md:w-[30%] items-center">
+            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">
+              To
+            </label>
+            <input
+              required
+              type="date"
+              className="text-slate-500 text-md border-slate-300"
+              onChange={(e) =>
+                setLeaveDateTo(e.target.value as unknown as string)
+              }
+            />
+          </div>
+
+          <label className="text-center text-slate-500 text-md border-slate-300">
             ={' '}
             {leaveDateFrom && leaveDateTo
               ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1
               : 0}{' '}
             Calendar Day(s) - {holidayCount} Holiday(s) -{' '}
             {overlappingLeaveCount} Overlapping Leave(s) ={' '}
-            {leaveDateFrom && leaveDateTo
-              ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') +
-                1 -
-                holidayCount -
-                overlappingLeaveCount
-              : 0}{' '}
-            Leave Day(s)
+            <label className="font-bold">
+              {leaveDateFrom && leaveDateTo
+                ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') +
+                  1 -
+                  holidayCount -
+                  overlappingLeaveCount
+                : 0}{' '}
+              Leave Day(s)
+            </label>
           </label>
         </div>
       ) : (
