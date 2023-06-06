@@ -325,7 +325,7 @@ export const DrcModalSetting = () => {
               )}
             </div>
             {/**Core Duties Box */}
-            <div className="w-full  mt-2 mb-5 h-[14rem]  bg-slate-50 rounded  overflow-y-scroll overflow-x-hidden">
+            <div className="w-full  mt-2 mb-5 h-[14rem]  bg-slate-50 rounded  overflow-y-scroll overflow-x-auto">
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected core duties & responsibilities</h1> */}
                 {swrExistingDnrsIsLoading ? (
@@ -376,7 +376,7 @@ export const DrcModalSetting = () => {
               )}
             </div>
             {/** Support Duties Box */}
-            <div className="w-full mt-2 mb-5 h-[14rem] bg-slate-50 rounded  overflow-y-scroll overflow-x-hidden">
+            <div className="w-full mt-2 mb-5 h-[14rem] bg-slate-50 rounded  overflow-y-scroll overflow-x-auto">
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected support duties & responsibilities</h1> */}
                 {swrExistingDnrsIsLoading ? (

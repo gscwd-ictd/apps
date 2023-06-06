@@ -123,7 +123,7 @@ export default function Dashboard({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
-      console.log(swrFaceScan);
+      // console.log(swrFaceScan);
       getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
     }
 
@@ -172,7 +172,7 @@ export default function Dashboard({
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 px-4">
-                <div className="col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
+                <div className="h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
                   <Carousel />
                 </div>
 
