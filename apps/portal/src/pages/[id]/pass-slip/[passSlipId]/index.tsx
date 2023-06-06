@@ -10,59 +10,87 @@ import React, { useEffect } from 'react';
 import { PassSlipPdf } from '../../../../components/fixed/passslip/PassSlipPdf';
 import { employeeDummy } from '../../../../../src/types/employee.type';
 import { useLeaveStore } from '../../../../../src/store/leave.store';
+import useSWR from 'swr';
+import { fetchWithToken } from '../../../../../src/utils/hoc/fetcher';
+import { useRouter } from 'next/router';
+import { isEmpty } from 'lodash';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 export default function PassSlipPage({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { passSlip } = usePassSlipStore((state) => ({
-    passSlip: state.passSlip,
+  const {
+    passSlip,
+    loading,
+    errorPassSlips,
+    getPassSlipList,
+    getPassSlipListSuccess,
+    getPassSlipListFail,
+    emptyResponseAndError,
+  } = usePassSlipStore((state) => ({
+    passSlip: state.passSlips,
+    loading: state.loading.loadingPassSlips,
+    errorPassSlips: state.error.errorPassSlips,
+
+    getPassSlipList: state.getPassSlipList,
+    getPassSlipListSuccess: state.getPassSlipListSuccess,
+    getPassSlipListFail: state.getPassSlipListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const router = useRouter();
+
+  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
-    leaveIndividualDetail,
-    leaveId,
-    loadingLeaveDetails,
-    errorLeaveDetails,
-    completedLeaveModalIsOpen,
+    data: swrPassSlipDetailsPdf,
+    isLoading: swrIsLoading,
+    error: swrError,
+    mutate: mutatePassSlips,
+  } = useSWR(passSlipUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
-    setLeaveId,
-    getLeaveIndividualDetail,
-    getLeaveIndividualDetailSuccess,
-    getLeaveIndividualDetailFail,
-  } = useLeaveStore((state) => ({
-    leaveIndividualDetail: state.leaveIndividualDetail,
-    leaveId: state.leaveId,
-    loadingLeaveDetails: state.loading.loadingIndividualLeave,
-    errorLeaveDetails: state.error.errorIndividualLeave,
-    completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoading) {
+      getPassSlipList(swrIsLoading);
+    }
+  }, [swrIsLoading]);
 
-    setLeaveId: state.setLeaveId,
-    getLeaveIndividualDetail: state.getLeaveIndividualDetail,
-    getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
-    getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
-  }));
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPassSlipDetailsPdf)) {
+      getPassSlipListSuccess(swrIsLoading, swrPassSlipDetailsPdf);
+    }
 
-  // const passSlipDetailPdf = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.passSlipId}`;
-  // const {
-  //   data: swrPassSlipDetailsPdf,
-  //   isLoading: swrIsLoading,
-  //   error: swrError,
-  // } = useSWR(passSlipDetailPdf, fetchWithToken, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
+    if (!isEmpty(swrError)) {
+      getPassSlipListFail(swrIsLoading, swrError.message);
+    }
+  }, [swrPassSlipDetailsPdf, swrError]);
 
   return (
-    employeeDetails && (
+    employeeDetails &&
+    passSlip && (
       <>
+        {/* Pass Slip List Load Failed Error */}
+        {!isEmpty(errorPassSlips) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorPassSlips}: Failed to load Pass Slip data.`}
+          />
+        ) : null}
         <Head>
           <title>Employee Pass Slips</title>
         </Head>
         <PassSlipPdf
           employeeDetails={employeeDetails}
-          passSlipDetails={passSlip}
+          passSlipDetails={passSlip.completed.filter(
+            (passSlip) => passSlip.id === router.query.passSlipId
+          )}
         />
-        ;
       </>
     )
   );

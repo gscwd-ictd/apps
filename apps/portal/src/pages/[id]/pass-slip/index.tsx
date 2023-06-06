@@ -133,6 +133,7 @@ export default function PassSlip({
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
+      console.log(swrPassSlips);
     }
 
     if (!isEmpty(swrError)) {
