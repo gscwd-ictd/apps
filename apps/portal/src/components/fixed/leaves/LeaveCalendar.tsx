@@ -207,7 +207,7 @@ export default function Calendar({
             />
           </div>
 
-          <label className="text-center text-slate-500 text-md border-slate-300">
+          <label className="text-center text-slate-500 text-sm border-slate-300">
             ={' '}
             {leaveDateFrom && leaveDateTo
               ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1
