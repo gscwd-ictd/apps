@@ -276,7 +276,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
           <h1 className="text-2xl font-medium">Add Field Scheduling Sheet</h1>
         </Modal.Header>
         <Modal.Body>
-          <>
+          <div className="sm:px-0 md:px-0 lg:px-4">
             <SelectGroupSsModal
               modalState={selectGroupModalIsOpen}
               setModalState={setSelectGroupModalIsOpen}
@@ -440,7 +440,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                 <SelectedEmployeesSsTable />
               </section>
             </form>
-          </>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end w-full gap-2">
