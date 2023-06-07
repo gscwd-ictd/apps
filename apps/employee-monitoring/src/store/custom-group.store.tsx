@@ -396,6 +396,14 @@ export const useCustomGroupStore = create<CustomGroupState>()(
           updateResponse: {} as CustomGroup,
           deleteResponse: {} as CustomGroupId,
         },
+        toAssignMembers: [],
+        toUnassignMembers: [],
+        members: {
+          assignResponse: {} as CustomGroupMembers,
+          unassignResponse: {} as CustomGroupMembers,
+        },
+        isRowsSelected: true,
+        isOptionSelected: true,
         error: {
           ...state.error,
           errorCustomGroups: '',
