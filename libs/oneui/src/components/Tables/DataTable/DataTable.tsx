@@ -25,7 +25,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
         {showGlobalFilter ? <GlobalFilter model={model} /> : null}
       </div>
 
-      <div className="order-3 w-full py-5 search-box-wrapper">
+      <div className="order-3 w-full py-5 column-filter-box-wrapper">
         {showColumnFilter ? (
           <>
             <p className="pb-1 text-xs">Filters:</p>
@@ -104,31 +104,42 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
           </thead>
 
           <tbody>
-            {hydrating
-              ? 'Loading data...'
-              : model?.getRowModel().rows.map((row) => {
-                  return (
-                    <tr
-                      key={row.id}
-                      onClick={onRowClick ? () => onRowClick(row) : () => null}
-                      className="cursor-pointer odd:bg-slate-50 hover:bg-slate-100"
-                    >
-                      {row.getVisibleCells().map((cell) => {
-                        return (
-                          <td
-                            key={cell.id}
-                            className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
+            {hydrating ? (
+              'Loading data...'
+            ) : model?.getRowModel().rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={model?.getAllColumns().length}
+                  className="text-center text-xs py-5 text-gray-500"
+                >
+                  --- No Data ---
+                </td>
+              </tr>
+            ) : (
+              model?.getRowModel().rows.map((row) => {
+                return (
+                  <tr
+                    key={row.id}
+                    onClick={onRowClick ? () => onRowClick(row) : () => null}
+                    className="cursor-pointer odd:bg-slate-50 hover:bg-slate-100"
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <td
+                          key={cell.id}
+                          className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
 
