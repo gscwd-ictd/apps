@@ -95,7 +95,7 @@ const AppEndModal: FunctionComponent = () => {
       <Modal.Header>
         <div className="flex w-full px-5 justifty-between">
           <div>
-            <h3 className="text-xl font-semibold text-gray-700">
+            <h3 className="text-xl md:text-2xl font-semibold text-gray-700">
               {modal.page === 1
                 ? 'Applicant Endorsement'
                 : modal.page === 2

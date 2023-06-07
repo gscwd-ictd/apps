@@ -398,9 +398,9 @@ export const LeaveApplicationModal = ({
         setOpen={setModalState}
       >
         <Modal.Header>
-          <h3 className="font-semibold text-2xl text-gray-700">
+          <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Leave Applicattion</span>
+              <span className="text-xl md:text-2xl">Leave Applicattion</span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}
@@ -423,7 +423,7 @@ export const LeaveApplicationModal = ({
           <form id="ApplyLeaveForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
-                <div className="flex flex-col md:flex-row justify-between items-center w-full">
+                <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1">
                   <div className="flex flex-row justify-between items-center w-full">
                     <label className="pt-2 text-slate-500 text-md font-medium">
                       Leave Type:
@@ -472,7 +472,7 @@ export const LeaveApplicationModal = ({
 
                 <div>
                   {watch('typeOfLeaveDetails.leaveName') ? (
-                    <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">
+                    <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2">
                       <span className="font-bold">
                         {watch('typeOfLeaveDetails.leaveName')}
                       </span>
@@ -529,7 +529,7 @@ export const LeaveApplicationModal = ({
                     {/* <label className="-mb-2 text-slate-500 text-xl font-medium w-full">
                       Details of Leave:
                     </label> */}
-                    <div className="flex flex-col md:flex-row justify-between items-center w-full mt-1">
+                    <div className="flex flex-col md:flex-row justify-between items-center w-full">
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="pt-2 text-slate-500 text-md font-medium">
                           {watch('typeOfLeaveDetails.leaveName') ===
@@ -731,7 +731,7 @@ export const LeaveApplicationModal = ({
 
                 {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
-                    <label className="pt-2 text-slate-500 text-md font-medium">
+                    <label className="text-slate-500 text-md font-medium">
                       Select Leave Dates:
                     </label>
                     {/* Notifications */}
@@ -822,7 +822,7 @@ export const LeaveApplicationModal = ({
                   </>
                 ) : null}
 
-                <div className="w-full pb-4">
+                <div className="w-full pb-4 pt-2">
                   <span className="text-slate-500 text-md font-medium">
                     Your current Leave Credits:
                   </span>
