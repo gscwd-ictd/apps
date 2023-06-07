@@ -36,6 +36,10 @@ export type PassSlipState = {
   getPassSlipListSuccess: (loading: boolean, response) => void;
   getPassSlipListFail: (loading: boolean, error: string) => void;
 
+  deletePassSlip: (loading: boolean) => void;
+  deletePassSlipSuccess: (response) => void;
+  deletePassSlipFail: (error: string) => void;
+
   postPassSlipList: () => void;
   postPassSlipListSuccess: (response: PassSlip) => void;
   postPassSlipListFail: (error: string) => void;
@@ -188,6 +192,51 @@ export const usePassSlipStore = create<PassSlipState>()(
       }));
     },
     postPassSlipListFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
+    //DELETE PASS SLIP ACTIONS
+    deletePassSlip: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          deleteResponseCancel: {} as PassSlipId,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    deletePassSlipSuccess: (response: PassSlipId) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          deleteResponseCancel: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    deletePassSlipFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {

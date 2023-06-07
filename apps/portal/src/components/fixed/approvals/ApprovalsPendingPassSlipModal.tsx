@@ -77,9 +77,11 @@ export const ApprovalsPendingPassSlipModal = ({
         setOpen={setModalState}
       >
         <Modal.Header>
-          <h3 className="font-semibold text-2xl text-gray-700">
+          <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Pass Slip for Approval</span>
+              <span className="text-xl md:text-2xl">
+                Pass Slip for Approval
+              </span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}

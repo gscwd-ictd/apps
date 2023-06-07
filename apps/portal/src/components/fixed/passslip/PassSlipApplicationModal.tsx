@@ -126,9 +126,11 @@ export const PassSlipApplicationModal = ({
         setOpen={setModalState}
       >
         <Modal.Header>
-          <h3 className="font-semibold text-2xl text-gray-700">
+          <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Pass Slip Authorization</span>
+              <span className="text-xl md:text-2xl">
+                Pass Slip Authorization
+              </span>
               <button
                 className="hover:bg-slate-100 px-1 rounded-full"
                 onClick={closeModalAction}
@@ -150,7 +152,7 @@ export const PassSlipApplicationModal = ({
           ) : null}
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
-              <div className="w-full flex flex-col gap-2 p-4 rounded">
+              <div className="w-full flex flex-col gap-3 p-4 rounded">
                 <div className="w-full flex gap-2 justify-start items-center">
                   <span className="text-slate-500 text-md font-medium">
                     Date:
@@ -159,7 +161,7 @@ export const PassSlipApplicationModal = ({
                 </div>
 
                 <div
-                  className={`md:flex-row lg:items-center flex-col items-start flex gap-4 justify-between `}
+                  className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between `}
                 >
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                     Select Nature of Business:
@@ -188,7 +190,7 @@ export const PassSlipApplicationModal = ({
                 {watch('natureOfBusiness') === 'Official Business' ? (
                   <>
                     <div
-                      className={`md:flex-row lg:items-center flex-col items-start flex gap-3 justify-between`}
+                      className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
                     >
                       <label className="text-slate-500 text-md whitespace-nowrap font-medium">
                         Select Mode of Transportation:
@@ -221,7 +223,7 @@ export const PassSlipApplicationModal = ({
                   <>
                     <div className="flex flex-col gap-2">
                       <div
-                        className={`md:flex-row lg:items-center flex-col items-start flex gap-3 justify-between`}
+                        className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
                       >
                         <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                           Estimated Hours:
@@ -253,7 +255,7 @@ export const PassSlipApplicationModal = ({
 
                 {watch('natureOfBusiness') ? (
                   <>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-0 md:gap-2">
                       <label className="text-slate-500 text-md font-medium">
                         Purpose/Desination:
                         <span className="text-red-600">*</span>

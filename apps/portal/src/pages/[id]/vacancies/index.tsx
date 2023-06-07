@@ -337,10 +337,10 @@ export default function Vacancies({
             <Modal.Header>
               <div className="flex items-start justify-between px-2">
                 <div className="flex flex-col">
-                  <label className="text-2xl font-semibold text-gray-700">
+                  <label className="text-xl md:text-2xl font-semibold text-gray-700">
                     {messageContent?.positionTitle}
                   </label>
-                  <p>{messageContent?.placeOfAssignment}</p>
+                  <p className="text-md">{messageContent?.placeOfAssignment}</p>
                 </div>
 
                 <button

@@ -20,3 +20,9 @@ export type CustomGroupWithMembers = { customGroupDetails: CustomGroup } & {
 export type MutatedCgwmSelectOption = SelectOption & {
   members: Array<EmployeeAsOptionWithPosition>;
 };
+
+// Member assignment/unassignment body
+export type CustomGroupMembers = {
+  customGroupId: string;
+  employeeIds: Array<string>;
+};
