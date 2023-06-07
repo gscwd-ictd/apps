@@ -93,7 +93,7 @@ export const useScheduleStore = create<ScheduleState>()(
       set((state) => ({
         ...state,
         schedule: { ...state.schedule, postResponse: {} as Schedule },
-        loading: { ...state.loading, loadingHoliday: true },
+        loading: { ...state.loading, loadingSchedule: true },
         error: { ...state.error, errorSchedule: '' },
       })),
 

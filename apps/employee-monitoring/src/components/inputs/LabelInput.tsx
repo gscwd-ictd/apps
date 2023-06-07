@@ -59,6 +59,7 @@ export const LabelInput: FunctionComponent<
           id={id}
           readOnly={disabled}
           disabled={disabled}
+          type={type}
           {...controller}
           className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
             isError

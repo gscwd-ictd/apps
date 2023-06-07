@@ -54,6 +54,11 @@ export type CustomGroupState = {
   deleteCustomGroupFail: (error: string) => void;
 
   emptyResponse: () => void;
+
+  selectedCustomGroupWithMembers: CustomGroupWithMembers;
+  setSelectedCustomGroupWithMembers: (
+    selectedCustomGroupWithMembers: CustomGroupWithMembers
+  ) => void;
 };
 
 export const useCustomGroupStore = create<CustomGroupState>()(
@@ -200,11 +205,20 @@ export const useCustomGroupStore = create<CustomGroupState>()(
           updateResponse: {} as CustomGroup,
           deleteResponse: {} as CustomGroupId,
         },
+        customGroupWithMembers: {} as CustomGroupWithMembers,
         error: {
           ...state.error,
           errorCustomGroups: '',
           errorCustomGroup: '',
         },
       })),
+
+    // local selected custom group
+    selectedCustomGroupWithMembers: {} as CustomGroupWithMembers,
+
+    // set local selected custom group
+    setSelectedCustomGroupWithMembers: (
+      selectedCustomGroupWithMembers: CustomGroupWithMembers
+    ) => set((state) => ({ ...state, selectedCustomGroupWithMembers })),
   }))
 );

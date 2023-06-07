@@ -33,3 +33,18 @@ export type EmployeeAsOptionWithPosition = Pick<
   'employeeId' | 'positionTitle'
 > &
   Pick<PersonalDetails, 'fullName'>;
+
+export type EmployeeAsOptionWithRestDays = Pick<
+  EmploymentDetails,
+  'employeeId' | 'positionTitle'
+> &
+  Pick<PersonalDetails, 'fullName'> & { restDays: Array<string> };
+
+export type EmployeeAsOptionWithRestDaysN = Pick<
+  EmploymentDetails,
+  'employeeId' | 'positionTitle' | 'companyId'
+> &
+  Pick<PersonalDetails, 'fullName'> & {
+    restDays: Array<number>;
+    assignment: string;
+  };
