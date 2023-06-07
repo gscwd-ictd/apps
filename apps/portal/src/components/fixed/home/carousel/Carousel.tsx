@@ -56,20 +56,21 @@ export default function Carousel() {
         <div className="keen-slider__slide number-slide1 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              GSIS Touch
+              {`Men's Month`}
             </label>
-            <label className="text-sm text-slate-500 text-justify">
-              To the employees who have not created their GSIS Touch Account,
-              please install and create an account now. This is for your
-              convenience in applying for loan and in viewing your member
-              record. In case you have trouble creating your account, please
-              approach us in the HR office so we can assist you. Deadline is
-              until Tuesday, May 9.
+            <label className="hidden lg:block text-sm text-slate-500 text-justify">
+              {`Shout out to all men out there who despite all odds and obstacles,
+              paved the way for themselves in the over-ambitious world. May you
+              get more strength and love. Thank you to all your contributions to
+              the community. We appreciate all the positive values you bring to
+              the world, to your families and to your office colleagues. Happy
+              Men's Month! `}
             </label>
+
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
-                href="https://www.facebook.com/gensanwd/posts/pfbid02FusT4yT54SKdne2Y8oUBmiEECwktdhaYJBsHHRYP4UE1Jz8fwencj43dwRNtndTDl"
+                href="https://www.facebook.com/gensanwd/posts/pfbid02NWfndy2GRDYeFWJR6XADqWGsobLun5GkDv8rZ1sKuxnJ2cKJuS82jNcas8hqexQhl"
               >
                 Read More
               </a>
@@ -80,15 +81,17 @@ export default function Carousel() {
         <div className="keen-slider__slide number-slide2 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              Congratulations
+              {`Men's Month Schedule of Activities`}
             </label>
-            <label className="text-sm text-slate-500 text-justify">
-              {`Congratulations to our newly hired Job Order Employees!`}
+
+            <label className="hidden lg:block text-sm text-slate-500 text-justify">
+              {`In celebration of Men's Month, here are the schedule of activities for June 2023.`}
             </label>
+
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
-                href="https://www.facebook.com/gensanwd/posts/pfbid0awsoJxxwP91amUDka3UAP59VsF9eVAFUh2PcN4Ti6wzVpGgmtbeXMeXXBCwZRw3Kl"
+                href="https://www.facebook.com/gensanwd/posts/pfbid02NWfndy2GRDYeFWJR6XADqWGsobLun5GkDv8rZ1sKuxnJ2cKJuS82jNcas8hqexQhl"
               >
                 Read More
               </a>
@@ -99,25 +102,55 @@ export default function Carousel() {
         <div className="keen-slider__slide number-slide1 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              Month of May Birthday Celebrants
+              Month of June Birthday Celebrants
             </label>
-            <label className="text-sm text-slate-500 text-justify">
-              {`Happy Birthday to all May Celebrants! Here's a short poem for you!
-              Unforgettable Birthday I'm wishing you a birthday You never will
-              forget, A day packed full of pleasure, Your very best birthday
-              yet. And when your birthday's over, I'm wishing quite sincerely
-              That happiness and joy and fun Will fill your birthdays yearly! By
-              Joanna Fuchs`}
+
+            <label className="hidden lg:block text-sm text-slate-500 text-justify">
+              {`Happy Birthday to all June Celebrants! Here's a short poem for you!
+                THE VERY BEST
+                Happy Birthday!
+                You deserve the very best,
+                All the special things in life,
+                Whatever makes you happy,
+                Whatever feels just right.
+                I want these gifts to be yours,
+                Each and every day,
+                To them, I add love and peace,
+                Above all on your birthday.
+                -Kevin Nishmas`}
             </label>
+
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
-                href="https://www.facebook.com/gensanwd/videos/189948873930324"
+                href="https://www.facebook.com/gensanwd/videos/568114448560257"
               >
                 Read More
               </a>
             </label>
             <img className="w-100 h-100" src="/03.jpg"></img>
+          </div>
+        </div>
+        <div className="keen-slider__slide number-slide1 w-screen h-screen">
+          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
+            <label className="text-lg text-slate-600 uppercase">
+              {`Artemio Quimay's Retirement`}
+            </label>
+
+            <label className="hidden lg:block text-sm text-slate-500 text-justify">
+              {`Mr. Quimay served for 11 years as Water Maintenance Man under the Water Distribution  and Restoration Division. 
+                Effective June 6, he will finally leave the district and vow to devote most of his time to his family according to him. `}
+            </label>
+
+            <label className="text-right text-sm text-slate-500 cursor-pointer">
+              <a
+                target="blank"
+                href="https://www.facebook.com/gensanwd/posts/pfbid0oJy75ZRNKGzq7XooRYshrTnMvzLeNB3HADdzUXGQksPAVwNohzHB1DeQH14oDapGl"
+              >
+                Read More
+              </a>
+            </label>
+            <img className="w-100 h-100" src="/04.jpg"></img>
           </div>
         </div>
       </div>
