@@ -9,6 +9,12 @@ export type CustomGroup = {
 
 export type CustomGroupId = Pick<CustomGroup, 'id'>;
 
-export type CustomGroupWithMembers = CustomGroup & {
+export type CustomGroupWithMembers = { customGroupDetails: CustomGroup } & {
   members: Array<EmployeeAsOptionWithPosition>;
+};
+
+// Member assignment/unassignment body
+export type CustomGroupMembers = {
+  customGroupId: string;
+  employeeIds: Array<string>;
 };

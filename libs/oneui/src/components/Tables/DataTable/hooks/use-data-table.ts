@@ -62,12 +62,7 @@ export const fuzzySort: SortingFn<unknown> = (rowA, rowB, columnId) => {
 };
 
 export const useDataTable = <T>(options: DataTableOptions<T>) => {
-  const {
-    columns,
-    data,
-    enableRowSelection = true,
-    columnVisibility,
-  } = options;
+  const { columns, data, enableRowSelection, columnVisibility } = options;
 
   const [sorting, setSorting] = useState<SortingState>([]);
 

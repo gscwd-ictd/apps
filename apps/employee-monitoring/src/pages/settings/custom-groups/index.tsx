@@ -127,14 +127,20 @@ const Index = () => {
     PostCustomGroupResponse,
     UpdateCustomGroupResponse,
     DeleteCustomGroupResponse,
+    AssignResponse,
+    UnassignResponse,
 
     IsLoading,
     ErrorCustomGroups,
-    ErrorCustomGroup,
+    ErrorAssignedMembers,
+    ErrorUnassignedMembers,
 
     GetCustomGroups,
     GetCustomGroupsSuccess,
     GetCustomGroupsFail,
+
+    IsRowsSelected,
+    IsOptionSelected,
 
     EmptyResponse,
   } = useCustomGroupStore((state) => ({
@@ -142,14 +148,20 @@ const Index = () => {
     PostCustomGroupResponse: state.customGroup.postResponse,
     UpdateCustomGroupResponse: state.customGroup.updateResponse,
     DeleteCustomGroupResponse: state.customGroup.deleteResponse,
+    AssignResponse: state.members.assignResponse,
+    UnassignResponse: state.members.unassignResponse,
 
     IsLoading: state.loading.loadingCustomGroups,
     ErrorCustomGroups: state.error.errorCustomGroups,
-    ErrorCustomGroup: state.error.errorCustomGroup,
+    ErrorAssignedMembers: state.error.errorAssignedMembers,
+    ErrorUnassignedMembers: state.error.errorUnassignedMembers,
 
     GetCustomGroups: state.getCustomGroups,
     GetCustomGroupsSuccess: state.getCustomGroupsSuccess,
     GetCustomGroupsFail: state.getCustomGroupsFail,
+
+    IsRowsSelected: state.isRowsSelected,
+    IsOptionSelected: state.isOptionSelected,
 
     EmptyResponse: state.emptyResponse,
   }));
@@ -209,10 +221,28 @@ const Index = () => {
             notifMessage={ErrorCustomGroups}
           />
         ) : null}
-        {!isEmpty(ErrorCustomGroup) ? (
+        {!isEmpty(ErrorAssignedMembers) ? (
           <ToastNotification
             toastType="error"
-            notifMessage={ErrorCustomGroup}
+            notifMessage={ErrorAssignedMembers}
+          />
+        ) : null}
+        {!isEmpty(ErrorUnassignedMembers) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={ErrorUnassignedMembers}
+          />
+        ) : null}
+        {!IsRowsSelected ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={'There are no selected members for removal'}
+          />
+        ) : null}
+        {!IsOptionSelected ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={'There are no selected employees for assignment'}
           />
         ) : null}
 
@@ -233,6 +263,18 @@ const Index = () => {
           <ToastNotification
             toastType="success"
             notifMessage="Custom group successfully deleted"
+          />
+        ) : null}
+        {!isEmpty(AssignResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Members successfully added"
+          />
+        ) : null}
+        {!isEmpty(UnassignResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Members successfully removed"
           />
         ) : null}
 

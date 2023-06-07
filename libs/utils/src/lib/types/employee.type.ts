@@ -30,6 +30,6 @@ export type EmployeeAsOption = Pick<EmploymentDetails, 'employeeId'> &
 
 export type EmployeeAsOptionWithPosition = Pick<
   EmploymentDetails,
-  'employeeId' | 'positionTitle'
+  'employeeId' | 'companyId' | 'positionTitle'
 > &
-  Pick<PersonalDetails, 'fullName'>;
+  Pick<PersonalDetails, 'fullName'> & { assignment: string };
