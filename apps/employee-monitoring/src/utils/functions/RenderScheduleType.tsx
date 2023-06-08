@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Categories } from 'libs/utils/src/lib/enums/category.enum';
 
 /* This function is used for rendering schedule types */

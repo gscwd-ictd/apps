@@ -2,81 +2,41 @@ import { DataTable, LoadingSpinner, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import AddFieldSsModal from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/scheduling-sheet/field/AddFieldSsModal';
+import AddFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/AddFieldSsModal';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
-import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import {
+  ScheduleSheet,
+  useScheduleSheetStore,
+} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import dayjs from 'dayjs';
-import { useState } from 'react';
-
-type Scheduling = {
-  id: string;
-  schedulingId: string;
-  scheduleName: string;
-  scheduleGroup: string;
-  scheduleFrom: string;
-  scheduleTo: string;
-};
-
-const Schedules: Array<Scheduling> = [
-  {
-    id: '1',
-    scheduleName: 'Schedule A',
-    scheduleFrom: '06/01/2023',
-    scheduleGroup: 'Central',
-    scheduleTo: '06/15/2023',
-    schedulingId: '1',
-  },
-  {
-    id: '2',
-    scheduleName: 'Schedule B',
-    scheduleFrom: '06/01/2023',
-    scheduleGroup: 'Central',
-    scheduleTo: '06/15/2023',
-    schedulingId: '2',
-  },
-
-  {
-    id: '3',
-    scheduleName: 'Schedule A',
-    scheduleFrom: '06/16/2023',
-    scheduleGroup: 'Calumpang',
-    scheduleTo: '06/30/2023',
-    schedulingId: '3',
-  },
-
-  {
-    id: '4',
-    scheduleName: 'Schedule B',
-    scheduleFrom: '06/16/2023',
-    scheduleGroup: 'Calumpang',
-    scheduleTo: '06/30/2023',
-    schedulingId: '4',
-  },
-  {
-    id: '5',
-    scheduleName: 'Schedule A',
-    scheduleFrom: '06/01/2023',
-    scheduleGroup: 'Mabuhay',
-    scheduleTo: '06/15/2023',
-    schedulingId: '5',
-  },
-  {
-    id: '6',
-    scheduleName: 'Schedule B',
-    scheduleFrom: '06/01/2023',
-    scheduleGroup: 'Mabuhay',
-    scheduleTo: '06/15/2023',
-    schedulingId: '6',
-  },
-];
+import { useEffect, useState } from 'react';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import useSWR from 'swr';
+import { isEmpty } from 'lodash';
 
 export default function Index() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { setSelectedScheduleId } = useScheduleSheetStore((state) => ({
+  const {
+    scheduleSheets,
+    setSelectedScheduleId,
+    getScheduleSheetsSuccess,
+    getScheduleSheetsFail,
+    getScheduleSheets,
+  } = useScheduleSheetStore((state) => ({
+    scheduleSheets: state.scheduleSheets,
+    getScheduleSheetsSuccess: state.getScheduleSheetsSuccess,
+    getScheduleSheetsFail: state.getScheduleSheetsFail,
     setSelectedScheduleId: state.setSelectedScheduleId,
+    getScheduleSheets: state.getScheduleSheets,
   }));
 
+  const {
+    data: swrGroupSchedules,
+    isLoading: swrGsIsLoading,
+    error: swrGsError,
+  } = useSWR(`/custom-groups/schedule-sheets`, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
   // add
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => {
@@ -89,17 +49,17 @@ export default function Index() {
 
   // edit
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-  const openEditActionModal = (rowData: Scheduling) => {
+  const openEditActionModal = (rowData: ScheduleSheet) => {
     setEditModalIsOpen(true);
   };
 
   // delete
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
-  const openDeleteActionModal = (rowData: Scheduling) => {
+  const openDeleteActionModal = (rowData: ScheduleSheet) => {
     setDeleteModalIsOpen(true);
   };
-  const [currentRowData, setCurrentRowData] = useState<Scheduling>(
-    {} as Scheduling
+  const [currentRowData, setCurrentRowData] = useState<ScheduleSheet>(
+    {} as ScheduleSheet
   );
 
   // transform date
@@ -109,7 +69,7 @@ export default function Index() {
   };
 
   // Render row actions in the table component
-  const renderRowActions = (rowData: Scheduling) => {
+  const renderRowActions = (rowData: ScheduleSheet) => {
     return (
       <>
         <button
@@ -132,15 +92,15 @@ export default function Index() {
   };
 
   // define table columns
-  const columnHelper = createColumnHelper<Scheduling>();
+  const columnHelper = createColumnHelper<ScheduleSheet>();
 
   const columns = [
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('scheduleGroup', {
+    columnHelper.accessor('customGroupName', {
       enableSorting: false,
-      header: () => 'Group',
+      header: () => 'Group Name',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('scheduleName', {
@@ -155,7 +115,7 @@ export default function Index() {
       ),
 
       columns: [
-        columnHelper.accessor('scheduleFrom', {
+        columnHelper.accessor('dateFrom', {
           enableSorting: true,
           header: () => <span className="w-full text-center ">Date From</span>,
           cell: (info) => (
@@ -164,7 +124,7 @@ export default function Index() {
             </div>
           ),
         }),
-        columnHelper.accessor('scheduleTo', {
+        columnHelper.accessor('dateTo', {
           enableSorting: true,
           header: () => <span className="w-full text-center ">Date To</span>,
           cell: (info) => (
@@ -189,9 +149,27 @@ export default function Index() {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: Schedules,
+    data: swrGsIsLoading ? null : scheduleSheets,
     columnVisibility: { id: false },
   });
+
+  // swr is loading
+  useEffect(() => {
+    if (swrGsIsLoading) {
+      getScheduleSheets();
+    }
+  }, [swrGsIsLoading]);
+
+  // success or fail gs
+  useEffect(() => {
+    // success
+    if (!isEmpty(swrGroupSchedules)) {
+      getScheduleSheetsSuccess(swrGroupSchedules.data);
+    }
+
+    // fail
+    if (!isEmpty(swrGsError)) getScheduleSheetsFail(swrGsError);
+  }, [swrGroupSchedules, swrGsError]);
 
   return (
     <>
@@ -200,7 +178,7 @@ export default function Index() {
           crumbs={[
             {
               layerNo: 1,
-              layerText: 'Scheduling Sheet',
+              layerText: 'Schedule Sheet',
               path: '',
             },
             {
@@ -209,7 +187,7 @@ export default function Index() {
               path: '',
             },
           ]}
-          title="Field Scheduling"
+          title="Field Schedule Sheet"
         />
 
         <AddFieldSsModal
@@ -221,7 +199,7 @@ export default function Index() {
         <Can I="access" this="Schedules">
           <div className="sm:mx-0 lg:mx-5">
             <Card>
-              {isLoading ? (
+              {swrGsIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
                 <div className="flex flex-row flex-wrap">
@@ -231,8 +209,8 @@ export default function Index() {
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
                       onClick={openAddActionModal}
                     >
-                      <i className="bx bxs-plus-square"></i>&nbsp; Open
-                      Scheduling Sheet
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Schedule
+                      Sheet
                     </button>
                   </div>
 

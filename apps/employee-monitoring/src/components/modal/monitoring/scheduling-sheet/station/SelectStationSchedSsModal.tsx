@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import {
   MutatedSsSelectOption,
   useScheduleSheetStore,
@@ -8,6 +9,7 @@ import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.st
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
 import dayjs from 'dayjs';
+import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
@@ -20,23 +22,24 @@ import {
 } from 'react';
 import Select from 'react-select';
 import useSWR from 'swr';
-import { LabelValue } from '../../../../labels/LabelValue';
 
-type SelectFieldSchedSsModalProps = {
+type SelectSchedSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-const SelectFieldSchedSsModal: FunctionComponent<
-  SelectFieldSchedSsModalProps
-> = ({ modalState, closeModalAction, setModalState }) => {
+const SelectStationSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
+  modalState,
+  closeModalAction,
+  setModalState,
+}) => {
   // use SWR
   const {
     data: swrSchedules,
     isLoading: swrIsLoading,
     error: swrError,
-  } = useSWR('/schedules?base=Field', fetcherEMS, {
+  } = useSWR('/schedules?base=Pumping%20Station', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -68,7 +71,16 @@ const SelectFieldSchedSsModal: FunctionComponent<
 
   // state value for the mutated component
   const [selectedSchedule, setSelectedSchedule] =
-    useState<MutatedSsSelectOption>({} as MutatedSsSelectOption);
+    useState<MutatedSsSelectOption>({
+      label: '',
+      lunchIn: '',
+      lunchOut: '',
+      shift: ScheduleShifts.MORNING,
+      timeIn: '',
+      timeOut: '',
+      value: '',
+      withLunch: false,
+    } as MutatedSsSelectOption);
 
   //  schedule store
   const { schedules, getSchedules, getSchedulesFail, getSchedulesSuccess } =
@@ -101,11 +113,6 @@ const SelectFieldSchedSsModal: FunctionComponent<
     if (date === null) return '-';
     else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
   };
-
-  // temporary
-  useEffect(() => {
-    if (transformedScheds) console.log(transformedScheds);
-  }, [transformedScheds]);
 
   // swr loading
   useEffect(() => {
@@ -166,7 +173,7 @@ const SelectFieldSchedSsModal: FunctionComponent<
                 menuShouldScrollIntoView
                 onChange={(newValue) => setSelectedSchedule(newValue)}
               />
-              {!isEmpty(selectedSchedule) ? (
+              {!isEmpty(selectedSchedule.value) ? (
                 <div className="px-2 py-4 mt-2 bg-gray-200 border rounded">
                   <div className="grid grid-cols-2 grid-rows-3">
                     <LabelValue
@@ -205,7 +212,11 @@ const SelectFieldSchedSsModal: FunctionComponent<
                       label="Shift: "
                       direction="left-to-right"
                       textSize="sm"
-                      value={UseCapitalizer(selectedSchedule.shift)}
+                      value={
+                        selectedSchedule.shift
+                          ? UseCapitalizer(selectedSchedule.shift)
+                          : null
+                      }
                     />
                   </div>
                 </div>
@@ -244,4 +255,4 @@ const SelectFieldSchedSsModal: FunctionComponent<
   );
 };
 
-export default SelectFieldSchedSsModal;
+export default SelectStationSchedSsModal;

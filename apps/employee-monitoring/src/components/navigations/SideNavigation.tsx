@@ -90,25 +90,14 @@ export const SideNavigation = () => {
 
           {/**Monitoring Scheduling Sheet */}
           <Sidebar.Item
-            display="Scheduling Sheet"
+            display="Schedule Sheets"
             className="text-xs"
             icon={<i className="text-xl bx bxs-spreadsheet"></i>}
             path=""
             hasSubItem
-            selected={pathname === Paths[18] || pathname === Paths[19]}
+            selected={pathname === Paths[19] || pathname === Paths[20]}
             subItems={
               <>
-                <Sidebar.Item
-                  display="Office"
-                  className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}
-                  selected={pathname === Paths[18] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bxs-buildings"></i>
-                    </>
-                  }
-                  path={Paths[18]}
-                />
                 <Sidebar.Item
                   display="Field"
                   className={`${isCollapsed ? 'text-xs' : 'text-xs pl-5'}`}

@@ -102,6 +102,11 @@ export type CustomGroupState = {
   setIsOptionSelected: (value: boolean) => void;
 
   emptyResponse: () => void;
+
+  selectedCustomGroupWithMembers: CustomGroupWithMembers;
+  setSelectedCustomGroupWithMembers: (
+    selectedCustomGroupWithMembers: CustomGroupWithMembers
+  ) => void;
 };
 
 export const useCustomGroupStore = create<CustomGroupState>()(
@@ -405,5 +410,13 @@ export const useCustomGroupStore = create<CustomGroupState>()(
           errorCustomGroup: '',
         },
       })),
+
+    // local selected custom group
+    selectedCustomGroupWithMembers: {} as CustomGroupWithMembers,
+
+    // set local selected custom group
+    setSelectedCustomGroupWithMembers: (
+      selectedCustomGroupWithMembers: CustomGroupWithMembers
+    ) => set((state) => ({ ...state, selectedCustomGroupWithMembers })),
   }))
 );

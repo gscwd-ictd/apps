@@ -2,7 +2,6 @@ import { DataTable, LoadingSpinner, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import AddStationSsModal from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/scheduling-sheet/station/AddStationSsModal';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import dayjs from 'dayjs';
@@ -216,40 +215,8 @@ export default function Index() {
           title="Office Scheduling"
         />
 
-        <AddStationSsModal
-          modalState={addModalIsOpen}
-          setModalState={setAddModalIsOpen}
-          closeModalAction={closeAddActionModal}
-        />
-
         <Can I="access" this="Schedules">
-          <div className="sm:mx-0 lg:mx-5">
-            <Card>
-              {isLoading ? (
-                <LoadingSpinner size="lg" />
-              ) : (
-                <div className="flex flex-row flex-wrap">
-                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                    <button
-                      type="button"
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                      onClick={openAddActionModal}
-                    >
-                      <i className="bx bxs-plus-square"></i>&nbsp; Open
-                      Scheduling Sheet
-                    </button>
-                  </div>
-
-                  <DataTable
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={false}
-                    paginate={true}
-                  />
-                </div>
-              )}
-            </Card>
-          </div>
+          <div className="sm:mx-0 lg:mx-5"></div>
         </Can>
       </div>
     </>
