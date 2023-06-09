@@ -103,16 +103,17 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           <div className="flex flex-col w-full min-h-[2.25rem] gap-1 px-5">
-            <div className="flex items-center ">
+            <div className="flex items-center justify-center gap-2 mb-5">
               <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
-              <div className="flex flex-col w-full mb-10">
+              <div className="flex flex-col w-full">
                 <p className="text-xl font-semibold">{rowData.fullName}</p>
-                <p className="font-medium text-md">{rowData.positionTitle}</p>
+                <p className="font-light text-md">{rowData.positionTitle}</p>
               </div>
             </div>
+
             <MySelectList
               id="scheduleRestDays"
-              label="Rest Day(s)"
+              label="Rest Days"
               multiple
               options={listOfRestDays}
               onChange={(o) => setSelectedRestDays(o)}

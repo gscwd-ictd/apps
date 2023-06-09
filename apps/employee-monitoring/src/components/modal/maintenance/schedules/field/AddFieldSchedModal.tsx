@@ -50,10 +50,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
     PostScheduleFail: state.postScheduleFail,
   }));
 
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
-    []
-  );
-
   const {
     setValue,
     handleSubmit,
@@ -80,16 +76,7 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
 
   // reset all values
   const resetToDefaultValues = () => {
-    setSelectedRestDays([]);
     reset();
-  };
-
-  // convert
-  const useRestDayArrayToNumberArray = (restDays: SelectOption[]) => {
-    const restDayNumbers = restDays.map((restDay) => {
-      return parseInt(restDay.value.toString());
-    });
-    return restDayNumbers;
   };
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
@@ -197,19 +184,6 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
                   errorMessage={errors.shift?.message}
                   disabled={IsLoading ? true : false}
                 />
-
-                {/** Rest Day */}
-                <div className="flex flex-col w-full min-h-[2.25rem]">
-                  <MySelectList
-                    id="scheduleRestDays"
-                    label="Rest Day(s)"
-                    multiple
-                    options={listOfRestDays}
-                    onChange={(o) => setSelectedRestDays(o)}
-                    value={selectedRestDays}
-                    disabled={IsLoading ? true : false}
-                  />
-                </div>
               </div>
             </div>
           </form>
