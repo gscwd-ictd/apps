@@ -294,13 +294,14 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
               closeModalAction={closeSelectScheduleModal}
             />
             <form id="addFieldSsForm" onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex w-full gap-2 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[18rem] ">
+              <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[20rem]">
                 {/* Effectivity */}
-                <section className="flex flex-col w-full h-full gap-2 px-10 py-4 border-2 border-dashed rounded-xl">
-                  <div className="flex flex-col justify-center w-full">
-                    <p className="flex justify-center w-full mt-5 font-semibold">
+                <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
+                  <div className="flex flex-col justify-center w-full pb-2">
+                    <p className="flex items-center justify-start w-full font-light">
                       Effectivity Date
                     </p>
+                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                       <LabelInput
                         id="fieldsStartDate"
@@ -340,9 +341,10 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                   </div>
 
                   <div className="flex flex-col justify-center w-full ">
-                    <p className="flex justify-center w-full font-semibold">
-                      Group
+                    <p className="flex items-center justify-start w-full text-sm font-light">
+                      Group Name
                     </p>
+                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
 
                     {swrGroupDetailsIsLoading ? (
                       <LoadingSpinner size="lg" />
@@ -351,7 +353,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                         id="fieldGroupName"
                         name="groupName"
                         type="text"
-                        label="Group Name"
+                        label=""
                         value={
                           !isEmpty(group.customGroupDetails)
                             ? group.customGroupDetails.name
@@ -382,16 +384,17 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                 </section>
 
                 {/* Schedule */}
-                <section className="flex flex-col w-full h-full gap-2 px-10 py-4 border-2 border-dashed rounded-xl">
-                  <div className="flex flex-col justify-center w-full">
-                    <p className="flex items-center justify-center w-full mt-5 font-semibold">
+                <section className="flex flex-col justify-between w-full h-full gap-2 px-5 py-4 rounded-xl">
+                  <div className="flex flex-col justify-between w-full h-full">
+                    <p className="flex items-center justify-start w-full font-light">
                       Field Schedule
                     </p>
+                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="flex flex-col w-full gap-2">
                       {swrScheduleIsLoading ? (
                         <LoadingSpinner size="lg" />
                       ) : (
-                        <>
+                        <div className="flex flex-col gap-5 pt-1">
                           <LabelInput
                             id="scheduleName"
                             label="Name"
@@ -431,12 +434,12 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                               />
                             </div>
                           </div>
-                        </>
+                        </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-end h-full gap-2">
+                  <div className="flex items-end w-full h-full">
                     <button
                       className="w-full px-2 py-2 text-white rounded bg-slate-700 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       onClick={openSelectScheduleModal}

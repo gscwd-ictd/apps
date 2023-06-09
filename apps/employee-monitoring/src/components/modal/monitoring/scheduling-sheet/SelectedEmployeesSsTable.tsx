@@ -104,6 +104,12 @@ const SelectedEmployeesSsTable = () => {
             rowData={currentRowData}
           />
 
+          {/* <hr className="mt-2 border border-dashed rounded " /> */}
+
+          <p className="flex items-center justify-start w-full px-5 font-light">
+            Employees
+          </p>
+          <hr className="h-1 mt-2 bg-gray-200 border-0 rounded" />
           <DataTable
             model={table}
             paginate={!isEmpty(currentScheduleSheet.employees) ? true : false}
