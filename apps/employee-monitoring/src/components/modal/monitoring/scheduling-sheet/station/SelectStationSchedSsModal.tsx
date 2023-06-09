@@ -243,7 +243,7 @@ const SelectStationSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
                 className="px-3 py-2 text-sm text-white bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400"
                 type="button"
                 onClick={onSubmit}
-                disabled={isEmpty(selectedSchedule) ? true : false}
+                disabled={isEmpty(selectedSchedule.label) ? true : false}
               >
                 Submit
               </button>

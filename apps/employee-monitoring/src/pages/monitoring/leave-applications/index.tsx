@@ -17,6 +17,7 @@ import {
 } from '@gscwd-apps/oneui';
 import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
+import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
 
 // Mock Data REMOVE later
 const TypesMockData: Array<MonitoringLeave> = [
@@ -95,7 +96,7 @@ const Index = () => {
       if (leaveDates.length > 4) {
         return (
           <span className="bg-gray-500 text-white text-xs font-medium px-1 py-0.5 ml-1 rounded text-center">
-            {leaveDates[0]} TO {leaveDates.slice(-1)}
+            {leaveDates[0]} to {leaveDates.slice(-1)}
           </span>
         );
       } else {
@@ -276,13 +277,13 @@ const Index = () => {
         closeModalAction={closeAddActionModal}
       /> */}
 
-      {/* Edit modal */}
-      {/* <EditTravelOrderModal
-        modalState={editModalIsOpen}
-        setModalState={setEditModalIsOpen}
-        closeModalAction={closeEditActionModal}
+      {/* View modal */}
+      <ViewLeaveApplicationModal
+        modalState={viewModalIsOpen}
+        setModalState={setViewModalIsOpen}
+        closeModalAction={closeViewActionModal}
         rowData={currentRowData}
-      /> */}
+      />
 
       {/* Delete modal */}
       {/* <DeleteTravelOrderModal

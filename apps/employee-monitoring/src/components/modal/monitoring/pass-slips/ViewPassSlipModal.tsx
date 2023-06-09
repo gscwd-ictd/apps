@@ -41,18 +41,18 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
         <Modal.Body>
           <div className="w-full min-h-[14rem]">
             <div className="flex flex-col w-full gap-4 px-2">
-              <div className="flex flex-col gap-4 px-5 py-2 rounded bg-gray-50">
-                <div className="grid mt-2 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2">
-                  <div className="pr-10 sm:order-2 md:order-2 lg:order-1">
-                    <LabelValue
-                      label="Assignment"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        rowData.assignmentName ? rowData.assignmentName : 'N/A'
-                      }
-                    />
+              <div className="flex flex-col gap-4 py-2 ">
+                <div className="flex items-center px-2">
+                  <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+
+                  <div className="flex flex-col">
+                    <div className="text-2xl font-semibold">
+                      {rowData.employeeName}
+                    </div>
                   </div>
+                </div>
+
+                <div className="grid px-5 mt-2 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2">
                   <div className="sm:order-1 md:order-1 lg:order-2">
                     <LabelValue
                       label="Pass Slip Date"
@@ -66,13 +66,15 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                 </div>
 
                 <hr />
-                <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <div className="pr-10">
                     <LabelValue
-                      label="Employee Name"
+                      label="Assignment"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={rowData.employeeName}
+                      value={
+                        rowData.assignmentName ? rowData.assignmentName : 'N/A'
+                      }
                     />
                   </div>
                   <LabelValue
@@ -85,7 +87,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 
                 <hr />
 
-                <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Nature of Business"
                     direction="top-to-bottom"
@@ -99,7 +101,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                     value={rowData.estimateHours}
                   />
                 </div>
-                <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Mode of Transportation"
                     direction="top-to-bottom"
