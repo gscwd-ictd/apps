@@ -6,6 +6,8 @@ import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 import React, { FunctionComponent } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
+import userphoto from '../../../../../public/user-photo.jpg';
+import Image from 'next/image';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -41,8 +43,20 @@ const ViewLeaveApplicationModal: FunctionComponent<
           <div className="w-full min-h-[14rem]">
             <div className="flex flex-col w-full gap-4 rounded ">
               <div className="flex flex-col gap-4 px-2 py-2 rounded ">
-                <div className="flex items-center px-2">
-                  <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+                <div className="flex items-center gap-2 px-2">
+                  {userphoto ? (
+                    <div className="flex flex-wrap justify-center">
+                      <div className="w-[6rem]">
+                        <Image
+                          src={userphoto}
+                          alt="user-circle"
+                          className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+                  )}
 
                   <div className="flex flex-col">
                     <div className="text-2xl font-semibold">
