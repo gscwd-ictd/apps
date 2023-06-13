@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form';
 import SelectFieldGroupSsModal from '../SelectGroupSsModal';
 import SelectStationSchedSsModal from './SelectStationSchedSsModal';
 import SelectedEmployeesSsTable from '../SelectedEmployeesSsTable';
-import { EmployeeAsOptionWithRestDaysN } from 'libs/utils/src/lib/types/employee.type';
+import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import SelectGroupSsModal from '../SelectGroupSsModal';
 
@@ -30,7 +30,7 @@ type AddStationSsModalProps = {
 };
 
 type ScheduleSheetForm = ScheduleSheet & {
-  employees: Array<EmployeeAsOptionWithRestDaysN>;
+  employees: Array<EmployeeAsOptionWithRestDays>;
 };
 
 const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
@@ -186,6 +186,9 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
     if (!error) {
       // post scheduling sheet success
       postScheduleSheetSuccess(result);
+
+      // close the modal since it is a success
+      onCloseScheduleSheet();
     } else if (error) {
       // post scheduling sheet fail
       postScheduleSheetFail(result);
@@ -272,9 +275,11 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
 
   return (
     <>
-      <Modal open={modalState} setOpen={setModalState} size="xl" steady>
+      <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="text-2xl font-medium">Add Station Scheduling Sheet</h1>
+          <h1 className="px-5 text-2xl font-medium">
+            Add Station Scheduling Sheet
+          </h1>
         </Modal.Header>
         <Modal.Body>
           <div className="sm:px-0 md:px-0 lg:px-4">
@@ -290,13 +295,14 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
               closeModalAction={closeSelectScheduleModal}
             />
             <form id="addStationSsForm" onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex w-full gap-2 mb-2 sm:flex-col md:flex-col lg:flex-row ">
+              <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[20rem]">
                 {/* Effectivity */}
-                <section className="flex flex-col w-full sm:h-auto md:h-auto lg:h-[15rem] py-2 px-6 gap-2 bg-gray-200/50 rounded">
-                  <div className="flex flex-col justify-center w-full ">
-                    <p className="flex justify-center w-full font-semibold">
+                <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
+                  <div className="flex flex-col justify-center w-full pb-2">
+                    <p className="flex items-center justify-start w-full font-light">
                       Effectivity Date
                     </p>
+                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                       <LabelInput
                         id="stationSsStartDate"
@@ -336,9 +342,10 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                   </div>
 
                   <div className="flex flex-col justify-center w-full ">
-                    <p className="flex justify-center w-full font-semibold">
-                      Group
+                    <p className="flex items-center justify-start w-full text-sm font-light">
+                      Group Name
                     </p>
+                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
 
                     {swrGroupDetailsIsLoading ? (
                       <LoadingSpinner size="lg" />
@@ -347,7 +354,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                         id="stationGroupName"
                         name="groupName"
                         type="text"
-                        label="Group Name"
+                        label=""
                         value={
                           !isEmpty(group.customGroupDetails)
                             ? group.customGroupDetails.name
@@ -378,20 +385,23 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                 </section>
 
                 {/* Schedule */}
-                <section className="flex flex-col w-full sm:h-auto md:h-auto lg:h-[15rem]  py-2 px-6 gap-2 bg-gray-200/50 rounded">
-                  <div className="flex flex-col justify-center w-full">
-                    <p className="flex items-center justify-center w-full font-semibold">
+                <section className="flex flex-col justify-between w-full h-full gap-2 px-5 py-4 rounded-xl">
+                  <div className="flex flex-col justify-between w-full h-full">
+                    <p className="flex items-center justify-start w-full font-light">
                       Station Schedule
                     </p>
+                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="flex flex-col w-full gap-2">
                       {swrScheduleIsLoading ? (
                         <LoadingSpinner size="lg" />
                       ) : (
-                        <>
+                        <div className="flex flex-col gap-5 pt-1">
                           <LabelInput
                             id="scheduleName"
                             label="Name"
                             value={schedule.name ?? '--'}
+                            isError={errors.scheduleId ? true : false}
+                            errorMessage={errors.scheduleId?.message}
                             disabled
                           />
                           <div className="gap-2 sm:flex-col md:flex-col lg:flex-row lg:flex">
@@ -404,6 +414,8 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                                     ? formatTime(schedule.timeIn)
                                     : '-- : --'
                                 }
+                                isError={errors.scheduleId ? true : false}
+                                errorMessage={errors.scheduleId?.message}
                                 disabled
                               />
                             </div>
@@ -417,16 +429,18 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                                     ? formatTime(schedule.timeOut)
                                     : '-- : --'
                                 }
+                                isError={errors.scheduleId ? true : false}
+                                errorMessage={errors.scheduleId?.message}
                                 disabled
                               />
                             </div>
                           </div>
-                        </>
+                        </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-end h-full gap-2">
+                  <div className="flex items-end w-full h-full">
                     <button
                       className="w-full px-2 py-2 text-white rounded bg-slate-700 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       onClick={openSelectScheduleModal}
@@ -437,7 +451,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                   </div>
                 </section>
               </div>
-              <section className="min-h-[26rem] bg-gray-100 col-span-2 rounded">
+              <section className="col-span-2 rounded bg-inherit min-h-auto">
                 <SelectedEmployeesSsTable />
               </section>
             </form>
@@ -446,17 +460,27 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
         <Modal.Footer>
           <div className="flex justify-end w-full gap-2">
             <button
-              className="px-3 py-2 text-gray-700 bg-gray-200 rounded text-md hover:bg-gray-300"
+              className="px-3 py-2 text-sm text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
               onClick={onCloseScheduleSheet}
             >
               Cancel
             </button>
 
             <button
-              className="px-3 py-2 text-white bg-blue-500 rounded text-md disabled:cursor-not-allowed hover:bg-blue-400"
+              className={`px-3 py-2 text-white ${
+                isEmpty(currentScheduleSheet.employees) ||
+                isEmpty(getValues('scheduleId'))
+                  ? 'bg-gray-500 hover:bg-gray-400'
+                  : 'bg-blue-500 hover:bg-blue-400'
+              } rounded text-sm disabled:cursor-not-allowed `}
               type="submit"
               form="addStationSsForm"
-              disabled={isEmpty(currentScheduleSheet.employees) ? true : false}
+              disabled={
+                isEmpty(currentScheduleSheet.employees) ||
+                isEmpty(getValues('scheduleId'))
+                  ? true
+                  : false
+              }
             >
               Submit
             </button>

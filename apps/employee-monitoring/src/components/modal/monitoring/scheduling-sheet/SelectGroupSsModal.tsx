@@ -252,52 +252,51 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
           <h1 className="text-2xl font-medium">Select a Group</h1>
         </Modal.Header>
         <Modal.Body>
-          {!isEmpty(transformedGroups) ? (
-            <>
-              <Select
-                id="customReactGroups"
-                name="groups"
-                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                options={transformedGroups}
-                className="z-50 w-full basic-multi-select"
-                classNamePrefix="select2-selection"
-                value={selectedGroup}
-                menuPosition="fixed"
-                menuPlacement="auto"
-                menuShouldScrollIntoView
-                onChange={(newValue) => {
-                  setShouldFetch(true);
-                  setSelectedGroup(newValue);
-                  setLocalSelectedGroupId(newValue.value.toString());
-                }}
-              />
-              {!isEmpty(localSelectedGroupId) && !isEmpty(groupWithMembers) ? (
-                <div className="px-2 py-4 mt-2 border border-dashed rounded bg-gray-100/50">
-                  <div className="grid grid-cols-2 grid-rows-3">
-                    <LabelValue
-                      label="Group Name: "
-                      direction="left-to-right"
-                      textSize="sm"
-                      value={groupWithMembers.customGroupDetails.name}
-                    />
-                    <LabelValue
-                      label="Description: "
-                      direction="left-to-right"
-                      textSize="sm"
-                      value={groupWithMembers.customGroupDetails.description}
-                    />
-                  </div>
-                  <DataTable model={table} paginate={true} />
+          <>
+            <Select
+              id="customReactGroups"
+              name="groups"
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+              options={transformedGroups ?? []}
+              className="z-50 w-full basic-multi-select"
+              classNamePrefix="select2-selection"
+              value={selectedGroup}
+              menuPosition="fixed"
+              menuPlacement="auto"
+              menuShouldScrollIntoView
+              onChange={(newValue) => {
+                setShouldFetch(true);
+                setSelectedGroup(newValue);
+                setLocalSelectedGroupId(newValue.value.toString());
+              }}
+            />
+            {!isEmpty(localSelectedGroupId) && !isEmpty(groupWithMembers) ? (
+              <div className="px-2 py-4 mt-2 border border-dashed rounded bg-gray-100/50">
+                <div className="grid grid-cols-2 grid-rows-3">
+                  <LabelValue
+                    label="Group Name: "
+                    direction="left-to-right"
+                    textSize="sm"
+                    value={groupWithMembers.customGroupDetails.name}
+                  />
+                  <LabelValue
+                    label="Description: "
+                    direction="left-to-right"
+                    textSize="sm"
+                    value={groupWithMembers.customGroupDetails.description}
+                  />
                 </div>
-              ) : (
-                <div className="flex justify-center w-full mt-2 text-gray-400">
-                  --No selected group--
-                </div>
-              )}
-            </>
-          ) : (
-            <LoadingSpinner size="lg" />
-          )}
+                <DataTable
+                  model={table}
+                  paginate={!isEmpty(groupWithMembers.members) ? true : false}
+                />
+              </div>
+            ) : (
+              <div className="flex justify-center w-full mt-2 text-gray-400">
+                --No selected group--
+              </div>
+            )}
+          </>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end w-full">
@@ -312,7 +311,7 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
                 className="px-3 py-2 text-sm text-white bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400"
                 type="button"
                 onClick={onSubmit}
-                disabled={isEmpty(groupWithMembers) ? true : false}
+                disabled={isEmpty(groupWithMembers.members) ? true : false}
               >
                 Submit
               </button>

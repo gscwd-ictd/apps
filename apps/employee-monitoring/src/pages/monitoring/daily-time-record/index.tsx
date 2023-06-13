@@ -18,7 +18,7 @@ import {
   EmployeeSchedule,
   useDtrStore,
 } from 'apps/employee-monitoring/src/store/dtr.store';
-import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/ViewEmployeeSchedule';
+import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/modal/monitoring/daily-time-record/ViewEmployeeSchedule';
 import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 
 export default function Index() {

@@ -6,12 +6,12 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { Fragment, useState } from 'react';
-import { DtrDateSelect } from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/employee/DtrDateSelect';
+import { DtrDateSelect } from 'apps/employee-monitoring/src/components/modal/monitoring/daily-time-record/employee/DtrDateSelect';
 import {
   EmployeeAttendance,
   useDtrStore,
 } from 'apps/employee-monitoring/src/store/dtr.store';
-import EditDailySchedModal from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/employee/EditOfficeDtrModall';
+import EditDailySchedModal from 'apps/employee-monitoring/src/components/modal/monitoring/daily-time-record/employee/EditOfficeDtrModall';
 
 var customParseFormat = require('dayjs/plugin/customParseFormat');
 var localizedFormat = require('dayjs/plugin/localizedFormat');

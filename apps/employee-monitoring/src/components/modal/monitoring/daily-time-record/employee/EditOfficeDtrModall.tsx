@@ -88,7 +88,9 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady>
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full pl-5">
-            <span className="text-2xl text-gray-900">Time Log Correction</span>
+            <span className="text-2xl font-medium text-gray-900">
+              Time Log Correction
+            </span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"

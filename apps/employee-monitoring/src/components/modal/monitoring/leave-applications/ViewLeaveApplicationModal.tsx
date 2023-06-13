@@ -1,49 +1,48 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Modal } from '@gscwd-apps/oneui';
+import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
 import dayjs from 'dayjs';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
-import Image from 'next/image';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 import React, { FunctionComponent } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
 import userphoto from '../../../../../public/user-photo.jpg';
+import Image from 'next/image';
 
-type ViewPassSlipModalProps = {
-  rowData: PassSlip;
+type ViewLeaveApplicationModalProps = {
+  rowData: MonitoringLeave;
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
-  rowData,
-  modalState,
-  closeModalAction,
-  setModalState,
-}) => {
+// /v1/leave-application/details/${leaveId}
+
+const ViewLeaveApplicationModal: FunctionComponent<
+  ViewLeaveApplicationModalProps
+> = ({ rowData, modalState, closeModalAction, setModalState }) => {
+  const firstAndLastDate = (dates: Array<string>) => {
+    const sortedDates = dates.sort((date1, date2) =>
+      dayjs(date1).format('YYYY/MM/DD') > dayjs(date2).format('YYYY/MM/DD')
+        ? 1
+        : dayjs(date1).format('YYYY/MM/DD') > dayjs(date2).format('YYYY/MM/DD')
+        ? -1
+        : 0
+    );
+    return `${sortedDates[0]} to ${sortedDates[sortedDates.length - 1]}`;
+  };
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} size="md">
         <Modal.Header withCloseBtn>
           <div className="flex gap-1 px-5 text-2xl font-semibold text-gray-800">
-            {rowData.status === PassSlipStatus.ONGOING
-              ? 'Ongoing'
-              : rowData.status === PassSlipStatus.FOR_APPROVAL
-              ? 'For Approval'
-              : rowData.status === PassSlipStatus.APPROVED
-              ? 'Completed'
-              : rowData.status === PassSlipStatus.DISAPPROVED
-              ? 'Completed'
-              : rowData.status === PassSlipStatus.CANCELLED
-              ? 'Cancelled'
-              : ''}
-            <span>Pass Slip</span>
+            <span>Leave Application</span>
           </div>
         </Modal.Header>
         <Modal.Body>
           <div className="w-full min-h-[14rem]">
-            <div className="flex flex-col w-full gap-4 px-2">
-              <div className="flex flex-col gap-4 py-2 ">
+            <div className="flex flex-col w-full gap-4 rounded ">
+              <div className="flex flex-col gap-4 px-2 py-2 rounded ">
                 <div className="flex items-center gap-2 px-2">
                   {userphoto ? (
                     <div className="flex flex-wrap justify-center">
@@ -61,41 +60,26 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 
                   <div className="flex flex-col">
                     <div className="text-2xl font-semibold">
-                      {rowData.employeeName}
+                      {rowData.fullName}
+                    </div>
+                    <div className="font-light">
+                      {rowData.positionTitle ?? 'Web Developer'}
                     </div>
                   </div>
                 </div>
 
-                <div className="grid px-5 mt-2 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2">
-                  <div className="sm:order-1 md:order-1 lg:order-2">
-                    <LabelValue
-                      label="Pass Slip Date"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={dayjs(rowData.dateOfApplication).format(
-                        'MMMM DD, YYYY'
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <hr />
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
-                  <div className="pr-10">
-                    <LabelValue
-                      label="Assignment"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        rowData.assignmentName ? rowData.assignmentName : 'N/A'
-                      }
-                    />
-                  </div>
                   <LabelValue
                     label="Supervisor Name"
                     direction="top-to-bottom"
                     textSize="md"
-                    value={rowData.supervisorName}
+                    value="Test Supervisor Name"
+                  />
+                  <LabelValue
+                    label="Assignment"
+                    direction="top-to-bottom"
+                    textSize="md"
+                    value="Test Assignment"
                   />
                 </div>
 
@@ -103,59 +87,62 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
-                    label="Nature of Business"
+                    label="Leave Name"
                     direction="top-to-bottom"
                     textSize="md"
-                    value={rowData.natureOfBusiness}
+                    value={rowData.leaveName}
                   />
                   <LabelValue
-                    label="Estimated Hours"
+                    label="Date of Filing"
                     direction="top-to-bottom"
                     textSize="md"
-                    value={rowData.estimateHours}
+                    value={rowData.dateOfFiling}
                   />
                 </div>
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
-                    label="Mode of Transportation"
+                    label="Applied Leave Dates"
                     direction="top-to-bottom"
                     textSize="md"
-                    value={rowData.obTransportation ?? 'N/A'}
+                    value={
+                      rowData.leaveDates && rowData.leaveDates.length >= 2
+                        ? firstAndLastDate(rowData.leaveDates)
+                        : rowData.leaveDates && rowData.leaveDates.length === 1
+                        ? rowData.leaveDates.map((date) => date)
+                        : 'N/A'
+                    }
                   />
 
                   <LabelValue
-                    label="Purpose or Destination"
+                    label="Status"
                     direction="top-to-bottom"
                     textSize="md"
-                    value={rowData.purposeDestination}
+                    value={rowData.status ? UseCapitalizer(rowData.status) : ''}
                   />
                 </div>
               </div>
+              <hr />
 
               <AlertNotification
                 alertType={
-                  rowData.status === PassSlipStatus.ONGOING
+                  rowData.status === LeaveStatus.ONGOING
                     ? 'warning'
-                    : rowData.status === PassSlipStatus.FOR_APPROVAL
-                    ? 'warning'
-                    : rowData.status === PassSlipStatus.APPROVED
+                    : rowData.status === LeaveStatus.APPROVED
                     ? 'success'
-                    : rowData.status === PassSlipStatus.DISAPPROVED
+                    : rowData.status === LeaveStatus.DISAPPROVED
                     ? 'error'
-                    : rowData.status === PassSlipStatus.CANCELLED
+                    : rowData.status === LeaveStatus.CANCELLED
                     ? 'error'
                     : ''
                 }
                 notifMessage={
-                  rowData.status === PassSlipStatus.ONGOING
-                    ? 'Pass Slip is being used as of the moment'
-                    : rowData.status === PassSlipStatus.APPROVED
+                  rowData.status === LeaveStatus.ONGOING
+                    ? 'Awaiting Approval'
+                    : rowData.status === LeaveStatus.APPROVED
                     ? 'Approved'
-                    : rowData.status === PassSlipStatus.FOR_APPROVAL
-                    ? 'Awaiting Supervisor Approval'
-                    : rowData.status === PassSlipStatus.DISAPPROVED
+                    : rowData.status === LeaveStatus.DISAPPROVED
                     ? 'Disapproved'
-                    : rowData.status === PassSlipStatus.CANCELLED
+                    : rowData.status === LeaveStatus.CANCELLED
                     ? 'Cancelled'
                     : ''
                 }
@@ -169,4 +156,4 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
   );
 };
 
-export default ViewPassSlipModal;
+export default ViewLeaveApplicationModal;

@@ -90,7 +90,7 @@ export const SideNavigation = () => {
 
           {/**Monitoring Scheduling Sheet */}
           <Sidebar.Item
-            display="Schedule Sheets"
+            display="Scheduling Sheets"
             className="text-xs"
             icon={<i className="text-xl bx bxs-spreadsheet"></i>}
             path=""

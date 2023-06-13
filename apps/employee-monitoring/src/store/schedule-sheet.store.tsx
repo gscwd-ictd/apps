@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { EmployeeAsOptionWithRestDaysN } from 'libs/utils/src/lib/types/employee.type';
+import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { create } from 'zustand';
@@ -41,7 +41,7 @@ export type ScheduleSheet = {
   customGroupName?: string;
   dateFrom: string;
   dateTo: string;
-  employees?: Array<EmployeeAsOptionWithRestDaysN>;
+  employees?: Array<EmployeeAsOptionWithRestDays>;
 };
 
 export type ScheduleSheetState = {
@@ -76,6 +76,8 @@ export type ScheduleSheetState = {
   setSelectedScheduleId: (value: string) => void;
   loading: LoadingScheduleSheet;
   error: ErrorScheduleSheet;
+
+  emptyResponseAndErrors: () => void;
 };
 
 export const useScheduleSheetStore = create<ScheduleSheetState>()(
@@ -212,6 +214,25 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         ...state,
         loading: { ...state.loading, loadingSchedule: false },
         error: { ...state.error, errorSchedule: error },
+      })),
+
+    emptyResponseAndErrors: () =>
+      set((state) => ({
+        ...state,
+        scheduleSheet: {
+          ...state.scheduleSheet,
+          postResponse: {} as ScheduleSheet,
+          deleteResponse: {} as ScheduleSheet,
+          updateResponse: {} as ScheduleSheet,
+        },
+        error: {
+          ...state.error,
+          errorEmployees: '',
+          errorGroup: '',
+          errorSchedule: '',
+          errorScheduleSheet: '',
+          errorScheduleSheets: '',
+        },
       })),
   }))
 );
