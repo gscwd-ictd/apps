@@ -29,7 +29,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
             {rowData.status === PassSlipStatus.ONGOING
               ? 'Ongoing'
               : rowData.status === PassSlipStatus.FOR_APPROVAL
-              ? 'For Approval'
+              ? 'Pending'
               : rowData.status === PassSlipStatus.APPROVED
               ? 'Completed'
               : rowData.status === PassSlipStatus.DISAPPROVED

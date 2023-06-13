@@ -1,24 +1,33 @@
 import { Button, ListDef, Select } from '@gscwd-apps/oneui';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { format } from 'date-fns';
+import { isEmpty } from 'lodash';
+import { useEffect } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi';
 
 type Month = { month: string; code: string };
 type Year = { year: string };
 
 export const DtrDateSelect = () => {
-  const selectedMonth = useDtrStore((state) => state.selectedMonth);
-  const selectedYear = useDtrStore((state) => state.selectedYear);
-  const date = useDtrStore((state) => state.date);
-
-  const setSelectedMonth = useDtrStore((state) => state.setSelectedMonth);
-  const setSelectedYear = useDtrStore((state) => state.setSelectedYear);
-  const setDate = useDtrStore((state) => state.setDate);
+  const {
+    selectedMonth,
+    selectedYear,
+    setSelectedMonth,
+    setSelectedYear,
+    setIsDateSearched,
+  } = useDtrStore((state) => ({
+    selectedMonth: state.selectedMonth,
+    selectedYear: state.selectedYear,
+    setSelectedMonth: state.setSelectedMonth,
+    setSelectedYear: state.setSelectedYear,
+    setIsDateSearched: state.setIsDateSearched,
+  }));
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
 
   const months = [
+    { month: '--', code: '--' },
     { month: 'January', code: '01' },
     { month: 'February', code: '02' },
     { month: 'March', code: '03' },
@@ -34,16 +43,7 @@ export const DtrDateSelect = () => {
   ] as Month[];
 
   const years = [
-    // { year: `${Number(yearNow) + 10}` },
-    // { year: `${Number(yearNow) + 9}` },
-    // { year: `${Number(yearNow) + 8}` },
-    // { year: `${Number(yearNow) + 7}` },
-    // { year: `${Number(yearNow) + 6}` },
-    // { year: `${Number(yearNow) + 5}` },
-    // { year: `${Number(yearNow) + 4}` },
-    // { year: `${Number(yearNow) + 3}` },
-    // { year: `${Number(yearNow) + 2}` },
-    // { year: `${Number(yearNow) + 1}` },
+    { year: '--' },
     { year: `${yearNow}` },
     { year: `${Number(yearNow) - 1}` },
   ] as Year[];
@@ -86,25 +86,24 @@ export const DtrDateSelect = () => {
 
   const searchDtr = (e) => {
     e.preventDefault();
-    setDate(
-      `${selectedMonth ? selectedMonth : monthNow}-01-${
-        selectedYear ? selectedYear : yearNow
-      }`
-    );
+    setIsDateSearched(true);
   };
 
   return (
-    <form className="flex justify-end gap-2">
+    <div className="flex justify-end gap-2">
       <Select
         className="w-40"
         data={months}
-        initial={months[Number(monthNow) - 1]}
+        textSize="sm"
+        // initial={months[Number(monthNow) - 1]}
+        initial={months[0]}
         listDef={list}
         onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
       />
       <Select
-        className="w-28 "
+        className="w-28"
         data={years}
+        textSize="sm"
         initial={years[0]}
         listDef={yearList}
         onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
@@ -115,10 +114,13 @@ export const DtrDateSelect = () => {
         size={'sm'}
         loading={false}
         onClick={(e) => searchDtr(e)}
-        type="submit"
+        type="button"
+        disabled={
+          selectedMonth === '--' || selectedYear === '--' ? true : false
+        }
       >
-        <HiOutlineSearch className="w-5 h-5" />
+        <HiOutlineSearch className="w-4 h-4" />
       </Button>
-    </form>
+    </div>
   );
 };

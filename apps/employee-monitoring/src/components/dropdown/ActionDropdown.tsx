@@ -3,24 +3,41 @@ import { Fragment, FunctionComponent } from 'react';
 import { createPortal } from 'react-dom';
 import { useDtrStore } from '../../store/dtr.store';
 import { EmployeeRowData } from '../../utils/types/table-row-types/monitoring/employee.type';
+import { useRouter } from 'next/router';
 
 type ActionDropdownProps = {
   employee: EmployeeRowData;
 };
 
-const actionItems = ['Schedule', 'View Daily Time Record'];
+const actionItems = ['View Daily Time Record'];
 
 export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
   employee,
 }) => {
+  const router = useRouter();
+
   const { setDropdownAction, setSelectedEmployee } = useDtrStore((state) => ({
     setDropdownAction: state.setDropdownAction,
     setSelectedEmployee: state.setSelectedEmployee,
   }));
 
+  const { setEmployeeDtr, setSelectedMonth, setSelectedYear } = useDtrStore(
+    (state) => ({
+      setEmployeeDtr: state.setEmployeeDtr,
+      setSelectedMonth: state.setSelectedMonth,
+      setSelectedYear: state.setSelectedYear,
+    })
+  );
+
   const handleSelectAction = (item: string) => {
     setDropdownAction(item);
     setSelectedEmployee(employee);
+    if (item === 'View Daily Time Record') {
+      setEmployeeDtr([]);
+      setSelectedMonth('--');
+      setSelectedYear('--');
+      router.push(`/employees/${employee.id}`);
+    }
   };
 
   return (
@@ -51,11 +68,6 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
                   <Menu.Item as="section">
                     {({ active }) => (
                       <a
-                        href={
-                          item === 'View Daily Time Record'
-                            ? `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_FE_DOMAIN}/monitoring/daily-time-record/employee?id=${employee.id}`
-                            : null
-                        }
                         rel="noreferrer"
                         onClick={() => handleSelectAction(item)}
                         className={`${

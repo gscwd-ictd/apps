@@ -36,16 +36,16 @@ export const buttonClass = ({
      */
 
     // disabled state for primary button
-    'bg-indigo-400': disabled && variant === 'primary',
+    'bg-indigo-400 cursor-not-allowed': disabled && variant === 'primary',
 
     // disabled state for warning
-    'bg-orange-400': disabled && variant === 'warning',
+    'bg-orange-400 cursor-not-allowed': disabled && variant === 'warning',
 
     // disabled state for info
-    'bg-blue-400': disabled && variant === 'info',
+    'bg-blue-400 cursor-not-allowed': disabled && variant === 'info',
 
     // disabled state for danger
-    'bg-red-400': disabled && variant === 'danger',
+    'bg-red-400 cursor-not-allowed': disabled && variant === 'danger',
 
     /**
      *  *primary button states
