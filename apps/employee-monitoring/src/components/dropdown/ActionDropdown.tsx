@@ -69,7 +69,9 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
                     {({ active }) => (
                       <a
                         rel="noreferrer"
-                        onClick={() => handleSelectAction(item)}
+                        // onClick={() => handleSelectAction(item)}
+                        target="_blank"
+                        href={`http://172.20.10.57:3005/employees/${employee.id}`}
                         className={`${
                           active ? 'bg-slate-50 text-white' : 'text-gray-500'
                         } hover:bg-slate-600 group flex w-full items-center rounded py-3 px-4`}

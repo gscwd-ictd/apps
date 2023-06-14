@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -8,7 +9,6 @@ import { Fragment, useEffect, useState } from 'react';
 import { DtrDateSelect } from 'apps/employee-monitoring/src/components/modal/employees/DtrDateSelect';
 import {
   DtrWithSchedule,
-  EmployeeAttendance,
   useDtrStore,
 } from 'apps/employee-monitoring/src/store/dtr.store';
 import EditDailySchedModal from 'apps/employee-monitoring/src/components/modal/employees/EditOfficeDtrModal';
@@ -22,8 +22,18 @@ import { isEmpty } from 'lodash';
 import userphoto from '../../../../public/user-photo.jpg';
 import Image from 'next/image';
 
-var customParseFormat = require('dayjs/plugin/customParseFormat');
-var localizedFormat = require('dayjs/plugin/localizedFormat');
+import dynamic from 'next/dynamic';
+
+const CardEmployeeSchedules = dynamic(
+  () =>
+    import(
+      'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules'
+    ),
+  { ssr: false }
+);
+
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+const localizedFormat = require('dayjs/plugin/localizedFormat');
 
 dayjs.extend(localizedFormat, customParseFormat);
 
@@ -147,131 +157,149 @@ export default function Index({
           ]}
         />
 
-        <div className="mx-5">
-          <Card>
-            {/** Top Card */}
-            <div className="flex flex-col flex-wrap ">
-              <Card className="rounded-t bg-slate-200">
-                <div className="flex items-center gap-4 px-2">
-                  {userphoto ? (
-                    <div className="flex flex-wrap justify-center">
-                      <div className="w-[6rem]">
-                        <Image
-                          src={userphoto}
-                          alt="user-circle"
-                          className="h-auto max-w-full align-middle border-none rounded-full shadow"
-                        />
+        <div className="flex flex-col w-full gap-6">
+          {/* DTR CARD */}
+          <div className="mx-5">
+            <Card>
+              {/** Top Card */}
+              <div className="flex flex-col flex-wrap ">
+                <Card className="rounded-t bg-slate-200">
+                  <div className="flex items-center gap-4 px-2">
+                    {userphoto ? (
+                      <div className="flex flex-wrap justify-center">
+                        <div className="w-[6rem]">
+                          <Image
+                            src={userphoto}
+                            alt="user-circle"
+                            className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+                    )}
+
+                    <div className="flex flex-col">
+                      <div className="text-2xl font-semibold text-gray-600">
+                        {employeeData.fullName}
+                      </div>
+                      <div className="text-xl text-gray-500">
+                        {employeeData.assignment.positionTitle}
                       </div>
                     </div>
-                  ) : (
-                    <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
-                  )}
-
-                  <div className="flex flex-col">
-                    <div className="text-2xl font-semibold text-gray-600">
-                      {employeeData.fullName}
-                    </div>
-                    <div className="text-xl text-gray-500">
-                      {employeeData.assignment.positionTitle}
-                    </div>
                   </div>
-                </div>
 
-                <DtrDateSelect />
-              </Card>
-              {/* EMPLOYEE DTR TABLE */}
-              <div className="flex w-full border rounded">
-                <table className="w-full overflow-auto border-separate bg-slate-50 border-spacing-0">
-                  <thead className="border-0">
-                    <tr className="text-xs">
-                      <th className="px-6 py-2 text-center border">Date</th>
-                      <th className="px-5 py-2 text-center border">Time In</th>
-                      <th className="px-5 py-2 text-center border">
-                        Lunch Out
-                      </th>
-                      <th className="px-5 py-2 text-center border">Lunch In</th>
-                      <th className="px-5 py-2 text-center border">Time Out</th>
-                      <th className="px-5 py-2 text-center border">Schedule</th>
-                      <th className="px-5 py-2 text-center border w-[12rem]">
-                        Remarks
-                      </th>
-                      <th className="px-5 py-2 text-center border">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sm text-center ">
-                    {!getIsLoading &&
-                    selectedMonth !== '--' &&
-                    selectedYear !== '--' &&
-                    !isEmpty(employeeDtr) ? (
-                      employeeDtr.map((logs, index) => {
-                        return (
-                          <Fragment key={index}>
-                            <tr>
-                              <td colSpan={8}></td>
-                            </tr>
-                            <tr className="text-xs">
-                              <td className="py-2 text-center border">
-                                {formatDateInWords(logs.day)}
-                              </td>
-                              <td className={`py-2 text-center border`}>
-                                {logs.dtr.timeIn
-                                  ? formatTime(logs.dtr.timeIn)
-                                  : '-'}
+                  <DtrDateSelect />
+                </Card>
+                {/* EMPLOYEE DTR TABLE */}
+                <div className="flex w-full border rounded">
+                  <table className="w-full overflow-auto border-separate bg-slate-50 border-spacing-0">
+                    <thead className="border-0">
+                      <tr className="text-xs">
+                        <th className="px-6 py-2 text-center border">Date</th>
+                        <th className="px-5 py-2 text-center border">
+                          Time In
+                        </th>
+                        <th className="px-5 py-2 text-center border">
+                          Lunch Out
+                        </th>
+                        <th className="px-5 py-2 text-center border">
+                          Lunch In
+                        </th>
+                        <th className="px-5 py-2 text-center border">
+                          Time Out
+                        </th>
+                        <th className="px-5 py-2 text-center border">
+                          Schedule
+                        </th>
+                        <th className="px-5 py-2 text-center border w-[12rem]">
+                          Remarks
+                        </th>
+                        <th className="px-5 py-2 text-center border">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-sm text-center ">
+                      {!getIsLoading &&
+                      selectedMonth !== '--' &&
+                      selectedYear !== '--' &&
+                      !isEmpty(employeeDtr) ? (
+                        employeeDtr.map((logs, index) => {
+                          return (
+                            <Fragment key={index}>
+                              <tr>
+                                <td colSpan={8}></td>
+                              </tr>
+                              <tr className="text-xs">
+                                <td className="py-2 text-center border">
+                                  {formatDateInWords(logs.day)}
+                                </td>
+                                <td className={`py-2 text-center border`}>
+                                  {logs.dtr.timeIn
+                                    ? formatTime(logs.dtr.timeIn)
+                                    : '-'}
 
-                                {/* {compareTimes(
+                                  {/* {compareTimes(
                                   logs.dtr.timeIn,
                                   logs.schedule.timeIn
                                 ).toString()} */}
-                              </td>
-                              <td className="py-2 text-center border">
-                                {logs.dtr.lunchOut
-                                  ? formatTime(logs.dtr.lunchOut)
-                                  : '-'}
-                              </td>
-                              <td className="py-2 text-center border">
-                                {logs.dtr.lunchIn
-                                  ? formatTime(logs.dtr.lunchIn)
-                                  : '-'}
-                              </td>
-                              <td className="py-2 text-center border">
-                                {logs.dtr.timeOut
-                                  ? formatTime(logs.dtr.timeOut)
-                                  : '-'}
-                              </td>
-                              <td className="py-2 text-center border">
-                                {formatTime(logs.schedule.timeIn)} -{' '}
-                                {formatTime(logs.schedule.timeOut)}
-                              </td>
-                              <td className="py-2 text-xs text-center break-words border">
-                                {logs.dtr.remarks ? logs.dtr.remarks : '-'}
-                              </td>
-                              <td className="py-2 text-center border">
-                                <div>
-                                  <button
-                                    className=""
-                                    onClick={() => {
-                                      setCurrentRowData(logs);
-                                      setEditModalIsOpen(true);
-                                    }}
-                                  >
-                                    <i className="text-xl text-green-500 bx bxs-edit"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          </Fragment>
-                        );
-                      })
-                    ) : (
-                      <tr className="border-0">
-                        <td colSpan={8}>NO DATA FOUND</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                                </td>
+                                <td className="py-2 text-center border">
+                                  {logs.dtr.lunchOut
+                                    ? formatTime(logs.dtr.lunchOut)
+                                    : '-'}
+                                </td>
+                                <td className="py-2 text-center border">
+                                  {logs.dtr.lunchIn
+                                    ? formatTime(logs.dtr.lunchIn)
+                                    : '-'}
+                                </td>
+                                <td className="py-2 text-center border">
+                                  {logs.dtr.timeOut
+                                    ? formatTime(logs.dtr.timeOut)
+                                    : '-'}
+                                </td>
+                                <td className="py-2 text-center border">
+                                  {formatTime(logs.schedule.timeIn)} -{' '}
+                                  {formatTime(logs.schedule.timeOut)}
+                                </td>
+                                <td className="py-2 text-xs text-center break-words border">
+                                  {logs.dtr.remarks ? logs.dtr.remarks : '-'}
+                                </td>
+                                <td className="py-2 text-center border">
+                                  <div>
+                                    <button
+                                      className=""
+                                      onClick={() => {
+                                        setCurrentRowData(logs);
+                                        setEditModalIsOpen(true);
+                                      }}
+                                    >
+                                      <i className="text-xl text-green-500 bx bxs-edit"></i>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            </Fragment>
+                          );
+                        })
+                      ) : (
+                        <tr className="border-0">
+                          <td colSpan={8}>NO DATA FOUND</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
+
+          <div className="mx-5">
+            {/* SCHEDULE CARD */}
+            <CardEmployeeSchedules employeeId={employeeData.userId} />
+          </div>
         </div>
 
         <EditDailySchedModal

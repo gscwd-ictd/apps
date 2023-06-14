@@ -3,6 +3,7 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { create } from 'zustand';
 import { EmployeeRowData } from '../utils/types/table-row-types/monitoring/employee.type';
 import { devtools } from 'zustand/middleware';
+import { EmployeeTimeLog } from 'libs/utils/src/lib/types/dtr.type';
 
 type LoadingDtrEmployee = {
   loadingEmployeesAsOption: boolean;
@@ -26,34 +27,11 @@ export type EmployeeSchedule = {
   schedule: Schedule;
 };
 
-export type EmployeeAttendance = {
-  employeeId?: string;
-  employeeName?: string;
-  id: number;
-  date: string;
-  timeIn: string;
-  timeOut: string;
-  lunchIn: string;
-  lunchOut: string;
-  schedule: string;
-  remarks?: string;
-};
-
-type Dtr = {
-  id: string;
-  companyId: string;
-  dtrDate: string;
-  timeIn: string | null;
-  timeOut: string | null;
-  lunchIn: string | null;
-  lunchOut: string | null;
-};
-
 export type DtrWithSchedule = {
   day: string;
   companyId: string;
   schedule: Schedule & { restDaysNumbers: string; restDaysNames: string };
-  dtr: Dtr & { remarks: string };
+  dtr: EmployeeTimeLog;
 };
 
 export type DailyTimeRecordState = {
