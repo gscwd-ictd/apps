@@ -150,8 +150,8 @@ export default function Index({
           crumbs={[
             {
               layerNo: 1,
-              layerText: 'Employee',
-              path: `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_FE_DOMAIN}/employees`,
+              layerText: 'Employees',
+              path: '/employees',
             },
             { layerNo: 2, layerText: 'Daily Time Record', path: '' },
           ]}
