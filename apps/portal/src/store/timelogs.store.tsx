@@ -3,14 +3,14 @@ import { create } from 'zustand';
 import {
   EmployeeDtrWithSchedule,
   EmployeeRestDay,
-  EmployeeSchedule,
   EmployeeTimeLog,
 } from '../../../../libs/utils/src/lib/types/dtr.type';
 import { devtools } from 'zustand/middleware';
+import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 
 export type TimeLogState = {
   dtr: EmployeeTimeLog;
-  schedule: EmployeeSchedule & EmployeeRestDay;
+  schedule: Schedule & EmployeeRestDay;
 
   loading: {
     loadingTimeLogs: boolean;
@@ -27,7 +27,7 @@ export type TimeLogState = {
 export const useTimeLogStore = create<TimeLogState>()(
   devtools((set) => ({
     dtr: {} as EmployeeTimeLog,
-    schedule: {} as EmployeeSchedule & EmployeeRestDay,
+    schedule: {} as Schedule & EmployeeRestDay,
 
     loading: {
       loadingTimeLogs: false,
@@ -41,7 +41,7 @@ export const useTimeLogStore = create<TimeLogState>()(
       set((state) => ({
         ...state,
         dtr: {} as EmployeeTimeLog,
-        schedule: {} as EmployeeSchedule & EmployeeRestDay,
+        schedule: {} as Schedule & EmployeeRestDay,
         loading: {
           ...state.loading,
           loadingTimeLogs: loading,

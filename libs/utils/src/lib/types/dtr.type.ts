@@ -1,3 +1,5 @@
+import { Schedule } from './schedule.type';
+
 // dtr
 export type EmployeeTimeLog = {
   id: string;
@@ -10,17 +12,17 @@ export type EmployeeTimeLog = {
   remarks: string;
 };
 
-export type EmployeeSchedule = {
-  id: string;
-  timeIn: string;
-  lunchOut: string;
-  lunchIn: string;
-  timeOut: string;
-  scheduleBase: string;
-  scheduleName: string;
-  scheduleType: string;
-  shift: string;
-};
+// export type EmployeeSchedule = {
+//   id: string;
+//   timeIn: string;
+//   lunchOut: string;
+//   lunchIn: string;
+//   timeOut: string;
+//   scheduleBase: string;
+//   scheduleName: string;
+//   scheduleType: string;
+//   shift: string;
+// };
 
 export type EmployeeRestDay = {
   restDaysNames: string;
@@ -28,6 +30,8 @@ export type EmployeeRestDay = {
 };
 
 export type EmployeeDtrWithSchedule = {
+  day: string;
+  companyId: string;
   dtr: EmployeeTimeLog; //dtr
-  schedule: EmployeeSchedule & EmployeeRestDay; // schedule with rest days
+  schedule: Schedule & EmployeeRestDay; // schedule with rest days
 };

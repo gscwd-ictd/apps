@@ -10,6 +10,7 @@ type DtrtableProps = {
 
 export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
   const date = useDtrStore((state) => state.date);
+  const employeeDtr = useDtrStore((state) => state.employeeDtr);
 
   const faceScanLogs = [
     {
@@ -146,65 +147,55 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
         <table className="w-full bg-slate-50 border-spacing-0 border-0 border-separate">
           <thead className="border-0">
             <tr>
-              <th className="border text-center py-2 px-2 md:px-6 text-sm md:text-lg">
+              <th className="border text-center py-2 px-2 md:px-6 text-sm md:text-md">
                 Date
               </th>
-              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-md">
                 Time In
               </th>
-              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-md">
                 Lunch Out
               </th>
-              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-md">
                 Lunch In
               </th>
-              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-md">
                 Time Out
               </th>
-              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-lg">
+              <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-md">
                 Schedule
               </th>
             </tr>
           </thead>
           <tbody className="text-center text-sm ">
-            {faceScanLogs.filter(
-              (filterLogs) =>
-                format(new Date(filterLogs.Date), 'MM-yyyy') ===
-                format(new Date(date), 'MM-yyyy')
-            ).length > 0 ? (
-              faceScanLogs
-                .filter(
-                  (filterLogs) =>
-                    format(new Date(filterLogs.Date), 'MM-yyyy') ===
-                    format(new Date(date), 'MM-yyyy')
-                )
-                .map((logs) => {
-                  return (
-                    <>
-                      <tr>
-                        <td colSpan={6}></td>
-                      </tr>
-                      <tr key={logs.id}>
-                        <td className="border text-center py-2">{logs.Date}</td>
-                        <td className="border text-center py-2 ">
-                          {logs.TimeIn}
-                        </td>
-                        <td className="border text-center py-2">
-                          {logs.LunchOut}
-                        </td>
-                        <td className="border text-center py-2">
-                          {logs.LunchIn}
-                        </td>
-                        <td className="border text-center py-2">
-                          {logs.TimeOut}
-                        </td>
-                        <td className="border text-center py-2">
-                          {logs.Schedule}
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })
+            {employeeDtr.length > 0 ? (
+              employeeDtr.map((logs) => {
+                return (
+                  <>
+                    <tr>
+                      <td colSpan={6}></td>
+                    </tr>
+                    <tr key={logs.id}>
+                      <td className="border text-center py-2">
+                        {logs.dtrDate}
+                      </td>
+                      <td className="border text-center py-2 ">
+                        {logs.timeIn}
+                      </td>
+                      <td className="border text-center py-2">
+                        {logs.lunchOut}
+                      </td>
+                      <td className="border text-center py-2">
+                        {logs.lunchIn}
+                      </td>
+                      <td className="border text-center py-2">
+                        {logs.timeOut}
+                      </td>
+                      <td className="border text-center py-2">{''}</td>
+                    </tr>
+                  </>
+                );
+              })
             ) : (
               <tr className="border-0">
                 <td colSpan={6}>NO DATA FOUND</td>

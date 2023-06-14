@@ -82,7 +82,7 @@ export default function DailyTimeRecord({
                 title="Daily Time Record"
                 subtitle="View schedules, time in and time out"
               >
-                <DtrDateSelect />
+                <DtrDateSelect employeeDetails={employeeDetails} />
               </ContentHeader>
 
               <ContentBody>
@@ -108,18 +108,18 @@ export default function DailyTimeRecord({
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const userDetails = employeeDummy;
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const employeeDetails = employeeDummy;
 
-//   return { props: { userDetails } };
-// };
+  return { props: { employeeDetails } };
+};
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+// export const getServerSideProps: GetServerSideProps = withCookieSession(
+//   async (context: GetServerSidePropsContext) => {
+//     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+//     return { props: { employeeDetails } };
+//   }
+// );
