@@ -26,8 +26,8 @@ import {
 } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import { LabelInput } from '../../../inputs/LabelInput';
-import { SelectListRF } from '../../../inputs/SelectListRF';
+import { LabelInput } from '../../inputs/LabelInput';
+import { SelectListRF } from '../../inputs/SelectListRF';
 
 type ViewEmployeeScheduleProps = {
   modalState: boolean;

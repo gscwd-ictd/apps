@@ -19,6 +19,7 @@ export type RenderList<T> = {
 
 type SelectProps<T> = {
   className?: string;
+  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   data: T[];
   listDef: ListDef<T>;
   initial?: T;
@@ -30,6 +31,7 @@ export const Select = <T extends object>({
   data,
   listDef,
   initial,
+  textSize = 'md',
   onSelect,
 }: SelectProps<T>) => {
   const { key, render, disable = () => false } = listDef;
@@ -63,7 +65,7 @@ export const Select = <T extends object>({
               {({ value }) => {
                 return (
                   <>
-                    <span>{value[key]}</span>
+                    <span className={`text-${textSize}`}>{value[key]}</span>
                     <ChevronDown rotate={open} />
                   </>
                 );
@@ -110,6 +112,7 @@ export const Select = <T extends object>({
                                    */
                                   return (
                                     <li
+                                      className={`text-${textSize}`}
                                       onClick={
                                         onSelect
                                           ? () => onSelect(listItem)

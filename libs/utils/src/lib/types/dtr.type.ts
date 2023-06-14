@@ -1,16 +1,13 @@
+// dtr
 export type EmployeeTimeLog = {
   id: string;
   companyId: string;
   dtrDate: string;
-
   timeIn: string;
   lunchOut: string | null;
   lunchIn: string | null;
   timeOut: string | null;
-
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
+  remarks: string;
 };
 
 export type EmployeeSchedule = {
@@ -19,7 +16,6 @@ export type EmployeeSchedule = {
   lunchOut: string;
   lunchIn: string;
   timeOut: string;
-
   scheduleBase: string;
   scheduleName: string;
   scheduleType: string;
@@ -32,6 +28,6 @@ export type EmployeeRestDay = {
 };
 
 export type EmployeeDtrWithSchedule = {
-  dtr: EmployeeTimeLog;
-  schedule: EmployeeSchedule & EmployeeRestDay;
+  dtr: EmployeeTimeLog; //dtr
+  schedule: EmployeeSchedule & EmployeeRestDay; // schedule with rest days
 };
