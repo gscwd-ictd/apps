@@ -1,8 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Button, ListDef, Select } from '@gscwd-apps/oneui';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
-import { format } from 'date-fns';
 import Link from 'next/link';
 import { useDtrStore } from '../../../store/dtr.store';
+import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
+import { UseUndertimeChecker } from 'libs/utils/src/lib/functions/UndertimeChecker';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -11,135 +13,6 @@ type DtrtableProps = {
 export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
   const date = useDtrStore((state) => state.date);
   const employeeDtr = useDtrStore((state) => state.employeeDtr);
-
-  const faceScanLogs = [
-    {
-      id: 1,
-      Date: '01-10-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 2,
-      Date: '01-09-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 3,
-      Date: '01-08-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 4,
-      Date: '01-06-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 5,
-      Date: '02-10-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 6,
-      Date: '02-09-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 7,
-      Date: '02-08-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 8,
-      Date: '03-16-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 9,
-      Date: '03-15-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 10,
-      Date: '03-04-2023',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 11,
-      Date: '12-25-2022',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 12,
-      Date: '04-20-2022',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 13,
-      Date: '04-21-2022',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-    {
-      id: 14,
-      Date: '05-21-2022',
-      TimeIn: '7:30AM',
-      TimeOut: '12:29PM',
-      LunchIn: '12:31PM',
-      LunchOut: '5:30PM',
-      Schedule: '8:00AM - 5:00PM',
-    },
-  ];
 
   return (
     <>
@@ -163,35 +36,53 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                 Time Out
               </th>
               <th className="border text-center py-2 px-2 md:px-5 text-sm md:text-md">
-                Schedule
+                Remarks
               </th>
             </tr>
           </thead>
           <tbody className="text-center text-sm ">
             {employeeDtr.length > 0 ? (
-              employeeDtr.map((logs) => {
+              employeeDtr.map((logs, index) => {
                 return (
                   <>
                     <tr>
                       <td colSpan={6}></td>
                     </tr>
-                    <tr key={logs.id}>
+                    <tr key={index}>
+                      <td className="border text-center py-2">{logs.day}</td>
+                      <td
+                        className={`border text-center py-2 ${
+                          UseLateChecker(
+                            logs.dtr.timeIn,
+                            logs.schedule.timeIn
+                          ) == true && logs.schedule.scheduleBase === 'Office'
+                            ? 'text-red-500'
+                            : ''
+                        }`}
+                      >
+                        {logs.dtr.timeIn}
+                      </td>
                       <td className="border text-center py-2">
-                        {logs.dtrDate}
-                      </td>
-                      <td className="border text-center py-2 ">
-                        {logs.timeIn}
+                        {logs.dtr.lunchOut}
                       </td>
                       <td className="border text-center py-2">
-                        {logs.lunchOut}
+                        {logs.dtr.lunchIn}
+                      </td>
+                      <td
+                        className={`border text-center py-2 ${
+                          UseUndertimeChecker(
+                            logs.dtr.timeOut,
+                            logs.schedule.timeOut
+                          ) == true && logs.schedule.scheduleBase === 'Office'
+                            ? 'text-red-500'
+                            : ''
+                        }`}
+                      >
+                        {logs.dtr.timeOut}
                       </td>
                       <td className="border text-center py-2">
-                        {logs.lunchIn}
+                        {logs.dtr.remarks}
                       </td>
-                      <td className="border text-center py-2">
-                        {logs.timeOut}
-                      </td>
-                      <td className="border text-center py-2">{''}</td>
                     </tr>
                   </>
                 );

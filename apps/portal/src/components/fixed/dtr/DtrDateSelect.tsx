@@ -5,6 +5,7 @@ import { useDtrStore } from '../../../../src/store/dtr.store';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
+import { useEffect } from 'react';
 
 type Month = { month: string; code: string };
 type Year = { year: string };
@@ -86,12 +87,18 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     setSelectedYear(year);
   };
 
+  useEffect(() => {
+    setSelectedYear(yearNow);
+    setSelectedMonth(monthNow);
+  }, []);
+
   const searchDtr = async (e) => {
     e.preventDefault();
+    getEmployeeDtr(true);
     console.log(employeeDetails.employmentDetails.companyId);
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/2023/05`
+        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}`
       );
 
       if (!isEmpty(data)) {

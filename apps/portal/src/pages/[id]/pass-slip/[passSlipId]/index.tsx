@@ -7,7 +7,7 @@ import {
 import { getUserDetails, withSession } from '../../../../utils/helpers/session';
 import { usePassSlipStore } from '../../../../store/passslip.store';
 import React, { useEffect } from 'react';
-import { PassSlipPdf } from '../../../../components/fixed/passslip/PassSlipPdf';
+import { PassSlipPdfView } from '../../../../components/fixed/passslip/PassSlipPdf';
 import { employeeDummy } from '../../../../../src/types/employee.type';
 import { useLeaveStore } from '../../../../../src/store/leave.store';
 import useSWR from 'swr';
@@ -40,7 +40,8 @@ export default function PassSlipPage({
 
   const router = useRouter();
 
-  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/${employeeDetails.employmentDetails.userId}`;
+  // const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/${employeeDetails.employmentDetails.userId}`;
+  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/details/${router.query.passSlipId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
@@ -63,6 +64,7 @@ export default function PassSlipPage({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlipDetailsPdf)) {
+      console.log(swrPassSlipDetailsPdf);
       getPassSlipListSuccess(swrIsLoading, swrPassSlipDetailsPdf);
     }
 
@@ -73,7 +75,7 @@ export default function PassSlipPage({
 
   return (
     employeeDetails &&
-    passSlip && (
+    swrPassSlipDetailsPdf && (
       <>
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlips) ? (
@@ -85,11 +87,9 @@ export default function PassSlipPage({
         <Head>
           <title>Employee Pass Slips</title>
         </Head>
-        <PassSlipPdf
+        <PassSlipPdfView
           employeeDetails={employeeDetails}
-          passSlipDetails={passSlip.completed.filter(
-            (passSlip) => passSlip.id === router.query.passSlipId
-          )}
+          passSlipDetails={swrPassSlipDetailsPdf}
         />
       </>
     )

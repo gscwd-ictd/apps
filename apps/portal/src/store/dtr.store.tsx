@@ -1,11 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import { EmployeeTimeLog } from 'libs/utils/src/lib/types/dtr.type';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { devtools } from 'zustand/middleware';
 
 export type DtrState = {
-  employeeDtr: Array<EmployeeTimeLog>;
-  responseDtr: Array<EmployeeTimeLog>;
+  employeeDtr: Array<EmployeeDtrWithSchedule>;
   loadingDtr: boolean;
   errorDtr: string;
 
@@ -21,12 +20,13 @@ export type DtrState = {
   getEmployeeDtr: (loading: boolean) => void;
   getEmployeeDtrSuccess: (loading: boolean, response) => void;
   getEmployeeDtrFail: (loading: boolean, error: string) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const useDtrStore = create<DtrState>()(
   devtools((set) => ({
     employeeDtr: [],
-    responseDtr: [],
     loadingDtr: false,
     errorDtr: '',
     selectedYear: '',
@@ -54,11 +54,11 @@ export const useDtrStore = create<DtrState>()(
     },
     getEmployeeDtrSuccess: (
       loading: boolean,
-      response: Array<EmployeeTimeLog>
+      response: Array<EmployeeDtrWithSchedule>
     ) => {
       set((state) => ({
         ...state,
-        responseDtr: response,
+        employeeDtr: response,
         loadingDtr: loading,
       }));
     },
@@ -67,6 +67,13 @@ export const useDtrStore = create<DtrState>()(
         ...state,
         loadingDtr: loading,
         errorDtr: error,
+      }));
+    },
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        errorDtr: '',
       }));
     },
   }))
