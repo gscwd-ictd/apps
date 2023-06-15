@@ -2,7 +2,6 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withNx } = require('@nx/next/plugins/with-nx');
-const { m } = require('framer-motion');
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
