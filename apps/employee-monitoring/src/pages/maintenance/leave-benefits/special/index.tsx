@@ -123,19 +123,13 @@ export default function Index() {
       enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('accumulatedCredits', {
+    columnHelper.accessor('maximumCredits', {
       enableSorting: false,
       enableColumnFilter: false,
       header: 'Credits',
-      cell: (info) => '-',
+      cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('creditDistribution', {
-      enableSorting: false,
-      header: 'Distribution',
-      cell: (info) => (
-        <div className="w-[4rem]">{UseRenderDistribution(info.getValue())}</div>
-      ),
-    }),
+
     columnHelper.accessor('isMonetizable', {
       enableSorting: false,
       header: 'Monetizable',

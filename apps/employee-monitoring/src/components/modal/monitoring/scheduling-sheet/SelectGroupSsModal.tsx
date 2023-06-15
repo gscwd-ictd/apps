@@ -140,10 +140,10 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
 
     // map the selected group and assign an empty array to rest days
     const membersWithRestDays = groupWithMembers.members.map((member) => {
-      return { ...member, restDays: [] };
+      return { ...member };
     });
 
-    //! Replace with groupWithMembers later if rest days are available
+    //! Replaced with groupWithMembers later if rest days are available
     setCurrentScheduleSheet({
       ...currentScheduleSheet,
       employees: membersWithRestDays,
