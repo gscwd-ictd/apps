@@ -100,7 +100,7 @@ const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">Add Custom Group</span>
+            <span className="text-xl font-medium">New Custom Group</span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
