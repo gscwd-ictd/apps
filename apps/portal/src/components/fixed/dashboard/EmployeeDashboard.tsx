@@ -53,10 +53,10 @@ const VerticalLayout = (): JSX.Element => {
                       ? `/${router.query.id}/pds`
                       : destination === 'psb'
                       ? `${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`
-                      : destination === 'leaves'
-                      ? `/${router.query.id}/leaves`
                       : destination === 'dtr'
                       ? `/${router.query.id}/dtr`
+                      : destination === 'leaves'
+                      ? `/${router.query.id}/leaves`
                       : destination === 'pass-slip'
                       ? `/${router.query.id}/pass-slip`
                       : destination === 'approvals'

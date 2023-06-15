@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { NoGroupSelectedVisual } from './NoGroupSelected';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, useDataTable } from '@gscwd-apps/oneui';
-import { EmployeeAsOptionWithRestDaysN } from 'libs/utils/src/lib/types/employee.type';
+import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import SelectRdByNModal from './SelectRdByNModal';
 import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
@@ -17,13 +17,11 @@ const SelectedEmployeesSsTable = () => {
   const [isDateRangeFilled, setIsDateRangeFilled] = useState<boolean>(true);
 
   const [currentRowData, setCurrentRowData] =
-    useState<EmployeeAsOptionWithRestDaysN>(
-      {} as EmployeeAsOptionWithRestDaysN
-    );
+    useState<EmployeeAsOptionWithRestDays>({} as EmployeeAsOptionWithRestDays);
 
   const [restDaysModalIsOpen, setRestDaysModalIsOpen] =
     useState<boolean>(false);
-  const openRestDaysModal = (rowData: EmployeeAsOptionWithRestDaysN) => {
+  const openRestDaysModal = (rowData: EmployeeAsOptionWithRestDays) => {
     setRestDaysModalIsOpen(true);
     setCurrentRowData(rowData);
   };
@@ -42,7 +40,7 @@ const SelectedEmployeesSsTable = () => {
   }, [currentScheduleSheet.dateFrom, currentScheduleSheet.dateTo]);
 
   // Render row actions in the table component
-  const renderRowActions = (rowData: EmployeeAsOptionWithRestDaysN) => {
+  const renderRowActions = (rowData: EmployeeAsOptionWithRestDays) => {
     return (
       <div className="text-center">
         <button
@@ -50,14 +48,14 @@ const SelectedEmployeesSsTable = () => {
           className="text-white bg-green-400 hover:bg-green-500 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
           onClick={() => openRestDaysModal(rowData)}
         >
-          <i className="bx bx-group"></i>
+          <i className="text-md bx bxs-sleepy"></i>
         </button>
       </div>
     );
   };
 
   // Define table columns
-  const columnHelper = createColumnHelper<EmployeeAsOptionWithRestDaysN>();
+  const columnHelper = createColumnHelper<EmployeeAsOptionWithRestDays>();
   const columns = [
     columnHelper.accessor('employeeId', {
       cell: (info) => info.getValue(),
@@ -80,6 +78,7 @@ const SelectedEmployeesSsTable = () => {
     }),
     columnHelper.display({
       id: 'actions',
+      header: () => <div className="flex justify-center w-full">Edit</div>,
       enableColumnFilter: false,
       cell: (props) => renderRowActions(props.row.original),
     }),
@@ -105,11 +104,18 @@ const SelectedEmployeesSsTable = () => {
             rowData={currentRowData}
           />
 
-          <DataTable model={table} paginate={true} />
+          {/* <hr className="mt-2 border border-dashed rounded " /> */}
+
+          <p className="flex items-center justify-start w-full px-5 font-light">
+            Employees
+          </p>
+          <hr className="h-1 mt-2 bg-gray-200 border-0 rounded" />
+          <DataTable
+            model={table}
+            paginate={!isEmpty(currentScheduleSheet.employees) ? true : false}
+          />
         </>
-      ) : (
-        <NoGroupSelectedVisual />
-      )}
+      ) : null}
     </>
   );
 };

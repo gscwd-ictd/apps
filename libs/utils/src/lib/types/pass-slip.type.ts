@@ -39,3 +39,23 @@ export type PassSlip = {
 
 // Individual pass slip id
 export type PassSlipId = Pick<PassSlip, 'id'>;
+
+export type PassSlipPdf = {
+  id: string;
+  dateOfApplication: string;
+  natureOfBusiness: string;
+  obTransportation: string | null;
+  estimateHours: string;
+  purposeDestination: string;
+  timeOut: string | null;
+  timeIn: string | null;
+  employee: {
+    name: string;
+    signature: string;
+  };
+  supervisor: {
+    name: string;
+    signature: string;
+  };
+  assignment: string;
+};

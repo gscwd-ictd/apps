@@ -42,6 +42,7 @@ Thumbs.db
 .next
 
 # ENV
+**/.env
 apps/employee-monitoring/.env
 apps/pds/.env
 apps/portal/.env

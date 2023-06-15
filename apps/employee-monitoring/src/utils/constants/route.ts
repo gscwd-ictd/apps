@@ -1,6 +1,6 @@
 export const Paths = [
   '/dashboard', //0
-  '/monitoring/daily-time-record', //1
+  '/employees', //1
   '/monitoring/leave-applications', //2
   '/monitoring/travel-orders', // 3
   '/monitoring/trainings-and-seminars', // 4

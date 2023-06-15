@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import {
   EmployeeAsOptionWithPosition,
-  EmployeeAsOptionWithRestDaysN,
+  EmployeeAsOptionWithRestDays,
 } from 'libs/utils/src/lib/types/employee.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
@@ -14,7 +14,7 @@ export type CustomGroup = {
 export type CustomGroupId = Pick<CustomGroup, 'id'>;
 
 export type CustomGroupWithMembers = { customGroupDetails: CustomGroup } & {
-  members: Array<EmployeeAsOptionWithRestDaysN>;
+  members: Array<EmployeeAsOptionWithRestDays>;
 };
 
 export type MutatedCgwmSelectOption = SelectOption & {

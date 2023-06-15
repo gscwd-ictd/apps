@@ -2,11 +2,11 @@ import cls from 'classnames';
 import { ModalProps, Props } from './Modal';
 
 export const overlayClass = () => {
-  return cls('fixed inset-0 flex items-center justify-center bg-black/30');
+  return cls('fixed inset-0 flex items-center justify-center bg-black/80');
 };
 
 export const panelContainerClass = ({ size }: ModalProps) => {
-  return cls('fixed inset-0  overflow-auto', {
+  return cls('fixed inset-0 overflow-auto', {
     'p-5': size === 'full',
     'py-14': size !== 'full',
   });
@@ -14,10 +14,11 @@ export const panelContainerClass = ({ size }: ModalProps) => {
 
 export const panelClass = (
   { size, className, fixedHeight }: ModalProps,
-  shake: boolean
+  shake: boolean,
+  noShakeOnSteady: boolean
 ) => {
   return cls(className, 'bg-white rounded-md mx-auto', {
-    'animate-shake': shake,
+    'animate-shake': shake && noShakeOnSteady === false,
 
     // 'min-h-[30%]': !fixedHeight && size === 'xs',
     // 'min-h-[50%]': !fixedHeight && size === 'sm',

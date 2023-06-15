@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Modal } from '@gscwd-apps/oneui';
-import { EmployeeAsOptionWithRestDaysN } from 'libs/utils/src/lib/types/employee.type';
+import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import {
   Dispatch,
   FunctionComponent,
@@ -15,12 +15,14 @@ import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functi
 import { isEmpty } from 'lodash';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
+import Image from 'next/image';
+import userphoto from '../../../../../public/user-photo.jpg';
 
 type SelectRdByNModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: EmployeeAsOptionWithRestDaysN;
+  rowData: EmployeeAsOptionWithRestDays;
 };
 
 const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
@@ -83,7 +85,13 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
 
   return (
     <>
-      <Modal open={modalState} setOpen={setModalState} size="sm" steady>
+      <Modal
+        open={modalState}
+        setOpen={setModalState}
+        size="sm"
+        steady
+        noShakeOnSteady={true}
+      >
         <Modal.Header>
           <div className="flex justify-between w-full pl-5">
             <span className="text-2xl font-medium">Select Rest Days</span>
@@ -97,13 +105,30 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           <div className="flex flex-col w-full min-h-[2.25rem] gap-1 px-5">
-            <div className="flex flex-col w-full mb-10">
-              <p className="text-xl font-semibold">{rowData.fullName}</p>
-              <p className="font-medium text-md">{rowData.positionTitle}</p>
+            <div className="flex items-center justify-center gap-2 mb-5">
+              {userphoto ? (
+                <div className="flex flex-wrap justify-center">
+                  <div className="w-[6rem]">
+                    <Image
+                      src={userphoto}
+                      alt="user-circle"
+                      className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+              )}
+
+              <div className="flex flex-col w-full">
+                <p className="text-xl font-semibold">{rowData.fullName}</p>
+                <p className="font-light text-md">{rowData.positionTitle}</p>
+              </div>
             </div>
+
             <MySelectList
               id="scheduleRestDays"
-              label="Rest Day(s)"
+              label="Rest Days"
               multiple
               options={listOfRestDays}
               onChange={(o) => setSelectedRestDays(o)}

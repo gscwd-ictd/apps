@@ -1,7 +1,7 @@
 import { Alert, Button, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
-import { EmployeeAttendance } from 'apps/employee-monitoring/src/store/dtr.store';
+import { DtrWithSchedule } from 'apps/employee-monitoring/src/store/dtr.store';
 import dayjs from 'dayjs';
 import {
   Dispatch,
@@ -16,7 +16,7 @@ type EditDailySchedModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: EmployeeAttendance; // TBD
+  rowData: DtrWithSchedule; // TBD
 };
 
 const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
@@ -31,7 +31,7 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EmployeeAttendance>();
+  } = useForm<DtrWithSchedule>();
 
   const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
 
@@ -40,17 +40,20 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
     closeModalAction();
   };
 
-  const onSubmit = (data: Partial<EmployeeAttendance>) => {
+  const onSubmit = (data: Partial<DtrWithSchedule>) => {
     console.log(data);
     // setConfirmAlertIsOpen(false);
     // closeModal();
   };
 
-  const setDefaultValues = (rowData: EmployeeAttendance) => {
-    setValue('timeIn', rowData.timeIn);
-    setValue('timeOut', rowData.timeOut);
-    setValue('lunchIn', rowData.lunchIn);
-    setValue('lunchOut', rowData.lunchOut);
+  const setDefaultValues = (rowData: DtrWithSchedule) => {
+    console.log(rowData.dtr.timeIn);
+    setValue('companyId', rowData.companyId);
+    setValue('dtr.dtrDate', rowData.dtr.dtrDate);
+    setValue('dtr.timeIn', rowData.dtr.timeIn);
+    setValue('dtr.timeOut', rowData.dtr.timeOut);
+    setValue('dtr.lunchIn', rowData.dtr.lunchIn);
+    setValue('dtr.lunchOut', rowData.dtr.lunchOut);
   };
 
   useEffect(() => {
@@ -69,7 +72,7 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
                 onClick={() => setConfirmAlertIsOpen(false)}
                 className="w-full"
               >
-                Cancel
+                <span className="text-xs">Cancel</span>
               </Button>
             </div>
             <div className="w-[6rem]">
@@ -88,7 +91,9 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady>
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full pl-5">
-            <span className="text-2xl text-gray-900">Time Log Correction</span>
+            <span className="text-2xl font-medium text-gray-900">
+              Time Log Correction
+            </span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -105,7 +110,7 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
               <div className="">
                 <LabelValue
                   label="Date"
-                  value={dayjs(rowData.date).format('MMMM DD, YYYY')}
+                  value={dayjs(rowData.day).format('MMMM DD, YYYY')}
                   direction="top-to-bottom"
                   textSize="md"
                 />
@@ -118,9 +123,9 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id="timeIn"
                   label="Time in"
                   type="time"
-                  controller={{ ...register('timeIn') }}
-                  isError={errors.timeIn ? true : false}
-                  errorMessage={errors.timeIn?.message}
+                  controller={{ ...register('dtr.timeIn') }}
+                  isError={errors.dtr?.timeIn ? true : false}
+                  errorMessage={errors.dtr?.timeIn?.message}
                 />
               </div>
               <div className="">
@@ -128,9 +133,9 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id="timeOut"
                   label="Time out"
                   type="time"
-                  controller={{ ...register('timeOut') }}
-                  isError={errors.timeOut ? true : false}
-                  errorMessage={errors.timeOut?.message}
+                  controller={{ ...register('dtr.timeOut') }}
+                  isError={errors.dtr?.timeOut ? true : false}
+                  errorMessage={errors.dtr?.timeOut?.message}
                 />
               </div>
 
@@ -139,9 +144,9 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id={'scheduleLunchIn'}
                   type="time"
                   label={'Lunch In'}
-                  controller={{ ...register('lunchIn') }}
-                  isError={errors.lunchIn ? true : false}
-                  errorMessage={errors.lunchIn?.message}
+                  controller={{ ...register('dtr.lunchIn') }}
+                  isError={errors.dtr?.lunchIn ? true : false}
+                  errorMessage={errors.dtr?.lunchIn?.message}
                   // disabled={IsLoading ? true : false}
                 />
               </div>
@@ -150,9 +155,9 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id={'scheduleLunchOut'}
                   type="time"
                   label={'Lunch Out'}
-                  controller={{ ...register('lunchOut') }}
-                  isError={errors.lunchOut ? true : false}
-                  errorMessage={errors.lunchOut?.message}
+                  controller={{ ...register('dtr.lunchOut') }}
+                  isError={errors.dtr?.lunchOut ? true : false}
+                  errorMessage={errors.dtr?.lunchOut?.message}
                   // disabled={IsLoading ? true : false}
                 />
               </div>

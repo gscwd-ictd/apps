@@ -16,23 +16,32 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 export default function Index() {
   const {
+    postResponse,
+    deleteResponse,
+    updateResponse,
     scheduleSheets,
-    setSelectedScheduleId,
-    getScheduleSheetsSuccess,
-    getScheduleSheetsFail,
     getScheduleSheets,
+    setSelectedScheduleId,
+    getScheduleSheetsFail,
+    emptyResponseAndErrors,
+    getScheduleSheetsSuccess,
   } = useScheduleSheetStore((state) => ({
     scheduleSheets: state.scheduleSheets,
-    getScheduleSheetsSuccess: state.getScheduleSheetsSuccess,
+    postResponse: state.scheduleSheet.postResponse,
+    updateResponse: state.scheduleSheet.updateResponse,
+    deleteResponse: state.scheduleSheet.deleteResponse,
+    getScheduleSheets: state.getScheduleSheets,
     getScheduleSheetsFail: state.getScheduleSheetsFail,
     setSelectedScheduleId: state.setSelectedScheduleId,
-    getScheduleSheets: state.getScheduleSheets,
+    emptyResponseAndErrors: state.emptyResponseAndErrors,
+    getScheduleSheetsSuccess: state.getScheduleSheetsSuccess,
   }));
 
   const {
     data: swrGroupSchedules,
     isLoading: swrGsIsLoading,
     error: swrGsError,
+    mutate: swrMutate,
   } = useSWR(`/custom-groups/schedule-sheets`, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
@@ -176,6 +185,19 @@ export default function Index() {
     columnVisibility: { id: false },
   });
 
+  // response listener
+  useEffect(() => {
+    if (
+      !isEmpty(postResponse) ||
+      !isEmpty(updateResponse) ||
+      !isEmpty(deleteResponse)
+    ) {
+      swrMutate();
+      setTimeout(() => {
+        emptyResponseAndErrors();
+      }, 2500);
+    }
+  }, [postResponse, updateResponse, deleteResponse]);
   return (
     <>
       <div className="w-full">
@@ -183,7 +205,7 @@ export default function Index() {
           crumbs={[
             {
               layerNo: 1,
-              layerText: 'Schedule Sheet',
+              layerText: 'Scheduling Sheet',
               path: '',
             },
             {
@@ -192,7 +214,7 @@ export default function Index() {
               path: '',
             },
           ]}
-          title="Station Schedule Sheet"
+          title="Station Scheduling Sheet"
         />
 
         <AddStationSsModal
@@ -214,8 +236,8 @@ export default function Index() {
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
                       onClick={openAddActionModal}
                     >
-                      <i className="bx bxs-plus-square"></i>&nbsp; Add Schedule
-                      Sheet
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add
+                      Scheduling Sheet
                     </button>
                   </div>
 
@@ -223,7 +245,7 @@ export default function Index() {
                     model={table}
                     showGlobalFilter={true}
                     showColumnFilter={false}
-                    paginate={true}
+                    paginate={!isEmpty(scheduleSheets) ? true : false}
                   />
                 </div>
               )}

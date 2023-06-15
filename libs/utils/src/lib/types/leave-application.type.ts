@@ -101,4 +101,5 @@ export type LeaveId = Pick<EmployeeLeave, 'id'>;
 export type MonitoringLeave = {
   employeeId: string;
   fullName: string;
+  positionTitle?: string;
 } & EmployeeLeave;

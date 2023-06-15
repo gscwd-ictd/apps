@@ -18,7 +18,7 @@ import {
 } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, ListDef, Select } from '@gscwd-apps/oneui';
+import { Button, ListDef, Select, ToastNotification } from '@gscwd-apps/oneui';
 import { format } from 'date-fns';
 import { HiOutlineSearch } from 'react-icons/hi';
 import Link from 'next/link';
@@ -28,11 +28,16 @@ import { DtrTable } from '../../../../src/components/fixed/dtr/DtrTable';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { isEmpty } from 'lodash';
 
 export default function DailyTimeRecord({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const isLoadingDtr = useDtrStore((state) => state.loadingDtr);
+  const isErrorDtr = useDtrStore((state) => state.errorDtr);
+  const emptyResponseAndError = useDtrStore(
+    (state) => state.emptyResponseAndError
+  );
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
@@ -42,16 +47,7 @@ export default function DailyTimeRecord({
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
-    setIsLoading(true);
   }, [employeeDetails, setEmployeeDetails]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-    }
-  }, [isLoading]);
 
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
@@ -66,9 +62,25 @@ export default function DailyTimeRecord({
     });
   }, []);
 
+  useEffect(() => {
+    if (!isEmpty(isErrorDtr)) {
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [isErrorDtr]);
+
   return (
     <>
       <>
+        {/* DTR Fetch Error */}
+        {!isEmpty(isErrorDtr) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${isErrorDtr}: Failed to load DTR.`}
+          />
+        ) : null}
+
         <EmployeeProvider employeeData={employee}>
           <Head>
             <title>Daily Time Record</title>
@@ -82,11 +94,11 @@ export default function DailyTimeRecord({
                 title="Daily Time Record"
                 subtitle="View schedules, time in and time out"
               >
-                <DtrDateSelect />
+                <DtrDateSelect employeeDetails={employeeDetails} />
               </ContentHeader>
 
               <ContentBody>
-                {isLoading ? (
+                {isLoadingDtr ? (
                   <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                     <SpinnerDotted
                       speed={70}
@@ -97,7 +109,9 @@ export default function DailyTimeRecord({
                     />
                   </div>
                 ) : (
-                  <DtrTable employeeDetails={employeeDetails} />
+                  <div className="pb-10">
+                    <DtrTable employeeDetails={employeeDetails} />
+                  </div>
                 )}
               </ContentBody>
             </div>
@@ -111,9 +125,9 @@ export default function DailyTimeRecord({
 // export const getServerSideProps: GetServerSideProps = async (
 //   context: GetServerSidePropsContext
 // ) => {
-//   const userDetails = employeeDummy;
+//   const employeeDetails = employeeDummy;
 
-//   return { props: { userDetails } };
+//   return { props: { employeeDetails } };
 // };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(

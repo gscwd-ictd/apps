@@ -63,6 +63,18 @@ export const SideNavigation = () => {
             }
             path={Paths[0]}
           />
+          {/**Employees */}
+          <Sidebar.Item
+            display=" Employees"
+            className="text-xs"
+            selected={pathname === Paths[1] ? true : false}
+            icon={
+              <>
+                <i className="text-xl bx bxs-user-account"></i>
+              </>
+            }
+            path={Paths[1]}
+          />
 
           {/**Monitoring Header */}
           <Sidebar.Header className={`py-2`}>
@@ -75,22 +87,9 @@ export const SideNavigation = () => {
             </span>
           </Sidebar.Header>
 
-          {/**DTR */}
-          <Sidebar.Item
-            display=" Daily Time Record"
-            className="text-xs"
-            selected={pathname === Paths[1] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bx-fingerprint"></i>
-              </>
-            }
-            path={Paths[1]}
-          />
-
           {/**Monitoring Scheduling Sheet */}
           <Sidebar.Item
-            display="Schedule Sheets"
+            display="Scheduling Sheets"
             className="text-xs"
             icon={<i className="text-xl bx bxs-spreadsheet"></i>}
             path=""

@@ -18,7 +18,7 @@ import {
   EmployeeSchedule,
   useDtrStore,
 } from 'apps/employee-monitoring/src/store/dtr.store';
-import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/sidebar-items/monitoring/daily-time-record/ViewEmployeeSchedule';
+import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/modal/employees/ViewEmployeeSchedule';
 import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 
 export default function Index() {
@@ -35,11 +35,12 @@ export default function Index() {
     getDtrEmployeesSuccess,
     setEmployeeWithSchedule,
     setDropdownAction,
+    setEmployeeDtr,
   } = useDtrStore((state) => ({
     employees: state.employees,
     dropdownAction: state.dropdownAction,
     selectedEmployee: state.selectedEmployee,
-    postResponse: state.employeeDtr.postResponse,
+    postResponse: state.employeeSchedule.postResponse,
     errorEmployeeWithSchedule: state.error.errorEmployeeWithSchedule,
     errorEmployeeAsOption: state.error.errorEmployeesAsOption,
     getDtrEmployees: state.getDtrEmployees,
@@ -48,6 +49,7 @@ export default function Index() {
     getDtrEmployeesFail: state.getDtrEmployeesFail,
     getDtrEmployeesSuccess: state.getDtrEmployeesSuccess,
     setDropdownAction: state.setDropdownAction,
+    setEmployeeDtr: state.setEmployeeDtr,
   }));
 
   const [currentRowData, setCurrentRowData] = useState<EmployeeRowData>(
@@ -190,15 +192,20 @@ export default function Index() {
     }
   }, [postResponse, errorEmployeeWithSchedule, errorEmployeeAsOption]);
 
+  useEffect(() => {
+    setDropdownAction('');
+    setEmployeeDtr([]);
+  }, []);
+
   return (
     <>
       <div className="w-full">
         <BreadCrumbs
-          title="Daily Time Record"
+          title="Employees"
           crumbs={[
             {
               layerNo: 1,
-              layerText: 'Daily Time Record',
+              layerText: 'Employees',
               path: '',
             },
           ]}

@@ -22,6 +22,7 @@ export type ModalProps = Props & {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
   steady?: boolean;
   fixedHeight?: boolean;
+  noShakeOnSteady?: boolean;
 };
 
 type HeaderProps = Props & {
@@ -39,11 +40,16 @@ type ModalComposition = {
 export const Modal: FunctionComponent<ModalProps> & ModalComposition = (
   props
 ) => {
-  const { open, setOpen, steady, children } = props;
+  const { open, setOpen, noShakeOnSteady = false, steady, children } = props;
 
   const [shake, setShake] = useState(false);
 
-  const onClose = () => (steady ? setShake(true) : setOpen(false));
+  const onClose = () =>
+    steady && noShakeOnSteady
+      ? null
+      : steady && noShakeOnSteady === false
+      ? setShake(true)
+      : setOpen(false);
 
   return (
     <LazyMotion features={domAnimation}>
@@ -71,7 +77,7 @@ export const Modal: FunctionComponent<ModalProps> & ModalComposition = (
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -100, transition: { duration: 0.25 } }}
                 onAnimationEnd={() => setShake(false)}
-                className={panelClass(props, shake)}
+                className={panelClass(props, shake, noShakeOnSteady)}
               >
                 <div className={childrenContainer()}>{children}</div>
               </Dialog.Panel>
