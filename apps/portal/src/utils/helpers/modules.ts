@@ -13,6 +13,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'pds' ||
           card.destination === 'leaves' ||
           card.destination === 'pass-slip' ||
+          card.destination === 'dtr' ||
           card.destination === 'psb'
       );
     } else if (Boolean(userDetails.employmentDetails.isHRMPSB) === false) {
@@ -20,7 +21,8 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         (card) =>
           card.destination === 'pds' ||
           card.destination === 'leaves' ||
-          card.destination === 'pass-slip'
+          card.destination === 'pass-slip' ||
+          card.destination === 'dtr'
       );
     }
   } else if (
@@ -34,7 +36,8 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'pds' ||
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
-        card.destination === 'pass-slip'
+        card.destination === 'pass-slip' ||
+        card.destination === 'dtr'
     );
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER)
@@ -48,8 +51,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   } else if (
@@ -67,8 +69,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   } else if (
@@ -84,8 +85,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   } else if (
@@ -101,8 +101,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   } else if (
@@ -120,8 +119,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   } else if (
@@ -139,8 +137,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   } else if (
@@ -158,8 +155,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   } else if (
@@ -178,8 +174,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
         card.destination === 'psb' ||
         card.destination === 'leaves' ||
         card.destination === 'pass-slip' ||
-        // card.destination === 'dtr' ||
-
+        card.destination === 'dtr' ||
         card.destination === 'approvals'
     );
   }

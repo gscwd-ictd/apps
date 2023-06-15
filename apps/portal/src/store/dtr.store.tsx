@@ -1,63 +1,80 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import { AlertState } from '../types/alert.type';
-import { ErrorState, ModalState } from '../types/modal.type';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import { devtools } from 'zustand/middleware';
 
 export type DtrState = {
-  alert: AlertState;
-  setAlert: (alert: AlertState) => void;
-  modal: ModalState;
-  setModal: (modal: ModalState) => void;
-  action: string;
-  setAction: (value: string) => void;
-  error: ErrorState;
-  setError: (error: ErrorState) => void;
+  employeeDtr: Array<EmployeeDtrWithSchedule>;
+  loadingDtr: boolean;
+  errorDtr: string;
+
   selectedYear: string;
   setSelectedYear: (value: string) => void;
+
   selectedMonth: string;
   setSelectedMonth: (value: string) => void;
+
   date: string;
   setDate: (value: string) => void;
-  isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
-  tab: number;
-  setTab: (tab: number) => void;
+
+  getEmployeeDtr: (loading: boolean) => void;
+  getEmployeeDtrSuccess: (loading: boolean, response) => void;
+  getEmployeeDtrFail: (loading: boolean, error: string) => void;
+
+  emptyResponseAndError: () => void;
 };
 
-export const useDtrStore = create<DtrState>((set) => ({
-  alert: { isOpen: false, page: 1 },
-  modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
-  action: '',
-  error: { isError: false, errorMessage: '' },
-  selectedYear: '',
-  selectedMonth: '',
-  date: '01-0001',
-  isLoading: false,
-  tab: 1,
-  setAlert: (alert: AlertState) => {
-    set((state) => ({ ...state, alert }));
-  },
-  setModal: (modal: ModalState) => {
-    set((state) => ({ ...state, modal }));
-  },
-  setAction: (action: string) => {
-    set((state) => ({ ...state, action }));
-  },
-  setError: (error: ErrorState) => {
-    set((state) => ({ ...state, error }));
-  },
-  setSelectedYear: (selectedYear: string) => {
-    set((state) => ({ ...state, selectedYear }));
-  },
-  setSelectedMonth: (selectedMonth: string) => {
-    set((state) => ({ ...state, selectedMonth }));
-  },
-  setDate: (date: string) => {
-    set((state) => ({ ...state, date }));
-  },
-  setIsLoading: (isLoading: boolean) => {
-    set((state) => ({ ...state, isLoading }));
-  },
-  setTab: (tab: number) => {
-    set((state) => ({ ...state, tab }));
-  },
-}));
+export const useDtrStore = create<DtrState>()(
+  devtools((set) => ({
+    employeeDtr: [],
+    loadingDtr: false,
+    errorDtr: '',
+    selectedYear: '',
+    selectedMonth: '',
+    date: '01-0001',
+
+    setSelectedYear: (selectedYear: string) => {
+      set((state) => ({ ...state, selectedYear }));
+    },
+    setSelectedMonth: (selectedMonth: string) => {
+      set((state) => ({ ...state, selectedMonth }));
+    },
+    setDate: (date: string) => {
+      set((state) => ({ ...state, date }));
+    },
+
+    //GET DTR ACTIONS
+    getEmployeeDtr: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        employeeDtr: [],
+        loadingDtr: loading,
+        errorDtr: '',
+      }));
+    },
+    getEmployeeDtrSuccess: (
+      loading: boolean,
+      response: Array<EmployeeDtrWithSchedule>
+    ) => {
+      set((state) => ({
+        ...state,
+        employeeDtr: response,
+        loadingDtr: loading,
+      }));
+    },
+    getEmployeeDtrFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loadingDtr: loading,
+        errorDtr: error,
+      }));
+    },
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        errorDtr: '',
+      }));
+    },
+  }))
+);

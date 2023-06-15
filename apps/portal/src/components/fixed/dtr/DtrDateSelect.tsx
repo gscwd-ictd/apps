@@ -2,11 +2,19 @@ import { Button, ListDef, Select } from '@gscwd-apps/oneui';
 import { format } from 'date-fns';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { useDtrStore } from '../../../../src/store/dtr.store';
+import axios from 'axios';
+import { isEmpty } from 'lodash';
+import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
+import { useEffect } from 'react';
 
 type Month = { month: string; code: string };
 type Year = { year: string };
 
-export const DtrDateSelect = () => {
+type DtrDateSelectProps = {
+  employeeDetails: EmployeeDetails;
+};
+
+export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const selectedMonth = useDtrStore((state) => state.selectedMonth);
   const selectedYear = useDtrStore((state) => state.selectedYear);
   const date = useDtrStore((state) => state.date);
@@ -14,6 +22,11 @@ export const DtrDateSelect = () => {
   const setSelectedMonth = useDtrStore((state) => state.setSelectedMonth);
   const setSelectedYear = useDtrStore((state) => state.setSelectedYear);
   const setDate = useDtrStore((state) => state.setDate);
+  const getEmployeeDtr = useDtrStore((state) => state.getEmployeeDtr);
+  const getEmployeeDtrSuccess = useDtrStore(
+    (state) => state.getEmployeeDtrSuccess
+  );
+  const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
@@ -74,8 +87,27 @@ export const DtrDateSelect = () => {
     setSelectedYear(year);
   };
 
-  const searchDtr = (e) => {
+  useEffect(() => {
+    setSelectedYear(yearNow);
+    setSelectedMonth(monthNow);
+  }, []);
+
+  const searchDtr = async (e) => {
     e.preventDefault();
+    getEmployeeDtr(true);
+    console.log(employeeDetails.employmentDetails.companyId);
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}`
+      );
+
+      if (!isEmpty(data)) {
+        getEmployeeDtrSuccess(false, data);
+      }
+    } catch (error) {
+      getEmployeeDtrFail(false, error.message);
+    }
+
     setDate(
       `${selectedMonth ? selectedMonth : monthNow}-01-${
         selectedYear ? selectedYear : yearNow
