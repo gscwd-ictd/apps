@@ -42,8 +42,8 @@ Thumbs.db
 .next
 
 # ENV
-/apps/employee-monitoring/.env
-/apps/pds/.env
-/apps/portal/.env
-/apps/learning-development/.env
-/apps/job-portal/.env
+apps/employee-monitoring/.env
+apps/pds/.env
+apps/portal/.env
+apps/learning-development/.env
+apps/job-portal/.env
