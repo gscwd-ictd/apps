@@ -26,8 +26,8 @@ import {
 } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import { LabelInput } from '../../inputs/LabelInput';
-import { SelectListRF } from '../../inputs/SelectListRF';
+import { LabelInput } from '../../../inputs/LabelInput';
+import { SelectListRF } from '../../../inputs/SelectListRF';
 
 type ViewEmployeeScheduleProps = {
   modalState: boolean;
@@ -43,12 +43,9 @@ type EmployeeWithSchedule = {
   scheduleBase: ScheduleBases;
 };
 
-const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
-  modalState,
-  setModalState,
-  closeAction,
-  employee,
-}) => {
+const EditEmployeeTimeLogModal: FunctionComponent<
+  ViewEmployeeScheduleProps
+> = ({ modalState, setModalState, closeAction, employee }) => {
   const [employeeId, setEmployeeId] = useState<string>('');
   const [listOfSchedules, setListOfSchedules] = useState<
     Array<SelectOption & { scheduleBase: string }>
@@ -370,4 +367,4 @@ const ViewEmployeeSchedule: FunctionComponent<ViewEmployeeScheduleProps> = ({
   );
 };
 
-export default ViewEmployeeSchedule;
+export default EditEmployeeTimeLogModal;

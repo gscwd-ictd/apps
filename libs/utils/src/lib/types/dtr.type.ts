@@ -28,6 +28,8 @@ export type EmployeeRestDay = {
 };
 
 export type EmployeeDtrWithSchedule = {
+  day: string;
+  companyId: string;
   dtr: EmployeeTimeLog; //dtr
   schedule: EmployeeSchedule & EmployeeRestDay; // schedule with rest days
 };

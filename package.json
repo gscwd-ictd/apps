@@ -50,7 +50,7 @@
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "date-fns": "^2.29.3",
-    "dayjs": "^1.11.7",
+    "dayjs": "^1.11.8",
     "framer-motion": "^7.6.4",
     "keen-slider": "^6.8.5",
     "lodash.debounce": "^4.0.8",

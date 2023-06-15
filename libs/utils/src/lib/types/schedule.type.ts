@@ -15,12 +15,12 @@ type ScheduleWithoutLunch = {
 
 export type Schedule = {
   id?: string;
-  scheduleType: Categories | null;
   name: string;
   timeIn: string;
   timeOut: string;
-  shift: ScheduleShifts | null;
   scheduleBase: ScheduleBases | null;
+  scheduleType: Categories | null;
+  shift: ScheduleShifts | null;
 } & (ScheduleWithLunch | ScheduleWithoutLunch);
 
 export type ScheduleId = Pick<Schedule, 'id'>;

@@ -1,8 +1,9 @@
 import { Alert, Button, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
-import { DtrWithSchedule } from 'apps/employee-monitoring/src/store/dtr.store';
+
 import dayjs from 'dayjs';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import {
   Dispatch,
   FunctionComponent,
@@ -16,10 +17,10 @@ type EditDailySchedModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: DtrWithSchedule; // TBD
+  rowData: EmployeeDtrWithSchedule; // TBD
 };
 
-const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
+const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -31,7 +32,7 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<DtrWithSchedule>();
+  } = useForm<EmployeeDtrWithSchedule>();
 
   const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
 
@@ -40,13 +41,13 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
     closeModalAction();
   };
 
-  const onSubmit = (data: Partial<DtrWithSchedule>) => {
+  const onSubmit = (data: Partial<EmployeeDtrWithSchedule>) => {
     console.log(data);
     // setConfirmAlertIsOpen(false);
     // closeModal();
   };
 
-  const setDefaultValues = (rowData: DtrWithSchedule) => {
+  const setDefaultValues = (rowData: EmployeeDtrWithSchedule) => {
     console.log(rowData.dtr.timeIn);
     setValue('companyId', rowData.companyId);
     setValue('dtr.dtrDate', rowData.dtr.dtrDate);
@@ -182,4 +183,4 @@ const EditDailySchedModal: FunctionComponent<EditDailySchedModalProps> = ({
   );
 };
 
-export default EditDailySchedModal;
+export default EditOfficeTimeLogModal;

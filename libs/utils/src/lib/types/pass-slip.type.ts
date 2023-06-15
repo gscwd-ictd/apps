@@ -15,6 +15,8 @@ export type PassSlipApplicationForm = {
   obTransportation: ObTransportation | null;
   estimateHours?: number | null;
   purposeDestination: string;
+  timeIn?: string;
+  timeOut?: string;
   isCancelled: boolean;
 };
 
