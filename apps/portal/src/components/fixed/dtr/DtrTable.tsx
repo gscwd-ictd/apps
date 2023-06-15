@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useDtrStore } from '../../../store/dtr.store';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
 import { UseUndertimeChecker } from 'libs/utils/src/lib/functions/UndertimeChecker';
+import dayjs from 'dayjs';
+import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -13,7 +15,8 @@ type DtrtableProps = {
 export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
   const date = useDtrStore((state) => state.date);
   const employeeDtr = useDtrStore((state) => state.employeeDtr);
-
+  const now = dayjs().toDate().toDateString();
+  console.log(now);
   return (
     <>
       <div className="w-full flex rounded shadow">
@@ -44,10 +47,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
             {employeeDtr.length > 0 ? (
               employeeDtr.map((logs, index) => {
                 return (
-                  <>
-                    <tr>
-                      <td colSpan={6}></td>
-                    </tr>
+
                     <tr key={index}>
                       <td className="border text-center py-2">{logs.day}</td>
                       <td
@@ -60,13 +60,13 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                             : ''
                         }`}
                       >
-                        {logs.dtr.timeIn}
+                        {logs.dtr.timeIn ? UseTwelveHourFormat(logs.dtr.timeIn) : ''}
                       </td>
                       <td className="border text-center py-2">
-                        {logs.dtr.lunchOut}
+                        {logs.dtr.lunchOut ? UseTwelveHourFormat(logs.dtr.lunchOut) : ''}
                       </td>
                       <td className="border text-center py-2">
-                        {logs.dtr.lunchIn}
+                        {logs.dtr.lunchIn ? UseTwelveHourFormat(logs.dtr.lunchIn) : ''}
                       </td>
                       <td
                         className={`border text-center py-2 ${
@@ -78,13 +78,13 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                             : ''
                         }`}
                       >
-                        {logs.dtr.timeOut}
+                        {logs.dtr.timeOut ? UseTwelveHourFormat(logs.dtr.timeOut) : ''}
                       </td>
                       <td className="border text-center py-2">
                         {logs.dtr.remarks}
                       </td>
                     </tr>
-                  </>
+
                 );
               })
             ) : (
@@ -96,11 +96,11 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
         </table>
       </div>
       <div className="w-full flex justify-end pt-4">
-        <Link href={`/123/dtr/${date}`} target={'_blank'}>
+        {/* <Link href={`/123/dtr/${date}`} target={'_blank'}>
           <Button variant={'primary'} size={'md'} loading={false}>
             View
           </Button>
-        </Link>
+        </Link> */}
       </div>
     </>
   );

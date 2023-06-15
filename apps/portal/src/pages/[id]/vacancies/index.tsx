@@ -344,7 +344,7 @@ export default function Vacancies({
                 </div>
 
                 <button
-                  className="h-8 px-1 text-2xl rounded-full hover:bg-slate-100"
+                  className="h-8 px-1 text-xl outline-slate-100 outline-8 rounded-full hover:bg-slate-100"
                   onClick={modalCancel}
                 >
                   <HiX />

@@ -132,7 +132,7 @@ export const PassSlipApplicationModal = ({
                 Pass Slip Authorization
               </span>
               <button
-                className="hover:bg-slate-100 px-1 rounded-full"
+                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
               >
                 <HiX />
