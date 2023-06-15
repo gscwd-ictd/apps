@@ -54,22 +54,30 @@ export const AllPassSlipListTab = ({
                 className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
               >
                 <div className="w-full px-1 py-2 ">
-                  <h1 className="text-xl font-medium text-gray-600">
+                  <h1 className="text-lg font-medium text-gray-600">
                     {item.natureOfBusiness}
                   </h1>
                   <p className="text-sm text-gray-500">
-                    Date:{' '}
+                    Date Applied:{' '}
                     {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-gray-500">
                     Estimated Hours: {item.estimateHours}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-gray-500">
                     Purpose: {item.purposeDestination}
                   </p>
-
-                  <p className="text-xs text-indigo-500">
-                    Status: {item.status}
+                  <p className="text-sm text-indigo-500">
+                    Status:{' '}
+                    {item.status === 'ongoing'
+                      ? 'Ongoing'
+                      : item.status === 'approved'
+                      ? 'Approved'
+                      : item.status === 'disapproved'
+                      ? 'Disapproved'
+                      : item.status === 'cancelled'
+                      ? 'Cancelled'
+                      : item.status}
                   </p>
                 </div>
               </li>
