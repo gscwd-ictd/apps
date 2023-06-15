@@ -251,8 +251,9 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
-          <h1 className="text-2xl font-medium">Select a Group</h1>
+          <h1 className="text-xl font-medium">Select a Group</h1>
         </Modal.Header>
+
         <Modal.Body>
           <>
             <Select
@@ -300,6 +301,7 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
             )}
           </>
         </Modal.Body>
+
         <Modal.Footer>
           <div className="flex justify-end w-full">
             <div className="flex gap-2">

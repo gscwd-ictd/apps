@@ -196,23 +196,24 @@ const Index = () => {
     GetLeaveApplicationsFail: state.getLeaveApplicationsFail,
   }));
 
+  // UNCOMMENT IF leave application route is active
   // Initial zustand state update
-  useEffect(() => {
-    if (swrIsLoading) {
-      GetLeaveApplications(swrIsLoading);
-    }
-  }, [swrIsLoading]);
+  // useEffect(() => {
+  //   if (swrIsLoading) {
+  //     GetLeaveApplications(swrIsLoading);
+  //   }
+  // }, [swrIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrLeaveApplication)) {
-      GetLeaveApplicationsSuccess(swrIsLoading, swrLeaveApplication.data);
-    }
+  // useEffect(() => {
+  //   if (!isEmpty(swrLeaveApplication)) {
+  //     GetLeaveApplicationsSuccess(swrIsLoading, swrLeaveApplication.data);
+  //   }
 
-    if (!isEmpty(swrError)) {
-      GetLeaveApplicationsFail(swrIsLoading, swrError.message);
-    }
-  }, [swrLeaveApplication, swrError]);
+  //   if (!isEmpty(swrError)) {
+  //     GetLeaveApplicationsFail(swrIsLoading, swrError.message);
+  //   }
+  // }, [swrLeaveApplication, swrError]);
 
   return (
     <div className="w-full px-4">

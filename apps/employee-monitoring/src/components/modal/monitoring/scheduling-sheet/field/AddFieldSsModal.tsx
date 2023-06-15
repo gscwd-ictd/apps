@@ -281,7 +281,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="px-5 text-2xl font-medium">
+          <h1 className="px-5 text-xl font-medium">
             Add Field Scheduling Sheet
           </h1>
         </Modal.Header>
