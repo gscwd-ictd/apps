@@ -1,7 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Modal } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import {
+  NatureOfBusiness,
+  PassSlipStatus,
+} from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import Image from 'next/image';
 import React, { FunctionComponent } from 'react';
@@ -130,6 +133,30 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                     value={rowData.purposeDestination}
                   />
                 </div>
+
+                {rowData.status === PassSlipStatus.FOR_APPROVAL ||
+                rowData.status === PassSlipStatus.DISAPPROVED ||
+                rowData.status === PassSlipStatus.APPROVED ? null : (
+                  <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Pass Slip Time Out"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={rowData.timeOut ?? 'N/A'}
+                    />
+
+                    {rowData.natureOfBusiness === NatureOfBusiness.HALF_DAY ||
+                    rowData.natureOfBusiness ===
+                      NatureOfBusiness.UNDERTIME ? null : (
+                      <LabelValue
+                        label="Pass Slip Time In"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={rowData.timeIn ?? 'N/A'}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
 
               <AlertNotification

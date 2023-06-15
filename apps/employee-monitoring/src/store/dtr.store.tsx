@@ -3,7 +3,10 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { create } from 'zustand';
 import { EmployeeRowData } from '../utils/types/table-row-types/monitoring/employee.type';
 import { devtools } from 'zustand/middleware';
-import { EmployeeTimeLog } from 'libs/utils/src/lib/types/dtr.type';
+import {
+  EmployeeDtrWithSchedule,
+  EmployeeTimeLog,
+} from 'libs/utils/src/lib/types/dtr.type';
 
 type LoadingDtrEmployee = {
   loadingEmployeesAsOption: boolean;
@@ -25,13 +28,6 @@ export type EmployeeSchedule = {
   employeeId: string;
   employeeName: string;
   schedule: Schedule;
-};
-
-export type DtrWithSchedule = {
-  day: string;
-  companyId: string;
-  schedule: Schedule & { restDaysNumbers: string; restDaysNames: string };
-  dtr: EmployeeTimeLog;
 };
 
 export type DailyTimeRecordState = {
@@ -58,13 +54,13 @@ export type DailyTimeRecordState = {
   loading: LoadingDtrEmployee;
   error: ErrorDtrEmployee;
   employeeSchedule: ResponseDtrEmployee;
-  employeeDtr: Array<DtrWithSchedule>;
-  setEmployeeDtr: (employeeDtr: Array<DtrWithSchedule>) => void;
+  employeeDtr: Array<EmployeeDtrWithSchedule>;
+  setEmployeeDtr: (employeeDtr: Array<EmployeeDtrWithSchedule>) => void;
   shouldFetchDtr: boolean;
   setShouldFetchDtr: (shouldFetchDtr: boolean) => void;
 
   getEmployeeDtr: () => void;
-  getEmployeeDtrSuccess: (response: Array<DtrWithSchedule>) => void;
+  getEmployeeDtrSuccess: (response: Array<EmployeeDtrWithSchedule>) => void;
   getEmployeeDtrFail: (error: string) => void;
 
   getDtrEmployees: () => void;
@@ -113,7 +109,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
     selectedYear: '--',
     employeeDtr: [],
 
-    setEmployeeDtr: (response: Array<DtrWithSchedule>) =>
+    setEmployeeDtr: (response: Array<EmployeeDtrWithSchedule>) =>
       set((state) => ({ ...state, employeeDtr: response })),
 
     setDate: (value: string) => set((state) => ({ ...state, date: value })),
@@ -158,7 +154,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         // isDateSearched: true,
       })),
 
-    getEmployeeDtrSuccess: (response: Array<DtrWithSchedule>) =>
+    getEmployeeDtrSuccess: (response: Array<EmployeeDtrWithSchedule>) =>
       set((state) => ({
         ...state,
         loading: { ...state.loading, loadingEmployeeDtr: false },

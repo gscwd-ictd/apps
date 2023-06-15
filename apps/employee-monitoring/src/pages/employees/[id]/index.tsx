@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
@@ -7,11 +8,8 @@ import dayjs from 'dayjs';
 import useSWR from 'swr';
 import { Fragment, useEffect, useState } from 'react';
 import { DtrDateSelect } from 'apps/employee-monitoring/src/components/modal/employees/DtrDateSelect';
-import {
-  DtrWithSchedule,
-  useDtrStore,
-} from 'apps/employee-monitoring/src/store/dtr.store';
-import EditDailySchedModal from 'apps/employee-monitoring/src/components/modal/employees/EditOfficeDtrModal';
+import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
+import EditDailySchedModal from 'apps/employee-monitoring/src/components/modal/employees/EditOfficeTimeLogModal';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -19,33 +17,35 @@ import {
 } from 'next/types';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
-import userphoto from '../../../../public/user-photo.jpg';
-import Image from 'next/image';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
+import duration from 'dayjs/plugin/duration';
 
-import dynamic from 'next/dynamic';
-
-const CardEmployeeSchedules = dynamic(
-  () =>
-    import(
-      'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules'
-    ),
-  { ssr: false }
-);
+// const CardEmployeeSchedules = dynamic(
+//   () =>
+//     import(
+//       'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules'
+//     ),
+//   { ssr: false }
+// );
 
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 const localizedFormat = require('dayjs/plugin/localizedFormat');
+// const duration = require('dayjs/plugin/duration');
 
-dayjs.extend(localizedFormat, customParseFormat);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(duration);
 
 export default function Index({
   employeeData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Edit modal function
-  const [currentRowData, setCurrentRowData] = useState<DtrWithSchedule>(
-    {} as DtrWithSchedule
+  const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>(
+    {} as EmployeeDtrWithSchedule
   );
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-  const openEditActionModal = (rowData: DtrWithSchedule) => {
+  const openEditActionModal = (rowData: EmployeeDtrWithSchedule) => {
     setEditModalIsOpen(true);
     setCurrentRowData(rowData);
   };
@@ -82,7 +82,11 @@ export default function Index({
     getIsLoading: state.loading.loadingEmployeeDtr,
   }));
 
-  const { data: swrDtr, error: swrDtrError } = useSWR(
+  const {
+    data: swrDtr,
+    error: swrDtrError,
+    mutate: swrMutate,
+  } = useSWR(
     shouldFetchDtr
       ? `daily-time-record/employees/${employeeData.companyId}/${selectedYear}/${selectedMonth}`
       : null,
@@ -93,16 +97,42 @@ export default function Index({
     }
   );
 
-  const compareTimes = (fromTime: string, toTime: string) => {
-    const from = dayjs(fromTime);
-    const to = dayjs(toTime);
-    const ft = dayjs(`2000-01-01 ${from}`);
-    const tt = dayjs(`2000-01-01 ${to}`);
-    const mins = tt.diff(ft, 'minutes', true);
-
-    const totalMins = dayjs().minute(mins);
-    return totalMins;
+  // compare if after
+  const compareIfEarly = (
+    day: string,
+    actualTime: string,
+    scheduledTime: string
+  ) => {
+    return dayjs(day + ' ' + actualTime).isBefore(
+      day + ' ' + scheduledTime,
+      'minute'
+    );
   };
+
+  // compare if before
+  const compareIfLate = (
+    day: string,
+    actualTime: string,
+    scheduledTime: string,
+    addition?: number
+  ) => {
+    // addition is included since we do not set the lunch in duration
+
+    if (addition) {
+      return dayjs(day + ' ' + actualTime).isAfter(
+        dayjs(day + ' ' + scheduledTime)
+          .add(dayjs.duration({ minutes: 29 }))
+          .format('MM DD YYYY HH:mm'),
+        'minutes'
+      );
+    } else {
+      return dayjs(day + ' ' + actualTime).isAfter(
+        day + ' ' + scheduledTime,
+        'minute'
+      );
+    }
+  };
+
   // mm dd yyyy
   const formatDate = (date: string) => {
     return dayjs(date).format('MM-DD-YYYY');
@@ -165,11 +195,11 @@ export default function Index({
               <div className="flex flex-col flex-wrap ">
                 <Card className="rounded-t bg-slate-200">
                   <div className="flex items-center gap-4 px-2">
-                    {userphoto ? (
+                    {employeeData.photoUrl ? (
                       <div className="flex flex-wrap justify-center">
                         <div className="w-[6rem]">
-                          <Image
-                            src={userphoto}
+                          <img
+                            src={employeeData.photoUrl}
                             alt="user-circle"
                             className="h-auto max-w-full align-middle border-none rounded-full shadow"
                           />
@@ -226,6 +256,60 @@ export default function Index({
                       selectedYear !== '--' &&
                       !isEmpty(employeeDtr) ? (
                         employeeDtr.map((logs, index) => {
+                          const red = 'text-red-500';
+                          const normal = 'text-gray-700';
+                          let timeInColor = '';
+                          let lunchOutColor = '';
+                          let lunchInColor = '';
+                          let timeOutColor = '';
+
+                          // time in color
+                          compareIfLate(
+                            logs.day,
+                            logs.dtr.timeIn,
+                            logs.schedule.timeIn
+                          ) === true
+                            ? (timeInColor = red)
+                            : (timeInColor = normal);
+
+                          // lunch out color
+                          compareIfEarly(
+                            logs.day,
+                            logs.dtr.lunchOut,
+                            logs.schedule.lunchOut
+                          ) ||
+                          compareIfLate(
+                            logs.day,
+                            logs.dtr.lunchOut,
+                            logs.schedule.lunchIn
+                          ) === true
+                            ? (lunchOutColor = red)
+                            : (lunchOutColor = normal);
+
+                          // lunch in color
+                          compareIfEarly(
+                            logs.day,
+                            logs.dtr.lunchIn,
+                            logs.schedule.lunchIn
+                          ) ||
+                          compareIfLate(
+                            logs.day,
+                            logs.dtr.lunchIn,
+                            logs.schedule.lunchIn,
+                            29 // 12:31 lunch in + 20 = 1pm
+                          ) === true
+                            ? (lunchInColor = red)
+                            : (lunchInColor = normal);
+
+                          // time out color
+                          compareIfEarly(
+                            logs.day,
+                            logs.dtr.timeOut,
+                            logs.schedule.timeOut
+                          ) === true
+                            ? (timeOutColor = red)
+                            : (timeOutColor = normal);
+
                           return (
                             <Fragment key={index}>
                               <tr>
@@ -235,48 +319,58 @@ export default function Index({
                                 <td className="py-2 text-center border">
                                   {formatDateInWords(logs.day)}
                                 </td>
-                                <td className={`py-2 text-center border`}>
-                                  {logs.dtr.timeIn
-                                    ? formatTime(logs.dtr.timeIn)
-                                    : '-'}
-
-                                  {/* {compareTimes(
-                                  logs.dtr.timeIn,
-                                  logs.schedule.timeIn
-                                ).toString()} */}
+                                <td className="py-2 text-center border">
+                                  <span className={timeInColor}>
+                                    {logs.dtr.timeIn
+                                      ? formatTime(logs.dtr.timeIn)
+                                      : '-'}
+                                  </span>
                                 </td>
                                 <td className="py-2 text-center border">
-                                  {logs.dtr.lunchOut
-                                    ? formatTime(logs.dtr.lunchOut)
-                                    : '-'}
+                                  <span className={lunchOutColor}>
+                                    {logs.dtr.lunchOut
+                                      ? formatTime(logs.dtr.lunchOut)
+                                      : '-'}
+                                  </span>
                                 </td>
                                 <td className="py-2 text-center border">
-                                  {logs.dtr.lunchIn
-                                    ? formatTime(logs.dtr.lunchIn)
-                                    : '-'}
+                                  <span className={lunchInColor}>
+                                    {logs.dtr.lunchIn
+                                      ? formatTime(logs.dtr.lunchIn)
+                                      : '-'}
+                                  </span>
                                 </td>
                                 <td className="py-2 text-center border">
-                                  {logs.dtr.timeOut
-                                    ? formatTime(logs.dtr.timeOut)
-                                    : '-'}
+                                  <span className={timeOutColor}>
+                                    {logs.dtr.timeOut
+                                      ? formatTime(logs.dtr.timeOut)
+                                      : '-'}
+                                  </span>
                                 </td>
                                 <td className="py-2 text-center border">
                                   {formatTime(logs.schedule.timeIn)} -{' '}
                                   {formatTime(logs.schedule.timeOut)}
                                 </td>
                                 <td className="py-2 text-xs text-center break-words border">
-                                  {logs.dtr.remarks ? logs.dtr.remarks : '-'}
+                                  {(dayjs().isAfter(dayjs(logs.day)) ||
+                                    dayjs().isSame(dayjs(logs.day), 'day')) &&
+                                  logs.dtr.remarks
+                                    ? logs.dtr.remarks
+                                    : '-'}
                                 </td>
                                 <td className="py-2 text-center border">
                                   <div>
                                     <button
-                                      className=""
-                                      onClick={() => {
-                                        setCurrentRowData(logs);
-                                        setEditModalIsOpen(true);
-                                      }}
+                                      className="text-green-500 disabled:text-red-600"
+                                      onClick={() => openEditActionModal(logs)}
+                                      disabled={
+                                        dayjs().isBefore(dayjs(logs.day)) ||
+                                        dayjs().isSame(dayjs(logs.day), 'day')
+                                          ? true
+                                          : false
+                                      }
                                     >
-                                      <i className="text-xl text-green-500 bx bxs-edit"></i>
+                                      <i className="text-xl text-inherit bx bxs-edit"></i>
                                     </button>
                                   </div>
                                 </td>
@@ -298,7 +392,7 @@ export default function Index({
 
           <div className="mx-5">
             {/* SCHEDULE CARD */}
-            <CardEmployeeSchedules employeeId={employeeData.userId} />
+            <CardEmployeeSchedules employeeData={employeeData} />
           </div>
         </div>
 

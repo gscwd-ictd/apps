@@ -18,6 +18,7 @@ import {
 import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
+import dayjs from 'dayjs';
 
 // Mock Data REMOVE later
 const TypesMockData: Array<MonitoringLeave> = [
@@ -133,7 +134,7 @@ const Index = () => {
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
       filterFn: 'equalsString',
-      cell: (info) => info.getValue(),
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employeeId', {
       cell: (info) => info.getValue(),

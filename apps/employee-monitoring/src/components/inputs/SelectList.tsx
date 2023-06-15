@@ -116,7 +116,6 @@ export function MySelectList({
       <Popover.Root>
         <Popover.Trigger>
           <div
-            role="button"
             id={id}
             ref={containerRef}
             tabIndex={0}

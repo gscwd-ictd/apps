@@ -15,6 +15,7 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
 import UseRenderObTransportation from 'apps/employee-monitoring/src/utils/functions/RenderObTransporation';
 import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
+import dayjs from 'dayjs';
 import {
   NatureOfBusiness,
   ObTransportation,
@@ -177,7 +178,7 @@ export default function Index() {
     columnHelper.accessor('dateOfApplication', {
       header: 'Date of Application',
       enableSorting: false,
-      cell: (info) => info.getValue(),
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
 
     columnHelper.accessor('employeeName', {
@@ -237,9 +238,7 @@ export default function Index() {
     if (!isEmpty(swrPassSlips)) getPassSlipsSuccess(swrPassSlips.data);
 
     // fail
-    if (!isEmpty(swrError)) {
-      getPassSlipsFail(swrError.message);
-    }
+    if (!isEmpty(swrError)) getPassSlipsFail(swrError.message);
   }, [swrPassSlips, swrError]);
 
   // if error getting pass slips

@@ -84,8 +84,7 @@ export const DtrDateSelect = () => {
     setSelectedYear(year);
   };
 
-  const searchDtr = (e) => {
-    e.preventDefault();
+  const searchDtr = () => {
     setIsDateSearched(true);
   };
 
@@ -113,7 +112,7 @@ export const DtrDateSelect = () => {
         variant={'info'}
         size={'sm'}
         loading={false}
-        onClick={(e) => searchDtr(e)}
+        onClick={() => setIsDateSearched(true)}
         type="button"
         disabled={
           selectedMonth === '--' || selectedYear === '--' ? true : false

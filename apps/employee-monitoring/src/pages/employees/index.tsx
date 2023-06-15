@@ -18,7 +18,6 @@ import {
   EmployeeSchedule,
   useDtrStore,
 } from 'apps/employee-monitoring/src/store/dtr.store';
-import ViewEmployeeSchedule from 'apps/employee-monitoring/src/components/modal/employees/ViewEmployeeSchedule';
 import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 
 export default function Index() {
@@ -242,12 +241,6 @@ export default function Index() {
             ) : (
               <div className="flex flex-col flex-wrap ">
                 {/** Top Card */}
-                <ViewEmployeeSchedule
-                  modalState={editModalIsOpen}
-                  setModalState={setEditModalIsOpen}
-                  closeAction={closeEditActionModal}
-                  employee={currentRowData}
-                />
 
                 <DataTable
                   model={table}
