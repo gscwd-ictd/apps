@@ -114,13 +114,14 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">New Field Schedule</span>
+            <span className="text-xl font-medium">New Field Schedule</span>
             <button
-              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
               onClick={closeModalAction}
             >
-              x
+              <i className="bx bx-x"></i>
+              <span className="sr-only">Close modal</span>
             </button>
           </div>
         </Modal.Header>
@@ -138,56 +139,55 @@ const AddFieldSchedModal: FunctionComponent<AddModalProps> = ({
           ) : null}
 
           <form onSubmit={handleSubmit(onSubmit)} id="addfieldmodal">
-            <div className="w-full mt-5">
-              <div className="flex flex-col w-full gap-5">
-                {/** name */}
-                <LabelInput
-                  id={'scheduleName'}
-                  label={'Schedule Name'}
-                  controller={{ ...register('name', { required: true }) }}
-                  isError={errors.name ? true : false}
-                  errorMessage={errors.name?.message}
-                  disabled={IsLoading ? true : false}
-                />
+            <div className="flex flex-col w-full gap-5">
+              {/** name */}
+              <LabelInput
+                id={'scheduleName'}
+                label={'Schedule Name'}
+                controller={{ ...register('name', { required: true }) }}
+                isError={errors.name ? true : false}
+                errorMessage={errors.name?.message}
+                disabled={IsLoading ? true : false}
+              />
 
-                {/** Time in */}
-                <LabelInput
-                  id={'scheduleTimeIn'}
-                  type="time"
-                  label={'Time In'}
-                  controller={{ ...register('timeIn', { required: true }) }}
-                  isError={errors.timeIn ? true : false}
-                  errorMessage={errors.timeIn?.message}
-                  disabled={IsLoading ? true : false}
-                />
+              {/** Time in */}
+              <LabelInput
+                id={'scheduleTimeIn'}
+                type="time"
+                label={'Time In'}
+                controller={{ ...register('timeIn', { required: true }) }}
+                isError={errors.timeIn ? true : false}
+                errorMessage={errors.timeIn?.message}
+                disabled={IsLoading ? true : false}
+              />
 
-                {/** Time Out */}
-                <LabelInput
-                  id={'scheduleTimeOut'}
-                  type="time"
-                  label={'Time Out'}
-                  controller={{ ...register('timeOut', { required: true }) }}
-                  isError={errors.timeOut ? true : false}
-                  errorMessage={errors.timeOut?.message}
-                  disabled={IsLoading ? true : false}
-                />
+              {/** Time Out */}
+              <LabelInput
+                id={'scheduleTimeOut'}
+                type="time"
+                label={'Time Out'}
+                controller={{ ...register('timeOut', { required: true }) }}
+                isError={errors.timeOut ? true : false}
+                errorMessage={errors.timeOut?.message}
+                disabled={IsLoading ? true : false}
+              />
 
-                {/** Shift  */}
-                <SelectListRF
-                  id="scheduleShift"
-                  selectList={listOfShifts}
-                  controller={{
-                    ...register('shift', { required: true }),
-                  }}
-                  label="Shift"
-                  isError={errors.shift ? true : false}
-                  errorMessage={errors.shift?.message}
-                  disabled={IsLoading ? true : false}
-                />
-              </div>
+              {/** Shift  */}
+              <SelectListRF
+                id="scheduleShift"
+                selectList={listOfShifts}
+                controller={{
+                  ...register('shift', { required: true }),
+                }}
+                label="Shift"
+                isError={errors.shift ? true : false}
+                errorMessage={errors.shift?.message}
+                disabled={IsLoading ? true : false}
+              />
             </div>
           </form>
         </Modal.Body>
+
         <Modal.Footer>
           <div className="flex justify-end w-full">
             <Button
