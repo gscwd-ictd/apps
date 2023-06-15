@@ -58,6 +58,7 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm<LeaveBenefit>({
     resolver: yupResolver(LeaveBenefitSchema),
     mode: 'onChange',
@@ -86,12 +87,16 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
   };
 
   const onSubmit: SubmitHandler<LeaveBenefit> = (leave: LeaveBenefit) => {
-    // console.log(leave);
-
     // set loading to true
     UpdateLeaveBenefit(true);
 
     handleEditLeave(leave);
+  };
+
+  // cancel or close action
+  const onCancel = () => {
+    reset();
+    closeModalAction();
   };
 
   const handleEditLeave = async (leave: LeaveBenefit) => {
@@ -108,7 +113,7 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
       UpdateLeaveBenefitSuccess(result);
 
       // call the close modal action
-      closeModalAction();
+      onCancel();
     }
   };
 
@@ -147,7 +152,7 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="editspecialmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="editSpecialModal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/* special Name */}
@@ -179,7 +184,7 @@ const EditSpecialModal: FunctionComponent<EditModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="editspecialmodal"
+              form="editSpecialModal"
               className="disabled:cursor-not-allowed"
             >
               <span className="text-xs font-normal">Update</span>

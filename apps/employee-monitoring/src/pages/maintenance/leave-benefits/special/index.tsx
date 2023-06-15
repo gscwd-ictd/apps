@@ -191,7 +191,9 @@ export default function Index() {
     if (
       !isEmpty(PostResponse) ||
       !isEmpty(UpdateResponse) ||
-      !isEmpty(DeleteResponse)
+      !isEmpty(DeleteResponse) ||
+      !isEmpty(LeaveBenefitError) ||
+      !isEmpty(LeaveBenefitsError)
     ) {
       mutateLeaveBenefits();
 
@@ -200,7 +202,13 @@ export default function Index() {
         EmptyErrors();
       }, 3000);
     }
-  }, [PostResponse, UpdateResponse, DeleteResponse]);
+  }, [
+    PostResponse,
+    UpdateResponse,
+    DeleteResponse,
+    LeaveBenefitError,
+    LeaveBenefitsError,
+  ]);
 
   return (
     <div className="w-full">

@@ -107,14 +107,6 @@ export default function Index() {
 
         <button
           type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
-        >
-          <i className="bx bxs-user-plus"></i>
-        </button>
-
-        <button
-          type="button"
           className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
           onClick={() => openDeleteActionModal(rowData)}
         >

@@ -20,7 +20,7 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  const { handleSubmit } = useForm<LeaveBenefit>();
+  const { handleSubmit, reset } = useForm<LeaveBenefit>();
 
   const {
     IsLoading,
@@ -46,8 +46,16 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
     }
   };
 
+  // cancel or close action
+  const onCancel = () => {
+    reset();
+    closeModalAction();
+  };
+
   const handleDeleteResult = async (id: string) => {
-    const { error, result } = await deleteEmpMonitoring(`/leave-benefit/${id}`);
+    const { error, result } = await deleteEmpMonitoring(
+      `/leave-benefits/${id}`
+    );
 
     if (error) {
       // request is done so set loading to false
@@ -56,8 +64,8 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
       // request is done so set loading to false
       DeleteLeaveBenefitSuccess(result);
 
-      // close modal
-      closeModalAction();
+      // reset and close modal
+      onCancel();
     }
   };
 
@@ -65,7 +73,7 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
-          <form onSubmit={handleSubmit(onSubmit)} id="deletespecialmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="deleteSpecialModal">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <span className="px-2 mt-5 text-xl font-medium text-center text-gray-600">
@@ -100,7 +108,7 @@ const DeleteSpecialModal: FunctionComponent<DeleteModalProps> = ({
             </button>
             <button
               type="submit"
-              form="deletespecialmodal"
+              form="deleteSpecialModal"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={IsLoading ? true : false}
             >

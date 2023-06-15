@@ -20,7 +20,7 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  const { handleSubmit } = useForm<LeaveBenefit>();
+  const { handleSubmit, reset } = useForm<LeaveBenefit>();
 
   const {
     IsLoading,
@@ -46,8 +46,16 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
     }
   };
 
+  // cancel or close action
+  const onCancel = () => {
+    reset();
+    closeModalAction();
+  };
+
   const handleDeleteResult = async (id: string) => {
-    const { error, result } = await deleteEmpMonitoring(`/leave-benefit/${id}`);
+    const { error, result } = await deleteEmpMonitoring(
+      `/leave-benefits/${id}`
+    );
 
     if (error) {
       // request is done so set loading to false
@@ -56,8 +64,8 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
       // request is done so set loading to false
       DeleteLeaveBenefitSuccess(result);
 
-      // close modal
-      closeModalAction();
+      // reset and close modal
+      onCancel();
     } else {
       // request is done so set loading to false
       DeleteLeaveBenefitFail(result);
@@ -68,7 +76,7 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
-          <form onSubmit={handleSubmit(onSubmit)} id="deleterecurringmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="deleteRecurringModal">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <span className="px-2 mt-5 text-xl font-medium text-center text-gray-600">
@@ -103,7 +111,7 @@ const DeleteRecurringModal: FunctionComponent<DeleteModalProps> = ({
             </button>
             <button
               type="submit"
-              form="deleterecurringmodal"
+              form="deleteRecurringModal"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={IsLoading ? true : false}
             >

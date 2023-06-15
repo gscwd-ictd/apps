@@ -162,8 +162,13 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
     revalidateOnMount: false,
   });
 
+  //! remove
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
+
   // on submit
-  const onSubmit = async () => {
+  const onSubmit = async (data: any) => {
     // extract the unnecessary items for posting
     const { scheduleName, customGroupName, id, customGroupId, ...rest } =
       currentScheduleSheet;
@@ -473,7 +478,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                   : 'bg-blue-500 hover:bg-blue-400'
               } rounded text-sm disabled:cursor-not-allowed `}
               type="submit"
-              form="addStationSsForm"
+              form="addFieldSsForm"
               disabled={
                 isEmpty(currentScheduleSheet.employees) ||
                 isEmpty(getValues('scheduleId'))

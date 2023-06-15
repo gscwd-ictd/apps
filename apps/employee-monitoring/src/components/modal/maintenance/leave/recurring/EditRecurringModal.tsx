@@ -56,6 +56,7 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
     setValue,
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm<LeaveBenefit>({
     mode: 'onChange',
@@ -92,6 +93,12 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
     handleEditLeave(leave);
   };
 
+  // cancel or close action
+  const onCancel = () => {
+    reset();
+    closeModalAction();
+  };
+
   const handleEditLeave = async (leave: LeaveBenefit) => {
     const { error, result } = await patchEmpMonitoring(
       '/leave-benefits',
@@ -106,7 +113,7 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
       UpdateLeaveBenefitSuccess(result);
 
       // call the close modal action
-      closeModalAction();
+      onCancel();
     }
   };
 
@@ -145,7 +152,7 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="editrecurringmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="editRecurringModal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/* Recurring Name */}
@@ -190,7 +197,7 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="editrecurringmodal"
+              form="editRecurringModal"
               className="disabled:cursor-not-allowed"
             >
               <span className="text-xs font-normal">Update</span>

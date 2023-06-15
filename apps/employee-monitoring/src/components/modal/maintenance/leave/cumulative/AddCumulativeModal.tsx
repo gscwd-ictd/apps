@@ -52,7 +52,7 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
 
   const {
     handleSubmit,
-
+    reset,
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({
@@ -78,6 +78,12 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
     handlePostLeave(leave);
   };
 
+  // cancel or close action
+  const onCancel = () => {
+    reset();
+    closeModalAction();
+  };
+
   const handlePostLeave = async (leave: LeaveBenefit) => {
     const { error, result } = await postEmpMonitoring('/leave-benefits', leave);
 
@@ -88,8 +94,8 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
       // request is done so set loading to false and set value from returned response
       PostLeaveBenefitSuccess(result);
 
-      // call the close modal action
-      closeModalAction();
+      // call the reset and close modal action
+      onCancel();
     }
   };
 
@@ -124,7 +130,7 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addcumulativemodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="addCumulativeModal">
             <div className="w-full mt-5">
               <div className="flex flex-col w-full gap-5">
                 {/* Recurring Name */}
@@ -169,7 +175,7 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addcumulativemodal"
+              form="addCumulativeModal"
               className="disabled:cursor-not-allowed"
             >
               <span className="text-xs font-normal">Submit</span>

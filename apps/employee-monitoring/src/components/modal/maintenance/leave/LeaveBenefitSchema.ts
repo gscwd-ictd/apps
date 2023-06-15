@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
 import * as yup from 'yup';
 const LeaveBenefitSchema = yup.object().shape({
@@ -39,7 +40,12 @@ const LeaveBenefitSchema = yup.object().shape({
         .typeError('Please enter a valid value')
         .transform((v, o) => (o === '' ? null : v))
         .label('Credit ceiling'),
-      otherwise: yup.number().notRequired().nullable().label('Credit ceiling'),
+      otherwise: yup
+        .number()
+        .notRequired()
+        .nullable()
+        .typeError('Please enter a valid value or empty')
+        .label('Credit ceiling'),
     }),
 });
 export default LeaveBenefitSchema;

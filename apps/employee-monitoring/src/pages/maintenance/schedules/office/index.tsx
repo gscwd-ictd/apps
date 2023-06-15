@@ -200,7 +200,9 @@ export default function Index() {
     if (
       !isEmpty(PostResponse) ||
       !isEmpty(UpdateResponse) ||
-      !isEmpty(DeleteResponse)
+      !isEmpty(DeleteResponse) ||
+      !isEmpty(ScheduleError) ||
+      !isEmpty(SchedulesError)
     ) {
       mutateSchedules();
 
@@ -209,7 +211,13 @@ export default function Index() {
         EmptyErrors();
       }, 3000);
     }
-  }, [PostResponse, UpdateResponse, DeleteResponse]);
+  }, [
+    PostResponse,
+    UpdateResponse,
+    DeleteResponse,
+    ScheduleError,
+    SchedulesError,
+  ]);
 
   return (
     <>
