@@ -126,15 +126,16 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">
+            <span className="text-xl font-medium">
               Edit Recurring Leave Benefit
             </span>
             <button
-              className="w-[1.5rem] h-[1.5rem] items-center text-center text-white bg-gray-400 rounded"
               type="button"
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
               onClick={closeModalAction}
             >
-              x
+              <i className="bx bx-x"></i>
+              <span className="sr-only">Close modal</span>
             </button>
           </div>
         </Modal.Header>
@@ -153,45 +154,44 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
           ) : null}
 
           <form onSubmit={handleSubmit(onSubmit)} id="editRecurringModal">
-            <div className="w-full mt-5">
-              <div className="flex flex-col w-full gap-5">
-                {/* Recurring Name */}
-                <LabelInput
-                  id={'recurringName'}
-                  label={'Leave Name'}
-                  controller={{ ...register('leaveName', { required: true }) }}
-                  isError={errors.leaveName ? true : false}
-                  errorMessage={errors.leaveName?.message}
-                  disabled={IsLoading ? true : false}
-                />
+            <div className="flex flex-col w-full gap-5">
+              {/* Recurring Name */}
+              <LabelInput
+                id={'recurringName'}
+                label={'Leave Name'}
+                controller={{ ...register('leaveName', { required: true }) }}
+                isError={errors.leaveName ? true : false}
+                errorMessage={errors.leaveName?.message}
+                disabled={IsLoading ? true : false}
+              />
 
-                {/* Recurring Credits */}
-                <LabelInput
-                  id="recurringAccumulatedCredits"
-                  label="Credits"
-                  controller={{
-                    ...register('accumulatedCredits', { required: true }),
-                  }}
-                  isError={errors.accumulatedCredits ? true : false}
-                  errorMessage={errors.accumulatedCredits?.message}
-                  disabled={IsLoading ? true : false}
-                />
+              {/* Recurring Credits */}
+              <LabelInput
+                id="recurringAccumulatedCredits"
+                label="Credits"
+                controller={{
+                  ...register('accumulatedCredits', { required: true }),
+                }}
+                isError={errors.accumulatedCredits ? true : false}
+                errorMessage={errors.accumulatedCredits?.message}
+                disabled={IsLoading ? true : false}
+              />
 
-                {/* Recurring Distribution */}
-                <SelectListRF
-                  id="recurringDistribution"
-                  label="Credit Distribution"
-                  selectList={distributionSelection}
-                  controller={{
-                    ...register('creditDistribution', { required: true }),
-                  }}
-                  isError={errors.creditDistribution ? true : false}
-                  disabled={IsLoading ? true : false}
-                />
-              </div>
+              {/* Recurring Distribution */}
+              <SelectListRF
+                id="recurringDistribution"
+                label="Credit Distribution"
+                selectList={distributionSelection}
+                controller={{
+                  ...register('creditDistribution', { required: true }),
+                }}
+                isError={errors.creditDistribution ? true : false}
+                disabled={IsLoading ? true : false}
+              />
             </div>
           </form>
         </Modal.Body>
+
         <Modal.Footer>
           <div className="flex justify-end w-full">
             <Button

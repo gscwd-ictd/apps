@@ -55,7 +55,7 @@ export const AllApplicantsListSummary = () => {
           <button
             type="button"
             tabIndex={-1}
-            className="text-sm font-medium text-indigo-700"
+            className="text-sm font-medium text-indigo-700 hidden md:block"
             onClick={() => {
               setPds({} as Pds);
               setShowPds(!showPds);
@@ -112,7 +112,7 @@ export const AllApplicantsListSummary = () => {
                 </div>
                 <div className="flex items-center justify-center text-indigo-400 border border-indigo-200 rounded h-7 bg-indigo-50 hover:bg-indigo-500 hover:text-white">
                   <button
-                    className="w-[4rem] flex items-center justify-center"
+                    className="w-[4rem] flex items-center justify-center hidden md:block"
                     onClick={() => {
                       setSelectedApplicantDetails({
                         applicantId: applicant.applicantId,
@@ -129,7 +129,7 @@ export const AllApplicantsListSummary = () => {
           })}
         </ul>
         {showPds ? (
-          <section className="w-full h-[32rem] bg-gray-100 border-2 rounded overflow-y-auto">
+          <section className="w-full h-[32rem] bg-gray-100 border-2 rounded overflow-y-auto hidden md:block">
             {/** PDS COMPONENT */}
             <AppEndPds applicantDetails={selectedApplicantDetails} />
           </section>

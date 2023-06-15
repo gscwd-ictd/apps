@@ -247,7 +247,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
   */
   // Every time the options in the select component changes, update the ToAssignedMembers state in store
   const handleMultiSelect = (selectedMulti: Array<any>) => {
-    let employeeIds = [];
+    const employeeIds = [];
     selectedMulti.map((option) => {
       const employeeId = option.value.employeeId;
       employeeIds.push(employeeId);
@@ -369,7 +369,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="lg">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">{rowData.name}</span>
+            <span className="text-xl font-medium">{rowData.name}</span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
