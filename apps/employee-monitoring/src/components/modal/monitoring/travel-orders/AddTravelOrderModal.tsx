@@ -233,7 +233,7 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-2xl text-gray-600">Add Travel Order</span>
+            <span className="text-xl font-medium">New Travel Order</span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -408,112 +408,6 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
                 </div>
               </div>
 
-              {/* Employee select input */}
-              {/* <div className="mb-6">
-                <label
-                  htmlFor="countries"
-                  className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                >
-                  Employee
-                </label>
-                <Combobox
-                  value={selectedEmployee}
-                  onChange={setSelectedEmployee}
-                  disabled={IsLoadingEAO ? true : false}
-                >
-                  <div className="relative mt-1">
-                    <div className="relative w-full overflow-hidden text-left bg-white rounded-lg cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-                      <Combobox.Input
-                        className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
-                        block p-2.5
-                        bg-gray-50 border ${
-                          errors.employeeId
-                            ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
-                            : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                        }`}
-                        displayValue={(selectedEmployee: EmployeeAsOption) =>
-                          selectedEmployee.fullName
-                        }
-                        onChange={(event) => {
-                          setEmployeeQuery(event.target.value);
-                        }}
-                      />
-                      <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                        {IsLoadingEAO ? (
-                          <LoadingSpinner size="xs" />
-                        ) : (
-                          <ChevronDownIcon
-                            className="w-5 h-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </Combobox.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      leave="transition ease-in duration-100"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
-                      afterLeave={() => setEmployeeQuery('')}
-                    >
-                      <Combobox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-30 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                        {filteredEmployee.length === 0 &&
-                        employeeQuery !== '' ? (
-                          <div className="relative px-4 py-2 text-gray-700 cursor-default select-none">
-                            Nothing found.
-                          </div>
-                        ) : (
-                          filteredEmployee.map((employee) => (
-                            <Combobox.Option
-                              key={employee.employeeId}
-                              className={({ active }) =>
-                                `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                  active
-                                    ? 'bg-gray-500 text-white'
-                                    : 'text-gray-900'
-                                }`
-                              }
-                              value={employee}
-                            >
-                              {({ selected, active }) => (
-                                <>
-                                  <span
-                                    className={`block truncate ${
-                                      selected ? 'text-sm' : 'text-xs'
-                                    }`}
-                                  >
-                                    {employee.fullName}
-                                  </span>
-
-                                  {selected ? (
-                                    <span
-                                      className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                        active ? 'text-white' : 'text-blue-400'
-                                      }`}
-                                    >
-                                      <CheckIcon
-                                        className="w-5 h-5"
-                                        aria-hidden="true"
-                                      />
-                                    </span>
-                                  ) : null}
-                                </>
-                              )}
-                            </Combobox.Option>
-                          ))
-                        )}
-                      </Combobox.Options>
-                    </Transition>
-                  </div>
-                </Combobox>
-                {errors.employeeId ? (
-                  <div className="mt-1 text-xs text-red-400">
-                    {errors.employeeId?.message}
-                  </div>
-                ) : null}
-              </div> */}
-
               {/* Itinerary dynamic fields */}
               <div className="mb-6">
                 <label className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800">
@@ -590,9 +484,9 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
               </div>
 
               {/* IS PTR Required */}
-              <div className="flex gap-2 text-start">
+              <div className="flex items-center gap-2 mb-6 text-start">
                 <Toggle
-                  labelPosition="top"
+                  labelPosition="right"
                   enabled={isPtrRequired}
                   setEnabled={setIsPtrRequired}
                   label={'Post-training report required: '}

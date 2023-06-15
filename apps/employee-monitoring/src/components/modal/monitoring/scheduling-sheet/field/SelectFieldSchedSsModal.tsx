@@ -153,7 +153,7 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header>
-          <h1 className="text-2xl font-medium">Select a Field Schedule</h1>
+          <h1 className="text-xl font-medium">Select a Field Schedule</h1>
         </Modal.Header>
         <Modal.Body>
           {transformedScheds ? (

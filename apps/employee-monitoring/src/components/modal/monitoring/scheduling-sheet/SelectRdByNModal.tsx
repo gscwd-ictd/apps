@@ -94,7 +94,7 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
       >
         <Modal.Header>
           <div className="flex justify-between w-full pl-5">
-            <span className="text-2xl font-medium">Select Rest Days</span>
+            <span className="text-xl font-medium">Select Rest Days</span>
             <button
               onClick={closeModal}
               className="px-2 rounded hover:bg-gray-200"
@@ -103,6 +103,7 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
             </button>
           </div>
         </Modal.Header>
+
         <Modal.Body>
           <div className="flex flex-col w-full min-h-[2.25rem] gap-1 px-5">
             <div className="flex items-center justify-center gap-2 mb-5">
@@ -136,6 +137,7 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
             />
           </div>
         </Modal.Body>
+
         <Modal.Footer>
           <div className="flex justify-end w-full gap-2">
             <button
