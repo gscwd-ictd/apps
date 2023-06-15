@@ -30,6 +30,7 @@ export default function Index() {
     getScheduleSheetsFail,
     emptyResponseAndErrors,
     getScheduleSheetsSuccess,
+    errorScheduleSheets,
   } = useScheduleSheetStore((state) => ({
     scheduleSheets: state.scheduleSheets,
     postResponse: state.scheduleSheet.postResponse,
@@ -40,6 +41,7 @@ export default function Index() {
     setSelectedScheduleId: state.setSelectedScheduleId,
     emptyResponseAndErrors: state.emptyResponseAndErrors,
     getScheduleSheetsSuccess: state.getScheduleSheetsSuccess,
+    errorScheduleSheets: state.error.errorScheduleSheets,
   }));
 
   const {
@@ -190,14 +192,15 @@ export default function Index() {
     if (
       !isEmpty(postResponse) ||
       !isEmpty(updateResponse) ||
-      !isEmpty(deleteResponse)
+      !isEmpty(deleteResponse) ||
+      !isEmpty(errorScheduleSheets)
     ) {
       swrMutate();
       setTimeout(() => {
         emptyResponseAndErrors();
-      }, 2500);
+      }, 1000);
     }
-  }, [postResponse, updateResponse, deleteResponse]);
+  }, [postResponse, updateResponse, deleteResponse, errorScheduleSheets]);
 
   return (
     <>

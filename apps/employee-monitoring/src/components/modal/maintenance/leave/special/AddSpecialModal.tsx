@@ -23,12 +23,6 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
-// mock
-const distributionSelection: Array<SelectOption> = [
-  { label: 'Monthly', value: 'monthly' },
-  { label: 'Yearly', value: 'yearly' },
-];
-
 const AddSpecialModal: FunctionComponent<AddModalProps> = ({
   modalState,
   setModalState,
@@ -53,6 +47,7 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
     handleSubmit,
     getValues,
     register,
+    reset,
     formState: { errors },
   } = useForm<LeaveBenefit>({
     resolver: yupResolver(LeaveBenefitSchema),
@@ -74,6 +69,12 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
     handlePostLeave(leave);
   };
 
+  // cancel or close action
+  const onCancel = () => {
+    reset();
+    closeModalAction();
+  };
+
   const handlePostLeave = async (leave: LeaveBenefit) => {
     const { error, result } = await postEmpMonitoring('/leave-benefits', leave);
 
@@ -84,8 +85,8 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
       // request is done so set loading to false and set value from returned response
       PostLeaveBenefitSuccess(result);
 
-      // call the close modal action
-      closeModalAction();
+      // reset the form and call the close modal action
+      onCancel();
     }
   };
 
@@ -121,7 +122,8 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addspecialmodal">
+
+          <form onSubmit={handleSubmit(onSubmit)} id="addSpecialModal">
             <div className="flex flex-col w-full gap-5">
               {/* special Name */}
               <LabelInput
@@ -145,10 +147,6 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
                 disabled={IsLoading ? true : false}
               />
             </div>
-
-            <button type="button" onClick={() => console.log(getValues())}>
-              Log
-            </button>
           </form>
         </Modal.Body>
         <Modal.Footer>
@@ -156,7 +154,7 @@ const AddSpecialModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addspecialmodal"
+              form="addSpecialModal"
               className="disabled:cursor-not-allowed"
             >
               <span className="text-xs font-normal">Submit</span>

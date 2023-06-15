@@ -1,4 +1,3 @@
-
 export type LeaveBenefit = {
   id?: string;
   leaveName: string;
@@ -10,7 +9,7 @@ export type LeaveBenefit = {
   leaveType: LeaveType;
 };
 
-export type LeaveBenefitOptions = Pick<LeaveBenefit, 'id'| 'leaveName'>
+export type LeaveBenefitOptions = Pick<LeaveBenefit, 'id' | 'leaveName'>;
 
 export enum CreditDistribution {
   YEARLY = 'yearly',
@@ -20,7 +19,7 @@ export enum CreditDistribution {
 export enum LeaveType {
   RECURRING = 'recurring',
   CUMULATIVE = 'cumulative',
-  SPECIAL = 'special leave benefits',
+  SPECIAL = 'special leave benefit',
 }
 
 export type LeaveBenefitId = Pick<LeaveBenefit, 'id'>;

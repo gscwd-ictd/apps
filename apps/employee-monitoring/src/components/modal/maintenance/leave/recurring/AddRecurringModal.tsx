@@ -53,7 +53,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
 
   const {
     handleSubmit,
-
+    reset,
     register,
     formState: { errors },
   } = useForm<LeaveBenefit>({
@@ -78,6 +78,12 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
     handlePostLeave(leave);
   };
 
+  // cancel or close action
+  const onCancel = () => {
+    reset();
+    closeModalAction();
+  };
+
   const handlePostLeave = async (leave: LeaveBenefit) => {
     const { error, result } = await postEmpMonitoring('/leave-benefits', leave);
 
@@ -88,8 +94,8 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
       // request is done so set loading to false and set value from returned response
       PostLeaveBenefitSuccess(result);
 
-      // call the close modal action
-      closeModalAction();
+      // call the reset and close modal action
+      onCancel();
     }
   };
 
@@ -125,7 +131,8 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addrecurringmodal">
+
+          <form onSubmit={handleSubmit(onSubmit)} id="addRecurringModal">
             <div className="flex flex-col w-full gap-5">
               {/* Recurring Name */}
               <LabelInput
@@ -170,7 +177,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addrecurringmodal"
+              form="addRecurringModal"
               className="disabled:cursor-not-allowed"
             >
               <span className="text-xs font-normal">Submit</span>
