@@ -15,8 +15,10 @@ export type PassSlipState = {
   };
   response: {
     postResponseApply: PassSlip;
-    deleteResponseCancel: PassSlipId;
+    cancelResponse: PassSlip;
   };
+
+  
   loading: {
     loadingPassSlips: boolean;
     loadingResponse: boolean;
@@ -27,6 +29,7 @@ export type PassSlipState = {
   };
 
   passSlip: PassSlip;
+  cancelApplicationModalIsOpen: boolean,
   applyPassSlipModalIsOpen: boolean;
   pendingPassSlipModalIsOpen: boolean;
   completedPassSlipModalIsOpen: boolean;
@@ -36,14 +39,15 @@ export type PassSlipState = {
   getPassSlipListSuccess: (loading: boolean, response) => void;
   getPassSlipListFail: (loading: boolean, error: string) => void;
 
-  deletePassSlip: (loading: boolean) => void;
-  deletePassSlipSuccess: (response) => void;
-  deletePassSlipFail: (error: string) => void;
+  cancelPassSlip: (loading: boolean) => void;
+  cancelPassSlipSuccess: (response) => void;
+  cancelPassSlipFail: (error: string) => void;
 
   postPassSlipList: () => void;
   postPassSlipListSuccess: (response: PassSlip) => void;
   postPassSlipListFail: (error: string) => void;
 
+  setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => void;
   setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => void;
   setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
   setCompletedPassSlipModalIsOpen: (
@@ -64,7 +68,7 @@ export const usePassSlipStore = create<PassSlipState>()(
     },
     response: {
       postResponseApply: {} as PassSlip,
-      deleteResponseCancel: {} as PassSlipId,
+      cancelResponse: {} as PassSlip,
     },
     loading: {
       loadingPassSlips: false,
@@ -82,10 +86,16 @@ export const usePassSlipStore = create<PassSlipState>()(
     pendingPassSlipModalIsOpen: false,
     completedPassSlipModalIsOpen: false,
 
+    cancelApplicationModalIsOpen: false,
+
     tab: 1,
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
+    },
+
+    setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => {
+      set((state) => ({ ...state, cancelApplicationModalIsOpen }));
     },
 
     setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => {
@@ -206,12 +216,12 @@ export const usePassSlipStore = create<PassSlipState>()(
     },
 
     //DELETE PASS SLIP ACTIONS
-    deletePassSlip: () => {
+    cancelPassSlip: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          deleteResponseCancel: {} as PassSlipId,
+          cancelResponse: {} as PassSlip,
         },
         loading: {
           ...state.loading,
@@ -223,12 +233,12 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-    deletePassSlipSuccess: (response: PassSlipId) => {
+    cancelPassSlipSuccess: (response: PassSlip) => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          deleteResponseCancel: response,
+          cancelResponse: response,
         },
         loading: {
           ...state.loading,
@@ -236,7 +246,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-    deletePassSlipFail: (error: string) => {
+    cancelPassSlipFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -250,16 +260,19 @@ export const usePassSlipStore = create<PassSlipState>()(
       }));
     },
 
+
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
           postResponseApply: {} as PassSlip,
+          cancelResponse: {} as PassSlip,
         },
         error: {
           ...state.error,
           errorResponse: '',
+          errorPassSlips: '',
         },
       }));
     },

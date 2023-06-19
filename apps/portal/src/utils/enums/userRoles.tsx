@@ -1,4 +1,5 @@
 export enum UserRole {
+  JOB_ORDER = 'job_order',
   RANK_AND_FILE = 'rank_and_file',
   DIVISION_MANAGER = 'division_manager',
   DEPARTMENT_MANAGER = 'department_manager',

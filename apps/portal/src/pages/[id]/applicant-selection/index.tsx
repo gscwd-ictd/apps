@@ -37,6 +37,7 @@ import AppSelectionModal from '../../../../src/components/fixed/selection/AppSel
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { Roles } from 'apps/portal/src/utils/constants/user-roles';
 
 export default function AppPosAppointment({
   employeeDetails,
@@ -473,6 +474,18 @@ export default function AppPosAppointment({
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
-    return { props: { employeeDetails } };
+    // check if user role is rank_and_file
+    if (employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER) {
+      // if true, the employee is not allowed to access this page
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${employeeDetails.user._id}`,
+        },
+      };
+    } else {
+      return { props: { employeeDetails } };
+    }
+   
   }
 );

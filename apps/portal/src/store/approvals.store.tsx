@@ -15,12 +15,14 @@ export type ApprovalLeaveList = {
   forApproval: Array<MonitoringLeave>;
   approved: Array<MonitoringLeave>;
   disapproved: Array<MonitoringLeave>;
+  cancelled: Array<MonitoringLeave>;
 };
 
 export type ApprovalPassSlipList = {
   completed: {
     approved: Array<PassSlip>;
     disapproved: Array<PassSlip>;
+    cancelled: Array<PassSlip>;
   };
   forApproval: Array<PassSlip>;
 };
@@ -39,12 +41,14 @@ export type ApprovalState = {
     forApproval: Array<MonitoringLeave>;
     approved: Array<MonitoringLeave>;
     disapproved: Array<MonitoringLeave>;
+    cancelled: Array<MonitoringLeave>;
   };
 
   passSlips: {
     completed: {
       approved: Array<PassSlip>;
       disapproved: Array<PassSlip>;
+      cancelled: Array<PassSlip>;
     };
     forApproval: Array<PassSlip>;
   };
@@ -71,6 +75,9 @@ export type ApprovalState = {
     errorIndividualPassSlip: string;
   };
 
+  declineApplicationModalIsOpen: boolean;
+  setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
+
   pendingLeaveModalIsOpen: boolean;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
 
@@ -81,6 +88,9 @@ export type ApprovalState = {
   setDisapprovedLeaveModalIsOpen: (
     disapprovedLeaveModalIsOpen: boolean
   ) => void;
+
+  cancelledLeaveModalIsOpen: boolean;
+  setCancelledLeaveModalIsOpen: (cancelledLeaveModalIsOpen: boolean) => void;
 
   otpPassSlipModalIsOpen: boolean;
   setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => void;
@@ -97,6 +107,9 @@ export type ApprovalState = {
   setDisapprovedPassSlipModalIsOpen: (
     disapprovedPassSlipModalIsOpen: boolean
   ) => void;
+
+  cancelledPassSlipModalIsOpen: boolean;
+  setCancelledPassSlipModalIsOpen: (cancelledPassSlipModalIsOpen: boolean) => void;
 
   // PASS SLIPS
   passSlipId: string;
@@ -142,12 +155,14 @@ export const useApprovalStore = create<ApprovalState>()(
       forApproval: [],
       approved: [],
       disapproved: [],
+      cancelled: [],
     },
 
     passSlips: {
       completed: {
         approved: [],
         disapproved: [],
+        cancelled: [],
       },
       forApproval: [],
     },
@@ -178,13 +193,16 @@ export const useApprovalStore = create<ApprovalState>()(
 
     otpPassSlipModalIsOpen: false,
 
+    declineApplicationModalIsOpen: false,
     pendingLeaveModalIsOpen: false,
     approvedLeaveModalIsOpen: false,
     disapprovedLeaveModalIsOpen: false,
+    cancelledLeaveModalIsOpen: false,
 
     pendingPassSlipModalIsOpen: false,
     approvedPassSlipModalIsOpen: false,
     disapprovedPassSlipModalIsOpen: false,
+    cancelledPassSlipModalIsOpen: false,
 
     // PASS SLIPS
     passSlipId: '',
@@ -223,6 +241,11 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, tab }));
     },
 
+    setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
+      set((state) => ({ ...state, declineApplicationModalIsOpen }));
+    },
+
+
     setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => {
       set((state) => ({ ...state, otpPassSlipModalIsOpen }));
     },
@@ -239,6 +262,10 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, disapprovedLeaveModalIsOpen }));
     },
 
+    setCancelledLeaveModalIsOpen: (cancelledLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, cancelledLeaveModalIsOpen }));
+    },
+
     setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => {
       set((state) => ({ ...state, pendingPassSlipModalIsOpen }));
     },
@@ -251,6 +278,12 @@ export const useApprovalStore = create<ApprovalState>()(
       disapprovedPassSlipModalIsOpen: boolean
     ) => {
       set((state) => ({ ...state, disapprovedPassSlipModalIsOpen }));
+    },
+
+    setCancelledPassSlipModalIsOpen: (
+      cancelledPassSlipModalIsOpen: boolean
+    ) => {
+      set((state) => ({ ...state, cancelledPassSlipModalIsOpen }));
     },
 
     setLeaveId: (leaveId: string) => {
@@ -266,6 +299,7 @@ export const useApprovalStore = create<ApprovalState>()(
           forApproval: [],
           approved: [],
           disapproved: [],
+          cancelled: [],
         },
         response: {
           ...state.response,
@@ -289,6 +323,7 @@ export const useApprovalStore = create<ApprovalState>()(
           forApproval: response.forApproval,
           approved: response.approved,
           disapproved: response.disapproved,
+          cancelled: response.cancelled
         },
         loading: {
           ...state.loading,
@@ -361,6 +396,7 @@ export const useApprovalStore = create<ApprovalState>()(
           completed: {
             approved: [],
             disapproved: [],
+            cancelled: [],
           },
           forApproval: [],
         },
@@ -389,6 +425,7 @@ export const useApprovalStore = create<ApprovalState>()(
           completed: {
             approved: response.completed.approved,
             disapproved: response.completed.disapproved,
+            cancelled: response.completed.cancelled
           },
           forApproval: response.forApproval,
         },

@@ -18,16 +18,20 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
     forApprovalPassSlips,
     approvedPassSlips,
     disapprovedPassSlips,
+    cancelledPassSlips,
     forApprovalLeaves,
     approvedLeaves,
     disapprovedLeaves,
+    cancelledLeaves,
   } = useApprovalStore((state) => ({
     forApprovalPassSlips: state.passSlips.forApproval,
     approvedPassSlips: state.passSlips.completed.approved,
     disapprovedPassSlips: state.passSlips.completed.disapproved,
+    cancelledPassSlips: state.passSlips.completed.cancelled,
     forApprovalLeaves: state.leaves.forApproval,
     approvedLeaves: state.leaves.approved,
     disapprovedLeaves: state.leaves.disapproved,
+    cancelledLeaves: state.leaves.cancelled,
   }));
 
   return (
@@ -130,6 +134,41 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 subtitle="Show all disapproved Leave applications"
                 notificationCount={
                   disapprovedLeaves ? disapprovedLeaves.length : 0
+                }
+                className="bg-gray-500"
+              />
+            </>
+          )}
+
+          {selectedApprovalType === 4 && (
+            <>
+              <TabHeader
+                tab={tab}
+                tabIndex={7}
+                onClick={() => {
+                  // setIsLoading(true);
+                  setTab(7);
+                }}
+                title="Cancelled Pass Slips"
+                icon={<HiCheck size={26} />}
+                subtitle="Show all cancelled Pass Slip applications"
+                notificationCount={
+                  cancelledPassSlips ? cancelledPassSlips.length : 0
+                }
+                className="bg-gray-500"
+              />
+              <TabHeader
+                tab={tab}
+                tabIndex={8}
+                onClick={() => {
+                  // setIsLoading(true);
+                  setTab(8);
+                }}
+                title="Cancelled Leaves"
+                icon={<HiCheck size={26} />}
+                subtitle="Show all cancelled Leave applications"
+                notificationCount={
+                  cancelledLeaves ? cancelledLeaves.length : 0
                 }
                 className="bg-gray-500"
               />

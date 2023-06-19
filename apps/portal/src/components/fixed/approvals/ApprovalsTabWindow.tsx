@@ -20,16 +20,20 @@ export const ApprovalsTabWindow = ({
     forApprovalPassSlips,
     approvedPassSlips,
     disapprovedPassSlips,
+    cancelledPassSlips,
     forApprovalLeaves,
     approvedLeaves,
     disapprovedLeaves,
+    cancelledLeaves,
   } = useApprovalStore((state) => ({
     forApprovalPassSlips: state.passSlips.forApproval,
     approvedPassSlips: state.passSlips.completed.approved,
     disapprovedPassSlips: state.passSlips.completed.disapproved,
+    cancelledPassSlips: state.passSlips.completed.cancelled,
     forApprovalLeaves: state.leaves.forApproval,
     approvedLeaves: state.leaves.approved,
     disapprovedLeaves: state.leaves.disapproved,
+    cancelledLeaves: state.leaves.cancelled
   }));
 
   return (
@@ -71,6 +75,21 @@ export const ApprovalsTabWindow = ({
             passslips={[]}
             tab={tab}
             leaves={disapprovedLeaves}
+          />
+        )}
+
+        {tab === 7 && selectedApprovalType === 4 && (
+          <AllApprovalsTab
+            passslips={cancelledPassSlips}
+            tab={tab}
+            leaves={[]}
+          />
+        )}
+        {tab === 8 && selectedApprovalType === 4 && (
+          <AllApprovalsTab
+            passslips={[]}
+            tab={tab}
+            leaves={cancelledLeaves}
           />
         )}
       </div>
