@@ -352,11 +352,12 @@ export default function Index({
                                   {formatTime(logs.schedule.timeOut)}
                                 </td>
                                 <td className="py-2 text-xs text-center break-words border">
-                                  {(dayjs().isAfter(dayjs(logs.day)) ||
+                                  {/* {(dayjs().isAfter(dayjs(logs.day)) ||
                                     dayjs().isSame(dayjs(logs.day), 'day')) &&
                                   logs.dtr.remarks
                                     ? logs.dtr.remarks
-                                    : '-'}
+                                    : '-'} */}
+                                  {logs.dtr.remarks ? logs.dtr.remarks : '-'}
                                 </td>
                                 <td className="py-2 text-center border">
                                   <div>
