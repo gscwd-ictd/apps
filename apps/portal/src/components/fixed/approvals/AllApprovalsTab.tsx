@@ -28,16 +28,21 @@ export const AllApprovalsTab = ({
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen,
+    cancelledLeaveModalIsOpen,
     pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
+    cancelledPassSlipModalIsOpen,
+
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen,
+    setCancelledLeaveModalIsOpen,
     setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen,
+    setCancelledPassSlipModalIsOpen,
 
     setPassSlipIndividualDetail,
     setLeaveId,
@@ -45,16 +50,22 @@ export const AllApprovalsTab = ({
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
+    cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
+
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
+    cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
+    setCancelledLeaveModalIsOpen: state.setCancelledLeaveModalIsOpen,
+
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
+    setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
     setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
     setLeaveId: state.setLeaveId,
   }));
@@ -77,6 +88,11 @@ export const AllApprovalsTab = ({
       if (!disapprovedPassSlipModalIsOpen) {
         setDisapprovedPassSlipModalIsOpen(true);
       }
+    } else if (tab === 7) {
+      // DISAPPROVED PASS SLIP
+      if (!cancelledPassSlipModalIsOpen) {
+        setCancelledPassSlipModalIsOpen(true);
+      }
     }
   };
 
@@ -96,6 +112,11 @@ export const AllApprovalsTab = ({
       // DISAPPROVED LEAVES
       if (!disapprovedLeaveModalIsOpen) {
         setDisapprovedLeaveModalIsOpen(true);
+      }
+    } else if (tab === 8) {
+      // DISAPPROVED LEAVES
+      if (!cancelledLeaveModalIsOpen) {
+        setCancelledLeaveModalIsOpen(true);
       }
     }
   };

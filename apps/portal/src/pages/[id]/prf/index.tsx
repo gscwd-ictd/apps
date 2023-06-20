@@ -285,12 +285,12 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     const forApproval = await getForApprovalPrfs(employee.user._id);
 
     // check if user role is rank_and_file
-    if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE) {
+    if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE || employee.employmentDetails.userRole === Roles.JOB_ORDER) {
       // if true, the employee is not allowed to access this page
       return {
         redirect: {
           permanent: false,
-          destination: `/${employee.profile.firstName.toLowerCase()}.${employee.profile.lastName.toLowerCase()}`,
+          destination: `/${employee.user._id}`,
         },
       };
     }

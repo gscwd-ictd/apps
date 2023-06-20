@@ -16,58 +16,45 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import SelectGroupSsModal from '../SelectGroupSsModal';
-import SelectFieldSchedSsModal from './SelectFieldSchedSsModal';
-import SelectedEmployeesSsTable from '../SelectedEmployeesSsTable';
 import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
-import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
+import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
+import ViewEmployeesSsTable from '../ViewEmployeesSsTable';
 
-type AddFieldSsModalProps = {
+type ViewFieldSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
+  rowData: ScheduleSheet;
 };
 
 type ScheduleSheetForm = ScheduleSheet & {
   employees: Array<EmployeeAsOptionWithRestDays>;
 };
 
-const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
+const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
   modalState,
   closeModalAction,
   setModalState,
+  rowData,
 }) => {
   // react hook form
   const {
-    watch,
-    getValues,
     setValue,
     register,
-    handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ScheduleSheetForm>({
-    defaultValues: {
-      scheduleId: '',
-      employees: [],
-      scheduleName: '',
-      dateFrom: '',
-      dateTo: '',
-    },
-  });
+  } = useForm<ScheduleSheetForm>();
 
   // on close sheet
   const onCloseScheduleSheet = () => {
     reset();
-    setCurrentScheduleSheet({
-      id: '',
-      scheduleId: '',
-      customGroupId: '',
-      dateFrom: '',
-      dateTo: '',
-    }) as unknown as ScheduleSheet;
-    setSelectedGroupId('');
-    setSelectedScheduleId('');
+    setIsLoading(false);
+    clearScheduleSheet();
+    setSelectedCustomGroupWithMembers({
+      customGroupDetails: {} as CustomGroup,
+      members: [],
+    });
     closeModalAction();
   };
 
@@ -77,27 +64,8 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
     else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
   };
 
-  const [selectGroupModalIsOpen, setSelectGroupModalIsOpen] =
-    useState<boolean>(false);
-
-  // open select group modal
-  const openSelectGroupModal = () => setSelectGroupModalIsOpen(true);
-
-  // close select group modal
-  const closeSelectGroupModal = () => {
-    setSelectGroupModalIsOpen(false);
-  };
-
-  const [selectScheduleModalIsOpen, setSelectScheduleModalIsopen] =
-    useState<boolean>(false);
-
-  // open select schedule modal
-  const openSelectScheduleModal = () => setSelectScheduleModalIsopen(true);
-
-  // close select schedule modal
-  const closeSelectScheduleModal = () => {
-    setSelectScheduleModalIsopen(false);
-  };
+  // loading
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // schedule sheet store
   const {
@@ -109,15 +77,13 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
     getGroupById,
     getScheduleById,
     getGroupByIdFail,
-    postScheduleSheet,
     setSelectedGroupId,
     getScheduleByIdFail,
     getGroupByIdSuccess,
-    postScheduleSheetFail,
     setSelectedScheduleId,
     getScheduleByIdSuccess,
     setCurrentScheduleSheet,
-    postScheduleSheetSuccess,
+    clearScheduleSheet,
   } = useScheduleSheetStore((state) => ({
     group: state.group,
     schedule: state.schedule,
@@ -133,10 +99,16 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
     getGroupById: state.getGroupById,
     getGroupByIdSuccess: state.getGroupByIdSuccess,
     getGroupByIdFail: state.getGroupByIdFail,
-    postScheduleSheet: state.postScheduleSheet,
-    postScheduleSheetSuccess: state.postScheduleSheetSuccess,
-    postScheduleSheetFail: state.postScheduleSheetFail,
+    clearScheduleSheet: state.clearScheduleSheet,
   }));
+
+  // custom group store
+  const { setSelectedCustomGroupWithMembers } = useCustomGroupStore(
+    (state) => ({
+      setSelectedCustomGroupWithMembers:
+        state.setSelectedCustomGroupWithMembers,
+    })
+  );
 
   // use SWR
   const {
@@ -157,41 +129,34 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
     data: swrGroupDetails,
     isLoading: swrGroupDetailsIsLoading,
     error: swrGroupDetailsError,
-  } = useSWR(`/custom-groups/${selectedGroupId}`, fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnMount: false,
-  });
-
-  // on submit
-  const onSubmit = async (data: any) => {
-    // extract the unnecessary items for posting
-    const { scheduleName, customGroupName, id, customGroupId, ...rest } =
-      currentScheduleSheet;
-
-    // call the function to start loading
-    postScheduleSheet();
-
-    // call the post function
-    await handlePostScheduling(rest);
-  };
-
-  // function for posting the schedule sheet
-  const handlePostScheduling = async (data: any) => {
-    const { error, result } = await postEmpMonitoring(
-      '/employee-schedule/group',
-      data
-    );
-
-    if (!error) {
-      // post scheduling sheet success
-      postScheduleSheetSuccess(result);
-
-      // close the modal since the scheduling sheet is a success
-      onCloseScheduleSheet();
-    } else if (error) {
-      // post scheduling sheet fail
-      postScheduleSheetFail(result);
+  } = useSWR(
+    !isEmpty(selectedGroupId) ? `/custom-groups/${selectedGroupId}` : null,
+    fetcherEMS,
+    {
+      shouldRetryOnError: false,
+      revalidateOnMount: false,
     }
+  );
+
+  // set default values
+  const setDefaultValues = (rowData: ScheduleSheet) => {
+    setValue('scheduleId', rowData.scheduleId);
+    setValue('customGroupId', rowData.customGroupId);
+    setValue('customGroupName', rowData.customGroupName);
+    setValue('dateFrom', dayjs(rowData.dateFrom).format('YYYY-MM-DD'));
+    setValue('dateTo', dayjs(rowData.dateTo).format('YYYY-MM-DD'));
+    setValue('scheduleName', rowData.scheduleName);
+    setSelectedGroupId(rowData.customGroupId);
+    setSelectedScheduleId(rowData.scheduleId);
+    setCurrentScheduleSheet({
+      ...currentScheduleSheet,
+      scheduleId: rowData.scheduleId,
+      scheduleName: rowData.scheduleName,
+      customGroupId: rowData.customGroupId,
+      customGroupName: rowData.customGroupName,
+      dateFrom: dayjs(rowData.dateFrom).format('MM-DD-YYYY'),
+      dateTo: dayjs(rowData.dateTo).format('MM-DD-YYYY'),
+    });
   };
 
   // set schedule id loading to true
@@ -229,80 +194,63 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
     }
   }, [swrGroupDetails, swrGroupDetailsError]);
 
+  // load the members
   useEffect(() => {
-    if (!isEmpty(schedule)) {
-      setValue('scheduleId', schedule.id);
-    }
-  }, [schedule]);
+    if (!isEmpty(group.members)) {
+      // map the selected group and assign an empty array to rest days
+      const membersWithRestDays = group.members.map((member) => {
+        return { ...member };
+      });
 
-  useEffect(() => {
-    if (!isEmpty(group)) {
-      if (!isEmpty(group.customGroupDetails)) {
-        setValue('customGroupId', group.customGroupDetails.id);
-        setValue('customGroupName', group.customGroupDetails.name);
-      }
+      //! Replaced with groupWithMembers later if rest days are available
+      setCurrentScheduleSheet({
+        ...currentScheduleSheet,
+        employees: membersWithRestDays,
+      });
+
+      // assign the selected custom group with members on submit only
+      setSelectedCustomGroupWithMembers({
+        customGroupDetails: group.customGroupDetails,
+        members: membersWithRestDays,
+      });
     }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
   }, [group]);
-
-  // watch
-  useEffect(() => {
-    // sched id
-    if (!isEmpty(watch('scheduleId'))) {
-      setCurrentScheduleSheet({
-        ...currentScheduleSheet,
-        scheduleId: getValues('scheduleId'),
-      });
-    }
-  }, [watch('scheduleId')]);
-
-  useEffect(() => {
-    if (!isEmpty(watch('customGroupId'))) {
-      setCurrentScheduleSheet({
-        ...currentScheduleSheet,
-        customGroupId: getValues('customGroupId'),
-      });
-    }
-  }, [watch('customGroupId')]);
 
   // register then group id and schedule ids
   useEffect(() => {
-    if (modalState) {
+    if (modalState && rowData) {
+      setIsLoading(true);
       register('scheduleId', { required: true });
       register('customGroupId', { required: true });
+      setDefaultValues(rowData);
     }
-  }, [modalState]);
+  }, [modalState, rowData]);
 
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
           <h1 className="px-5 text-xl font-medium">
-            Add Field Scheduling Sheet
+            View Field Scheduling Sheet
           </h1>
         </Modal.Header>
         <Modal.Body>
-          <div className=" xs:px-0 sm:px-0 md:px-0 lg:px-4">
-            <SelectGroupSsModal
-              modalState={selectGroupModalIsOpen}
-              setModalState={setSelectGroupModalIsOpen}
-              closeModalAction={closeSelectGroupModal}
-            />
-
-            <SelectFieldSchedSsModal
-              modalState={selectScheduleModalIsOpen}
-              setModalState={setSelectScheduleModalIsopen}
-              closeModalAction={closeSelectScheduleModal}
-            />
-            <form id="addFieldSsForm" onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[20rem]">
+          {isLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <div className=" xs:px-0 sm:px-0 md:px-0 lg:px-4">
+              <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[16rem]">
                 {/* Effectivity */}
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
-                  <div className="flex flex-col justify-center w-full pb-2">
+                  <div className="flex flex-col justify-start w-full pb-2">
                     <p className="flex items-center justify-start w-full font-light">
                       Effectivity Date
                     </p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
-                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
                       <LabelInput
                         id="fieldsStartDate"
                         name="dateFrom"
@@ -340,12 +288,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-col justify-center w-full ">
-                    <p className="flex items-center justify-start w-full text-sm font-light">
-                      Group Name
-                    </p>
-                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
-
+                  <div className="flex flex-col justify-center w-full">
                     {swrGroupDetailsIsLoading ? (
                       <LoadingSpinner size="lg" />
                     ) : (
@@ -353,7 +296,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                         id="fieldGroupName"
                         name="groupName"
                         type="text"
-                        label=""
+                        label="Group Name"
                         value={
                           !isEmpty(group.customGroupDetails)
                             ? group.customGroupDetails.name
@@ -365,36 +308,20 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                       />
                     )}
                   </div>
-
-                  <div className="flex items-end h-full gap-2">
-                    <button
-                      className="w-full px-2 py-2 text-white rounded disabled:cursor-not-allowed bg-slate-700 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      onClick={openSelectGroupModal}
-                      type="button"
-                      disabled={
-                        !isEmpty(getValues('dateFrom')) &&
-                        !isEmpty(getValues('dateTo'))
-                          ? false
-                          : true
-                      }
-                    >
-                      <span className="text-xs ">Select Group</span>
-                    </button>
-                  </div>
                 </section>
 
                 {/* Schedule */}
-                <section className="flex flex-col justify-between w-full h-full gap-2 px-5 py-4 rounded-xl">
-                  <div className="flex flex-col justify-between w-full h-full">
+                <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
+                  <div className="flex flex-col justify-start w-full h-full">
                     <p className="flex items-center justify-start w-full font-light">
                       Field Schedule
                     </p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
-                    <div className="flex flex-col w-full gap-2">
+                    <div className="flex flex-col w-full gap-4">
                       {swrScheduleIsLoading ? (
                         <LoadingSpinner size="lg" />
                       ) : (
-                        <div className="flex flex-col gap-5 pt-1">
+                        <div className="flex flex-col gap-4">
                           <LabelInput
                             id="scheduleName"
                             label="Name"
@@ -438,23 +365,13 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
                       )}
                     </div>
                   </div>
-
-                  <div className="flex items-end w-full h-full">
-                    <button
-                      className="w-full px-2 py-2 text-white rounded bg-slate-700 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      onClick={openSelectScheduleModal}
-                      type="button"
-                    >
-                      <span className="text-xs ">Select Schedule</span>
-                    </button>
-                  </div>
                 </section>
               </div>
               <section className="col-span-2 rounded bg-inherit min-h-auto">
-                <SelectedEmployeesSsTable />
+                <ViewEmployeesSsTable />
               </section>
-            </form>
-          </div>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end w-full gap-2">
@@ -462,26 +379,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
               className="px-3 py-2 text-sm text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
               onClick={onCloseScheduleSheet}
             >
-              Cancel
-            </button>
-
-            <button
-              className={`px-3 py-2 text-white  ${
-                isEmpty(currentScheduleSheet.employees) ||
-                isEmpty(getValues('scheduleId'))
-                  ? 'bg-gray-500 hover:bg-gray-400'
-                  : 'bg-blue-500 hover:bg-blue-400'
-              } rounded text-sm disabled:cursor-not-allowed `}
-              type="submit"
-              form="addFieldSsForm"
-              disabled={
-                isEmpty(currentScheduleSheet.employees) ||
-                isEmpty(getValues('scheduleId'))
-                  ? true
-                  : false
-              }
-            >
-              Submit
+              Close
             </button>
           </div>
         </Modal.Footer>
@@ -490,4 +388,4 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({
   );
 };
 
-export default AddFieldSsModal;
+export default ViewFieldSsModal;

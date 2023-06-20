@@ -1,5 +1,6 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Fragment, FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { Notice } from '../../../modular/alerts/Notice';
 import { Button } from '../../../modular/forms/buttons/Button';
 import { TextField } from '../../../modular/forms/TextField';
@@ -10,11 +11,12 @@ import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
+import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 interface OtpProps {
   mobile: string;
   employeeId: string;
-  action: string; // approve or disapprove
+  action: PassSlipStatus; // approve or disapprove
   tokenId: string; //like pass Slip Id, leave Id etc.
   otpName: string;
   remarks?: string;
@@ -43,20 +45,16 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
   const [failedFirstOtp, setFailedFirstOtp] = useState<boolean>(false);
 
   const {
-    passSlip,
     patchPassSlip,
     patchPassSlipSuccess,
     patchPassSlipFail,
     setPendingPassSlipModalIsOpen,
-    otpPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen,
   } = useApprovalStore((state) => ({
-    passSlip: state.passSlipIndividualDetail,
     patchPassSlip: state.patchPassSlip,
     patchPassSlipSuccess: state.patchPassSlipSuccess,
     patchPassSlipFail: state.patchPassSlipFail,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
-    otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
   }));
 
@@ -69,7 +67,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
 
   useEffect(() => {
     if (!localStorage.getItem(`${otpName}OtpEndTime_${tokenId}`)) {
-      console.log('no otp found');
       setOtpFieldError(false);
       setIsSubmitLoading(false);
       setWiggleEffect(false);
@@ -78,7 +75,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
       setIsOtpSending(false);
       setCountingDown(false);
     } else {
-      console.log('otp found');
       setOtpFieldError(false);
       setIsSubmitLoading(false);
       setWiggleEffect(false);
@@ -145,7 +141,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
   }
 
   //CANCEL BUTTON IN THE OTP WINDOW
-  const handleCancel = (e: any) => {
+  const handleCancel = (e) => {
     e.preventDefault();
     setCountingDown(false);
     localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`); //delete otp expiration local storage
@@ -163,7 +159,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
   };
 
   //CLOSE FUNCTION FOR COMPLETED OTP
-  const handleClose = (e: any) => {
+  const handleClose = (e) => {
     e.preventDefault();
     setOtpPassSlipModalIsOpen(false); //close OTP modal first
     setTimeout(() => {
@@ -178,7 +174,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
 
   const handlePatchResult = async (data: passSlipAction) => {
     const { error, result } = await patchPortal('/v1/pass-slip', data);
-    console.log(result);
     if (error) {
       patchPassSlipFail(result);
     } else {
@@ -202,7 +197,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
   }, [otpComplete]);
 
   // SUBMIT OTP CODE AND COMPLETE PASS SLIP APPROVAL/DISAPPROVAL IF CORRECT
-  async function handleFinalSubmit(e: any) {
+  async function handleFinalSubmit(e) {
     e.preventDefault();
     setIsSubmitLoading(true);
 
@@ -229,7 +224,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm">
             <div className="mb-2 text-center">
               {`To ${
-                action === 'approved' ? 'approve' : 'disapprove'
+                action === PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
               } this Pass Slip request, click Send Code
                               and enter the code sent to your mobile number:
                               ${mobile}. `}

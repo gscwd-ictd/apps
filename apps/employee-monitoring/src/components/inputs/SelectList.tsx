@@ -121,15 +121,16 @@ export function MySelectList({
             tabIndex={0}
             className="flex relative w-full bg-gray-50 border border-gray-300/90 rounded-lg min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
           >
-            <span className="text-xs text-left text-gray-700 ">
+            <span className="flex text-xs text-left text-gray-700 ">
               {multiple
                 ? value
                     .sort((a, b) => (a.value > b.value ? 1 : -1))
                     .map((v) => (
-                      <button
-                        className=""
+                      <span
+                        className="flex"
                         key={v.value}
                         onClick={(e) => {
+                          e.preventDefault();
                           e.stopPropagation();
                           selectOption(v);
                         }}
@@ -140,30 +141,30 @@ export function MySelectList({
                             &times;
                           </span>
                         </div>
-                      </button>
+                      </span>
                     ))
                 : multiple === false
                 ? value.label
                 : null}
             </span>
             <div className="flex items-center gap-2">
-              <button
+              <div
                 className="flex px-2 text-xl text-gray-500 rounded hover:text-white hover:bg-red-400"
-                type="button"
+                // type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   clearOptions();
                 }}
               >
                 &times;
-              </button>
+              </div>
               <span className="px-2 font-light text-gray-500">|</span>
               <span
                 className={`text-gray-600 hover:cursor-pointer px-2 hover:text-gray-800 ${
                   isOpen ? 'rotate-180 transition-all' : ''
                 }`}
               >
-                <ChevronDownIcon size={20} />
+                <ChevronDownIcon size={20} type={undefined} />
               </span>
             </div>
           </div>
@@ -171,7 +172,7 @@ export function MySelectList({
 
         <Popover.Content
           sideOffset={5}
-          avoidCollisions={false}
+          avoidCollisions={true}
           style={{ width: 'var(--radix-popover-trigger-width)' }}
         >
           {/* <ul

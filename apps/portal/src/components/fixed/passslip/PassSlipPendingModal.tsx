@@ -1,8 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { ConfirmationApplicationModal } from './ConfirmationModal';
+import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -15,16 +17,25 @@ export const PassSlipPendingModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipPendingModalProps) => {
-  const { passSlip } = usePassSlipStore((state) => ({
+  const { passSlip, cancelApplicationModalIsOpen, setCancelApplicationModalIsOpen } = usePassSlipStore((state) => ({
     passSlip: state.passSlip,
+    cancelApplicationModalIsOpen: state.cancelApplicationModalIsOpen,
+    setCancelApplicationModalIsOpen: state.setCancelApplicationModalIsOpen
   }));
 
   // for cancel pass slip button
   const modalAction = async (e) => {
     e.preventDefault();
+    setCancelApplicationModalIsOpen(true);
   };
 
+    // cancel action for Confirmation Application Modal
+    const closeConfirmationModal = async () => {
+      setCancelApplicationModalIsOpen(false);
+    };
+
   const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
       <Modal
@@ -48,12 +59,21 @@ export const PassSlipPendingModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
+          
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <AlertNotification
                 alertType="warning"
                 notifMessage="Awaiting Supervisor Approval"
                 dismissible={false}
+              />
+
+              <ConfirmationApplicationModal
+                modalState={cancelApplicationModalIsOpen}
+                setModalState={setCancelApplicationModalIsOpen}
+                closeModalAction={closeConfirmationModal}
+                action={PassSlipStatus.CANCELLED}
+                tokenId={passSlip.id}
               />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
@@ -130,7 +150,7 @@ export const PassSlipPendingModal = ({
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
               <Button
-                variant={'primary'}
+                variant={'warning'}
                 size={'md'}
                 loading={false}
                 onClick={(e) => modalAction(e)}

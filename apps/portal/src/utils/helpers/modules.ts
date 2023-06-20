@@ -26,6 +26,14 @@ export const setModules = async (userDetails: EmployeeDetails) => {
       );
     }
   } else if (
+    isEqual(userDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
+  ) {
+    allowed = Modules.filter(
+      (card) =>
+        card.destination === 'pass-slip' ||
+        card.destination === 'dtr'
+    );
+  } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER)
   ) {
     allowed = Modules.filter(

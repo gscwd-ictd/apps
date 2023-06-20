@@ -9,6 +9,7 @@ import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -26,11 +27,13 @@ export const ApprovalsPendingPassSlipModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipPendingModalProps) => {
-  const { passSlip, otpPassSlipModalIsOpen, setOtpPassSlipModalIsOpen } =
+  const { passSlip, otpPassSlipModalIsOpen, setOtpPassSlipModalIsOpen, declineApplicationModalIsOpen, setDeclineApplicationModalIsOpen } =
     useApprovalStore((state) => ({
       passSlip: state.passSlipIndividualDetail,
       otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
       setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+      declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
+      setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
     }));
 
   // React hook form
@@ -55,9 +58,12 @@ export const ApprovalsPendingPassSlipModal = ({
 
   const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
     setValue('passSlipId', passSlip.id);
-    console.log(watch('status'), 'status');
-    console.log(watch('passSlipId'), 'passslip Id');
-    setOtpPassSlipModalIsOpen(true);
+    if(data.status === 'approved') {
+      setOtpPassSlipModalIsOpen(true);
+    } else {
+      setDeclineApplicationModalIsOpen(true);
+    }
+    
   };
 
   // set state for employee store
@@ -65,6 +71,11 @@ export const ApprovalsPendingPassSlipModal = ({
 
   const closeOtpModal = async () => {
     setOtpPassSlipModalIsOpen(false);
+  };
+
+  // cancel action for Decline Application Modal
+  const closeDeclineModal = async () => {
+    setDeclineApplicationModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -219,19 +230,17 @@ export const ApprovalsPendingPassSlipModal = ({
               otpName={'passSlipApproval'}
             />
           </OtpModal>
+          <ConfirmationPassSlipModal
+            modalState={declineApplicationModalIsOpen}
+            setModalState={setDeclineApplicationModalIsOpen}
+            closeModalAction={closeDeclineModal}
+            action={watch('status')}
+            tokenId={passSlip.id}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              {/* <Button
-                variant={'warning'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => modalAction(e)}
-                type="submit"
-              >
-                Disapprove
-              </Button> */}
               <Button
                 variant={'primary'}
                 size={'md'}
