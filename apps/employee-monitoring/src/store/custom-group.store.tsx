@@ -412,7 +412,10 @@ export const useCustomGroupStore = create<CustomGroupState>()(
       })),
 
     // local selected custom group
-    selectedCustomGroupWithMembers: {} as CustomGroupWithMembers,
+    selectedCustomGroupWithMembers: {
+      customGroupDetails: {},
+      members: [],
+    } as CustomGroupWithMembers,
 
     // set local selected custom group
     setSelectedCustomGroupWithMembers: (

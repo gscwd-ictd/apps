@@ -1,4 +1,5 @@
 import { CardMiniStats } from '../cards/CardMiniStats';
+import { CardPassSlipRequests } from '../cards/CardPassSlipRequests';
 
 export const PendingDashboard = () => {
   return (
@@ -72,7 +73,7 @@ export const PendingDashboard = () => {
 
       {/**Card Pending Pass Slip */}
       <div className="w-full h-[6rem] col-span-1">
-        <CardMiniStats
+        {/* <CardMiniStats
           className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
@@ -90,7 +91,8 @@ export const PendingDashboard = () => {
           }
           title="Pass Slip Requests"
           value={47}
-        />
+        /> */}
+        <CardPassSlipRequests />
       </div>
     </div>
   );

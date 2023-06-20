@@ -6,6 +6,6 @@ import {
 
 export type EmployeeRowData = Pick<
   EmploymentDetails,
-  'assignment' | 'positionTitle' | 'companyId'
+  'assignment' | 'positionTitle' | 'companyId' | 'natureOfAppointment'
 > &
   Pick<PersonalDetails, 'fullName'> & { id: string };

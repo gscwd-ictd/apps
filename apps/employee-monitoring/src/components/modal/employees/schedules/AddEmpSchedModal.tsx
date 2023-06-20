@@ -1,9 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  LoadingSpinner,
+  Modal,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import {
   EmployeeWithSchedule,
-  ScheduleSheet,
   useScheduleSheetStore,
 } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import {
@@ -24,6 +28,7 @@ import { MySelectList } from '../../../inputs/SelectList';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
+import { Notification } from 'libs/oneui/src/components/Notification/Notification';
 
 type AddEmpSchedModalProps = {
   modalState: boolean;
@@ -82,17 +87,19 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
   // schedule sheet store
   const {
     schedule,
+    isLoading,
     selectedScheduleId,
     getScheduleById,
-    postScheduleSheet,
     getScheduleByIdFail,
     getEmployeeSchedules,
-    postScheduleSheetFail,
+    postEmployeeSchedule,
+    postEmployeeScheduleFail,
+    postEmployeeScheduleSuccess,
     setSelectedScheduleId,
     getScheduleByIdSuccess,
     getEmployeeSchedulesFail,
-    postScheduleSheetSuccess,
     getEmployeeSchedulesSuccess,
+    isError,
   } = useScheduleSheetStore((state) => ({
     schedule: state.schedule,
     selectedScheduleId: state.selectedScheduleId,
@@ -100,12 +107,14 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
     getScheduleById: state.getScheduleById,
     getScheduleByIdSuccess: state.getScheduleByIdSuccess,
     getScheduleByIdFail: state.getScheduleByIdFail,
-    postScheduleSheet: state.postScheduleSheet,
-    postScheduleSheetSuccess: state.postScheduleSheetSuccess,
-    postScheduleSheetFail: state.postScheduleSheetFail,
+    postEmployeeSchedule: state.postEmployeeSchedule,
+    postEmployeeScheduleSuccess: state.postEmployeeScheduleSuccess,
+    postEmployeeScheduleFail: state.postEmployeeScheduleFail,
     getEmployeeSchedules: state.getEmployeeSchedules,
     getEmployeeSchedulesSuccess: state.getEmployeeSchedulesSuccess,
     getEmployeeSchedulesFail: state.getEmployeeSchedulesFail,
+    isLoading: state.loading.loadingEmployeeSchedule,
+    isError: state.error.errorEmployeeSchedule,
   }));
 
   // use SWR
@@ -140,31 +149,30 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
       withLunch,
       ...rest
     } = data;
-    console.log(rest);
 
     // call the function to start loading
-    // postScheduleSheet();
-
+    postEmployeeSchedule();
+    console.log(rest);
     // call the post function
-    // await handlePostScheduling(rest);
+    await handlePostScheduling(rest);
   };
 
   // function for posting the schedule sheet
   const handlePostScheduling = async (data: Partial<EmployeeWithSchedule>) => {
     const { error, result } = await postEmpMonitoring(
-      '/employee-schedule/group',
+      `/employee-schedule/`,
       data
     );
 
     if (!error) {
       // post scheduling sheet success
-      postScheduleSheetSuccess(result);
+      postEmployeeScheduleSuccess(result);
 
       // close the modal since it is a success
       onCloseScheduleSheet();
     } else if (error) {
       // post scheduling sheet fail
-      postScheduleSheetFail(result);
+      postEmployeeScheduleFail(result);
     }
   };
 
@@ -221,6 +229,26 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
               setModalState={setSelectScheduleModalIsopen}
               closeModalAction={closeSelectScheduleModal}
             />
+            {/* Notification */}
+            {isLoading ? (
+              <div className="fixed z-50 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                <AlertNotification
+                  logo={<LoadingSpinner size="xs" />}
+                  alertType="info"
+                  notifMessage="Submitting request"
+                  dismissible={false}
+                />
+              </div>
+            ) : null}
+
+            {/* ERROR */}
+            {isError ? (
+              <ToastNotification
+                notifMessage="Something went wrong. Please try again within a few seconds."
+                toastType="error"
+              />
+            ) : null}
+
             <form id="addEmpSchedForm" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-col w-full gap-2 px-5">
                 <div className="flex items-center gap-4 px-2 pb-4">

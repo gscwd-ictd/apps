@@ -20,18 +20,11 @@ import { isEmpty } from 'lodash';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
 import duration from 'dayjs/plugin/duration';
-
-// const CardEmployeeSchedules = dynamic(
-//   () =>
-//     import(
-//       'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules'
-//     ),
-//   { ssr: false }
-// );
+import { ToastNotification } from '@gscwd-apps/oneui';
+import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 const localizedFormat = require('dayjs/plugin/localizedFormat');
-// const duration = require('dayjs/plugin/duration');
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -82,6 +75,14 @@ export default function Index({
     getIsLoading: state.loading.loadingEmployeeDtr,
   }));
 
+  // scheduling store
+  const { postResponse, deleteResponse, emptyResponseAndErrors } =
+    useScheduleSheetStore((state) => ({
+      postResponse: state.employeeSchedule.postResponse,
+      deleteResponse: state.employeeSchedule.deleteResponse,
+      emptyResponseAndErrors: state.emptyResponseAndErrors,
+    }));
+
   const {
     data: swrDtr,
     error: swrDtrError,
@@ -117,7 +118,6 @@ export default function Index({
     addition?: number
   ) => {
     // addition is included since we do not set the lunch in duration
-
     if (addition) {
       return dayjs(day + ' ' + actualTime).isAfter(
         dayjs(day + ' ' + scheduledTime)
@@ -145,7 +145,7 @@ export default function Index({
 
   // time only with AM or PM
   const formatTime = (date: string | null) => {
-    if (date === null) return '-';
+    if (date === null || isEmpty(date)) return '';
     else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
   };
 
@@ -168,6 +168,15 @@ export default function Index({
     if (!isEmpty(swrDtrError)) getEmployeeDtrFail(swrDtrError.message);
   }, [swrDtr, swrDtrError]);
 
+  // clear errors
+  useEffect(() => {
+    if (!isEmpty(postResponse)) {
+      setTimeout(() => {
+        emptyResponseAndErrors();
+      }, 1500);
+    }
+  }, [postResponse]);
+
   useEffect(() => {
     setEmployeeDtr([]);
   }, []);
@@ -186,6 +195,14 @@ export default function Index({
             { layerNo: 2, layerText: 'Daily Time Record', path: '' },
           ]}
         />
+
+        {/* Successfully added */}
+        {!isEmpty(postResponse) ? (
+          <ToastNotification
+            notifMessage="Successfully added a schedule!"
+            toastType="success"
+          />
+        ) : null}
 
         <div className="flex flex-col w-full gap-6">
           {/* DTR CARD */}
@@ -352,6 +369,22 @@ export default function Index({
                                   {formatTime(logs.schedule.timeOut)}
                                 </td>
                                 <td className="py-2 text-xs text-center break-words border">
+                                  {/* 
+                                  *
+                                  if future dates are listed, and if dtr remarks is "Rest Day",
+                                   show "-" or empty, else show the remarks (e.g, T.O, Holiday)
+                                   show the logic as comment for now
+                                   *
+                                   */}
+                                  {/* {(dayjs(logs.day).isBefore(dayjs(), 'days') ||
+                                    dayjs(logs.day).isSame(dayjs(), 'day')) &&
+                                  logs.dtr.remarks
+                                    ? logs.dtr.remarks
+                                    : dayjs(logs.day).isAfter(dayjs()) &&
+                                      logs.dtr.remarks &&
+                                      logs.dtr.remarks !== 'Rest Day'
+                                    ? logs.dtr.remarks
+
                                   {/* {(dayjs().isAfter(dayjs(logs.day)) ||
                                     dayjs().isSame(dayjs(logs.day), 'day')) &&
                                   logs.dtr.remarks
@@ -393,6 +426,7 @@ export default function Index({
 
           <div className="mx-5">
             {/* SCHEDULE CARD */}
+
             <CardEmployeeSchedules employeeData={employeeData} />
           </div>
         </div>
