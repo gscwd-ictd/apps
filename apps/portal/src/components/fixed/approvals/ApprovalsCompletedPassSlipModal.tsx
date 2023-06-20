@@ -8,6 +8,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { patchPortal } from '../../../utils/helpers/portal-axios-helper';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
+import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
+
 type PassSlipCompletedModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,9 +22,16 @@ export const ApprovalsPendingPassSlipModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipCompletedModalProps) => {
-  const { passSlip } = useApprovalStore((state) => ({
+  const { passSlip, declineApplicationModalIsOpen, setDeclineApplicationModalIsOpen } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
+    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
   }));
+
+   // cancel action for Decline Application Modal
+   const closeDeclineModal = async () => {
+    setDeclineApplicationModalIsOpen(false);
+  };
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -54,6 +64,14 @@ export const ApprovalsPendingPassSlipModal = ({
                 alertType="info"
                 notifMessage={`This Pass Slip is ${passSlip.status}`}
                 dismissible={false}
+              />
+
+              <ConfirmationPassSlipModal
+                modalState={declineApplicationModalIsOpen}
+                setModalState={setDeclineApplicationModalIsOpen}
+                closeModalAction={closeDeclineModal}
+                action={PassSlipStatus.CANCELLED}
+                tokenId={passSlip.id}
               />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
@@ -140,7 +158,20 @@ export const ApprovalsPendingPassSlipModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto">
+            <div className="min-w-[6rem] max-w-auto flex gap-2">
+              {
+                passSlip.status === PassSlipStatus.APPROVED ?
+                <Button
+                variant={'warning'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => setDeclineApplicationModalIsOpen(true)}
+                type="submit"
+                >
+                  Cancel Pass Slip
+                </Button>
+                : null
+              }
               <Button
                 variant={'primary'}
                 size={'md'}

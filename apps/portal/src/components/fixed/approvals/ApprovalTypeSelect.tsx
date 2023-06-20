@@ -16,6 +16,7 @@ export const ApprovalTypeSelect = () => {
     { type: 'For Approval', code: 1 },
     { type: 'Approved', code: 2 },
     { type: 'Disapproved', code: 3 },
+    { type: 'Cancelled', code: 4 },
   ] as ApprovalType[];
 
   const list: ListDef<ApprovalType> = {
@@ -42,6 +43,9 @@ export const ApprovalTypeSelect = () => {
     }
     if (code === 3) {
       setTab(5); //auto select 1st option in left panel
+    }
+    if (code === 4) {
+      setTab(7); //auto select 1st option in left panel
     }
   };
 

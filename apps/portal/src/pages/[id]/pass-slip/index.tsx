@@ -66,7 +66,7 @@ export default function PassSlip({
     errorPassSlips: state.error.errorPassSlips,
     errorResponse: state.error.errorResponse,
     responseApply: state.response.postResponseApply,
-    responseCancel: state.response.deleteResponseCancel,
+    responseCancel: state.response.cancelResponse,
 
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
@@ -176,7 +176,7 @@ export default function PassSlip({
 
         {/* Post/Submit Pass Slip Error */}
         {!isEmpty(errorResponse) ? (
-          <ToastNotification toastType="error" notifMessage={errorResponse} />
+          <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
         ) : null}
 
         {/* Post/Submit Pass Slip Success */}
@@ -184,6 +184,14 @@ export default function PassSlip({
           <ToastNotification
             toastType="success"
             notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
+          />
+        ) : null}
+
+         {/* Cancel Pass Slip Success */}
+         {!isEmpty(responseCancel) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Pass Slip Cancellation Successful!"
           />
         ) : null}
       </>

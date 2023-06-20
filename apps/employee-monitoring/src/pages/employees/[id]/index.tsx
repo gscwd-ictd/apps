@@ -384,6 +384,11 @@ export default function Index({
                                       logs.dtr.remarks &&
                                       logs.dtr.remarks !== 'Rest Day'
                                     ? logs.dtr.remarks
+
+                                  {/* {(dayjs().isAfter(dayjs(logs.day)) ||
+                                    dayjs().isSame(dayjs(logs.day), 'day')) &&
+                                  logs.dtr.remarks
+                                    ? logs.dtr.remarks
                                     : '-'} */}
                                   {logs.dtr.remarks ? logs.dtr.remarks : '-'}
                                 </td>

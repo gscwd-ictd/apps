@@ -43,9 +43,13 @@ export default function Approvals({
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen,
+    cancelledLeaveModalIsOpen,
+
     pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
+    cancelledPassSlipModalIsOpen,
+
     patchResponsePassSlip,
     postResponseLeave,
     loadingPassSlip,
@@ -56,9 +60,12 @@ export default function Approvals({
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen,
+    setCancelledLeaveModalIsOpen,
+
     setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen,
+    setCancelledPassSlipModalIsOpen,
 
     getPassSlipList,
     getPassSlipListSuccess,
@@ -73,9 +80,13 @@ export default function Approvals({
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
+    cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
+
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
+    cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
+
     patchResponsePassSlip: state.response.patchResponsePassSlip,
     postResponseLeave: state.response.postResponseLeave,
     loadingPassSlip: state.loading.loadingPassSlips,
@@ -86,9 +97,12 @@ export default function Approvals({
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
+    setCancelledLeaveModalIsOpen: state.setCancelledLeaveModalIsOpen,
+
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
+    setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
 
     getPassSlipList: state.getPassSlipList,
     getPassSlipListSuccess: state.getPassSlipListSuccess,
@@ -127,19 +141,24 @@ export default function Approvals({
     setDisapprovedLeaveModalIsOpen(false);
   };
 
-  // cancel action for Pending Leave Application Modal
+  // cancel action for Pending Pass Slip Application Modal
   const closePendingPassSlipModal = async () => {
     setPendingPassSlipModalIsOpen(false);
   };
 
-  // cancel action for Approved Leave Application Modal
+  // cancel action for Approved Pass Slip Application Modal
   const closeApprovedPassSlipModal = async () => {
     setApprovedPassSlipModalIsOpen(false);
   };
 
-  // cancel action for Dispproved Leave Application Modal
+  // cancel action for Dispproved Pass Slip Application Modal
   const closeDisapprovedPassSlipModal = async () => {
     setDisapprovedPassSlipModalIsOpen(false);
+  };
+
+  // cancel action for Cancelled Pass Slip Application Modal
+  const closeCancelledPassSlipModal = async () => {
+    setCancelledPassSlipModalIsOpen(false);
   };
 
   const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/supervisor/${employeeDetails.employmentDetails.userId}`;
@@ -279,7 +298,7 @@ export default function Approvals({
             closeModalAction={closePendingPassSlipModal}
           />
 
-          {/* Pending Pass Slip Approved/Disapproved Modal */}
+          {/* Pending Pass Slip Approved/Disapproved/Cancelled Modal */}
           <ApprovalsCompletedPassSlipModal
             modalState={approvedPassSlipModalIsOpen}
             setModalState={setApprovedPassSlipModalIsOpen}
@@ -290,6 +309,12 @@ export default function Approvals({
             modalState={disapprovedPassSlipModalIsOpen}
             setModalState={setDisapprovedPassSlipModalIsOpen}
             closeModalAction={closeDisapprovedPassSlipModal}
+          />
+
+          <ApprovalsCompletedPassSlipModal
+            modalState={cancelledPassSlipModalIsOpen}
+            setModalState={setCancelledPassSlipModalIsOpen}
+            closeModalAction={closeCancelledPassSlipModal}
           />
 
           <MainContainer>

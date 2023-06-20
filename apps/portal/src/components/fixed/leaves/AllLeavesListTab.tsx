@@ -1,8 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useLeaveStore } from '../../../../src/store/leave.store';
-import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { EmployeeLeave } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import dayjs from 'dayjs';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
 type AllLeaveListTabProps = {
   leaves: Array<EmployeeLeave>;
@@ -70,13 +70,13 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
 
                   <p className="text-sm text-indigo-500">
                     Status:{' '}
-                    {leave.status === 'ongoing'
+                    {leave.status === LeaveStatus.ONGOING
                       ? 'Ongoing'
-                      : leave.status === 'approved'
+                      : leave.status === LeaveStatus.APPROVED
                       ? 'Approved'
-                      : leave.status === 'disapproved'
+                      : leave.status === LeaveStatus.DISAPPROVED
                       ? 'Disapproved'
-                      : leave.status === 'cancelled'
+                      : leave.status === LeaveStatus.CANCELLED
                       ? 'Cancelled'
                       : leave.status}
                   </p>
