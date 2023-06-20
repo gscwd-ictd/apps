@@ -16,102 +16,10 @@ import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functi
 import UseRenderObTransportation from 'apps/employee-monitoring/src/utils/functions/RenderObTransporation';
 import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
 import dayjs from 'dayjs';
-import {
-  NatureOfBusiness,
-  ObTransportation,
-  PassSlipStatus,
-} from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-
-// const passSlips: Array<PassSlip> = [
-//   {
-//     employeeName: 'Maritess P. Primaylon',
-//     supervisorName: 'Michael G. Gabales',
-//     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
-//     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
-//     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-//     status: PassSlipStatus.APPROVED,
-//     dateOfApplication: '2023-03-01',
-//     natureOfBusiness: NatureOfBusiness.UNDERTIME,
-//     obTransportation: null,
-//     estimateHours: 0,
-//     purposeDestination: 'undertime',
-//     isCancelled: Boolean(0),
-//   },
-//   {
-//     employeeName: 'Ricardo Vicente P. Narvaiza',
-//     supervisorName: 'Michael G. Gabales',
-//     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
-//     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
-//     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-//     status: PassSlipStatus.DISAPPROVED,
-//     dateOfApplication: '2023-03-01',
-//     natureOfBusiness: NatureOfBusiness.HALF_DAY,
-//     obTransportation: null,
-//     estimateHours: 0,
-//     purposeDestination: 'undertime',
-//     isCancelled: Boolean(0),
-//   },
-//   {
-//     employeeName: 'Allyn Joseph C. Cubero',
-//     supervisorName: 'Michael G. Gabales',
-//     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
-//     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
-//     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-//     status: PassSlipStatus.ONGOING,
-//     dateOfApplication: '2023-03-01',
-//     natureOfBusiness: NatureOfBusiness.UNDERTIME,
-//     obTransportation: null,
-//     estimateHours: 0,
-//     purposeDestination: 'undertime',
-//     isCancelled: Boolean(0),
-//   },
-//   {
-//     employeeName: 'Eric C. Sison',
-//     supervisorName: 'Michael G. Gabales',
-//     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
-//     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
-//     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-//     status: PassSlipStatus.APPROVED,
-//     dateOfApplication: '2023-03-01',
-//     natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
-//     obTransportation: ObTransportation.OFFICE_VEHICLE,
-//     estimateHours: 0,
-//     purposeDestination: 'undertime',
-//     isCancelled: Boolean(0),
-//   },
-//   {
-//     employeeName: 'Eric C. Sison',
-//     supervisorName: 'Michael G. Gabales',
-//     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
-//     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
-//     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-//     status: PassSlipStatus.APPROVED,
-//     dateOfApplication: '2023-03-01',
-//     natureOfBusiness: NatureOfBusiness.PERSONAL_BUSINESS,
-//     obTransportation: null,
-//     estimateHours: 0,
-//     purposeDestination: 'undertime undertime undertime ',
-//     isCancelled: Boolean(0),
-//   },
-//   {
-//     employeeName: 'Alexis G. Aponesto',
-//     supervisorName: 'Michael G. Gabales',
-//     id: '09decec4-7a1c-4d77-a0cf-a905f9601dbe',
-//     employeeId: '7bda7038-9a26-44a0-b649-475a6118eccc',
-//     supervisorId: '010a02be-5b3d-11ed-a08b-000c29f95a80',
-//     status: PassSlipStatus.CANCELLED,
-//     dateOfApplication: '2023-03-01',
-//     natureOfBusiness: NatureOfBusiness.OFFICIAL_BUSINESS,
-//     obTransportation: ObTransportation.PRIVATE_OR_PERSONAL_VEHICLE,
-//     estimateHours: 0,
-//     purposeDestination: 'undertime',
-//     isCancelled: Boolean(0),
-//   },
-// ];
 
 export default function Index() {
   const {
@@ -136,6 +44,7 @@ export default function Index() {
     {} as PassSlip
   );
 
+  // use swr pass slips
   const {
     data: swrPassSlips,
     isLoading: swrIsLoading,

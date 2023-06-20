@@ -1,5 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, LoadingSpinner, useDataTable } from '@gscwd-apps/oneui';
+import {
+  DataTable,
+  LoadingSpinner,
+  ToastNotification,
+  useDataTable,
+} from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
@@ -15,15 +20,35 @@ import fetcherEMS from '../../utils/fetcher/FetcherEMS';
 import UseConvertRestDaysToString from '../../utils/functions/ConvertRestDaysToString';
 import UseRenderRestDays from '../../utils/functions/RenderRestDays';
 import AddEmpSchedModal from '../modal/employees/schedules/AddEmpSchedModal';
+import DeleteEmpSchedModal from '../modal/employees/schedules/DeleteEmpSchedModal';
 import { Card } from './Card';
 
+type EmployeeInfo = {
+  userId: string;
+  photoUrl: string;
+  companyId: string;
+  fullName: string;
+  isHRMPSB: number;
+  assignment: {
+    id: string;
+    name: string;
+    positionId: string;
+    positionTitle: string;
+  };
+  userRole: string;
+};
+
 type CardEmployeeSchedulesProps = {
-  employeeData: any;
+  employeeData: EmployeeInfo;
 };
 
 const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
   employeeData,
 }) => {
+  const [currentRowData, setCurrentRowData] = useState<EmployeeWithSchedule>(
+    {} as EmployeeWithSchedule
+  );
+
   // use swr
   const {
     data: swrEmpScheds,
@@ -31,7 +56,10 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
     error: swrEsError,
     mutate: mutateEs,
   } = useSWR(
-    employeeData ? `/employee-schedule/${employeeData.userId}/all` : null,
+    employeeData.userId
+      ? `/employee-schedule/${employeeData.userId}/all`
+      : null,
+
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -51,16 +79,78 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
   };
 
   const {
+    postResponse,
+    deleteResponse,
     employeeSchedules,
+    errorEmployeeSchedule,
     getEmployeeSchedules,
     getEmployeeSchedulesFail,
     getEmployeeSchedulesSuccess,
+    clearScheduleSheet,
+    emptyResponseAndErrors,
+    loadingEmployeeSchedules,
+    emptyErrors,
+    emptyResponse,
   } = useScheduleSheetStore((state) => ({
     employeeSchedules: state.employeeSchedules,
     getEmployeeSchedules: state.getEmployeeSchedules,
     getEmployeeSchedulesSuccess: state.getEmployeeSchedulesSuccess,
     getEmployeeSchedulesFail: state.getEmployeeSchedulesFail,
+    clearScheduleSheet: state.clearScheduleSheet,
+    emptyResponseAndErrors: state.emptyResponseAndErrors,
+    errorEmployeeSchedule: state.error.errorEmployeeSchedule,
+    postResponse: state.employeeSchedule.postResponse,
+    deleteResponse: state.employeeSchedule.deleteResponse,
+    loadingEmployeeSchedules: state.loading.loadingEmployeeSchedules,
+    emptyResponse: state.emptyResponse,
+    emptyErrors: state.emptyErrors,
   }));
+
+  // modal open
+  const [addSchedModalIsOpen, setAddSchedModalIsOpen] =
+    useState<boolean>(false);
+
+  const openAddSchedModal = () => setAddSchedModalIsOpen(true);
+  const closeAddSchedModal = () => {
+    setAddSchedModalIsOpen(false);
+  };
+
+  const [deleteSchedModalIsOpen, setDeleteSchedModalIsOpen] =
+    useState<boolean>(false);
+  const openDeleteSchedModal = (
+    rowData: EmployeeWithSchedule,
+    employeeData: any
+  ) => {
+    setCurrentRowData({
+      ...rowData,
+      employeeId: employeeData.userId,
+    });
+
+    setDeleteSchedModalIsOpen(true);
+  };
+  const closeDeleteSchedModal = () => {
+    setCurrentRowData({} as EmployeeWithSchedule);
+    mutateEs();
+    setTimeout(() => {
+      emptyResponseAndErrors();
+    }, 500);
+    setDeleteSchedModalIsOpen(false);
+  };
+
+  // Render row actions in the table component
+  const renderRowActions = (rowData: EmployeeWithSchedule) => {
+    return (
+      <>
+        <button
+          type="button"
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          onClick={() => openDeleteSchedModal(rowData, employeeData)}
+        >
+          <i className="bx bx-trash-alt"></i>
+        </button>
+      </>
+    );
+  };
 
   // define table columns
   const columnHelper = createColumnHelper<EmployeeWithSchedule>();
@@ -105,6 +195,15 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
       cell: (info) =>
         UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
     }),
+    columnHelper.display({
+      id: 'actions',
+      header: () => <span className="w-full text-center ">Actions</span>,
+      cell: (props) => (
+        <div className="w-full text-center">
+          {renderRowActions(props.row.original)}
+        </div>
+      ),
+    }),
   ];
 
   // react table initialization
@@ -125,7 +224,6 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
   useEffect(() => {
     // success
     if (!isEmpty(swrEmpScheds)) {
-      console.log(swrEmpScheds.data);
       getEmployeeSchedulesSuccess(swrEmpScheds.data);
     }
 
@@ -135,17 +233,45 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
     }
   }, [swrEsError, swrEmpScheds]);
 
-  // modal open
-  const [addSchedModalIsOpen, setAddSchedModalIsOpen] =
-    useState<boolean>(false);
+  // mutate
+  useEffect(() => {
+    if (!isEmpty(postResponse) || !isEmpty(deleteResponse)) {
+      mutateEs();
+      setTimeout(() => {
+        emptyResponse();
+      }, 1500);
+    }
+  }, [postResponse, deleteResponse]);
 
-  const openAddSchedModal = () => setAddSchedModalIsOpen(true);
-  const closeAddSchedModal = () => {
-    setAddSchedModalIsOpen(false);
-  };
+  // clear errors
+  useEffect(() => {
+    if (!isEmpty(errorEmployeeSchedule)) {
+      setTimeout(() => {
+        emptyErrors();
+      }, 1500);
+    }
+  }, [errorEmployeeSchedule]);
 
   return (
     <div className="w-full ">
+      {loadingEmployeeSchedules ? (
+        <ToastNotification notifMessage="Loading Schedules" toastType="info" />
+      ) : null}
+
+      {!isEmpty(deleteResponse) ? (
+        <ToastNotification
+          notifMessage="Successfully deleted an entry!"
+          toastType="success"
+        />
+      ) : null}
+
+      {!isEmpty(errorEmployeeSchedule) ? (
+        <ToastNotification
+          notifMessage="Something went wrong. Please try again within a few seconds"
+          toastType="error"
+        />
+      ) : null}
+
       <Can I="access" this="Employee_schedules">
         <Card title="Schedules" className="p-5">
           <div className="flex flex-row flex-wrap">
@@ -167,6 +293,13 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
               setModalState={setAddSchedModalIsOpen}
               closeModalAction={closeAddSchedModal}
               employeeData={employeeData}
+            />
+
+            <DeleteEmpSchedModal
+              modalState={deleteSchedModalIsOpen}
+              setModalState={setDeleteSchedModalIsOpen}
+              closeModalAction={closeDeleteSchedModal}
+              rowData={currentRowData}
             />
 
             {swrEsIsLoading ? (

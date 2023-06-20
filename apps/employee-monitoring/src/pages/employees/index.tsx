@@ -19,6 +19,8 @@ import {
   useDtrStore,
 } from 'apps/employee-monitoring/src/store/dtr.store';
 import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
+import { UseCapitalizer } from '../../utils/functions/Capitalizer';
+import UseRenderBadgePill from '../../utils/functions/RenderBadgePill';
 
 export default function Index() {
   const {
@@ -119,6 +121,11 @@ export default function Index() {
       header: 'Assignment',
       cell: (info) => info.getValue(),
     }),
+    columnHelper.accessor('natureOfAppointment', {
+      enableSorting: false,
+      header: 'Nature of Appointment',
+      cell: (info) => UseRenderBadgePill(UseCapitalizer(info.getValue())),
+    }),
     columnHelper.display({
       header: () => 'Actions',
       id: 'actions',
@@ -146,13 +153,13 @@ export default function Index() {
       const employeesDetails: Array<EmployeeRowData> = swrEmployees.data.map(
         (employeeDetails: EmployeeProfile) => {
           const { employmentDetails, personalDetails } = employeeDetails;
-
           return {
             id: employmentDetails.employeeId,
             fullName: personalDetails.fullName,
             assignment: employmentDetails.assignment,
             positionTitle: employmentDetails.positionTitle,
             companyId: employeeDetails.employmentDetails.companyId,
+            natureOfAppointment: employmentDetails.natureOfAppointment,
           };
         }
       );

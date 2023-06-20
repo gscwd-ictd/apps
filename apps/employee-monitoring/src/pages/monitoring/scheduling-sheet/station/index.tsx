@@ -1,4 +1,9 @@
-import { DataTable, LoadingSpinner, useDataTable } from '@gscwd-apps/oneui';
+import {
+  DataTable,
+  LoadingSpinner,
+  ToastNotification,
+  useDataTable,
+} from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -13,6 +18,7 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import ViewStationSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/station/ViewStationSsModal';
 
 export default function Index() {
   const {
@@ -25,6 +31,7 @@ export default function Index() {
     getScheduleSheetsFail,
     emptyResponseAndErrors,
     getScheduleSheetsSuccess,
+    errorScheduleSheets,
   } = useScheduleSheetStore((state) => ({
     scheduleSheets: state.scheduleSheets,
     postResponse: state.scheduleSheet.postResponse,
@@ -35,6 +42,7 @@ export default function Index() {
     setSelectedScheduleId: state.setSelectedScheduleId,
     emptyResponseAndErrors: state.emptyResponseAndErrors,
     getScheduleSheetsSuccess: state.getScheduleSheetsSuccess,
+    errorScheduleSheets: state.error.errorScheduleSheets,
   }));
 
   const {
@@ -55,13 +63,33 @@ export default function Index() {
     setAddModalIsOpen(false);
   };
 
-  // Edit modal function
-  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-  const openEditActionModal = (rowData: ScheduleSheet) => {
-    setEditModalIsOpen(true);
-    setCurrentRowData(rowData);
+  // view
+  const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
+  const openViewActionModal = (rowData: ScheduleSheet) => {
+    // setCurrentRowData(rowData);
+    setCurrentRowData({
+      ...currentRowData,
+      customGroupId: rowData.id,
+      customGroupName: rowData.customGroupName,
+      dateFrom: rowData.dateFrom,
+      dateTo: rowData.dateTo,
+      scheduleId: rowData.scheduleId,
+      scheduleName: rowData.scheduleName,
+    });
+    setViewModalIsOpen(true);
   };
-  const closeEditActionModal = () => setEditModalIsOpen(false);
+  const closeViewActionModal = () => {
+    setCurrentRowData({
+      customGroupId: '',
+      dateFrom: '',
+      dateTo: '',
+
+      scheduleId: '',
+      customGroupName: '',
+      scheduleName: '',
+    } as ScheduleSheet);
+    setViewModalIsOpen(false);
+  };
 
   // Delete modal function
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
@@ -89,7 +117,7 @@ export default function Index() {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          onClick={() => openEditActionModal(rowData)}
+          onClick={() => openViewActionModal(rowData)}
         >
           <i className="bx bx-edit-alt"></i>
         </button>
@@ -190,14 +218,15 @@ export default function Index() {
     if (
       !isEmpty(postResponse) ||
       !isEmpty(updateResponse) ||
-      !isEmpty(deleteResponse)
+      !isEmpty(deleteResponse) ||
+      !isEmpty(errorScheduleSheets)
     ) {
       swrMutate();
       setTimeout(() => {
         emptyResponseAndErrors();
       }, 2500);
     }
-  }, [postResponse, updateResponse, deleteResponse]);
+  }, [postResponse, updateResponse, deleteResponse, errorScheduleSheets]);
   return (
     <>
       <div className="w-full">
@@ -217,10 +246,45 @@ export default function Index() {
           title="Station Scheduling Sheet"
         />
 
+        {!isEmpty(swrGsError) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={swrGsError.message}
+          />
+        ) : null}
+
+        {!isEmpty(postResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully Added a Scheduling Sheet!"
+          />
+        ) : null}
+
+        {!isEmpty(updateResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully Updated the Scheduling Sheet!"
+          />
+        ) : null}
+
+        {!isEmpty(deleteResponse) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Successfully deleted the Scheduling Sheet!"
+          />
+        ) : null}
+
         <AddStationSsModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
           closeModalAction={closeAddActionModal}
+        />
+
+        <ViewStationSsModal
+          modalState={viewModalIsOpen}
+          setModalState={setViewModalIsOpen}
+          closeModalAction={closeViewActionModal}
+          rowData={currentRowData}
         />
 
         <Can I="access" this="Schedules">

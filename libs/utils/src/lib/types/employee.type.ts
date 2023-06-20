@@ -8,6 +8,7 @@ export type EmploymentDetails = {
   companyId: string | null;
   positionTitle: string;
   assignment: Assignment;
+  natureOfAppointment: string;
 };
 
 export type PersonalDetails = {

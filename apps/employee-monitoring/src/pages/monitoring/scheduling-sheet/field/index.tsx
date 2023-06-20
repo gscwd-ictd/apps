@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
+import ViewFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/ViewFieldSsModal';
 
 export default function Index() {
   const {
@@ -55,18 +56,38 @@ export default function Index() {
   });
   // add
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
-  const openAddActionModal = () => {
-    setAddModalIsOpen(true);
-  };
+  const openAddActionModal = () => setAddModalIsOpen(true);
   const closeAddActionModal = () => {
     setSelectedScheduleId('');
     setAddModalIsOpen(false);
   };
 
-  // edit
-  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-  const openEditActionModal = (rowData: ScheduleSheet) => {
-    setEditModalIsOpen(true);
+  // view
+  const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
+  const openViewActionModal = (rowData: ScheduleSheet) => {
+    // setCurrentRowData(rowData);
+    setCurrentRowData({
+      ...currentRowData,
+      customGroupId: rowData.id,
+      customGroupName: rowData.customGroupName,
+      dateFrom: rowData.dateFrom,
+      dateTo: rowData.dateTo,
+      scheduleId: rowData.scheduleId,
+      scheduleName: rowData.scheduleName,
+    });
+    setViewModalIsOpen(true);
+  };
+  const closeViewActionModal = () => {
+    setCurrentRowData({
+      customGroupId: '',
+      dateFrom: '',
+      dateTo: '',
+
+      scheduleId: '',
+      customGroupName: '',
+      scheduleName: '',
+    } as ScheduleSheet);
+    setViewModalIsOpen(false);
   };
 
   // delete
@@ -91,7 +112,7 @@ export default function Index() {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          onClick={() => openEditActionModal(rowData)}
+          onClick={() => openViewActionModal(rowData)}
         >
           <i className="bx bx-edit-alt"></i>
         </button>
@@ -253,6 +274,13 @@ export default function Index() {
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
           closeModalAction={closeAddActionModal}
+        />
+
+        <ViewFieldSsModal
+          modalState={viewModalIsOpen}
+          setModalState={setViewModalIsOpen}
+          closeModalAction={closeViewActionModal}
+          rowData={currentRowData}
         />
 
         <Can I="access" this="Schedules">
