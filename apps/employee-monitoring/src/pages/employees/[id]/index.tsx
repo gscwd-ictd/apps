@@ -20,6 +20,8 @@ import { isEmpty } from 'lodash';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
 import duration from 'dayjs/plugin/duration';
+import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/PrintButton';
+import DailyTimeRecordPdfModal from 'apps/employee-monitoring/src/components/modal/employees/DailyTimeRecordPdfModal';
 
 // const CardEmployeeSchedules = dynamic(
 //   () =>
@@ -50,6 +52,14 @@ export default function Index({
     setCurrentRowData(rowData);
   };
   const closeEditActionModal = () => setEditModalIsOpen(false);
+
+  // Print modal function
+  const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
+
+  const toggle = () => setPrintModalIsOpen(!printModalIsOpen);
+  // const openPrintActionModal = () => {
+  //   setPrintModalIsOpen(true)
+  // }
 
   const {
     date,
@@ -219,8 +229,12 @@ export default function Index({
                     </div>
                   </div>
 
-                  <DtrDateSelect />
+                  <div className="flex gap-2 justify-end">
+                    <DtrDateSelect />
+                    <PrintButton onClick={toggle} />
+                  </div>
                 </Card>
+
                 {/* EMPLOYEE DTR TABLE */}
                 <div className="flex w-full border rounded">
                   <table className="w-full overflow-auto border-separate bg-slate-50 border-spacing-0">
@@ -401,6 +415,12 @@ export default function Index({
           setModalState={setEditModalIsOpen}
           closeModalAction={closeEditActionModal}
           rowData={currentRowData}
+        />
+
+        <DailyTimeRecordPdfModal
+          printModalIsOpen={printModalIsOpen}
+          toggle={toggle}
+          employeeData={employeeData}
         />
       </div>
     </>
