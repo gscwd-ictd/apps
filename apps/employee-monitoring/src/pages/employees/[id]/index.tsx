@@ -20,6 +20,8 @@ import { isEmpty } from 'lodash';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
 import duration from 'dayjs/plugin/duration';
+import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/PrintButton';
+import DailyTimeRecordPdfModal from 'apps/employee-monitoring/src/components/modal/employees/DailyTimeRecordPdfModal';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -43,6 +45,14 @@ export default function Index({
     setCurrentRowData(rowData);
   };
   const closeEditActionModal = () => setEditModalIsOpen(false);
+
+  // Print modal function
+  const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
+
+  const toggle = () => setPrintModalIsOpen(!printModalIsOpen);
+  // const openPrintActionModal = () => {
+  //   setPrintModalIsOpen(true)
+  // }
 
   const {
     date,
@@ -128,7 +138,7 @@ export default function Index({
       );
     }
   };
-
+  console.log(employeeData);
   // mm dd yyyy
   const formatDate = (date: string) => {
     return dayjs(date).format('MM-DD-YYYY');
@@ -264,8 +274,12 @@ export default function Index({
                     </section>
                   </div>
 
-                  <DtrDateSelect />
+                  <div className="flex gap-2 justify-end">
+                    <DtrDateSelect />
+                    <PrintButton onClick={toggle} />
+                  </div>
                 </Card>
+
                 {/* EMPLOYEE DTR TABLE */}
                 <div className="flex w-full border rounded">
                   <table className="w-full overflow-auto border-separate bg-slate-50 border-spacing-0">
@@ -411,7 +425,7 @@ export default function Index({
                                   {formatTime(logs.schedule.timeOut)}
                                 </td>
                                 <td className="py-2 text-xs text-center break-words border">
-                                  {/* 
+                                  {/*
                                   *
                                   if future dates are listed, and if dtr remarks is "Rest Day",
                                    show "-" or empty, else show the remarks (e.g, T.O, Holiday)
@@ -478,6 +492,12 @@ export default function Index({
           setModalState={setEditModalIsOpen}
           closeModalAction={closeEditActionModal}
           rowData={currentRowData}
+        />
+
+        <DailyTimeRecordPdfModal
+          printModalIsOpen={printModalIsOpen}
+          toggle={toggle}
+          employeeData={employeeData}
         />
       </div>
     </>
