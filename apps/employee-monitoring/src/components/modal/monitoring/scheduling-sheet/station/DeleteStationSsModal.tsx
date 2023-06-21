@@ -17,7 +17,7 @@ type DeleteModalProps = {
   rowData: ScheduleSheet;
 };
 
-const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -77,7 +77,7 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
             />
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="deleteFieldSs">
+          <form onSubmit={handleSubmit(onSubmit)} id="deleteStationSs">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
@@ -95,7 +95,7 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
           <div className="flex justify-between w-full gap-2">
             <button
               type="submit"
-              form="deleteFieldSs"
+              form="deleteStationSs"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={IsLoading ? true : false}
             >
@@ -116,4 +116,4 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteFieldSsModal;
+export default DeleteStationSsModal;

@@ -19,6 +19,7 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import ViewFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/ViewFieldSsModal';
+import DeleteFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/DeleteFieldSsModal';
 
 export default function Index() {
   const {
@@ -65,7 +66,6 @@ export default function Index() {
   // view
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
   const openViewActionModal = (rowData: ScheduleSheet) => {
-    // setCurrentRowData(rowData);
     setCurrentRowData({
       ...currentRowData,
       customGroupId: rowData.id,
@@ -92,8 +92,32 @@ export default function Index() {
 
   // delete
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+
+  // open delete action
   const openDeleteActionModal = (rowData: ScheduleSheet) => {
+    setCurrentRowData({
+      ...currentRowData,
+      customGroupId: rowData.id,
+      customGroupName: rowData.customGroupName,
+      dateFrom: rowData.dateFrom,
+      dateTo: rowData.dateTo,
+      scheduleId: rowData.scheduleId,
+      scheduleName: rowData.scheduleName,
+    });
     setDeleteModalIsOpen(true);
+  };
+
+  // close delete action
+  const closeDeleteActionModal = () => {
+    setCurrentRowData({
+      customGroupId: '',
+      dateFrom: '',
+      dateTo: '',
+      scheduleId: '',
+      customGroupName: '',
+      scheduleName: '',
+    } as ScheduleSheet);
+    setDeleteModalIsOpen(false);
   };
   const [currentRowData, setCurrentRowData] = useState<ScheduleSheet>(
     {} as ScheduleSheet
@@ -280,6 +304,13 @@ export default function Index() {
           modalState={viewModalIsOpen}
           setModalState={setViewModalIsOpen}
           closeModalAction={closeViewActionModal}
+          rowData={currentRowData}
+        />
+
+        <DeleteFieldSsModal
+          modalState={deleteModalIsOpen}
+          setModalState={setDeleteModalIsOpen}
+          closeModalAction={closeDeleteActionModal}
           rowData={currentRowData}
         />
 

@@ -9,7 +9,7 @@ import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 export const CardPassSlipRequests: FunctionComponent = () => {
   // pass slip count
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<string>('--');
 
   // use swr pass slips
   const {
@@ -54,7 +54,7 @@ export const CardPassSlipRequests: FunctionComponent = () => {
       const forApprovalPassSlipsCount = passSlips.filter(
         (passSlip) => passSlip.status === PassSlipStatus.FOR_APPROVAL
       );
-      setCount(forApprovalPassSlipsCount.length);
+      setCount(forApprovalPassSlipsCount.length.toString());
     }
   }, [passSlips]);
 
