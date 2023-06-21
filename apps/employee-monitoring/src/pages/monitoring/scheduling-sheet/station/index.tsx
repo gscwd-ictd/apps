@@ -19,6 +19,7 @@ import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import ViewStationSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/station/ViewStationSsModal';
+import DeleteStationSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/station/DeleteStationSsModal';
 
 export default function Index() {
   const {
@@ -96,10 +97,30 @@ export default function Index() {
 
   // open delete action
   const openDeleteActionModal = (rowData: ScheduleSheet) => {
+    setCurrentRowData({
+      ...currentRowData,
+      customGroupId: rowData.id,
+      customGroupName: rowData.customGroupName,
+      dateFrom: rowData.dateFrom,
+      dateTo: rowData.dateTo,
+      scheduleId: rowData.scheduleId,
+      scheduleName: rowData.scheduleName,
+    });
     setDeleteModalIsOpen(true);
-    setCurrentRowData(rowData);
   };
 
+  // close delete action
+  const closeDeleteActionModal = () => {
+    setCurrentRowData({
+      customGroupId: '',
+      dateFrom: '',
+      dateTo: '',
+      scheduleId: '',
+      customGroupName: '',
+      scheduleName: '',
+    } as ScheduleSheet);
+    setDeleteModalIsOpen(false);
+  };
   const [currentRowData, setCurrentRowData] = useState<ScheduleSheet>(
     {} as ScheduleSheet
   );
@@ -284,6 +305,13 @@ export default function Index() {
           modalState={viewModalIsOpen}
           setModalState={setViewModalIsOpen}
           closeModalAction={closeViewActionModal}
+          rowData={currentRowData}
+        />
+
+        <DeleteStationSsModal
+          modalState={deleteModalIsOpen}
+          setModalState={setDeleteModalIsOpen}
+          closeModalAction={closeDeleteActionModal}
           rowData={currentRowData}
         />
 

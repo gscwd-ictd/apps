@@ -7,7 +7,7 @@ const background = {
   default: 'bg-gray-400',
   success: 'bg-green-500',
   error: 'bg-red-400',
-  warning: 'bg-amber-500',
+  warning: 'bg-amber-400',
 };
 
 type BadgePillProps = {

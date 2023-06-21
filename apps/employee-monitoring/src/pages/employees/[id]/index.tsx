@@ -7,7 +7,7 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import dayjs from 'dayjs';
 import useSWR from 'swr';
 import { Fragment, useEffect, useState } from 'react';
-import { DtrDateSelect } from 'apps/employee-monitoring/src/components/modal/employees/DtrDateSelect';
+import { DtrDateSelect } from 'apps/employee-monitoring/src/components/calendar/DtrDateSelect';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import EditDailySchedModal from 'apps/employee-monitoring/src/components/modal/employees/EditOfficeTimeLogModal';
 import {
@@ -22,9 +22,9 @@ import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards
 import duration from 'dayjs/plugin/duration';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-
-const customParseFormat = require('dayjs/plugin/customParseFormat');
-const localizedFormat = require('dayjs/plugin/localizedFormat');
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -83,11 +83,7 @@ export default function Index({
       emptyResponseAndErrors: state.emptyResponseAndErrors,
     }));
 
-  const {
-    data: swrDtr,
-    error: swrDtrError,
-    mutate: swrMutate,
-  } = useSWR(
+  const { data: swrDtr, error: swrDtrError } = useSWR(
     shouldFetchDtr
       ? `daily-time-record/employees/${employeeData.companyId}/${selectedYear}/${selectedMonth}`
       : null,
@@ -211,29 +207,61 @@ export default function Index({
               {/** Top Card */}
               <div className="flex flex-col flex-wrap ">
                 <Card className="rounded-t bg-slate-200">
-                  <div className="flex items-center gap-4 px-2">
-                    {employeeData.photoUrl ? (
-                      <div className="flex flex-wrap justify-center">
-                        <div className="w-[6rem]">
-                          <img
-                            src={employeeData.photoUrl}
-                            alt="user-circle"
-                            className="h-auto max-w-full align-middle border-none rounded-full shadow"
-                          />
+                  {/* HEADER */}
+                  <div className="grid gap-2 xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+                    <section className="flex items-center gap-4 px-2">
+                      {employeeData.photoUrl ? (
+                        <div className="flex flex-wrap justify-center">
+                          <div className="w-[6rem]">
+                            <img
+                              src={employeeData.photoUrl}
+                              alt="user-circle"
+                              className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+                      )}
+
+                      <div className="flex flex-col">
+                        <div className="text-2xl font-semibold text-gray-600">
+                          {employeeData.fullName}
+                        </div>
+                        <div className="text-xl text-gray-500">
+                          {employeeData.assignment.positionTitle}
                         </div>
                       </div>
-                    ) : (
-                      <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
-                    )}
-
-                    <div className="flex flex-col">
-                      <div className="text-2xl font-semibold text-gray-600">
-                        {employeeData.fullName}
+                    </section>
+                    <section className="flex justify-end">
+                      <div className="px-5 py-2 bg-gray-200 rounded">
+                        <span className="text-sm font-medium">Legend</span>
+                        <div className="grid grid-rows-2">
+                          <div className="grid items-center grid-cols-2 gap-1">
+                            <span className="text-xs font-light">
+                              Regular Holiday -
+                            </span>
+                            <i className="text-2xl text-red-400 bx bxs-checkbox"></i>
+                          </div>
+                          <div className="grid items-center grid-cols-2 gap-1">
+                            <span className="text-xs font-light">
+                              Special Holiday -
+                            </span>
+                            <i className="text-2xl text-blue-400 bx bxs-checkbox"></i>
+                          </div>
+                          <div className="grid items-center grid-cols-2 gap-1">
+                            <span className="text-xs font-light">
+                              Late/Undertime -
+                            </span>
+                            <div className="">
+                              <span className="max-w-[5rem] px-2 py-0.5  text-xs font-light text-center text-black rounded bg-yellow-400">
+                                Time Log
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-xl text-gray-500">
-                        {employeeData.assignment.positionTitle}
-                      </div>
-                    </div>
+                    </section>
                   </div>
 
                   <DtrDateSelect />
@@ -273,8 +301,11 @@ export default function Index({
                       selectedYear !== '--' &&
                       !isEmpty(employeeDtr) ? (
                         employeeDtr.map((logs, index) => {
-                          const red = 'text-red-500';
-                          const normal = 'text-gray-700';
+                          const regularHoliday = 'bg-red-400';
+                          const specialHoliday = 'bg-blue-400';
+                          const underTime =
+                            'bg-yellow-400 font-light rounded px-2 text-black ';
+                          const normal = 'text-gray-700 ';
                           let timeInColor = '';
                           let lunchOutColor = '';
                           let lunchInColor = '';
@@ -286,7 +317,7 @@ export default function Index({
                             logs.dtr.timeIn,
                             logs.schedule.timeIn
                           ) === true
-                            ? (timeInColor = red)
+                            ? (timeInColor = underTime)
                             : (timeInColor = normal);
 
                           // lunch out color
@@ -300,7 +331,7 @@ export default function Index({
                             logs.dtr.lunchOut,
                             logs.schedule.lunchIn
                           ) === true
-                            ? (lunchOutColor = red)
+                            ? (lunchOutColor = underTime)
                             : (lunchOutColor = normal);
 
                           // lunch in color
@@ -315,7 +346,7 @@ export default function Index({
                             logs.schedule.lunchIn,
                             29 // 12:31 lunch in + 20 = 1pm
                           ) === true
-                            ? (lunchInColor = red)
+                            ? (lunchInColor = underTime)
                             : (lunchInColor = normal);
 
                           // time out color
@@ -324,7 +355,7 @@ export default function Index({
                             logs.dtr.timeOut,
                             logs.schedule.timeOut
                           ) === true
-                            ? (timeOutColor = red)
+                            ? (timeOutColor = underTime)
                             : (timeOutColor = normal);
 
                           return (
@@ -332,9 +363,20 @@ export default function Index({
                               <tr>
                                 <td colSpan={8}></td>
                               </tr>
-                              <tr className="text-xs">
-                                <td className="py-2 text-center border">
-                                  {formatDateInWords(logs.day)}
+                              <tr
+                                className={`text-xs ${
+                                  logs.holidayType === HolidayTypes.REGULAR
+                                    ? regularHoliday
+                                    : logs.holidayType === HolidayTypes.SPECIAL
+                                    ? specialHoliday
+                                    : 'bg-inherit '
+                                } `}
+                              >
+                                <td className="py-2 text-center border max-w-[6rem]">
+                                  <div className="flex justify-center gap-2">
+                                    <span>{formatDateInWords(logs.day)}</span>
+                                    <span>{dayjs(logs.day).format('ddd')}</span>
+                                  </div>
                                 </td>
                                 <td className="py-2 text-center border">
                                   <span className={timeInColor}>
@@ -395,7 +437,7 @@ export default function Index({
                                 <td className="py-2 text-center border">
                                   <div>
                                     <button
-                                      className="text-green-500 disabled:text-red-600"
+                                      className="text-green-600 disabled:text-red-600"
                                       onClick={() => openEditActionModal(logs)}
                                       disabled={
                                         dayjs().isBefore(dayjs(logs.day)) ||

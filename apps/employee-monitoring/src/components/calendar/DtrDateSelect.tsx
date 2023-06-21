@@ -1,8 +1,6 @@
 import { Button, ListDef, Select } from '@gscwd-apps/oneui';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { format } from 'date-fns';
-import { isEmpty } from 'lodash';
-import { useEffect } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi';
 
 type Month = { month: string; code: string };
@@ -84,17 +82,13 @@ export const DtrDateSelect = () => {
     setSelectedYear(year);
   };
 
-  const searchDtr = () => {
-    setIsDateSearched(true);
-  };
-
   return (
     <div className="flex justify-end gap-2">
       <Select
         className="w-40"
         data={months}
         textSize="sm"
-        // initial={months[Number(monthNow) - 1]}
+        // initial={months[Number(monthNow)]}
         initial={months[0]}
         listDef={list}
         onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
@@ -104,6 +98,7 @@ export const DtrDateSelect = () => {
         data={years}
         textSize="sm"
         initial={years[0]}
+        // initial={{ year: yearNow }}
         listDef={yearList}
         onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
       />
