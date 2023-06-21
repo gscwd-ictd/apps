@@ -142,7 +142,7 @@ export default function Index({
       );
     }
   };
-
+  console.log(employeeData);
   // mm dd yyyy
   const formatDate = (date: string) => {
     return dayjs(date).format('MM-DD-YYYY');

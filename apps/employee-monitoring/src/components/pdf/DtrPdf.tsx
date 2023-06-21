@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable jsx-a11y/alt-text */
 import {
   Page,
@@ -11,9 +12,29 @@ import {
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import React, { FunctionComponent, useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import { isEmpty } from 'lodash';
+
+type EmployeeAssignment = {
+  id: string;
+  name: string;
+  positionId: string;
+  positionTitle: string;
+};
+
+type EmployeeData = {
+  assignment: EmployeeAssignment;
+  companyId: string;
+  fullName: string;
+  isHRMPSB: number;
+  photoUrl: string;
+  userId: string;
+  userRole: string;
+};
 
 type DtrPdfProps = {
   employeeDtr: Array<EmployeeDtrWithSchedule>;
+  employeeData: EmployeeData;
 };
 
 const styles = StyleSheet.create({
@@ -30,17 +51,22 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     border: '1px solid #000000',
-    paddingTop: 5,
-    paddingBottom: 0,
+    marginTop: 15,
+  },
+  dtrContainer2: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    border: '1px solid #000000',
+    marginTop: 10,
   },
 
   tableTdDate: {
     width: '18%',
     height: 20,
-    borderLeft: '0px solid #000000',
     borderRight: '1px solid #000000',
-    borderTop: '1px solid #000000',
-    fontSize: 10,
+    fontSize: 9,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -56,17 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tableTdDay: {
-    width: '6%',
-    height: 20,
-    borderLeft: '0px solid #000000',
-    borderRight: '1px solid #000000',
-    borderTop: '1px solid #000000',
-    fontSize: 10,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   tableTd: {
     width: '12.5%',
     height: 20,
@@ -89,13 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  dtrContainer2: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    border: '1px solid #000000',
-  },
+
   tableTdStats: {
     width: '15%',
     height: 35,
@@ -168,9 +178,29 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     width: '100%',
   },
+  tableHeader: {
+    borderRight: '1px solid #000000',
+    fontSize: 9,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    fontFamily: 'Helvetica-Bold',
+    paddingVertical: 3,
+    alignItems: 'stretch',
+  },
+  tableData: {
+    borderRight: '1px solid #000000',
+    fontSize: 8,
+    textAlign: 'center',
+    alignItems: 'center',
+    textTransform: 'capitalize',
+    paddingVertical: 3,
+  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
+  },
+  borderTop: {
+    borderTop: '1px solid #000000',
   },
   logo: {
     width: 60,
@@ -183,16 +213,80 @@ const styles = StyleSheet.create({
 
   // Width Styles
   w100: { width: '100%' },
+  w70: { width: '70%' },
+  w45: { width: '45%' },
   w40: { width: '40%' },
+  w37_5: { width: 'w37.5%' },
+  w35: { width: '35%' },
   w30: { width: '30%' },
+  w25: { width: '25%' },
+  w20: { width: '20%' },
+  w17_5: { width: '17.5%' },
+  w15: { width: '15%' },
+  w10: { width: '10%' },
+  w5: { width: '5%' },
 });
 
 // type PassSlipPdfProps = {
 //   employeeDetails: EmployeeDetails;
 // };
 
-export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeDtr }) => {
+export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
+  employeeData,
+  employeeDtr,
+}) => {
   const [isClient, setIsClient] = useState<boolean>(false);
+
+  // Temporary states
+  const [isOfficeSchedule] = useState<boolean>(true);
+  const [isFieldStationSchedule] = useState<boolean>(false);
+
+  const twelveHourFormat = (time: string | null) => {
+    if (time === null || isEmpty(time)) return '';
+    else return dayjs('01-01-0000' + ' ' + time).format('h:mm A');
+  };
+
+  // compare to schedule if after
+  const compareIfEarly = (
+    day: string,
+    actualTime: string,
+    scheduledTime: string
+  ) => {
+    return dayjs(day + ' ' + actualTime).isBefore(
+      day + ' ' + scheduledTime,
+      'minute'
+    );
+  };
+
+  // comparison to schedule if late
+  const compareIfLate = (
+    day: string,
+    actualTime: string,
+    scheduledTime: string,
+    addition?: number
+  ) => {
+    // addition is included since we do not set the lunch in duration
+    if (addition) {
+      return dayjs(day + ' ' + actualTime).isAfter(
+        dayjs(day + ' ' + scheduledTime)
+          .add(dayjs.duration({ minutes: 29 }))
+          .format('MM DD YYYY HH:mm'),
+        'minutes'
+      );
+    } else {
+      return dayjs(day + ' ' + actualTime).isAfter(
+        day + ' ' + scheduledTime,
+        'minute'
+      );
+    }
+  };
+
+  // check if date is rest day
+  const checkIfRestDay = (remark: string) => {
+    if (remark.includes('Rest Day')) return true;
+
+    return false;
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -247,137 +341,322 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeDtr }) => {
                 {/* EMPLOYEE PROFILE */}
                 <View style={styles.employeeProfile}>
                   <View style={[styles.rowContainer]}>
-                    <Text>NAME</Text>
-                    <Text style={{ fontFamily: 'Helvetica-Bold' }}>
-                      Ricardo Vicente Narvaiza
+                    <Text style={[styles.w20]}>NAME</Text>
+                    <Text
+                      style={{
+                        fontFamily: 'Helvetica-Bold',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {employeeData.fullName}
                     </Text>
                   </View>
 
                   <View style={[styles.rowContainer]}>
-                    <Text>DESIGNATION</Text>
-                    <Text>Division Manager</Text>
+                    <Text style={[styles.w20]}>DESIGNATION</Text>
+                    <Text>{employeeData.assignment.positionTitle}</Text>
                   </View>
 
                   <View style={[styles.rowContainer]}>
-                    <Text>DEPARTMENT</Text>
-                    <Text>
-                      General Services, Property and Materials Management
-                      Department
-                    </Text>
+                    <Text style={[styles.w20]}>OFFICE</Text>
+                    <Text>OFFICE_HERE</Text>
                   </View>
 
                   <View style={[styles.rowContainer]}>
-                    <Text>DIVISION</Text>
-                    <Text>
-                      Building and Grounds, Transportation and Water Meter
-                      Maintenance Division
-                    </Text>
+                    <Text style={[styles.w20]}>DEPARTMENT</Text>
+                    <Text>DEPARTMENT_HERE</Text>
                   </View>
 
                   <View style={[styles.rowContainer]}>
-                    <Text>SECTION</Text>
-                    <Text>X</Text>
+                    <Text style={[styles.w20]}>DIVISION</Text>
+                    <Text>DIVISION_HERE</Text>
                   </View>
                 </View>
 
-                <View style={styles.dtrContainer}>
-                  {/* Column Headers */}
-                  <View
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      gap: 0,
-                    }}
-                  >
-                    <View style={styles.tableTdDate}>
-                      <Text>DATE</Text>
+                {/* DAILY TIME LOGS */}
+                <View style={[styles.dtrContainer]}>
+                  {/* Column Headers  */}
+                  {isOfficeSchedule ? (
+                    // For Office Schedule
+                    <View style={[styles.rowContainer, { width: '100%' }]}>
+                      <View style={[styles.tableHeader, styles.w10]}>
+                        <Text>DATE</Text>
+                      </View>
+                      <View style={[styles.tableHeader, styles.w5]}>
+                        <Text></Text>
+                      </View>
+                      <View style={[styles.tableHeader, styles.w25]}>
+                        <Text>REMARKS</Text>
+                      </View>
+                      <View style={[styles.tableHeader, styles.w15]}>
+                        <Text>TIME IN</Text>
+                      </View>
+                      <View style={[styles.tableHeader, styles.w15]}>
+                        <Text>LUNCH OUT</Text>
+                      </View>
+                      <View style={[styles.tableHeader, styles.w15]}>
+                        <Text>LUNCH IN</Text>
+                      </View>
+                      <View
+                        style={[
+                          styles.tableHeader,
+                          styles.w15,
+                          { borderRight: 'none' },
+                        ]}
+                      >
+                        <Text>TIME OUT</Text>
+                      </View>
                     </View>
-                    <View style={styles.tableTdDate}>
-                      <Text></Text>
+                  ) : null}
+
+                  {isFieldStationSchedule ? (
+                    //  For Field/Pumping Station Schedule
+                    <View style={[styles.rowContainer, { width: '100%' }]}>
+                      <View style={[styles.tableHeader, styles.w25]}>
+                        <Text style={{ margin: 'auto 0' }}>REMARKS</Text>
+                      </View>
+
+                      {/* TIME IN */}
+                      <View style={[styles.tableHeader, styles.w37_5]}>
+                        <Text style={{ paddingBottom: 4 }}>TIME IN</Text>
+                        <View
+                          style={[
+                            styles.rowContainer,
+                            styles.w100,
+                            styles.borderTop,
+                          ]}
+                        >
+                          <View style={[styles.tableHeader, styles.w45]}>
+                            <Text>DATE</Text>
+                          </View>
+
+                          <View style={[styles.tableHeader, styles.w10]}>
+                            <Text></Text>
+                          </View>
+
+                          <View
+                            style={[
+                              styles.tableHeader,
+                              styles.w45,
+                              { borderRight: 'none' },
+                            ]}
+                          >
+                            <Text>TIME LOG</Text>
+                          </View>
+                        </View>
+                      </View>
+
+                      {/* TIME OUT */}
+                      <View
+                        style={[
+                          styles.tableHeader,
+                          styles.w37_5,
+                          { borderRight: 'none' },
+                        ]}
+                      >
+                        <Text style={{ paddingBottom: 4 }}>TIME OUT</Text>
+                        <View
+                          style={[
+                            styles.rowContainer,
+                            styles.w100,
+                            styles.borderTop,
+                          ]}
+                        >
+                          <View style={[styles.tableHeader, styles.w45]}>
+                            <Text>DATE</Text>
+                          </View>
+
+                          <View style={[styles.tableHeader, styles.w10]}>
+                            <Text></Text>
+                          </View>
+
+                          <View
+                            style={[
+                              styles.tableHeader,
+                              styles.w45,
+                              { borderRight: 'none' },
+                            ]}
+                          >
+                            <Text>TIME LOG</Text>
+                          </View>
+                        </View>
+                      </View>
                     </View>
-                    <View style={styles.tableTd}>
-                      <Text>TIME IN</Text>
-                    </View>
-                    <View style={styles.tableTd}>
-                      <Text>LUNCH OUT</Text>
-                    </View>
-                    <View style={styles.tableTd}>
-                      <Text>LUNCH IN</Text>
-                    </View>
-                    <View style={styles.tableTd}>
-                      <Text>TIME OUT</Text>
-                    </View>
-                    <View style={styles.tableTdRemarks}>
-                      <Text>REMARKS</Text>
-                    </View>
-                  </View>
+                  ) : null}
 
                   {/* Table Rows */}
                   <View>
-                    <Text style={[{ fontSize: 8 }]}>
-                      {JSON.stringify(employeeDtr)}
-                    </Text>
+                    {isOfficeSchedule
+                      ? employeeDtr.map((log, index) => {
+                          const yellow = 'yellow';
+                          const gray = '#9CA3AF';
+                          const white = 'white';
+
+                          let logBgColor = '';
+                          let timeInBgColor = '';
+                          let lunchOutColor = '';
+                          let lunchInColor = '';
+                          let timeOutColor = '';
+
+                          // row color
+                          checkIfRestDay(log.dtr.remarks) === true
+                            ? (logBgColor = gray)
+                            : (logBgColor = white);
+
+                          // time in color
+                          compareIfLate(
+                            log.day,
+                            log.dtr.timeIn,
+                            log.schedule.timeIn
+                          ) === true
+                            ? (timeInBgColor = yellow)
+                            : (timeInBgColor = '');
+
+                          // lunch out color
+                          compareIfEarly(
+                            log.day,
+                            log.dtr.lunchOut,
+                            log.schedule.lunchOut
+                          ) ||
+                          compareIfLate(
+                            log.day,
+                            log.dtr.lunchOut,
+                            log.schedule.lunchIn
+                          ) === true
+                            ? (lunchOutColor = yellow)
+                            : (lunchOutColor = '');
+
+                          // lunch in color
+                          compareIfEarly(
+                            log.day,
+                            log.dtr.lunchIn,
+                            log.schedule.lunchIn
+                          ) ||
+                          compareIfLate(
+                            log.day,
+                            log.dtr.lunchIn,
+                            log.schedule.lunchIn,
+                            29 // 12:31 lunch in + 20 = 1pm
+                          ) === true
+                            ? (lunchInColor = yellow)
+                            : (lunchInColor = '');
+
+                          // time out color
+                          compareIfEarly(
+                            log.day,
+                            log.dtr.timeOut,
+                            log.schedule.timeOut
+                          ) === true
+                            ? (timeOutColor = yellow)
+                            : (timeOutColor = '');
+
+                          return (
+                            <View
+                              style={[
+                                styles.rowContainer,
+                                styles.borderTop,
+                                { width: '100%', backgroundColor: logBgColor },
+                              ]}
+                              key={index}
+                            >
+                              {/* DATE */}
+                              <View style={[styles.tableData, styles.w10]}>
+                                <Text>{log.day}</Text>
+                              </View>
+
+                              {/* DAY OF THE WEEK */}
+                              <View style={[styles.tableData, styles.w5]}>
+                                <Text>{dayjs(log.day).format('ddd')}</Text>
+                              </View>
+
+                              {/* REMARKS */}
+                              <View style={[styles.tableData, styles.w25]}>
+                                <Text>{log.dtr.remarks}</Text>
+                              </View>
+
+                              {/* TIME IN */}
+                              <View
+                                style={[
+                                  styles.tableData,
+                                  styles.w15,
+                                  { backgroundColor: timeInBgColor },
+                                ]}
+                              >
+                                {log.dtr.timeIn ? (
+                                  <Text>
+                                    {twelveHourFormat(log.dtr.timeIn)}
+                                  </Text>
+                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                  <Text></Text>
+                                ) : (
+                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                )}
+                              </View>
+
+                              {/* LUNCH OUT */}
+                              <View
+                                style={[
+                                  styles.tableData,
+                                  styles.w15,
+                                  { backgroundColor: lunchOutColor },
+                                ]}
+                              >
+                                {log.dtr.lunchOut ? (
+                                  <Text>
+                                    {twelveHourFormat(log.dtr.lunchOut)}
+                                  </Text>
+                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                  <Text></Text>
+                                ) : (
+                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                )}
+                              </View>
+
+                              {/* LUNCH IN */}
+                              <View
+                                style={[
+                                  styles.tableData,
+                                  styles.w15,
+                                  { backgroundColor: lunchInColor },
+                                ]}
+                              >
+                                {log.dtr.lunchIn ? (
+                                  <Text>
+                                    {twelveHourFormat(log.dtr.lunchIn)}
+                                  </Text>
+                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                  <Text></Text>
+                                ) : (
+                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                )}
+                              </View>
+
+                              {/* TIME OUT */}
+                              <View
+                                style={[
+                                  styles.tableData,
+                                  styles.w15,
+                                  {
+                                    borderRight: 'none',
+                                    backgroundColor: timeOutColor,
+                                  },
+                                ]}
+                              >
+                                {log.dtr.timeOut ? (
+                                  <Text>
+                                    {twelveHourFormat(log.dtr.timeOut)}
+                                  </Text>
+                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                  <Text></Text>
+                                ) : (
+                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                )}
+                              </View>
+                            </View>
+                          );
+                        })
+                      : null}
                   </View>
-                  {/* {faceScanLogs.filter(
-                    (filterLogs) =>
-                      format(new Date(filterLogs.Date), 'MM-yyyy') ===
-                      format(new Date('1-1-2023'), 'MM-yyyy')
-                  ).length > 0 ? (
-                    faceScanLogs
-                      .filter(
-                        (filterLogs) =>
-                          format(new Date(filterLogs.Date), 'MM-yyyy') ===
-                          format(new Date('1-1-2023'), 'MM-yyyy')
-                      )
-                      .map((logs) => {
-                        return (
-                          <View
-                            key={logs.id}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              flexDirection: 'row',
-                              gap: 0,
-                            }}
-                          >
-                            <View style={styles.tableTdDate2}>
-                              <Text>{logs.Date}</Text>
-                            </View>
-                            <View style={styles.tableTdDay}>
-                              <Text>{logs.Day}</Text>
-                            </View>
-                            <View style={styles.tableTdDate}>
-                              <Text></Text>
-                            </View>
-                            <View style={styles.tableTd}>
-                              <Text>{logs.TimeIn}</Text>
-                            </View>
-                            <View style={styles.tableTd}>
-                              <Text>{logs.LunchOut}</Text>
-                            </View>
-                            <View style={styles.tableTd}>
-                              <Text>{logs.LunchIn}</Text>
-                            </View>
-                            <View style={styles.tableTd}>
-                              <Text>{logs.TimeOut}</Text>
-                            </View>
-                            <View style={styles.tableTdRemarks}>
-                              <Text> {logs.Schedule}</Text>
-                            </View>
-                          </View>
-                        );
-                      })
-                  ) : (
-                    <View
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        gap: 0,
-                      }}
-                    ></View>
-                  )} */}
                 </View>
 
                 <View style={styles.dtrContainer2}>

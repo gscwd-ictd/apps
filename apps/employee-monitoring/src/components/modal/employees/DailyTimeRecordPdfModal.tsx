@@ -3,15 +3,32 @@ import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { FunctionComponent } from 'react';
 import DtrPdf from '../../pdf/DtrPdf';
 
+type EmployeeAssignment = {
+  id: string;
+  name: string;
+  positionId: string;
+  positionTitle: string;
+};
+
+type EmployeeData = {
+  assignment: EmployeeAssignment;
+  companyId: string;
+  fullName: string;
+  isHRMPSB: number;
+  photoUrl: string;
+  userId: string;
+  userRole: string;
+};
+
 type DailyTimeRecordPdfModalProps = {
   printModalIsOpen: boolean;
   toggle: () => void;
-  // employeeData:
+  employeeData: EmployeeData;
 };
 
 const DailyTimeRecordPdfModal: FunctionComponent<
   DailyTimeRecordPdfModalProps
-> = ({ printModalIsOpen, toggle }) => {
+> = ({ printModalIsOpen, toggle, employeeData }) => {
   const { employeeDtr } = useDtrStore((state) => ({
     employeeDtr: state.employeeDtr,
   }));
@@ -36,7 +53,7 @@ const DailyTimeRecordPdfModal: FunctionComponent<
         </Modal.Header>
         <Modal.Body>
           <div>
-            <DtrPdf employeeDtr={employeeDtr} />
+            <DtrPdf employeeData={employeeData} employeeDtr={employeeDtr} />
           </div>
         </Modal.Body>
         <Modal.Footer>
