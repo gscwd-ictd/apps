@@ -14,6 +14,7 @@ import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
+import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 
 type EmployeeAssignment = {
   id: string;
@@ -38,129 +39,6 @@ type DtrPdfProps = {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 10,
-  },
-  dtrContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    border: '1px solid #000000',
-    marginTop: 15,
-  },
-  dtrContainer2: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    border: '1px solid #000000',
-    marginTop: 10,
-  },
-
-  tableTdDate: {
-    width: '18%',
-    height: 20,
-    borderRight: '1px solid #000000',
-    fontSize: 9,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tableTdDate2: {
-    width: '12%',
-    height: 20,
-    borderLeft: '0px solid #000000',
-    borderRight: '1px solid #000000',
-    borderTop: '1px solid #000000',
-    fontSize: 10,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  tableTd: {
-    width: '12.5%',
-    height: 20,
-    borderLeft: '0px solid #000000',
-    borderRight: '1px solid #000000',
-    borderTop: '1px solid #000000',
-    fontSize: 10,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tableTdRemarks: {
-    width: '20%',
-    height: 20,
-    borderLeft: '0px solid #000000',
-    borderRight: '0px solid #000000',
-    borderTop: '1px solid #000000',
-    fontSize: 10,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  tableTdStats: {
-    width: '15%',
-    height: 35,
-    borderLeft: '0px solid #000000',
-    borderRight: '1px solid #000000',
-    borderBottom: '1px solid #000000',
-    fontSize: 9,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    padding: 2,
-    fontWeight: 'bold',
-  },
-  tableTdStats2: {
-    width: '15%',
-    height: 35,
-    borderLeft: '0px solid #000000',
-    borderRight: '0px solid #000000',
-    borderBottom: '1px solid #000000',
-    fontSize: 9,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    padding: 2,
-    fontWeight: 'bold',
-  },
-  tableTdStats3: {
-    width: '15%',
-    height: 35,
-    borderLeft: '0px solid #000000',
-    borderRight: '1px solid #000000',
-    borderBottom: '0px solid #000000',
-    fontSize: 9,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    padding: 2,
-  },
-  tableTdStats4: {
-    width: '15%',
-    height: 35,
-    borderLeft: '0px solid #000000',
-    borderRight: '0px solid #000000',
-    borderBottom: '0px solid #000000',
-    fontSize: 9,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    padding: 2,
-  },
-
   page: {
     marginTop: 10,
     marginBottom: 10,
@@ -168,32 +46,78 @@ const styles = StyleSheet.create({
     marginRight: 25,
     fontFamily: 'Helvetica',
   },
+  logo: {
+    width: 60,
+    height: 60,
+    margin: 'auto',
+  },
   employeeProfile: {
     display: 'flex',
     flexDirection: 'column',
     gap: 3,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    fontSize: 9,
+    fontSize: 7.5,
     paddingTop: 15,
     width: '100%',
   },
-  tableHeader: {
-    borderRight: '1px solid #000000',
-    fontSize: 9,
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    fontFamily: 'Helvetica-Bold',
-    paddingVertical: 3,
-    alignItems: 'stretch',
+  dtrContainer: {
+    alignItems: 'center',
+    border: '1px solid #000000',
+    marginTop: 10,
   },
-  tableData: {
+  aggregateContainer: {
+    alignItems: 'center',
+    border: '1px solid #000000',
+    marginTop: 10,
+  },
+  tableHeader: {
     borderRight: '1px solid #000000',
     fontSize: 8,
     textAlign: 'center',
+    alignContent: 'center',
     alignItems: 'center',
-    textTransform: 'capitalize',
+    fontFamily: 'Helvetica-Bold',
+  },
+  tableHeader2: {
+    borderRight: '1px solid #000000',
+    fontSize: 8,
+    textAlign: 'center',
+    alignContent: 'center',
+    fontFamily: 'Helvetica-Bold',
+  },
+  tableHeaderText: {
     paddingVertical: 3,
+    textTransform: 'uppercase',
+    margin: 'auto 0',
+  },
+  tableData: {
+    borderRight: '1px solid #000000',
+    fontSize: 7.5,
+    textAlign: 'center',
+    alignItems: 'center',
+  },
+  tableDataText: {
+    paddingVertical: 3,
+    textTransform: 'capitalize',
+  },
+  certifyContainer: {
+    paddingVertical: 10,
+  },
+  certifyText: {
+    fontSize: 8,
+    fontFamily: 'Helvetica-Bold',
+  },
+  notesContainer: {
+    paddingTop: 15,
+  },
+  notesText: {
+    fontSize: 8,
+    fontFamily: 'Helvetica-Bold',
+  },
+  signatoryContainer: {
+    fontSize: 8.5,
+    fontFamily: 'Helvetica',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -202,34 +126,29 @@ const styles = StyleSheet.create({
   borderTop: {
     borderTop: '1px solid #000000',
   },
-  logo: {
-    width: 60,
-    height: 60,
-    margin: 'auto',
-  },
 
   verticalCenter: { margin: 'auto 0' },
   horizontalCenter: { textAlign: 'center' },
 
   // Width Styles
   w100: { width: '100%' },
-  w70: { width: '70%' },
+  w80: { width: '80%' },
+  w75: { width: '75%' },
+  w50: { width: '50%' },
   w45: { width: '45%' },
   w40: { width: '40%' },
   w37_5: { width: 'w37.5%' },
-  w35: { width: '35%' },
   w30: { width: '30%' },
   w25: { width: '25%' },
   w20: { width: '20%' },
-  w17_5: { width: '17.5%' },
   w15: { width: '15%' },
+  w12: { width: '12%' },
+  w11: { width: '11%' },
   w10: { width: '10%' },
+  w9: { width: '9%' },
+  w8: { width: '8%' },
   w5: { width: '5%' },
 });
-
-// type PassSlipPdfProps = {
-//   employeeDetails: EmployeeDetails;
-// };
 
 export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
   employeeData,
@@ -238,15 +157,16 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
   const [isClient, setIsClient] = useState<boolean>(false);
 
   // Temporary states
-  const [isOfficeSchedule] = useState<boolean>(true);
-  const [isFieldStationSchedule] = useState<boolean>(false);
+  const [isOfficeSchedule] = useState<boolean>(false);
+  const [isFieldStationSchedule] = useState<boolean>(true);
 
+  // convert to 12-hour time format
   const twelveHourFormat = (time: string | null) => {
     if (time === null || isEmpty(time)) return '';
     else return dayjs('01-01-0000' + ' ' + time).format('h:mm A');
   };
 
-  // compare to schedule if after
+  // compare to schedule if undertime
   const compareIfEarly = (
     day: string,
     actualTime: string,
@@ -286,6 +206,17 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
     if (remark.includes('Rest Day')) return true;
 
     return false;
+  };
+
+  // check if date is holiday
+  const checkIfHoliday = (holidayType: string) => {
+    if (holidayType === HolidayTypes.REGULAR) {
+      return HolidayTypes.REGULAR;
+    } else if (holidayType === HolidayTypes.SPECIAL) {
+      return HolidayTypes.SPECIAL;
+    } else {
+      return '';
+    }
   };
 
   useEffect(() => {
@@ -328,10 +259,30 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                     </Text>
 
                     {/* DATE PERIOD */}
-                    {/* ADD MONTH HERE */}
                     <Text style={{ fontSize: 9, paddingTop: 10 }}>
-                      For the month of
+                      As of{' '}
+                      <Text>
+                        {dayjs(employeeDtr[0].day).format('MM/DD/YYYY')}
+                      </Text>{' '}
+                      to{' '}
+                      <Text>
+                        {dayjs(employeeDtr[employeeDtr.length - 1].day).format(
+                          'MM/DD/YYYY'
+                        )}
+                      </Text>
                     </Text>
+
+                    {/* <Text style={{ fontSize: 9, paddingTop: 10 }}>
+                      For the month of{' '}
+                      <Text
+                        style={{
+                          textTransform: 'uppercase',
+                          fontFamily: 'Helvetica-Bold',
+                        }}
+                      >
+                        {dayjs(employeeDtr[0].day).format('MMMM YYYY')}
+                      </Text>
+                    </Text> */}
                   </View>
 
                   {/* RIGHT */}
@@ -340,166 +291,201 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
 
                 {/* EMPLOYEE PROFILE */}
                 <View style={styles.employeeProfile}>
-                  <View style={[styles.rowContainer]}>
-                    <Text style={[styles.w20]}>NAME</Text>
-                    <Text
-                      style={{
-                        fontFamily: 'Helvetica-Bold',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      {employeeData.fullName}
-                    </Text>
-                  </View>
+                  <View>
+                    {/* NAME */}
+                    <View style={[styles.rowContainer]}>
+                      <Text style={[styles.w20]}>NAME</Text>
+                      <Text
+                        style={[
+                          styles.w80,
+                          {
+                            fontFamily: 'Helvetica-Bold',
+                            textTransform: 'uppercase',
+                            fontSize: 8.3,
+                          },
+                        ]}
+                      >
+                        {employeeData.fullName}
+                      </Text>
+                    </View>
 
-                  <View style={[styles.rowContainer]}>
-                    <Text style={[styles.w20]}>DESIGNATION</Text>
-                    <Text>{employeeData.assignment.positionTitle}</Text>
-                  </View>
+                    {/* DESIGNATION */}
+                    <View style={[styles.rowContainer, { paddingTop: 2 }]}>
+                      <Text style={[styles.w20]}>DESIGNATION</Text>
+                      <Text
+                        style={[
+                          styles.w80,
+                          { textTransform: 'uppercase', fontSize: 8 },
+                        ]}
+                      >
+                        {employeeData.assignment.positionTitle}
+                      </Text>
+                    </View>
 
-                  <View style={[styles.rowContainer]}>
-                    <Text style={[styles.w20]}>OFFICE</Text>
-                    <Text>OFFICE_HERE</Text>
-                  </View>
+                    {/* OFFICE */}
+                    <View style={[styles.rowContainer, { paddingTop: 4 }]}>
+                      <Text style={[styles.w20]}>OFFICE</Text>
+                      <Text style={[styles.w80]}>office_name</Text>
+                    </View>
 
-                  <View style={[styles.rowContainer]}>
-                    <Text style={[styles.w20]}>DEPARTMENT</Text>
-                    <Text>DEPARTMENT_HERE</Text>
-                  </View>
+                    {/* DEPARTMENT */}
+                    <View style={[styles.rowContainer]}>
+                      <Text style={[styles.w20]}>DEPARTMENT</Text>
+                      <Text style={[styles.w80]}>department_name</Text>
+                    </View>
 
-                  <View style={[styles.rowContainer]}>
-                    <Text style={[styles.w20]}>DIVISION</Text>
-                    <Text>DIVISION_HERE</Text>
+                    {/* DIVISION */}
+                    <View style={[styles.rowContainer]}>
+                      <Text style={[styles.w20]}>DIVISION</Text>
+                      <Text style={[styles.w80]}>division_name</Text>
+                    </View>
                   </View>
                 </View>
 
                 {/* DAILY TIME LOGS */}
                 <View style={[styles.dtrContainer]}>
-                  {/* Column Headers  */}
-                  {isOfficeSchedule ? (
-                    // For Office Schedule
-                    <View style={[styles.rowContainer, { width: '100%' }]}>
-                      <View style={[styles.tableHeader, styles.w10]}>
-                        <Text>DATE</Text>
-                      </View>
-                      <View style={[styles.tableHeader, styles.w5]}>
-                        <Text></Text>
-                      </View>
-                      <View style={[styles.tableHeader, styles.w25]}>
-                        <Text>REMARKS</Text>
-                      </View>
-                      <View style={[styles.tableHeader, styles.w15]}>
-                        <Text>TIME IN</Text>
-                      </View>
-                      <View style={[styles.tableHeader, styles.w15]}>
-                        <Text>LUNCH OUT</Text>
-                      </View>
-                      <View style={[styles.tableHeader, styles.w15]}>
-                        <Text>LUNCH IN</Text>
-                      </View>
-                      <View
-                        style={[
-                          styles.tableHeader,
-                          styles.w15,
-                          { borderRight: 'none' },
-                        ]}
-                      >
-                        <Text>TIME OUT</Text>
-                      </View>
-                    </View>
-                  ) : null}
-
-                  {isFieldStationSchedule ? (
-                    //  For Field/Pumping Station Schedule
-                    <View style={[styles.rowContainer, { width: '100%' }]}>
-                      <View style={[styles.tableHeader, styles.w25]}>
-                        <Text style={{ margin: 'auto 0' }}>REMARKS</Text>
-                      </View>
-
-                      {/* TIME IN */}
-                      <View style={[styles.tableHeader, styles.w37_5]}>
-                        <Text style={{ paddingBottom: 4 }}>TIME IN</Text>
-                        <View
-                          style={[
-                            styles.rowContainer,
-                            styles.w100,
-                            styles.borderTop,
-                          ]}
-                        >
-                          <View style={[styles.tableHeader, styles.w45]}>
-                            <Text>DATE</Text>
-                          </View>
-
-                          <View style={[styles.tableHeader, styles.w10]}>
-                            <Text></Text>
-                          </View>
-
-                          <View
-                            style={[
-                              styles.tableHeader,
-                              styles.w45,
-                              { borderRight: 'none' },
-                            ]}
-                          >
-                            <Text>TIME LOG</Text>
-                          </View>
-                        </View>
-                      </View>
-
-                      {/* TIME OUT */}
-                      <View
-                        style={[
-                          styles.tableHeader,
-                          styles.w37_5,
-                          { borderRight: 'none' },
-                        ]}
-                      >
-                        <Text style={{ paddingBottom: 4 }}>TIME OUT</Text>
-                        <View
-                          style={[
-                            styles.rowContainer,
-                            styles.w100,
-                            styles.borderTop,
-                          ]}
-                        >
-                          <View style={[styles.tableHeader, styles.w45]}>
-                            <Text>DATE</Text>
-                          </View>
-
-                          <View style={[styles.tableHeader, styles.w10]}>
-                            <Text></Text>
-                          </View>
-
-                          <View
-                            style={[
-                              styles.tableHeader,
-                              styles.w45,
-                              { borderRight: 'none' },
-                            ]}
-                          >
-                            <Text>TIME LOG</Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  ) : null}
-
-                  {/* Table Rows */}
+                  {/* COLUMN HEADERS  */}
                   <View>
+                    {/* For Office Schedule */}
+                    {isOfficeSchedule ? (
+                      <View style={[styles.rowContainer]}>
+                        <View style={[styles.tableHeader, styles.w10]}>
+                          <Text style={[styles.tableHeaderText]}>DATE</Text>
+                        </View>
+                        <View style={[styles.tableHeader, styles.w5]}>
+                          <Text></Text>
+                        </View>
+                        <View style={[styles.tableHeader, styles.w25]}>
+                          <Text style={[styles.tableHeaderText]}>REMARKS</Text>
+                        </View>
+                        <View style={[styles.tableHeader, styles.w15]}>
+                          <Text style={[styles.tableHeaderText]}>TIME IN</Text>
+                        </View>
+                        <View style={[styles.tableHeader, styles.w15]}>
+                          <Text style={[styles.tableHeaderText]}>
+                            LUNCH OUT
+                          </Text>
+                        </View>
+                        <View style={[styles.tableHeader, styles.w15]}>
+                          <Text style={[styles.tableHeaderText]}>LUNCH IN</Text>
+                        </View>
+                        <View
+                          style={[
+                            styles.tableHeader,
+                            styles.w15,
+                            { borderRight: 'none' },
+                          ]}
+                        >
+                          <Text style={[styles.tableHeaderText]}>TIME OUT</Text>
+                        </View>
+                      </View>
+                    ) : null}
+
+                    {/* For Field/Pumping Station Schedule */}
+                    {isFieldStationSchedule ? (
+                      <View style={[styles.rowContainer]}>
+                        <View style={[styles.tableHeader, styles.w25]}>
+                          <Text style={{ margin: 'auto 0' }}>REMARKS</Text>
+                        </View>
+
+                        {/* TIME IN */}
+                        <View style={[styles.tableHeader, styles.w37_5]}>
+                          <Text style={[styles.tableHeaderText]}>TIME IN</Text>
+                          <View
+                            style={[
+                              styles.rowContainer,
+                              styles.w100,
+                              styles.borderTop,
+                            ]}
+                          >
+                            <View style={[styles.tableHeader, styles.w45]}>
+                              <Text style={[styles.tableHeaderText]}>DATE</Text>
+                            </View>
+
+                            <View style={[styles.tableHeader, styles.w10]}>
+                              <Text></Text>
+                            </View>
+
+                            <View
+                              style={[
+                                styles.tableHeader,
+                                styles.w45,
+                                { borderRight: 'none' },
+                              ]}
+                            >
+                              <Text style={[styles.tableHeaderText]}>
+                                TIME LOG
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+
+                        {/* TIME OUT */}
+                        <View
+                          style={[
+                            styles.tableHeader,
+                            styles.w37_5,
+                            { borderRight: 'none' },
+                          ]}
+                        >
+                          <Text style={[styles.tableHeaderText]}>TIME OUT</Text>
+                          <View
+                            style={[
+                              styles.rowContainer,
+                              styles.w100,
+                              styles.borderTop,
+                            ]}
+                          >
+                            <View style={[styles.tableHeader, styles.w45]}>
+                              <Text style={[styles.tableHeaderText]}>DATE</Text>
+                            </View>
+
+                            <View style={[styles.tableHeader, styles.w10]}>
+                              <Text></Text>
+                            </View>
+
+                            <View
+                              style={[
+                                styles.tableHeader,
+                                styles.w45,
+                                { borderRight: 'none' },
+                              ]}
+                            >
+                              <Text style={[styles.tableHeaderText]}>
+                                TIME LOG
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    ) : null}
+                  </View>
+
+                  {/* TABLE ROWS */}
+                  <View>
+                    {/* For Office Schedule */}
                     {isOfficeSchedule
                       ? employeeDtr.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
-                          const white = 'white';
+                          const white = '#FFFFFF';
+                          const red = '#ff8b8b';
+                          const blue = '#6eb4ff';
 
                           let logBgColor = '';
-                          let timeInBgColor = '';
+                          let timeInColor = '';
                           let lunchOutColor = '';
                           let lunchInColor = '';
                           let timeOutColor = '';
 
                           // row color
-                          checkIfRestDay(log.dtr.remarks) === true
+                          checkIfHoliday(log.holidayType) ===
+                          HolidayTypes.REGULAR
+                            ? (logBgColor = red)
+                            : checkIfHoliday(log.holidayType) ===
+                              HolidayTypes.SPECIAL
+                            ? (logBgColor = blue)
+                            : checkIfRestDay(log.dtr.remarks) === true
                             ? (logBgColor = gray)
                             : (logBgColor = white);
 
@@ -509,8 +495,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                             log.dtr.timeIn,
                             log.schedule.timeIn
                           ) === true
-                            ? (timeInBgColor = yellow)
-                            : (timeInBgColor = '');
+                            ? (timeInColor = yellow)
+                            : (timeInColor = '');
 
                           // lunch out color
                           compareIfEarly(
@@ -561,17 +547,23 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                             >
                               {/* DATE */}
                               <View style={[styles.tableData, styles.w10]}>
-                                <Text>{log.day}</Text>
+                                <Text style={[styles.tableDataText]}>
+                                  {log.day}
+                                </Text>
                               </View>
 
                               {/* DAY OF THE WEEK */}
                               <View style={[styles.tableData, styles.w5]}>
-                                <Text>{dayjs(log.day).format('ddd')}</Text>
+                                <Text style={[styles.tableDataText]}>
+                                  {dayjs(log.day).format('ddd')}
+                                </Text>
                               </View>
 
                               {/* REMARKS */}
                               <View style={[styles.tableData, styles.w25]}>
-                                <Text>{log.dtr.remarks}</Text>
+                                <Text style={[styles.tableDataText]}>
+                                  {log.dtr.remarks}
+                                </Text>
                               </View>
 
                               {/* TIME IN */}
@@ -579,17 +571,25 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                                 style={[
                                   styles.tableData,
                                   styles.w15,
-                                  { backgroundColor: timeInBgColor },
+                                  { backgroundColor: timeInColor },
                                 ]}
                               >
                                 {log.dtr.timeIn ? (
-                                  <Text>
+                                  <Text style={[styles.tableDataText]}>
                                     {twelveHourFormat(log.dtr.timeIn)}
                                   </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                ) : checkIfRestDay(log.dtr.remarks) ||
+                                  !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                  <Text
+                                    style={[
+                                      styles.tableDataText,
+                                      { color: 'red' },
+                                    ]}
+                                  >
+                                    No Entry
+                                  </Text>
                                 )}
                               </View>
 
@@ -602,13 +602,21 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                                 ]}
                               >
                                 {log.dtr.lunchOut ? (
-                                  <Text>
+                                  <Text style={[styles.tableDataText]}>
                                     {twelveHourFormat(log.dtr.lunchOut)}
                                   </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                ) : checkIfRestDay(log.dtr.remarks) ||
+                                  !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                  <Text
+                                    style={[
+                                      styles.tableDataText,
+                                      { color: 'red' },
+                                    ]}
+                                  >
+                                    No Entry
+                                  </Text>
                                 )}
                               </View>
 
@@ -621,13 +629,21 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                                 ]}
                               >
                                 {log.dtr.lunchIn ? (
-                                  <Text>
+                                  <Text style={[styles.tableDataText]}>
                                     {twelveHourFormat(log.dtr.lunchIn)}
                                   </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                ) : checkIfRestDay(log.dtr.remarks) ||
+                                  !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                  <Text
+                                    style={[
+                                      styles.tableDataText,
+                                      { color: 'red' },
+                                    ]}
+                                  >
+                                    No Entry
+                                  </Text>
                                 )}
                               </View>
 
@@ -643,14 +659,195 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                                 ]}
                               >
                                 {log.dtr.timeOut ? (
-                                  <Text>
+                                  <Text style={[styles.tableDataText]}>
                                     {twelveHourFormat(log.dtr.timeOut)}
                                   </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ? (
+                                ) : checkIfRestDay(log.dtr.remarks) ||
+                                  !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text style={{ color: 'red' }}>No Entry</Text>
+                                  <Text
+                                    style={[
+                                      styles.tableDataText,
+                                      { color: 'red' },
+                                    ]}
+                                  >
+                                    No Entry
+                                  </Text>
                                 )}
+                              </View>
+                            </View>
+                          );
+                        })
+                      : null}
+
+                    {/* For Field/Pumping Station Schedule | WAITING FOR UPDATES*/}
+                    {isFieldStationSchedule
+                      ? employeeDtr.map((log, index) => {
+                          const yellow = 'yellow';
+                          const gray = '#9CA3AF';
+                          const white = '#FFFFFF';
+                          const red = '#ff8b8b';
+                          const blue = '#6eb4ff';
+
+                          let logBgColor = '';
+                          let timeInColor = '';
+                          let timeOutColor = '';
+
+                          // row color
+                          checkIfHoliday(log.holidayType) ===
+                          HolidayTypes.REGULAR
+                            ? (logBgColor = red)
+                            : checkIfHoliday(log.holidayType) ===
+                              HolidayTypes.SPECIAL
+                            ? (logBgColor = blue)
+                            : checkIfRestDay(log.dtr.remarks) === true
+                            ? (logBgColor = gray)
+                            : (logBgColor = white);
+
+                          // time in color
+                          compareIfLate(
+                            log.day,
+                            log.dtr.timeIn,
+                            log.schedule.timeIn
+                          ) === true
+                            ? (timeInColor = yellow)
+                            : (timeInColor = '');
+
+                          // time out color
+                          compareIfEarly(
+                            log.day,
+                            log.dtr.timeOut,
+                            log.schedule.timeOut
+                          ) === true
+                            ? (timeOutColor = yellow)
+                            : (timeOutColor = '');
+
+                          return (
+                            <View
+                              style={[
+                                styles.rowContainer,
+                                styles.borderTop,
+                                { width: '100%', backgroundColor: logBgColor },
+                              ]}
+                              key={index}
+                            >
+                              <View style={[styles.tableData, styles.w25]}>
+                                <Text style={{ margin: 'auto 0' }}>
+                                  {log.dtr.remarks}
+                                </Text>
+                              </View>
+
+                              {/* TIME IN */}
+                              <View style={[styles.tableData, styles.w37_5]}>
+                                <View
+                                  style={[styles.rowContainer, styles.w100]}
+                                >
+                                  <View style={[styles.tableData, styles.w45]}>
+                                    <Text style={[styles.tableDataText]}>
+                                      {log.day}
+                                    </Text>
+                                  </View>
+
+                                  <View style={[styles.tableData, styles.w10]}>
+                                    <Text style={[styles.tableDataText]}>
+                                      {dayjs(log.day).format('ddd')}
+                                    </Text>
+                                  </View>
+
+                                  <View
+                                    style={[
+                                      styles.tableData,
+                                      styles.w45,
+                                      {
+                                        borderRight: 'none',
+                                        backgroundColor: timeInColor,
+                                      },
+                                    ]}
+                                  >
+                                    {log.dtr.timeIn ? (
+                                      <Text style={[styles.tableDataText]}>
+                                        {twelveHourFormat(log.dtr.timeIn)}
+                                      </Text>
+                                    ) : checkIfRestDay(log.dtr.remarks) ||
+                                      !isEmpty(log.holidayType) ? (
+                                      <Text></Text>
+                                    ) : (
+                                      <Text
+                                        style={[
+                                          styles.tableDataText,
+                                          { color: 'red' },
+                                        ]}
+                                      >
+                                        No Entry
+                                      </Text>
+                                    )}
+                                  </View>
+                                </View>
+                              </View>
+
+                              {/* TIME OUT */}
+                              <View
+                                style={[
+                                  styles.tableData,
+                                  styles.w37_5,
+                                  { borderRight: 'none' },
+                                ]}
+                              >
+                                <View
+                                  style={[styles.rowContainer, styles.w100]}
+                                >
+                                  <View style={[styles.tableData, styles.w45]}>
+                                    <Text style={[styles.tableDataText]}>
+                                      {/* add 1 day if night shift */}
+                                      {log.schedule.shift === 'night'
+                                        ? dayjs(log.day)
+                                            .add(1, 'day')
+                                            .format('YYYY-MM-DD')
+                                        : log.dtr.dtrDate}
+                                    </Text>
+                                  </View>
+
+                                  <View style={[styles.tableData, styles.w10]}>
+                                    <Text style={[styles.tableDataText]}>
+                                      {dayjs(log.day)
+                                        .add(1, 'day')
+                                        .format('ddd')}
+                                    </Text>
+                                  </View>
+
+                                  <View
+                                    style={[
+                                      styles.tableData,
+                                      styles.w45,
+                                      styles.tableDataText,
+                                      {
+                                        borderRight: 'none',
+                                        backgroundColor: timeOutColor,
+                                      },
+                                    ]}
+                                  >
+                                    <Text>
+                                      {log.dtr.timeOut ? (
+                                        <Text style={[styles.tableDataText]}>
+                                          {twelveHourFormat(log.dtr.timeOut)}
+                                        </Text>
+                                      ) : checkIfRestDay(log.dtr.remarks) ||
+                                        !isEmpty(log.holidayType) ? (
+                                        <Text></Text>
+                                      ) : (
+                                        <Text
+                                          style={[
+                                            styles.tableDataText,
+                                            { color: 'red' },
+                                          ]}
+                                        >
+                                          No Entry
+                                        </Text>
+                                      )}
+                                    </Text>
+                                  </View>
+                                </View>
                               </View>
                             </View>
                           );
@@ -659,79 +856,122 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                   </View>
                 </View>
 
-                <View style={styles.dtrContainer2}>
-                  <View
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      gap: 0,
-                    }}
-                  >
-                    <View style={styles.tableTdStats}>
-                      <Text>NO. OF TIMES LATE</Text>
+                {/* AGGREGATE STATS */}
+                <View style={styles.aggregateContainer}>
+                  {/* COLUMN HEADER */}
+                  <View style={[styles.rowContainer]}>
+                    <View style={[styles.tableHeader2, styles.w11]}>
+                      <Text style={[styles.tableHeaderText]}>
+                        NO. OF TIMES LATE
+                      </Text>
                     </View>
-                    <View style={styles.tableTdStats}>
-                      <Text>NO. OF TIMES UNDERTIME</Text>
+                    <View style={[styles.tableHeader2, styles.w9]}>
+                      <Text
+                        style={[
+                          styles.tableHeaderText,
+                          { paddingHorizontal: 3 },
+                        ]}
+                      >
+                        TOTAL MINUTES LATE
+                      </Text>
                     </View>
-                    <View style={styles.tableTdStats}>
-                      <Text>TOTAL MINUTES LATE & UNDERTIME</Text>
+                    <View style={[styles.tableHeader2, styles.w15]}>
+                      <Text style={[styles.tableHeaderText]}>DATE/S LATE</Text>
                     </View>
-                    <View style={styles.tableTdStats}>
-                      <Text>NO. OF TIMES HALF DAY (AM/PM)</Text>
+                    <View style={[styles.tableHeader2, styles.w8]}>
+                      <Text style={[styles.tableHeaderText]}>
+                        NO. OF TIMES UNDERTIME
+                      </Text>
                     </View>
-                    <View style={styles.tableTdStats}>
-                      <Text>DATE/S</Text>
+                    <View style={[styles.tableHeader2, styles.w9]}>
+                      <Text
+                        style={[
+                          styles.tableHeaderText,
+                          { paddingHorizontal: 3 },
+                        ]}
+                      >
+                        TOTAL MINUTES UNDERTIME
+                      </Text>
                     </View>
-                    <View style={styles.tableTdStats}>
-                      <Text>DATE/S LATE & UNDERTIME</Text>
+                    <View style={[styles.tableHeader2, styles.w15]}>
+                      <Text
+                        style={[
+                          styles.tableHeaderText,
+                          { paddingHorizontal: 3 },
+                        ]}
+                      >
+                        DATE/S UNDERTIME
+                      </Text>
                     </View>
-                    <View style={styles.tableTdStats2}>
-                      <Text>NO ATTENDANCE</Text>
+                    <View style={[styles.tableHeader2, styles.w10]}>
+                      <Text
+                        style={[
+                          styles.tableHeaderText,
+                          { paddingHorizontal: 3 },
+                        ]}
+                      >
+                        NO. OF TIMES HALF DAY (AM/PM)
+                      </Text>
+                    </View>
+                    <View style={[styles.tableHeader2, styles.w12]}>
+                      <Text style={[styles.tableHeaderText]}>
+                        DATE/S HALF DAY
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.tableHeader2,
+                        styles.w11,
+                        { borderRight: 'none' },
+                      ]}
+                    >
+                      <Text style={[styles.tableHeaderText]}>
+                        NO ATTENDANCE
+                      </Text>
                     </View>
                   </View>
-                  <View
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      gap: 0,
-                    }}
-                  >
-                    <View style={styles.tableTdStats3}>
-                      <Text>5.00</Text>
+
+                  {/* TABLE ROW */}
+                  <View style={[styles.rowContainer, styles.borderTop]}>
+                    <View style={[styles.tableData, styles.w11]}>
+                      <Text style={[styles.tableDataText]}>0.00</Text>
                     </View>
-                    <View style={styles.tableTdStats3}>
-                      <Text>1.00</Text>
+                    <View style={[styles.tableData, styles.w9]}>
+                      <Text style={[styles.tableDataText]}>0.00</Text>
                     </View>
-                    <View style={styles.tableTdStats3}>
-                      <Text>155.00</Text>
+                    <View style={[styles.tableData, styles.w15]}>
+                      <Text style={[styles.tableDataText]}>1,2,3</Text>
                     </View>
-                    <View style={styles.tableTdStats3}>
-                      <Text>3</Text>
+                    <View style={[styles.tableData, styles.w8]}>
+                      <Text style={[styles.tableDataText]}>0.00</Text>
                     </View>
-                    <View style={styles.tableTdStats3}>
-                      <Text>1, 13, 22</Text>
+                    <View style={[styles.tableData, styles.w9]}>
+                      <Text style={[styles.tableDataText]}>0.00</Text>
                     </View>
-                    <View style={styles.tableTdStats3}>
-                      <Text>0.00</Text>
+                    <View style={[styles.tableData, styles.w15]}>
+                      <Text style={[styles.tableDataText]}>4,5,6</Text>
                     </View>
-                    <View style={styles.tableTdStats4}>
-                      <Text>0.00</Text>
+                    <View style={[styles.tableData, styles.w10]}>
+                      <Text style={[styles.tableDataText]}>0.00</Text>
+                    </View>
+                    <View style={[styles.tableData, styles.w12]}>
+                      <Text style={[styles.tableDataText]}>7,8,9</Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.tableData,
+                        styles.w11,
+                        { borderRight: 'none' },
+                      ]}
+                    >
+                      <Text style={[styles.tableDataText]}>10,11,12</Text>
                     </View>
                   </View>
                 </View>
 
-                <View
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 200,
-                    paddingBottom: 10,
-                    paddingTop: 5,
-                    fontFamily: 'Helvetica-Bold',
-                  }}
-                >
-                  <Text>
+                {/* CERTIFY TEXT */}
+                <View style={[styles.certifyContainer]}>
+                  <Text style={[styles.certifyText]}>
                     I certify on my honor that the above is true and correct
                     report of the hours of work performed record of which was
                     made daily at the time of arrival and departure from the
@@ -739,19 +979,50 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                   </Text>
                 </View>
 
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    fontSize: 10,
-                  }}
-                >
-                  <Text style={{ width: '50%' }}>
-                    Employee&apos;s Signature:
-                  </Text>
-                  <Text style={{ width: '50%', paddingLeft: 70 }}>
-                    Noted by:
+                {/* SIGNATORY */}
+                <View style={[styles.rowContainer, styles.signatoryContainer]}>
+                  {/* LEFT */}
+                  <View style={[styles.w50]}>
+                    <Text style={[{ padding: '10 0 10 0' }]}>REMARKS:</Text>
+
+                    <Text style={[{ paddingBottom: 30 }]}>Verified by:</Text>
+                    <Text
+                      style={[
+                        {
+                          borderBottom: '1px solid #000',
+                          width: '80%',
+                        },
+                      ]}
+                    ></Text>
+                    <Text style={[{ padding: '2 0 0 2' }]}>
+                      Employee&apos;s Signature
+                    </Text>
+                  </View>
+
+                  {/* RIGHT */}
+                  <View style={[styles.w50]}>
+                    <Text style={[{ padding: '29 0 30 0' }]}>Noted by:</Text>
+                    <Text
+                      style={[
+                        {
+                          borderBottom: '1px solid #000',
+                          width: '80%',
+                        },
+                      ]}
+                    ></Text>
+                    <Text style={[{ padding: '2 0 0 2' }]}>
+                      Supervisor&apos;s/Department Manager&apos;s Signature
+                    </Text>
+                  </View>
+                </View>
+
+                {/* NOTES */}
+                <View style={[styles.notesContainer]}>
+                  <Text style={[styles.notesText]}>
+                    Incomplete time logs must be supported by an Accomplishment
+                    Report, Travel Order, Certificate of Attendance, Approved
+                    Leave Application Form or Trip Ticket. Moreover, Please see
+                    Human Resource for inquiry.
                   </Text>
                 </View>
               </View>
