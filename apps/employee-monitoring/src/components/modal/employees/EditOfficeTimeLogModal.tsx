@@ -17,8 +17,8 @@ import {
 import { useForm } from 'react-hook-form';
 
 type EmployeeDtr = {
-  companyId: string | null;
-  dtrDate: string | null;
+  companyId: string;
+  dtrDate: string;
   timeIn: string | null;
   lunchOut: string | null;
   lunchIn: string | null;
@@ -32,6 +32,14 @@ type EditDailySchedModalProps = {
   rowData: EmployeeDtrWithSchedule; // TBD
 };
 
+enum KEYS {
+  COMPANYID = 'companyId',
+  DTRDATE = 'dtrDate',
+  TIMEIN = 'timeIn',
+  TIMEOUT = 'timeOut',
+  LUNCHIN = 'lunchIn',
+  LUNCHOUT = 'lunchOut',
+}
 const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   modalState,
   setModalState,
@@ -76,7 +84,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     let parentArray = [];
 
     // map each keys and push them to the initialized array
-    Object.keys(dirtyFields).map((field, index) => {
+    Object.keys(dirtyFields).map((field: KEYS, index) => {
       parentArray.push([field, getValues(field)]);
     });
 
