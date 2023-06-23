@@ -1,17 +1,13 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { fetchWithSession } from '../../../../src/utils/hoc/fetcher';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import useSWR from 'swr';
 
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Applicant } from '../../../types/applicant.type';
+import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 
 export const AllApplicantsList = () => {
-  // const [applicantListIsLoaded, setApplicantListIsLoaded] = useState<boolean>(false);
-
-  // use this to assign as a parameter in useSWR
-  const random = useRef(Date.now());
-
   const vppId = useAppEndStore((state) => state.selectedPublicationId);
 
   const applicantList = useAppEndStore((state) => state.applicantList);
@@ -20,13 +16,24 @@ export const AllApplicantsList = () => {
     (state) => state.setSelectedApplicants
   );
 
+  const showPds = useAppEndStore((state) => state.showPds);
+
+  const setShowPds = useAppEndStore((state) => state.setShowPds);
+
   const setApplicantList = useAppEndStore((state) => state.setApplicantList);
 
-  // initialize url to get applicant
-  const applicantGetUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/${vppId}/all`;
+  const setSelectedApplicantDetails = useAppEndStore(
+    (state) => state.setSelectedApplicantDetails
+  );
 
   // use swr
-  const { data } = useSWR([applicantGetUrl, random], fetchWithSession);
+  const { data: swrApplicants } = useSWR(
+    `/applicant-endorsement/${vppId}/all`,
+    fetcherHRIS,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   // on select
   const onSelect = (sequenceNo: number) => {
@@ -62,15 +69,17 @@ export const AllApplicantsList = () => {
   };
 
   useEffect(() => {
-    if (data) {
-      const applicants = data.map((applicant: any, index: number) => {
-        applicant.state = false;
-        applicant.sequenceNo = index;
-        return applicant;
-      });
+    if (swrApplicants) {
+      const applicants = swrApplicants.data.map(
+        (applicant: any, index: number) => {
+          applicant.state = false;
+          applicant.sequenceNo = index;
+          return applicant;
+        }
+      );
       setApplicantList(applicants);
     }
-  }, [data]);
+  }, [swrApplicants]);
 
   return (
     <>
@@ -80,30 +89,55 @@ export const AllApplicantsList = () => {
             return (
               <li
                 key={index}
-                onClick={() => onSelect(applicant.sequenceNo!)}
-                className="flex cursor-pointer items-center justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
+                className="flex w-full py-3 items-center pr-2 border-b border-l-[5px] border-b-gray-100 border-l-transparent hover:border-l-indigo-500 hover:bg-indigo-50"
               >
-                <div>
-                  <p className="font-medium text-gray-600">
-                    {applicant.applicantName}
-                  </p>
-                </div>
-                <input
-                  type="checkbox"
-                  onChange={() => (applicant: Applicant) => {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    applicant.state;
+                <div
+                  className="flex items-center justify-between w-full p-5 transition-colors ease-in-out cursor-pointer"
+                  key={index}
+                  onClick={() => {
+                    onSelect(applicant.sequenceNo!);
+                    // setSelectedApplicantDetails({
+                    //   applicantId: applicant.applicantId,
+                    //   applicantType: applicant.applicantType,
+                    // });
                   }}
-                  checked={applicant.state ? true : false}
-                  className="mr-2 cursor-pointer rounded-sm border-2 border-gray-300 p-2 transition-colors checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
-                />
+                >
+                  <div>
+                    <p className="font-medium text-gray-600">
+                      {applicant.applicantName}
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    onChange={() => (applicant: Applicant) => {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                      applicant.state;
+                    }}
+                    checked={applicant.state ? true : false}
+                    className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
+                  />
+                </div>
+                <div className="flex items-center justify-center text-indigo-400 border border-indigo-200 rounded h-7 bg-indigo-50 hover:bg-indigo-500 hover:text-white">
+                  <button
+                    className="w-[4rem] flex items-center justify-center"
+                    onClick={() => {
+                      setSelectedApplicantDetails({
+                        applicantId: applicant.applicantId,
+                        applicantType: applicant.applicantType,
+                      });
+                      setShowPds(true);
+                    }}
+                  >
+                    <div className="text-xs ">View PDS</div>
+                  </button>
+                </div>
               </li>
             );
           })}
         </ul>
       ) : (
         <>
-          <div className="w-full h-full flex justify-center items-center animate-pulse text-gray-500 uppercase">
+          <div className="flex items-center justify-center w-full h-full text-gray-500 uppercase animate-pulse">
             No Applicant Data
           </div>
         </>

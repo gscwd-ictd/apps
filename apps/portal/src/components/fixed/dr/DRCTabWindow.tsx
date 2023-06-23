@@ -59,7 +59,6 @@ export const DrcTabWindow = ({ positionId }: DrcTabWindowProps) => {
         {tab === 2 && (
           <AllDrcPositionsListTab positions={fulfilledPositions} tab={tab} />
         )}
-        {/* <Button btnLabel="Fulfilled Positions" onClick={() => console.log(fulfilledPositions)} /> */}
       </div>
     </>
   );

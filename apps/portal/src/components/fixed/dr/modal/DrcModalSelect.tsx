@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { DutyResponsibility } from 'apps/portal/src/types/dr.type';
 import { FormEvent, MutableRefObject, useEffect, useRef } from 'react';
@@ -82,8 +82,8 @@ export const DrcModalSelect = (): JSX.Element => {
 
   return (
     <>
-      <div className="grid grid-cols-5 mb-5">
-        <section className="col-span-2">
+      <div className="grid grid-cols-1 mb-5 lg:grid-cols-6">
+        <section className="col-span-1 lg:col-span-3">
           <div className="flex justify-between px-3 mb-1 text-sm">
             <p className="font-medium text-gray-500 uppercase">
               {selectedDrcType}
@@ -123,7 +123,7 @@ export const DrcModalSelect = (): JSX.Element => {
             ) : null}
           </div>
 
-          <div className="h-[28rem] overflow-y-scroll">
+          <div className="h-auto lg:h-[28rem] w-full overflow-y-auto">
             {filteredAvailableDnrs.length === 0 ? (
               <div className="flex justify-center h-full pt-5 text-center">
                 <h5 className="text-2xl font-medium text-gray-300">{`No results found for '${filteredDnrValue}'`}</h5>
@@ -133,7 +133,7 @@ export const DrcModalSelect = (): JSX.Element => {
             )}
           </div>
         </section>
-        <section className="col-span-3 max-h-[34rem] bg-slate-50 bg-opacity-50 px-5 pt-5">
+        <section className="col-span-1 lg:col-span-3 h-[34rem] bg-slate-50 bg-opacity-50 px-5 pt-5">
           {(selectedDrcType === 'core' && checkedDnrs.core.length === 0) ||
           (selectedDrcType === 'support' &&
             checkedDnrs.support.length === 0) ? (
@@ -149,7 +149,7 @@ export const DrcModalSelect = (): JSX.Element => {
             (selectedDrcType === 'support' &&
               checkedDnrs.support.length > 0) ? (
             <>
-              <div className="h-[28rem] w-full overflow-y-scroll px-2 pt-1">
+              <div className="h-[34rem] w-full overflow-y-auto px-2 pt-1">
                 {/* <SelectedDRCard /> */}
                 <DrcSelectedDrcCard />
               </div>

@@ -11,7 +11,7 @@ import { isEmpty, isEqual } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import {
   getUserDetails,
-  withCookieSession,
+  withCookieSessionPds,
 } from '../../../utils/helpers/session';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -27,6 +27,8 @@ export default function Dashboard({
   employee,
   pdsDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const setHasPds = useEmployeeStore((state) => state.setHasPds);
@@ -62,13 +64,6 @@ export default function Dashboard({
     parents,
     elementary,
     secondary,
-    officeRelation,
-    guiltyCharged,
-    convicted,
-    separatedService,
-    candidateResigned,
-    immigrant,
-    indigenousPwdSoloParent,
     governmentIssuedId,
     setGuiltyCharged,
     setConvicted,
@@ -434,10 +429,9 @@ export default function Dashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
+export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
   async (context: GetServerSidePropsContext) => {
     const employee = getUserDetails();
-
     try {
       const applicantPds = await axios.get(
         `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
@@ -463,6 +457,14 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
         return {
           props: { employee, pdsDetails: applicantPds.data },
           redirect: { destination: '/401', permanent: false },
+        };
+      } else {
+        return {
+          props: {},
+          redirect: {
+            destination: `${process.env.NEXT_PUBLIC_PORTAL_FE_URL}/login`,
+            permanent: false,
+          },
         };
       }
     } catch {

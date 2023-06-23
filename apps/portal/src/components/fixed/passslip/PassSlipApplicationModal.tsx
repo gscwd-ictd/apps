@@ -1,20 +1,20 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
 import {
   AlertNotification,
   Button,
   LoadingSpinner,
   Modal,
-  ToastNotification,
 } from '@gscwd-apps/oneui';
-import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { PassSlip } from '../../../../src/types/passslip.type';
+import { PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
 import { HiX } from 'react-icons/hi';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { format } from 'date-fns';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -56,41 +56,33 @@ export const PassSlipApplicationModal = ({
 
   //zustand initialization to access pass slip store
   const {
-    postResponseApply,
     loadingResponse,
-    errorResponse,
 
     postPassSlipList,
     postPassSlipListSuccess,
     postPassSlipListFail,
   } = usePassSlipStore((state) => ({
-    postResponseApply: state.response.postResponseApply,
     loadingResponse: state.loading.loadingResponse,
-    errorResponse: state.error.errorResponse,
 
     postPassSlipList: state.postPassSlipList,
     postPassSlipListSuccess: state.postPassSlipListSuccess,
     postPassSlipListFail: state.postPassSlipListFail,
   }));
 
-  // set state for employee store
-  // const [empId, setEmpId] = useState<string>(
-  //   employeeDetails.employmentDetails.assignment.id
-  // );
-
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } = useForm<PassSlip>({
-    mode: 'onChange',
-    defaultValues: {
-      employeeId: '',
-      dateOfApplication: dateToday,
-      natureOfBusiness: '',
-      estimateHours: 0,
-      purposeDestination: '',
-      isCancelled: false,
-      obTransportation: '',
-    },
-  });
+  const { reset, register, handleSubmit, watch, setValue } =
+    useForm<PassSlipApplicationForm>({
+      mode: 'onChange',
+      defaultValues: {
+        employeeId: '',
+        dateOfApplication: dateToday,
+        natureOfBusiness: null,
+        estimateHours: 0,
+        purposeDestination: '',
+        isCancelled: false,
+        obTransportation: null,
+      },
+    });
 
   useEffect(() => {
     if (
@@ -106,12 +98,14 @@ export const PassSlipApplicationModal = ({
     setValue('employeeId', employeeDetails.employmentDetails.userId);
   }, [watch('natureOfBusiness')]);
 
-  const onSubmit: SubmitHandler<PassSlip> = (data: PassSlip) => {
+  const onSubmit: SubmitHandler<PassSlipApplicationForm> = (
+    data: PassSlipApplicationForm
+  ) => {
     handlePostResult(data);
     postPassSlipList();
   };
 
-  const handlePostResult = async (data: PassSlip) => {
+  const handlePostResult = async (data: PassSlipApplicationForm) => {
     const { error, result } = await postPortal('/v1/pass-slip', data);
 
     if (error) {
@@ -123,31 +117,22 @@ export const PassSlipApplicationModal = ({
       closeModalAction();
     }
   };
-
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(errorResponse) ? (
-        <>
-          {console.log(errorResponse)}
-          <ToastNotification toastType="error" notifMessage={errorResponse} />
-        </>
-      ) : null}
-
-      {!isEmpty(postResponseApply) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
-        />
-      ) : null}
-
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1024 ? 'lg' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
-          <h3 className="font-semibold text-2xl text-gray-700">
+          <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Pass Slip Authorization</span>
+              <span className="text-xl md:text-2xl">
+                Pass Slip Authorization
+              </span>
               <button
-                className="hover:bg-slate-100 px-1 rounded-full"
+                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
               >
                 <HiX />
@@ -167,24 +152,26 @@ export const PassSlipApplicationModal = ({
           ) : null}
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
-              <div className="w-full flex flex-col gap-2 p-4 rounded">
+              <div className="w-full flex flex-col gap-3 p-4 rounded">
                 <div className="w-full flex gap-2 justify-start items-center">
-                  <span className="text-slate-500 text-lg font-medium">
+                  <span className="text-slate-500 text-md font-medium">
                     Date:
                   </span>
-                  <div className="text-slate-500 text-lg">{dateToday}</div>
+                  <div className="text-slate-500 text-md">{dateToday}</div>
                 </div>
 
-                <div className="flex gap-2 justify-between items-center">
-                  <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                <div
+                  className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between `}
+                >
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                     Select Nature of Business:
                     <span className="text-red-600">*</span>
                   </label>
 
-                  <div className="w-96">
+                  <div className="w-full md:w-80">
                     <select
                       id="natureOfBusiness"
-                      className="text-slate-500 h-12 w-96 rounded text-lg border-slate-300"
+                      className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                       required
                       {...register('natureOfBusiness')}
                     >
@@ -202,16 +189,18 @@ export const PassSlipApplicationModal = ({
 
                 {watch('natureOfBusiness') === 'Official Business' ? (
                   <>
-                    <div className={`flex gap-3 justify-between items-center`}>
-                      <label className="text-slate-500 text-lg whitespace-nowrap font-medium">
+                    <div
+                      className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
+                    >
+                      <label className="text-slate-500 text-md whitespace-nowrap font-medium">
                         Select Mode of Transportation:
                         <span className="text-red-600">*</span>
                       </label>
-                      <div className="w-96">
+                      <div className="w-full md:w-80">
                         <select
                           id="obTransportation"
                           required
-                          className="text-slate-500 h-12 w-96 rounded text-lg border-slate-300"
+                          className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                           {...register('obTransportation')}
                         >
                           <option value="" disabled>
@@ -233,17 +222,19 @@ export const PassSlipApplicationModal = ({
                 watch('natureOfBusiness') ? (
                   <>
                     <div className="flex flex-col gap-2">
-                      <div className="flex gap-2 justify-between items-center">
-                        <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                      <div
+                        className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
+                      >
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                           Estimated Hours:
                           <span className="text-red-600">*</span>
                         </label>
-                        <div className="w-96">
+                        <div className="w-full md:w-80">
                           <input
                             type="number"
                             name="passSlip_estimatedHours"
                             id="estimateHours"
-                            className="border-slate-300 text-slate-500 h-12 text-lg w-96 rounded"
+                            className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                             placeholder="Enter number of hours "
                             required
                             defaultValue={0}
@@ -264,8 +255,8 @@ export const PassSlipApplicationModal = ({
 
                 {watch('natureOfBusiness') ? (
                   <>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-slate-500 text-lg font-medium">
+                    <div className="flex flex-col gap-0 md:gap-2">
+                      <label className="text-slate-500 text-md font-medium">
                         Purpose/Desination:
                         <span className="text-red-600">*</span>
                       </label>
@@ -274,7 +265,7 @@ export const PassSlipApplicationModal = ({
                         placeholder={`Enter Purpose of Pass Slip`}
                         name="passSlip_purpose"
                         id="purposeDestination"
-                        className="resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300"
+                        className="resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300"
                         required
                         {...register('purposeDestination')}
                       ></textarea>
@@ -292,22 +283,11 @@ export const PassSlipApplicationModal = ({
                 variant={'primary'}
                 size={'md'}
                 loading={false}
-                // onClick={(e) => modalAction(e)}
                 form="ApplyPassSlipForm"
                 type="submit"
               >
                 Apply Pass Slip
               </Button>
-
-              {/* <Link
-                href={`/${router.query.id}/pass-slip/${employeeDetail.employmentDetails.userId}`}
-                target={'_blank'}
-                className={`${modal.page == 3 ? '' : 'hidden'}`}
-              >
-                <Button variant={'primary'} size={'md'} loading={false}>
-                  View
-                </Button>
-              </Link> */}
             </div>
           </div>
         </Modal.Footer>

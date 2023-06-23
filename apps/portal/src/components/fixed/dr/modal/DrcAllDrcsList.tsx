@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { DutyResponsibility } from 'apps/portal/src/types/dr.type';
 
@@ -67,20 +67,28 @@ export const DrcAllDrcsList = (): JSX.Element => {
               <li
                 key={index}
                 onClick={() => onSelect(dr.sequenceNo)}
-                className="flex cursor-pointer items-center justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
+                // className="flex cursor-pointer items-center justify-start lg:justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
+                className="flex grid-cols-2 items-center w-full cursor-pointer border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
               >
-                <div>
-                  <p className="font-normal text-md text-gray-600 truncate w-[24rem]">
+                <div className="flex justify-start w-[90%]">
+                  <p className="w-full font-normal text-gray-600 truncate text-md">
                     {dr.description}
                   </p>
                 </div>
-                <input
-                  checked={dr.state ? true : false}
-                  onChange={() => (dr: DutyResponsibility) =>
-                    onSelect(dr.sequenceNo)}
-                  className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
-                  type="checkbox"
-                />
+                <div className="flex justify-end w-[10%]">
+                  <input
+                    checked={dr.state ? true : false}
+                    onChange={() => (dr: DutyResponsibility) =>
+                      onSelect(dr.sequenceNo)}
+                    className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
+                    type="checkbox"
+                  />
+                </div>
+                {/* <div className="block lg:hidden">
+                  <p className="w-full font-normal text-gray-600 truncate text-md">
+                    {dr.description}
+                  </p>
+                </div> */}
               </li>
             );
           })}

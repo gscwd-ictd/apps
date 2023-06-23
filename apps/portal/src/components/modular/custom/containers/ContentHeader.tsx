@@ -8,12 +8,19 @@ type ContentHeaderProps = {
   children?: ReactNode;
 };
 
-export const ContentHeader: React.FC<ContentHeaderProps> = ({ title, subtitle, children }): JSX.Element => {
+export const ContentHeader: React.FC<ContentHeaderProps> = ({
+  title,
+  subtitle,
+  children,
+}): JSX.Element => {
   const router = useRouter();
 
   return (
     <>
-      <button className="flex items-center gap-2 mb-5 text-gray-500 transition-colors ease-in-out hover:text-gray-700" onClick={() => router.back()}>
+      <button
+        className="flex items-center gap-2 mb-5 text-gray-500 transition-colors ease-in-out hover:text-gray-700"
+        onClick={() => router.back()}
+      >
         <HiArrowSmLeft className="w-5 h-5" />
         <span className="font-medium">Go Back</span>
       </button>

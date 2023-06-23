@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { DrcTypes, useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
@@ -295,15 +295,18 @@ export const DrcModalSetting = () => {
         <span className="text-sm font-normal">
           {selectedPosition.itemNumber}
         </span>
+        <span className="text-xs font-normal">
+          {selectedPosition.designation}
+        </span>
 
         {/** HERE */}
-        <div className="flex flex-col mt-5">
+        <div className="flex flex-col w-full mt-5">
           <section>
-            <div className="flex items-end justify-between ">
-              <p className="flex min-w-[22rem] max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col items-end justify-between md:flex-row ">
+              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
                 Core Duties, Responsibilities, & Competencies
                 <HiPuzzle />
-              </p>
+              </div>
 
               {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
@@ -315,14 +318,14 @@ export const DrcModalSetting = () => {
                       : '+ Add Core'
                   }
                   btnVariant="white"
-                  className="min-w-[16rem] border-none text-indigo-600 "
+                  className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
                   isDisabled={availableDnrs.length === 0 ? true : false}
                   onClick={() => openDrcModalSelection(DrcTypes.CORE)}
                 />
               )}
             </div>
             {/**Core Duties Box */}
-            <div className="w-full  mt-2 mb-5 h-[14rem]  bg-slate-50 rounded  overflow-y-scroll overflow-x-hidden">
+            <div className="w-full  mt-2 mb-5 h-[14rem]  bg-slate-50 rounded  overflow-y-scroll overflow-x-auto">
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected core duties & responsibilities</h1> */}
                 {swrExistingDnrsIsLoading ? (
@@ -341,9 +344,9 @@ export const DrcModalSetting = () => {
                         </div>
                       </>
                     ) : (
-                      <>
+                      <div className="w-full">
                         <SelectedCoreDrcs />
-                      </>
+                      </div>
                     )}
                   </>
                 )}
@@ -351,10 +354,10 @@ export const DrcModalSetting = () => {
             </div>
           </section>
           <section>
-            <div className="flex items-end justify-between ">
-              <p className="flex min-w-[22rem] max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col items-end justify-between md:flex-row ">
+              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
                 Support Duties, Responsibilities, & Competencies <HiPuzzle />
-              </p>
+              </div>
 
               {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
@@ -367,13 +370,13 @@ export const DrcModalSetting = () => {
                   }
                   btnVariant="white"
                   isDisabled={availableDnrs.length === 0 ? true : false}
-                  className="min-w-[16rem] border-none text-indigo-600"
+                  className="w-auto lg:min-w-[16rem] border-none text-indigo-600"
                   onClick={() => openDrcModalSelection(DrcTypes.SUPPORT)}
                 />
               )}
             </div>
             {/** Support Duties Box */}
-            <div className="w-full mt-2 mb-5 h-[14rem] bg-slate-50 rounded  overflow-y-scroll overflow-x-hidden">
+            <div className="w-full mt-2 mb-5 h-[14rem] bg-slate-50 rounded  overflow-y-scroll overflow-x-auto">
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected support duties & responsibilities</h1> */}
                 {swrExistingDnrsIsLoading ? (

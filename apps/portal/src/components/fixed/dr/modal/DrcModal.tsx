@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useAlertConfirmationStore } from 'apps/portal/src/store/alert.store';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
@@ -8,6 +8,7 @@ import { isEqual } from 'lodash';
 import { FunctionComponent } from 'react';
 import { CompetencyChecker, DrcChecker } from '../utils/functions';
 import { DrcModalController } from './DrcModalController';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 const DrcModal: FunctionComponent = () => {
   // use modal store
@@ -135,32 +136,39 @@ const DrcModal: FunctionComponent = () => {
       return true;
     else return false;
   };
-
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
       <Modal
         open={modal.isOpen}
         setOpen={() => setModal({ ...modal })}
         steady
-        size="xl"
+        size={`${windowWidth > 1024 ? 'xl' : 'full'}`}
       >
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full px-5">
             <div>
-              <h3 className="text-xl font-semibold text-gray-700">
+              <h3 className="text-xl font-semibold text-gray-700 md:text-2xl">
                 {modal.page === 6
                   ? 'Setting Successful'
                   : 'Set Duties, Responsibilities, and Competencies'}
               </h3>
-              <p>
-                {modal.page === 1
-                  ? 'Select a position title'
-                  : modal.page === 2
-                  ? 'Add core or support'
-                  : modal.page === 3
-                  ? `${selectedPosition.positionTitle}`
-                  : modal.page === 4 && 'Position Summary'}
-              </p>
+              <div>
+                {modal.page === 1 ? (
+                  'Select a position title'
+                ) : modal.page === 2 ? (
+                  'Add core or support'
+                ) : modal.page === 3 ? (
+                  <>
+                    <div>{selectedPosition.positionTitle}</div>
+                    <div className="text-xs text-gray-600">
+                      {selectedPosition.designation}
+                    </div>
+                  </>
+                ) : (
+                  modal.page === 4 && 'Position Summary'
+                )}
+              </div>
             </div>
             <button
               type="button"

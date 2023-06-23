@@ -1,4 +1,11 @@
-import { flip, FloatingPortal, offset, Placement, shift, useFloating } from '@floating-ui/react-dom-interactions';
+import {
+  flip,
+  FloatingPortal,
+  offset,
+  Placement,
+  shift,
+  useFloating,
+} from '@floating-ui/react-dom-interactions';
 import { Menu } from '@headlessui/react';
 import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
 import { ReactNode } from 'react';
@@ -19,7 +26,9 @@ type DropdownProps<T> = {
   onSelect?: (menuItem: T, index: number) => void;
 };
 
-export const Dropdown = <T extends object | string>(props: DropdownProps<T>) => {
+export const Dropdown = <T extends object | string>(
+  props: DropdownProps<T>
+) => {
   // deconstruct props object
   const {
     className,
@@ -41,7 +50,11 @@ export const Dropdown = <T extends object | string>(props: DropdownProps<T>) => 
     placement,
 
     // additional functions for positioning the menu
-    middleware: [offset(offsetValue), flip(), shift({ padding: shiftPaddingValue })],
+    middleware: [
+      offset(offsetValue),
+      flip(),
+      shift({ padding: shiftPaddingValue }),
+    ],
   });
 
   return (
@@ -60,7 +73,11 @@ export const Dropdown = <T extends object | string>(props: DropdownProps<T>) => 
                     ref={floating}
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10, transition: { duration: 0.25 } }}
+                    exit={{
+                      opacity: 0,
+                      y: -10,
+                      transition: { duration: 0.25 },
+                    }}
                     style={{ position: strategy, top: y ?? 0, left: x ?? 0 }}
                   >
                     <Menu.Items as="ul" static className={menuContainerClass()}>

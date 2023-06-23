@@ -1,84 +1,134 @@
 import { Card } from './Card';
-
-type Holidays = {
-  date: string;
-  title: string;
-};
-
-type Events = {
-  date: string;
-  title: string;
-};
-
-const regularHolidays: Array<Holidays> = [
-  { date: 'April 6', title: 'Maundy Thursday' },
-  { date: 'April 7', title: 'Good Friday' },
-  { date: 'April 10', title: 'Araw ng Kagitingan' },
-  { date: 'May 1', title: 'Labor Day' },
-  { date: 'June 12', title: 'Independence Day' },
-];
-
-const specialHolidays: Array<Holidays> = [
-  { date: 'February 25', title: 'EDSA People Power Revolution Day' },
-  { date: 'April 8', title: 'Black Saturday' },
-  { date: 'August 21', title: 'Ninoy Aquino Day' },
-];
-
-const events: Array<Events> = [
-  { date: 'February 1-31', title: 'Philippine Heart Month' },
-];
+import useSWR from 'swr';
+import fetcherEMS from '../../utils/fetcher/FetcherEMS';
+import { useEffect } from 'react';
+import { useHolidaysStore } from '../../store/holidays.store';
+import { isEmpty } from 'lodash';
+import dayjs from 'dayjs';
 
 export const Holidays = (): JSX.Element => {
+  // fetch data for list of holidays
+  const {
+    data: swrHolidays,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateHolidays,
+  } = useSWR('/holidays', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // holiday store
+  const { holidays, getHolidays, getHolidaysFail, getHolidaysSuccess } =
+    useHolidaysStore((state) => ({
+      holidays: state.holidays,
+      getHolidays: state.getHolidays,
+      getHolidaysSuccess: state.getHolidaysSuccess,
+      getHolidaysFail: state.getHolidaysFail,
+    }));
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoading) {
+      getHolidays(swrIsLoading);
+    }
+  }, [swrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrHolidays)) {
+      getHolidaysSuccess(swrIsLoading, swrHolidays.data);
+    }
+
+    if (!isEmpty(swrError)) {
+      getHolidaysFail(swrIsLoading, swrError.message);
+    }
+  }, [swrHolidays, swrError]);
+
   return (
-    <div className="w-full  flex static h-[24rem] rounded">
-      <Card title="Upcoming Holidays & Events" className="border-none rounded">
-        <div className="flex flex-col w-full h-full text-xs">
-          {/* Regular Holidays */}
-          <span className="text-gray-500"> Regular Holidays</span>
-          <div className="flex flex-col w-full px-2 py-1 rounded bg-blue-50">
-            {regularHolidays.slice(0, 5).map((holiday, index) => {
-              return (
-                <div key={index} className="flex gap-2">
-                  <div className="w-[30%]">• {holiday.date}</div>
-                  <div className="w-[70%]">{holiday.title}</div>
-                </div>
-              );
-            })}
-          </div>
-          <br />
+    <div className="flex w-full h-full border rounded-md shadow">
+      <Card
+        title="Upcoming Holidays"
+        className="overflow-y-hidden border-none rounded"
+      >
+        <div className="flex flex-col justify-between w-full min-h-max">
+          <div className="flex flex-col w-full gap-2 overflow-y-auto text-xs">
+            {/* Regular Holidays */}
 
-          {/* Special Holidays */}
-          <span className="text-gray-500"> Special non-working Holidays</span>
-          <div className="flex flex-col w-full px-2 py-2 rounded bg-blue-50">
-            {specialHolidays.slice(0, 5).map((holiday, index) => {
-              return (
-                <div key={index} className="flex gap-2">
-                  <div className="w-[30%]">• {holiday.date}</div>
-                  <div className="w-[70%]">{holiday.title}</div>
+            <div className="text-gray-500"> Regular Holidays</div>
+            <div className="flex flex-col w-full gap-1 px-2 py-1 rounded-lg bg-blue-50">
+              {!isEmpty(holidays) ? (
+                <>
+                  {holidays.map((holiday) => {
+                    const { holidayDate, id, name, type } = holiday;
+                    if (
+                      type === 'regular' &&
+                      dayjs().isBefore(
+                        dayjs(holidayDate).format('MM DD, YYYY')
+                      ) &&
+                      dayjs().isSame(
+                        dayjs(holidayDate).format('MM DD, YYYY'),
+                        'year'
+                      )
+                    ) {
+                      return (
+                        <div key={id} className="flex gap-2 px-2">
+                          <div className="w-[30%] ">
+                            {dayjs(holidayDate).format('MMMM D')}
+                          </div>
+                          <div className="w-[70%]">{name}</div>
+                        </div>
+                      );
+                    }
+                  })}
+                </>
+              ) : (
+                <div className="flex justify-center w-full h-full text-gray-400">
+                  -- No Data --
                 </div>
-              );
-            })}
-          </div>
-          <br />
+              )}
+            </div>
 
-          {/* Special Holidays */}
-          <span className="text-gray-500"> Events</span>
-          <div className="flex flex-col w-full px-2 py-2 rounded bg-blue-50">
-            {events.slice(0, 5).map((event, index) => {
-              return (
-                <div key={index} className="flex gap-2">
-                  <div className="w-[30%]">• {event.date}</div>
-                  <div className="w-[70%]">{event.title}</div>
+            {/* Special Holidays */}
+
+            <div className="text-gray-500"> Special non-working Holidays</div>
+            <div className="flex flex-col w-full gap-1 px-2 py-2 rounded-lg bg-blue-50">
+              {!isEmpty(holidays) ? (
+                holidays.map((holiday) => {
+                  const { holidayDate, id, name, type } = holiday;
+                  if (
+                    type === 'special' &&
+                    dayjs().isBefore(
+                      dayjs(holidayDate).format('MM DD, YYYY')
+                    ) &&
+                    dayjs().isSame(
+                      dayjs(holidayDate).format('MM DD, YYYY'),
+                      'year'
+                    )
+                  ) {
+                    return (
+                      <div key={id} className="flex gap-2 px-2 ">
+                        <div className="w-[30%] ">
+                          {dayjs(holidayDate).format('MMMM D')}
+                        </div>
+                        <div className="w-[70%] ">{name}</div>
+                      </div>
+                    );
+                  }
+                })
+              ) : (
+                <div className="flex justify-center w-full h-full text-gray-400">
+                  -- No Data --
                 </div>
-              );
-            })}
+              )}
+            </div>
           </div>
-        </div>
-        {/* Button */}
-        <div className="flex flex-col justify-end pt-2">
-          <div className="w-[16rem]">
+
+          {/* Button */}
+
+          <div className="flex flex-col mt-2">
             <button className="px-3 py-1 bg-blue-400 rounded">
-              <span className="text-xs text-white">View More →</span>
+              <div className="text-xs text-white">View More →</div>
             </button>
           </div>
         </div>

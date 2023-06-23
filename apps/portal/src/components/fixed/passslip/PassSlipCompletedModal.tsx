@@ -1,8 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import Link from 'next/link';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import { useRouter } from 'next/router';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -20,16 +22,21 @@ export const PassSlipCompletedModal = ({
   }));
 
   const router = useRouter();
+  const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
-      <Modal size={'lg'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1024 ? 'lg' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
-          <h3 className="font-semibold text-2xl text-gray-700">
+          <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Completed Pass Slip</span>
+              <span className="text-xl md:text-2xl">Completed Pass Slip</span>
               <button
-                className="hover:bg-slate-100 px-1 rounded-full"
+                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
               >
                 <HiX />
@@ -50,62 +57,60 @@ export const PassSlipCompletedModal = ({
 
               {passSlip.status === 'disapproved' ? (
                 <AlertNotification
-                  alertType="info"
+                  alertType="error"
                   notifMessage="Disapproved"
                   dismissible={false}
                 />
               ) : null}
 
-              <div className="flex gap-2 justify-between items-center">
-                <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
                   Date of Application:
                 </label>
 
-                <div className="w-96">
-                  <label className="text-slate-500 h-12 w-96  text-lg ">
+                <div className="w-auto sm:w-96">
+                  <label className="text-slate-500 h-12 w-96 text-md ">
                     {passSlip.dateOfApplication}
                   </label>
                 </div>
               </div>
 
-              <div className="flex gap-2 justify-between items-center">
-                <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
                   Nature of Business:
                 </label>
 
-                <div className="w-96">
-                  <label className="text-slate-500 h-12 w-96  text-lg ">
+                <div className="w-auto sm:w-96">
+                  <label className="text-slate-500 h-12 w-96  text-md ">
                     {passSlip.natureOfBusiness}
                   </label>
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-between items-center">
-                <label
-                  className={`${
-                    passSlip.natureOfBusiness === 'Official Business'
-                      ? 'text-slate-500 text-lg whitespace-nowrap font-medium'
-                      : 'hidden'
-                  }`}
-                >
-                  Mode of Transportation:
-                </label>
-                <div className="w-96">
-                  <label className="text-slate-500 h-12 w-96  text-lg ">
-                    {passSlip.obTransportation}
+              {passSlip.natureOfBusiness === 'Official Business' ? (
+                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center ">
+                  <label
+                    className={`text-slate-500 text-md whitespace-nowrap font-medium sm:w-80`}
+                  >
+                    Mode of Transportation:
                   </label>
+                  <div className="w-auto sm:w-96">
+                    <label className="text-slate-500 h-12 w-96  text-md ">
+                      {passSlip.obTransportation}
+                    </label>
+                  </div>
                 </div>
-              </div>
+              ) : null}
               <div
                 className={` flex flex-col gap-2
             `}
               >
-                <div className="flex gap-2 justify-between items-center">
-                  <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
                     Estimated Hours:
                   </label>
-                  <div className="w-96">
-                    <label className="text-slate-500 h-12 w-96  text-lg ">
+                  <div className="w-auto sm:w-96">
+                    <label className="text-slate-500 h-12 w-96  text-md ">
                       {passSlip.estimateHours}
                     </label>
                   </div>
@@ -115,12 +120,12 @@ export const PassSlipCompletedModal = ({
                 className={`flex flex-col gap-2
             `}
               >
-                <label className="text-slate-500 text-lg font-medium">
+                <label className="text-slate-500 text-md font-medium">
                   Purpose/Desination:
                 </label>
                 <textarea
                   className={
-                    'resize-none w-full p-2 rounded text-slate-500 text-lg border-slate-300'
+                    'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'
                   }
                   value={passSlip.purposeDestination}
                   rows={4}
@@ -133,14 +138,25 @@ export const PassSlipCompletedModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Link
-                href={`/${router.query.id}/pass-slip/${passSlip.id}`}
-                target={'_blank'}
-              >
-                <Button variant={'primary'} size={'md'} loading={false}>
-                  Print
+              {passSlip.status === 'approved' ? (
+                <Link
+                  href={`/${router.query.id}/pass-slip/${passSlip.id}`}
+                  target={'_blank'}
+                >
+                  <Button variant={'primary'} size={'md'} loading={false}>
+                    Print PDF
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  disabled
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                >
+                  Print PDF
                 </Button>
-              </Link>
+              )}
             </div>
           </div>
         </Modal.Footer>

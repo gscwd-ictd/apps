@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import React, { useContext, useEffect } from 'react';
 import { Page } from '../../modular/pages/Page';
 import { NextButton } from '../navigation/button/NextButton';

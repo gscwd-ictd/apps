@@ -207,8 +207,6 @@ export const DRModalSetting = (): JSX.Element => {
           ),
         ];
 
-        // console.log('Get Pool HERE: ', getPool)
-
         //loop through all drs
         newDRs.map((dr: DutyResponsibility, index: number) => {
           // set default state value for dr on select
@@ -217,7 +215,7 @@ export const DRModalSetting = (): JSX.Element => {
           // set default state value for dr on edit
           dr.onEdit = false;
 
-          // set default value state of sequenc number
+          // set default value state of sequence number
           dr.sequenceNo = index;
 
           // set default percentage to 0

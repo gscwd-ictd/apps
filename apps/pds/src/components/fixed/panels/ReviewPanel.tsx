@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CardPreview } from '../../modular/cards/CardPreview';
 import { CardContainer } from '../card/CardContainer';
 import { LabelFieldPreview } from '../card/LabelFieldPreview';
@@ -696,12 +696,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to) && isEmpty(yearGraduated)
+                                      (isEmpty(to.toString()) || to === null) &&
+                                      (isEmpty(yearGraduated.toString()) ||
+                                        yearGraduated === null)
                                         ? 'Present'
-                                        : !isEmpty(to) &&
-                                          !isEmpty(yearGraduated)
-                                        ? yearGraduated
-                                        : 'N/A'
+                                        : to
                                     }
                                   />
                                   <LabelFieldPreview
@@ -751,6 +750,7 @@ export default function ReviewPanel(): JSX.Element {
                                 yearGraduated,
                                 awards,
                               } = course;
+
                               return (
                                 <div
                                   key={courseIdx}
@@ -771,12 +771,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to) && isEmpty(yearGraduated)
+                                      (isEmpty(to.toString()) || to === null) &&
+                                      (isEmpty(yearGraduated.toString()) ||
+                                        yearGraduated === null)
                                         ? 'Present'
-                                        : !isEmpty(to) &&
-                                          !isEmpty(yearGraduated)
-                                        ? yearGraduated
-                                        : 'N/A'
+                                        : to
                                     }
                                   />
                                   <LabelFieldPreview
@@ -846,12 +845,11 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      isEmpty(to) && isEmpty(yearGraduated)
+                                      (isEmpty(to.toString()) || to === null) &&
+                                      (isEmpty(yearGraduated.toString()) ||
+                                        yearGraduated === null)
                                         ? 'Present'
-                                        : !isEmpty(to) &&
-                                          !isEmpty(yearGraduated)
-                                        ? yearGraduated
-                                        : 'N/A'
+                                        : to
                                     }
                                   />
                                   <LabelFieldPreview
@@ -897,8 +895,10 @@ export default function ReviewPanel(): JSX.Element {
                           examDateTo,
                           examPlace,
                           licenseNumber,
+                          examDate,
                           validity,
                         } = elig;
+
                         return (
                           <div
                             key={eligIdx}
@@ -914,11 +914,11 @@ export default function ReviewPanel(): JSX.Element {
                             />
                             <LabelFieldPreview
                               label="Exam Date From:"
-                              field={examDateFrom ? examDateFrom : 'N/A'}
+                              field={examDate.from ? examDate.from : 'N/A'}
                             />
                             <LabelFieldPreview
                               label="Exam Date To:"
-                              field={examDateTo ? examDateTo : 'N/A'}
+                              field={examDate.to ? examDate.to : 'N/A'}
                             />
                             <LabelFieldPreview
                               label="Place of Examination:"

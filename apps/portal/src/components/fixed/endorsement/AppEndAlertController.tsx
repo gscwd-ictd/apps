@@ -1,17 +1,26 @@
-import { useAppEndStore } from "../../../store/endorsement.store"
-import { AppEndAlertConfirmation } from "./AppEndAlertConfirmation"
-import { AppEndAlertSuccess } from "./AppEndAlertSuccess"
+import { useAppEndStore } from '../../../store/endorsement.store';
+import { AppEndAlertConfirmation } from './AppEndAlertConfirmation';
+import { AppEndAlertFail } from './AppEndAlertFail';
+import { AppEndAlertSuccess } from './AppEndAlertSuccess';
 
 type AppEndAlertControllerProps = {
-    page: number
-}
+  page: number;
+};
 
 export const AppEndAlertController = ({ page }: AppEndAlertControllerProps) => {
+  const selectedApplicants = useAppEndStore(
+    (state) => state.selectedApplicants
+  );
 
-    const selectedApplicants = useAppEndStore(state => state.selectedApplicants)
-
-    return (<div className="max-h-[90%]">
-        {page === 1 && <AppEndAlertConfirmation selectedApplicants={selectedApplicants.length} />}
-        {page === 2 && <AppEndAlertSuccess />}
-    </div>)
-}
+  return (
+    <div className="max-h-[90%]">
+      {page === 1 && (
+        <AppEndAlertConfirmation
+          selectedApplicants={selectedApplicants.length}
+        />
+      )}
+      {page === 2 && <AppEndAlertSuccess />}
+      {page === 3 && <AppEndAlertFail />}
+    </div>
+  );
+};

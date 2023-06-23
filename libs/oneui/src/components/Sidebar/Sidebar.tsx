@@ -80,13 +80,16 @@ const Item: FunctionComponent<ItemProps> = ({
   hasSubItem = false,
 }) => {
   const {
-    aside: { isCollapsed },
+    aside: { isCollapsed, isDarkMode },
   } = useContext(PageContentContext);
 
   return (
-    <li className={itemClass(className, selected)}>
+    <li className={itemClass(className, selected, hasSubItem)}>
       {!hasSubItem ? (
-        <Link href={path} className={linkClass(isCollapsed, selected)}>
+        <Link
+          href={path}
+          className={linkClass(isCollapsed, selected, isDarkMode)}
+        >
           {icon}
           <AnimatePresence initial={false}>
             {!isCollapsed && (
@@ -101,8 +104,14 @@ const Item: FunctionComponent<ItemProps> = ({
         </Link>
       ) : (
         <Accordion className="flex flex-col justify-center w-full">
-          <Accordion.Button className={linkClass(isCollapsed, selected)}>
-            <div className="flex w-full gap-5 text-center place-items-center">
+          <Accordion.Button
+            className={linkClass(isCollapsed, selected, isDarkMode)}
+          >
+            <div
+              className={`flex w-full ${
+                isCollapsed ? 'gap-0' : 'gap-5'
+              } pr-2 text-center place-items-center`}
+            >
               <span
                 className={`${
                   isCollapsed ? 'w-full' : 'w-[10%]'
@@ -110,34 +119,32 @@ const Item: FunctionComponent<ItemProps> = ({
               >
                 {icon}
               </span>
-              {!isCollapsed && (
+              {!isCollapsed ? (
                 <div className="flex justify-between w-full text-left place-items-center">
                   <motion.span
                     initial={{ opacity: 0, x: -100 }}
                     animate={{ opacity: 1, x: 0 }}
                   >
+                    <span className={`${isCollapsed ? '' : ''}`}>
+                      {display}
+                    </span>
+                  </motion.span>
+
+                  <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
+                </div>
+              ) : isCollapsed ? (
+                <>
+                  <motion.span
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    hidden
+                  >
                     {display}
                   </motion.span>
 
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    height={20}
-                    width={20}
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className=" ui-open:rotate-180 ui-open:transform ui-open:transition-all"
-                  >
-                    <polyline points="18 15 12 9 6 15"></polyline>
-                  </svg>
-                </div>
-              )}
-              {/* {!isCollapsed && (
-                
-              )} */}
+                  <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
+                </>
+              ) : null}
             </div>
           </Accordion.Button>
           <Accordion.Body>

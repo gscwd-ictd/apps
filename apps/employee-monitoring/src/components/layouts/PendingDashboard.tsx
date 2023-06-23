@@ -1,12 +1,13 @@
 import { CardMiniStats } from '../cards/CardMiniStats';
+import { CardPassSlipRequests } from '../cards/CardPassSlipRequests';
 
 export const PendingDashboard = () => {
   return (
-    <div className="w-full gap-5 sm:flex sm:flex-col lg:flex lg:flex-row">
+    <div className="w-full grid-cols-4 gap-5 sm:flex sm:flex-col lg:flex lg:flex-row">
       {/** Card Pending DTR */}
-      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
+      <div className="w-full h-[6rem] col-span-1">
         <CardMiniStats
-          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
+          className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -26,9 +27,9 @@ export const PendingDashboard = () => {
       </div>
 
       {/**Card Leave Applications */}
-      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
+      <div className="w-full h-[6rem] col-span-1">
         <CardMiniStats
-          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
+          className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -49,9 +50,9 @@ export const PendingDashboard = () => {
       </div>
 
       {/**Card Pending Overtime */}
-      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
+      <div className="w-full h-[6rem] col-span-1">
         <CardMiniStats
-          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
+          className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -71,9 +72,9 @@ export const PendingDashboard = () => {
       </div>
 
       {/**Card Pending Pass Slip */}
-      <div className="sm:w-full  lg:min-w-[12rem] lg:w-full h-[6rem]">
-        <CardMiniStats
-          className="rounded-md hover:bg-slate-200 hover:cursor-pointer"
+      <div className="w-full h-[6rem] col-span-1">
+        {/* <CardMiniStats
+          className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +91,8 @@ export const PendingDashboard = () => {
           }
           title="Pass Slip Requests"
           value={47}
-        />
+        /> */}
+        <CardPassSlipRequests />
       </div>
     </div>
   );

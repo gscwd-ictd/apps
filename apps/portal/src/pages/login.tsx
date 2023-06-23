@@ -137,13 +137,13 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col items-center justify-center pt-16 overflow-y-auto drop-shadow-xl">
-        <main className="w-[40rem] py-5  flex">
-          <div className="w-[25%] bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-slate-300 to-slate-600 rounded-tl-xl rounded-bl-xl ">
+        <main className="w-full md:w-[40rem] py-5  flex justify-center">
+          <div className="hidden md:block w-[25%] bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-slate-300 to-slate-600 rounded-tl-xl rounded-bl-xl ">
             <div className="h-full px-4 mt-48 text-2xl font-medium tracking-wider text-left text-white uppercase place-items-center drop-shadow-2xl">
               Employee Portal
             </div>
           </div>
-          <div className="w-[75%] px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl">
+          <div className="w-[95%] md:w-[75%] px-6 md:px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl">
             <header className="mb-8">
               <h1 className="mt-10 text-2xl font-medium text-gray-700">
                 Sign in

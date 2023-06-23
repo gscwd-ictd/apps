@@ -1,36 +1,56 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
+import { LeaveBenefitOptions } from '../../../../libs/utils/src/lib/types/leave-benefits.type';
 import {
-  Leave,
-  LeaveContents,
+  EmployeeLeave,
+  EmployeeLeaveDetails,
+  CalendarDate,
+  LeaveApplicationForm,
+  EmployeeLeaveList,
+  EmployeeLeaveCredits,
   LeaveId,
-  LeaveList,
-  LeaveType,
-} from '../types/leave.type';
+} from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 
 export type LeavesState = {
   leaves: {
-    onGoing: Array<Leave>;
-    completed: Array<Leave>;
+    onGoing: Array<EmployeeLeave>;
+    completed: Array<EmployeeLeave>;
   };
+  leaveCredits: {
+    vacation: number;
+    forced: number;
+    sick: number;
+  };
+  leaveId: string;
+  leaveIndividualDetail: EmployeeLeaveDetails;
+  unavailableDates: Array<CalendarDate>;
   response: {
-    postResponseApply: LeaveContents;
+    postResponseApply: LeaveApplicationForm;
     deleteResponseCancel: LeaveId;
   };
   loading: {
     loadingLeaves: boolean;
     loadingLeaveTypes: boolean;
     loadingResponse: boolean;
+    loadingLeaveCredits: boolean;
+    loadingUnavailableDates: boolean;
+    loadingIndividualLeave: boolean;
   };
   error: {
     errorLeaves: string;
     errorLeaveTypes: string;
     errorResponse: string;
+    errorLeaveCredits: string;
+    errorUnavailableDates: string;
+    errorIndividualLeave: string;
   };
   leaveDates: Array<string>;
-  leaveTypes: Array<LeaveType>;
+  leaveDateFrom: string;
+  leaveDateTo: string;
+  leaveTypes: Array<LeaveBenefitOptions>;
+  overlappingLeaveCount: number;
 
-  leaveIndividual: LeaveContents;
   applyLeaveModalIsOpen: boolean;
   pendingLeaveModalIsOpen: boolean;
   completedLeaveModalIsOpen: boolean;
@@ -38,26 +58,43 @@ export type LeavesState = {
   isGetLeaveLoading: boolean;
 
   setLeaveDates: (dates: Array<string>) => void;
+  setLeaveDateFrom: (date: string) => void;
+  setLeaveDateTo: (date: string) => void;
+  setLeaveId: (id: string) => void;
+  setOverlappingLeaveCount: (overlappingLeaveCount: number) => void;
 
   getLeaveList: (loading: boolean) => void;
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
 
   postLeave: () => void;
-  postLeaveSuccess: (response: LeaveContents) => void;
+  postLeaveSuccess: (response: LeaveApplicationForm) => void;
   postLeaveFail: (error: string) => void;
 
   getLeaveTypes: (loading: boolean) => void;
   getLeaveTypesSuccess: (loading: boolean, response) => void;
   getLeaveTypesFail: (loading: boolean, error: string) => void;
 
+  getLeaveCredits: (loading: boolean) => void;
+  getLeaveCreditsSuccess: (loading: boolean, response) => void;
+  getLeaveCreditsFail: (loading: boolean, error: string) => void;
+
+  getLeaveIndividualDetail: (loading: boolean) => void;
+  getLeaveIndividualDetailSuccess: (loading: boolean, response) => void;
+  getLeaveIndividualDetailFail: (loading: boolean, error: string) => void;
+
+  getUnavailableDates: (loading: boolean) => void;
+  getUnavailableSuccess: (loading: boolean, response) => void;
+  getUnavailableFail: (loading: boolean, error: string) => void;
+
   setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
   setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => void;
 
-  getLeaveIndividual: (leaveIndividual: LeaveContents) => void;
   setIsGetLeaveLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const useLeaveStore = create<LeavesState>()(
@@ -66,24 +103,40 @@ export const useLeaveStore = create<LeavesState>()(
       onGoing: [],
       completed: [],
     },
+    leaveCredits: {
+      vacation: 10.3,
+      forced: 5,
+      sick: 5.8,
+    },
+    leaveId: '',
+    leaveIndividualDetail: {} as EmployeeLeaveDetails,
+    unavailableDates: [] as Array<CalendarDate>,
+
     response: {
-      postResponseApply: {} as LeaveContents,
+      postResponseApply: {} as LeaveApplicationForm,
       deleteResponseCancel: {} as LeaveId,
     },
     loading: {
       loadingLeaves: false,
       loadingLeaveTypes: false,
       loadingResponse: false,
+      loadingLeaveCredits: false,
+      loadingUnavailableDates: false,
+      loadingIndividualLeave: false,
     },
     error: {
       errorLeaves: '',
       errorLeaveTypes: '',
       errorResponse: '',
+      errorLeaveCredits: '',
+      errorUnavailableDates: '',
+      errorIndividualLeave: '',
     },
-    leaveDates: [] as Array<string>,
-    leaveTypes: [] as Array<LeaveType>,
-
-    leaveIndividual: {} as LeaveContents,
+    leaveDates: [] as Array<string>, //store employee selected dates during application
+    leaveDateFrom: '',
+    leaveDateTo: '',
+    leaveTypes: [] as Array<LeaveBenefitOptions>,
+    overlappingLeaveCount: 0,
 
     //APPLY LEAVE MODAL
     applyLeaveModalIsOpen: false,
@@ -95,6 +148,22 @@ export const useLeaveStore = create<LeavesState>()(
 
     setLeaveDates: (leaveDates: Array<string>) => {
       set((state) => ({ ...state, leaveDates }));
+    },
+
+    setLeaveDateFrom: (leaveDateFrom: string) => {
+      set((state) => ({ ...state, leaveDateFrom }));
+    },
+
+    setLeaveDateTo: (leaveDateTo: string) => {
+      set((state) => ({ ...state, leaveDateTo }));
+    },
+
+    setLeaveId: (leaveId: string) => {
+      set((state) => ({ ...state, leaveId }));
+    },
+
+    setOverlappingLeaveCount: (overlappingLeaveCount: number) => {
+      set((state) => ({ ...state, overlappingLeaveCount }));
     },
 
     setIsGetLeaveLoading: (isGetLeaveLoading: boolean) => {
@@ -117,10 +186,6 @@ export const useLeaveStore = create<LeavesState>()(
       set((state) => ({ ...state, completedLeaveModalIsOpen }));
     },
 
-    getLeaveIndividual: (leaveIndividual: LeaveContents) => {
-      set((state) => ({ ...state, leaveIndividual }));
-    },
-
     //GET LEAVE ACTIONS
     getLeaveList: (loading: boolean) => {
       set((state) => ({
@@ -140,7 +205,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveListSuccess: (loading: boolean, response: Leave) => {
+    getLeaveListSuccess: (loading: boolean, response: EmployeeLeaveList) => {
       set((state) => ({
         ...state,
         leaves: {
@@ -174,7 +239,7 @@ export const useLeaveStore = create<LeavesState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveContents,
+          postResponseApply: {} as LeaveApplicationForm,
         },
         loading: {
           ...state.loading,
@@ -186,7 +251,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    postLeaveSuccess: (response: LeaveContents) => {
+    postLeaveSuccess: (response: LeaveApplicationForm) => {
       set((state) => ({
         ...state,
         response: {
@@ -230,7 +295,10 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveTypesSuccess: (loading: boolean, response: Array<LeaveType>) => {
+    getLeaveTypesSuccess: (
+      loading: boolean,
+      response: Array<LeaveBenefitOptions>
+    ) => {
       set((state) => ({
         ...state,
         leaveTypes: response,
@@ -250,6 +318,160 @@ export const useLeaveStore = create<LeavesState>()(
         error: {
           ...state.error,
           errorLeaveTypes: error,
+        },
+      }));
+    },
+
+    //GET LEAVE CREDIT ACTIONS
+    getLeaveCredits: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveCredits: {
+          ...state.leaveCredits,
+          vacation: null,
+          sick: null,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaveCredits: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveCredits: '',
+        },
+      }));
+    },
+    getLeaveCreditsSuccess: (
+      loading: boolean,
+      response: EmployeeLeaveCredits
+    ) => {
+      set((state) => ({
+        ...state,
+        leaves: {
+          ...state.leaves,
+          vacation: response.vacation,
+          sick: response.sick,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaveCredits: loading,
+        },
+      }));
+    },
+    getLeaveCreditsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingLeaveCredits: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveCredits: error,
+        },
+      }));
+    },
+
+    //GET CURRENT APPROVED/PENDING LEAVE DATES ACTIONS
+    getUnavailableDates: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        unavailableDates: {
+          ...state.unavailableDates,
+          unavailableDates: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingUnavailableDates: loading,
+        },
+        error: {
+          ...state.error,
+          errorUnavailableDates: '',
+        },
+      }));
+    },
+    getUnavailableSuccess: (
+      loading: boolean,
+      response: Array<CalendarDate>
+    ) => {
+      set((state) => ({
+        ...state,
+        unavailableDates: {
+          ...state.unavailableDates,
+          unavailableDates: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingUnavailableDates: loading,
+        },
+      }));
+    },
+    getUnavailableFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingUnavailableDates: loading,
+        },
+        error: {
+          ...state.error,
+          errorUnavailableDates: error,
+        },
+      }));
+    },
+
+    //GET LEAVE INDIVIDUAL DETAILS ACTIONS
+    getLeaveIndividualDetail: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveIndividualDetail: {} as EmployeeLeaveDetails,
+        loading: {
+          ...state.loading,
+          loadingIndividualLeave: loading,
+        },
+        error: {
+          ...state.error,
+          errorIndividualLeave: '',
+        },
+      }));
+    },
+    getLeaveIndividualDetailSuccess: (
+      loading: boolean,
+      response: EmployeeLeaveDetails
+    ) => {
+      set((state) => ({
+        ...state,
+        leaveIndividualDetail: response,
+        loading: {
+          ...state.loading,
+          loadingIndividualLeave: loading,
+        },
+      }));
+    },
+    getLeaveIndividualDetailFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingIndividualLeave: loading,
+        },
+        error: {
+          ...state.error,
+          errorIndividualLeave: error,
+        },
+      }));
+    },
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: {} as LeaveApplicationForm,
+          deleteResponseCancel: {} as LeaveId,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
         },
       }));
     },

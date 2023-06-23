@@ -17,6 +17,7 @@ type ToastTheme = 'light' | 'dark' | 'colored';
 type ToastNotificationProps = {
   toastType: ToastType;
   notifMessage: string;
+  hideProgressBar?: boolean;
 };
 
 type ToastOptions = {
@@ -48,6 +49,7 @@ const ToastDefaultOptions: ToastOptions = {
 export const ToastNotification: FunctionComponent<ToastNotificationProps> = ({
   toastType,
   notifMessage,
+  hideProgressBar = true,
 }) => {
   // Check the toast type
   useEffect(() => {
@@ -69,7 +71,7 @@ export const ToastNotification: FunctionComponent<ToastNotificationProps> = ({
       <ToastContainer
         position={ToastDefaultOptions.position}
         autoClose={ToastDefaultOptions.autoClose}
-        hideProgressBar={ToastDefaultOptions.hideProgressBar}
+        hideProgressBar={hideProgressBar}
         newestOnTop={ToastDefaultOptions.newestOnTop}
         closeOnClick={ToastDefaultOptions.closeOnClick}
         rtl={ToastDefaultOptions.rtl}

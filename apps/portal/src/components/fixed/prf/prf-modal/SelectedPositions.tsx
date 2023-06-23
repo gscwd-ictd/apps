@@ -33,7 +33,7 @@ const Selections: FunctionComponent<SelectionsProps> = ({ positions }) => {
   const setWithExam = usePrfStore((state) => state.setWithExam);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-[100%]">
       <div className="flex justify-end px-10 my-2">
         <Checkbox
           checkboxId="with-exam"

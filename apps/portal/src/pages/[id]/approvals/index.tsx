@@ -1,7 +1,6 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
-import { HiX } from 'react-icons/hi';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import { useEffect, useState } from 'react';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -13,40 +12,107 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 // import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { getUserDetails, withSession } from '../../../utils/helpers/session';
+import {
+  getUserDetails,
+  withCookieSession,
+  withSession,
+} from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { ApprovalsTabs } from '../../../../src/components/fixed/approvals/ApprovalsTabs';
 import { ApprovalsTabWindow } from '../../../../src/components/fixed/approvals/ApprovalsTabWindow';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
-import { ApprovalListController } from '../../../../src/components/fixed/approvals/ApprovalsListController';
+import useSWR from 'swr';
 import { ApprovalTypeSelect } from '../../../../src/components/fixed/approvals/ApprovalTypeSelect';
 import { employeeDummy } from '../../../../src/types/employee.type';
+import ApprovalsPendingLeaveModal from '../../../../src/components/fixed/approvals/ApprovalsPendingLeaveModal';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
+import ApprovalsPendingPassSlipModal from '../../../../src/components/fixed/approvals/ApprovalsPendingPassSlipModal';
+import ApprovalsCompletedPassSlipModal from '../../../../src/components/fixed/approvals/ApprovalsCompletedPassSlipModal';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function Approvals({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // get state for the modal
-  const modal = useApprovalStore((state) => state.modal);
+  const {
+    tab,
+    pendingLeaveModalIsOpen,
+    approvedLeaveModalIsOpen,
+    disapprovedLeaveModalIsOpen,
+    cancelledLeaveModalIsOpen,
 
-  // get loading state from store
-  const isLoading = useApprovalStore((state) => state.isLoading);
+    pendingPassSlipModalIsOpen,
+    approvedPassSlipModalIsOpen,
+    disapprovedPassSlipModalIsOpen,
+    cancelledPassSlipModalIsOpen,
 
-  // set tab state
-  const tab = useApprovalStore((state) => state.tab);
+    patchResponsePassSlip,
+    postResponseLeave,
+    loadingPassSlip,
+    loadingLeave,
+    errorPassSlip,
+    errorLeave,
 
-  // set loading state from store
-  const setIsLoading = useApprovalStore((state) => state.setIsLoading);
+    setPendingLeaveModalIsOpen,
+    setApprovedLeaveModalIsOpen,
+    setDisapprovedLeaveModalIsOpen,
+    setCancelledLeaveModalIsOpen,
 
-  // set state for the modal
-  const setModal = useApprovalStore((state) => state.setModal);
+    setPendingPassSlipModalIsOpen,
+    setApprovedPassSlipModalIsOpen,
+    setDisapprovedPassSlipModalIsOpen,
+    setCancelledPassSlipModalIsOpen,
 
-  const setAction = useApprovalStore((state) => state.setAction);
-  const action = useApprovalStore((state) => state.action);
+    getPassSlipList,
+    getPassSlipListSuccess,
+    getPassSlipListFail,
+
+    getLeaveList,
+    getLeaveListSuccess,
+    getLeaveListFail,
+    emptyResponseAndError,
+  } = useApprovalStore((state) => ({
+    tab: state.tab,
+    pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
+    approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
+    disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
+    cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
+
+    pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
+    approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
+    disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
+    cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
+
+    patchResponsePassSlip: state.response.patchResponsePassSlip,
+    postResponseLeave: state.response.postResponseLeave,
+    loadingPassSlip: state.loading.loadingPassSlips,
+    loadingLeave: state.loading.loadingLeaves,
+    errorPassSlip: state.error.errorPassSlips,
+    errorLeave: state.error.errorLeaves,
+
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
+    setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
+    setCancelledLeaveModalIsOpen: state.setCancelledLeaveModalIsOpen,
+
+    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
+    setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
+    setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
+
+    getPassSlipList: state.getPassSlipList,
+    getPassSlipListSuccess: state.getPassSlipListSuccess,
+    getPassSlipListFail: state.getPassSlipListFail,
+
+    getLeaveList: state.getLeaveList,
+    getLeaveListSuccess: state.getLeaveListSuccess,
+    getLeaveListFail: state.getLeaveListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
+  }));
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
@@ -55,111 +121,211 @@ export default function Approvals({
   // set state for employee store
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
-  // open the modal
-  const openModal = () => {
-    if (!modal.isOpen) {
-      setAction('Apply Action');
-      setModal({ ...modal, page: 1, isOpen: true });
-    }
-  };
-
-  // cancel action for modal
-  const modalCancel = async () => {
-    setModal({ ...modal, isOpen: false });
-    setIsLoading(true);
-  };
-
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
-    setIsLoading(true);
-    console.log(employeeDetails);
-  }, [employeeDetails, setEmployeeDetails, setIsLoading]);
+  }, [employeeDetails, setEmployeeDetails]);
+
+  // cancel action for Pending Leave Application Modal
+  const closePendingLeaveModal = async () => {
+    setPendingLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Approved Leave Application Modal
+  const closeApprovedLeaveModal = async () => {
+    setApprovedLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Dispproved Leave Application Modal
+  const closeDisapprovedLeaveModal = async () => {
+    setDisapprovedLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Pending Pass Slip Application Modal
+  const closePendingPassSlipModal = async () => {
+    setPendingPassSlipModalIsOpen(false);
+  };
+
+  // cancel action for Approved Pass Slip Application Modal
+  const closeApprovedPassSlipModal = async () => {
+    setApprovedPassSlipModalIsOpen(false);
+  };
+
+  // cancel action for Dispproved Pass Slip Application Modal
+  const closeDisapprovedPassSlipModal = async () => {
+    setDisapprovedPassSlipModalIsOpen(false);
+  };
+
+  // cancel action for Cancelled Pass Slip Application Modal
+  const closeCancelledPassSlipModal = async () => {
+    setCancelledPassSlipModalIsOpen(false);
+  };
+
+  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/supervisor/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPassSlips,
+    isLoading: swrPassSlipIsLoading,
+    error: swrPassSlipError,
+    mutate: mutatePassSlips,
+  } = useSWR(passSlipUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPassSlipIsLoading) {
+      getPassSlipList(swrPassSlipIsLoading);
+    }
+  }, [swrPassSlipIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPassSlips)) {
+      getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
+    }
+
+    if (!isEmpty(swrPassSlipError)) {
+      getPassSlipListFail(swrPassSlipIsLoading, swrPassSlipError.message);
+    }
+  }, [swrPassSlips, swrPassSlipError]);
+
+  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/${employeeDetails.employmentDetails.userId}`;
+
+  const {
+    data: swrLeaves,
+    isLoading: swrLeaveIsLoading,
+    error: swrLeaveError,
+    mutate: mutateLeaves,
+  } = useSWR(leaveUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveIsLoading) {
+      getLeaveList(swrLeaveIsLoading);
+    }
+  }, [swrLeaveIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaves)) {
+      getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
+    }
+
+    if (!isEmpty(swrLeaveError)) {
+      getLeaveListFail(swrLeaveIsLoading, swrLeaveError.message);
+    }
+  }, [swrLeaves, swrLeaveError]);
 
   useEffect(() => {
-    if (isLoading) {
+    if (!isEmpty(patchResponsePassSlip)) {
+      mutatePassSlips();
       setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
+        emptyResponseAndError();
+      }, 5000);
     }
-  }, [isLoading, setIsLoading]);
+    if (!isEmpty(postResponseLeave)) {
+      mutateLeaves();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [patchResponsePassSlip, postResponseLeave]);
 
-  //modal action button
-  // const modalAction = () => (
-  //   <PDFViewer>
-  //     {/* <PassSlipPdf /> */}
-  //   </PDFViewer>
-  // );
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
 
   return (
     <>
       <>
+        {/* Pass Slip List Load Failed Error */}
+        {!isEmpty(patchResponsePassSlip) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage={`Pass Slip action submitted.`}
+          />
+        ) : null}
+
+        {/* Pass Slip List Load Failed Error */}
+        {!isEmpty(errorPassSlip) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`}
+          />
+        ) : null}
+
+        {/* Leave List Load Failed Error */}
+        {!isEmpty(errorLeave) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorLeave}: Failed to load Leaves.`}
+          />
+        ) : null}
+
         <EmployeeProvider employeeData={employee}>
           <Head>
             <title>Approvals</title>
           </Head>
 
-          <SideNav />
+          <SideNav navDetails={navDetails} />
 
-          <Modal size={'xl'} open={modal.isOpen} setOpen={openModal}>
-            <Modal.Header>
-              <h3 className="font-semibold text-2xl text-gray-700">
-                <div className="px-5 flex justify-between">
-                  <span>{modal.title}</span>
-                  <button
-                    className="hover:bg-slate-100 px-1 rounded-full"
-                    onClick={modalCancel}
-                  >
-                    <HiX />
-                  </button>
-                </div>
-              </h3>
-            </Modal.Header>
-            <Modal.Body>
-              <ApprovalListController page={modal.page} />
-            </Modal.Body>
-            <Modal.Footer>
-              <div className="flex justify-end gap-2">
-                {/* <div className="flex flex-row">
-                  <Button
-                    variant={'primary'}
-                    size={'md'}
-                    loading={false}
-                    onClick={modalCancel}
-                    className="w-16"
-                  >
-                    {'Exit'}
-                  </Button>
-                </div> */}
+          {/* Pending Leave Approval Modal */}
+          <ApprovalsPendingLeaveModal
+            modalState={pendingLeaveModalIsOpen}
+            setModalState={setPendingLeaveModalIsOpen}
+            closeModalAction={closePendingLeaveModal}
+          />
 
-                <div className="min-w-[6rem] max-w-auto">
-                  <Button variant={'primary'} size={'md'} loading={false}>
-                    {action}
-                  </Button>
+          {/* Pending Pass Slip For Approval Modal */}
+          <ApprovalsPendingPassSlipModal
+            modalState={pendingPassSlipModalIsOpen}
+            setModalState={setPendingPassSlipModalIsOpen}
+            closeModalAction={closePendingPassSlipModal}
+          />
 
-                  {/* <Link
-                    href={`/${router.query.id}/pass-slip/${employeeDetail.employmentDetails.userId}`}
-                    target={'_blank'}
-                    className={`${modal.page == 3 ? '' : 'hidden'}`}
-                  >
-                    <Button variant={'primary'} size={'md'} loading={false}>
-                      View
-                    </Button>
-                  </Link> */}
-                </div>
-              </div>
-            </Modal.Footer>
-          </Modal>
+          {/* Pending Pass Slip Approved/Disapproved/Cancelled Modal */}
+          <ApprovalsCompletedPassSlipModal
+            modalState={approvedPassSlipModalIsOpen}
+            setModalState={setApprovedPassSlipModalIsOpen}
+            closeModalAction={closeApprovedPassSlipModal}
+          />
+
+          <ApprovalsCompletedPassSlipModal
+            modalState={disapprovedPassSlipModalIsOpen}
+            setModalState={setDisapprovedPassSlipModalIsOpen}
+            closeModalAction={closeDisapprovedPassSlipModal}
+          />
+
+          <ApprovalsCompletedPassSlipModal
+            modalState={cancelledPassSlipModalIsOpen}
+            setModalState={setCancelledPassSlipModalIsOpen}
+            closeModalAction={closeCancelledPassSlipModal}
+          />
 
           <MainContainer>
-            <div className="w-full h-full px-32">
+            <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Approvals"
                 subtitle="Approve Employee Pass Slips & Leaves"
               >
                 <ApprovalTypeSelect />
               </ContentHeader>
-              {isLoading ? (
+              {loadingPassSlip && loadingLeave ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}
@@ -172,13 +338,13 @@ export default function Approvals({
               ) : (
                 <ContentBody>
                   <>
-                    <div className="w-full flex">
-                      <div className="w-[58rem]">
+                    <div className={`w-full flex lg:flex-row flex-col`}>
+                      <div className={`lg:w-[58rem] w-full`}>
                         <ApprovalsTabs tab={tab} />
                       </div>
                       <div className="w-full">
                         <ApprovalsTabWindow
-                          employeeId={employeeDummy.employmentDetails.userId}
+                          employeeId={employeeDetails.employmentDetails.userId}
                         />
                       </div>
                     </div>
@@ -193,10 +359,18 @@ export default function Approvals({
   );
 }
 
-export const getServerSideProps: GetServerSideProps =
-  // withSession
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
+
+//   return { props: { employeeDetails } };
+// };
+
+export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDummy } };
-  };
+    return { props: { employeeDetails } };
+  }
+);

@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Alert } from '@gscwd-apps/oneui';
 import { useAlertSuccessStore } from 'apps/portal/src/store/alert.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ChevronDownIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import * as Popover from '@radix-ui/react-popover';
 
 type SelectOption = {
   label: string;
@@ -105,91 +106,107 @@ export function MySelectList({
 
   return (
     <div className="flex flex-col w-full">
-      <label htmlFor={id} className="text-xs text-gray-700">
+      <label
+        htmlFor={id}
+        className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800"
+      >
         {label}
       </label>
 
-      <div
-        id={id}
-        ref={containerRef}
-        onBlur={() => setIsOpen(false)}
-        onClick={() => setIsOpen((prev) => !prev)}
-        tabIndex={0}
-        className="flex hover:cursor-pointer relative w-full border border-gray-300/90 rounded min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
-      >
-        <span className="text-xs text-gray-700 ">
-          {multiple
-            ? value
-                .sort((a, b) => (a.value > b.value ? 1 : -1))
-                .map((v) => (
-                  <button
-                    className="px-2 "
-                    key={v.value}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      selectOption(v);
-                    }}
-                  >
-                    <div className="flex items-center gap-1 p-1 px-2 text-xs text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-400 border-gray-300/90">
-                      {v.label}
-                      <span className="flex text-sm text-white">&times;</span>
-                    </div>
-                  </button>
-                ))
-            : multiple === false
-            ? value.label
-            : null}
-        </span>
-        <div className="flex items-center gap-2">
-          <button
-            className="flex px-2 text-xl text-gray-500 rounded hover:text-white hover:bg-red-400"
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              clearOptions();
-            }}
+      <Popover.Root>
+        <Popover.Trigger>
+          <div
+            id={id}
+            ref={containerRef}
+            tabIndex={0}
+            className="flex relative w-full bg-gray-50 border border-gray-300/90 rounded-lg min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
           >
-            &times;
-          </button>
-          <span className="px-2 font-light text-gray-500">|</span>
-          <span
-            className={`text-gray-600 hover:cursor-pointer px-2 hover:text-gray-800 ${
-              isOpen ? 'rotate-180 transition-all' : ''
-            }`}
-          >
-            <ChevronDownIcon size={20} />
-          </span>
-        </div>
-        <ul
-          className={`${
-            isOpen ? 'block' : 'hidden'
-          } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
+            <span className="flex text-xs text-left text-gray-700 ">
+              {multiple
+                ? value
+                    .sort((a, b) => (a.value > b.value ? 1 : -1))
+                    .map((v) => (
+                      <span
+                        className="flex"
+                        key={v.value}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          selectOption(v);
+                        }}
+                      >
+                        <div className="flex items-center gap-1 py-0.5 px-2 text-xs text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-400 border-gray-300/90">
+                          {v.label}
+                          <span className="flex text-sm text-white">
+                            &times;
+                          </span>
+                        </div>
+                      </span>
+                    ))
+                : multiple === false
+                ? value.label
+                : null}
+            </span>
+            <div className="flex items-center gap-2">
+              <div
+                className="flex px-2 text-xl text-gray-500 rounded hover:text-white hover:bg-red-400"
+                // type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearOptions();
+                }}
+              >
+                &times;
+              </div>
+              <span className="px-2 font-light text-gray-500">|</span>
+              <span
+                className={`text-gray-600 hover:cursor-pointer px-2 hover:text-gray-800 ${
+                  isOpen ? 'rotate-180 transition-all' : ''
+                }`}
+              >
+                <ChevronDownIcon size={20} type={undefined} />
+              </span>
+            </div>
+          </div>
+        </Popover.Trigger>
+
+        <Popover.Content
+          sideOffset={5}
+          avoidCollisions={true}
+          style={{ width: 'var(--radix-popover-trigger-width)' }}
         >
-          {options.map((option, index) => (
-            <li
-              onClick={(e) => {
-                e.stopPropagation();
-                selectOption(option);
-              }}
-              key={option.value}
-              onMouseEnter={() => setHighlightedIndex(index)}
-              className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
-                isOptionSelected(option) && index === highlightedIndex
-                  ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-400 hover hover:cursor-grab '
-                  : !isOptionSelected(option) && index === highlightedIndex
-                  ? 'hover:bg-blue-600 hover:text-white'
-                  : isOptionSelected(option) && index !== highlightedIndex
-                  ? 'bg-blue-100 text-gray-500'
-                  : 'text-gray-700'
-              }
+          {/* <ul
+            className={`${
+              isOpen ? 'block' : 'hidden'
+            } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
+          > */}
+          <ul className="border  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full">
+            {options.map((option, index) => (
+              <li
+                onClick={(e) => {
+                  e.stopPropagation();
+                  selectOption(option);
+                }}
+                key={option.value}
+                onMouseEnter={() => setHighlightedIndex(index)}
+                className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
+                  isOptionSelected(option) && index === highlightedIndex
+                    ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-400 hover hover:cursor-grab '
+                    : !isOptionSelected(option) && index === highlightedIndex
+                    ? 'hover:bg-blue-600 hover:text-white'
+                    : isOptionSelected(option) && index !== highlightedIndex
+                    ? 'bg-blue-100 text-gray-500'
+                    : 'text-gray-700'
+                }
           
               `}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
-      </div>
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+        </Popover.Content>
+      </Popover.Root>
     </div>
   );
 }

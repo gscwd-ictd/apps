@@ -9,32 +9,38 @@ export const sidebarClass = (
 
 export const itemClass = (
   classnames: string | undefined,
-  selected: boolean | undefined
+  selected: boolean | undefined,
+  hasSubItem: boolean | undefined
 ) => {
   return cls(
     classnames,
-    'w-full border-l-4 duration-100 ease-in-out transition-all',
+    'border-l-4 border-transparent w-full  duration-100 ease-in-out transition-all',
     {
-      'border-l-transparent': !selected,
-      'border-l-cyan-500 bg-slate-700/50': selected,
+      'bg-sky-400/40': selected && !hasSubItem,
+      'bg-sky-800/40': selected && hasSubItem,
     }
   );
 };
 
 export const linkClass = (
   collapsed: boolean,
-  selected: boolean | undefined
+  selected: boolean | undefined,
+  isDarkMode: boolean | undefined
 ) => {
   return cls(
-    'flex items-center hover:text-slate-50  font-medium py-3 duration-100 ease-in-out transition-all',
+    'flex items-center   font-medium py-3 duration-100 ease-in-out transition-all',
     {
-      'justify-center': collapsed,
+      'justify-center hover:pl-1': collapsed,
 
       'pl-4 gap-5': !collapsed,
 
-      'text-slate-300/70': !selected,
+      'text-slate-300/70 hover:text-slate-50': !selected && isDarkMode,
 
-      'text-slate-200': selected,
+      'text-slate-200 hover:text-slate-50': selected && isDarkMode,
+
+      'text-slate-800 hover:text-slate-900': !selected && !isDarkMode,
+
+      'text-slate-600 hover:text-slate-900': selected && !isDarkMode,
     }
   );
 };

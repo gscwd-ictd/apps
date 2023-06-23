@@ -16,7 +16,7 @@ export * from './components/Wrappers/Main';
 export * from './components/Wrappers/Nav';
 export * from './components/Wrappers/PageContent';
 export * from './components/Tables/DataTable';
-export * from './components/Tables/DataTableHrms';
 export * from './components/Spinner/LoadingSpinner';
 export * from './components/ToastNotification/ToastNotification';
 export * from './components/AlertNotification/AlertNotification';
+export * from './components/OtpModal';

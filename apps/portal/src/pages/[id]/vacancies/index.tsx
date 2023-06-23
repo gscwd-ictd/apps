@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import axios from 'axios';
 import {
   GetServerSideProps,
@@ -5,9 +6,9 @@ import {
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiNewspaper, HiX } from 'react-icons/hi';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import {
@@ -24,20 +25,27 @@ import {
 import {
   getUserDetails,
   withCookieSession,
-  withSession,
 } from '../../../utils/helpers/session';
 import { isEmpty } from 'lodash';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Button, Modal } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  Modal,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsPanel';
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
+import { employeeDummy } from '../../../../src/types/employee.type';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function Vacancies({
   data,
   employeeId,
+  employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [messageContent, setMessageContent] = useState<VacancyDetails>();
   const [mailMessage, setMailMessage] = useState<string>('');
@@ -58,6 +66,40 @@ export default function Vacancies({
   const withRelevantExperience = useWorkExpStore(
     (state) => state.withRelevantExperience
   );
+
+  const {
+    errorJobOpening,
+    errorIfApplied,
+    errorWorkExperience,
+    errorApplyJob,
+    errorCaptcha,
+    errorMessage,
+    responseApply,
+
+    setErrorJobOpening,
+    setErrorWorkExperience,
+    setErrorApplyJob,
+    setErrorCaptcha,
+    setErrorMessage,
+    setResponseApply,
+    emptyResponseAndError,
+  } = useWorkExpStore((state) => ({
+    errorJobOpening: state.error.errorJobOpening,
+    errorIfApplied: state.error.errorIfApplied,
+    errorWorkExperience: state.error.errorWorkExperience,
+    errorApplyJob: state.error.errorApplyJob,
+    errorCaptcha: state.error.errorCaptcha,
+    errorMessage: state.error.errorMessage,
+    responseApply: state.response.responseApplyJob,
+
+    setErrorJobOpening: state.setErrorJobOpening,
+    setErrorWorkExperience: state.setErrorWorkExperience,
+    setErrorApplyJob: state.setErrorApplyJob,
+    setErrorCaptcha: state.setErrorCaptcha,
+    setErrorMessage: state.setErrorMessage,
+    setResponseApply: state.setResponseApply,
+    emptyResponseAndError: state.emptyResponseAndError,
+  }));
 
   // set state for handling modal page
   const [modal, setModal] = useState({
@@ -80,10 +122,12 @@ export default function Vacancies({
     setIsMessageOpen(true);
 
     const jobOpeningDesc = await getJobOpeningDetails(vacancies.vppId);
+
     if (jobOpeningDesc) {
       setJobDetails(jobOpeningDesc);
       if (jobOpeningDesc.error) {
-        toast.error(jobOpeningDesc.error + '');
+        setErrorJobOpening(jobOpeningDesc.error + '');
+        // toast.error(jobOpeningDesc.error + '');
       }
     }
 
@@ -98,9 +142,11 @@ export default function Vacancies({
 
   const handleWorkExperience = async (employeeId: string) => {
     const data = await getWorkExp(employeeId);
+
     if (data) {
       if (data.error) {
-        toast.error(data.error + ' Error');
+        setErrorWorkExperience(data.error + ' Error');
+        // toast.error(data.error + ' Error');
       } else {
         setWorkExperience(data);
       }
@@ -122,6 +168,13 @@ export default function Vacancies({
       resetExperience();
     }
     if (e == 2) {
+      setResponseApply(null);
+      setErrorJobOpening(null);
+      setErrorWorkExperience(null);
+      setErrorApplyJob(null);
+      setErrorCaptcha(null);
+      setErrorMessage(null);
+      setPassword('');
       handleWorkExperience(employeeId);
       setPwdArray([]);
     }
@@ -130,25 +183,40 @@ export default function Vacancies({
   // cancel action for modal
   const modalCancel = async () => {
     setModal({ ...modal, isOpen: false });
+    setResponseApply(null);
+    setErrorJobOpening(null);
+    setErrorWorkExperience(null);
+    setErrorApplyJob(null);
+    setErrorCaptcha(null);
+    setErrorMessage(null);
+    setPassword('');
   };
 
   // set modal main modal action (confirm)
   const modalAction = async () => {
-    if (!messageContent) {
-      setIsCaptchaError(true);
-      setWiggleEffect(true);
-      toast.error('Failed to load message contents!');
-    } else if (
-      password != captchaPassword ||
-      password == '' ||
-      captchaPassword == ''
-    ) {
-      setIsCaptchaError(true);
-      setWiggleEffect(true);
-      toast.error('Incorrect Captcha!');
-    } else {
-      completeApplication();
-    }
+    setResponseApply(null);
+    setErrorJobOpening(null);
+    setErrorWorkExperience(null);
+    setErrorApplyJob(null);
+    setErrorCaptcha(null);
+    setErrorMessage(null);
+    setTimeout(() => {
+      if (!messageContent) {
+        setIsCaptchaError(true);
+        setWiggleEffect(true);
+        setErrorMessage('Failed to load message contents!');
+      } else if (
+        password != captchaPassword ||
+        password == '' ||
+        captchaPassword == ''
+      ) {
+        setIsCaptchaError(true);
+        setWiggleEffect(true);
+        setErrorCaptcha('Incorrect Captcha!');
+      } else {
+        completeApplication();
+      }
+    }, 100);
   };
 
   // complete appilcation
@@ -162,16 +230,22 @@ export default function Vacancies({
     if (data && data.internalApplicant?.applicantStatus == 'For review') {
       setIsApplied(true);
       setIsCaptchaError(false);
-      toast.success('Application Successful!');
+      setResponseApply('Application Successful!');
       changeModalPage(1);
-      console.log(data);
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
     } else {
-      toast.error(data.error.response.data.message);
+      setErrorApplyJob(data.error.response.data.message);
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   };
 
   // generate captcha
   const getCaptcha = () => {
+    setPassword('');
     const data = GenerateCaptcha();
     if (data) {
       setCaptchaPassword(data.pwd);
@@ -186,8 +260,69 @@ export default function Vacancies({
     }
   };
 
+  const { windowWidth } = UseWindowDimensions();
+
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
+      {
+        //error response from POST if tried to POST with empty supervisor/office
+        !isEmpty(errorApplyJob) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorApplyJob}`}
+          />
+        ) : null
+      }
+
+      {!isEmpty(errorIfApplied) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorIfApplied}`}
+        />
+      ) : null}
+
+      {!isEmpty(errorWorkExperience) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorWorkExperience}`}
+        />
+      ) : null}
+
+      {!isEmpty(errorJobOpening) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorJobOpening}`}
+        />
+      ) : null}
+
+      {!isEmpty(errorCaptcha) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorCaptcha}`} />
+      ) : null}
+
+      {!isEmpty(errorMessage) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorMessage}`} />
+      ) : null}
+
+      {!isEmpty(responseApply) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage={`${responseApply}`}
+        />
+      ) : null}
+
       {data && (
         <div>
           <Head>
@@ -195,21 +330,21 @@ export default function Vacancies({
           </Head>
 
           <Modal
-            size={'xl'}
+            size={`${windowWidth > 768 ? 'xl' : 'full'}`}
             open={modal.isOpen}
             setOpen={() => setModal({ ...modal })}
           >
             <Modal.Header>
               <div className="flex items-start justify-between px-2">
                 <div className="flex flex-col">
-                  <label className="text-2xl font-semibold text-gray-700">
+                  <label className="text-xl font-semibold text-gray-700 md:text-2xl">
                     {messageContent?.positionTitle}
                   </label>
-                  <p>{messageContent?.placeOfAssignment}</p>
+                  <p className="text-md">{messageContent?.placeOfAssignment}</p>
                 </div>
 
                 <button
-                  className="h-8 px-1 text-2xl rounded-full hover:bg-slate-100"
+                  className="h-8 px-1 text-xl rounded-full outline-slate-100 outline-8 hover:bg-slate-100"
                   onClick={modalCancel}
                 >
                   <HiX />
@@ -218,6 +353,14 @@ export default function Vacancies({
             </Modal.Header>
 
             <Modal.Body>
+              {isApplied || hasApplied ? (
+                <AlertNotification
+                  alertType="info"
+                  notifMessage="You have already applied for this position."
+                  dismissible={false}
+                />
+              ) : null}
+
               <VacancyModalController
                 page={modal.page}
                 dataJobOpening={jobDetails}
@@ -225,19 +368,12 @@ export default function Vacancies({
               />
             </Modal.Body>
 
-            <Modal.Footer>
-              <div className="flex flex-col w-full">
+            <Modal.Footer
+              className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}
+            >
+              <div className="flex flex-col justify-center w-full h-full">
                 {modal.page === 1 ? (
                   <div className="flex flex-col items-end w-full">
-                    <div
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'bg-green-500 p-2 text-white rounded w-full text-center'
-                          : 'hidden'
-                      }`}
-                    >
-                      <label>You have applied for this position.</label>
-                    </div>
                     <Button
                       className={`${
                         isApplied || hasApplied ? 'hidden' : 'h-10'
@@ -252,53 +388,36 @@ export default function Vacancies({
                     <div
                       className={`${
                         isApplied || hasApplied
-                          ? 'bg-green-500 p-2 text-white rounded w-full text-center'
-                          : 'hidden'
-                      }`}
-                    >
-                      <label>You have applied for this position.</label>
-                    </div>
-
-                    <div
-                      className={`${
-                        isApplied || hasApplied
                           ? 'hidden'
-                          : 'w-full h-10 flex flex-row gap-3 justify-between'
+                          : 'w-full h-10 flex flex-row gap-3 justify-between items-center'
                       }`}
                     >
-                      <div className="flex flex-row gap-2">
-                        <Button onClick={(e) => changeModalPage(1)}>
-                          Back
-                        </Button>
-                      </div>
+                      <Button onClick={(e) => changeModalPage(1)}>Back</Button>
+
                       <div
                         className={`${
                           isApplied || hasApplied
                             ? 'hidden'
-                            : 'flex justify-start items-center text-xs text-red-600'
+                            : 'hidden lg:flex justify-start items-center text-xs text-red-600'
                         }`}
                       >
                         Warning: Going back or closing the window will reset
                         your entries.
                       </div>
-                      {/* <div
-                        className={`${
-                          isApplied || hasApplied
-                            ? 'hidden'
-                            : 'flex justify-end items-center text-xs'
-                        }`}
-                      >
-                        Generate and enter the correct Captcha to apply.
-                      </div> */}
-                      <div className="flex flex-row justify-end gap-2">
-                        <Button variant="danger" onClick={getCaptcha}>
+
+                      <div className="flex flex-col justify-end gap-2 w-36 md:w-auto md:flex-row">
+                        <Button
+                          variant="danger"
+                          onClick={getCaptcha}
+                          size={`${windowWidth > 768 ? 'md' : 'sm'}`}
+                        >
                           Generate Captcha
                         </Button>
                         {/* captcha */}
                         <div
                           className={`${
                             pwdArray ? '' : 'animate-pulse'
-                          } select-none h-full  px-4 transition-all duration-150 bg-slate-200 text-xl flex flex-row justify-center items-center gap-1`}
+                          } select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex lex-rowf justify-center items-center gap-1`}
                         >
                           <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
                             {pwdArray && pwdArray[0]}
@@ -321,7 +440,7 @@ export default function Vacancies({
                         </div>
                         <input
                           type="text"
-                          defaultValue=""
+                          value={password}
                           placeholder="Enter Captcha"
                           className={`${
                             wiggleEffect && 'animate-shake border-red-600'
@@ -329,123 +448,26 @@ export default function Vacancies({
                             isCaptchaError
                               ? 'border-red-600'
                               : 'border-stone-200'
-                          }  w-32 border text-xs`}
+                          }  md:w-28 border text-xs`}
                           onAnimationEnd={() => setWiggleEffect(false)}
                           onChange={(e) =>
                             handlePassword(e.target.value as unknown as string)
                           }
                         />
-                        <Button onClick={modalAction}>Apply</Button>
                       </div>
+                      <Button onClick={modalAction}>Apply</Button>
                     </div>
                   </div>
-                ) : (
-                  <div className="flex flex-col items-end w-full">
-                    <label
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'hidden'
-                          : 'pt-2 pb-2 right-0 pr-12'
-                      }`}
-                    >
-                      Generate and enter the correct Captcha to apply.
-                    </label>
-
-                    <div
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'bg-green-500 p-2 text-white rounded w-full text-center'
-                          : 'hidden'
-                      }`}
-                    >
-                      <label>You have applied for this position.</label>
-                    </div>
-
-                    <div
-                      className={`${
-                        isApplied || hasApplied
-                          ? 'hidden'
-                          : 'w-full h-10 flex flex-row gap-2 justify-between'
-                      }`}
-                    >
-                      <div className="flex flex-row gap-2">
-                        <Button onClick={(e) => changeModalPage(2)}>
-                          Back
-                        </Button>
-                      </div>
-
-                      <div className="flex flex-row justify-end w-2/6 gap-2">
-                        <Button variant="danger" onClick={getCaptcha}>
-                          Generate
-                        </Button>
-                        {/* captcha */}
-                        <div
-                          className={`${
-                            pwdArray ? '' : 'animate-pulse'
-                          } select-none h-full  px-4 transition-all duration-150 bg-slate-200 text-xl flex flex-row justify-center items-center gap-1`}
-                        >
-                          <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
-                            {pwdArray && pwdArray[0]}
-                          </div>
-                          <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">
-                            {pwdArray && pwdArray[1]}
-                          </div>
-                          <div className="w-4 font-light text-red-800 scale-105 rotate-45">
-                            {pwdArray && pwdArray[2]}
-                          </div>
-                          <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
-                            {pwdArray && pwdArray[3]}
-                          </div>
-                          <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">
-                            {pwdArray && pwdArray[4]}
-                          </div>
-                          <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">
-                            {pwdArray && pwdArray[5]}
-                          </div>
-                        </div>
-                        <input
-                          type="text"
-                          defaultValue=""
-                          placeholder="Captcha"
-                          className={`${
-                            wiggleEffect && 'animate-shake border-red-600'
-                          } ${
-                            isCaptchaError
-                              ? 'border-red-600'
-                              : 'border-stone-200'
-                          }  w-24 border`}
-                          onAnimationEnd={() => setWiggleEffect(false)}
-                          onChange={(e) =>
-                            handlePassword(e.target.value as unknown as string)
-                          }
-                        />
-                        <Button onClick={modalAction}>Apply</Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                ) : null}
               </div>
             </Modal.Footer>
           </Modal>
 
-          <SideNav />
+          <SideNav navDetails={navDetails} />
           <MainContainer>
-            <ToastContainer
-              className={'uppercase text-xs'}
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-            <div className="flex flex-row w-full h-full pb-10">
-              <div className="flex flex-col w-4/5 h-full pl-4 pr-20 overflow-y-scroll">
-                Job Vacancies
+            <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
+              <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">
+                <label className="pb-4">Job Vacancies</label>
                 {data && data.length > 0 ? (
                   data.map((vacancies: VacancyDetails, messageIdx: number) => {
                     return (
@@ -464,19 +486,19 @@ export default function Vacancies({
                     );
                   })
                 ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full">
-                    <label className="w-full text-4xl text-center opacity-50 ">
+                  <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
+                    <label className="w-full text-4xl text-center text-gray-400 ">
                       NO VACANCIES
                     </label>
                   </div>
                 )}
               </div>
               {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                <div className="flex flex-col items-center w-full h-full pt-6 ml-4 mr-4 text-gray-700">
+                <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
                   <div
                     className={`${
                       isMessageOpen
-                        ? 'w-full ml-10  mr-10 p-8 flex flex-col bg-white'
+                        ? 'w-full md:ml-10 md:mr-10 p-8 flex flex-col bg-white'
                         : 'hidden'
                     }`}
                   >
@@ -508,8 +530,8 @@ export default function Vacancies({
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center w-full h-full pt-6 ml-4 mr-4 text-4xl text-gray-400">
-                  NO DATA FOUND
+                <div className="flex flex-col items-center justify-center w-full pt-1 text-4xl text-center text-gray-400 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
+                  NO JOB POSTING SELECTED
                 </div>
               )}
             </div>
@@ -520,6 +542,25 @@ export default function Vacancies({
   );
 }
 
+//use for dummy login only
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   try {
+//     const userDetails = employeeDummy;
+//     const { data } = await axios.get(
+//       `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
+//     );
+//     if (data) {
+//       return { props: { data, employeeId: userDetails.user._id } };
+//     } else {
+//       return { props: {} };
+//     }
+//   } catch (error) {
+//     return { props: {} };
+//   }
+// };
+
 //get list of all posted job positions
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
@@ -529,7 +570,13 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
         `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
       );
       if (data) {
-        return { props: { data, employeeId: userDetails.user._id } };
+        return {
+          props: {
+            data,
+            employeeId: userDetails.user._id,
+            employeeDetails: userDetails,
+          },
+        };
       } else {
         return { props: {} };
       }

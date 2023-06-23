@@ -1,6 +1,8 @@
-import { ToastNotification } from '@gscwd-apps/oneui';
 import { useEffect, useState } from 'react';
-import { HiOutlineEye, HiOutlinePlusCircle } from 'react-icons/hi';
+import {
+  HiOutlineEye,
+  HiOutlinePlusCircle,
+} from 'react-icons/hi';
 import { TabHeader } from '../tab/TabHeader';
 
 type PdsTabsProps = {
@@ -22,16 +24,8 @@ export const PdsTabs = ({ tab, userId }: PdsTabsProps) => {
 
   return (
     <>
-      <div className="w-full h-[44rem] px-5 overflow-y-auto">
-        <div className="flex flex-col text-gray-500">
-          {/* Notification error */}
-          {openPdsIsClicked ? (
-            <ToastNotification
-              toastType="error"
-              notifMessage={'Updating of PDS is now closed!'}
-            />
-          ) : null}
-
+      <div className="w-full max-h-[44rem] px-5 overflow-y-auto">
+        <div className="flex flex-col md:flex-row lg:flex-col text-gray-500">
           <TabHeader
             tab={tab}
             tabIndex={1}

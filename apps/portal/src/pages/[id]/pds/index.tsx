@@ -6,19 +6,22 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getUserDetails,
   withCookieSession,
   withSession,
 } from '../../../utils/helpers/session';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { PdsTabs } from '../../../components/fixed/pds/PdsTabs';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { usePdsStore } from '../../../store/pds.store';
+import { employeeDummy } from 'apps/portal/src/types/employee.type';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function Pds({
   employeeDetails,
@@ -44,8 +47,17 @@ export default function Pds({
     return (location.href = link);
   };
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
   useEffect(() => {
-    setEmployeeDetails(employeeDetails);
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
   }, []);
 
   return (
@@ -54,10 +66,10 @@ export default function Pds({
         <title>Personal Data Sheet</title>
       </Head>
 
-      <SideNav />
+      <SideNav navDetails={navDetails} />
 
       <MainContainer>
-        <div className="w-full h-full px-32">
+        <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
           <ContentHeader
             title="Personal Data Sheet"
             subtitle="Create or view your PDS"
@@ -70,11 +82,10 @@ export default function Pds({
           </ContentHeader>
           <ContentBody>
             <>
-              <div className="flex w-full">
-                <div className="w-[58rem]">
+              <div className={`w-full flex lg:flex-row flex-col`}>
+                <div className={`lg:w-[32rem] md:w-[58rem] sm:w-full`}>
                   <PdsTabs tab={tab} userId={userId} />
                 </div>
-                <div className="invisible w-full">TEST</div>
               </div>
             </>
           </ContentBody>
@@ -84,10 +95,18 @@ export default function Pds({
   );
 }
 
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
+
+//   return { props: { employeeDetails } };
+// };
+
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
-    const userDetails = getUserDetails();
+    const employeeDetails = getUserDetails();
 
-    return { props: { userDetails, userId: context.query.id } };
+    return { props: { employeeDetails, userId: context.query.id } };
   }
 );

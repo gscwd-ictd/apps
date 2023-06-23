@@ -3,6 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -16,7 +18,11 @@
     "baseUrl": ".",
     "paths": {
       "@gscwd-apps/oneui": ["libs/oneui/src/index.ts"],
-      "@gscwd-apps/utils": ["libs/utils/src/index.ts"]
+      "@gscwd-apps/utils": ["libs/utils/src/index.ts"],
+      "@gscwd-apps/apps/employee-monitoring": ["apps/employee-monitoring"],
+      "@gscwd-apps/apps/job-portal": ["apps/job-portal/"],
+      "@gscwd-apps/apps/pds": ["apps/pds"],
+      "@gscwd-apps/apps/portal": ["apps/portal"]
     }
   },
   "exclude": ["node_modules", "tmp"]

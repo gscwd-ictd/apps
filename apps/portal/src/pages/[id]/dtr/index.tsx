@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -18,18 +18,26 @@ import {
 } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, ListDef, Select } from '@gscwd-apps/oneui';
+import { Button, ListDef, Select, ToastNotification } from '@gscwd-apps/oneui';
 import { format } from 'date-fns';
 import { HiOutlineSearch } from 'react-icons/hi';
 import Link from 'next/link';
 import { DtrDateSelect } from '../../../../src/components/fixed/dtr/DtrDateSelect';
 import { useDtrStore } from '../../../../src/store/dtr.store';
 import { DtrTable } from '../../../../src/components/fixed/dtr/DtrTable';
+import { employeeDummy } from '../../../../src/types/employee.type';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { isEmpty } from 'lodash';
 
 export default function DailyTimeRecord({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const isLoadingDtr = useDtrStore((state) => state.loadingDtr);
+  const isErrorDtr = useDtrStore((state) => state.errorDtr);
+  const emptyResponseAndError = useDtrStore(
+    (state) => state.emptyResponseAndError
+  );
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore(
@@ -39,38 +47,58 @@ export default function DailyTimeRecord({
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
-    setIsLoading(true);
   }, [employeeDetails, setEmployeeDetails]);
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
   useEffect(() => {
-    if (isLoading) {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isEmpty(isErrorDtr)) {
       setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
+        emptyResponseAndError();
+      }, 5000);
     }
-  }, [isLoading]);
+  }, [isErrorDtr]);
 
   return (
     <>
       <>
+        {/* DTR Fetch Error */}
+        {!isEmpty(isErrorDtr) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${isErrorDtr}: Failed to load DTR.`}
+          />
+        ) : null}
+
         <EmployeeProvider employeeData={employee}>
           <Head>
             <title>Daily Time Record</title>
           </Head>
 
-          <SideNav />
+          <SideNav navDetails={navDetails} />
 
           <MainContainer>
-            <div className="w-full h-full px-32">
+            <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
               <ContentHeader
                 title="Daily Time Record"
                 subtitle="View schedules, time in and time out"
               >
-                <DtrDateSelect />
+                <DtrDateSelect employeeDetails={employeeDetails} />
               </ContentHeader>
 
               <ContentBody>
-                {isLoading ? (
+                {isLoadingDtr ? (
                   <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                     <SpinnerDotted
                       speed={70}
@@ -81,7 +109,9 @@ export default function DailyTimeRecord({
                     />
                   </div>
                 ) : (
-                  <DtrTable employeeDetails={employeeDetails} />
+                  <div className="pb-10">
+                    <DtrTable employeeDetails={employeeDetails} />
+                  </div>
                 )}
               </ContentBody>
             </div>
@@ -91,6 +121,14 @@ export default function DailyTimeRecord({
     </>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
+
+//   return { props: { employeeDetails } };
+// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {

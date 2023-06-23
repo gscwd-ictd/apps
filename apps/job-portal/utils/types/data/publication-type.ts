@@ -1,0 +1,21 @@
+export type Publication = {
+  vppId: string;
+  postingDate: string;
+  numberOfPositions: string;
+  postingDeadline: string;
+  positionId: string;
+  positionTitle: string;
+  itemNumber: string;
+  salaryGrade: string;
+  salaryGradeLevel: number;
+  annualSalary: string;
+  education: string;
+  training: string;
+  eligibility: string;
+  experience: string;
+  placeOfAssignment: string;
+  occupationName: string;
+  prfNo: string;
+  prfId: string;
+  postingStatus: string;
+};

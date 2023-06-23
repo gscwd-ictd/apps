@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import {
   EmploymentDetails,
   PersonalDetails,
@@ -5,6 +6,6 @@ import {
 
 export type EmployeeRowData = Pick<
   EmploymentDetails,
-  'assignment' | 'positionTitle'
+  'assignment' | 'positionTitle' | 'companyId' | 'natureOfAppointment'
 > &
   Pick<PersonalDetails, 'fullName'> & { id: string };

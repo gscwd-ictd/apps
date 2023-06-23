@@ -20,6 +20,7 @@ const fetcherHRIS = async (url: string, config: AxiosRequestConfig) =>
     .get(url, config)
     .then((res) => res)
     .catch((error) => error);
+// .catch((error) => error);
 // const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default fetcherHRIS;

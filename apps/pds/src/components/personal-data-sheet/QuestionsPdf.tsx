@@ -152,7 +152,7 @@ export const QuestionsPdf = ({
   references,
   governmentIssuedId,
 }: QuestionsPdfProps): JSX.Element => {
-  const [emptyReferenceRows, setEmptyReferenceRows] = useState(3);
+  const [emptyReferenceRows] = useState(3);
 
   const renderReferenceRows = () => {
     const content = references.slice(0, 3).map((reference, index) => (

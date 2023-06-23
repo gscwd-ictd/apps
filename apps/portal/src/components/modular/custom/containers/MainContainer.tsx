@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { ReactNode } from 'react';
 
 type MainContentProps = {
@@ -9,7 +10,12 @@ export const MainContainer: React.FC<MainContentProps> = ({
 }): JSX.Element => {
   return (
     <>
-      <div className="h-screen pl-24 overflow-y-auto pt-14">{children}</div>
+      <div
+        className={`pt-20 lg:pl-24 lg:pt-12
+        h-screen overflow-y-auto`}
+      >
+        {children}
+      </div>
     </>
   );
 };

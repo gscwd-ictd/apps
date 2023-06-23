@@ -9,6 +9,9 @@ type LabelInputProps = {
   errorMessage?: string;
   controller?: object;
   disabled?: boolean;
+  type?: string;
+  rows?: number;
+  cols?: number;
 };
 
 export const LabelInput: FunctionComponent<
@@ -17,27 +20,59 @@ export const LabelInput: FunctionComponent<
   id,
   label,
   placeholder = '',
-  className,
+  className = '',
   isError = false,
   errorMessage,
   controller,
   disabled = false,
+  type,
+  rows,
+  cols,
   ...props
 }) => {
   return (
     <div className="flex flex-col">
       <label htmlFor={id}>
-        <span className="text-xs text-gray-700">{label}</span>
+        <span className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
+          {label}
+        </span>
       </label>
-      <input
-        {...props}
-        id={id}
-        readOnly={disabled}
-        disabled={disabled}
-        {...controller}
-        className={`rounded border disabled:hover:cursor-not-allowed focus:border-blue-500 border-gray-300 w-full outline-none text-xs text-gray-600 h-[2.25rem] px-4 ${className}`}
-        placeholder={placeholder}
-      />
+
+      {type === 'textarea' ? (
+        <textarea
+          id={id}
+          readOnly={disabled}
+          disabled={disabled}
+          rows={rows}
+          cols={cols}
+          {...controller}
+          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm  text-gray-900 ${className} block p-2.5 bg-gray-50 border ${
+            isError
+              ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+              : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+          }`}
+          placeholder={placeholder}
+        ></textarea>
+      ) : (
+        <input
+          {...props}
+          id={id}
+          readOnly={disabled}
+          disabled={disabled}
+          type={type}
+          {...controller}
+          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
+            isError
+              ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+              : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+          }`}
+          placeholder={placeholder}
+        />
+      )}
+
+      {isError ? (
+        <div className="mt-1 text-xs text-red-400">{errorMessage}</div>
+      ) : null}
     </div>
   );
 };

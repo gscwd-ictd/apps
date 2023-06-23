@@ -1,14 +1,17 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import {
   HiOutlineClock,
   HiOutlineCalendar,
   HiOutlineGlobe,
 } from 'react-icons/hi';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 interface Props {
   count: number;
   name: string;
 }
 export const StatsCard: React.FC<Props> = ({ count, name }) => {
+  const { windowWidth } = UseWindowDimensions();
   return (
     <div className="h-34 w-full shadow bg-white flex flex-col p-4 gap-2 rounded-md">
       <div className="flex flex-row justify-between">
@@ -23,10 +26,11 @@ export const StatsCard: React.FC<Props> = ({ count, name }) => {
         )}
       </div>
       {/* <label className="text-7xl text-stone-500">{count}</label> */}
-      <label className="text-7xl text-stone-500">-</label>
-      <label className="text-xs text-stone-500">{name}</label>
+      <label className="text-7xl text-gray-700">10</label>
 
-      <div className="w-full h-3 rounded bg-stone-300">
+      <label className="hidden md:block text-xs text-stone-500">{name}</label>
+
+      <div className="hidden md:block w-full h-3 rounded bg-stone-300">
         <div
           className={`${
             count >= 10

@@ -1,7 +1,8 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import Head from 'next/head';
-import { useEffect } from 'react';
-import { HiDocumentAdd, HiX } from 'react-icons/hi';
-import { SideNav } from '../../../components/fixed/nav/SideNav';
+import { useEffect, useState } from 'react';
+import { HiDocumentAdd } from 'react-icons/hi';
+import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
@@ -13,7 +14,7 @@ import {
   InferGetServerSidePropsType,
 } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
@@ -27,6 +28,12 @@ import PassSlipPendingModal from '../../../../src/components/fixed/passslip/Pass
 import PassSlipCompletedModal from '../../../../src/components/fixed/passslip/PassSlipCompletedModal';
 import { isEmpty } from 'lodash';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import {
+  getUserDetails,
+  withCookieSession,
+} from '../../../../src/utils/helpers/session';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function PassSlip({
   employeeDetails,
@@ -37,7 +44,8 @@ export default function PassSlip({
     pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen,
     loading,
-    error,
+    errorPassSlips,
+    errorResponse,
     responseApply,
     responseCancel,
 
@@ -48,15 +56,17 @@ export default function PassSlip({
     getPassSlipList,
     getPassSlipListSuccess,
     getPassSlipListFail,
+    emptyResponseAndError,
   } = usePassSlipStore((state) => ({
     tab: state.tab,
     applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen: state.completedPassSlipModalIsOpen,
     loading: state.loading.loadingPassSlips,
-    error: state.error.errorPassSlips,
+    errorPassSlips: state.error.errorPassSlips,
+    errorResponse: state.error.errorResponse,
     responseApply: state.response.postResponseApply,
-    responseCancel: state.response.deleteResponseCancel,
+    responseCancel: state.response.cancelResponse,
 
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
@@ -65,6 +75,7 @@ export default function PassSlip({
     getPassSlipList: state.getPassSlipList,
     getPassSlipListSuccess: state.getPassSlipListSuccess,
     getPassSlipListFail: state.getPassSlipListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -120,7 +131,6 @@ export default function PassSlip({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    // console.log(swrPassSlips);
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
     }
@@ -133,21 +143,67 @@ export default function PassSlip({
   useEffect(() => {
     if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
       mutatePassSlips();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
     }
   }, [responseApply, responseCancel]);
 
+  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+
+  useEffect(() => {
+    setNavDetails({
+      profile: employeeDetails.user.email,
+      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
+      initials: UseNameInitials(
+        employeeDetails.profile.firstName,
+        employeeDetails.profile.lastName
+      ),
+    });
+  }, []);
+
   return (
     <>
-      {error ? (
-        <ToastNotification toastType="error" notifMessage={error} />
-      ) : null}
+      <>
+        {/* Pass Slip List Load Failed Error */}
+        {!isEmpty(errorPassSlips) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorPassSlips}: Failed to load Pass Slips.`}
+          />
+        ) : null}
+
+        {/* Post/Submit Pass Slip Error */}
+        {!isEmpty(errorResponse) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorResponse}: Failed to Submit.`}
+          />
+        ) : null}
+
+        {/* Post/Submit Pass Slip Success */}
+        {!isEmpty(responseApply) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
+          />
+        ) : null}
+
+        {/* Cancel Pass Slip Success */}
+        {!isEmpty(responseCancel) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage="Pass Slip Cancellation Successful!"
+          />
+        ) : null}
+      </>
 
       <EmployeeProvider employeeData={employee}>
         <Head>
           <title>Employee Pass Slips</title>
         </Head>
 
-        <SideNav />
+        <SideNav navDetails={navDetails} />
 
         {/* Pass Slip Application Modal */}
         <PassSlipApplicationModal
@@ -171,14 +227,28 @@ export default function PassSlip({
         />
 
         <MainContainer>
-          <div className="w-full h-full px-32">
+          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader
               title="Employee Pass Slips"
               subtitle="Apply for pass slip"
             >
-              <Button onClick={openApplyPassSlipModal}>
+              <Button
+                className="hidden lg:block"
+                size={`md`}
+                onClick={openApplyPassSlipModal}
+              >
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd /> Apply Pass Slip
+                </div>
+              </Button>
+
+              <Button
+                className="block lg:hidden"
+                size={`lg`}
+                onClick={openApplyPassSlipModal}
+              >
+                <div className="flex items-center w-full gap-2">
+                  <HiDocumentAdd />
                 </div>
               </Button>
             </ContentHeader>
@@ -188,7 +258,7 @@ export default function PassSlip({
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
-                  className="w-full flex h-full transition-all "
+                  className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
                 />
@@ -196,14 +266,12 @@ export default function PassSlip({
             ) : (
               <ContentBody>
                 <>
-                  <div className="w-full flex">
-                    <div className="w-[58rem]">
+                  <div className={`w-full flex lg:flex-row flex-col`}>
+                    <div className={`lg:w-[58rem] w-full`}>
                       <PassSlipTabs tab={tab} />
                     </div>
                     <div className="w-full">
-                      <PassSlipTabWindow
-                      // employeeId={employeeDetails.employmentDetails.userId}
-                      />
+                      <PassSlipTabWindow />
                     </div>
                   </div>
                 </>
@@ -216,18 +284,18 @@ export default function PassSlip({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const employeeDetails = employeeDummy;
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
 
-  return { props: { employeeDetails } };
-};
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employeeDetails = getUserDetails();
 
-//     return { props: { employeeDetails } };
-//   }
-// );
+    return { props: { employeeDetails } };
+  }
+);

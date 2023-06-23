@@ -73,7 +73,6 @@ export default function EmployeeCalendar() {
   function viewDateActivities(day: Date) {
     setSelectedDay(day);
     setViewActivities(true);
-    console.log(day);
   }
 
   const days = eachDayOfInterval({
@@ -106,9 +105,9 @@ export default function EmployeeCalendar() {
       >
         <span
           onClick={() => setViewActivities(false)}
-          className="cursor-pointer absolute top-0 right-0 p-4"
+          className="absolute top-0 right-0 p-4 cursor-pointer"
         >
-          <HiOutlineXCircle className="h-6 w-6 text-slate-600" />
+          <HiOutlineXCircle className="w-6 h-6 text-slate-600" />
         </span>
         <section>
           <h2 className="font-semibold text-gray-900">
@@ -140,7 +139,7 @@ export default function EmployeeCalendar() {
                 <span className="sr-only">Previous month</span>
                 <HiOutlineChevronLeft className="w-5 h-5" aria-hidden="true" />
               </button>
-              <h2 className="flex-auto font-semibold text-gray-900 text-center">
+              <h2 className="flex-auto font-semibold text-center text-gray-900">
                 {format(firstDayCurrentMonth, 'MMMM yyyy')}
               </h2>
 

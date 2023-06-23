@@ -1,131 +1,222 @@
-import { FunctionComponent, useState, useMemo } from 'react';
-import { tableHeaderStyles } from './DataTable.styles';
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  Row,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table';
-// import { Pagination } from '../Pagination';
+import { FunctionComponent } from 'react';
+import { flexRender } from '@tanstack/react-table';
+import { DataTableProps } from './types/data-table-props';
+import { SortableColumn } from './SortableColumn';
+import { GlobalFilter } from './GlobalFilter';
+import { ColumnFilter } from './ColumnFilter';
+import { Button } from '@gscwd-apps/oneui';
 
-export type TableProps<T> = {
-  data: Array<T>;
-  columns: Array<ColumnDef<T, unknown>>;
-  paginate?: boolean;
-  onRowClick?: (row: Row<T>) => void;
-};
-
-export const DataTable = <T extends object>({
-  data,
-  columns,
-  paginate,
+export const DataTable: FunctionComponent<DataTableProps> = ({
+  hydrating = false,
+  model,
+  width = 'auto',
   onRowClick,
-}: TableProps<T>) => {
-  // set state for sorting the table
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  // set table columns
-  const tableColumns = useMemo(() => columns, [columns]);
-
-  // set table data
-  const tableData = useMemo(() => data, [data]);
-
-  // initialize table settings
-  const table = useReactTable({
-    columns: tableColumns,
-    data: tableData,
-    state: { sorting },
-    getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-  });
+  showGlobalFilter = false,
+  showColumnFilter = false,
+  paginate = false,
+}) => {
+  const resetFilterInputs = () => {
+    model.resetColumnFilters();
+  };
 
   return (
-    <div className="bg-white rounded-md overflow-y-auto h-full w-full flex flex-col">
-      <table className="w-full text-left table-auto whitespace-no-wrap bg-white flex-1">
-        <thead className="text-sm text-gray-600 sticky top-0 bg-white border-b z-30">
-          {table.getHeaderGroups().map((group) => {
-            return (
-              <tr key={group.id}>
-                {group.headers.map((header) => {
-                  return (
-                    <th key={header.id} scope="col" className="py-4 px-6">
-                      {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: tableHeaderStyles(
-                              header.column.getCanSort()
-                            ),
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {header.column.getCanSort() && <SortableColumnSvg />}
+    <>
+      <div className="order-1 w-1/2 search-box-wrapper">
+        {showGlobalFilter ? <GlobalFilter model={model} /> : null}
+      </div>
+
+      <div className="order-3 w-full py-5 column-filter-box-wrapper">
+        {showColumnFilter ? (
+          <>
+            <p className="pb-1 text-xs">Filters:</p>
+            {model?.getHeaderGroups().map((headerGroup) => (
+              <div key={headerGroup.id} className="flex flex-wrap items-center">
+                {headerGroup.headers.map((header) => {
+                  return header.isPlaceholder ? null : (
+                    <div key={header.id}>
+                      {header.column.getCanFilter() ? (
+                        <div className="w-1/4 pr-2">
+                          <ColumnFilter
+                            column={header.column}
+                            model={model}
+                            placeholder={header.column.columnDef.header}
+                          />
                         </div>
-                      )}
-                    </th>
+                      ) : null}
+                    </div>
                   );
                 })}
-              </tr>
-            );
-          })}
-        </thead>
 
-        {/* start of table body */}
-        {data.length !== 0 ? (
-          <tbody>
-            {table.getRowModel().rows.map((row) => {
-              return (
-                <tr
-                  key={row.id}
-                  onClick={onRowClick ? () => onRowClick(row) : () => null}
-                  className="odd:bg-slate-50 hover:bg-slate-100 cursor-pointer"
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <td key={cell.id} className="py-3 px-6 border-gray-100">
+                <div>
+                  <Button
+                    id="resetButton"
+                    onClick={() => resetFilterInputs()}
+                    variant="info"
+                  >
+                    <i className="bx bx-reset"></i>
+                  </Button>
+                  <div className="h-1" />
+                </div>
+              </div>
+            ))}
+          </>
+        ) : null}
+      </div>
+
+      <div className="flex flex-col order-4 w-full h-full overflow-y-auto bg-white rounded-md">
+        <table className="flex-1 w-full text-left whitespace-no-wrap bg-white table-auto">
+          <thead className="sticky top-0 text-sm text-gray-600 bg-white border-b">
+            {model?.getHeaderGroups().map((headerGroup) => (
+              <tr
+                key={headerGroup.id}
+                className={'header_level_' + headerGroup.id}
+              >
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    scope="col"
+                    className="px-6 py-3 text-xs font-semibold text-left text-black align-middle border-l-0 border-r-0 bg-blueGray-50 text-blueGray-500 border-blueGray-100 whitespace-nowrap"
+                    colSpan={header.colSpan}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div
+                        {...{
+                          className: `${
+                            header.column.getCanSort()
+                              ? 'cursor-pointer'
+                              : 'cursor-default'
+                          } select-none flex items-center gap-2`,
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
                         {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+                          header.column.columnDef.header,
+                          header.getContext()
                         )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+
+                        {header.column.getCanSort() && <SortableColumn />}
+                      </div>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+
+          <tbody>
+            {hydrating ? (
+              'Loading data...'
+            ) : model?.getRowModel().rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={model?.getAllColumns().length}
+                  className="text-center text-xs py-5 text-gray-500"
+                >
+                  --- No Data ---
+                </td>
+              </tr>
+            ) : (
+              model?.getRowModel().rows.map((row) => {
+                return (
+                  <tr
+                    key={row.id}
+                    onClick={onRowClick ? () => onRowClick(row) : () => null}
+                    className="cursor-pointer odd:bg-slate-50 hover:bg-slate-100"
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <td
+                          key={cell.id}
+                          className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+            )}
           </tbody>
-        ) : (
-          <tbody></tbody>
-        )}
-      </table>
+        </table>
 
-      {/* {paginate && <Pagination table={table} />} */}
-    </div>
-  );
-};
+        {model && paginate ? (
+          <div className="flex items-center justify-end px-4 py-3 space-x-3 bg-white border-t border-gray-200 sm:px-6">
+            {/* Next and Previous button */}
+            <div className="flex justify-between flex-1 sm:hidden">
+              <button
+                className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                onClick={() => model.previousPage()}
+                disabled={!model.getCanPreviousPage()}
+              >
+                {'Previous'}
+              </button>
+              <button
+                className="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                onClick={() => model.nextPage()}
+                disabled={!model.getCanNextPage()}
+              >
+                {'Next'}
+              </button>
+            </div>
 
-// custom svg for sortable table
-const SortableColumnSvg: FunctionComponent = () => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-[0.6rem] h-[0.6rem] text-gray-300"
-      aria-hidden="true"
-      fill="currentColor"
-      viewBox="0 0 320 512"
-    >
-      <path d="M27.66 224h264.7c24.6 0 36.89-29.78 19.54-47.12l-132.3-136.8c-5.406-5.406-12.47-8.107-19.53-8.107c-7.055 0-14.09 2.701-19.45 8.107L8.119 176.9C-9.229 194.2 3.055 224 27.66 224zM292.3 288H27.66c-24.6 0-36.89 29.77-19.54 47.12l132.5 136.8C145.9 477.3 152.1 480 160 480c7.053 0 14.12-2.703 19.53-8.109l132.3-136.8C329.2 317.8 316.9 288 292.3 288z" />
-    </svg>
+            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-end">
+              <div>
+                <nav
+                  className="inline-flex -space-x-px rounded-md shadow-sm isolate"
+                  aria-label="Pagination"
+                >
+                  <button
+                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 "
+                    onClick={() => model.previousPage()}
+                    disabled={!model.getCanPreviousPage()}
+                  >
+                    <i className="bx bxs-chevron-left"></i>
+                    {'Previous'}
+                  </button>
+                  <button
+                    className="relative inline-flex items-center px-2 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 "
+                    onClick={() => model.nextPage()}
+                    disabled={!model.getCanNextPage()}
+                  >
+                    {'Next'}
+                    <i className="bx bxs-chevron-right"></i>
+                  </button>
+                </nav>
+              </div>
+            </div>
+
+            {/* Page number */}
+            <div className="hidden text-xs text-gray-700 sm:flex">
+              <span className="pr-1">Page</span>
+              <strong>
+                {model.getState().pagination.pageIndex + 1} of{' '}
+                {model.getPageCount()}
+              </strong>
+            </div>
+
+            {/* Paginate size */}
+            <div className="hidden text-gray-700 sm:flex">
+              <select
+                value={model.getState().pagination.pageSize}
+                onChange={(e) => {
+                  model.setPageSize(Number(e.target.value));
+                }}
+                className="text-xs font-medium text-gray-500 border border-gray-300 rounded-md"
+              >
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <option key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 };

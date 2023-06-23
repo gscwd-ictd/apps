@@ -13,7 +13,9 @@ import { format } from 'date-fns';
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-// import { EmployeeDetails } from '../../../types/employee.type';
+import { EmployeeDetails } from '../../../../src/types/employee.type';
+
+import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 const styles = StyleSheet.create({
   page: {
@@ -155,14 +157,15 @@ const styles = StyleSheet.create({
   },
 });
 
-// type PassSlipPdfProps = {
-//   employeeDetails: EmployeeDetails;
-// };
+type LeavePdfProps = {
+  employeeDetails: EmployeeDetails;
+  leaveDetails: EmployeeLeaveDetails;
+};
 
-export const LeavePdf = (): //   {
-//   employeeDetails,
-// }: PassSlipPdfProps
-JSX.Element => {
+export const LeavePdf = ({
+  employeeDetails,
+  leaveDetails,
+}: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const router = useRouter();
@@ -264,7 +267,7 @@ JSX.Element => {
                         width: '140px',
                       }}
                     >
-                      INFORMATION COMMUNICATION & TECHNOLOGY
+                      {leaveDetails.employeeDetails.assignment.name}
                     </Text>
                     <Text style={{ marginRight: 50 }}>2. NAME</Text>
                     <Text
@@ -274,33 +277,36 @@ JSX.Element => {
                         marginLeft: 180,
                         fontSize: 8,
                         width: '130px',
+                        textAlign: 'center',
                       }}
                     >
-                      NARVAIZA XXSSSSSWSWFWWQF
+                      {employeeDetails.profile.lastName}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(Last)</Text>
                     <Text
                       style={{
                         position: 'absolute',
                         marginTop: 11,
-                        marginLeft: 320,
+                        marginLeft: 293,
                         fontSize: 8,
                         width: '120px',
+                        textAlign: 'center',
                       }}
                     >
-                      RICARDO VICENTE XXYY WWZ
+                      {employeeDetails.profile.firstName}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(First)</Text>
                     <Text
                       style={{
                         position: 'absolute',
                         marginTop: 11,
-                        marginLeft: 448,
+                        marginLeft: 410,
                         fontSize: 8,
                         width: '100px',
+                        textAlign: 'center',
                       }}
                     >
-                      RICARDO VICENTE XSSW
+                      {employeeDetails.profile.middleName}
                     </Text>
                     <Text style={{ marginRight: 50 }}>(Middle)</Text>
                   </View>
@@ -330,7 +336,7 @@ JSX.Element => {
                         width: '100px',
                       }}
                     >
-                      JANUARY 23, 2023
+                      {leaveDetails.leaveApplicationBasicInfo.dateOfFiling}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                     <Text style={{ marginRight: 1 }}>4. POSITION</Text>
@@ -338,12 +344,12 @@ JSX.Element => {
                       style={{
                         position: 'absolute',
                         paddingBottom: 1,
-                        marginLeft: 280,
+                        marginLeft: 282,
                         fontSize: 8,
                         width: '140px',
                       }}
                     >
-                      CLEARK PROCESSOR A
+                      {leaveDetails.employeeDetails.assignment.positionTitle}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                     <Text style={{ marginRight: 1 }}>5. SALARY</Text>
@@ -356,7 +362,7 @@ JSX.Element => {
                         width: '140px',
                       }}
                     >
-                      P 999,999.00
+                      {leaveDetails.employeeDetails.assignment.salary}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                   </View>
@@ -387,7 +393,12 @@ JSX.Element => {
                     >
                       <Text>6.A TYPE OF LEAVE TO BE AVAILED OF</Text>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Vacation Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Vacation Leave</Text>
                         <Text style={{ fontSize: 6 }}>
                           (Sec. 51, Rule XVI, Omnibus Rules Implementing E.O.
@@ -395,7 +406,12 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Forced Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Mandatory/Force Leave
                         </Text>
@@ -405,7 +421,12 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Sick Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Sick Leave</Text>
                         <Text style={{ fontSize: 6 }}>
                           (Sec. 43, Rule XVI, Omnibus Rules Implementing E.O.
@@ -413,21 +434,36 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Maternity Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Maternity Leave</Text>
                         <Text style={{ fontSize: 6 }}>
                           (R.A. No. 11210 / IRR issued by CSC, DOLE and SSS)
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Paternity Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Paternity Leave</Text>
                         <Text style={{ fontSize: 6 }}>
                           (R.A. No. 8187 / CSC MC No. 71, s. 1998 as amended)
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Special Privilege Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Special Privilege Leave
                         </Text>
@@ -437,14 +473,24 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Solo Parent Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Solo Parent Leave</Text>
                         <Text style={{ fontSize: 6 }}>
                           (R.A. No. 8972 / CSC MC No. 8, s. 2004)
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Study Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Study Leave</Text>
                         <Text style={{ fontSize: 6 }}>
                           (Sec. 68, Rule XVI, Omnibus Rules Implementing E.O.
@@ -452,14 +498,24 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          '10-Day VAWC Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>10-Day VAWC Leave</Text>
                         <Text style={{ fontSize: 6 }}>
                           (R.A. No. 9262 / CSC MC No. 15, s. 2005)
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Rehabilitation Privilege'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Rehabilitation Privilege
                         </Text>
@@ -469,7 +525,12 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Special Leave Benefits for Women'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Special Leave Benefits for Women
                         </Text>
@@ -478,7 +539,12 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Special Emergency (Calamity) Leave'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Special Emergency (Calamity) Leave
                         </Text>
@@ -486,22 +552,24 @@ JSX.Element => {
                           (CSC MC No. 2, s. 2012, as amended)
                         </Text>
                       </View>
+
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
-                        <Text style={styles.leaveLabel}>
-                          Special Emergency (Calamity) Leave
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Adoption Leave'
+                            ? 'X'
+                            : null}
                         </Text>
-                        <Text style={{ fontSize: 6 }}>
-                          (CSC MC No. 2, s. 2012, as amended)
-                        </Text>
-                      </View>
-                      <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>Adoption Leave</Text>
                         <Text style={{ fontSize: 6 }}>(R.A. No. 8552)</Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          'Others'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Others:</Text>
                       </View>
                     </View>
@@ -520,12 +588,25 @@ JSX.Element => {
                         In case of Vacation/Special Priviledge Leave:
                       </Text>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Vacation Leave' &&
+                          leaveDetails.leaveApplicationDetails
+                            .inPhilippinesOrAbroad &&
+                          leaveDetails.leaveApplicationDetails
+                            .inPhilippinesOrAbroad === 'Within the Philippines'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Within the Philippines
                         </Text>
                         <Text style={{ fontSize: 6 }}>
-                          _______________________________________
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Vacation Leave' &&
+                          leaveDetails.leaveApplicationDetails.location
+                            ? leaveDetails.leaveApplicationDetails.location
+                            : null}
                         </Text>
                         <Text
                           style={{
@@ -540,10 +621,23 @@ JSX.Element => {
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Vacation Leave' &&
+                          leaveDetails.leaveApplicationDetails
+                            .inPhilippinesOrAbroad &&
+                          leaveDetails.leaveApplicationDetails
+                            .inPhilippinesOrAbroad === 'Abroad'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>Abroad (Specify)</Text>
                         <Text style={{ fontSize: 6, paddingLeft: 20 }}>
-                          _______________________________________
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Vacation Leave' &&
+                          leaveDetails.leaveApplicationDetails.location
+                            ? leaveDetails.leaveApplicationDetails.location
+                            : null}
                         </Text>
                         <Text
                           style={{
@@ -559,7 +653,15 @@ JSX.Element => {
                       </View>
                       <Text style={styles.inCase}>In case of Sick Leave:</Text>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Sick Leave' &&
+                          leaveDetails.leaveApplicationDetails.hospital &&
+                          leaveDetails.leaveApplicationDetails.hospital ===
+                            'In Hospital'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           In Hospital (Specify Illness)
                         </Text>
@@ -575,11 +677,26 @@ JSX.Element => {
                             paddingBottom: 3,
                           }}
                         >
-                          Cancer of the Nail
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Sick Leave' &&
+                          leaveDetails.leaveApplicationDetails.illness &&
+                          leaveDetails.leaveApplicationDetails.hospital ===
+                            'In Hospital'
+                            ? leaveDetails.leaveApplicationDetails.illness
+                            : null}
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}></Text>
+                        <Text style={styles.checkbox}>
+                          {' '}
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Sick Leave' &&
+                          leaveDetails.leaveApplicationDetails.hospital &&
+                          leaveDetails.leaveApplicationDetails.hospital ===
+                            'Out Patient'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Out Patient (Specify Illness)
                         </Text>
@@ -595,7 +712,13 @@ JSX.Element => {
                             paddingBottom: 3,
                           }}
                         >
-                          Cancer of the Nail
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Sick Leave' &&
+                          leaveDetails.leaveApplicationDetails.illness &&
+                          leaveDetails.leaveApplicationDetails.hospital ===
+                            'Out Patient'
+                            ? leaveDetails.leaveApplicationDetails.illness
+                            : null}
                         </Text>
                       </View>
                       <Text style={styles.inCase}>
@@ -617,18 +740,36 @@ JSX.Element => {
                             paddingBottom: 3,
                           }}
                         >
-                          Cancer of the Nail
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Special Leave Benefits for Women' &&
+                          leaveDetails.leaveApplicationDetails.splWomen
+                            ? leaveDetails.leaveApplicationDetails.splWomen
+                            : null}
                         </Text>
                       </View>
                       <Text style={styles.inCase}>In case of Study Leave:</Text>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Study Leave' &&
+                          leaveDetails.leaveApplicationDetails
+                            .forMastersCompletion === '1'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           Completion of Mater's Degree
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}>
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Study Leave' &&
+                          leaveDetails.leaveApplicationDetails
+                            .forBarBoardReview === '1'
+                            ? 'X'
+                            : null}
+                        </Text>
                         <Text style={styles.leaveLabel}>
                           BAR/Board Examination Review
                         </Text>
@@ -647,17 +788,22 @@ JSX.Element => {
                             paddingBottom: 3,
                           }}
                         >
-                          Cancer of the Nail
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                            'Study Leave' &&
+                          leaveDetails.leaveApplicationDetails.studyLeaveOther
+                            ? leaveDetails.leaveApplicationDetails
+                                .studyLeaveOther
+                            : null}
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>
                           Monetization of Leave Credits
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>Terminal Leave</Text>
                       </View>
                     </View>
@@ -676,14 +822,30 @@ JSX.Element => {
                       <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
                       <Text
                         style={{
+                          fontSize: 8,
                           position: 'absolute',
                           padding: 6,
                           marginTop: 10,
                           lineHeight: 2.1,
                         }}
                       >
-                        asdas dsadas dasd sa dsa dasd sad asda sdsadsda dsa
-                        dadsa da dsadasd dasdas dasdas dasdas dsa
+                        {leaveDetails.leaveApplicationBasicInfo.leaveDates
+                          ? leaveDetails.leaveApplicationBasicInfo.leaveDates
+                              .length > 18
+                            ? `From ${
+                                leaveDetails.leaveApplicationBasicInfo
+                                  .leaveDates[0]
+                              } To ${
+                                leaveDetails.leaveApplicationBasicInfo
+                                  .leaveDates[
+                                  leaveDetails.leaveApplicationBasicInfo
+                                    .leaveDates.length - 1
+                                ]
+                              }`
+                            : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(
+                                ', '
+                              )
+                          : null}
                       </Text>
                       <Text style={{ padding: 5 }}>
                         _____________________________________________________
@@ -703,11 +865,11 @@ JSX.Element => {
                     >
                       <Text>6.D COMMUTATION</Text>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>Not Requested</Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>Requested</Text>
                       </View>
                       <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
@@ -757,7 +919,7 @@ JSX.Element => {
                           marginTop: 18,
                         }}
                       >
-                        JANUARY 10, 2023
+                        {leaveDetails.leaveApplicationBasicInfo.dateOfFiling}
                       </Text>
                       <Text
                         style={{
@@ -789,10 +951,10 @@ JSX.Element => {
                               <Text>Total Earned</Text>
                             </View>
                             <View style={styles.containerTableRow}>
-                              <Text>123456789</Text>
+                              <Text>0</Text>
                             </View>
                             <View style={styles.containerTableRow2}>
-                              <Text>987654321</Text>
+                              <Text>0</Text>
                             </View>
                           </View>
                           <View
@@ -802,10 +964,10 @@ JSX.Element => {
                               <Text>Less this application</Text>
                             </View>
                             <View style={styles.containerTableRow}>
-                              <Text>55555555</Text>
+                              <Text>0</Text>
                             </View>
                             <View style={styles.containerTableRow2}>
-                              <Text>33333333</Text>
+                              <Text>0</Text>
                             </View>
                           </View>
                           <View
@@ -815,10 +977,10 @@ JSX.Element => {
                               <Text>Balance</Text>
                             </View>
                             <View style={styles.containerTableRow}>
-                              <Text>8888888</Text>
+                              <Text>0</Text>
                             </View>
                             <View style={styles.containerTableRow2}>
-                              <Text>4444444</Text>
+                              <Text>0</Text>
                             </View>
                           </View>
                         </View>
@@ -849,11 +1011,11 @@ JSX.Element => {
                       <Text>7.B RECOMMENDATION</Text>
                       <View style={{ height: 20 }}></View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>For approval</Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
-                        <Text style={styles.checkbox}>X</Text>
+                        <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>
                           For disapproval due to
                         </Text>
@@ -866,9 +1028,7 @@ JSX.Element => {
                             lineHeight: 2.2,
                           }}
                         >
-                          asdas dsadas dasd sa dsa dasd sad asda sdsadsda dsa
-                          dadsa da dsadasd sdsdasdas dasdas dasdas sadsadd
-                          sadasdsa dsad asds asdsad dsa
+                          Test
                         </Text>
                         <Text style={{ padding: 5 }}>
                           ____________________________________________
@@ -921,7 +1081,7 @@ JSX.Element => {
                           marginLeft: 12,
                         }}
                       >
-                        999
+                        0
                       </Text>
                       <Text>_______ days with pay</Text>
                       <Text
@@ -931,7 +1091,7 @@ JSX.Element => {
                           marginLeft: 12,
                         }}
                       >
-                        999
+                        0
                       </Text>
                       <Text>_______ days without pay</Text>
                     </View>
@@ -953,9 +1113,7 @@ JSX.Element => {
                             lineHeight: 2.2,
                           }}
                         >
-                          asdas dsadas dasd sa dsa dasd sad asda sdsadsda dsa
-                          dadsa da dsadasd sdsdasdas dasdas dasdas sadsadd
-                          sadasdsa dsad asds asdsad dsa
+                          Test
                         </Text>
                         <Text style={{ padding: 5 }}>
                           ____________________________________________

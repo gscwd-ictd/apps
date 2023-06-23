@@ -15,17 +15,17 @@ export const ProfileCard: React.FC<Props> = ({
 }) => {
   const photoUrl_temp = '/profile.jpg';
   return (
-    <div className="h-1/2 w-100 border-blue-800 shadow bg-white flex gap-1 flex-col justify-center items-center text-center rounded p-5 mr-5">
+    <div className="h-full w-full border-blue-800 shadow bg-white flex gap-1 flex-col justify-center items-center text-center rounded p-5">
       <img
         className="rounded-full border border-stone-100 shadow w-2/4"
         src={photoUrl ? photoUrl : photoUrl_temp}
         alt={'sample'}
       ></img>
-      <label className="text-xl font-medium text-stone-900 pt-2">
+      <label className="text-xl font-medium text-gray-800 pt-2">
         {firstName} {lastName}
       </label>
-      <label className="text-md font-medium text-stone-400">{position}</label>
-      <label className="text-xs font-medium text-stone-400">{division}</label>
+      <label className="text-md font-medium text-gray-400">{position}</label>
+      <label className="text-xs font-medium text-gray-400">{division}</label>
     </div>
   );
 };

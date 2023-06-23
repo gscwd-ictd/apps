@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
@@ -130,7 +130,124 @@ export const SelectedSupportDrcs = (): JSX.Element => {
 
   return (
     <>
-      <Table
+      <>
+        <div className="min-w-[50rem] grid grid-cols-12 gap-1 pt-2">
+          <div className="col-span-1 "></div>
+          <div className="col-span-6 ">
+            <label className="font-normal lex justify-start">Description</label>
+          </div>
+          <div className="col-span-1 ">
+            <label className="font-normal flex justify-center">Code</label>
+          </div>
+          <div className="col-span-2">
+            <label className="font-normal flex justify-center">
+              Percentage
+            </label>
+          </div>
+          <div className="col-span-2">
+            <label className="font-normal flex justify-center">Actions</label>
+          </div>
+
+          {isLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            selectedDnrs &&
+            selectedDnrs.support.map(
+              (dr: DutyResponsibility, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    className="grid col-span-12 grid-cols-12 gap-1"
+                  >
+                    <div className="col-span-1 ">
+                      <div className="flex justify-center">
+                        {dr.percentage! > 0 &&
+                        dr.onEdit === false &&
+                        !Number.isNaN(dr.percentage) &&
+                        JSON.stringify(dr.competency) !== '{}' ? (
+                          <>
+                            <HiBadgeCheck size={20} fill="#7b42f5" />
+                          </>
+                        ) : (
+                          <>
+                            <HiExclamationCircle size={20} fill="#f54242" />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-span-6 ">
+                      <div className="flex flex-row justify-start peer-hover:text-white">
+                        <p className="text-sm font-light text-gray-600 w-full overflow-hidden text-black text-ellipsis ">
+                          {dr.description}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-span-1">
+                      <label className="text-sm font-light flex justify-center">
+                        {dr.competency.code}
+                      </label>
+                    </div>
+                    <div className="col-span-2">
+                      <div className="text-sm font-light  flex gap-1 items-center justify-center ">
+                        <>
+                          <input
+                            type="number"
+                            className={`w-[4rem] h-[1.5rem] rounded outline-none border-0  border-gray-100 text-center ${
+                              dr.onEdit ? 'bg-red-200' : 'bg-transparent'
+                            }`}
+                            max={100}
+                            value={dr.percentage ? dr.percentage : 0}
+                            onChange={(e) =>
+                              onChangePercentage(e, dr.odrId, dr.sequenceNo!)
+                            }
+                            disabled={dr.onEdit ? false : true}
+                          />
+                        </>
+                        <span className="font-semibold">%</span>
+                      </div>
+                    </div>
+                    <div className="col-span-2">
+                      <div className="flex items-center justify-center gap-2">
+                        {dr.onEdit ? (
+                          <>
+                            <HiLockOpen
+                              size={26}
+                              className="bg-transparent rounded hover:cursor-pointer"
+                              fill="#fc0303"
+                              onClick={() =>
+                                handleEditToggle(dr.odrId, dr.onEdit!)
+                              }
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <HiLockClosed
+                              size={26}
+                              className="bg-transparent rounded hover:cursor-pointer"
+                              fill="#7b42f5"
+                              onClick={() =>
+                                handleEditToggle(dr.odrId, dr.onEdit!)
+                              }
+                            />
+                          </>
+                        )}
+                        <HiX
+                          className="bg-red-500 rounded hover:cursor-pointer"
+                          fill="white"
+                          size={26}
+                          onClick={() => handleRemove(index, dr.odrId)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+            )
+          )}
+        </div>
+      </>
+
+      {/* <Table
         tableHeader={
           <>
             <TableHeader
@@ -248,7 +365,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
             )}
           </>
         }
-      />
+      /> */}
     </>
   );
 };

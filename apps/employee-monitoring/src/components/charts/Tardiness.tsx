@@ -70,7 +70,7 @@ export const TardinessChart = () => {
   }, []);
 
   return (
-    <div className="flex justify-center w-full p-5 bg-white border-none rounded">
+    <div className="flex justify-center w-full p-5 bg-white border rounded shadow">
       <Bar options={chartOptions} data={chartData} />
     </div>
   );

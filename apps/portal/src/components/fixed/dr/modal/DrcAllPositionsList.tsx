@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { Position } from 'apps/portal/src/types/position.type';
@@ -52,6 +52,9 @@ export const DrcAllPositionsList = (): JSX.Element => {
                     {position.positionTitle}
                   </h1>
                   <p className="text-sm text-gray-500">{position.itemNumber}</p>
+                  <p className="text-xs text-gray-500">
+                    {position.designation}
+                  </p>
                 </div>
 
                 <div className="flex gap-2">

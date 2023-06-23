@@ -1,6 +1,6 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
-import Calendar from '../calendar/Calendar';
 import {
   AlertNotification,
   Button,
@@ -10,13 +10,19 @@ import {
 } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { LeaveContents, LeaveType } from '../../../../src/types/leave.type';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
-import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
+import Calendar from './LeaveCalendar';
+import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
+import {
+  CalendarDate,
+  LeaveApplicationForm,
+} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -77,13 +83,13 @@ const leaveHospital: Array<SelectOption> = [
 const leaveStudy: Array<SelectOption> = [
   {
     label: `Completion of Master's Degree`,
-    value: `Completion of Master's Degree`,
+    value: `master`,
   },
   {
     label: 'BAR/Board Examination Review',
-    value: 'BAR/Board Examination Review',
+    value: 'bar',
   },
-  { label: 'Other', value: 'Other' },
+  { label: 'Other', value: 'other' },
 ];
 
 const leaveOther: Array<SelectOption> = [
@@ -115,12 +121,17 @@ export const LeaveApplicationModal = ({
 }: LeaveApplicationModalProps) => {
   //zustand initialization to access Leave store
   const {
-    postResponseApply,
     loadingResponse,
-    errorResponse,
-    errorLeaveTypes,
+
     leaveDates,
     applyLeaveModalIsOpen,
+    vacationLeave,
+    forcedLeave,
+    sickLeave,
+
+    leaveDateFrom,
+    leaveDateTo,
+    overlappingLeaveCount,
 
     postLeave,
     postLeaveSuccess,
@@ -131,13 +142,20 @@ export const LeaveApplicationModal = ({
     getLeaveTypesFail,
 
     setLeaveDates,
+    setLeaveDateFrom,
+    setLeaveDateTo,
   } = useLeaveStore((state) => ({
-    postResponseApply: state.response.postResponseApply,
     loadingResponse: state.loading.loadingResponse,
-    errorResponse: state.error.errorResponse,
-    errorLeaveTypes: state.error.errorLeaveTypes,
+
     leaveDates: state.leaveDates,
     applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
+    vacationLeave: state.leaveCredits.vacation,
+    forcedLeave: state.leaveCredits.forced,
+    sickLeave: state.leaveCredits.sick,
+
+    leaveDateFrom: state.leaveDateFrom,
+    leaveDateTo: state.leaveDateTo,
+    overlappingLeaveCount: state.overlappingLeaveCount,
 
     postLeave: state.postLeave,
     postLeaveSuccess: state.postLeaveSuccess,
@@ -147,6 +165,9 @@ export const LeaveApplicationModal = ({
     getLeaveTypesSuccess: state.getLeaveTypesSuccess,
     getLeaveTypesFail: state.getLeaveTypesFail,
     setLeaveDates: state.setLeaveDates,
+
+    setLeaveDateFrom: state.setLeaveDateFrom,
+    setLeaveDateTo: state.setLeaveDateTo,
   }));
 
   // set state for employee store
@@ -155,7 +176,23 @@ export const LeaveApplicationModal = ({
   const [leaveReminder, setLeaveReminder] = useState<string>(
     'For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985).'
   );
+  const [vacationBalance, setVacationBalance] = useState<number>(0);
+  const [forcedBalance, setForcedBalance] = useState<number>(0);
+  const [sickBalance, setSickBalance] = useState<number>(0);
+  const [numberOfHolidays, setNumberOfHolidays] = useState<number>(0);
+  const [holidays, setHolidays] = useState<Array<CalendarDate>>([]);
+  //store json string from leave type selection
+  const [leaveObject, setLeaveObject] = useState<string>('');
+  const [selectedStudy, setSelectedStudy] = useState<string>('');
 
+  // Set state for vacation/sick leave credits
+  useEffect(() => {
+    setVacationBalance(vacationLeave - leaveDates.length);
+    setSickBalance(sickLeave - leaveDates.length);
+    setForcedBalance(forcedLeave - leaveDates.length);
+  }, [leaveDates]);
+
+  //fetch leave benefits list
   const leaveTypeUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-benefits`;
   const {
     data: swrLeaveTypes,
@@ -186,29 +223,54 @@ export const LeaveApplicationModal = ({
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } =
-    useForm<LeaveContents>({
+    useForm<LeaveApplicationForm>({
       mode: 'onChange',
       defaultValues: {
-        // employeeId: employeeDetails.employmentDetails.userId,
         typeOfLeaveDetails: {
           id: '',
           leaveName: '',
         },
+        forMastersCompletion: null,
+        forBarBoardReview: null,
+        studyLeaveOther: null,
       },
     });
 
-  //store json string from leave type selection
-  const [leaveObject, setLeaveObject] = useState<string>('');
-
   const handleTypeOfLeave = (e: string) => {
     setLeaveObject(e);
-    const leave = JSON.parse(e) as LeaveType;
+    const leave = JSON.parse(e) as LeaveBenefitOptions;
     setValue('typeOfLeaveDetails', leave);
+    setLeaveDateFrom(null);
+    setLeaveDateTo(null);
+  };
+
+  const handleStudy = (e: string) => {
+    setSelectedStudy(e);
+    if (e === `master`) {
+      setValue('forMastersCompletion', true);
+      setValue('forBarBoardReview', null);
+      setValue('studyLeaveOther', null);
+    } else if (e === `bar`) {
+      setValue('forMastersCompletion', null);
+      setValue('forBarBoardReview', true);
+      setValue('studyLeaveOther', null);
+    } else {
+      setValue('forMastersCompletion', null);
+      setValue('forBarBoardReview', null);
+    }
   };
 
   useEffect(() => {
     setValue('leaveApplicationDates', leaveDates);
   }, [leaveDates]);
+
+  useEffect(() => {
+    setValue('leaveApplicationDatesRange.from', leaveDateFrom);
+  }, [leaveDateFrom]);
+
+  useEffect(() => {
+    setValue('leaveApplicationDatesRange.to', leaveDateTo);
+  }, [leaveDateTo]);
 
   useEffect(() => {
     if (!applyLeaveModalIsOpen) {
@@ -221,12 +283,11 @@ export const LeaveApplicationModal = ({
     setValue('employeeId', employeeDetails.employmentDetails.userId);
   }, [leaveObject]);
 
-  const onSubmit: SubmitHandler<LeaveContents> = (data: LeaveContents) => {
+  const onSubmit: SubmitHandler<LeaveApplicationForm> = (
+    data: LeaveApplicationForm
+  ) => {
     let dataToSend;
-    if (
-      data.typeOfLeaveDetails.leaveName === 'Vacation Leave' ||
-      data.typeOfLeaveDetails.leaveName === 'Forced Leave'
-    ) {
+    if (data.typeOfLeaveDetails.leaveName === 'Vacation Leave') {
       if (data.inPhilippinesOrAbroad === 'Philippines') {
         dataToSend = {
           leaveBenefitsId: data.typeOfLeaveDetails.id,
@@ -262,26 +323,33 @@ export const LeaveApplicationModal = ({
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        typeOfLeave: data.typeOfLeaveDetails.leaveName,
-        leaveApplicationDates: data.leaveApplicationDates,
-        study: data.study,
-        studyPurpose: data.studyPurpose ? data.studyPurpose : null,
+        leaveApplicationDates: data.leaveApplicationDatesRange,
+        forMastersCompletion: data.forMastersCompletion,
+        forBarBoardReview: data.forBarBoardReview,
+        studyLeaveOther: data.studyLeaveOther,
       };
     } else if (
       data.typeOfLeaveDetails.leaveName === 'Special Leave Benefits for Women'
     ) {
       dataToSend = {
-        leaveBenefitsd: data.typeOfLeaveDetails.id,
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        typeOfLeave: data.typeOfLeaveDetails.leaveName,
         leaveApplicationDates: data.leaveApplicationDates,
-        specialLeaveWomenIllness: data.specialLeaveWomenIllness,
+        splWomen: data.specialLeaveWomenIllness,
+      };
+    } else if (
+      data.typeOfLeaveDetails.leaveName === 'Maternity Leave' ||
+      data.typeOfLeaveDetails.leaveName === 'Study Leave'
+    ) {
+      dataToSend = {
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        leaveApplicationDates: data.leaveApplicationDatesRange,
       };
     } else if (data.typeOfLeaveDetails.leaveName === 'Others') {
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        typeOfLeave: data.typeOfLeaveDetails.leaveName,
         leaveApplicationDates: data.leaveApplicationDates,
         other: data.other,
         commutation: data.commutation ? data.commutation : null,
@@ -290,19 +358,24 @@ export const LeaveApplicationModal = ({
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        typeOfLeave: data.typeOfLeaveDetails.leaveName,
         leaveApplicationDates: data.leaveApplicationDates,
       };
     }
-
-    if (!isEmpty(watch('leaveApplicationDates'))) {
+    //check first if leave dates are filled
+    if (
+      (!isEmpty(watch('leaveApplicationDates')) &&
+        watch('typeOfLeaveDetails.leaveName') !== 'Maternity Leave' &&
+        watch('typeOfLeaveDetails.leaveName') !== 'Study Leave') ||
+      (!isEmpty(watch('leaveApplicationDatesRange')) &&
+        (watch('typeOfLeaveDetails.leaveName') === 'Maternity Leave' ||
+          watch('typeOfLeaveDetails.leaveName') === 'Study Leave'))
+    ) {
       handlePostResult(dataToSend);
       postLeave();
-      console.log(dataToSend);
     }
   };
 
-  const handlePostResult = async (data: LeaveContents) => {
+  const handlePostResult = async (data: LeaveApplicationForm) => {
     const { error, result } = await postPortal('/v1/leave-application', data);
 
     if (error) {
@@ -315,43 +388,21 @@ export const LeaveApplicationModal = ({
     }
   };
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
-      {/* Notifications */}
-      {!isEmpty(errorLeaveTypes) ? (
-        <>
-          {/* {console.log(errorLeaveTypes)} */}
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorLeaveTypes}: Failed to load Leave Types`}
-          />
-        </>
-      ) : null}
-
-      {!isEmpty(errorResponse) ? (
-        <>
-          {/* {console.log(errorLeaveTypes)} */}
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorResponse}`}
-          />
-        </>
-      ) : null}
-
-      {!isEmpty(postResponseApply) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Leave Application Successful! Please wait for supervisor's decision on this application"
-        />
-      ) : null}
-
-      <Modal size={'xl'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={`${windowWidth > 1024 ? 'lg' : 'full'}`}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
-          <h3 className="font-semibold text-2xl text-gray-700">
+          <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Leave Applicattion</span>
+              <span className="text-xl md:text-2xl">Leave Applicattion</span>
               <button
-                className="hover:bg-slate-100 px-1 rounded-full"
+                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
               >
                 <HiX />
@@ -372,62 +423,9 @@ export const LeaveApplicationModal = ({
           <form id="ApplyLeaveForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
-                {/* <div className="bg-indigo-400 rounded-full w-8 h-8 flex justify-center items-center text-white font-bold shadow">1</div> */}
-                <div className="w-full pb-4">
-                  <span className="text-slate-500 text-xl font-medium">
-                    Your current Leave Credits:
-                  </span>
-                  <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                    <tbody>
-                      <tr className="border border-slate-400">
-                        <td className="border border-slate-400"></td>
-                        <td className="border border-slate-400 text-center text-sm p-1">
-                          Vacation Leave
-                        </td>
-                        <td className="border border-slate-400 text-center text-sm p-1">
-                          Sick Leave
-                        </td>
-                      </tr>
-                      <tr className="border border-slate-400">
-                        <td className="border border-slate-400 text-sm p-1">
-                          Total Earned
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          20
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          10
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-400 text-sm p-1">
-                          Less this application
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          3
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          2
-                        </td>
-                      </tr>
-                      <tr className="border border-slate-400 bg-green-100">
-                        <td className="border border-slate-400 text-sm p-1">
-                          Balance
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          7
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          8
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1">
                   <div className="flex flex-row justify-between items-center w-full">
-                    <label className="pt-2 text-slate-500 text-xl font-medium">
+                    <label className="pt-2 text-slate-500 text-md font-medium">
                       Leave Type:
                     </label>
                     {swrIsLoading ? <LoadingSpinner size="xs" /> : null}
@@ -435,12 +433,9 @@ export const LeaveApplicationModal = ({
 
                   <div className="flex gap-2 w-full items-center">
                     <select
-                      // id="typeOfLeave"
-                      className="text-slate-500 w-full h-14 rounded text-lg border-slate-300"
+                      className="text-slate-500 w-full h-14 rounded text-md border-slate-300"
                       required
                       defaultValue={''}
-                      // {...register('typeOfLeave')}
-                      // disabled={swrIsLoading ? true : false}
                       onChange={(e) =>
                         handleTypeOfLeave(e.target.value as unknown as string)
                       }
@@ -452,7 +447,7 @@ export const LeaveApplicationModal = ({
                         // typeOfLeave
                         swrLeaveTypes
                           ? swrLeaveTypes.map(
-                              (item: LeaveType, idx: number) => (
+                              (item: LeaveBenefitOptions, idx: number) => (
                                 <option
                                   value={`{"id":"${item.id}", "leaveName":"${item.leaveName}"}`}
                                   key={idx}
@@ -462,13 +457,13 @@ export const LeaveApplicationModal = ({
                               )
                             )
                           : // typeOfLeave.map((item: Item, index: number) => (
-                            //   <option
-                            //     value={`{"leaveBenefitsId":"${item.value}", "leaveName":"${item.label}"}`}
-                            //     key={index}
-                            //   >
-                            //     {item.label}
-                            //   </option>
-                            // ))
+                            //     <option
+                            //       value={`{"leaveBenefitsId":"${item.value}", "leaveName":"${item.label}"}`}
+                            //       key={index}
+                            //     >
+                            //       {item.label}
+                            //     </option>
+                            //   ))
                             null
                       }
                     </select>
@@ -477,7 +472,7 @@ export const LeaveApplicationModal = ({
 
                 <div>
                   {watch('typeOfLeaveDetails.leaveName') ? (
-                    <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">
+                    <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2">
                       <span className="font-bold">
                         {watch('typeOfLeaveDetails.leaveName')}
                       </span>
@@ -490,7 +485,7 @@ export const LeaveApplicationModal = ({
                           ? 'Annual five-day vacatuin leave shall be forfeited if not taken during the year. In case the scheduled leave has been cancelled in the exigency of the service by the head of agency, it shall no longer be deducted from the accumulated vacation leave. Availment of one (1) day or more Vacation Leave (VL) shall be considered for complying the mandatory/forced leave subject to the conditions under Section 25, Rule XVI of the Omnibus Rules Implementing E.O. No. 292.'
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Sick Leave'
-                          ? `It shall be filed immediately upon employee's return from such leave. IF filed in advance or exceeding the five (5) days, application shall be accompanied by a medical certificate. In case medical consultation was not availed of, an affidavit should be executed by an applicant.`
+                          ? `It shall be filed immediately upon employee's return from such leave. If filed in advance or exceeding the five (5) days, application shall be accompanied by a medical certificate. In case medical consultation was not availed of, an affidavit should be executed by an applicant.`
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Maternity Leave'
                           ? `Proof of pregnancy e.g. ultrasound, doctor's certificate on the expected data of delivery. Accomplished Notice of Allocation of Maternity Leave Credits (CS Form No. 6a), if needed. Seconded female employees shall enjoy maternity leave with full pay in the recipient agency.`
@@ -520,7 +515,7 @@ export const LeaveApplicationModal = ({
                           ? `The special emergency leave can be applied for a maximum of five (5) straight working days or staggered basis within thirty (30) days from the actual occurence of the natural calamity/disaster. Said privilege shall be enjoyed once a year, not in every instance of calamity or disaster. The head of office shall take full responsibility for teh grant of special emergency leave and verification of teh employee's eligibility to be granted thereof. Said verification shall include: validation of place of residence based on latest available records of the affected employee; verification that the place of residence is covered in the declaration of calamity area by the proper government agency, and such other proofs as may be necessary.`
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Adoption Leave'
-                          ? `Application for adoption leave shall be filed with an authenticated copy of teh Pre-Adoptive Placement Authority issued by the Department of Scoial Welfare and Development (DSWD).`
+                          ? `Application for adoption leave shall be filed with an authenticated copy of the Pre-Adoptive Placement Authority issued by the Department of Scoial Welfare and Development (DSWD).`
                           : watch('typeOfLeaveDetails.leaveName') === 'Others'
                           ? `For Monetization of Leave Credits, application for monetization of fifthy percent (50%) or more of the accumulated leave credits shall be accompanied by letter request to the head of the agency stating the valid and justifiable reasons. For Terminal Leave, proof of employee's resignation or retirement or separation from the service.`
                           : ``}
@@ -534,13 +529,11 @@ export const LeaveApplicationModal = ({
                     {/* <label className="-mb-2 text-slate-500 text-xl font-medium w-full">
                       Details of Leave:
                     </label> */}
-                    <div className="flex flex-row justify-between items-center w-full mt-1">
+                    <div className="flex flex-col md:flex-row justify-between items-center w-full">
                       <div className="flex flex-row justify-between items-center w-full">
-                        <label className="pt-2 text-slate-500 text-xl font-medium">
+                        <label className="pt-2 text-slate-500 text-md font-medium">
                           {watch('typeOfLeaveDetails.leaveName') ===
                             'Vacation Leave' ||
-                          watch('typeOfLeaveDetails.leaveName') ===
-                            'Forced Leave' ||
                           watch('typeOfLeaveDetails.leaveName') ===
                             'Special Privilege Leave'
                             ? 'Location:'
@@ -560,13 +553,11 @@ export const LeaveApplicationModal = ({
                         {watch('typeOfLeaveDetails.leaveName') ===
                           'Vacation Leave' ||
                         watch('typeOfLeaveDetails.leaveName') ===
-                          'Forced Leave' ||
-                        watch('typeOfLeaveDetails.leaveName') ===
                           'Special Privilege Leave' ? (
                           <>
                             <select
                               id="inPhilippinesOrAbroad"
-                              className="text-slate-500 w-full h-14 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-14 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('inPhilippinesOrAbroad')}
@@ -588,7 +579,7 @@ export const LeaveApplicationModal = ({
                           <>
                             <select
                               id="hospital"
-                              className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('hospital')}
@@ -610,10 +601,13 @@ export const LeaveApplicationModal = ({
                           <>
                             <select
                               id="study"
-                              className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
-                              {...register('study')}
+                              // {...register('study')}
+                              onChange={(e) =>
+                                handleStudy(e.target.value as unknown as string)
+                              }
                             >
                               <option value="" disabled>
                                 Select Study Purpose:
@@ -631,7 +625,7 @@ export const LeaveApplicationModal = ({
                           <>
                             <select
                               id="others"
-                              className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('other')}
@@ -654,7 +648,7 @@ export const LeaveApplicationModal = ({
                     watch('other') === 'Monetization of Leave Credits' ? (
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-row justify-between items-center w-full">
-                          <label className="pt-2 text-slate-500 text-xl font-medium">
+                          <label className="pt-2 text-slate-500 text-md font-medium">
                             Commutation
                           </label>
                         </div>
@@ -665,7 +659,7 @@ export const LeaveApplicationModal = ({
                             <div className="w-full">
                               <select
                                 id="commutation"
-                                className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                                className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
                                 required
                                 defaultValue={''}
                                 {...register('commutation')}
@@ -689,14 +683,13 @@ export const LeaveApplicationModal = ({
 
                     {watch('typeOfLeaveDetails.leaveName') ===
                       'Vacation Leave' ||
-                    watch('typeOfLeaveDetails.leaveName') === 'Forced Leave' ||
                     watch('typeOfLeaveDetails.leaveName') ===
                       'Special Privilege Leave' ||
                     watch('typeOfLeaveDetails.leaveName') === 'Sick Leave' ||
                     watch('typeOfLeaveDetails.leaveName') ===
                       'Special Leave Benefits for Women' ||
                     (watch('typeOfLeaveDetails.leaveName') === 'Study Leave' &&
-                      watch('study') === 'Other') ? (
+                      selectedStudy === 'other') ? (
                       <textarea
                         {...(watch('typeOfLeaveDetails.leaveName') ===
                           'Vacation Leave' ||
@@ -707,7 +700,7 @@ export const LeaveApplicationModal = ({
                           ? { ...register('illness') }
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Study Leave'
-                          ? { ...register('studyPurpose') }
+                          ? { ...register('studyLeaveOther') }
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Special Leave Benefits for Women'
                           ? { ...register('specialLeaveWomenIllness') }
@@ -718,8 +711,6 @@ export const LeaveApplicationModal = ({
                           watch('typeOfLeaveDetails.leaveName') ===
                             'Vacation Leave' ||
                           watch('typeOfLeaveDetails.leaveName') ===
-                            'Forced Leave' ||
-                          watch('typeOfLeaveDetails.leaveName') ===
                             'Special Privilege Leave'
                             ? 'Specify Leave Details'
                             : watch('typeOfLeaveDetails.leaveName') ===
@@ -728,11 +719,11 @@ export const LeaveApplicationModal = ({
                                 'Special Leave Benefits for Women'
                             ? 'Specify Illness'
                             : watch('typeOfLeaveDetails.leaveName') ===
-                                'Study Leave' && watch('study') === 'Other'
+                                'Study Leave' && selectedStudy === 'other'
                             ? 'Specify Study Leave Purpose'
                             : 'Specify Leave Details'
                         }`}
-                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-lg border-slate-300"
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                       ></textarea>
                     ) : null}
                   </>
@@ -740,11 +731,14 @@ export const LeaveApplicationModal = ({
 
                 {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
-                    <label className="pt-2 text-slate-500 text-xl font-medium">
+                    <label className="text-slate-500 text-md font-medium">
                       Select Leave Dates:
                     </label>
                     {/* Notifications */}
-                    {isEmpty(leaveDates) ? (
+                    {isEmpty(leaveDates) &&
+                    watch('typeOfLeaveDetails.leaveName') !==
+                      'Maternity Leave' &&
+                    watch('typeOfLeaveDetails.leaveName') !== 'Study Leave' ? (
                       <AlertNotification
                         alertType="warning"
                         notifMessage="Please select date of leave"
@@ -753,12 +747,186 @@ export const LeaveApplicationModal = ({
                       />
                     ) : null}
 
+                    {/* Notifications */}
+                    {leaveDateTo < leaveDateFrom &&
+                    (watch('typeOfLeaveDetails.leaveName') ==
+                      'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ==
+                        'Study Leave') ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Please select an acceptable date of leave"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
+                    {/* Vacation Leave Credits Notifications */}
+                    {vacationBalance < 0 &&
+                    watch('typeOfLeaveDetails.leaveName') ===
+                      'Vacation Leave' ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Insufficient Vacation Leave Credits"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
+                    {/* Vacation Leave Credits Notifications */}
+                    {forcedBalance < 0 &&
+                    watch('typeOfLeaveDetails.leaveName') === 'Forced Leave' ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Insufficient Forced Leave Credits"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
+                    {/* Sick Leave Credits Notifications */}
+                    {sickBalance < 0 &&
+                    watch('typeOfLeaveDetails.leaveName') === 'Sick Leave' ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Insufficient Sick Leave Credits"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
+                    {/* Overlapping Leaves Notifications */}
+                    {overlappingLeaveCount > 0 &&
+                    (watch('typeOfLeaveDetails.leaveName') ===
+                      'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ===
+                        'Study Leave') ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="There are overlapping leaves in your application"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
                     <div className="w-full p-4 bg-gray-50 rounded">
-                      <Calendar clickableDate={true} />
+                      {watch('typeOfLeaveDetails.leaveName') ===
+                        'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ===
+                        'Study Leave' ? (
+                        <Calendar type={'range'} clickableDate={true} />
+                      ) : (
+                        <Calendar type={'single'} clickableDate={true} />
+                      )}
                     </div>
                   </>
                 ) : null}
 
+                <div className="w-full pb-4 pt-2">
+                  <span className="text-slate-500 text-md font-medium">
+                    Your current Leave Credits:
+                  </span>
+                  <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                    <tbody>
+                      <tr className="border border-slate-400">
+                        <td className="border border-slate-400"></td>
+                        <td className="border border-slate-400 text-center text-sm p-1">
+                          Vacation Leave
+                        </td>
+                        <td className="border border-slate-400 text-center text-sm p-1">
+                          Forced Leave
+                        </td>
+                        <td className="border border-slate-400 text-center text-sm p-1">
+                          Sick Leave
+                        </td>
+                      </tr>
+                      <tr className="border border-slate-400">
+                        <td className="border border-slate-400 text-sm p-1">
+                          Total Earned
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {vacationLeave.toFixed(2)}
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {forcedLeave.toFixed(2)}
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {sickLeave.toFixed(2)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-400 text-sm p-1">
+                          Less this application
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Vacation Leave'
+                            ? leaveDates.length
+                            : 0}
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Forced Leave'
+                            ? leaveDates.length
+                            : 0}
+                        </td>
+                        <td className="border border-slate-400 p-1 text-center text-sm">
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Sick Leave'
+                            ? leaveDates.length
+                            : 0}
+                        </td>
+                      </tr>
+                      <tr className="border border-slate-400 bg-green-100">
+                        <td className="border border-slate-400 text-sm p-1">
+                          Balance
+                        </td>
+                        <td
+                          className={`${
+                            vacationBalance < 0 &&
+                            watch('typeOfLeaveDetails.leaveName') ===
+                              'Vacation Leave'
+                              ? 'bg-red-300'
+                              : ''
+                          } border border-slate-400 p-1 text-center text-sm`}
+                        >
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Vacation Leave'
+                            ? vacationBalance.toFixed(2)
+                            : vacationLeave.toFixed(2)}
+                        </td>
+                        <td
+                          className={`${
+                            forcedBalance < 0 &&
+                            watch('typeOfLeaveDetails.leaveName') ===
+                              'Forced Leave'
+                              ? 'bg-red-300'
+                              : ''
+                          } border border-slate-400 p-1 text-center text-sm`}
+                        >
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Forced Leave'
+                            ? forcedBalance.toFixed(2)
+                            : forcedLeave.toFixed(2)}
+                        </td>
+                        <td
+                          className={`${
+                            sickBalance < 0 &&
+                            watch('typeOfLeaveDetails.leaveName') ===
+                              'Sick Leave'
+                              ? 'bg-red-300'
+                              : ''
+                          } border border-slate-400 p-1 text-center text-sm`}
+                        >
+                          {watch('typeOfLeaveDetails.leaveName') ===
+                          'Sick Leave'
+                            ? sickBalance.toFixed(2)
+                            : sickLeave.toFixed(2)}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
                 <div
                   className={`flex flex-col gap-2 w-full bg-slate-100 text-sm p-2 mt-1`}
                 >
@@ -777,6 +945,33 @@ export const LeaveApplicationModal = ({
                 loading={false}
                 form="ApplyLeaveForm"
                 type="submit"
+                disabled={
+                  vacationBalance < 0 &&
+                  watch('typeOfLeaveDetails.leaveName') === 'Vacation Leave'
+                    ? true
+                    : forcedBalance < 0 &&
+                      watch('typeOfLeaveDetails.leaveName') === 'Forced Leave'
+                    ? true
+                    : sickBalance < 0 &&
+                      watch('typeOfLeaveDetails.leaveName') === 'Sick Leave'
+                    ? true
+                    : overlappingLeaveCount > 0 &&
+                      (watch('typeOfLeaveDetails.leaveName') ===
+                        'Maternity Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') === 'Study Leave')
+                    ? true
+                    : leaveDates.length <= 0 &&
+                      watch('typeOfLeaveDetails.leaveName') !==
+                        'Maternity Leave' &&
+                      watch('typeOfLeaveDetails.leaveName') !== 'Study Leave'
+                    ? true
+                    : leaveDateTo < leaveDateFrom &&
+                      (watch('typeOfLeaveDetails.leaveName') ==
+                        'Maternity Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') == 'Study Leave')
+                    ? true
+                    : false
+                }
               >
                 Apply Leave
               </Button>

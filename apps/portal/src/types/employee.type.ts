@@ -13,7 +13,7 @@ export type Profile = User & {
   nameExt: string;
   sex: string;
   birthDate: string | Date | null;
-  mobile: string;
+  mobileNumber: string;
 
   photoUrl: string;
 };
@@ -30,6 +30,7 @@ export type EmploymentDetails = {
   companyId: string | null;
   assignment: Assignment;
   userRole: string;
+  isHRMPSB?: boolean;
 };
 
 export type EmployeeDetails = {
@@ -65,31 +66,31 @@ export type EmployeeProfile = {
 
 export const employeeDummy: EmployeeDetails = {
   user: {
-    _id: 'b35433c0-b1c6-11ed-a79b-000c29f95a80',
+    _id: '62fef63c-b26f-11ed-a79b-000c29f95a80',
     email: 'ericsison003@gmail.com',
   },
   profile: {
-    _id: 'b35433c0-b1c6-11ed-a79b-000c29f95a80',
+    _id: '1c0787b0-093e-4362-85ff-c372c0dde496',
     companyId: null,
-    firstName: 'Rannie May',
-    middleName: 'D',
-    lastName: 'Sy',
+    firstName: 'Ferdz Dummy',
+    middleName: 'Dionaldo',
+    lastName: 'Ferrer',
     nameExt: 'Jr',
     sex: 'Male',
     birthDate: '1991-08-14',
-    mobile: '09238045092',
+    mobileNumber: '09235197604',
     email: 'ericsison003@gmail.com',
-    photoUrl: '/avatars/avatar4.png',
+    photoUrl: '/profile.jpg',
   },
   employmentDetails: {
-    userId: 'b35433c0-b1c6-11ed-a79b-000c29f95a80',
-    companyId: null,
+    userId: '62fef63c-b26f-11ed-a79b-000c29f95a80',
+    companyId: '2020-007',
     assignment: {
-      id: '928bb2b7-f048-11ec-8d31-c4bde5a04065',
-      name: 'Mainline Expansion, Rehabitation and Civil Works Division',
-      positionId: '929448ca-f048-11ec-8d31-c4bde5a04065',
-      positionTitle: 'Senior Engineer A',
+      id: '91ddf4e0-f048-11ec-8d31-c4bde5a04065',
+      name: 'Systems Development and Application Division',
+      positionId: '91f25a60-f048-11ec-8d31-c4bde5a04065',
+      positionTitle: 'Management Information System Researcher',
     },
-    userRole: 'division_manager',
+    userRole: 'general_manager',
   },
 };

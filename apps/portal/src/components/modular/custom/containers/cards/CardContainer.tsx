@@ -1,43 +1,56 @@
-import { ReactNode } from 'react';
+const size = {
+  sm: 'text-sm',
+  md: 'text-md',
+  lg: 'text-lg',
+  xl: 'text-xl',
+  xxl: 'text-2xl',
+  xxxl: 'text-3xl',
+};
 
 type CardContainerProps = {
-  bgColor: string;
-  className: string;
-  titleClassName: string;
   title: string;
-  icon: any;
-  remarks: string;
-  subtitle: string;
-  subtitleClassName: string;
-  children: ReactNode;
+  children?: React.ReactNode | React.ReactNode[];
+  titleClassName?: string;
+  className?: string;
+  isArray?: boolean;
+  cols?: number;
+  titleSize?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
 };
 
 export const CardContainer = ({
-  bgColor,
-  className,
   title,
-  subtitle,
-  titleClassName,
-  subtitleClassName,
-  icon,
-  remarks,
+  titleSize = 'xxl',
+  className,
+  titleClassName = '',
+  isArray = false,
+  cols = 1,
   children,
-}: CardContainerProps) => {
+}: CardContainerProps): JSX.Element => {
   return (
     <>
-      <div className={` mt-3 rounded-xl bg-${bgColor} pt-2 pb-10 shadow-md ${className} `}>
-        <header>
-          <div className="justify-between grid-cols-2 xs:grid sm:grid md:flex lg:flex">
-            <h3 className={`${titleClassName} col-span-1 flex select-none items-end hover:text-indigo-800`}>
-              {title}
-              {icon}
-            </h3>
-            <div className="pt-2 mx-5 mt-3 italic lg:text-md md:text-md xs:text-xs sm:text-xs ">{remarks}</div>
+      <div className={`${className}`}>
+        <h1
+          className={`${titleClassName} flex hover:text-indigo-800 ${
+            isArray ? 'mx-[5%] mt-5 justify-start uppercase' : 'justify-center'
+          } ${size[titleSize]} `}
+        >
+          {title}
+        </h1>
+        {isArray ? (
+          <div
+            className={`${className}  grid grid-cols-1 gap-2 text-left font-light lg:grid  `}
+          >
+            {children}
           </div>
-
-          <span className={`${subtitleClassName} col-span-1 select-none hover:text-indigo-800`}>{subtitle}</span>
-        </header>
-        <main>{children}</main>
+        ) : (
+          <div
+            className={` grid grid-cols-${cols} ${
+              cols > 1 ? 'justify-between' : ''
+            } gap-2 text-left font-light`}
+          >
+            {children}
+          </div>
+        )}
       </div>
     </>
   );

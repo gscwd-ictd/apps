@@ -8,10 +8,11 @@ import {
   View,
   Image,
 } from '@react-pdf/renderer';
-import { PassSlipContents } from '../../../../src/types/passslip.type';
-
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { PassSlipPdf } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import React, { useEffect, useState } from 'react';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
+import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({
   page: {
@@ -90,10 +91,10 @@ const styles = StyleSheet.create({
 
 type PassSlipPdfProps = {
   employeeDetails: EmployeeDetails;
-  passSlipDetails: PassSlipContents;
+  passSlipDetails: PassSlipPdf;
 };
 
-export const PassSlipPdf = ({
+export const PassSlipPdfView = ({
   employeeDetails,
   passSlipDetails,
 }: PassSlipPdfProps): JSX.Element => {
@@ -143,7 +144,9 @@ export const PassSlipPdf = ({
                       marginTop: 10,
                     }}
                   >
-                    {passSlipDetails.createdAt}
+                    {dayjs(passSlipDetails.dateOfApplication).format(
+                      'MM-DD-YYYY'
+                    )}
                   </Text>
                   <Text>DEPARTMENT: _________________</Text>
                   <Text
@@ -153,7 +156,7 @@ export const PassSlipPdf = ({
                       marginTop: 10,
                     }}
                   >
-                    {`ICTD`}
+                    {passSlipDetails.assignment}
                   </Text>
                 </View>
                 <Text style={{ fontSize: 9, paddingLeft: 10 }}>
@@ -321,11 +324,18 @@ export const PassSlipPdf = ({
                         fontSize: 9,
                       }}
                     >
-                      {employeeDetails.profile.firstName}{' '}
-                      {employeeDetails.profile.middleName}
-                      {'. '}
-                      {employeeDetails.profile.lastName}
+                      {passSlipDetails.employee.name}
                     </Text>
+
+                    <Image
+                      style={{
+                        position: 'absolute',
+                        marginTop: 0,
+                        marginLeft: 90,
+                        width: 50,
+                      }}
+                      src={passSlipDetails.employee.signature}
+                    ></Image>
                     <Text style={{ marginTop: 10 }}>
                       _____________________________
                     </Text>
@@ -338,15 +348,26 @@ export const PassSlipPdf = ({
                         fontSize: 9,
                       }}
                     >
-                      {passSlipDetails.supervisorName}
+                      {passSlipDetails.supervisor.name}
                     </Text>
+
+                    <Image
+                      style={{
+                        position: 'absolute',
+                        marginTop: 45,
+                        marginLeft: 90,
+                        width: 60,
+                      }}
+                      src={`${passSlipDetails.supervisor.signature}`}
+                    ></Image>
+
                     <Text style={{ marginTop: 7 }}>
                       _____________________________
                     </Text>
                     <Text>Department Manager / Supervisor</Text>
                   </View>
                   <View style={styles.flexColumnJustifyBetween}>
-                    <Text>X</Text>
+                    {/* <Text>X</Text> */}
                   </View>
                 </View>
               </View>

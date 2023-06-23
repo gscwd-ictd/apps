@@ -1,11 +1,13 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import 'react-toastify/dist/ReactToastify.css';
 import { WorkExperiencePds } from '../../../../src/types/workexp.type';
 import { NumericFormat } from 'react-number-format';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Button, Modal, TextField } from '@gscwd-apps/oneui';
+import { Button, Modal, TextField, ToastNotification } from '@gscwd-apps/oneui';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
 import { HiPencil, HiPlus, HiTrash, HiX } from 'react-icons/hi';
-import { toast, ToastContainer } from 'react-toastify';
+import { isEmpty } from 'lodash';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export const VacancyWorkExperience = (props: {
   data: WorkExperiencePds;
@@ -50,6 +52,9 @@ export const VacancyWorkExperience = (props: {
     inputOffice(e.target.value.trimStart(), expId);
   };
 
+  const [errorAccomplishment, setErrorAccomplishment] = useState<string>('');
+  const [errorDuty, setErrorDuty] = useState<string>('');
+
   const handleAccomplishmentInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setAccomplishmentInput(e.target.value.trim());
   };
@@ -59,21 +64,29 @@ export const VacancyWorkExperience = (props: {
   };
 
   const handleAddAccomplishment = (expId: string, accomplishment: string) => {
-    if (accomplishment == '' || accomplishment.trim().length == 0) {
-      toast.error('Please fill out accomplishment field!');
-    } else {
-      addAccomplishment(expId, accomplishment);
-      modalCancel();
-    }
+    setErrorAccomplishment(null);
+
+    setTimeout(() => {
+      if (accomplishment == '' || accomplishment.trim().length == 0) {
+        setErrorAccomplishment('Please fill out accomplishment field!');
+      } else {
+        addAccomplishment(expId, accomplishment);
+        modalCancel();
+      }
+    }, 100);
   };
 
   const handleAddDuty = (duty: string, expId: string) => {
-    if (duty == '' || duty.trim().length == 0) {
-      toast.error('Please fill out duty field!');
-    } else {
-      addDuty(duty, expId);
-      modalCancel();
-    }
+    setErrorDuty(null);
+
+    setTimeout(() => {
+      if (duty == '' || duty.trim().length == 0) {
+        setErrorDuty('Please fill out duty field!');
+      } else {
+        addDuty(duty, expId);
+        modalCancel();
+      }
+    }, 100);
   };
 
   const handleRemoveAccomplishment = (
@@ -88,21 +101,30 @@ export const VacancyWorkExperience = (props: {
   };
 
   const handleEditAccomplishment = (expId: string, indexForEdit: number) => {
-    if (accomplishmentInput === '' || accomplishmentInput.trim().length == 0) {
-      toast.error('Please fill out accomplishment field!');
-    } else {
-      editAccomplishment(expId, indexForEdit, accomplishmentInput);
-      modalCancel();
-    }
+    setErrorAccomplishment(null);
+    setTimeout(() => {
+      if (
+        accomplishmentInput === '' ||
+        accomplishmentInput.trim().length == 0
+      ) {
+        setErrorAccomplishment('Please fill out accomplishment field!');
+      } else {
+        editAccomplishment(expId, indexForEdit, accomplishmentInput);
+        modalCancel();
+      }
+    }, 100);
   };
 
   const handleEditDuty = (expId: string, indexForEdit: number) => {
-    if (dutyInput == '' || dutyInput.trim().length == 0) {
-      toast.error('Please fill out duty field!');
-    } else {
-      editDuty(expId, indexForEdit, dutyInput);
-      modalCancel();
-    }
+    setErrorDuty(null);
+    setTimeout(() => {
+      if (dutyInput == '' || dutyInput.trim().length == 0) {
+        setErrorDuty('Please fill out duty field!');
+      } else {
+        editDuty(expId, indexForEdit, dutyInput);
+        modalCancel();
+      }
+    }, 100);
   };
 
   const addWorkExperience = (Idx: number, expId: string, e: unknown) => {
@@ -176,24 +198,23 @@ export const VacancyWorkExperience = (props: {
       page: pageNumber,
     });
   };
+
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <ToastContainer
-        className={'uppercase text-xs'}
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      {!isEmpty(errorAccomplishment) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorAccomplishment}`}
+        />
+      ) : null}
+
+      {!isEmpty(errorDuty) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorDuty}`} />
+      ) : null}
+
       <Modal
-        size={'md'}
-        className={'w-full'}
+        size={`${windowWidth > 768 ? 'lg' : 'full'}`}
         open={modal.isOpen}
         setOpen={() => setModal({ ...modal })}
       >
@@ -540,7 +561,7 @@ export const VacancyWorkExperience = (props: {
         })
       ) : (
         <div className="w-full h-full flex flex-col justify-center items-center">
-          <label className="text-4xl opacity-50 w-full text-center pt-40">
+          <label className="text-4xl opacity-50 w-full text-center pt-40 pb-40">
             NO WORK EXPERIENCE FOUND
           </label>
         </div>

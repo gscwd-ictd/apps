@@ -1,5 +1,5 @@
 /* eslint-disable no-empty */
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Data } from 'apps/pds/src/types/data/pds.type';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

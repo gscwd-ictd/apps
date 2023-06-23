@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import {
   FormEvent,
@@ -70,7 +70,11 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
     // loop through positions array and filter according to position title
     positions.filter((position: Position) => {
       // check if there is a match
-      if (position.positionTitle.match(new RegExp(value, 'i'))) {
+      if (
+        position.positionTitle.match(new RegExp(value, 'i')) ||
+        position.itemNumber.match(new RegExp(value, 'i')) ||
+        position.designation.match(new RegExp(value, 'i'))
+      ) {
         // insert the matching position inside the filtered result
 
         filteredResult.push(position);
@@ -100,6 +104,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
   useEffect(() => {
     if (!isEmpty(swrPositions)) {
       // success
+
       GetAllPositionsSuccess(swrPositions.data);
     }
 
@@ -164,7 +169,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
                 </>
               ) : null}
             </div>
-            <div className="h-[28rem] overflow-y-scroll">
+            <div className="h-[28rem] overflow-y-auto">
               {filteredPositions.length === 0 ? (
                 <div className="flex justify-center h-full pt-5 text-center">
                   <h5 className="text-2xl font-medium text-gray-300">{`No results found for '${filteredValue}'`}</h5>

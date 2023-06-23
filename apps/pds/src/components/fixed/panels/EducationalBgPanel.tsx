@@ -1,4 +1,4 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Page } from '../../modular/pages/Page';
 import { Elementary } from './education/Elementary';
 import { Secondary } from './education/Secondary';

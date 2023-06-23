@@ -1,4 +1,11 @@
-import { autoUpdate, FloatingPortal, offset, shift, size, useFloating } from '@floating-ui/react-dom-interactions';
+import {
+  autoUpdate,
+  FloatingPortal,
+  offset,
+  shift,
+  size,
+  useFloating,
+} from '@floating-ui/react-dom-interactions';
 import { Listbox } from '@headlessui/react';
 import { AnimatePresence, m, LazyMotion, domAnimation } from 'framer-motion';
 import { Fragment, FunctionComponent } from 'react';
@@ -12,13 +19,21 @@ export type RenderList<T> = {
 
 type SelectProps<T> = {
   className?: string;
+  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   data: T[];
   listDef: ListDef<T>;
   initial?: T;
   onSelect?: (item: T) => void;
 };
 
-export const Select = <T extends object>({ className, data, listDef, initial, onSelect }: SelectProps<T>) => {
+export const Select = <T extends object>({
+  className,
+  data,
+  listDef,
+  initial,
+  textSize = 'md',
+  onSelect,
+}: SelectProps<T>) => {
   const { key, render, disable = () => false } = listDef;
 
   const { x, y, reference, floating, strategy } = useFloating({
@@ -38,14 +53,19 @@ export const Select = <T extends object>({ className, data, listDef, initial, on
 
   return (
     <div>
-      <Listbox ref={reference} as="div" name="listbox" defaultValue={initial ? initial : data[0]}>
+      <Listbox
+        ref={reference}
+        as="div"
+        name="listbox"
+        defaultValue={initial ? initial : data[0]}
+      >
         {({ open }) => (
           <>
             <Listbox.Button as="button" className={listBtnClass(className)}>
               {({ value }) => {
                 return (
                   <>
-                    <span>{value[key]}</span>
+                    <span className={`text-${textSize}`}>{value[key]}</span>
                     <ChevronDown rotate={open} />
                   </>
                 );
@@ -66,7 +86,11 @@ export const Select = <T extends object>({ className, data, listDef, initial, on
                         static
                         ref={floating}
                         as="div"
-                        style={{ position: strategy, top: y ?? 0, left: x ?? 0 }}
+                        style={{
+                          position: strategy,
+                          top: y ?? 0,
+                          left: x ?? 0,
+                        }}
                         className={listOptionsClass()}
                       >
                         <ul className={ulClass()} role="listbox">
@@ -87,7 +111,14 @@ export const Select = <T extends object>({ className, data, listDef, initial, on
                                    *  render the item in the DOM based on user defined element (or just a plain string)
                                    */
                                   return (
-                                    <li onClick={onSelect ? () => onSelect(listItem) : () => null}>
+                                    <li
+                                      className={`text-${textSize}`}
+                                      onClick={
+                                        onSelect
+                                          ? () => onSelect(listItem)
+                                          : () => null
+                                      }
+                                    >
                                       {render(listItem, state)}
                                     </li>
                                   );
@@ -119,7 +150,11 @@ const ChevronDown: FunctionComponent<{ rotate: boolean }> = ({ rotate }) => {
       stroke="currentColor"
       className={`${rotate && 'rotate-180'} w-4 h-4 transition-transform`}
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+      />
     </svg>
   );
 };

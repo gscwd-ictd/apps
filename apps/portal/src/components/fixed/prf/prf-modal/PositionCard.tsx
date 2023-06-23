@@ -60,7 +60,7 @@ export const PositionCard: FunctionComponent<PositionCardProps> = ({
     <>
       <div className="scale-90 transition-all shadow-2xl shadow-slate-100 bg-white bg-opacity-40 p-5 rounded">
         <div className="flex">
-          <div className="shrink-0 w-[calc(100%-2rem)] space-y-3">
+          <div className="shrink-0 w-full lg:w-[calc(100%-2rem)] space-y-3">
             <p className="text-gray-600 text-xs ml-1">{position.itemNumber}</p>
 
             <div className="flex gap-3">
@@ -69,8 +69,8 @@ export const PositionCard: FunctionComponent<PositionCardProps> = ({
               </section>
 
               <div>
-                <h3 className="truncate">{position.positionTitle}</h3>
-                <p className="text-sm text-gray-400 truncate w-[30rem]">
+                <h3 className="md:truncate">{position.positionTitle}</h3>
+                <p className="text-sm text-gray-400 md:truncate w-full lg:w-[30rem]">
                   {position.designation}
                 </p>
               </div>

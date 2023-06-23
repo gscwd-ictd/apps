@@ -1,3 +1,4 @@
+import { Card } from '../../components/cards/Card';
 import { CardEmployee } from '../../components/cards/CardEmployee';
 import { Holidays } from '../../components/cards/Holidays';
 import { TardinessChart } from '../../components/charts/Tardiness';
@@ -6,19 +7,23 @@ import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
 
 export function Index() {
   return (
-    <div className="min-h-[100%] min-w-full">
+    <div className="w-full">
       <BreadCrumbs title="" />
-      <div className="relative w-full h-full gap-5 px-5 lg:flex lg:flex-row md:flex md:flex-col sm:flex sm:flex-col">
-        <div className="sm:w-full lg:w-[30%] min-w-[18rem] h-full flex flex-col gap-5 ">
-          <CardEmployee />
-          <Holidays />
-        </div>
+      <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
+        <Card>
+          <div className="gap-5 lg:flex lg:flex-row md:flex md:flex-col sm:flex sm:flex-col">
+            <section className="sm:w-full md:w-full lg:w-[30%] flex flex-col gap-5 ">
+              <CardEmployee />
+              <Holidays />
+            </section>
 
-        <section className="flex flex-col sm:w-full lg:w-[70%] h-full gap-5">
-          <PendingDashboard />
+            <section className="flex flex-col sm:w-full lg:w-[70%] h-full gap-5">
+              <PendingDashboard />
 
-          <TardinessChart />
-        </section>
+              <TardinessChart />
+            </section>
+          </div>
+        </Card>
       </div>
     </div>
   );

@@ -9,31 +9,35 @@ type ApprovalsTabsProps = {
 
 export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
   const setTab = useApprovalStore((state) => state.setTab);
-  const pendingPassSlipList = useApprovalStore(
-    (state) => state.pendingPassSlipList
-  );
-  const approvedPassSlipList = useApprovalStore(
-    (state) => state.approvedPassSlipList
-  );
-  const disapprovedPassSlipList = useApprovalStore(
-    (state) => state.disapprovedPassSlipList
-  );
-  const pendingLeaveList = useApprovalStore((state) => state.pendingLeaveList);
-  const approvedLeaveList = useApprovalStore(
-    (state) => state.approvedLeaveList
-  );
-  const disapprovedLeaveList = useApprovalStore(
-    (state) => state.disapprovedLeaveList
-  );
 
   const selectedApprovalType = useApprovalStore(
     (state) => state.selectedApprovalType
   );
 
+  const {
+    forApprovalPassSlips,
+    approvedPassSlips,
+    disapprovedPassSlips,
+    cancelledPassSlips,
+    forApprovalLeaves,
+    approvedLeaves,
+    disapprovedLeaves,
+    cancelledLeaves,
+  } = useApprovalStore((state) => ({
+    forApprovalPassSlips: state.passSlips.forApproval,
+    approvedPassSlips: state.passSlips.completed.approved,
+    disapprovedPassSlips: state.passSlips.completed.disapproved,
+    cancelledPassSlips: state.passSlips.completed.cancelled,
+    forApprovalLeaves: state.leaves.forApproval,
+    approvedLeaves: state.leaves.approved,
+    disapprovedLeaves: state.leaves.disapproved,
+    cancelledLeaves: state.leaves.cancelled,
+  }));
+
   return (
     <>
-      <div className="w-full h-[44rem] px-5 overflow-y-auto">
-        <ul className="flex flex-col text-gray-500">
+      <div className="lg:h-auto lg:pt-0 lg:pb-10 h-full py-4 w-full px-5 overflow-y-auto">
+        <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500">
           {selectedApprovalType === 1 && (
             <>
               <TabHeader
@@ -43,11 +47,11 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                   // setIsLoading(true);
                   setTab(1);
                 }}
-                title="Pending Pass Slip Approvals"
+                title="Pass Slip Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
-                subtitle="Show all pending Pass Slips you applied for"
+                subtitle="Show all Pass Slips that require your approval"
                 notificationCount={
-                  pendingPassSlipList ? pendingPassSlipList.length : 0
+                  forApprovalPassSlips ? forApprovalPassSlips.length : 0
                 }
                 className="bg-indigo-500"
               />
@@ -58,11 +62,11 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                   // setIsLoading(true);
                   setTab(2);
                 }}
-                title="Pending Leave Approvals"
+                title="Leave Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
-                subtitle="Show all pending Pass Slips you applied for"
+                subtitle="Show all Leaves that require your approval"
                 notificationCount={
-                  pendingLeaveList ? pendingLeaveList.length : 0
+                  forApprovalLeaves ? forApprovalLeaves.length : 0
                 }
                 className="bg-indigo-500"
               />
@@ -79,9 +83,9 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Approved Pass Slips"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
+                subtitle="Show all approved Pass Slip applications"
                 notificationCount={
-                  approvedPassSlipList ? approvedPassSlipList.length : 0
+                  approvedPassSlips ? approvedPassSlips.length : 0
                 }
                 className="bg-gray-500"
               />
@@ -94,10 +98,8 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Approved Leaves"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
-                notificationCount={
-                  approvedLeaveList ? approvedLeaveList.length : 0
-                }
+                subtitle="Show all approved Leave applications"
+                notificationCount={approvedLeaves ? approvedLeaves.length : 0}
                 className="bg-gray-500"
               />
             </>
@@ -114,9 +116,9 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Disapproved Pass Slips"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
+                subtitle="Show all disapproved Pass Slip applications"
                 notificationCount={
-                  disapprovedPassSlipList ? disapprovedPassSlipList.length : 0
+                  disapprovedPassSlips ? disapprovedPassSlips.length : 0
                 }
                 className="bg-gray-500"
               />
@@ -129,9 +131,44 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 }}
                 title="Disapproved Leaves"
                 icon={<HiCheck size={26} />}
-                subtitle="Show all fulfilled Pass Slip applications"
+                subtitle="Show all disapproved Leave applications"
                 notificationCount={
-                  disapprovedLeaveList ? disapprovedLeaveList.length : 0
+                  disapprovedLeaves ? disapprovedLeaves.length : 0
+                }
+                className="bg-gray-500"
+              />
+            </>
+          )}
+
+          {selectedApprovalType === 4 && (
+            <>
+              <TabHeader
+                tab={tab}
+                tabIndex={7}
+                onClick={() => {
+                  // setIsLoading(true);
+                  setTab(7);
+                }}
+                title="Cancelled Pass Slips"
+                icon={<HiCheck size={26} />}
+                subtitle="Show all cancelled Pass Slip applications"
+                notificationCount={
+                  cancelledPassSlips ? cancelledPassSlips.length : 0
+                }
+                className="bg-gray-500"
+              />
+              <TabHeader
+                tab={tab}
+                tabIndex={8}
+                onClick={() => {
+                  // setIsLoading(true);
+                  setTab(8);
+                }}
+                title="Cancelled Leaves"
+                icon={<HiCheck size={26} />}
+                subtitle="Show all cancelled Leave applications"
+                notificationCount={
+                  cancelledLeaves ? cancelledLeaves.length : 0
                 }
                 className="bg-gray-500"
               />

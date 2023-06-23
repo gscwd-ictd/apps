@@ -1,7 +1,40 @@
 import { create } from 'zustand';
 import { WorkExperience } from '../types/workexp.type';
+import { devtools } from 'zustand/middleware';
 
 export type WorkExpState = {
+  loading: {
+    loadingJobOpening: boolean;
+    loadingIfApplied: boolean;
+    loadingWorkExperience: boolean;
+    loadingApplyJob: boolean;
+  };
+  error: {
+    errorJobOpening: string;
+    errorIfApplied: string;
+    errorWorkExperience: string;
+    errorApplyJob: string;
+    errorCaptcha: string;
+    errorMessage: string;
+  };
+  response: {
+    responseApplyJob: string;
+  };
+
+  setloadingJobOpening: (loading: boolean) => void;
+  setloadingifApplied: (loading: boolean) => void;
+  setloadingWorkExperience: (loading: boolean) => void;
+  setloadingApplyJob: (loading: boolean) => void;
+
+  setErrorJobOpening: (error: string) => void;
+  setErrorIfApplied: (error: string) => void;
+  setErrorWorkExperience: (error: string) => void;
+  setErrorApplyJob: (error: string) => void;
+  setErrorCaptcha: (error: string) => void;
+  setErrorMessage: (error: string) => void;
+
+  setResponseApply: (response: string) => void;
+
   workExperience: Array<WorkExperience>;
   withRelevantExperience: boolean;
   setWithRelevantExperience: (withExperience: boolean) => void;
@@ -27,149 +60,300 @@ export type WorkExpState = {
     indexForEdit: number,
     newDuty: string
   ) => void;
+
+  emptyResponseAndError: () => void;
 };
 
-export const useWorkExpStore = create<WorkExpState>((set) => ({
-  workExperience: [] as Array<WorkExperience>,
-  withRelevantExperience: false,
-  resetWorkExperience: () => {
-    set((state) => ({
-      workExperience: [],
-    }));
-  },
-  addWorkExperience: (newExp: WorkExperience) => {
-    set((state) => ({
-      workExperience: [...state.workExperience, newExp],
-    }));
-  },
-  removeWorkExperience: (workExperienceId: string) => {
-    set((state) => ({
-      workExperience: state.workExperience.filter(
-        (exp) => exp.basic.workExperienceId !== workExperienceId
-      ),
-    }));
-  },
-  setWithRelevantExperience: (withExperience: boolean) => {
-    set((state) => ({
-      withRelevantExperience: withExperience,
-    }));
-  },
-  inputSupervisor: (name: string, workExperienceId: string) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) =>
-        exp.basic.workExperienceId === workExperienceId
-          ? { ...exp, basic: { ...exp.basic, supervisor: name } }
-          : exp
-      ),
-    }));
-  },
-  inputOffice: (name: string, workExperienceId: string) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) =>
-        exp.basic.workExperienceId === workExperienceId
-          ? { ...exp, basic: { ...exp.basic, office: name } }
-          : exp
-      ),
-    }));
-  },
-  addAccomplishment: (workExperienceId: string, accomplishment: string) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) =>
-        exp.basic.workExperienceId === workExperienceId
-          ? {
-              ...exp,
-              accomplishments: [...exp.accomplishments, { accomplishment }],
-            }
-          : exp
-      ),
-    }));
-  },
-  addDuty: (duty: string, workExperienceId: string) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) =>
-        exp.basic.workExperienceId === workExperienceId
-          ? {
-              ...exp,
-              duties: [...exp.duties, { duty }],
-            }
-          : exp
-      ),
-    }));
-  },
-  deleteAccomplishment: (workExperienceId: string, indexForDelete: number) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) =>
-        exp.basic.workExperienceId === workExperienceId
-          ? {
-              ...exp,
-              accomplishments: exp.accomplishments.filter(
-                (a, index) => index !== indexForDelete
-              ),
-            }
-          : exp
-      ),
-    }));
-  },
-  deleteDuty: (workExperienceId: string, indexForDelete: number) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) =>
-        exp.basic.workExperienceId === workExperienceId
-          ? {
-              ...exp,
-              duties: exp.duties.filter((d, index) => index !== indexForDelete),
-            }
-          : exp
-      ),
-    }));
-  },
-  editAccomplishment: (
-    workExperienceId: string,
-    indexForEdit: number,
-    newAccomplishment: string
-  ) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) => {
-        if (exp.basic.workExperienceId === workExperienceId) {
-          return {
-            ...exp,
-            accomplishments: exp.accomplishments.map((a, index) => {
-              if (index === indexForEdit) {
-                return {
-                  ...a,
-                  accomplishment: newAccomplishment,
-                };
+export const useWorkExpStore = create<WorkExpState>()(
+  devtools((set) => ({
+    loading: {
+      loadingJobOpening: false,
+      loadingIfApplied: false,
+      loadingWorkExperience: false,
+      loadingApplyJob: false,
+    },
+    error: {
+      errorJobOpening: '',
+      errorIfApplied: '',
+      errorWorkExperience: '',
+      errorApplyJob: '',
+      errorCaptcha: '',
+      errorMessage: '',
+    },
+    response: {
+      responseApplyJob: '',
+    },
+
+    workExperience: [] as Array<WorkExperience>,
+    withRelevantExperience: false,
+    resetWorkExperience: () => {
+      set((state) => ({
+        workExperience: [],
+      }));
+    },
+    addWorkExperience: (newExp: WorkExperience) => {
+      set((state) => ({
+        workExperience: [...state.workExperience, newExp],
+      }));
+    },
+    removeWorkExperience: (workExperienceId: string) => {
+      set((state) => ({
+        workExperience: state.workExperience.filter(
+          (exp) => exp.basic.workExperienceId !== workExperienceId
+        ),
+      }));
+    },
+    setWithRelevantExperience: (withExperience: boolean) => {
+      set((state) => ({
+        withRelevantExperience: withExperience,
+      }));
+    },
+    inputSupervisor: (name: string, workExperienceId: string) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) =>
+          exp.basic.workExperienceId === workExperienceId
+            ? { ...exp, basic: { ...exp.basic, supervisor: name } }
+            : exp
+        ),
+      }));
+    },
+    inputOffice: (name: string, workExperienceId: string) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) =>
+          exp.basic.workExperienceId === workExperienceId
+            ? { ...exp, basic: { ...exp.basic, office: name } }
+            : exp
+        ),
+      }));
+    },
+    addAccomplishment: (workExperienceId: string, accomplishment: string) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) =>
+          exp.basic.workExperienceId === workExperienceId
+            ? {
+                ...exp,
+                accomplishments: [...exp.accomplishments, { accomplishment }],
               }
-              return a;
-            }),
-          };
-        }
-        return exp;
-      }),
-    }));
-  },
-  editDuty: (
-    workExperienceId: string,
-    indexForEdit: number,
-    newDuty: string
-  ) => {
-    set((state) => ({
-      workExperience: state.workExperience.map((exp) => {
-        if (exp.basic.workExperienceId === workExperienceId) {
-          return {
-            ...exp,
-            duties: exp.duties.map((d, index) => {
-              if (index === indexForEdit) {
-                return {
-                  ...d,
-                  duty: newDuty,
-                };
+            : exp
+        ),
+      }));
+    },
+    addDuty: (duty: string, workExperienceId: string) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) =>
+          exp.basic.workExperienceId === workExperienceId
+            ? {
+                ...exp,
+                duties: [...exp.duties, { duty }],
               }
-              return d;
-            }),
-          };
-        }
-        return exp;
-      }),
-    }));
-  },
-}));
+            : exp
+        ),
+      }));
+    },
+    deleteAccomplishment: (
+      workExperienceId: string,
+      indexForDelete: number
+    ) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) =>
+          exp.basic.workExperienceId === workExperienceId
+            ? {
+                ...exp,
+                accomplishments: exp.accomplishments.filter(
+                  (a, index) => index !== indexForDelete
+                ),
+              }
+            : exp
+        ),
+      }));
+    },
+    deleteDuty: (workExperienceId: string, indexForDelete: number) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) =>
+          exp.basic.workExperienceId === workExperienceId
+            ? {
+                ...exp,
+                duties: exp.duties.filter(
+                  (d, index) => index !== indexForDelete
+                ),
+              }
+            : exp
+        ),
+      }));
+    },
+    editAccomplishment: (
+      workExperienceId: string,
+      indexForEdit: number,
+      newAccomplishment: string
+    ) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) => {
+          if (exp.basic.workExperienceId === workExperienceId) {
+            return {
+              ...exp,
+              accomplishments: exp.accomplishments.map((a, index) => {
+                if (index === indexForEdit) {
+                  return {
+                    ...a,
+                    accomplishment: newAccomplishment,
+                  };
+                }
+                return a;
+              }),
+            };
+          }
+          return exp;
+        }),
+      }));
+    },
+    editDuty: (
+      workExperienceId: string,
+      indexForEdit: number,
+      newDuty: string
+    ) => {
+      set((state) => ({
+        workExperience: state.workExperience.map((exp) => {
+          if (exp.basic.workExperienceId === workExperienceId) {
+            return {
+              ...exp,
+              duties: exp.duties.map((d, index) => {
+                if (index === indexForEdit) {
+                  return {
+                    ...d,
+                    duty: newDuty,
+                  };
+                }
+                return d;
+              }),
+            };
+          }
+          return exp;
+        }),
+      }));
+    },
+
+    setloadingJobOpening: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingJobOpening: loading,
+        },
+      }));
+    },
+
+    setloadingifApplied: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingIfApplied: loading,
+        },
+      }));
+    },
+
+    setloadingWorkExperience: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingWorkExperience: loading,
+        },
+      }));
+    },
+
+    setloadingApplyJob: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingApplyJob: loading,
+        },
+      }));
+    },
+
+    setErrorJobOpening: (error: string) => {
+      set((state) => ({
+        ...state,
+        error: {
+          ...state.error,
+          errorJobOpening: error,
+        },
+      }));
+    },
+
+    setErrorIfApplied: (error: string) => {
+      set((state) => ({
+        ...state,
+        error: {
+          ...state.error,
+          errorIfApplied: error,
+        },
+      }));
+    },
+
+    setErrorWorkExperience: (error: string) => {
+      set((state) => ({
+        ...state,
+        error: {
+          ...state.error,
+          errorWorkExperience: error,
+        },
+      }));
+    },
+
+    setErrorApplyJob: (error: string) => {
+      set((state) => ({
+        ...state,
+        error: {
+          ...state.error,
+          errorApplyJob: error,
+        },
+      }));
+    },
+
+    setErrorCaptcha: (error: string) => {
+      set((state) => ({
+        ...state,
+        error: {
+          ...state.error,
+          errorCaptcha: error,
+        },
+      }));
+    },
+
+    setErrorMessage: (error: string) => {
+      set((state) => ({
+        ...state,
+        error: {
+          ...state.error,
+          errorMessage: error,
+        },
+      }));
+    },
+
+    setResponseApply: (response: string) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          responseApplyJob: response,
+        },
+      }));
+    },
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          responseApplyJob: '',
+        },
+        error: {
+          ...state.error,
+          errorApplyJob: '',
+        },
+      }));
+    },
+  }))
+);

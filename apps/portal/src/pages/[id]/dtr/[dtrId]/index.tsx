@@ -11,6 +11,7 @@ import {
 } from '../../../../utils/helpers/session';
 import React from 'react';
 import DtrPdf from '../../../../../src/components/fixed/dtr/DtrPdf';
+import { employeeDummy } from '../../../../../src/types/employee.type';
 
 export default function PassSlipPage({
   employeeDetails,
@@ -22,11 +23,18 @@ export default function PassSlipPage({
           <title>Employee DTR</title>
         </Head>
         <DtrPdf />
-        test
       </>
     )
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const employeeDetails = employeeDummy;
+
+//   return { props: { employeeDetails } };
+// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
