@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  HiOutlineEye,
-  HiOutlinePlusCircle,
-} from 'react-icons/hi';
+import { HiOutlineEye, HiOutlinePlusCircle } from 'react-icons/hi';
 import { TabHeader } from '../tab/TabHeader';
 
 type PdsTabsProps = {
@@ -29,8 +26,8 @@ export const PdsTabs = ({ tab, userId }: PdsTabsProps) => {
           <TabHeader
             tab={tab}
             tabIndex={1}
-            // href={`${process.env.NEXT_PUBLIC_PDS}/pds/${userId}`}
-            onClick={() => setOpenPdsIsClicked(true)}
+            href={`${process.env.NEXT_PUBLIC_PDS}/pds/${userId}`}
+            // onClick={() => setOpenPdsIsClicked(true)}
             icon={<HiOutlinePlusCircle size={26} />}
             title="Open Personal Data Sheet"
             subtitle="Create or Update your PDS"
