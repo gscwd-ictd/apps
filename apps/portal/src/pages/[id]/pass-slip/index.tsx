@@ -133,7 +133,6 @@ export default function PassSlip({
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
-      console.log(swrPassSlips);
     }
 
     if (!isEmpty(swrError)) {
@@ -176,7 +175,10 @@ export default function PassSlip({
 
         {/* Post/Submit Pass Slip Error */}
         {!isEmpty(errorResponse) ? (
-          <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorResponse}: Failed to Submit.`}
+          />
         ) : null}
 
         {/* Post/Submit Pass Slip Success */}
@@ -187,8 +189,8 @@ export default function PassSlip({
           />
         ) : null}
 
-         {/* Cancel Pass Slip Success */}
-         {!isEmpty(responseCancel) ? (
+        {/* Cancel Pass Slip Success */}
+        {!isEmpty(responseCancel) ? (
           <ToastNotification
             toastType="success"
             notifMessage="Pass Slip Cancellation Successful!"
@@ -256,7 +258,7 @@ export default function PassSlip({
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
-                  className="w-full flex h-full transition-all "
+                  className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
                 />

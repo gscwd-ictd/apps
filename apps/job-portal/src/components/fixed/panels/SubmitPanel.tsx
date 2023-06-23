@@ -390,7 +390,6 @@ export default function SubmitPanel(): JSX.Element {
                 {isLoading && <LoadingIndicator size={5} />}
               </span>
             </button>
-            {/* <Button onClick={() => console.log(fetchUpdatedArrays().eligibility)}>Log Pds</Button> */}
           </div>
         </>
       </Page>

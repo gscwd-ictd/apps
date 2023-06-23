@@ -139,12 +139,9 @@ export default function Login(): JSX.Element {
         { email, password }
       );
 
-      console.log(error);
-
       // check if the result return an error, go to dashboard otherwise
       result && router.push(`/dashboard/${result._id}`);
     } catch (error) {
-      // console.log(error)
       setIsLoading(false);
       setError({
         status: true,

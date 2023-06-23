@@ -64,7 +64,6 @@ export default function PassSlipPage({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlipDetailsPdf)) {
-      console.log(swrPassSlipDetailsPdf);
       getPassSlipListSuccess(swrIsLoading, swrPassSlipDetailsPdf);
     }
 

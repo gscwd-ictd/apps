@@ -70,8 +70,6 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
   });
 
   const onSubmit: SubmitHandler<LeaveBenefit> = (leave: LeaveBenefit) => {
-    // console.log(leave);
-
     // set loading to true
     PostLeaveBenefit(true);
 
@@ -130,7 +128,6 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
               />
             </div>
           ) : null}
-
 
           <form onSubmit={handleSubmit(onSubmit)} id="addRecurringModal">
             <div className="flex flex-col w-full gap-5">

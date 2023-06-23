@@ -45,7 +45,6 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
       deleteScheduleSheet();
 
       handleDeleteResult();
-      // console.log(rowData.id);
     }
   };
 

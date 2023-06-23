@@ -89,7 +89,6 @@ const EditHolidayModal: FunctionComponent<EditModalProps> = ({
   };
 
   const handlePatchResult = async (data: Holiday) => {
-    console.log(data);
     const { error, result } = await putEmpMonitoring('/holidays', data);
 
     if (error) {

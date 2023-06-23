@@ -109,19 +109,16 @@ export default function Inbox({
     if (swrIsLoadingMessages) {
       getMessageList(swrIsLoadingMessages);
     }
-    // console.log(swrMessages, 'test');
   }, [swrIsLoadingMessages]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrMessages)) {
       getMessageListSuccess(swrIsLoadingMessages, swrMessages);
-      // console.log(swrMessages, 'success');
     }
 
     if (!isEmpty(swrError)) {
       getMessageListFail(swrIsLoadingMessages, swrError.message);
-      // console.log(swrMessages, 'error');
     }
   }, [swrMessages, swrError]);
 
@@ -171,7 +168,6 @@ export default function Inbox({
 
       setIsMessageOpen(false);
     } catch (error) {
-      // console.log(error);
       postMessageFail(error);
       closeSubmitModalAction();
     }
@@ -256,14 +252,14 @@ export default function Inbox({
         setOpen={setSubmitModalIsOpen}
       >
         <Modal.Header>
-          <h3 className="font-semibold text-xl text-gray-700">
-            <div className="px-5 flex justify-between">
+          <h3 className="text-xl font-semibold text-gray-700">
+            <div className="flex justify-between px-5">
               <span>PSB Member Acknowledgement</span>
             </div>
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
+          <div className="flex flex-col w-full h-full gap-2 text-lg text-center">
             {isAccepted
               ? 'Are you sure you want accept?'
               : 'Are you sure you want decline?'}
@@ -294,8 +290,8 @@ export default function Inbox({
       </Modal>
 
       <MainContainer>
-        <div className="flex flex-col md:flex-row w-full h-full pb-10 px-4 md:px-0">
-          <div className="flex flex-col w-full pb-5 px-8 md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20 overflow-y-auto">
+        <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
+          <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">
             <label className="pb-4">Inbox</label>
             {swrMessages && swrMessages.length > 0 ? (
               swrMessages.map(
@@ -324,7 +320,7 @@ export default function Inbox({
                 }
               )
             ) : (
-              <div className="bg-slate-50 flex flex-col justify-center items-center w-full pb-5 px-8 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20 overflow-y-auto">
+              <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
                 <label className="w-full text-4xl text-center text-gray-400 ">
                   NO MESSAGES
                 </label>
@@ -332,7 +328,7 @@ export default function Inbox({
             )}
           </div>
           {isMessageOpen ? (
-            <div className="flex flex-col items-center w-full h-1/2 md:h-full pt-1 md:pt-6 md:ml-4 md:mr-4 text-gray-700">
+            <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
               {
                 <div
                   className={
@@ -435,7 +431,7 @@ export default function Inbox({
 
                   {messageContent?.details.acknowledgedSchedule ||
                   messageContent?.details.declinedSchedule ? null : (
-                    <div className="flex flex-row gap-4 items-center justify-end">
+                    <div className="flex flex-row items-center justify-end gap-4">
                       <Button
                         variant={'primary'}
                         size={'md'}
@@ -467,7 +463,7 @@ export default function Inbox({
               }
             </div>
           ) : (
-            <div className="text-center flex flex-col items-center justify-center w-full h-1/2 md:h-full pt-1 md:pt-6 md:ml-4 md:mr-4 text-4xl text-gray-400">
+            <div className="flex flex-col items-center justify-center w-full pt-1 text-4xl text-center text-gray-400 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
               NO MESSAGE SELECTED
             </div>
           )}

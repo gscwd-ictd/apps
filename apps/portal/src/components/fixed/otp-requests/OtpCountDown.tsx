@@ -12,7 +12,6 @@ export function getCountDown(
       parse(targetDate, 'yyyy-MM-dd HH:mm:ss', new Date()),
       parse(now, 'yyyy-MM-dd HH:mm:ss', new Date())
     );
-    // console.log(difference);
 
     //COMPUTE DAYS
     const d = Math.floor(difference / (1 * 60 * 60 * 24));

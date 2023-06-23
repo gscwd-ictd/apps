@@ -93,14 +93,14 @@ export default function ForApproval({
         setOpen={setIsDeclineModalOpen}
       >
         <Modal.Header>
-          <h3 className="font-semibold text-xl text-gray-700">
-            <div className="px-5 flex justify-between">
+          <h3 className="text-xl font-semibold text-gray-700">
+            <div className="flex justify-between px-5">
               <span>Decline Position Request</span>
             </div>
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-md ">
+          <div className="flex flex-col w-full h-full gap-2 text-md ">
             {'Please indicate reason for declining this position request:'}
             <form id="declinePrfForm">
               <textarea
@@ -137,7 +137,7 @@ export default function ForApproval({
         </Modal.Footer>
       </Modal>
 
-      <div className="flex flex-col w-screen h-screen py-10 overflow-hidden pl-4 pr-4 lg:pl-32 lg:pr-32">
+      <div className="flex flex-col w-screen h-screen py-10 pl-4 pr-4 overflow-hidden lg:pl-32 lg:pr-32">
         <button
           className="flex items-center gap-2 text-gray-700 transition-colors ease-in-out hover:text-gray-700"
           onClick={() => router.back()}
@@ -155,7 +155,7 @@ export default function ForApproval({
         </header>
 
         <main className="mt-16">
-          <main className="flex flex-col md:flex-row h-full items-center md:items-start">
+          <main className="flex flex-col items-center h-full md:flex-row md:items-start">
             <aside className="shrink-0 w-[20rem]">
               <section className="flex items-center gap-4">
                 <HiOutlineUser className="text-gray-700 shrink-0" />
@@ -191,7 +191,7 @@ export default function ForApproval({
                 )}
               </section>
 
-              <section className="mt-10 flex flex-col w-full  gap-2">
+              <section className="flex flex-col w-full gap-2 mt-10">
                 <Button
                   btnLabel={'Approve Request'}
                   fluid
@@ -271,7 +271,6 @@ export default function ForApproval({
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
-    // console.log(context.query.prfid);
     try {
       const employee = await getEmployeeDetailsFromHr(context);
       const profile = await getEmployeeProfile(employee.userId);
@@ -283,7 +282,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
       const prfDetails = await getPrfById(`${context.query.prfid}`, context);
 
       // return the result
-      // console.log(prfDetails);
+
       return { props: { profile, employee, prfDetails } };
     } catch (error) {
       return { notFound: true };

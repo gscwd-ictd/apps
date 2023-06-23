@@ -152,7 +152,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
 
     // call the function to start loading
     postEmployeeSchedule();
-    console.log(rest);
+
     // call the post function
     await handlePostScheduling(rest);
   };

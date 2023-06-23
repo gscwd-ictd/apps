@@ -67,8 +67,6 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
     getIsLoading: state.loading.loadingEmployeeDtr,
   }));
 
-  console.log(isDateSearched, 'Employees/id component re-rendered!');
-
   const { data: swrDtr, error: swrDtrError } = useSWR(
     isDateSearched
       ? `daily-time-record/employees/${employeeData.companyId}/${selectedYear}/${selectedMonth}`

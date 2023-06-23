@@ -136,10 +136,8 @@ export default function Leaves({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    console.log(swrLeaves);
     if (!isEmpty(swrLeaves)) {
       getLeaveListSuccess(swrIsLoading, swrLeaves);
-      // console.log(swrLeaves);
     }
 
     if (!isEmpty(swrError)) {
@@ -297,7 +295,7 @@ export default function Leaves({
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
-                  className="w-full flex h-full transition-all "
+                  className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
                 />

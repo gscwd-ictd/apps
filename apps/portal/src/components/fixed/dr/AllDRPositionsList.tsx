@@ -7,21 +7,19 @@ export const AllDRPositionsList = (): JSX.Element => {
   // get all related state from dr context
   // const { filteredPositions, modal, setSelectedPosition, setModal, setAction } = useContext(DRContext);
 
-  const filteredPositions = useDrStore((state) => state.filteredPositions)
+  const filteredPositions = useDrStore((state) => state.filteredPositions);
 
-  const modal = useDrStore((state) => state.modal)
+  const modal = useDrStore((state) => state.modal);
 
-  const setSelectedPosition = useDrStore((state) => state.setSelectedPosition)
+  const setSelectedPosition = useDrStore((state) => state.setSelectedPosition);
 
-  const setModal = useDrStore((state) => state.setModal)
+  const setModal = useDrStore((state) => state.setModal);
 
-  const setAction = useDrStore((state) => state.setAction)
-
+  const setAction = useDrStore((state) => state.setAction);
 
   const onSelect = (position: Position, action: string) => {
     // set action whether create or update
     setAction(action);
-    // console.log(position)
 
     // set the selected position based on index
     setSelectedPosition(position);
@@ -42,7 +40,9 @@ export const AllDRPositionsList = (): JSX.Element => {
                 className="flex items-center justify-between p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
               >
                 <div>
-                  <h1 className="font-medium text-gray-600">{position.positionTitle}</h1>
+                  <h1 className="font-medium text-gray-600">
+                    {position.positionTitle}
+                  </h1>
                   <p className="text-sm text-gray-500">{position.itemNumber}</p>
                 </div>
 
@@ -53,7 +53,7 @@ export const AllDRPositionsList = (): JSX.Element => {
                       icon={<HiPlusCircle size={20} />}
                       iconPlacement="start"
                       onClick={() => onSelect(position, 'create')}
-                      className="w-28 flex justify-center"
+                      className="flex justify-center w-28"
                       light
                       shadow
                     />
@@ -65,7 +65,7 @@ export const AllDRPositionsList = (): JSX.Element => {
                       icon={<HiPencilAlt size={20} />}
                       iconPlacement="start"
                       onClick={() => onSelect(position, 'update')}
-                      className="w-28 flex justify-center"
+                      className="flex justify-center w-28"
                       shadow
                     />
                   )}

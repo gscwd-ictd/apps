@@ -44,7 +44,6 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
       DeleteTravelOrder();
 
       handleDeleteResult();
-      // console.log(rowData.id);
     }
   };
 

@@ -39,7 +39,6 @@ export async function confirmOtpCode(otpCode: string, id: any, otpName) {
               errorMessage: '',
             };
           } catch (error: any) {
-            // console.log(error);
             if (error.response.data) {
               const errorData = error.response.data;
               return {

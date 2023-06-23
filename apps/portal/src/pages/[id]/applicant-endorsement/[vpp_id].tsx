@@ -47,11 +47,11 @@ export default function AppEndSummary({
           ></ContentHeader>
           <ContentBody>
             <>
-              <div className="mt-14 w-full">
+              <div className="w-full mt-14">
                 <div className="text-xl font-semibold text-gray-800">
                   {publication.positionTitle}
                 </div>
-                <div className="flex w-full justify-between text-md font-normal text-gray-600">
+                <div className="flex justify-between w-full font-normal text-gray-600 text-md">
                   <div>
                     <div>{publication.itemNumber}</div>
 
@@ -76,6 +76,5 @@ export default function AppEndSummary({
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
   const publicationDetails = await getPublication(context.query.vpp_id); //get employeeId using context
-  // console.log(context);
   return { props: { publicationDetails } };
 };

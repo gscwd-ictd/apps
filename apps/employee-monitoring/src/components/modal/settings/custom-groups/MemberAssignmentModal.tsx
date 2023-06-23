@@ -263,7 +263,6 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
       SetIsOptionSelected(false);
     } else {
       SetIsOptionSelected(true);
-      // console.log(ToAssignedMembers);
 
       PostMembers();
 
@@ -396,7 +395,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
             <div className="mx-5">
               <Card>
                 {LoadingAssignedMembers ? (
-                  <div className="w-full flex order-3 justify-center mt-2">
+                  <div className="flex justify-center order-3 w-full mt-2">
                     <LoadingSpinner size="lg" />
                   </div>
                 ) : (
@@ -406,7 +405,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
                         id="customReactSelectEmployees"
                         name="employees"
                         options={UnassignedMembers}
-                        className="z-50 w-2/3 basic-multi-select text-xs font-normal"
+                        className="z-50 w-2/3 text-xs font-normal basic-multi-select"
                         classNamePrefix="select2-selection"
                         onChange={(e: Array<any>) => {
                           handleMultiSelect(e);
