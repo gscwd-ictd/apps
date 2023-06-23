@@ -1,9 +1,12 @@
 import { Alert, Button, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
+import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
+import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import dayjs from 'dayjs';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import { isEmpty } from 'lodash';
 import {
   Dispatch,
   FunctionComponent,
@@ -12,6 +15,15 @@ import {
   useState,
 } from 'react';
 import { useForm } from 'react-hook-form';
+
+type EmployeeDtr = {
+  companyId: string | null;
+  dtrDate: string | null;
+  timeIn: string | null;
+  lunchOut: string | null;
+  lunchIn: string | null;
+  timeOut: string | null;
+};
 
 type EditDailySchedModalProps = {
   modalState: boolean;
@@ -29,32 +41,91 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   const {
     setValue,
     register,
+    getValues,
     handleSubmit,
     reset,
-    formState: { errors },
-  } = useForm<EmployeeDtrWithSchedule>();
+    formState: { errors, isDirty, dirtyFields },
+  } = useForm<EmployeeDtr>();
 
   const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
+
+  // default values
+  const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr>(
+    {} as EmployeeDtr
+  );
 
   const closeModal = () => {
     reset();
     closeModalAction();
   };
 
-  const onSubmit = (data: Partial<EmployeeDtrWithSchedule>) => {
-    console.log(data);
-    // setConfirmAlertIsOpen(false);
-    // closeModal();
+  const {
+    employeeDailyRecord,
+    updateEmployeeDtr,
+    updateEmployeeDtrFail,
+    updateEmployeeDtrSuccess,
+  } = useDtrStore((state) => ({
+    employeeDailyRecord: state.employeeDailyRecord,
+    updateEmployeeDtr: state.updateEmployeeDtr,
+    updateEmployeeDtrSuccess: state.updateEmployeeDtrSuccess,
+    updateEmployeeDtrFail: state.updateEmployeeDtrFail,
+  }));
+
+  const onSubmit = async (data: Partial<EmployeeDtr>) => {
+    // initialize an empty array
+    let parentArray = [];
+
+    // map each keys and push them to the initialized array
+    Object.keys(dirtyFields).map((field, index) => {
+      parentArray.push([field, getValues(field)]);
+    });
+
+    // create the new object
+    const dtr = {
+      companyId: data.companyId,
+      ...Object.fromEntries(parentArray),
+    };
+
+    // initialize loading
+    updateEmployeeDtr();
+
+    // patch
+    await handlePatchTimeLogs(dtr);
+  };
+
+  // patch
+  const handlePatchTimeLogs = async (dtr: Partial<EmployeeDtr>) => {
+    const { error, result } = await patchEmpMonitoring('/daily-time-record/', {
+      data: dtr,
+    });
+
+    if (error) {
+      // request is done set loading to false and set the error message
+      updateEmployeeDtrFail(result);
+    } else if (!error) {
+      // request is done set loading to false and set the update response
+      updateEmployeeDtrSuccess(result);
+      setConfirmAlertIsOpen(false);
+      closeModal();
+    }
   };
 
   const setDefaultValues = (rowData: EmployeeDtrWithSchedule) => {
-    console.log(rowData.dtr.timeIn);
+    reset({
+      companyId: rowData.companyId,
+      dtrDate: rowData.day,
+      timeIn: rowData.dtr.timeIn,
+      lunchIn: rowData.dtr.lunchIn,
+      lunchOut: rowData.dtr.lunchOut,
+      timeOut: rowData.dtr.timeOut,
+    });
+
     setValue('companyId', rowData.companyId);
-    setValue('dtr.dtrDate', rowData.dtr.dtrDate);
-    setValue('dtr.timeIn', rowData.dtr.timeIn);
-    setValue('dtr.timeOut', rowData.dtr.timeOut);
-    setValue('dtr.lunchIn', rowData.dtr.lunchIn);
-    setValue('dtr.lunchOut', rowData.dtr.lunchOut);
+    setValue('dtrDate', rowData.day);
+    setValue('timeIn', rowData.dtr.timeIn);
+    setValue('timeOut', rowData.dtr.timeOut);
+    setValue('lunchIn', rowData.dtr.lunchIn);
+    setValue('lunchOut', rowData.dtr.lunchOut);
   };
 
   useEffect(() => {
@@ -123,10 +194,12 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                 <LabelInput
                   id="timeIn"
                   label="Time in"
+                  step="any"
                   type="time"
-                  controller={{ ...register('dtr.timeIn') }}
-                  isError={errors.dtr?.timeIn ? true : false}
-                  errorMessage={errors.dtr?.timeIn?.message}
+                  controller={{ ...register('timeIn') }}
+                  isError={errors.timeIn ? true : false}
+                  errorMessage={errors.timeIn?.message}
+                  className={dirtyFields.timeIn ? 'bg-green-300' : 'bg-inherit'}
                 />
               </div>
               <div className="">
@@ -134,9 +207,13 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id="timeOut"
                   label="Time out"
                   type="time"
-                  controller={{ ...register('dtr.timeOut') }}
-                  isError={errors.dtr?.timeOut ? true : false}
-                  errorMessage={errors.dtr?.timeOut?.message}
+                  step="any"
+                  controller={{ ...register('timeOut') }}
+                  isError={errors.timeOut ? true : false}
+                  errorMessage={errors.timeOut?.message}
+                  className={
+                    dirtyFields.timeOut ? 'bg-green-300' : 'bg-inherit'
+                  }
                 />
               </div>
 
@@ -145,10 +222,14 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id={'scheduleLunchIn'}
                   type="time"
                   label={'Lunch In'}
-                  controller={{ ...register('dtr.lunchIn') }}
-                  isError={errors.dtr?.lunchIn ? true : false}
-                  errorMessage={errors.dtr?.lunchIn?.message}
-                  // disabled={IsLoading ? true : false}
+                  step="any"
+                  required={false}
+                  controller={{ ...register('lunchIn') }}
+                  isError={errors.lunchIn ? true : false}
+                  errorMessage={errors.lunchIn?.message}
+                  className={
+                    dirtyFields.lunchIn ? 'bg-green-300' : 'bg-inherit'
+                  }
                 />
               </div>
               <div className="">
@@ -156,9 +237,13 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id={'scheduleLunchOut'}
                   type="time"
                   label={'Lunch Out'}
-                  controller={{ ...register('dtr.lunchOut') }}
-                  isError={errors.dtr?.lunchOut ? true : false}
-                  errorMessage={errors.dtr?.lunchOut?.message}
+                  step="any"
+                  controller={{ ...register('lunchOut') }}
+                  isError={errors.lunchOut ? true : false}
+                  errorMessage={errors.lunchOut?.message}
+                  className={
+                    dirtyFields.lunchOut ? 'bg-green-300' : 'bg-inherit'
+                  }
                   // disabled={IsLoading ? true : false}
                 />
               </div>

@@ -85,8 +85,6 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
   };
 
   const onSubmit: SubmitHandler<LeaveBenefit> = (leave: LeaveBenefit) => {
-    // console.log(leave);
-
     // set loading to true
     UpdateLeaveBenefit(true);
 

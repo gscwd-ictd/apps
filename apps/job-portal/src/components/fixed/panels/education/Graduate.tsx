@@ -66,7 +66,6 @@ export const Graduate = (): JSX.Element => {
 
   // fire submit button
   const onSubmit = handleSubmit((course: EducationInfo, e: any) => {
-    console.log(course);
     e.preventDefault();
 
     const updatedGraduate = [...graduate];

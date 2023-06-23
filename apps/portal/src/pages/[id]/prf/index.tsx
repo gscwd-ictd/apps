@@ -125,8 +125,6 @@ export default function Prf({
     }
   }, [isLoading, setIsLoading]);
 
-  useEffect(() => console.log(forApprovalPrfs), [forApprovalPrfs]);
-
   const handleCancel = () => {
     // check if current modal page is the first page
     modalPage === 1 ? setIsOpen(false) : setModalPage(modalPage - 1);
@@ -285,7 +283,10 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     const forApproval = await getForApprovalPrfs(employee.user._id);
 
     // check if user role is rank_and_file
-    if (employee.employmentDetails.userRole === Roles.RANK_AND_FILE || employee.employmentDetails.userRole === Roles.JOB_ORDER) {
+    if (
+      employee.employmentDetails.userRole === Roles.RANK_AND_FILE ||
+      employee.employmentDetails.userRole === Roles.JOB_ORDER
+    ) {
       // if true, the employee is not allowed to access this page
       return {
         redirect: {

@@ -148,12 +148,12 @@ const DrcModal: FunctionComponent = () => {
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full px-5">
             <div>
-              <h3 className="text-xl md:text-2xl font-semibold text-gray-700">
+              <h3 className="text-xl font-semibold text-gray-700 md:text-2xl">
                 {modal.page === 6
                   ? 'Setting Successful'
                   : 'Set Duties, Responsibilities, and Competencies'}
               </h3>
-              <p>
+              <div>
                 {modal.page === 1 ? (
                   'Select a position title'
                 ) : modal.page === 2 ? (
@@ -168,7 +168,7 @@ const DrcModal: FunctionComponent = () => {
                 ) : (
                   modal.page === 4 && 'Position Summary'
                 )}
-              </p>
+              </div>
             </div>
             <button
               type="button"

@@ -1,81 +1,95 @@
-import axios from 'axios'
-import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { useState } from 'react'
-import { HiCheckCircle, HiShieldExclamation } from 'react-icons/hi'
-import { SpinnerDotted } from 'spinners-react'
-import { fetchWithToken, serverSideFetch } from '../../../../utils/hoc/fetcher'
-import { CardContainer } from '../../../components/modular/cards/CardContainer'
-import TopNavigation from '../../../components/page-header/TopNavigation'
+import axios from 'axios';
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { HiCheckCircle, HiShieldExclamation } from 'react-icons/hi';
+import { SpinnerDotted } from 'spinners-react';
+import { fetchWithToken, serverSideFetch } from '../../../../utils/hoc/fetcher';
+import { CardContainer } from '../../../components/modular/cards/CardContainer';
+import TopNavigation from '../../../components/page-header/TopNavigation';
 
 type Loading = {
-  state: boolean
-  level: number
-}
+  state: boolean;
+  level: number;
+};
 
 type UserDetails = {
-  login: 'success' | 'failed'
+  login: 'success' | 'failed';
   details: {
-    externalApplicantId: string
-    vppId: string
-  }
-}
+    externalApplicantId: string;
+    vppId: string;
+  };
+};
 
 type CreateSessionProps = {
-  token: string
-}
+  token: string;
+};
 
 export default function CreateSession({ token }: CreateSessionProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState<Loading>({ state: false, level: 1 })
-  const [userDetails, setUserDetails] = useState<UserDetails>({} as UserDetails)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<Loading>({
+    state: false,
+    level: 1,
+  });
+  const [userDetails, setUserDetails] = useState<UserDetails>(
+    {} as UserDetails
+  );
 
   const getData = async () => {
     try {
-      console.log(token)
-      const userDetails = await fetchWithToken('POST', `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/login`, token)
-      return setUserDetails(userDetails)
+      const userDetails = await fetchWithToken(
+        'POST',
+        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/login`,
+        token
+      );
+      return setUserDetails(userDetails);
     } catch (error) {
-      return {}
+      return {};
     }
-  }
+  };
 
   useEffect(() => {
     if (isLoading.state === false && isLoading.level === 1) {
-      setIsLoading({ state: true, level: 1 })
+      setIsLoading({ state: true, level: 1 });
     }
-    getData()
-  }, [])
+    getData();
+  }, []);
 
   useEffect(() => {
     if (isLoading.state === true && isLoading.level === 1) {
       setTimeout(() => {
-        setIsLoading({ state: true, level: 2 })
-      }, 500)
+        setIsLoading({ state: true, level: 2 });
+      }, 500);
     }
-  }, [isLoading])
+  }, [isLoading]);
 
   useEffect(() => {
     if (isLoading.level === 2 && userDetails.login === 'success') {
       setTimeout(async () => {
-        setIsLoading({ state: true, level: 3 })
-        await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${userDetails.details.vppId}/checklist`)
-      }, 1000)
+        setIsLoading({ state: true, level: 3 });
+        await router.push(
+          `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${userDetails.details.vppId}/checklist`
+        );
+      }, 1000);
     } else if (isLoading.level === 2 && userDetails.login !== 'success') {
       setTimeout(() => {
-        setIsLoading({ state: true, level: 3 })
-      }, 500)
+        setIsLoading({ state: true, level: 3 });
+      }, 500);
     }
-  }, [isLoading.level])
+  }, [isLoading.level]);
 
   return (
     <>
       <div className="min-h-screen bg-white">
         <TopNavigation />
         <header className="shadow ">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
               {isLoading.level === 1
                 ? 'Please wait'
@@ -89,27 +103,38 @@ export default function CreateSession({ token }: CreateSessionProps) {
         </header>
         <main>
           <div className="h-[44rem] w-full">
-            <div className="flex h-full w-full flex-col items-center justify-center text-3xl">
-              <CardContainer bgColor={'bg-slate-50'} title={''} remarks={''} subtitle={''}>
+            <div className="flex flex-col items-center justify-center w-full h-full text-3xl">
+              <CardContainer
+                bgColor={'bg-slate-50'}
+                title={''}
+                remarks={''}
+                subtitle={''}
+              >
                 <div className="static flex h-[20rem] w-[44rem] flex-col place-items-center items-center justify-items-center rounded shadow transition-all">
                   {isLoading.level <= 2 ? (
                     <>
                       <SpinnerDotted
                         speed={150}
                         thickness={120}
-                        className="flex h-full w-full animate-pulse transition-all "
-                        color={isLoading.level === 1 ? 'slateblue' : isLoading.level === 2 ? 'indigo' : 'green'}
+                        className="flex w-full h-full transition-all animate-pulse "
+                        color={
+                          isLoading.level === 1
+                            ? 'slateblue'
+                            : isLoading.level === 2
+                            ? 'indigo'
+                            : 'green'
+                        }
                         size={100}
                       />
                     </>
                   ) : (
                     <>
                       {userDetails.login === 'success' ? (
-                        <div className="flex h-full w-full animate-pulse items-center justify-center transition-all ">
+                        <div className="flex items-center justify-center w-full h-full transition-all animate-pulse ">
                           <HiCheckCircle size={100} color="indigo" />
                         </div>
                       ) : (
-                        <div className="flex h-full w-full animate-pulse items-center justify-center transition-all ">
+                        <div className="flex items-center justify-center w-full h-full transition-all animate-pulse ">
                           <HiShieldExclamation size={100} color="red" />
                         </div>
                       )}
@@ -130,7 +155,7 @@ export default function CreateSession({ token }: CreateSessionProps) {
                   )}
                 </div>
               </CardContainer>
-              {/* <div className="flex w-full justify-center">
+              {/* <div className="flex justify-center w-full">
                 {isLoading.level === 3 && userDetails.login !== 'success' && (
                   <Link href={''}>
                     <span className="pt-5 text-xl underline">Click here to resend email verification</span>
@@ -142,15 +167,17 @@ export default function CreateSession({ token }: CreateSessionProps) {
         </main>
       </div>
     </>
-  )
+  );
 }
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   try {
-    const token = context.query.token
+    const token = context.query.token;
 
-    return { props: { token } }
+    return { props: { token } };
   } catch (error) {
-    return { props: {} }
+    return { props: {} };
   }
-}
+};

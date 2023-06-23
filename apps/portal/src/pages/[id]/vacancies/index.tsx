@@ -122,7 +122,7 @@ export default function Vacancies({
     setIsMessageOpen(true);
 
     const jobOpeningDesc = await getJobOpeningDetails(vacancies.vppId);
-    console.log(jobOpeningDesc);
+
     if (jobOpeningDesc) {
       setJobDetails(jobOpeningDesc);
       if (jobOpeningDesc.error) {
@@ -337,14 +337,14 @@ export default function Vacancies({
             <Modal.Header>
               <div className="flex items-start justify-between px-2">
                 <div className="flex flex-col">
-                  <label className="text-xl md:text-2xl font-semibold text-gray-700">
+                  <label className="text-xl font-semibold text-gray-700 md:text-2xl">
                     {messageContent?.positionTitle}
                   </label>
                   <p className="text-md">{messageContent?.placeOfAssignment}</p>
                 </div>
 
                 <button
-                  className="h-8 px-1 text-xl outline-slate-100 outline-8 rounded-full hover:bg-slate-100"
+                  className="h-8 px-1 text-xl rounded-full outline-slate-100 outline-8 hover:bg-slate-100"
                   onClick={modalCancel}
                 >
                   <HiX />
@@ -405,7 +405,7 @@ export default function Vacancies({
                         your entries.
                       </div>
 
-                      <div className="flex w-36 md:w-auto flex-col md:flex-row justify-end gap-2">
+                      <div className="flex flex-col justify-end gap-2 w-36 md:w-auto md:flex-row">
                         <Button
                           variant="danger"
                           onClick={getCaptcha}
@@ -465,8 +465,8 @@ export default function Vacancies({
 
           <SideNav navDetails={navDetails} />
           <MainContainer>
-            <div className="flex flex-col md:flex-row w-full h-full pb-10 px-4 md:px-0">
-              <div className="flex flex-col w-full pb-5 px-8 md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20 overflow-y-auto">
+            <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
+              <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">
                 <label className="pb-4">Job Vacancies</label>
                 {data && data.length > 0 ? (
                   data.map((vacancies: VacancyDetails, messageIdx: number) => {
@@ -486,7 +486,7 @@ export default function Vacancies({
                     );
                   })
                 ) : (
-                  <div className="bg-slate-50 flex flex-col justify-center items-center w-full pb-5 px-8 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20 overflow-y-auto">
+                  <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
                     <label className="w-full text-4xl text-center text-gray-400 ">
                       NO VACANCIES
                     </label>
@@ -494,7 +494,7 @@ export default function Vacancies({
                 )}
               </div>
               {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                <div className="flex flex-col items-center w-full h-1/2 md:h-full pt-1 md:pt-6 md:ml-4 md:mr-4 text-gray-700">
+                <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
                   <div
                     className={`${
                       isMessageOpen
@@ -530,7 +530,7 @@ export default function Vacancies({
                   </div>
                 </div>
               ) : (
-                <div className="text-center flex flex-col items-center justify-center w-full h-1/2 md:h-full pt-1 md:pt-6 md:ml-4 md:mr-4 text-4xl text-gray-400">
+                <div className="flex flex-col items-center justify-center w-full pt-1 text-4xl text-center text-gray-400 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
                   NO JOB POSTING SELECTED
                 </div>
               )}

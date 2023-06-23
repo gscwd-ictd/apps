@@ -95,7 +95,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const searchDtr = async (e) => {
     e.preventDefault();
     getEmployeeDtr(true);
-    console.log(employeeDetails.employmentDetails.companyId);
+
     try {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}`
@@ -116,7 +116,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   };
 
   return (
-    <form className="flex flex-col md:flex-row justify-end gap-2">
+    <form className="flex flex-col justify-end gap-2 md:flex-row">
       <Select
         className="w-28 md:w-40"
         data={months}

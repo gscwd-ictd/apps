@@ -87,8 +87,6 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
   };
 
   const onSubmit: SubmitHandler<LeaveBenefit> = (leave: LeaveBenefit) => {
-    // console.log(leave);
-
     // set loading to true
     UpdateLeaveBenefit(true);
 
@@ -155,7 +153,6 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
             </div>
           ) : null}
 
-
           <form onSubmit={handleSubmit(onSubmit)} id="editcumulativemodal">
             <div className="flex flex-col w-full gap-5">
               {/* Recurring Name */}
@@ -191,7 +188,6 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
                 isError={errors.creditDistribution ? true : false}
                 disabled={IsLoading ? true : false}
               />
-
             </div>
           </form>
         </Modal.Body>

@@ -12,14 +12,17 @@ export default function Page404() {
 
           {/** Oops  */}
           <div className="flex items-center text-3xl font-semibold text-gray-400">
-            <span className="tracking-tighter"> Oops! Page Not Found</span>
+            <span className="tracking-tighter">
+              {' '}
+              Oops! The requested resource is not found
+            </span>
           </div>
 
           {/** Never existed  */}
           <div className="flex items-center text-lg font-medium ">
             <span className="text-gray-700 ">
-              ...maybe the page you&apos;re looking for is not found or never
-              existed.
+              ...maybe the resource you&apos;re looking for is not found or
+              never existed.
             </span>
           </div>
 

@@ -77,7 +77,6 @@ const EditCustomGroupModal: FunctionComponent<EditModalProps> = ({
   // form submission
   const onSubmit: SubmitHandler<CustomGroup> = (data: CustomGroup) => {
     UpdateCustomGroup();
-    console.log(data);
 
     handlePatchResult(data);
   };

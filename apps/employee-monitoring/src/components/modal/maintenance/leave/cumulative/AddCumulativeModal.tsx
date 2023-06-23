@@ -70,8 +70,6 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
   });
 
   const onSubmit: SubmitHandler<LeaveBenefit> = (leave: LeaveBenefit) => {
-    // console.log(leave);
-
     // set loading to true
     PostLeaveBenefit(true);
 
@@ -166,7 +164,6 @@ const AddCumulativeModal: FunctionComponent<AddModalProps> = ({
                 isError={errors.creditDistribution ? true : false}
                 disabled={IsLoading ? true : false}
               />
-
             </div>
           </form>
         </Modal.Body>

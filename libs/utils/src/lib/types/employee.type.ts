@@ -1,3 +1,5 @@
+import { UserRole } from '../enums/user-roles.enum';
+
 export type Assignment = {
   _id: string;
   name: string;
@@ -9,6 +11,21 @@ export type EmploymentDetails = {
   positionTitle: string;
   assignment: Assignment;
   natureOfAppointment: string;
+};
+
+export type EmployeeWithDetails = {
+  userId: string;
+  photoUrl: string;
+  companyId: string;
+  fullName: string;
+  isHRMPSB: number;
+  assignment: {
+    id: string;
+    name: string;
+    positionId: string;
+    positionTitle: string;
+  };
+  userRole: UserRole;
 };
 
 export type PersonalDetails = {

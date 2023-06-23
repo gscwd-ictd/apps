@@ -36,7 +36,6 @@ export const JobDetails = ({ publication }: JobDetailsProps) => {
 
   useEffect(() => {
     if (!isEmpty(swrJobDetails)) {
-      console.log(swrJobDetails.data);
       setJobOpeningDetails(swrJobDetails.data);
     }
 

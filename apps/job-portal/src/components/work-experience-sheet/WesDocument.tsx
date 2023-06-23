@@ -124,10 +124,6 @@ export const WesDocument = ({
 }: Data): JSX.Element => {
   const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    applicant && console.log(applicant);
-  }, [applicant]);
-
   // Rendering of individual row of work experience
   const renderWorkExperiences = () => {
     const content =

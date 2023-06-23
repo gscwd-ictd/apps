@@ -200,7 +200,6 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
 
   // work experience fetch effect
   useEffect(() => {
-    hasWE && console.log(hasWE);
     // applicant has not submitted
     if (isEmpty(hasWE)) {
       setSubmission({
@@ -730,8 +729,6 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                 </Button>
               </div>
             )}
-
-          {/* <Button onClick={() => console.log(progress, submission, hasPds)}>Log</Button> */}
         </footer>
       </div>
     </>
@@ -756,7 +753,6 @@ export const getServerSideProps: GetServerSideProps = async (
       },
     };
   } catch (error) {
-    console.log(error);
     return {
       props: {},
       // redirect: { destination: process.env.NEXT_PUBLIC_JOB_PORTAL }

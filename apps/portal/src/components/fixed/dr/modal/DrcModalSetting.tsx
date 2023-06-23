@@ -300,13 +300,13 @@ export const DrcModalSetting = () => {
         </span>
 
         {/** HERE */}
-        <div className="flex flex-col mt-5 w-full">
+        <div className="flex flex-col w-full mt-5">
           <section>
-            <div className="flex flex-col md:flex-row items-end justify-between ">
-              <p className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col items-end justify-between md:flex-row ">
+              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
                 Core Duties, Responsibilities, & Competencies
                 <HiPuzzle />
-              </p>
+              </div>
 
               {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
@@ -354,10 +354,10 @@ export const DrcModalSetting = () => {
             </div>
           </section>
           <section>
-            <div className="flex flex-col md:flex-row items-end justify-between ">
-              <p className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col items-end justify-between md:flex-row ">
+              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
                 Support Duties, Responsibilities, & Competencies <HiPuzzle />
-              </p>
+              </div>
 
               {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />

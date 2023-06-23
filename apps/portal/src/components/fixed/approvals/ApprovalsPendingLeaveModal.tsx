@@ -56,7 +56,6 @@ export const ApprovalsPendingLeaveModal = ({
 
   const onChangeType = (action: string) => {
     setAction(action);
-    console.log(action);
   };
 
   const handleReason = (e: string) => {
@@ -94,12 +93,12 @@ export const ApprovalsPendingLeaveModal = ({
       <Modal size={'lg'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
-            <div className="px-5 flex justify-between">
+            <div className="flex justify-between px-5">
               <span className="text-xl md:text-2xl">
                 Ongoing Leave Application
               </span>
               <button
-                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
+                className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                 onClick={closeModalAction}
               >
                 <HiX />
@@ -114,16 +113,16 @@ export const ApprovalsPendingLeaveModal = ({
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
-                  className="w-full flex h-full transition-all "
+                  className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
                 />
               </div>
             </>
           ) : (
-            <div className="w-full h-full flex flex-col  ">
-              <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="flex flex-col w-full h-full ">
+              <div className="flex flex-col w-full h-full gap-2 ">
+                <div className="flex flex-col w-full gap-2 p-4 rounded">
                   {leaveIndividualDetail.leaveApplicationBasicInfo ? (
                     <AlertNotification
                       alertType="warning"
@@ -140,14 +139,14 @@ export const ApprovalsPendingLeaveModal = ({
                     />
                   ) : null}
 
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                  <div className="flex flex-row items-center justify-between w-full">
+                    <div className="flex flex-row items-center justify-between w-full">
+                      <label className="text-lg font-medium text-slate-500 whitespace-nowrap">
                         Leave Type:
                       </label>
 
                       <div className="w-96 ">
-                        <label className="text-slate-500 w-full text-lg ">
+                        <label className="w-full text-lg text-slate-500 ">
                           {
                             leaveIndividualDetail.leaveApplicationBasicInfo
                               ?.leaveName
@@ -160,8 +159,8 @@ export const ApprovalsPendingLeaveModal = ({
                   {leaveIndividualDetail.leaveApplicationBasicInfo
                     ?.leaveName ? (
                     <>
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <label className="text-slate-500 text-lg font-medium">
+                      <div className="flex flex-row items-center justify-between w-full">
+                        <label className="text-lg font-medium text-slate-500">
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Vacation Leave' ||
                           leaveIndividualDetail.leaveApplicationBasicInfo
@@ -184,7 +183,7 @@ export const ApprovalsPendingLeaveModal = ({
                             .leaveName === 'Vacation Leave' ||
                           leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Special Privilege Leave' ? (
-                            <div className="text-slate-500 w-full text-lg">
+                            <div className="w-full text-lg text-slate-500">
                               {
                                 leaveIndividualDetail.leaveApplicationDetails
                                   .inPhilippinesOrAbroad
@@ -195,7 +194,7 @@ export const ApprovalsPendingLeaveModal = ({
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Sick Leave' ? (
                             <>
-                              <div className="text-slate-500 w-full text-lg">
+                              <div className="w-full text-lg text-slate-500">
                                 {
                                   leaveIndividualDetail.leaveApplicationDetails
                                     .hospital
@@ -207,7 +206,7 @@ export const ApprovalsPendingLeaveModal = ({
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Study Leave' ? (
                             <>
-                              <div className="text-slate-500 w-full text-lg">
+                              <div className="w-full text-lg text-slate-500">
                                 {leaveIndividualDetail.leaveApplicationDetails
                                   .forBarBoardReview === '1'
                                   ? 'For BAR/Board Examination Review '
@@ -222,14 +221,14 @@ export const ApprovalsPendingLeaveModal = ({
                         </div>
                       </div>
 
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                      <div className="flex flex-row items-center justify-between w-full">
+                        <div className="flex flex-row items-center justify-between w-full">
+                          <label className="text-lg font-medium text-slate-500 whitespace-nowrap">
                             Leave Dates:
                           </label>
 
                           <div className="w-96 ">
-                            <label className="text-slate-500 w-full text-lg ">
+                            <label className="w-full text-lg text-slate-500 ">
                               {leaveIndividualDetail.leaveApplicationBasicInfo
                                 .leaveName === 'Maternity Leave' ||
                               leaveIndividualDetail.leaveApplicationBasicInfo
@@ -257,20 +256,20 @@ export const ApprovalsPendingLeaveModal = ({
 
                       {/* {watch('typeOfLeaveDetails.leaveName') === 'Others' &&
                       watch('other') === 'Monetization of Leave Credits' ? (
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 text-slate-500 text-xl font-medium">
+                        <div className="flex flex-row items-center justify-between w-full">
+                          <div className="flex flex-row items-center justify-between w-full">
+                            <label className="pt-2 text-xl font-medium text-slate-500">
                               Commutation
                             </label>
                           </div>
 
-                          <div className="flex gap-2 w-full items-center">
+                          <div className="flex items-center w-full gap-2">
                             {watch('other') ===
                             'Monetization of Leave Credits' ? (
                               <div className="w-full">
                                 <select
                                   id="commutation"
-                                  className="text-slate-500 w-full h-16 rounded text-lg border-slate-300"
+                                  className="w-full h-16 text-lg rounded text-slate-500 border-slate-300"
                                   required
                                   defaultValue={''}
                                   {...register('commutation')}
@@ -304,16 +303,16 @@ export const ApprovalsPendingLeaveModal = ({
                         .leaveName === 'Study Leave' &&
                         leaveIndividualDetail.leaveApplicationDetails
                           .studyLeaveOther) ? (
-                        <div className="flex flex-col justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="text-slate-500 text-lg font-medium whitespace-nowrap">
+                        <div className="flex flex-col items-center justify-between w-full">
+                          <div className="flex flex-row items-center justify-between w-full">
+                            <label className="text-lg font-medium text-slate-500 whitespace-nowrap">
                               Specific Details:
                             </label>
                           </div>
                           <textarea
                             disabled
                             rows={2}
-                            className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-lg border-slate-300"
+                            className="w-full p-2 mt-1 text-lg rounded resize-none text-slate-500 border-slate-300"
                             value={
                               leaveIndividualDetail.leaveApplicationBasicInfo
                                 .leaveName === 'Vacation Leave' ||
@@ -347,53 +346,53 @@ export const ApprovalsPendingLeaveModal = ({
                   ) : null}
 
                   <div className="w-full pb-4">
-                    <span className="text-slate-500 text-xl font-medium">
+                    <span className="text-xl font-medium text-slate-500">
                       Your current Leave Credits:
                     </span>
-                    <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                    <table className="w-full border border-collapse rounded-md bg-slate-50 text-slate-600 border-spacing-0 border-slate-400">
                       <tbody>
                         <tr className="border border-slate-400">
                           <td className="border border-slate-400"></td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             Vacation Leave
                           </td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             Forced Leave
                           </td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             Sick Leave
                           </td>
                         </tr>
                         <tr className="border border-slate-400">
-                          <td className="border border-slate-400 text-sm p-1">
+                          <td className="p-1 text-sm border border-slate-400">
                             Total Earned
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             10
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             5
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             10
                           </td>
                         </tr>
                         <tr>
-                          <td className="border border-slate-400 text-sm p-1">
+                          <td className="p-1 text-sm border border-slate-400">
                             Less this application
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             0
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             0
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="p-1 text-sm text-center border border-slate-400">
                             0
                           </td>
                         </tr>
-                        <tr className="border border-slate-400 bg-green-100">
-                          <td className="border border-slate-400 text-sm p-1">
+                        <tr className="bg-green-100 border border-slate-400">
+                          <td className="p-1 text-sm border border-slate-400">
                             Balance
                           </td>
                           <td
@@ -417,8 +416,8 @@ export const ApprovalsPendingLeaveModal = ({
                   </div>
                 </div>
               </div>
-              <div className="w-full flex gap-2 justify-start items-center pt-12">
-                <span className="text-slate-500 text-xl font-medium">
+              <div className="flex items-center justify-start w-full gap-2 pt-12">
+                <span className="text-xl font-medium text-slate-500">
                   Action:
                 </span>
                 <select

@@ -71,7 +71,6 @@ export default function Dashboard({
   }
 
   useEffect(() => {
-    console.log(userDetails);
     setEmployee(userDetails);
     setIsLoading(true);
     hydration();
@@ -124,7 +123,6 @@ export default function Dashboard({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
-      // console.log(swrFaceScan);
       getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
     }
 
@@ -163,7 +161,7 @@ export default function Dashboard({
             </>
           ) : (
             <>
-              <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10 z-0">
+              <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
                 <Image
                   src={'/gwdlogo.png'}
                   className="w-2/4 "
@@ -172,21 +170,21 @@ export default function Dashboard({
                   height={'500'}
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 px-4">
+              <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
                 <div className="h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
                   <Carousel />
                 </div>
 
-                <div className="col-span-1 md:col-span-3 lg:col-span-3 order-1 lg:order-2 z-10">
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 ">
-                    <div className="col-span-2 order-3 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
+                <div className="z-10 order-1 col-span-1 md:col-span-3 lg:col-span-3 lg:order-2">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 ">
+                    <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
                       <div className="flex flex-row gap-4">
                         <StatsCard name={'Total Lates'} count={10} />
                         <StatsCard name={'Total Absents'} count={10} />
                         <StatsCard name={'Total Leaves'} count={10} />
                       </div>
                     </div>
-                    <div className="col-span-2 order-1 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
+                    <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
                       <ProfileCard
                         firstName={userDetails.profile.firstName}
                         lastName={userDetails.profile.lastName}
@@ -197,17 +195,17 @@ export default function Dashboard({
                         photoUrl={userDetails.profile.photoUrl}
                       />
                     </div>
-                    <div className="col-span-2 order-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-3">
+                    <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-3">
                       <AttendanceCard timeLogData={swrFaceScan} />
                     </div>
-                    <div className="col-span-2 order-5 md:order-4 md:col-span-2 lg:col-span-2 lg:order-4">
+                    <div className="order-5 col-span-2 md:order-4 md:col-span-2 lg:col-span-2 lg:order-4">
                       <RemindersCard reminders={''} />
                     </div>
 
-                    <div className="col-span-2 row-span-3 order-4 md:col-span-1 md:order-5 lg:col-span-1 lg:order-5">
+                    <div className="order-4 col-span-2 row-span-3 md:col-span-1 md:order-5 lg:col-span-1 lg:order-5">
                       <EmployeeDashboard />
                     </div>
-                    <div className="col-span-2 order-6">
+                    <div className="order-6 col-span-2">
                       <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
                         <EmployeeCalendar />
                       </div>
@@ -235,7 +233,7 @@ export default function Dashboard({
 export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const userDetails = getUserDetails();
-    // console.log(userDetails);
+
     return { props: { userDetails } };
   }
 );

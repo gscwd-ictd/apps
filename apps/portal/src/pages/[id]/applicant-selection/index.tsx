@@ -204,25 +204,19 @@ export default function AppPosAppointment({
         `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/${selectedPublication.vppId}`, //* Changed
         postingApplicantIds
       );
-      console.log('patched start');
+
       patchPublication();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       data = result;
-      console.log(result, 'result');
-      error && console.log(error, 'error');
 
       if (!error) {
-        console.log('patched successfully');
-        console.log(data, 'patched data');
         patchPublicationSuccess(data);
         setAlert({ ...alert, page: 2 });
       } else {
         patchPublicationFail(data);
-        console.log(data, 'patch error message');
         setAlert({ ...alert, page: 2 });
       }
     } else if (alert.page === 2) {
-      console.log('closed alert modal');
       setIsLoading(true);
       setModal({ ...modal, isOpen: false, page: 1 });
       setAlert({ ...alert, isOpen: false, page: 1 });
@@ -486,6 +480,5 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     } else {
       return { props: { employeeDetails } };
     }
-   
   }
 );

@@ -19,6 +19,7 @@ import { pdsToSubmit } from '../../../utils/helpers/pds.helper';
 import { tabs, tabsHasPds } from '../../../utils/constants/tabs';
 import axios from 'axios';
 import { useTabStore } from '../../store/tab.store';
+import { useRouter } from 'next/router';
 
 dayjs.extend(utc);
 
@@ -26,6 +27,8 @@ export default function Dashboard({
   employee,
   pdsDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const setHasPds = useEmployeeStore((state) => state.setHasPds);
@@ -59,13 +62,6 @@ export default function Dashboard({
     parents,
     elementary,
     secondary,
-    officeRelation,
-    guiltyCharged,
-    convicted,
-    separatedService,
-    candidateResigned,
-    immigrant,
-    indigenousPwdSoloParent,
     governmentIssuedId,
     setGuiltyCharged,
     setConvicted,
@@ -398,6 +394,11 @@ export default function Dashboard({
     }
   }, [isLoading, residentialAddress, permanentAddress]);
 
+  // redirect to closed page
+  useEffect(() => {
+    router.push(`${process.env.NEXT_PUBLIC_PERSONAL_DATA_SHEET}/closed`);
+  }, []);
+
   return (
     <>
       <div className="w-full min-h-screen col-span-1 ">
@@ -429,7 +430,6 @@ export default function Dashboard({
 export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
   async (context: GetServerSidePropsContext) => {
     const employee = getUserDetails();
-
     try {
       const applicantPds = await axios.get(
         `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`

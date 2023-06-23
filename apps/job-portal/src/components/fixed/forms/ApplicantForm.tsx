@@ -37,7 +37,7 @@ export const ApplicantForm = () => {
         `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`
       );
     } catch (error) {
-      console.log(error);
+      //
     }
 
     return setIsLoading(false);
