@@ -53,8 +53,6 @@ export default function Dashboard({
     (state) => state.permanentAddressOnEdit
   );
 
-  const router = useRouter();
-
   const {
     personalInfo,
     residentialAddress,
