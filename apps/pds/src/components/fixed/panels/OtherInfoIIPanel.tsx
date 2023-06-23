@@ -29,6 +29,9 @@ export default function OtherInfoIIPanel(): JSX.Element {
   const governmentIssuedIdOnEdit = usePdsStore(
     (state) => state.governmentIssuedIdOnEdit
   );
+  const supportingInfoOnEdit = usePdsStore(
+    (state) => state.supportingInfoOnEdit
+  );
   const { notify } = useContext(NotificationContext);
   // call ref error from ref error context
   const { setRefError, refRef, shake, refError, setShake } =
@@ -44,21 +47,60 @@ export default function OtherInfoIIPanel(): JSX.Element {
 
   // on submit listener
   const onSubmit: SubmitHandler<any> = () => {
+    // --
     if (references.length === 3) {
       setRefError(false);
-      handleNextTab(selectedTab);
     } else if (references.length < 3) {
       setShake(true);
       setRefError(true);
     }
 
-    // handleNextTab(selectedTab)
+    // --
+    if (hasPds) {
+      if (
+        references.length === 3 &&
+        !referencesOnEdit &&
+        !governmentIssuedIdOnEdit &&
+        !supportingInfoOnEdit
+      ) {
+        handleNextTab(selectedTab);
+      } else if (
+        !referencesOnEdit ||
+        !governmentIssuedIdOnEdit ||
+        !supportingInfoOnEdit
+      ) {
+        addNotification(TabActions.NEXT);
+      }
+    } else if (!hasPds) {
+      if (
+        references.length === 3 &&
+        !referencesOnEdit &&
+        !governmentIssuedIdOnEdit &&
+        !supportingInfoOnEdit
+      ) {
+        handleNextTab(selectedTab);
+      } else if (
+        !referencesOnEdit ||
+        !governmentIssuedIdOnEdit ||
+        !supportingInfoOnEdit
+      ) {
+        addNotification(TabActions.NEXT);
+      }
+    }
   };
 
   const onPrev = () => {
-    if (hasPds && !referencesOnEdit && !governmentIssuedIdOnEdit)
+    if (
+      hasPds &&
+      !referencesOnEdit &&
+      !governmentIssuedIdOnEdit &&
+      !supportingInfoOnEdit
+    )
       handlePrevTab(selectedTab);
-    else if (hasPds && (referencesOnEdit || governmentIssuedIdOnEdit))
+    else if (
+      hasPds &&
+      (referencesOnEdit || governmentIssuedIdOnEdit || supportingInfoOnEdit)
+    )
       addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };

@@ -29,8 +29,6 @@ export default function OtherInfoIIPanel(): JSX.Element {
 
   // on submit listener
   const onSubmit = () => {
-    // if ((officeRelation.withinFourthDegree || officeRelation.withinThirdDegree) && (officeRelation.details === '' || officeRelation.details === null)) console.log('ungas ka')
-
     if (references.length === 3) {
       setRefError(false);
       handleNextTab();

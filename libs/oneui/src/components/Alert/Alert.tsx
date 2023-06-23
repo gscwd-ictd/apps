@@ -39,7 +39,9 @@ export const Alert: FunctionComponent<AlertProps> & AlertComposition = ({
         <FadeInOut>
           <div className={promptOverlayStyles()} />
         </FadeInOut>
-
+        <Dialog.Overlay
+          className={`pointer-events-none fixed inset-0 bg-black bg-opacity-25 transition-opacity backdrop-filter backdrop-blur-sm`}
+        />
         <div className="fixed inset-0 overflow-y-auto">
           <div className={promptContainerStyles()}>
             <FadeAndScale>

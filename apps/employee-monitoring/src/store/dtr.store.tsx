@@ -12,16 +12,27 @@ type LoadingDtrEmployee = {
   loadingEmployeesAsOption: boolean;
   loadingEmployeeWithSchedule: boolean;
   loadingEmployeeDtr: boolean;
+  loadingUpdateEmployeeDtr: boolean;
 };
 
 type ErrorDtrEmployee = {
   errorEmployeesAsOption: string;
   errorEmployeeWithSchedule: string;
   errorEmployeeDtr: string;
+  errorUpdateEmployeeDtr: string;
 };
 
 type ResponseDtrEmployee = {
   postResponse: EmployeeSchedule;
+};
+
+type EmployeeDtr = {
+  companyId: string | null;
+  dtrDate: string | null;
+  timeIn: string | null;
+  lunchOut: string | null;
+  lunchIn: string | null;
+  timeOut: string | null;
 };
 
 export type EmployeeSchedule = {
@@ -38,6 +49,7 @@ export type DailyTimeRecordState = {
   date: string;
   setDate: (value: string) => void;
   searchValue: string;
+  employeeDailyRecord: EmployeeDtr;
   setSearchValue: (searchValue: string) => void;
   selectedAssignment: string;
   setSelectedAssignment: (selectedAssignment: string) => void;
@@ -56,8 +68,6 @@ export type DailyTimeRecordState = {
   employeeSchedule: ResponseDtrEmployee;
   employeeDtr: Array<EmployeeDtrWithSchedule>;
   setEmployeeDtr: (employeeDtr: Array<EmployeeDtrWithSchedule>) => void;
-  shouldFetchDtr: boolean;
-  setShouldFetchDtr: (shouldFetchDtr: boolean) => void;
 
   getEmployeeDtr: () => void;
   getEmployeeDtrSuccess: (response: Array<EmployeeDtrWithSchedule>) => void;
@@ -74,6 +84,10 @@ export type DailyTimeRecordState = {
   defineSchedule: () => void;
   defineScheduleSuccess: (response: EmployeeSchedule) => void;
   defineScheduleFail: (error: string) => void;
+
+  updateEmployeeDtr: () => void;
+  updateEmployeeDtrSuccess: (response: EmployeeDtr) => void;
+  updateEmployeeDtrFail: (error: string) => void;
 
   emptyErrorsAndResponse: () => void;
 };
@@ -92,16 +106,16 @@ export const useDtrStore = create<DailyTimeRecordState>()(
       errorEmployeesAsOption: '',
       errorEmployeeWithSchedule: '',
       errorEmployeeDtr: '',
+      errorUpdateEmployeeDtr: '',
     },
     loading: {
       loadingEmployeesAsOption: false,
       loadingEmployeeWithSchedule: false,
       loadingEmployeeDtr: false,
+      loadingUpdateEmployeeDtr: false,
     },
+    employeeDailyRecord: {} as EmployeeDtr,
     isDateSearched: false,
-    shouldFetchDtr: false,
-    setShouldFetchDtr: (shouldFetchDtr: boolean) =>
-      set((state) => ({ ...state, shouldFetchDtr })),
     setIsDateSearched: (isDateSearched: boolean) =>
       set((state) => ({ ...state, isDateSearched })),
 
@@ -127,6 +141,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
           errorEmployeesAsOption: '',
           errorEmployeeWithSchedule: '',
           errorEmployeeDtr: '',
+          errorUpdateEmployeeDtr: '',
         },
         employeeSchedule: { postResponse: {} as EmployeeSchedule },
       })),
@@ -214,6 +229,28 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         ...state,
         loading: { ...state.loading, loadingEmployeesAsOption: false },
         error: { ...state.error, errorEmployeesAsOption: error },
+      })),
+
+    updateEmployeeDtr: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateEmployeeDtr: true },
+        employeeDailyRecord: {} as EmployeeDtr,
+        error: { ...state.error, errorUpdateEmployeeDtr: '' },
+      })),
+
+    updateEmployeeDtrSuccess: (response: EmployeeDtr) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateEmployeeDtr: false },
+        employeeDailyRecord: response,
+      })),
+
+    updateEmployeeDtrFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateEmployeeDtr: true },
+        error: { ...state.error, errorUpdateEmployeeDtr: error },
       })),
 
     getEmployeeSchedule: () =>
