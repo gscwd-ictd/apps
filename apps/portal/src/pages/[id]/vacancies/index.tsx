@@ -41,6 +41,7 @@ import { employeeDummy } from '../../../../src/types/employee.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function Vacancies({
   data,
@@ -468,27 +469,39 @@ export default function Vacancies({
             <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
               <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">
                 <label className="pb-4">Job Vacancies</label>
-                {data && data.length > 0 ? (
-                  data.map((vacancies: VacancyDetails, messageIdx: number) => {
-                    return (
-                      <div key={messageIdx}>
-                        <MessageCard
-                          icon={
-                            <HiNewspaper className="w-6 h-6 text-green-800" />
-                          }
-                          color={`green`}
-                          title={vacancies.positionTitle}
-                          description={vacancies.occupationName}
-                          linkType={'router'}
-                          onClick={() => handleMessage(vacancies)}
-                        />
-                      </div>
-                    );
-                  })
+
+                {employeeDetails.employmentDetails.userRole !==
+                UserRole.JOB_ORDER ? (
+                  data && data.length > 0 ? (
+                    data.map(
+                      (vacancies: VacancyDetails, messageIdx: number) => {
+                        return (
+                          <div key={messageIdx}>
+                            <MessageCard
+                              icon={
+                                <HiNewspaper className="w-6 h-6 text-green-800" />
+                              }
+                              color={`green`}
+                              title={vacancies.positionTitle}
+                              description={vacancies.occupationName}
+                              linkType={'router'}
+                              onClick={() => handleMessage(vacancies)}
+                            />
+                          </div>
+                        );
+                      }
+                    )
+                  ) : (
+                    <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
+                      <label className="w-full text-4xl text-center text-gray-400 ">
+                        NO VACANCIES
+                      </label>
+                    </div>
+                  )
                 ) : (
                   <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
                     <label className="w-full text-4xl text-center text-gray-400 ">
-                      NO VACANCIES
+                      NO DATA
                     </label>
                   </div>
                 )}

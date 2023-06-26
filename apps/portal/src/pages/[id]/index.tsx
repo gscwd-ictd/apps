@@ -147,74 +147,63 @@ export default function Dashboard({
 
       <MainContainer>
         <>
-          {swrFaceScanIsLoading ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                />
+          <>
+            <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
+              <Image
+                src={'/gwdlogo.png'}
+                className="w-2/4 "
+                alt={''}
+                width={'500'}
+                height={'500'}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
+              <div className="h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
+                <Carousel />
               </div>
-            </>
-          ) : (
-            <>
-              <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
-                <Image
-                  src={'/gwdlogo.png'}
-                  className="w-2/4 "
-                  alt={''}
-                  width={'500'}
-                  height={'500'}
-                />
-              </div>
-              <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
-                <div className="h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
-                  <Carousel />
-                </div>
 
-                <div className="z-10 order-1 col-span-1 md:col-span-3 lg:col-span-3 lg:order-2">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 ">
-                    <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
-                      <div className="flex flex-row gap-4">
-                        <StatsCard name={'Total Lates'} count={10} />
-                        <StatsCard name={'Total Absents'} count={10} />
-                        <StatsCard name={'Total Leaves'} count={10} />
-                      </div>
+              <div className="z-10 order-1 col-span-1 md:col-span-3 lg:col-span-3 lg:order-2">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 ">
+                  <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
+                    <div className="flex flex-row gap-4">
+                      <StatsCard name={'Total Lates'} count={10} />
+                      <StatsCard name={'Total Absents'} count={10} />
+                      <StatsCard name={'Total Leaves'} count={10} />
                     </div>
-                    <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
-                      <ProfileCard
-                        firstName={userDetails.profile.firstName}
-                        lastName={userDetails.profile.lastName}
-                        position={
-                          userDetails.employmentDetails.assignment.positionTitle
-                        }
-                        division={userDetails.employmentDetails.assignment.name}
-                        photoUrl={userDetails.profile.photoUrl}
-                      />
-                    </div>
-                    <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-3">
-                      <AttendanceCard timeLogData={swrFaceScan} />
-                    </div>
-                    <div className="order-5 col-span-2 md:order-4 md:col-span-2 lg:col-span-2 lg:order-4">
-                      <RemindersCard reminders={''} />
-                    </div>
+                  </div>
+                  <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
+                    <ProfileCard
+                      firstName={userDetails.profile.firstName}
+                      lastName={userDetails.profile.lastName}
+                      position={
+                        userDetails.employmentDetails.assignment.positionTitle
+                      }
+                      division={userDetails.employmentDetails.assignment.name}
+                      photoUrl={userDetails.profile.photoUrl}
+                    />
+                  </div>
+                  <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-3">
+                    <AttendanceCard
+                      timeLogData={swrFaceScan}
+                      swrFaceScanIsLoading={swrFaceScanIsLoading}
+                    />
+                  </div>
+                  <div className="order-5 col-span-2 md:order-4 md:col-span-2 lg:col-span-2 lg:order-4">
+                    <RemindersCard reminders={''} />
+                  </div>
 
-                    <div className="order-4 col-span-2 row-span-3 md:col-span-1 md:order-5 lg:col-span-1 lg:order-5">
-                      <EmployeeDashboard />
-                    </div>
-                    <div className="order-6 col-span-2">
-                      <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
-                        <EmployeeCalendar />
-                      </div>
+                  <div className="order-4 col-span-2 row-span-3 md:col-span-1 md:order-5 lg:col-span-1 lg:order-5">
+                    <EmployeeDashboard />
+                  </div>
+                  <div className="order-6 col-span-2">
+                    <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
+                      <EmployeeCalendar />
                     </div>
                   </div>
                 </div>
               </div>
-            </>
-          )}
+            </div>
+          </>
         </>
       </MainContainer>
     </>

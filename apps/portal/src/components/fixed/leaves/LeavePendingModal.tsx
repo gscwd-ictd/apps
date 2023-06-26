@@ -83,7 +83,7 @@ export const LeavePendingModal = ({
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
               <span className="text-xl md:text-2xl">
-                Ongoing Leave Application
+                For Approval Leave Application
               </span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"

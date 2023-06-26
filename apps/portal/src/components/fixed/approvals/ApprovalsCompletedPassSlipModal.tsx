@@ -22,14 +22,18 @@ export const ApprovalsPendingPassSlipModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipCompletedModalProps) => {
-  const { passSlip, declineApplicationModalIsOpen, setDeclineApplicationModalIsOpen } = useApprovalStore((state) => ({
+  const {
+    passSlip,
+    declineApplicationModalIsOpen,
+    setDeclineApplicationModalIsOpen,
+  } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
   }));
 
-   // cancel action for Decline Application Modal
-   const closeDeclineModal = async () => {
+  // cancel action for Decline Application Modal
+  const closeDeclineModal = async () => {
     setDeclineApplicationModalIsOpen(false);
   };
 
@@ -45,9 +49,7 @@ export const ApprovalsPendingPassSlipModal = ({
         <Modal.Header>
           <h3 className="font-semibold  text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">
-                Pass Slip for Approval
-              </span>
+              <span className="text-xl md:text-2xl">Completed Pass Slip</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -159,19 +161,17 @@ export const ApprovalsPendingPassSlipModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto flex gap-2">
-              {
-                passSlip.status === PassSlipStatus.APPROVED ?
+              {passSlip.status === PassSlipStatus.APPROVED ? (
                 <Button
-                variant={'warning'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => setDeclineApplicationModalIsOpen(true)}
-                type="submit"
+                  variant={'warning'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => setDeclineApplicationModalIsOpen(true)}
+                  type="submit"
                 >
                   Cancel Pass Slip
                 </Button>
-                : null
-              }
+              ) : null}
               <Button
                 variant={'primary'}
                 size={'md'}
