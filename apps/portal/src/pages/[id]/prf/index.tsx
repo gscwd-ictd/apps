@@ -13,6 +13,7 @@ import { useUserStore } from '../../../store/user.store';
 
 import {
   createPrf,
+  getDisapprovedPrfs,
   getForApprovalPrfs,
   getPendingPrfs,
   savePrf,
@@ -39,6 +40,7 @@ import { HiDocumentAdd } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { DisapprovedPrfList } from 'apps/portal/src/components/fixed/prf/prf-index/DisapprovedPrfList';
 
 type PrfPageProps = {
   user: User;
@@ -46,6 +48,7 @@ type PrfPageProps = {
   // profile: EmployeeProfile;
   pendingRequests: Array<PrfDetails>;
   forApproval: Array<any>;
+  disapprovedRequests: Array<PrfDetails>;
 };
 
 export default function Prf({
@@ -54,6 +57,7 @@ export default function Prf({
   // profile,
   pendingRequests,
   forApproval,
+  disapprovedRequests,
 }: PrfPageProps) {
   // access modal-open state from store
   const isOpen = usePrfStore((state) => state.isModalOpen);
@@ -69,6 +73,8 @@ export default function Prf({
 
   const forApprovalPrfs = usePrfStore((state) => state.forApprovalPrfs);
 
+  const disapprovedPrfs = usePrfStore((state) => state.disapprovedPrfs);
+
   const activeItem = usePrfStore((state) => state.activeItem);
 
   const setSelectedPositions = usePrfStore(
@@ -78,6 +84,8 @@ export default function Prf({
   const setPendingPrfs = usePrfStore((state) => state.setPendingPrfs);
 
   const setForApprovalPrfs = usePrfStore((state) => state.setForApprovalPrfs);
+
+  const setDisapprovedPrfs = usePrfStore((state) => state.setDisapprovedPrfs);
 
   // access function to control with exam value
   const setWithExam = usePrfStore((state) => state.setWithExam);
@@ -113,6 +121,8 @@ export default function Prf({
     setPendingPrfs(pendingRequests);
 
     setForApprovalPrfs(forApproval);
+
+    setDisapprovedPrfs(disapprovedRequests);
 
     setIsLoading(true);
   }, [employee]);
@@ -255,6 +265,8 @@ export default function Prf({
                     {activeItem === 0 && <PendingPrfList />}
 
                     {activeItem === 1 && <ForApprovalPrfList />}
+
+                    {activeItem === 2 && <DisapprovedPrfList />}
                   </div>
                 </div>
               </>
@@ -282,6 +294,9 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     // get all approved prfs
     const forApproval = await getForApprovalPrfs(employee.user._id);
 
+    // get all disapproved prfs
+    const disapprovedRequests = await getDisapprovedPrfs(employee.user._id);
+
     // check if user role is rank_and_file
     if (
       employee.employmentDetails.userRole === Roles.RANK_AND_FILE ||
@@ -303,6 +318,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
         // profile: employee.profile,
         pendingRequests,
         forApproval,
+        disapprovedRequests,
       },
     };
   }

@@ -7,6 +7,21 @@ export type PrfError = {
 };
 
 export type PrfState = {
+  response: {
+    patchResponse: any;
+  };
+
+  loading: {
+    loadingResponse: boolean;
+  };
+  errors: {
+    errorResponse: string;
+  };
+
+  patchPrf: () => void;
+  patchPrfSuccess: (response) => void;
+  patchPrfFail: (error: string) => void;
+
   error: PrfError;
   isModalOpen: boolean;
   modalPage: number;
@@ -16,6 +31,7 @@ export type PrfState = {
   withExam: boolean;
   pendingPrfs: Array<PrfDetails>;
   forApprovalPrfs: Array<ForApprovalPrf>;
+  disapprovedPrfs: Array<PrfDetails>;
   activeItem: number;
   setError: (error: PrfError) => void;
   setIsModalOpen: (state: boolean) => void;
@@ -27,6 +43,7 @@ export type PrfState = {
   setWithExam: (state: boolean) => void;
   setPendingPrfs: (pendingPrfs: Array<PrfDetails>) => void;
   setForApprovalPrfs: (forApprovalPrs: Array<ForApprovalPrf>) => void;
+  setDisapprovedPrfs: (disapprovedPrfs: Array<PrfDetails>) => void;
   setActiveItem: (activeItem: number) => void;
 
   isLoading: boolean;
@@ -34,9 +51,21 @@ export type PrfState = {
 
   prfOtpModalIsOpen: boolean;
   setPrfOtpModalIsOpen: (prfOtpModalIsOpen: boolean) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const usePrfStore = create<PrfState>((set) => ({
+  response: {
+    patchResponse: {},
+  },
+  loading: {
+    loadingResponse: false,
+  },
+  errors: {
+    errorResponse: '',
+  },
+
   prfOtpModalIsOpen: false,
 
   error: { status: false, message: '' },
@@ -56,6 +85,8 @@ export const usePrfStore = create<PrfState>((set) => ({
   pendingPrfs: [],
 
   forApprovalPrfs: [],
+
+  disapprovedPrfs: [],
 
   activeItem: 0,
 
@@ -150,7 +181,69 @@ export const usePrfStore = create<PrfState>((set) => ({
     set((state) => ({ ...state, forApprovalPrfs }));
   },
 
+  setDisapprovedPrfs: (disapprovedPrfs: Array<any>) => {
+    set((state) => ({ ...state, disapprovedPrfs }));
+  },
+
   setActiveItem: (activeItem: number) => {
     set((state) => ({ ...state, activeItem }));
+  },
+
+  //PATCH PRF ACTIONS
+  patchPrf: () => {
+    set((state) => ({
+      ...state,
+      response: {
+        ...state.response,
+        patchResponse: {},
+      },
+      loading: {
+        ...state.loading,
+        loadingResponse: true,
+      },
+      errors: {
+        ...state.error,
+        errorResponse: '',
+      },
+    }));
+  },
+  patchPrfSuccess: (response) => {
+    set((state) => ({
+      ...state,
+      response: {
+        ...state.response,
+        patchResponse: response,
+      },
+      loading: {
+        ...state.loading,
+        loadingResponse: false,
+      },
+    }));
+  },
+  patchPrfFail: (error: string) => {
+    set((state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        loadingResponse: false,
+      },
+      errors: {
+        ...state.error,
+        errorResponse: error,
+      },
+    }));
+  },
+  emptyResponseAndError: () => {
+    set((state) => ({
+      ...state,
+      response: {
+        ...state.response,
+        patchResponse: {},
+      },
+      errors: {
+        ...state.error,
+        errorResponse: '',
+      },
+    }));
   },
 }));

@@ -16,7 +16,10 @@ import {
   getEmployeeDetailsFromHr,
   getEmployeeProfile,
 } from '../../../../utils/helpers/http-requests/employee-requests';
-import { approvePrf, getPrfById } from '../../../../utils/helpers/prf.requests';
+import {
+  getPrfById,
+  patchPrfRequest,
+} from '../../../../utils/helpers/prf.requests';
 import {
   EmployeeDetailsPrf,
   EmployeeProfile,
@@ -28,11 +31,12 @@ import {
   PrfStatus,
 } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../../src/utils/helpers/session';
-import { Modal, OtpModal } from '@gscwd-apps/oneui';
+import { Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
 import { PrfOtpContents } from '../../../../../src/components/fixed/prf/prfOtp/PrfOtpContents';
 import { usePrfStore } from '../../../../../src/store/prf.store';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { isEmpty } from 'lodash';
 
 type ForApprovalProps = {
   profile: EmployeeProfile;
@@ -45,9 +49,24 @@ export default function ForApproval({
   employee,
   prfDetails,
 }: ForApprovalProps) {
-  const { prfOtpModalIsOpen, setPrfOtpModalIsOpen } = usePrfStore((state) => ({
+  const {
+    prfOtpModalIsOpen,
+    patchError,
+    patchSuccess,
+    patchPrf,
+    patchPrfSuccess,
+    patchPrfFail,
+    setPrfOtpModalIsOpen,
+    emptyResponseAndError,
+  } = usePrfStore((state) => ({
+    patchError: state.errors.errorResponse,
+    patchSuccess: state.response.patchResponse,
     prfOtpModalIsOpen: state.prfOtpModalIsOpen,
     setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
+    patchPrf: state.patchPrf,
+    patchPrfSuccess: state.patchPrfSuccess,
+    patchPrfFail: state.patchPrfFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
@@ -57,24 +76,66 @@ export default function ForApproval({
   const handleOtpModal = () => {
     setPrfOtpModalIsOpen(true);
   };
-  const handleDecline = () => {
-    approvePrf(
-      `${router.query.prfid}`,
-      PrfStatus.DISAPPROVED,
-      employee.userId,
-      remarks
-    );
+  const handleDecline = async (e) => {
+    if (!isEmpty(remarks)) {
+      patchPrf();
+      const { error, result } = await patchPrfRequest(
+        `/prf-trail/${router.query.prfid}`,
+        {
+          status: PrfStatus.DISAPPROVED,
+          employeeId: employee.userId,
+          remarks,
+        }
+      );
+
+      if (error) {
+        // request is done set loading to false and set the error message
+        patchPrfFail(result);
+      } else if (!error) {
+        // request is done set loading to false and set the update response
+        patchPrfSuccess(result);
+        setIsDeclineModalOpen(false);
+        setTimeout(() => {
+          router.push(`/${router.query.id}/prf`);
+        }, 3000);
+      }
+    }
   };
+
+  useEffect(() => {
+    if (!isEmpty(patchSuccess) || !isEmpty(patchError)) {
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [patchSuccess, patchError]);
+
   const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
+      {/* Disapprove PRF Failed Error */}
+      {!isEmpty(patchError) && !prfOtpModalIsOpen ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`Network Error: ${patchError}`}
+        />
+      ) : null}
+
+      {/* Disapprove PRF Success */}
+      {!isEmpty(patchSuccess) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage={`PRF Action Submitted.`}
+        />
+      ) : null}
+
       <PageTitle title={prfDetails.prfNo} />
 
       <OtpModal
         modalState={prfOtpModalIsOpen}
         setModalState={setPrfOtpModalIsOpen}
-        title={'PRF OTP'}
+        title={'APPROVE PRF OTP'}
       >
         {/* contents */}
         <PrfOtpContents
@@ -94,35 +155,29 @@ export default function ForApproval({
       >
         <Modal.Header>
           <h3 className="text-xl font-semibold text-gray-700">
-            <div className="flex justify-between px-5">
+            <div className="flex justify-between px-2">
               <span>Decline Position Request</span>
             </div>
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col w-full h-full gap-2 text-md ">
+          <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
             {'Please indicate reason for declining this position request:'}
-            <form id="declinePrfForm">
-              <textarea
-                required
-                placeholder="Reason for decline"
-                className={`
-                        w-full h-32 p-2 border resize-none
-                    `}
-                onChange={(e) =>
-                  setRemarks(e.target.value as unknown as string)
-                }
-              ></textarea>
-            </form>
+            <textarea
+              required
+              placeholder="Reason for decline"
+              className={`w-full h-32 p-2 border resize-none`}
+              onChange={(e) => setRemarks(e.target.value as unknown as string)}
+            ></textarea>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button
-                form="declinePrfForm"
                 variant={'primary'}
-                onClick={(e) => handleDecline()}
+                isDisabled={!isEmpty(remarks) ? false : true}
+                onClick={(e) => handleDecline(e)}
                 btnLabel={'Submit'}
               ></Button>
               <Button
@@ -192,24 +247,28 @@ export default function ForApproval({
               </section>
 
               <section className="flex flex-col w-full gap-2 mt-10">
-                <Button
-                  btnLabel={'Approve Request'}
-                  fluid
-                  strong
-                  onClick={() => {
-                    handleOtpModal();
-                  }}
-                />
-                <Button
-                  btnLabel={'Disapprove Request'}
-                  variant="danger"
-                  fluid
-                  strong
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                  onClick={() => {
-                    setIsDeclineModalOpen(true);
-                  }}
-                />
+                {isEmpty(patchSuccess) && !prfOtpModalIsOpen ? (
+                  <>
+                    <Button
+                      btnLabel={'Approve Request'}
+                      fluid
+                      strong
+                      onClick={() => {
+                        handleOtpModal();
+                      }}
+                    />
+                    <Button
+                      btnLabel={'Disapprove Request'}
+                      variant="danger"
+                      fluid
+                      strong
+                      // eslint-disable-next-line @typescript-eslint/no-empty-function
+                      onClick={() => {
+                        setIsDeclineModalOpen(true);
+                      }}
+                    />
+                  </>
+                ) : null}
               </section>
             </aside>
             <section className="w-full">

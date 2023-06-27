@@ -318,15 +318,16 @@ export const AllSelectionApplicantsList = () => {
                   return (
                     <div
                       key={index}
-                      className="flex items-center w-full grid-cols-5 gap-4 justify-left"
+                      className="flex items-center w-full grid-cols-5 gap-4 justify-left hover:bg-indigo-100"
                     >
                       <div className="w-[5%] flex justify-center">
                         <input
                           type="checkbox"
-                          onChange={() => (applicant: Applicant) => {
+                          onChange={() =>
                             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                            applicant.state;
-                          }}
+
+                            onSelect(applicant.sequenceNo)
+                          }
                           checked={
                             swrApplicants?.data.positionDetails
                               .postingStatus ===
@@ -361,7 +362,7 @@ export const AllSelectionApplicantsList = () => {
                         }
                         className={`flex grid-cols-3 items-center border-b gap-4 ${
                           applicant.state && 'bg-slate-300'
-                        } w-[95%] hover:cursor-pointer border-b-gray-100 border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-100`}
+                        } w-[95%] hover:cursor-pointer border-b-gray-100 border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 `}
                       >
                         <div className="w-[5%] flex justify-center items-center">
                           {/* <RankingPopover data={applicant} /> */}

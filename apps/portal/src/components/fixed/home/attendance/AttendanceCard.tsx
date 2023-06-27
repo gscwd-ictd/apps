@@ -27,7 +27,7 @@ export const AttendanceCard: React.FC<Props> = ({
   ); //change to scheduled timeOut prop when ready
 
   return (
-    <div className="w-full h-auto shadow rounded-md bg-white flex flex-col p-4 gap-2">
+    <div className="w-full h-32 shadow rounded-md bg-white flex flex-col p-4 gap-2">
       <label className="text-2xl text-gray-600 font-bold text-center">
         {now}
       </label>

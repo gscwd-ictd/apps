@@ -49,7 +49,7 @@ export async function confirmOtpCode(otpCode: string, id: any, otpName) {
                 errorMessage: errorData,
               };
             } else {
-              const errorData = 'Server Error';
+              const errorData = 'OTP Server Error';
               return {
                 otpComplete: false,
                 otpFieldError: true,
@@ -70,7 +70,7 @@ export async function confirmOtpCode(otpCode: string, id: any, otpName) {
               errorMessage: errorData,
             };
           } else {
-            const errorData = `Server Error`;
+            const errorData = `OTP Server Error`;
             return {
               otpComplete: false,
               otpFieldError: true,

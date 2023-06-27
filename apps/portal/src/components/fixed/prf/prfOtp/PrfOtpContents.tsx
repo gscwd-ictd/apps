@@ -7,7 +7,7 @@ import PortalSVG from '../../svg/PortalSvg';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
-import { approvePrf } from '../../../../utils/helpers/prf.requests';
+import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { PrfStatus } from '../../../../types/prf.types';
 import { useRouter } from 'next/router';
 import { usePrfStore } from '../../../../../src/store/prf.store';
@@ -51,9 +51,18 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
     animate: false,
   });
 
-  const { prfOtpModalIsOpen, setPrfOtpModalIsOpen } = usePrfStore((state) => ({
+  const {
+    patchPrf,
+    patchPrfSuccess,
+    patchPrfFail,
+    prfOtpModalIsOpen,
+    setPrfOtpModalIsOpen,
+  } = usePrfStore((state) => ({
     prfOtpModalIsOpen: state.prfOtpModalIsOpen,
     setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
+    patchPrf: state.patchPrf,
+    patchPrfSuccess: state.patchPrfSuccess,
+    patchPrfFail: state.patchPrfFail,
   }));
 
   useEffect(() => {
@@ -154,7 +163,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
     e.preventDefault();
     setPrfOtpModalIsOpen(false); //close OTP modal first
     setTimeout(() => {
-      setPrfOtpModalIsOpen(false); //then close Pass Slip modal
+      router.push(`/${router.query.id}/prf`);
     }, 200);
   };
 
@@ -165,12 +174,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
 
   useEffect(() => {
     if (otpComplete) {
-      approvePrf(
-        `${router.query.prfid}`,
-        PrfStatus.APPROVED,
-        employeeId,
-        remarks
-      );
+      //remove otp tokens
       localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
       localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
     } else {
@@ -185,11 +189,40 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
 
     const data = await confirmOtpCode(otpCode, tokenId, otpName);
     if (data) {
-      setOtpFieldError(data.otpFieldError);
-      setIsSubmitLoading(data.isSubmitLoading);
-      setWiggleEffect(data.wiggleEffect);
-      setErrorMessage(data.errorMessage);
-      setOtpComplete(data.otpComplete);
+      patchPrf();
+      const { error, result } = await patchPrfRequest(
+        `/prf-trail/${router.query.prfid}`,
+        {
+          status: PrfStatus.APPROVED,
+          employeeId: employeeId,
+          remarks: remarks,
+        }
+      );
+
+      //check if there's an error in otp confirmation
+      if (data.errorMessage) {
+        setOtpFieldError(data.otpFieldError);
+        setIsSubmitLoading(data.isSubmitLoading);
+        setWiggleEffect(data.wiggleEffect);
+        setErrorMessage(data.errorMessage);
+        setOtpComplete(data.otpComplete);
+      } else if (error) {
+        // request is done set loading to false and set the error message
+        patchPrfFail(result);
+        setOtpFieldError(true);
+        setIsSubmitLoading(data.isSubmitLoading);
+        setWiggleEffect(true);
+        setErrorMessage(result); // show error message here
+        setOtpComplete(false);
+      } else if (!error) {
+        // request is done set loading to false and set the update response
+        patchPrfSuccess(result);
+        setOtpFieldError(data.otpFieldError);
+        setIsSubmitLoading(data.isSubmitLoading);
+        setWiggleEffect(data.wiggleEffect);
+        setErrorMessage(data.errorMessage);
+        setOtpComplete(data.otpComplete);
+      }
     } else {
       setOtpFieldError(true);
       setIsSubmitLoading(false);

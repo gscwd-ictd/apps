@@ -1,5 +1,9 @@
 import React, { DOMAttributes, FunctionComponent } from 'react';
-import { HiOutlineTag, HiOutlineThumbUp } from 'react-icons/hi';
+import {
+  HiOutlineTag,
+  HiOutlineThumbDown,
+  HiOutlineThumbUp,
+} from 'react-icons/hi';
 import { usePrfStore } from '../../../../store/prf.store';
 
 interface TabHeaderItemProps extends DOMAttributes<HTMLDivElement> {
@@ -22,6 +26,8 @@ export const TabHeader: FunctionComponent = () => {
 
   const forApprovalPrfs = usePrfStore((state) => state.forApprovalPrfs);
 
+  const disapprovedPrfs = usePrfStore((state) => state.disapprovedPrfs);
+
   const activeItem = usePrfStore((state) => state.activeItem);
 
   const setActiveItem = usePrfStore((state) => state.setActiveItem);
@@ -41,6 +47,14 @@ export const TabHeader: FunctionComponent = () => {
       isActive: false,
       variant: 'warning',
       icon: <HiOutlineThumbUp className="h-5 w-5 text-gray-700" />,
+    },
+    {
+      title: 'Disapproved Requests',
+      subtitle: 'Show all disapproved position requests',
+      count: disapprovedPrfs && disapprovedPrfs.length,
+      isActive: false,
+      variant: 'warning',
+      icon: <HiOutlineThumbDown className="h-5 w-5 text-gray-700" />,
     },
   ];
 
