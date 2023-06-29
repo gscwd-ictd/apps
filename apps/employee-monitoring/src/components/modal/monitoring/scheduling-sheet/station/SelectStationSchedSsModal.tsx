@@ -75,7 +75,7 @@ const SelectStationSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
       label: '',
       lunchIn: '',
       lunchOut: '',
-      shift: ScheduleShifts.MORNING,
+      shift: ScheduleShifts.DAY,
       timeIn: '',
       timeOut: '',
       value: '',

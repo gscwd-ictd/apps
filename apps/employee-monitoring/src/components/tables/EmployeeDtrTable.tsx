@@ -113,6 +113,15 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
     }
   };
 
+  // check if holiday
+  const checkIfHoliday = (type) => {
+    if (type === HolidayTypes.REGULAR) {
+      return 'text-white';
+    } else if (type === HolidayTypes.SPECIAL) {
+      return 'text-white';
+    } else return 'text-inherit';
+  };
+
   // month day and year
   const formatDateInWords = (date: string) => {
     return dayjs(date).format('MMMM DD, YYYY');
@@ -180,6 +189,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                   let lunchOutColor = '';
                   let lunchInColor = '';
                   let timeOutColor = '';
+                  let isHoliday = false;
 
                   // time in color
                   compareIfLate(
@@ -242,51 +252,79 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                             : 'bg-inherit '
                         } `}
                       >
-                        <td className="py-2 text-center border max-w-[6rem]">
+                        <td
+                          className={`py-2 text-center border max-w-[6rem] ${checkIfHoliday(
+                            logs.holidayType
+                          )}`}
+                        >
                           <div className="flex justify-center gap-2">
                             <span>{formatDateInWords(logs.day)}</span>
                             <span>{dayjs(logs.day).format('ddd')}</span>
                           </div>
                         </td>
                         <td className="py-2 text-center border">
-                          <span className={timeInColor}>
+                          <span
+                            className={`${checkIfHoliday(
+                              logs.holidayType
+                            )} ${timeInColor}`}
+                          >
                             {logs.dtr.timeIn
                               ? formatTime(logs.dtr.timeIn)
                               : '-'}
                           </span>
                         </td>
                         <td className="py-2 text-center border">
-                          <span className={lunchOutColor}>
+                          <span
+                            className={`${checkIfHoliday(
+                              logs.holidayType
+                            )} ${lunchOutColor}`}
+                          >
                             {logs.dtr.lunchOut
                               ? formatTime(logs.dtr.lunchOut)
                               : '-'}
                           </span>
                         </td>
                         <td className="py-2 text-center border">
-                          <span className={lunchInColor}>
+                          <span
+                            className={`${checkIfHoliday(
+                              logs.holidayType
+                            )} ${lunchOutColor}`}
+                          >
                             {logs.dtr.lunchIn
                               ? formatTime(logs.dtr.lunchIn)
                               : '-'}
                           </span>
                         </td>
                         <td className="py-2 text-center border">
-                          <span className={timeOutColor}>
+                          <span
+                            className={`${checkIfHoliday(
+                              logs.holidayType
+                            )} ${timeOutColor}`}
+                          >
                             {logs.dtr.timeOut
                               ? formatTime(logs.dtr.timeOut)
                               : '-'}
                           </span>
                         </td>
-                        <td className="py-2 text-center border">
+                        <td
+                          className={`py-2 text-center border ${checkIfHoliday(
+                            logs.holidayType
+                          )} `}
+                        >
                           {formatTime(logs.schedule.timeIn)} -{' '}
                           {formatTime(logs.schedule.timeOut)}
                         </td>
-                        <td className="py-2 text-xs text-center break-words border">
+                        <td
+                          className={`py-2 text-xs text-center break-words border ${checkIfHoliday(
+                            logs.holidayType
+                          )} `}
+                        >
                           {logs.dtr.remarks ? logs.dtr.remarks : '-'}
                         </td>
                         <td className="py-2 text-center border">
                           <div>
                             <button
-                              className="text-green-600 disabled:text-red-600"
+                              className="text-green-700 disabled:text-red-600"
                               onClick={() => openEditActionModal(logs)}
                               disabled={
                                 dayjs().isBefore(dayjs(logs.day)) ||
