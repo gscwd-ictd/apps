@@ -293,7 +293,7 @@ PrfPageProps) {
 
   useEffect(() => {
     if (!isEmpty(patchResponse)) {
-      console.log(employee.user._id, 'userid');
+      // console.log(employee.user._id, 'userid');
       mutateForApprovalPrfDetails();
       mutatePendingPrfDetails();
       mutateDisapprovedPrfDetails();
@@ -302,7 +302,7 @@ PrfPageProps) {
       }, 500);
       if (swrForApprovalPrfDetailsList.length <= 1) {
         setTimeout(() => {
-          // router.reload();
+          router.reload();
         }, 2000);
       }
     }
