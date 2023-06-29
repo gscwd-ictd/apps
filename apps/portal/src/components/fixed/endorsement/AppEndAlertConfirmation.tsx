@@ -1,3 +1,4 @@
+import { HiExclamationCircle } from 'react-icons/hi';
 import { useAppEndStore } from '../../../store/endorsement.store';
 
 type AppEndAlertConfirmationProps = {
@@ -13,17 +14,27 @@ export const AppEndAlertConfirmation = ({
 
   return (
     <>
-      <div className="flex-row items-center w-full h-auto px-5 rounded text-slate-700 bg-slate-50 pt-7">
+      <div className="flex items-center gap-2">
+        <HiExclamationCircle
+          className="text-yellow-500 animate-pulse"
+          size={30}
+        />
+        <span className="text-2xl">Confirm Action</span>
+      </div>
+
+      <hr />
+      <div className="flex-row items-center w-full h-auto rounded text-slate-700">
         {selectedApplicants > 0 && (
-          <div className="flex justify-center text-xl">
+          <div className="flex mt-5 text-xl">
             <div className="flex flex-col items-center">
               <p className="w-full text-lg font-light text-left">
-                You have selected{' '}
+                You have selected
+                <br />
                 <span className="font-medium text-black">
                   {selectedApplicants}{' '}
                   {selectedApplicants > 1 ? 'applicants' : 'applicant'}
                 </span>{' '}
-                for{' '}
+                for <br />
                 <span className="font-medium text-black">
                   {selectedPublication.positionTitle}
                 </span>{' '}
@@ -32,7 +43,7 @@ export const AppEndAlertConfirmation = ({
             </div>
           </div>
         )}
-        <div className="w-full mt-5 text-lg font-light text-left ">
+        <div className="w-full mt-5 font-light text-left text-md ">
           <div>This action cannot be undone.</div>
           <div>Do you want to proceed?</div>
         </div>

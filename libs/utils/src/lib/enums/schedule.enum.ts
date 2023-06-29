@@ -1,5 +1,5 @@
 export enum ScheduleShifts {
-  MORNING = 'morning',
+  DAY = 'day',
   NIGHT = 'night',
 }
 

@@ -84,12 +84,14 @@ export const AllApplicantsList = () => {
   return (
     <>
       {applicantList.length > 0 ? (
-        <ul>
+        <ul className="divide-y">
           {applicantList.map((applicant: Applicant, index: number) => {
             return (
               <li
                 key={index}
-                className="flex w-full py-3 items-center pr-2 border-b border-l-[5px] border-b-gray-100 border-l-transparent hover:border-l-indigo-500 hover:bg-indigo-50"
+                className={`flex w-full py-3 items-center pr-2 border-l-[5px]  border-l-transparent hover:border-l-indigo-500 hover:bg-indigo-50 ${
+                  applicant.state ? 'bg-gray-100' : 'bg-inherit'
+                } `}
               >
                 <div
                   className="flex items-center justify-between w-full p-5 transition-colors ease-in-out cursor-pointer"
