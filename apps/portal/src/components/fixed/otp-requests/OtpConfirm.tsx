@@ -29,8 +29,8 @@ export async function confirmOtpCode(otpCode: string, id: any, otpName) {
         if (data.status && data.status === 200) {
           //otp good
           try {
-            localStorage.removeItem(`${otpName}OtpToken_${data.id}`);
-            localStorage.removeItem(`${otpName}OtpEndTime_${data.id}`);
+            // localStorage.removeItem(`${otpName}OtpToken_${data.id}`);
+            // localStorage.removeItem(`${otpName}OtpEndTime_${data.id}`);
             return {
               otpComplete: true,
               otpFieldError: false,

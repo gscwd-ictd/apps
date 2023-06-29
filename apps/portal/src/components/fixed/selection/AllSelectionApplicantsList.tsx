@@ -312,13 +312,15 @@ export const AllSelectionApplicantsList = () => {
                 <p className="font-light"></p>
               </div>
             </div>
-            <ul>
+            <ul className="divide-y">
               {applicantList.map(
                 (applicant: ApplicantWithScores, index: number) => {
                   return (
                     <div
                       key={index}
-                      className="flex items-center w-full grid-cols-5 gap-4 justify-left hover:bg-indigo-100"
+                      className={`flex items-center w-full grid-cols-5 gap-4 justify-left hover:bg-indigo-100  ${
+                        applicant.state && 'bg-slate-300 '
+                      }  `}
                     >
                       <div className="w-[5%] flex justify-center">
                         <input
@@ -360,9 +362,7 @@ export const AllSelectionApplicantsList = () => {
                             ? onSelect(applicant.sequenceNo!)
                             : {}
                         }
-                        className={`flex grid-cols-3 items-center border-b gap-4 ${
-                          applicant.state && 'bg-slate-300'
-                        } w-[95%] hover:cursor-pointer border-b-gray-100 border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 `}
+                        className={`flex grid-cols-3 items-center  gap-4 w-[95%] hover:cursor-pointer  border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 `}
                       >
                         <div className="w-[5%] flex justify-center items-center">
                           {/* <RankingPopover data={applicant} /> */}
@@ -445,10 +445,10 @@ export const AllSelectionApplicantsList = () => {
                         </div>
                       </li>
                       <div className="w-[5%]">
-                        <div className="flex items-center justify-center w-full font-medium text-gray-600 border-b hover:cursor-pointer">
+                        <div className="flex items-center justify-center w-full font-medium text-gray-600 hover:cursor-pointer">
                           <button
                             tabIndex={-1}
-                            className="px-1 text-white bg-inherit rounded"
+                            className="px-1 text-white rounded"
                             onClick={() => {
                               setSelectedApplicantDetails({
                                 applicantId: applicant.applicantId,
