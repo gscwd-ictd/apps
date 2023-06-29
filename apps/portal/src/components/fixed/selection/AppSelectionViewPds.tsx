@@ -1809,9 +1809,7 @@ export const AppSelectionViewPds = ({ pds }: AppEndViewPdsProps) => {
                 appInfoIsOpen ? 'block' : 'hidden'
               } flex flex-col justify-center items-center text-4xl text-slate-400 m-2 h-screen md:flex -mt-14 md:-mt-12`}
             >
-              <label className="text-lg uppercase">
-                Applicant not yet selected
-              </label>
+              <label className="text-lg uppercase">No PDS found</label>
             </div>
           )
         }

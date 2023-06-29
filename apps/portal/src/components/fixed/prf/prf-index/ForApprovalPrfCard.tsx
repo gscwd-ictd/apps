@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { FunctionComponent } from 'react';
 import { HiOutlinePencil, HiOutlineDocumentDuplicate } from 'react-icons/hi';
 import { ForApprovalPrf } from '../../../../types/prf.types';
+import { usePrfStore } from 'apps/portal/src/store/prf.store';
 
 type ForApprovalPrfCardProps = {
   prf: Array<ForApprovalPrf>;
@@ -12,16 +13,27 @@ export const ForApprovalPrfCard: FunctionComponent<ForApprovalPrfCardProps> = ({
 }) => {
   const router = useRouter();
 
+  const { selectedPrfId, setSelectedPrfId, setForApprovalPrfModalIsOpen } =
+    usePrfStore((state) => ({
+      selectedPrfId: state.selectedPrfId,
+      setSelectedPrfId: state.setSelectedPrfId,
+      setForApprovalPrfModalIsOpen: state.setForApprovalPrfModalIsOpen,
+    }));
+
   return (
     <>
       {prf.map((forApproval: ForApprovalPrf, index: number) => {
         return (
           <React.Fragment key={index}>
             <div
-              onClick={() =>
-                router.push(
-                  `/${router.query.id}/prf/for-approval/${forApproval.prfDetailsId}`
-                )
+              onClick={
+                () => {
+                  setSelectedPrfId(forApproval.prfDetailsId);
+                  setForApprovalPrfModalIsOpen(true);
+                }
+                // router.push(
+                //   `/${router.query.id}/prf/for-approval/${forApproval.prfDetailsId}`
+                // )
               }
               className="bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
             >

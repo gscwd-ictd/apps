@@ -13,6 +13,7 @@ import { useUserStore } from '../../../store/user.store';
 
 import {
   createPrf,
+  getDisapprovedPrfs,
   getForApprovalPrfs,
   getPendingPrfs,
   savePrf,
@@ -34,27 +35,37 @@ import {
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
-import { Button } from '@gscwd-apps/oneui';
+import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { HiDocumentAdd } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { DisapprovedPrfList } from 'apps/portal/src/components/fixed/prf/prf-index/DisapprovedPrfList';
+import PendingPrfModal from 'apps/portal/src/components/fixed/prf/prf-modal/PendingPrfModal';
+import { DisapprovedPrfModal } from 'apps/portal/src/components/fixed/prf/prf-modal/DisapprovedPrfModal';
+import ForApprovalPrfModal from 'apps/portal/src/components/fixed/prf/prf-modal/ForApprovalPrfModal';
+import useSWR from 'swr';
+import { isEmpty } from 'lodash';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { useRouter } from 'next/router';
 
 type PrfPageProps = {
   user: User;
   employee: EmployeeDetails;
   // profile: EmployeeProfile;
-  pendingRequests: Array<PrfDetails>;
-  forApproval: Array<any>;
+  // pendingRequests: Array<PrfDetails>;
+  // forApproval: Array<any>;
+  // disapprovedRequests: Array<PrfDetails>;
 };
 
 export default function Prf({
   user,
   employee,
-  // profile,
-  pendingRequests,
-  forApproval,
-}: PrfPageProps) {
+}: // profile,
+// pendingRequests,
+// forApproval,
+// disapprovedRequests,
+PrfPageProps) {
   // access modal-open state from store
   const isOpen = usePrfStore((state) => state.isModalOpen);
 
@@ -69,6 +80,27 @@ export default function Prf({
 
   const forApprovalPrfs = usePrfStore((state) => state.forApprovalPrfs);
 
+  const disapprovedPrfs = usePrfStore((state) => state.disapprovedPrfs);
+
+  const pendingPrfModalIsOpen = usePrfStore(
+    (state) => state.pendingPrfModalIsOpen
+  );
+  const forApprovalPrfModalIsOpen = usePrfStore(
+    (state) => state.forApprovalPrfModalIsOpen
+  );
+  const disapprovedPrfModalIsOpen = usePrfStore(
+    (state) => state.disapprovedPrfModalIsOpen
+  );
+  const setPendingPrfModalIsOpen = usePrfStore(
+    (state) => state.setPendingPrfModalIsOpen
+  );
+  const setForApprovalPrfModalIsOpen = usePrfStore(
+    (state) => state.setForApprovalPrfModalIsOpen
+  );
+  const setDisapprovedPrfModalIsOpen = usePrfStore(
+    (state) => state.setDisapprovedPrfModalIsOpen
+  );
+
   const activeItem = usePrfStore((state) => state.activeItem);
 
   const setSelectedPositions = usePrfStore(
@@ -78,6 +110,8 @@ export default function Prf({
   const setPendingPrfs = usePrfStore((state) => state.setPendingPrfs);
 
   const setForApprovalPrfs = usePrfStore((state) => state.setForApprovalPrfs);
+
+  const setDisapprovedPrfs = usePrfStore((state) => state.setDisapprovedPrfs);
 
   // access function to control with exam value
   const setWithExam = usePrfStore((state) => state.setWithExam);
@@ -100,6 +134,180 @@ export default function Prf({
   // set loading state from store
   const setIsLoading = usePrfStore((state) => state.setIsLoading);
 
+  const router = useRouter();
+  const {
+    patchResponse,
+    patchError,
+    getPrfDetailsForApprovalList,
+    getPrfDetailsForApprovalListSuccess,
+    getPrfDetailsForApprovalListFail,
+
+    getPrfDetailsPendingList,
+    getPrfDetailsPendingListSuccess,
+    getPrfDetailsPendingListFail,
+
+    getPrfDetailsDisapprovedList,
+    getPrfDetailsDisapprovedListSuccess,
+    getPrfDetailsDisapprovedListFail,
+
+    emptyResponseAndError,
+  } = usePrfStore((state) => ({
+    patchResponse: state.response.patchResponse,
+    patchError: state.errors.errorResponse,
+    getPrfDetailsForApprovalList: state.getPrfDetailsForApprovalList,
+    getPrfDetailsForApprovalListSuccess:
+      state.getPrfDetailsForApprovalListSuccess,
+    getPrfDetailsForApprovalListFail: state.getPrfDetailsForApprovalListFail,
+
+    getPrfDetailsPendingList: state.getPrfDetailsPendingList,
+    getPrfDetailsPendingListSuccess: state.getPrfDetailsPendingListSuccess,
+    getPrfDetailsPendingListFail: state.getPrfDetailsPendingListFail,
+
+    getPrfDetailsDisapprovedList: state.getPrfDetailsDisapprovedList,
+    getPrfDetailsDisapprovedListSuccess:
+      state.getPrfDetailsDisapprovedListSuccess,
+    getPrfDetailsDisapprovedListFail: state.getPrfDetailsDisapprovedListFail,
+
+    emptyResponseAndError: state.emptyResponseAndError,
+  }));
+
+  const prfUrl = process.env.NEXT_PUBLIC_HRIS_URL;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  //get pending prf detail list
+  const {
+    data: swrPendingPrfDetailsList,
+    isLoading: swrPendingPrfListIsLoading,
+    error: swrPendingPrfListError,
+    mutate: mutatePendingPrfDetails,
+  } = useSWR(
+    `${prfUrl}/prf/${employee.user._id}?status=pending`,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: true,
+    }
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPendingPrfListIsLoading) {
+      getPrfDetailsPendingList(swrPendingPrfListIsLoading);
+    }
+  }, [swrPendingPrfListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPendingPrfDetailsList)) {
+      getPrfDetailsPendingListSuccess(
+        swrPendingPrfListIsLoading,
+        swrPendingPrfDetailsList
+      );
+    }
+
+    if (!isEmpty(swrPendingPrfListError)) {
+      getPrfDetailsPendingListFail(
+        swrPendingPrfListIsLoading,
+        swrPendingPrfListError.message
+      );
+    }
+  }, [swrPendingPrfDetailsList, swrPendingPrfListError]);
+
+  //get disapproved prf detail list
+  const {
+    data: swrDisapprovedPrfDetailsList,
+    isLoading: swrDisapprovedPrfListIsLoading,
+    error: swrDisapprovedPrfListError,
+    mutate: mutateDisapprovedPrfDetails,
+  } = useSWR(
+    `${prfUrl}/prf/${employee.user._id}?status=disapproved`,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: true,
+    }
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrDisapprovedPrfListIsLoading) {
+      getPrfDetailsDisapprovedList(swrDisapprovedPrfListIsLoading);
+    }
+  }, [swrDisapprovedPrfListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrDisapprovedPrfDetailsList)) {
+      getPrfDetailsDisapprovedListSuccess(
+        swrDisapprovedPrfListIsLoading,
+        swrDisapprovedPrfDetailsList
+      );
+    }
+
+    if (!isEmpty(swrDisapprovedPrfListError)) {
+      getPrfDetailsDisapprovedListFail(
+        swrDisapprovedPrfListIsLoading,
+        swrDisapprovedPrfListError.message
+      );
+    }
+  }, [swrDisapprovedPrfDetailsList, swrDisapprovedPrfListError]);
+
+  //get for approval prf detail list
+  const {
+    data: swrForApprovalPrfDetailsList,
+    isLoading: swrForApprovalPrfListIsLoading,
+    error: swrForApprovalPrfListError,
+    mutate: mutateForApprovalPrfDetails,
+  } = useSWR(
+    `${prfUrl}/prf-trail/employee/${employee.user._id}`,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: true,
+    }
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrForApprovalPrfListIsLoading) {
+      getPrfDetailsForApprovalList(swrForApprovalPrfListIsLoading);
+    }
+  }, [swrForApprovalPrfListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrForApprovalPrfDetailsList)) {
+      getPrfDetailsForApprovalListSuccess(
+        swrForApprovalPrfListIsLoading,
+        swrForApprovalPrfDetailsList
+      );
+    }
+
+    if (!isEmpty(swrForApprovalPrfListError)) {
+      getPrfDetailsForApprovalListFail(
+        swrForApprovalPrfListIsLoading,
+        swrForApprovalPrfListError.message
+      );
+    }
+  }, [swrForApprovalPrfDetailsList, swrForApprovalPrfListError]);
+
+  useEffect(() => {
+    if (!isEmpty(patchResponse)) {
+      // console.log(employee.user._id, 'userid');
+      mutateForApprovalPrfDetails();
+      mutatePendingPrfDetails();
+      mutateDisapprovedPrfDetails();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 500);
+      if (swrForApprovalPrfDetailsList.length <= 1) {
+        setTimeout(() => {
+          router.reload();
+        }, 2000);
+      }
+    }
+  }, [patchResponse]);
+
   useEffect(() => {
     // update value of user
     setUser(user);
@@ -110,20 +318,12 @@ export default function Prf({
     // update value of profile
     // setProfile(profile);
 
-    setPendingPrfs(pendingRequests);
-
-    setForApprovalPrfs(forApproval);
+    // setPendingPrfs(pendingRequests);
+    // setForApprovalPrfs(forApproval);
+    // setDisapprovedPrfs(disapprovedRequests);
 
     setIsLoading(true);
   }, [employee]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-    }
-  }, [isLoading, setIsLoading]);
 
   const handleCancel = () => {
     // check if current modal page is the first page
@@ -189,8 +389,52 @@ export default function Prf({
     });
   }, []);
 
+  const closePendingPrfModal = async () => {
+    setPendingPrfModalIsOpen(false);
+  };
+  const closeForApprovalPrfModal = async () => {
+    setForApprovalPrfModalIsOpen(false);
+  };
+  const closeDisapprovedPrfModal = async () => {
+    setDisapprovedPrfModalIsOpen(false);
+  };
+
   return (
     <>
+      {/* Disapprove PRF Success */}
+      {!isEmpty(patchResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage={`PRF Action Submitted.`}
+        />
+      ) : null}
+
+      {/* Disapprove PRF Failed Error */}
+      {!isEmpty(patchError) ? (
+        <ToastNotification toastType="error" notifMessage={`${patchError}`} />
+      ) : null}
+
+      {/* Pending PRF Modal */}
+      <PendingPrfModal
+        modalState={pendingPrfModalIsOpen}
+        setModalState={setPendingPrfModalIsOpen}
+        closeModalAction={closePendingPrfModal}
+      />
+
+      {/* Disapproved PRF Modal */}
+      <DisapprovedPrfModal
+        modalState={disapprovedPrfModalIsOpen}
+        setModalState={setDisapprovedPrfModalIsOpen}
+        closeModalAction={closeDisapprovedPrfModal}
+      />
+
+      {/* For Approval PRF Modal */}
+      <ForApprovalPrfModal
+        modalState={forApprovalPrfModalIsOpen}
+        setModalState={setForApprovalPrfModalIsOpen}
+        closeModalAction={closeForApprovalPrfModal}
+      />
+
       <Modal
         title="Position Request"
         subtitle="Request for new personnel"
@@ -234,7 +478,9 @@ export default function Prf({
               </div>
             </Button>
           </ContentHeader>
-          {isLoading ? (
+          {swrForApprovalPrfListIsLoading &&
+          swrDisapprovedPrfListIsLoading &&
+          swrPendingPrfListIsLoading ? (
             <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
               <SpinnerDotted
                 speed={70}
@@ -255,6 +501,8 @@ export default function Prf({
                     {activeItem === 0 && <PendingPrfList />}
 
                     {activeItem === 1 && <ForApprovalPrfList />}
+
+                    {activeItem === 2 && <DisapprovedPrfList />}
                   </div>
                 </div>
               </>
@@ -277,10 +525,13 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     //const profile = await getEmployeeProfile(user._id);
 
     // get all pending prfs
-    const pendingRequests = await getPendingPrfs(employee.user._id);
+    // const pendingRequests = await getPendingPrfs(employee.user._id);
 
     // get all approved prfs
-    const forApproval = await getForApprovalPrfs(employee.user._id);
+    // const forApproval = await getForApprovalPrfs(employee.user._id);
+
+    // get all disapproved prfs
+    // const disapprovedRequests = await getDisapprovedPrfs(employee.user._id);
 
     // check if user role is rank_and_file
     if (
@@ -301,13 +552,10 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
         user: employee.user,
         employee: employee,
         // profile: employee.profile,
-        pendingRequests,
-        forApproval,
+        // pendingRequests,
+        // forApproval,
+        // disapprovedRequests,
       },
     };
   }
 );
-
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   return { props: { user, employee: employeeDetails, profile } };
-// };

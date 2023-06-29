@@ -3,10 +3,10 @@
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
 function UseRenderShiftType(shiftType: ScheduleShifts | null) {
-  if (shiftType === ScheduleShifts.MORNING) {
+  if (shiftType === ScheduleShifts.DAY) {
     return (
       <div className="bg-red-400 text-white text-xs font-medium py-0.5 rounded text-center">
-        Morning
+        Day
       </div>
     );
   } else if (shiftType === ScheduleShifts.NIGHT) {
