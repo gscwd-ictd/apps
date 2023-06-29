@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { UndrawSelecting } from '../undraw/Selecting';
 import { AllApplicantsList } from './AllApplicantsList';
@@ -35,21 +36,21 @@ export const AppEndSelectApplicants = () => {
           <button
             type="button"
             tabIndex={-1}
-            className="text-sm font-medium text-indigo-700"
+            className="text-sm font-medium text-indigo-700 disabled:cursor-not-allowed"
             onClick={() => setShowPds(!showPds)}
+            hidden={isEmpty(selectedApplicantDetails) ? true : false}
           >
             {showPds ? 'Hide PDS' : 'Show PDS'}
           </button>
         </div>
       </div>
-      <div className="flex grid w-full grid-cols-12 gap-5 border rounded-md border-gray-50">
+      <div className="flex grid w-full grid-cols-12 gap-5 rounded-md ">
         {/** FIRST SECTION */}
-        <section className="w-full col-span-3">
+        <section className="w-full col-span-4">
           <div className="flex justify-end py-2 mb-1 text-sm">
             {applicantList.length > 0 ? (
               <>
-                {' '}
-                <p className="text-gray-600 font-extralight">
+                <p className="font-medium text-gray-600">
                   {selectedApplicants.length > 0
                     ? selectedApplicants.length
                     : ' '}{' '}
@@ -70,7 +71,7 @@ export const AppEndSelectApplicants = () => {
         {/** SECOND SECTION */}
         <section
           className={`${
-            showPds ? 'col-span-5' : 'col-span-9'
+            showPds ? 'col-span-4' : 'col-span-8'
           } bg-gray-50 bg-opacity-50 px-5 pt-5 transition-all `}
         >
           {selectedApplicants.length > 0 ? (

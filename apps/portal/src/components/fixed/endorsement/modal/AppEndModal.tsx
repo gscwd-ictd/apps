@@ -95,7 +95,7 @@ const AppEndModal: FunctionComponent = () => {
       <Modal.Header>
         <div className="flex w-full px-5 justifty-between">
           <div>
-            <h3 className="text-xl md:text-2xl font-semibold text-gray-700">
+            <h3 className="text-xl font-semibold text-gray-700 md:text-2xl">
               {modal.page === 1
                 ? 'Applicant Endorsement'
                 : modal.page === 2
@@ -120,18 +120,21 @@ const AppEndModal: FunctionComponent = () => {
       <Modal.Footer>
         <div className="flex justify-end gap-2">
           {modal.page !== 4 ? (
-            <Button variant="info" onClick={modalCancel} className="w-[6rem]">
+            <button
+              onClick={modalCancel}
+              className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+            >
               {modal.page === 1 ? 'Close' : 'Cancel'}
-            </Button>
+            </button>
           ) : null}
           {modal.page !== 1 && modal.page !== 3 && (
-            <Button
+            <button
               onClick={modalAction}
               disabled={modal.page === 2 && selectedApplicants.length < 1}
-              className="min-w-[6rem] max-w-auto"
+              className="min-w-[6rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
             >
               {modal.page !== 4 ? 'Confirm' : 'Got it, Thanks!'}
-            </Button>
+            </button>
           )}
         </div>
       </Modal.Footer>
