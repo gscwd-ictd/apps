@@ -266,14 +266,14 @@ export const DrcAlertConfirmation = () => {
           <div className="flex gap-2">
             <button
               onClick={closeConf}
-              className="w-[6rem] px-3 py-2 bg-indigo-400 rounded text-white"
+              className="w-[6rem] px-3 py-2 bg-white border border-gray-300 rounded text-gray-700 active:bg-gray-100 focus:ring-gray-200 focus:bg-gray-100"
             >
               <span>No</span>
             </button>
 
             <button
               onClick={onSubmitConfirm}
-              className="w-[6rem] px-3 py-2 bg-indigo-400 rounded text-white"
+              className="w-[6rem] px-3 py-2 bg-indigo-400 rounded text-white active:bg-indigo-500"
             >
               <span>Yes</span>
             </button>

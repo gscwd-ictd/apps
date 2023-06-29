@@ -185,13 +185,20 @@ const DrcModal: FunctionComponent = () => {
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Button onClick={cancelBtn}>
+            <button
+              onClick={cancelBtn}
+              className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-gray-100  hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+            >
               {modal.page === 1 ? 'Close' : 'Cancel'}
-            </Button>
+            </button>
             {modal.page !== 1 ? (
-              <Button onClick={actionBtn} disabled={validateConfirmActionBtn()}>
+              <button
+                onClick={actionBtn}
+                disabled={validateConfirmActionBtn()}
+                className="min-w-[6rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+              >
                 Confirm
-              </Button>
+              </button>
             ) : null}
           </div>
         </Modal.Footer>
