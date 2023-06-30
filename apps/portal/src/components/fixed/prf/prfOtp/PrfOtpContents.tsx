@@ -7,7 +7,7 @@ import PortalSVG from '../../svg/PortalSvg';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
-import { approvePrf } from '../../../../utils/helpers/prf.requests';
+import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { PrfStatus } from '../../../../types/prf.types';
 import { useRouter } from 'next/router';
 import { usePrfStore } from '../../../../../src/store/prf.store';
@@ -51,9 +51,20 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
     animate: false,
   });
 
-  const { prfOtpModalIsOpen, setPrfOtpModalIsOpen } = usePrfStore((state) => ({
-    prfOtpModalIsOpen: state.prfOtpModalIsOpen,
+  const {
+    selectedPrfId,
+    patchPrf,
+    patchPrfSuccess,
+    patchPrfFail,
+    setPrfOtpModalIsOpen,
+    setForApprovalPrfModalIsOpen,
+  } = usePrfStore((state) => ({
+    selectedPrfId: state.selectedPrfId,
     setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
+    setForApprovalPrfModalIsOpen: state.setForApprovalPrfModalIsOpen,
+    patchPrf: state.patchPrf,
+    patchPrfSuccess: state.patchPrfSuccess,
+    patchPrfFail: state.patchPrfFail,
   }));
 
   useEffect(() => {
@@ -154,7 +165,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
     e.preventDefault();
     setPrfOtpModalIsOpen(false); //close OTP modal first
     setTimeout(() => {
-      setPrfOtpModalIsOpen(false); //then close Pass Slip modal
+      setForApprovalPrfModalIsOpen(false);
     }, 200);
   };
 
@@ -163,20 +174,15 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
     setOtpCode(e);
   };
 
-  useEffect(() => {
-    if (otpComplete) {
-      approvePrf(
-        `${router.query.prfid}`,
-        PrfStatus.APPROVED,
-        employeeId,
-        remarks
-      );
-      localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
-      localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
-    } else {
-      //nothing to do
-    }
-  }, [otpComplete]);
+  // useEffect(() => {
+  //   if (otpComplete) {
+  //     //remove otp tokens
+  //     localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
+  //     localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
+  //   } else {
+  //     //nothing to do
+  //   }
+  // }, [otpComplete]);
 
   // SUBMIT OTP CODE AND COMPLETE PASS SLIP APPROVAL/DISAPPROVAL IF CORRECT
   async function handleFinalSubmit(e: any) {
@@ -185,11 +191,43 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
 
     const data = await confirmOtpCode(otpCode, tokenId, otpName);
     if (data) {
-      setOtpFieldError(data.otpFieldError);
-      setIsSubmitLoading(data.isSubmitLoading);
-      setWiggleEffect(data.wiggleEffect);
-      setErrorMessage(data.errorMessage);
-      setOtpComplete(data.otpComplete);
+      const { error, result } = await patchPrfRequest(
+        `/prf-trail/${selectedPrfId}`,
+        {
+          status: PrfStatus.APPROVED,
+          employeeId: employeeId,
+          remarks: remarks,
+        }
+      );
+      patchPrf();
+      //check if there's an error in otp confirmation
+      if (data.errorMessage) {
+        setOtpFieldError(data.otpFieldError);
+        setIsSubmitLoading(data.isSubmitLoading);
+        setWiggleEffect(data.wiggleEffect);
+        setErrorMessage(data.errorMessage);
+        setOtpComplete(data.otpComplete);
+      } else {
+        if (error) {
+          // request is done set loading to false and set the error message
+          patchPrfFail(result);
+          setOtpFieldError(true);
+          setIsSubmitLoading(data.isSubmitLoading);
+          setWiggleEffect(true);
+          setErrorMessage(result); // show error message here
+          setOtpComplete(false);
+        } else if (!error) {
+          // request is done set loading to false and set the update response
+          patchPrfSuccess(result);
+          setOtpFieldError(data.otpFieldError);
+          setIsSubmitLoading(data.isSubmitLoading);
+          setWiggleEffect(data.wiggleEffect);
+          setErrorMessage(data.errorMessage);
+          setOtpComplete(data.otpComplete);
+          localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
+          localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
+        }
+      }
     } else {
       setOtpFieldError(true);
       setIsSubmitLoading(false);
