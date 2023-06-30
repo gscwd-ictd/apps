@@ -111,7 +111,7 @@ export const RequestSummary: FunctionComponent = () => {
                       <section className="flex items-center gap-2">
                         <HiOutlineExclamation className="h-5 w-5 text-rose-400" />
                         <p className="text-red-400">
-                          No remarks. Please add one to proceed.
+                          No remarks stated but it is recommended.
                         </p>
                       </section>
                     )}

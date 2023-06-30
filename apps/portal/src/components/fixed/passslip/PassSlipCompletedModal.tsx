@@ -5,6 +5,7 @@ import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import { useRouter } from 'next/router';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -47,7 +48,7 @@ export const PassSlipCompletedModal = ({
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {passSlip.status === 'approved' ? (
+              {passSlip.status === PassSlipStatus.APPROVED ? (
                 <AlertNotification
                   alertType="info"
                   notifMessage="Approved"
@@ -55,7 +56,7 @@ export const PassSlipCompletedModal = ({
                 />
               ) : null}
 
-              {passSlip.status === 'disapproved' ? (
+              {passSlip.status === PassSlipStatus.DISAPPROVED ? (
                 <AlertNotification
                   alertType="error"
                   notifMessage="Disapproved"

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { FunctionComponent } from 'react';
 import { HiOutlinePencil, HiOutlineDocumentDuplicate } from 'react-icons/hi';
 import { PrfDetails } from '../../../../types/prf.types';
+import { usePrfStore } from 'apps/portal/src/store/prf.store';
 
 type PrfCardProps = {
   prf: Array<PrfDetails>;
@@ -11,16 +12,27 @@ type PrfCardProps = {
 export const PendingPrfCard: FunctionComponent<PrfCardProps> = ({ prf }) => {
   const router = useRouter();
 
+  const { selectedPrfId, setSelectedPrfId, setPendingPrfIsModalOpen } =
+    usePrfStore((state) => ({
+      selectedPrfId: state.selectedPrfId,
+      setSelectedPrfId: state.setSelectedPrfId,
+      setPendingPrfIsModalOpen: state.setPendingPrfModalIsOpen,
+    }));
+
   return (
     <>
       {prf.map((prf: PrfDetails, index: number) => {
         return (
           <div
-            onClick={() =>
-              router.push(`/${router.query.id}/prf/pending/${prf._id}`)
+            onClick={
+              () => {
+                setSelectedPrfId(prf._id);
+                setPendingPrfIsModalOpen(true); //open pending prf modal
+              }
+              // router.push(`/${router.query.id}/prf/pending/${prf._id}`)
             }
             key={index}
-            className="bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
+            className="scale-95 bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
           >
             <div className="">
               <header>
