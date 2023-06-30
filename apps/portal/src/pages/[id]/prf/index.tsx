@@ -384,7 +384,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
   return (
     <>
-      {/* Disapprove PRF Success */}
+      {/* Patch PRF Success */}
       {!isEmpty(patchResponse) ? (
         <ToastNotification
           toastType="success"

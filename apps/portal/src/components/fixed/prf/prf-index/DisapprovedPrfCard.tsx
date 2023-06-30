@@ -34,7 +34,7 @@ export const DisapprovedPrfCard: FunctionComponent<PrfCardProps> = ({
               // router.push(`/${router.query.id}/prf/disapproved/${prf._id}`)
             }
             key={index}
-            className="bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
+            className="scale-95 bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
           >
             <div className="">
               <header>
