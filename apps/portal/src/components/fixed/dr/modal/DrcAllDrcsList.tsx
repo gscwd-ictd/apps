@@ -23,7 +23,9 @@ export const DrcAllDrcsList = (): JSX.Element => {
     setFilteredDnrValue: state.setFilteredDnrValue,
   }));
 
-  const onSelect = (sequenceNo: number | undefined) => {
+  const onSelect = (sequenceNo: number | undefined, drId: string) => {
+    console.log(sequenceNo);
+
     // initialize currently selected drc
     let tempSelectedDr: DutyResponsibility = {} as DutyResponsibility;
 
@@ -36,7 +38,8 @@ export const DrcAllDrcsList = (): JSX.Element => {
     // loop through all core drs
     updatedDnrs.map((dr, drIndex: number) => {
       // get the current list of checked drcs based on state from available drcs
-      if (dr.state === true) tempCheckedDnrs.push(dr);
+      if (dr.state === true)
+        tempCheckedDnrs.push({ ...dr, sequenceNo: drIndex });
 
       // check if a particular drc's index is selected
       if (sequenceNo === drIndex) {
@@ -66,14 +69,31 @@ export const DrcAllDrcsList = (): JSX.Element => {
       // set a copy of checked core drcs
       const finalCheckedCoreDnrs = [...checkedDnrs.core];
 
-      // push the element
-      finalCheckedCoreDnrs.push(tempSelectedDr);
+      if (tempSelectedDr.state === true) {
+        // push the element
+        finalCheckedCoreDnrs.push({
+          ...tempSelectedDr,
+          sequenceNo:
+            checkedDnrs.core.length === 0 ? 0 : checkedDnrs.core.length,
+        });
 
-      // set the final core array
-      setCheckedDnrs({
-        ...checkedDnrs,
-        core: finalCheckedCoreDnrs,
-      });
+        // set the final core array
+        setCheckedDnrs({
+          ...checkedDnrs,
+          core: finalCheckedCoreDnrs,
+        });
+      } else if (tempSelectedDr.state === false) {
+        // splice the element
+        const removedFinalCheckedCoreDnrs = finalCheckedCoreDnrs.filter(
+          (e) => e.drId !== drId
+        );
+
+        // set the final core array
+        setCheckedDnrs({
+          ...checkedDnrs,
+          core: removedFinalCheckedCoreDnrs,
+        });
+      }
     } else if (selectedDrcType === 'support') {
       //! previous code
       // setCheckedDnrs({ ...checkedDnrs, support: tempCheckedDnrs });
@@ -81,11 +101,40 @@ export const DrcAllDrcsList = (): JSX.Element => {
       // set a copy of checked support drcs
       const finalCheckedSupportDnrs = [...checkedDnrs.support];
 
-      // push the element
-      finalCheckedSupportDnrs.push(tempSelectedDr);
+      // // push the element
+      // finalCheckedSupportDnrs.push({
+      //   ...tempSelectedDr,
+      //   sequenceNo:
+      //     checkedDnrs.support.length === 0 ? 0 : checkedDnrs.support.length - 1,
+      // });
 
-      // set the final support array
-      setCheckedDnrs({ ...checkedDnrs, support: finalCheckedSupportDnrs });
+      // // set the final support array
+      // setCheckedDnrs({ ...checkedDnrs, support: finalCheckedSupportDnrs });
+      if (tempSelectedDr.state === true) {
+        // push the element
+        finalCheckedSupportDnrs.push({
+          ...tempSelectedDr,
+          sequenceNo:
+            checkedDnrs.support.length === 0 ? 0 : checkedDnrs.support.length,
+        });
+
+        // set the final support array
+        setCheckedDnrs({
+          ...checkedDnrs,
+          support: finalCheckedSupportDnrs,
+        });
+      } else if (tempSelectedDr.state === false) {
+        // splice the element
+        const removedFinalCheckedSupportDnrs = finalCheckedSupportDnrs.filter(
+          (e) => e.drId !== drId
+        );
+
+        // set the final core array
+        setCheckedDnrs({
+          ...checkedDnrs,
+          support: removedFinalCheckedSupportDnrs,
+        });
+      }
     }
 
     // set drs state
@@ -105,7 +154,7 @@ export const DrcAllDrcsList = (): JSX.Element => {
             return (
               <li
                 key={index}
-                onClick={() => onSelect(dr.sequenceNo)}
+                onClick={() => onSelect(dr.sequenceNo, dr.drId)}
                 // className="flex cursor-pointer items-center justify-start lg:justify-between border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
                 className="flex grid-cols-2 items-center w-full cursor-pointer border-b border-l-[5px] border-b-gray-100 border-l-transparent p-5 transition-colors ease-in-out hover:border-l-indigo-500 hover:bg-indigo-50"
               >
@@ -118,7 +167,7 @@ export const DrcAllDrcsList = (): JSX.Element => {
                   <input
                     checked={dr.state ? true : false}
                     onChange={() => (dr: DutyResponsibility) =>
-                      onSelect(dr.sequenceNo)}
+                      onSelect(dr.sequenceNo, dr.drId)}
                     className="p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500"
                     type="checkbox"
                   />

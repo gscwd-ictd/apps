@@ -469,7 +469,10 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
     // check if user role is rank_and_file
-    if (employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER) {
+    if (
+      employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER &&
+      employeeDetails.employmentDetails.userRole !== Roles.OIC_GENERAL_MANAGER
+    ) {
       // if true, the employee is not allowed to access this page
       return {
         redirect: {
