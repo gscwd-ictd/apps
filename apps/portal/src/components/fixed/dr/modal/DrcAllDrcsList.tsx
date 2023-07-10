@@ -24,30 +24,69 @@ export const DrcAllDrcsList = (): JSX.Element => {
   }));
 
   const onSelect = (sequenceNo: number | undefined) => {
-    // copy the current state of drs
+    // initialize currently selected drc
+    let tempSelectedDr: DutyResponsibility = {} as DutyResponsibility;
+
+    // copy the current state of drcs
     const updatedDnrs: Array<DutyResponsibility> = [...availableDnrs];
+
+    // temporary checked drcs
+    const tempCheckedDnrs: Array<DutyResponsibility> = [];
 
     // loop through all core drs
     updatedDnrs.map((dr, drIndex: number) => {
-      // check if a particular dr's index is selected
+      // get the current list of checked drcs based on state from available drcs
+      if (dr.state === true) tempCheckedDnrs.push(dr);
+
+      // check if a particular drc's index is selected
+      if (sequenceNo === drIndex) {
+        // reverse the current value of the dr state
+        // dr.state = !dr.state;
+
+        //! 07/10/2023 instead of reversing state of the element, get the element and set the state to the reversed state value
+        tempSelectedDr = { ...dr, state: !dr.state };
+      }
+    });
+
+    // loop to push to temporary array where state is true
+    updatedDnrs.map((dr, drIndex: number) => {
+      // if (dr.state === true) tempCheckedDnrs.push(dr);
+      // check if a particular drc's index is selected
       if (sequenceNo === drIndex) {
         // reverse the current value of the dr state
         dr.state = !dr.state;
       }
     });
 
-    const tempCheckedDnrs: Array<DutyResponsibility> = [];
-
-    // loop to push to temporary array where state is true
-    updatedDnrs.map((dr) => {
-      if (dr.state === true) tempCheckedDnrs.push(dr);
-    });
-
     // set selected core drs state depending on type prop
-    if (selectedDrcType === 'core')
-      setCheckedDnrs({ ...checkedDnrs, core: tempCheckedDnrs });
-    else if (selectedDrcType === 'support')
-      setCheckedDnrs({ ...checkedDnrs, support: tempCheckedDnrs });
+    if (selectedDrcType === 'core') {
+      //! previous code
+      // setCheckedDnrs({ ...checkedDnrs, core: tempCheckedDnrs });
+
+      // set a copy of checked core drcs
+      const finalCheckedCoreDnrs = [...checkedDnrs.core];
+
+      // push the element
+      finalCheckedCoreDnrs.push(tempSelectedDr);
+
+      // set the final core array
+      setCheckedDnrs({
+        ...checkedDnrs,
+        core: finalCheckedCoreDnrs,
+      });
+    } else if (selectedDrcType === 'support') {
+      //! previous code
+      // setCheckedDnrs({ ...checkedDnrs, support: tempCheckedDnrs });
+
+      // set a copy of checked support drcs
+      const finalCheckedSupportDnrs = [...checkedDnrs.support];
+
+      // push the element
+      finalCheckedSupportDnrs.push(tempSelectedDr);
+
+      // set the final support array
+      setCheckedDnrs({ ...checkedDnrs, support: finalCheckedSupportDnrs });
+    }
 
     // set drs state
     //! Removed recently
