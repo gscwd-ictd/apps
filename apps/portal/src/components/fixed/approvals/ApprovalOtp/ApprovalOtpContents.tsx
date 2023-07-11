@@ -322,7 +322,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                     <label
                       className={`${
                         isSubmitLoading
-                          ? 'cursor-not-allowed pointer-events-none'
+                          ? 'cursor-not-allowed pointer-events-none font-sans'
                           : 'hidden'
                       } `}
                     >
@@ -332,7 +332,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                       className={`${
                         isSubmitLoading
                           ? 'hidden'
-                          : 'cursor-pointer pointer-events-none'
+                          : 'cursor-pointer pointer-events-none font-sans'
                       } `}
                     >
                       CONFIRM OTP
