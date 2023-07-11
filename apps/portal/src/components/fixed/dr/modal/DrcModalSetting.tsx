@@ -395,9 +395,9 @@ export const DrcModalSetting = () => {
                         </div>
                       </>
                     ) : (
-                      <>
+                      <div className="w-full">
                         <SelectedSupportDrcs />
-                      </>
+                      </div>
                     )}
                   </>
                 )}

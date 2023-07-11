@@ -1,5 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* This function is used for rendering schedule shifts */
-
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
 function UseRenderShiftType(shiftType: ScheduleShifts | null) {

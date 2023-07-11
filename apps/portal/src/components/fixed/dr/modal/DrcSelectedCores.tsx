@@ -3,6 +3,7 @@
 import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { Competency, DutyResponsibility } from 'apps/portal/src/types/dr.type';
+
 import {
   HiBadgeCheck,
   HiExclamationCircle,
@@ -10,6 +11,7 @@ import {
   HiLockOpen,
   HiX,
 } from 'react-icons/hi';
+import UseRenderBadgePill from '../../badge-pill/BadgePill';
 import { Table, TableHeader } from '../../table/Table';
 
 export const SelectedCoreDrcs = (): JSX.Element => {
@@ -131,15 +133,18 @@ export const SelectedCoreDrcs = (): JSX.Element => {
 
   return (
     <>
-      <div className="min-w-[50rem] grid grid-cols-12 gap-1 pt-2">
+      <div className="min-w-[50rem] grid grid-cols-12 gap-1 pt-2 text-xs">
         <div className="col-span-1 "></div>
         <div className="col-span-6 ">
-          <label className="font-normal lex justify-start">Description</label>
+          <label className="font-normal flex justify-start">Description</label>
         </div>
         <div className="col-span-1 ">
           <label className="font-normal flex justify-center">Code</label>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-1 ">
+          <label className="font-normal flex justify-center">Level</label>
+        </div>
+        <div className="col-span-1">
           <label className="font-normal flex justify-center">Percentage</label>
         </div>
         <div className="col-span-2 ">
@@ -177,26 +182,30 @@ export const SelectedCoreDrcs = (): JSX.Element => {
                   </div>
                 </div>
                 <div className="col-span-1 ">
-                  <label className="text-sm font-light flex justify-center">
-                    {dr.competency.code}
+                  <div className="text-sm font-light flex justify-center text-gray-800">
+                    {UseRenderBadgePill(dr.competency.code)}
+                  </div>
+                </div>
+                <div className="col-span-1">
+                  <label className="text-sm font-light flex justify-center text-gray-800">
+                    {UseRenderBadgePill(dr.competency.level)}
                   </label>
                 </div>
-                <div className="col-span-2">
-                  <div className="text-sm font-light  flex gap-1 items-center justify-center ">
-                    <>
-                      <input
-                        type="number"
-                        className={`w-[4rem] h-[1.5rem] rounded outline-none border-0 border-gray-100 text-center ${
-                          dr.onEdit ? 'bg-red-200' : 'bg-transparent'
-                        }`}
-                        max={100}
-                        value={dr.percentage ? dr.percentage : 0}
-                        onChange={(e) =>
-                          onChangePercentage(e, dr.odrId, dr.sequenceNo!)
-                        }
-                        disabled={dr.onEdit ? false : true}
-                      />
-                    </>
+                <div className="col-span-1">
+                  <div className="text-sm font-light flex gap-1 items-center justify-center ">
+                    <input
+                      type="number"
+                      className={`w-[4rem] h-[1.5rem] text-gray-800 rounded outline-none border-0 border-gray-100 text-center ${
+                        dr.onEdit ? 'bg-red-200' : 'bg-transparent'
+                      }`}
+                      max={100}
+                      value={dr.percentage ? dr.percentage : 0}
+                      onChange={(e) =>
+                        onChangePercentage(e, dr.odrId, dr.sequenceNo!)
+                      }
+                      disabled={dr.onEdit ? false : true}
+                    />
+
                     <span className="font-semibold">%</span>
                   </div>
                 </div>

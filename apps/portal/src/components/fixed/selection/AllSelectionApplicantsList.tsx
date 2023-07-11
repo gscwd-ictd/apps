@@ -7,14 +7,16 @@ import useSWR from 'swr';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Applicant } from '../../../types/applicant.type';
 import { ApplicantWithScores, PsbScores } from '../../../types/selection.type';
+import { ActionDropdown } from '../dropdown/ActionDropdown';
 import { AppSelectionPdsAlert } from './AppSelectionPdsAlert';
+import { AppSelectionPsbDetailsAlert } from './AppSelectionPsbDetailsAlert';
 
 export const AllSelectionApplicantsList = () => {
   const [applicantListIsLoaded, setApplicantListIsLoaded] =
     useState<boolean>(false);
 
   // for the alert component for pds
-  const [pdsAlertState, setPdsAlertState] = useState<boolean>(false);
+  // const [pdsAlertState, setPdsAlertState] = useState<boolean>(false);
 
   // use this to assign as a parameter in useSWR
 
@@ -24,11 +26,18 @@ export const AllSelectionApplicantsList = () => {
     selectedApplicantDetails,
     selectedPublication,
     selectedPublicationId,
+    dropdownAction,
+    showPdsAlert,
+    showPsbDetailsAlert,
+    setShowPsbDetailsAlert,
+    setShowPdsAlert,
+    setDropdownAction,
     setApplicantList,
     setApplicantScores,
     setPublicationDetails,
     setSelectedApplicantDetails,
     setSelectedApplicants,
+    setPsbDetails,
     setPds,
   } = useAppSelectionStore((state) => ({
     applicantList: state.applicantList,
@@ -36,12 +45,19 @@ export const AllSelectionApplicantsList = () => {
     selectedPublicationId: state.selectedPublicationId,
     selectedApplicantDetails: state.selectedApplicantDetails,
     selectedPublication: state.selectedPublication,
+    dropdownAction: state.dropdownAction,
+    showPdsAlert: state.showPdsAlert,
+    showPsbDetailsAlert: state.showPsbDetailsAlert,
+    setPsbDetails: state.setPsbDetails,
+    setShowPsbDetailsAlert: state.setShowPsbDetailsAlert,
+    setDropdownAction: state.setDropdownAction,
     setPds: state.setPds,
     setApplicantScores: state.setApplicantScores,
     setPublicationDetails: state.setPublicationDetails,
     setApplicantList: state.setApplicantList,
     setSelectedApplicants: state.setSelectedApplicants,
     setSelectedApplicantDetails: state.setSelectedApplicantDetails,
+    setShowPdsAlert: state.setShowPdsAlert,
   }));
 
   const { patchResponseApply } = useAppSelectionStore((state) => ({
@@ -64,6 +80,30 @@ export const AllSelectionApplicantsList = () => {
 
   const pdsAlertCloseAction = () => {
     setPds({} as Pds);
+    setSelectedApplicantDetails({
+      applicantAvgScore: '',
+      applicantId: '',
+      applicantName: '',
+      applicantType: '',
+      postingApplicantId: '',
+      positionTitle: '',
+      rank: '',
+    });
+    setDropdownAction('');
+  };
+
+  const psbDetailsAlertCloseAction = () => {
+    setSelectedApplicantDetails({
+      applicantAvgScore: '',
+      applicantId: '',
+      applicantName: '',
+      applicantType: '',
+      postingApplicantId: '',
+      positionTitle: '',
+      rank: '',
+    });
+    setPsbDetails([]);
+    setDropdownAction('');
   };
 
   //mutate publications when patchResponseApply is updated
@@ -174,11 +214,16 @@ export const AllSelectionApplicantsList = () => {
   return (
     <>
       <AppSelectionPdsAlert
-        alertState={pdsAlertState}
-        setAlertState={setPdsAlertState}
+        alertState={showPdsAlert}
+        setAlertState={setShowPdsAlert}
         closeAlertAction={pdsAlertCloseAction}
       />
-      <div className="min-h-auto max-h-[24rem] overflow-y-auto overflow-x-auto bg-slate-100 py-5 rounded-md">
+      <AppSelectionPsbDetailsAlert
+        alertState={showPsbDetailsAlert}
+        setAlertState={setShowPsbDetailsAlert}
+        closeAlertAction={psbDetailsAlertCloseAction}
+      />
+      <div className="min-h-auto max-h-[24rem] overflow-y-auto overflow-x-auto bg-slate-100 py-5 rounded-md m-2">
         {applicantList.length > 0 ? (
           <div className="px-5 min-w-[60rem] ">
             <div className="flex w-full grid-cols-5 gap-4 border-b border-gray-400 w-100">
@@ -309,7 +354,9 @@ export const AllSelectionApplicantsList = () => {
                 )}
               </div>
               <div className="col-span-1 w-[5%]">
-                <p className="font-light"></p>
+                <p className="font-light flex justify-center items-center">
+                  Actions
+                </p>
               </div>
             </div>
             <ul className="divide-y">
@@ -446,21 +493,7 @@ export const AllSelectionApplicantsList = () => {
                       </li>
                       <div className="w-[5%]">
                         <div className="flex items-center justify-center w-full font-medium text-gray-600 hover:cursor-pointer">
-                          <button
-                            tabIndex={-1}
-                            className="px-1 text-white rounded"
-                            onClick={() => {
-                              setSelectedApplicantDetails({
-                                applicantId: applicant.applicantId,
-                                applicantType: applicant.applicantType,
-                              });
-                              setPdsAlertState(true);
-                            }}
-                          >
-                            <span className="text-indigo-600 underline uppercase">
-                              Pds
-                            </span>
-                          </button>
+                          <ActionDropdown applicant={applicant} />
                         </div>
                       </div>
                     </div>

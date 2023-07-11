@@ -37,11 +37,12 @@ export const TabHeader: FC<TabHeaderProps> = ({
         target="_blank"
         href={href}
         onClick={onClick}
-        className={`${
-          tab === tabIndex ? 'bg-slate-700' : 'bg-slate-100'
-        } mr-6 flex h-auto min-h-[6rem] w-full cursor-pointer items-center justify-start rounded-xl ${
-          invert ? 'rounded-b-none' : 'rounded-tr-none'
-        } 
+        //  ${tab === tabIndex ? 'bg-slate-700' : 'bg-slate-100'}
+        className={`
+        ${selected ? 'bg-slate-700' : 'bg-slate-100'}
+         mr-6 flex h-auto min-h-[6rem] w-full cursor-pointer items-center justify-start rounded-xl ${
+           invert ? 'rounded-b-none' : 'rounded-tr-none'
+         } 
 
         border-b  border-gray-200 bg-white py-2 pt-1 transition-all ease-in-out  hover:drop-shadow-lg`}
       >

@@ -14,7 +14,7 @@ export const itemClass = (
 ) => {
   return cls(
     classnames,
-    'border-l-4 border-transparent w-full  duration-100 ease-in-out transition-all',
+    'border-l-4 border-transparent w-full truncate  duration-100 ease-in-out transition-all',
     {
       'bg-sky-400/40': selected && !hasSubItem,
       'bg-sky-800/40': selected && hasSubItem,
@@ -28,7 +28,7 @@ export const linkClass = (
   isDarkMode: boolean | undefined
 ) => {
   return cls(
-    'flex items-center   font-medium py-3 duration-100 ease-in-out transition-all',
+    'flex items-center font-light py-3 duration-100 ease-in-out transition-all',
     {
       'justify-center hover:pl-1': collapsed,
 

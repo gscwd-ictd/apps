@@ -23,7 +23,26 @@ export const RANKING: Ranking = {
   allPsbSubmitted: '',
 };
 
-type ApplicantDetails = Pick<Applicant, 'applicantId' | 'applicantType'>;
+// type ApplicantDetails = Pick<
+//   Applicant,
+//   'applicantId' | 'applicantType' | 'postingApplicantId' | 'applicantName'
+// >;
+type ApplicantDetails = {
+  applicantId: string;
+  applicantType: string;
+  postingApplicantId: string;
+  applicantName: string;
+  applicantAvgScore: string;
+  positionTitle: string;
+  rank: string;
+};
+
+type PsbDetails = {
+  psbNo: number;
+  psbName: string;
+  score: string;
+  remarks: string;
+};
 
 export type SelectionState = {
   response: {
@@ -34,12 +53,14 @@ export type SelectionState = {
     loadingPendingPublicationList: boolean;
     loadingFulfilledPublicationList: boolean;
     loadingResponse: boolean;
+    loadingPsbDetails: boolean;
   };
   errors: {
     errorPublicationList: string;
     errorPendingPublicationList: string;
     errorFulfilledPublicationList: string;
     errorResponse: string;
+    errorPsbDetails: string;
   };
 
   getPublicationList: (loading: boolean) => void;
@@ -58,10 +79,23 @@ export type SelectionState = {
   patchPublicationSuccess: (response: Publication) => void;
   patchPublicationFail: (error: string) => void;
 
+  getPsbDetails: () => void;
+  getPsbDetailsSuccess: (
+    response: Array<PsbDetails>,
+    applicantList: Array<ApplicantWithScores>,
+    applicantDetails: ApplicantDetails
+  ) => void;
+  getPsbDetailsFail: (error: string) => void;
+  psbDetails: Array<PsbDetails>;
+  setPsbDetails: (psbDetails: Array<PsbDetails>) => void;
   appSelectionModalIsOpen: boolean;
   setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => void;
   pds: Pds;
   setPds: (pds: Pds) => void;
+  showPdsAlert: boolean;
+  setShowPdsAlert: (showPdsAlert: boolean) => void;
+  showPsbDetailsAlert: boolean;
+  setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) => void;
   alert: AlertState;
   setAlert: (alert: AlertState) => void;
   modal: ModalState;
@@ -71,6 +105,8 @@ export type SelectionState = {
   error: ErrorState;
   setError: (error: ErrorState) => void;
   publicationList: Array<Publication>;
+  dropdownAction: string;
+  setDropdownAction: (dropdownAction: string) => void;
   // setPublicationList: (publications: Array<Publication>) => void;
   selectedPublicationId: string;
   setSelectedPublicationId: (value: string) => void;
@@ -100,6 +136,7 @@ export type SelectionState = {
   tab: number;
   setTab: (tab: number) => void;
   emptyResponseAndError: () => void;
+  // psbScores: {psb}
 };
 
 export const useAppSelectionStore = create<SelectionState>()(
@@ -112,25 +149,90 @@ export const useAppSelectionStore = create<SelectionState>()(
       loadingPendingPublicationList: false,
       loadingFulfilledPublicationList: false,
       loadingResponse: false,
+      loadingPsbDetails: false,
     },
     errors: {
       errorPublicationList: '',
       errorPendingPublicationList: '',
       errorFulfilledPublicationList: '',
       errorResponse: '',
+      errorPsbDetails: '',
     },
-    selectedApplicantDetails: { applicantId: '', applicantType: '' },
-
+    selectedApplicantDetails: {
+      applicantId: '',
+      applicantType: '',
+      postingApplicantId: '',
+      applicantName: '',
+      applicantAvgScore: '',
+      positionTitle: '',
+      rank: '',
+    },
     setSelectedApplicantDetails: (
       selectedApplicantDetails: ApplicantDetails
     ) => {
       set((state) => ({ ...state, selectedApplicantDetails }));
     },
+    showPdsAlert: false,
+    setShowPdsAlert: (showPdsAlert: boolean) =>
+      set((state) => ({ ...state, showPdsAlert })),
+    dropdownAction: '',
+    setDropdownAction: (dropdownAction: string) =>
+      set((state) => ({ ...state, dropdownAction })),
+
+    psbDetails: [],
+    setPsbDetails: (psbDetails: Array<PsbDetails>) =>
+      set((state) => ({ ...state, psbDetails })),
+
+    getPsbDetails: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPsbDetails: true },
+        psbDetails: [],
+        errors: { ...state.errors, errorPsbDetails: '' },
+      })),
+
+    getPsbDetailsSuccess: (
+      response: Array<PsbDetails>,
+      applicantList: Array<ApplicantWithScores>,
+      applicantDetails: ApplicantDetails
+    ) => {
+      const filteredApplicant = applicantList.find(
+        (applicant) =>
+          applicant.postingApplicantId === applicantDetails.postingApplicantId
+      );
+      response &&
+        response.map((psb) => {
+          if (psb.psbNo === 1) psb.score = filteredApplicant.psb_1;
+          if (psb.psbNo === 2) psb.score = filteredApplicant.psb_2;
+          if (psb.psbNo === 3) psb.score = filteredApplicant.psb_3;
+          if (psb.psbNo === 4) psb.score = filteredApplicant.psb_4;
+          if (psb.psbNo === 5) psb.score = filteredApplicant.psb_5;
+          if (psb.psbNo === 6) psb.score = filteredApplicant.psb_6;
+          if (psb.psbNo === 7) psb.score = filteredApplicant.psb_7;
+          if (psb.psbNo === 8) psb.score = filteredApplicant.psb_8;
+        });
+
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPsbDetails: false },
+        psbDetails: response,
+      }));
+    },
+
+    getPsbDetailsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPsbDetails: false },
+        errors: { ...state.errors, errorPsbDetails: error },
+      })),
+
     pds: {} as Pds,
     setPds: (pds: Pds) => {
       set((state) => ({ ...state, pds }));
     },
-
+    showPsbDetailsAlert: false,
+    setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) =>
+      set((state) => ({ ...state, showPsbDetailsAlert })),
     appSelectionModalIsOpen: false,
 
     setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => {
