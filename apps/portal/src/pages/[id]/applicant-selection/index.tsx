@@ -386,20 +386,19 @@ export default function AppPosAppointment({
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             {alert.page === 1 && (
-              <div className="w-[5rem]">
-                <Button
-                  variant="info"
-                  onClick={() => setAlert({ ...alert, isOpen: false })}
-                >
-                  No
-                </Button>
-              </div>
+              <button
+                onClick={() => setAlert({ ...alert, isOpen: false })}
+                className="w-[5rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+              >
+                No
+              </button>
             )}
-            <div className="min-w-[5rem] max-w-auto">
-              <Button onClick={alertAction}>
-                {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
-              </Button>
-            </div>
+            <button
+              onClick={alertAction}
+              className="min-w-[5rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+            >
+              {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
+            </button>
           </div>
         </Alert.Footer>
       </Alert>
