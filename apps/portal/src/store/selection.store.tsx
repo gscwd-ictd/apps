@@ -33,6 +33,8 @@ type ApplicantDetails = {
   postingApplicantId: string;
   applicantName: string;
   applicantAvgScore: string;
+  positionTitle: string;
+  rank: string;
 };
 
 type PsbDetails = {
@@ -81,7 +83,7 @@ export type SelectionState = {
   getPsbDetailsSuccess: (
     response: Array<PsbDetails>,
     applicantList: Array<ApplicantWithScores>,
-    postingApplicantId: string
+    applicantDetails: ApplicantDetails
   ) => void;
   getPsbDetailsFail: (error: string) => void;
   psbDetails: Array<PsbDetails>;
@@ -162,6 +164,8 @@ export const useAppSelectionStore = create<SelectionState>()(
       postingApplicantId: '',
       applicantName: '',
       applicantAvgScore: '',
+      positionTitle: '',
+      rank: '',
     },
     setSelectedApplicantDetails: (
       selectedApplicantDetails: ApplicantDetails
@@ -190,10 +194,11 @@ export const useAppSelectionStore = create<SelectionState>()(
     getPsbDetailsSuccess: (
       response: Array<PsbDetails>,
       applicantList: Array<ApplicantWithScores>,
-      postingApplicantId
+      applicantDetails: ApplicantDetails
     ) => {
       const filteredApplicant = applicantList.find(
-        (applicant) => applicant.postingApplicantId === postingApplicantId
+        (applicant) =>
+          applicant.postingApplicantId === applicantDetails.postingApplicantId
       );
       response &&
         response.map((psb) => {

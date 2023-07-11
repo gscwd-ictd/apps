@@ -14,6 +14,7 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
   applicant,
 }) => {
   const {
+    selectedPublication,
     setSelectedApplicantDetails,
     setDropdownAction,
     setShowPdsAlert,
@@ -23,6 +24,7 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
     setDropdownAction: state.setDropdownAction,
     setShowPdsAlert: state.setShowPdsAlert,
     setShowPsbDetailsAlert: state.setShowPsbDetailsAlert,
+    selectedPublication: state.selectedPublication,
   }));
 
   const handleSelectAction = (e: any, item: string) => {
@@ -35,6 +37,8 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
       postingApplicantId: applicant.postingApplicantId,
       applicantName: applicant.applicantName,
       applicantAvgScore: applicant.average,
+      positionTitle: selectedPublication.positionTitle,
+      rank: applicant.rank,
     });
     if (item === 'PDS') {
       // do this
@@ -53,7 +57,7 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
     <>
       <Popover.Root>
         <Popover.Trigger
-          className="h-full whitespace-nowrap rounded bg-slate-300 px-3 py-[0.2rem] text-gray-700 transition-colors ease-in-out hover:bg-slate-200 active:bg-slate-300"
+          className="h-full border border-gray-400 whitespace-nowrap rounded bg-slate-300 px-3 py-[0.2rem] text-gray-700 transition-colors ease-in-out hover:bg-slate-200 active:bg-slate-300"
           asChild
         >
           <span>...</span>

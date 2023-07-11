@@ -1,13 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Alert, Modal } from '@gscwd-apps/oneui';
+import { Modal } from '@gscwd-apps/oneui';
 import { useAppSelectionStore } from 'apps/portal/src/store/selection.store';
 import React, { useEffect } from 'react';
-import { AppSelectionPds } from './AppSelectionPds';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import useSWR from 'swr';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import LoadingVisual from '../loading/LoadingVisual';
+import ordinal from 'ordinal-number-suffix';
 
 type AppSelectionPsbDetailsAlertProps = {
   alertState: boolean;
@@ -64,10 +64,8 @@ export const AppSelectionPsbDetailsAlert = ({
       getPsbDetailsSuccess(
         swrPsbDetails.data,
         applicantList,
-        selectedApplicantDetails.postingApplicantId
+        selectedApplicantDetails
       );
-      // console.log(swrPsbDetails.data);
-      console.log(applicantList);
     }
 
     if (!isEmpty(swrError)) {
@@ -85,62 +83,85 @@ export const AppSelectionPsbDetailsAlert = ({
     <Modal
       open={alertState}
       setOpen={setAlertState}
-      size={`${windowWidth > 1024 ? 'full' : 'full'}`}
+      size={`${windowWidth > 1024 ? 'lg' : 'full'}`}
     >
       <Modal.Body>
         {swrIsLoading ? (
           <LoadingVisual />
         ) : (
           <div className="sm:p-2 md:p-2 lg:p-5">
-            <div className="px-2 flex flex-col pb-5">
-              <span className="text-2xl font-semibold">
-                {selectedApplicantDetails.applicantName}
-              </span>
-              <span className="text-lg ">
-                Average score:{' '}
-                <span className="underline">
-                  {selectedApplicantDetails.applicantAvgScore}
-                </span>
-              </span>
+            <div className="px-2 flex justify-between w-full pb-5">
+              <div className="flex items-center gap-2 px-2">
+                <i className="text-slate-500 text-7xl bx bxs-user-circle"></i>
+                <div className="flex flex-col">
+                  <div className="text-2xl font-semibold text-gray-800">
+                    {selectedApplicantDetails.applicantName}
+                  </div>
+                  <span className="text-lg text-gray-700">
+                    {selectedApplicantDetails.positionTitle} Applicant
+                  </span>
+                </div>
+              </div>
+              <div className="text-lg text-gray-700 mt-2">
+                <div className="w-full flex flex-col">
+                  <div>
+                    <span className="">Rank: </span>
+                    <span className=" font-semibold">
+                      {ordinal(parseInt(selectedApplicantDetails.rank))}
+                    </span>
+                  </div>
+                  <div>
+                    Average rating:{' '}
+                    <span className="underline font-semibold">
+                      {selectedApplicantDetails.applicantAvgScore}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <table className="table-fixed w-full">
-              <thead>
-                <tr className="text-xs text-gray-500">
-                  <th className="px-2">PSB Member</th>
-                  <th className="px-2">Name</th>
-                  <th className="px-2">Score</th>
-                  <th className="px-2">Remarks</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {psbDetails &&
-                  psbDetails.map((psb) => {
-                    return (
-                      <tr
-                        key={psb.psbNo}
-                        className="odd:bg-indigo-100 even:bg-slate-100 "
-                      >
-                        <td className="p-2">{psb.psbNo ?? '--'}</td>
-                        <td className="p-2 text-lg">{psb.psbName ?? '--'}</td>
-                        <td className="p-2 flex justify-center items-center">
-                          {!isEmpty(psb.score) && parseInt(psb.score) > 0
-                            ? psb.score
-                            : '--'}
-                        </td>
-                        <td className="p-2 break-words">
-                          {!isEmpty(psb.remarks) ? (
-                            psb.remarks
-                          ) : (
-                            <span className="flex w-full justify-center items-center">
-                              --
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
+            <hr />
+
+            <div className="p-2">
+              {psbDetails &&
+                psbDetails.map((psb) => {
+                  return (
+                    <div key={psb.psbNo}>
+                      {!isEmpty(psb.psbName) ? (
+                        <>
+                          <section className="bg-indigo-900 rounded-md m-10 px-5 py-4">
+                            <div className="flex flex-col">
+                              <div className="text-white text-2xl">
+                                <span className="font-semibold">
+                                  {psb.psbName}
+                                </span>
+                              </div>
+                              <div className="text-white text-xl flex gap-2">
+                                <span className="text-gray-200 font-light">
+                                  Interview Rating:
+                                </span>
+                                <span>{psb.score}</span>
+                              </div>
+                              <div className="text-white pt-5">
+                                {!isEmpty(psb.remarks) ? (
+                                  <div className="text-lg flex flex-col gap-2">
+                                    <span className="italic font-extralight px-2 text-justify">
+                                      ❝ {psb.remarks} ❞
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div className="text-lg flex gap-2">
+                                    <span className="">No remarks</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </section>
+                        </>
+                      ) : null}
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         )}
       </Modal.Body>

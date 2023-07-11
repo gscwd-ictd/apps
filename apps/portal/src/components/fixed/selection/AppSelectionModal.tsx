@@ -73,9 +73,13 @@ export const AppSelectionModal = ({
             <div className="px-5 text-xl">
               {modal.page === 1
                 ? 'Select a publication'
-                : modal.page === 2 && !isEmpty(selectedPublication)
+                : modal.page === 2 &&
+                  !isEmpty(selectedPublication) &&
+                  selectedPublication.postingStatus ===
+                    PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION
                 ? 'Select Applicant(s)'
                 : modal.page === 2 &&
+                  !isEmpty(selectedPublication) &&
                   selectedPublication.postingStatus ===
                     PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
                 ? 'Selected Applicant(s)'

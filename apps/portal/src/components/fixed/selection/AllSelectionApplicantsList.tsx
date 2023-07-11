@@ -80,10 +80,28 @@ export const AllSelectionApplicantsList = () => {
 
   const pdsAlertCloseAction = () => {
     setPds({} as Pds);
+    setSelectedApplicantDetails({
+      applicantAvgScore: '',
+      applicantId: '',
+      applicantName: '',
+      applicantType: '',
+      postingApplicantId: '',
+      positionTitle: '',
+      rank: '',
+    });
     setDropdownAction('');
   };
 
   const psbDetailsAlertCloseAction = () => {
+    setSelectedApplicantDetails({
+      applicantAvgScore: '',
+      applicantId: '',
+      applicantName: '',
+      applicantType: '',
+      postingApplicantId: '',
+      positionTitle: '',
+      rank: '',
+    });
     setPsbDetails([]);
     setDropdownAction('');
   };
@@ -205,7 +223,7 @@ export const AllSelectionApplicantsList = () => {
         setAlertState={setShowPsbDetailsAlert}
         closeAlertAction={psbDetailsAlertCloseAction}
       />
-      <div className="min-h-auto max-h-[24rem] overflow-y-auto overflow-x-auto bg-slate-100 py-5 rounded-md">
+      <div className="min-h-auto max-h-[24rem] overflow-y-auto overflow-x-auto bg-slate-100 py-5 rounded-md m-2">
         {applicantList.length > 0 ? (
           <div className="px-5 min-w-[60rem] ">
             <div className="flex w-full grid-cols-5 gap-4 border-b border-gray-400 w-100">
