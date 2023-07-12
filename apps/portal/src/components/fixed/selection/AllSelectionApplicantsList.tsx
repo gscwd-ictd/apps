@@ -355,25 +355,6 @@ export const AllSelectionApplicantsList = () => {
                   return (
                     <li
                       key={index}
-<<<<<<< HEAD
-                      className={`flex items-center w-full grid-cols-5 gap-4 justify-left hover:bg-indigo-100  ${
-                        applicant.state && 'bg-slate-300 '
-                      }  `}
-                    >
-                      <div className="w-[5%] flex justify-center">
-                        <input
-                          type="checkbox"
-                          onChange={() =>
-                            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-
-                            onSelect(applicant.sequenceNo)
-                          }
-                          checked={
-                            swrApplicants?.data.positionDetails
-                              .postingStatus ===
-                            'Appointing authority selection'
-                              ? applicant.state
-=======
                       className={`flex items-center w-full  hover:bg-indigo-100  ${
                         applicant.state && 'bg-slate-300 '
                       }  `}
@@ -398,7 +379,6 @@ export const AllSelectionApplicantsList = () => {
                                   : false
                                 : applicant.isSelectedByAppointingAuthority ===
                                   1
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
                                 ? true
                                 : false
                             }
@@ -412,37 +392,9 @@ export const AllSelectionApplicantsList = () => {
                                 : applicant.isSelectedByAppointingAuthority ===
                                   1
                                 ? ''
-<<<<<<< HEAD
-                                : ''
-                              : applicant.isSelectedByAppointingAuthority === 1
-                              ? ''
-                              : 'hidden'
-                          } p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
-                        />
-                      </div>
-
-                      <li
-                        onClick={() =>
-                          swrApplicants.data.positionDetails.postingStatus ===
-                          'Appointing authority selection'
-                            ? onSelect(applicant.sequenceNo!)
-                            : {}
-                        }
-                        className={`flex grid-cols-3 items-center  gap-4 w-[95%] hover:cursor-pointer  border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 `}
-                      >
-                        <div className="w-[5%] flex justify-center items-center">
-                          {/* <RankingPopover data={applicant} /> */}
-                          {applicant.rank}
-                        </div>
-                        <div className="w-[20%] ">
-                          <p className="font-medium text-gray-600">
-                            {applicant.applicantName}
-                          </p>
-=======
                                 : 'hidden'
                             } m-2 p-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
                           />
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
                         </div>
 
                         <div
@@ -657,30 +609,9 @@ export const AllSelectionApplicantsList = () => {
                             ) : null}
                           </div>
                         </div>
-<<<<<<< HEAD
-                      </li>
-                      <div className="w-[5%]">
-                        <div className="flex items-center justify-center w-full font-medium text-gray-600 hover:cursor-pointer">
-                          <button
-                            tabIndex={-1}
-                            className="px-1 text-white rounded"
-                            onClick={() => {
-                              setSelectedApplicantDetails({
-                                applicantId: applicant.applicantId,
-                                applicantType: applicant.applicantType,
-                              });
-                              setPdsAlertState(true);
-                            }}
-                          >
-                            <span className="text-indigo-600 underline uppercase">
-                              Pds
-                            </span>
-                          </button>
-=======
 
                         <div className="flex col-span-1 items-center justify-center w-[5%] font-medium text-gray-600 hover:cursor-pointer">
                           <ActionDropdown applicant={applicant} />
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
                         </div>
                       </div>
                     </li>

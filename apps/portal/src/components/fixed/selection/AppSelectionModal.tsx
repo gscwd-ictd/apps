@@ -63,21 +63,6 @@ export const AppSelectionModal = ({
         steady
       >
         <Modal.Header>
-<<<<<<< HEAD
-          <h3 className="font-semibold text-gray-700">
-            <div className="px-5 text-xl">
-              {modal.page === 1
-                ? 'Select a publication'
-                : modal.page === 2 && !isEmpty(selectedPublication)
-                ? 'Select Applicant(s)'
-                : modal.page === 2 &&
-                  selectedPublication.postingStatus ===
-                    PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
-                ? 'Selected Applicant(s)'
-                : null}
-            </div>
-          </h3>
-=======
           <div className="w-full flex justify-between">
             <h3 className="px-5 font-semibold text-gray-700 flex flex-col w-full ">
               <div className=" text-2xl">Appointing Authority Selection</div>
@@ -103,7 +88,6 @@ export const AppSelectionModal = ({
               onClick={closeModalFunction}
             ></i>
           </div>
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
         </Modal.Header>
 
         <Modal.Body>
@@ -113,13 +97,8 @@ export const AppSelectionModal = ({
           <div className="flex justify-end gap-2">
             {modal.page !== 4 ? (
               <button
-<<<<<<< HEAD
-                className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-gray-100 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
-                onClick={closeModalAction}
-=======
                 className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
                 onClick={closeModalFunction}
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
               >
                 {modal.page === 1 ? 'Close' : 'Cancel'}
               </button>

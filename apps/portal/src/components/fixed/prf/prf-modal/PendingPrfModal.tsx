@@ -248,11 +248,7 @@ export const PendingPrfModal = ({
                             </section>
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
-<<<<<<< HEAD
-                            <main className="scale-95 h-[24rem] w-full overflow-y-auto px-5">
-=======
                             <main className="scale-95 h-auto w-full overflow-y-auto px-5">
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
                               {prfDetails.prfPositions.map(
                                 (position: Position, index: number) => {
                                   return (

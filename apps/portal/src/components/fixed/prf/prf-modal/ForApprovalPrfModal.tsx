@@ -355,11 +355,7 @@ export const ForApprovalPrfModal = ({
                             </section>
                           </aside>
                           <section className="w-full">
-<<<<<<< HEAD
-                            <main className="scale-95 h-[31rem] w-full overflow-y-auto px-5">
-=======
                             <main className="scale-95 h-auto w-full overflow-y-auto px-5">
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
                               {prfDetailsForApproval.prfPositions &&
                                 prfDetailsForApproval.prfPositions.map(
                                   (position: Position, index: number) => {

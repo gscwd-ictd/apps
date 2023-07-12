@@ -52,26 +52,9 @@ import { useRouter } from 'next/router';
 type PrfPageProps = {
   user: User;
   employee: EmployeeDetails;
-<<<<<<< HEAD
-  // profile: EmployeeProfile;
-  // pendingRequests: Array<PrfDetails>;
-  // forApproval: Array<any>;
-  // disapprovedRequests: Array<PrfDetails>;
-};
-
-export default function Prf({
-  user,
-  employee,
-}: // profile,
-// pendingRequests,
-// forApproval,
-// disapprovedRequests,
-PrfPageProps) {
-=======
 };
 
 export default function Prf({ user, employee }: PrfPageProps) {
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
   // access modal-open state from store
   const isOpen = usePrfStore((state) => state.isModalOpen);
 
@@ -299,10 +282,6 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
   useEffect(() => {
     if (!isEmpty(patchResponse)) {
-<<<<<<< HEAD
-      // console.log(employee.user._id, 'userid');
-=======
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
       mutateForApprovalPrfDetails();
       mutatePendingPrfDetails();
       mutateDisapprovedPrfDetails();
@@ -327,13 +306,6 @@ export default function Prf({ user, employee }: PrfPageProps) {
     // update value of profile
     // setProfile(profile);
 
-<<<<<<< HEAD
-    // setPendingPrfs(pendingRequests);
-    // setForApprovalPrfs(forApproval);
-    // setDisapprovedPrfs(disapprovedRequests);
-
-=======
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
     setIsLoading(true);
   }, [employee]);
 
@@ -412,11 +384,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
   return (
     <>
-<<<<<<< HEAD
-      {/* Disapprove PRF Success */}
-=======
       {/* Patch PRF Success */}
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
       {!isEmpty(patchResponse) ? (
         <ToastNotification
           toastType="success"
@@ -533,23 +501,6 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async () => {
     const employee = getUserDetails();
     // const employee = employeeDummy;
-<<<<<<< HEAD
-    // get user details
-    //const user = await getUserDetails(employee.userId);
-
-    // get employee profile
-    //const profile = await getEmployeeProfile(user._id);
-
-    // get all pending prfs
-    // const pendingRequests = await getPendingPrfs(employee.user._id);
-
-    // get all approved prfs
-    // const forApproval = await getForApprovalPrfs(employee.user._id);
-
-    // get all disapproved prfs
-    // const disapprovedRequests = await getDisapprovedPrfs(employee.user._id);
-=======
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
 
     // check if user role is rank_and_file
     if (
@@ -569,13 +520,6 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
       props: {
         user: employee.user,
         employee: employee,
-<<<<<<< HEAD
-        // profile: employee.profile,
-        // pendingRequests,
-        // forApproval,
-        // disapprovedRequests,
-=======
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
       },
     };
   }

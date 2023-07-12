@@ -280,11 +280,7 @@ export const PassSlipApplicationModal = ({
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
               <Button
-<<<<<<< HEAD
-                disabled={true}
-=======
                 disabled
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
                 variant={'primary'}
                 size={'md'}
                 loading={false}
