@@ -476,14 +476,8 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     const employeeDetails = getUserDetails();
     // check if user role is rank_and_file
     if (
-<<<<<<< HEAD:apps/portal/src/pages/[id]/applicant-selection/index.tsx
-      employeeDetails.employmentDetails.userRole !== UserRole.GENERAL_MANAGER &&
-      employeeDetails.employmentDetails.userRole !==
-        UserRole.OIC_GENERAL_MANAGER
-=======
       employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER &&
       employeeDetails.employmentDetails.userRole !== Roles.OIC_GENERAL_MANAGER
->>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8:apps/portal/src/pages/[id]/appointing-authority-selection/index.tsx
     ) {
       // if true, the employee is not allowed to access this page
       return {
