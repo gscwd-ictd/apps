@@ -30,6 +30,7 @@ import AppEndModal from 'apps/portal/src/components/fixed/endorsement/modal/AppE
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function ApplicantEndorsement({
   employeeDetails,
@@ -224,6 +225,20 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
+    // check if user role is rank_and_file or job order = kick out
+    if (
+      employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+    ) {
+      // if true, the employee is not allowed to access this page
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${employeeDetails.user._id}`,
+        },
+      };
+    } else {
+      return { props: { employeeDetails } };
+    }
   }
 );
