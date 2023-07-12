@@ -22,6 +22,7 @@ import { usePdsStore } from '../../../store/pds.store';
 import { employeeDummy } from 'apps/portal/src/types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function Pds({
   employeeDetails,
@@ -107,6 +108,17 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails, userId: context.query.id } };
+    // check if user role is rank_and_file or job order = kick out
+    if (employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) {
+      // if true, the employee is not allowed to access this page
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${employeeDetails.user._id}`,
+        },
+      };
+    } else {
+      return { props: { employeeDetails, userId: context.query.id } };
+    }
   }
 );

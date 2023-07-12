@@ -945,33 +945,34 @@ export const LeaveApplicationModal = ({
                 loading={false}
                 form="ApplyLeaveForm"
                 type="submit"
-                disabled={
-                  vacationBalance < 0 &&
-                  watch('typeOfLeaveDetails.leaveName') === 'Vacation Leave'
-                    ? true
-                    : forcedBalance < 0 &&
-                      watch('typeOfLeaveDetails.leaveName') === 'Forced Leave'
-                    ? true
-                    : sickBalance < 0 &&
-                      watch('typeOfLeaveDetails.leaveName') === 'Sick Leave'
-                    ? true
-                    : overlappingLeaveCount > 0 &&
-                      (watch('typeOfLeaveDetails.leaveName') ===
-                        'Maternity Leave' ||
-                        watch('typeOfLeaveDetails.leaveName') === 'Study Leave')
-                    ? true
-                    : leaveDates.length <= 0 &&
-                      watch('typeOfLeaveDetails.leaveName') !==
-                        'Maternity Leave' &&
-                      watch('typeOfLeaveDetails.leaveName') !== 'Study Leave'
-                    ? true
-                    : leaveDateTo < leaveDateFrom &&
-                      (watch('typeOfLeaveDetails.leaveName') ==
-                        'Maternity Leave' ||
-                        watch('typeOfLeaveDetails.leaveName') == 'Study Leave')
-                    ? true
-                    : false
-                }
+                disabled
+                // disabled={
+                //   vacationBalance < 0 &&
+                //   watch('typeOfLeaveDetails.leaveName') === 'Vacation Leave'
+                //     ? true
+                //     : forcedBalance < 0 &&
+                //       watch('typeOfLeaveDetails.leaveName') === 'Forced Leave'
+                //     ? true
+                //     : sickBalance < 0 &&
+                //       watch('typeOfLeaveDetails.leaveName') === 'Sick Leave'
+                //     ? true
+                //     : overlappingLeaveCount > 0 &&
+                //       (watch('typeOfLeaveDetails.leaveName') ===
+                //         'Maternity Leave' ||
+                //         watch('typeOfLeaveDetails.leaveName') === 'Study Leave')
+                //     ? true
+                //     : leaveDates.length <= 0 &&
+                //       watch('typeOfLeaveDetails.leaveName') !==
+                //         'Maternity Leave' &&
+                //       watch('typeOfLeaveDetails.leaveName') !== 'Study Leave'
+                //     ? true
+                //     : leaveDateTo < leaveDateFrom &&
+                //       (watch('typeOfLeaveDetails.leaveName') ==
+                //         'Maternity Leave' ||
+                //         watch('typeOfLeaveDetails.leaveName') == 'Study Leave')
+                //     ? true
+                //     : false
+                // }
               >
                 Apply Leave
               </Button>
