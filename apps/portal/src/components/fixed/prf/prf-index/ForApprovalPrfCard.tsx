@@ -35,7 +35,7 @@ export const ForApprovalPrfCard: FunctionComponent<ForApprovalPrfCardProps> = ({
                 //   `/${router.query.id}/prf/for-approval/${forApproval.prfDetailsId}`
                 // )
               }
-              className="bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
+              className="scale-95 bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
             >
               <header>
                 <h3 className="text-lg font-semibold text-gray-600">

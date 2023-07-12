@@ -133,7 +133,7 @@ export const DrcModalSelect = (): JSX.Element => {
             )}
           </div>
         </section>
-        <section className="col-span-1 lg:col-span-3 h-[34rem] bg-slate-50 bg-opacity-50 px-5 pt-5">
+        <section className="col-span-1 lg:col-span-3 h-[34rem] bg-opacity-50 px-5 pt-5">
           {(selectedDrcType === 'core' && checkedDnrs.core.length === 0) ||
           (selectedDrcType === 'support' &&
             checkedDnrs.support.length === 0) ? (
@@ -149,7 +149,7 @@ export const DrcModalSelect = (): JSX.Element => {
             (selectedDrcType === 'support' &&
               checkedDnrs.support.length > 0) ? (
             <>
-              <div className="h-[34rem] w-full overflow-y-auto px-2 pt-1">
+              <div className="h-[34rem] w-full overflow-y-scroll px-2 pt-1">
                 {/* <SelectedDRCard /> */}
                 <DrcSelectedDrcCard />
               </div>

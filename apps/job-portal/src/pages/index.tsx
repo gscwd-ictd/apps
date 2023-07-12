@@ -112,7 +112,7 @@ const Home: NextPage = ({
   }, []);
 
   return (
-    <div className="min-h-full">
+    <div className="w-full min-h-full">
       <TopNavigation />
 
       <header className="bg-white shadow">
@@ -124,13 +124,7 @@ const Home: NextPage = ({
       </header>
 
       <main>
-        <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="px-4 py-6 sm:px-0">
-            <div className="rounded-lg h-96">
-              <JobOpeningsTable jobOpenings={jobOpenings} />
-            </div>
-          </div>
-        </div>
+        <JobOpeningsTable jobOpenings={jobOpenings} />
       </main>
       <section>
         <FormModal

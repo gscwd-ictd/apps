@@ -166,9 +166,15 @@ export default function Dashboard({
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 ">
                   <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
                     <div className="flex flex-row gap-4">
+<<<<<<< HEAD
                       <StatsCard name={'Lates Count'} count={10} />
                       <StatsCard name={'Pass Slip Count'} count={10} />
                       <StatsCard name={'Force Leaves'} count={5} />
+=======
+                      <StatsCard name={'Lates Count'} count={0} />
+                      <StatsCard name={'Pass Slip Count'} count={0} />
+                      <StatsCard name={'Force Leaves'} count={0} />
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
                     </div>
                   </div>
                   <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">

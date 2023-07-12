@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { FunctionComponent } from 'react';
@@ -76,3 +77,83 @@ export const DisapprovedPrfCard: FunctionComponent<PrfCardProps> = ({
     </>
   );
 };
+=======
+import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
+import { FunctionComponent } from 'react';
+import { HiOutlinePencil, HiOutlineDocumentDuplicate } from 'react-icons/hi';
+import { PrfDetails } from '../../../../types/prf.types';
+import { usePrfStore } from 'apps/portal/src/store/prf.store';
+
+type PrfCardProps = {
+  prf: Array<PrfDetails>;
+};
+
+export const DisapprovedPrfCard: FunctionComponent<PrfCardProps> = ({
+  prf,
+}) => {
+  const router = useRouter();
+
+  const { selectedPrfId, setSelectedPrfId, setDisapprovedPrfModalIsOpen } =
+    usePrfStore((state) => ({
+      selectedPrfId: state.selectedPrfId,
+      setSelectedPrfId: state.setSelectedPrfId,
+      setDisapprovedPrfModalIsOpen: state.setDisapprovedPrfModalIsOpen,
+    }));
+
+  return (
+    <>
+      {prf.map((prf: PrfDetails, index: number) => {
+        return (
+          <div
+            onClick={
+              () => {
+                setSelectedPrfId(prf._id);
+                setDisapprovedPrfModalIsOpen(true);
+              }
+              // router.push(`/${router.query.id}/prf/disapproved/${prf._id}`)
+            }
+            key={index}
+            className="scale-95 bg-white shadow-xl shadow-slate-100 hover:shadow-2xl hover:shadow-slate-200 rounded-md bg-opacity-50 hover:scale-105 transition-all border-b border-b-gray-100 cursor-pointer p-8"
+          >
+            <div className="">
+              <header>
+                <h3 className="text-lg font-semibold text-gray-600">
+                  {prf.prfNo}
+                </h3>
+                <p className="text-xs text-gray-500">
+                  Requested last {dayjs(prf.createdAt).format('DD MMM, YYYY')}
+                </p>
+              </header>
+
+              <main className="mt-4">
+                <div className="flex items-center gap-2">
+                  <HiOutlineDocumentDuplicate className="text-gray-600" />
+                  <p className="text-sm text-gray-600">
+                    {prf.prfPositions.length}{' '}
+                    {prf.prfPositions.length === 1 ? 'position' : 'positions'}{' '}
+                    requested
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <HiOutlinePencil className="text-gray-600" />
+                  {prf.withExam ? (
+                    <p className="text-sm text-indigo-700">
+                      Examination is required
+                    </p>
+                  ) : (
+                    <p className="text-sm text-orange-600">
+                      No examination required
+                    </p>
+                  )}
+                </div>
+              </main>
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+};
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8

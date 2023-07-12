@@ -105,7 +105,7 @@ export const VacancyJobInformation = (props: {
                     </div>
                     <div className="pb-4">
                       <label className="font-bold">Key Actions: </label>
-                      {competency.description}
+                      {competency.keyActions}
                     </div>
                   </div>
                 );
@@ -120,7 +120,7 @@ export const VacancyJobInformation = (props: {
               (competency: JobCompetencies, Idx: number) => {
                 return (
                   <div
-                    className="px-8 py-2 my-2 text-justify bg-white border rounded-xl"
+                    className="px-4 py-2 my-2 text-justify bg-white border rounded-xl"
                     key={Idx}
                   >
                     <div>
@@ -137,7 +137,7 @@ export const VacancyJobInformation = (props: {
                     </div>
                     <div className="pb-4">
                       <label className="font-bold">Key Actions: </label>
-                      {competency.description}
+                      {competency.keyActions}
                     </div>
                   </div>
                 );
@@ -157,7 +157,7 @@ export const VacancyJobInformation = (props: {
               (competency: JobCompetencies, Idx: number) => {
                 return (
                   <div
-                    className="px-8 py-2 my-2 text-justify bg-white border rounded-xl"
+                    className="px-4 py-2 my-2 text-justify bg-white border rounded-xl"
                     key={Idx}
                   >
                     <div>
@@ -174,7 +174,7 @@ export const VacancyJobInformation = (props: {
                     </div>
                     <div className="pb-4">
                       <label className="font-bold">Key Actions: </label>
-                      {competency.description}
+                      {competency.keyActions}
                     </div>
                   </div>
                 );

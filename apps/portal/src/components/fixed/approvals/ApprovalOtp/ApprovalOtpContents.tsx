@@ -243,21 +243,23 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
             ) : null}
 
             {isOtpSending || isSendOtpLoading ? null : (
-              <div
-                className={`mb-4 text-center text-green-600 cursor-pointer text-md'`}
+              // <Button
+              //   btnLabel={`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}
+              //   variant="primary"
+              //   className="font-bold mb-2"
+
+              // />
+              <button
+                disabled={isSubmitLoading == true ? true : false}
+                className={`${
+                  isSubmitLoading == true ? 'cursor-not-allowed' : ''
+                } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
                 onClick={() => handleSendCode()}
               >
-                <label
-                  className={`${failedFirstOtp ? 'hidden ' : 'cursor-pointer'}`}
-                >
-                  Send Code
-                </label>
-                <label
-                  className={`${failedFirstOtp ? 'cursor-pointer' : 'hidden'}`}
-                >
-                  Resend Code
-                </label>
-              </div>
+                <label className="font-bold cursor-pointer">{`${
+                  failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'
+                }`}</label>
+              </button>
             )}
 
             {isSendOtpLoading ? (
@@ -273,89 +275,92 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
               </div>
             ) : null}
 
-            <form
-              onSubmit={(e) => handleFinalSubmit(e)}
-              className="flex flex-col gap-1"
+            {isOtpSending || isSendOtpLoading ? (
+              <>
+                <form
+                  onSubmit={(e) => handleFinalSubmit(e)}
+                  className="flex flex-col gap-1"
+                >
+                  {otpFieldError && (
+                    <section
+                      className="mb-3"
+                      onAnimationEnd={() =>
+                        setIsError({ ...isError, animate: false })
+                      }
+                    >
+                      <Notice
+                        type="error"
+                        message={errorMessage}
+                        animate={otpFieldError}
+                      />
+                    </section>
+                  )}
+                  <section
+                    className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}
+                  >
+                    <TextField
+                      autoFocus
+                      value={otpCode}
+                      type="text"
+                      placeholder="Enter Code"
+                      isError={otpFieldError ? true : false}
+                      errorMessage={''}
+                      maxLength={6}
+                      onChange={(e) =>
+                        handleOtpInput(e.target.value as unknown as string)
+                      }
+                    />
+                  </section>
+                  <button
+                    disabled={isSubmitLoading == true ? true : false}
+                    className={`${wiggleEffect && 'animate-shake'}  ${
+                      isSubmitLoading == true ? 'cursor-not-allowed' : ''
+                    }  text-white w-56 h-10 transition-all rounded my-2 hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
+                      wiggleEffect
+                        ? 'bg-rose-600 hover:bg-rose-600'
+                        : 'bg-indigo-500'
+                    }`}
+                    type="submit"
+                    onAnimationEnd={() => setWiggleEffect(false)}
+                  >
+                    <PortalSVG.AnimationBlueLoading
+                      width={30}
+                      height={30}
+                      className={`${
+                        isSubmitLoading ? '' : 'hidden'
+                      } absolute -mt-1`}
+                    />
+                    <label
+                      className={`${
+                        isSubmitLoading
+                          ? 'cursor-not-allowed pointer-events-none font-bold'
+                          : 'hidden'
+                      } `}
+                    >
+                      VERIFYING
+                    </label>
+                    <label
+                      className={`${
+                        isSubmitLoading
+                          ? 'hidden'
+                          : 'cursor-pointer pointer-events-none font-bold'
+                      } `}
+                    >
+                      CONFIRM OTP
+                    </label>
+                  </button>
+                </form>
+              </>
+            ) : null}
+            <button
+              disabled={isSubmitLoading == true ? true : false}
+              className={`${
+                isSubmitLoading == true ? 'cursor-not-allowed' : ''
+              }  mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
+              onClick={(e) => handleCancel(e)}
             >
-              {otpFieldError && (
-                <section
-                  className="mb-3"
-                  onAnimationEnd={() =>
-                    setIsError({ ...isError, animate: false })
-                  }
-                >
-                  <Notice
-                    type="error"
-                    message={errorMessage}
-                    animate={otpFieldError}
-                  />
-                </section>
-              )}
-              <section
-                className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}
-              >
-                <TextField
-                  autoFocus
-                  value={otpCode}
-                  type="text"
-                  placeholder="Enter Code"
-                  isError={otpFieldError ? true : false}
-                  errorMessage={''}
-                  maxLength={6}
-                  onChange={(e) =>
-                    handleOtpInput(e.target.value as unknown as string)
-                  }
-                />
-              </section>
-              <button
-                disabled={isSubmitLoading == true ? true : false}
-                className={`${wiggleEffect && 'animate-shake'}  ${
-                  isSubmitLoading == true ? 'cursor-not-allowed' : ''
-                }  text-white w-full h-10 transition-all rounded my-2 hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
-                  wiggleEffect
-                    ? 'bg-rose-600 hover:bg-rose-600'
-                    : 'bg-indigo-500'
-                }`}
-                type="submit"
-                onAnimationEnd={() => setWiggleEffect(false)}
-              >
-                <PortalSVG.AnimationBlueLoading
-                  width={30}
-                  height={30}
-                  className={`${
-                    isSubmitLoading ? '' : 'hidden'
-                  } absolute -mt-1`}
-                />
-                <label
-                  className={`${
-                    isSubmitLoading
-                      ? 'cursor-not-allowed pointer-events-none'
-                      : 'hidden'
-                  } `}
-                >
-                  Verifying
-                </label>
-                <label
-                  className={`${
-                    isSubmitLoading
-                      ? 'hidden'
-                      : 'cursor-pointer pointer-events-none'
-                  } `}
-                >
-                  Submit
-                </label>
-              </button>
-
-              <Button
-                disabled={isSubmitLoading == true ? true : false}
-                btnLabel="Cancel OTP"
-                variant="danger"
-                className={`${
-                  isSubmitLoading == true ? 'cursor-not-allowed' : ''
-                } mb-2 `}
-                onClick={(e) => handleCancel(e)}
-              />
-            </form>
+              <label className="font-bold cursor-pointer">CANCEL OTP</label>
+            </button>
           </div>
         </>
       ) : null}

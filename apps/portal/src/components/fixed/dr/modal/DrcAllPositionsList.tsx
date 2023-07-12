@@ -51,7 +51,9 @@ export const DrcAllPositionsList = (): JSX.Element => {
                   <h1 className="font-medium text-gray-600">
                     {position.positionTitle}
                   </h1>
-                  <p className="text-sm text-gray-500">{position.itemNumber}</p>
+                  <p className="text-sm text-black font-semibold">
+                    {position.itemNumber}
+                  </p>
                   <p className="text-xs text-gray-500">
                     {position.designation}
                   </p>
