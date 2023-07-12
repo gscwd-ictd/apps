@@ -151,7 +151,7 @@ export default function DutiesResponsibilities({
           >
             <Button onClick={openModal} className="hidden lg:block" size={`md`}>
               <div className="flex items-center w-full gap-2">
-                <HiSearch /> Find Position
+                <HiSearch /> Find All Positions
               </div>
             </Button>
 

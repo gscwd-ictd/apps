@@ -48,7 +48,7 @@ const VerticalLayout = (): JSX.Element => {
                       : destination === 'endorsement'
                       ? `/${router.query.id}/applicant-endorsement`
                       : destination === 'selection'
-                      ? `/${router.query.id}/applicant-selection`
+                      ? `/${router.query.id}/appointing-authority-selection`
                       : destination === 'pds'
                       ? `/${router.query.id}/pds`
                       : destination === 'psb'

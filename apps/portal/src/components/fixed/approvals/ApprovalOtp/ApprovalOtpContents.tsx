@@ -243,12 +243,23 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
             ) : null}
 
             {isOtpSending || isSendOtpLoading ? null : (
-              <Button
-                btnLabel={`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}
-                variant="primary"
-                className="font-bold mb-2"
+              // <Button
+              //   btnLabel={`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}
+              //   variant="primary"
+              //   className="font-bold mb-2"
+
+              // />
+              <button
+                disabled={isSubmitLoading == true ? true : false}
+                className={`${
+                  isSubmitLoading == true ? 'cursor-not-allowed' : ''
+                } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
                 onClick={() => handleSendCode()}
-              />
+              >
+                <label className="font-bold cursor-pointer">{`${
+                  failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'
+                }`}</label>
+              </button>
             )}
 
             {isSendOtpLoading ? (
@@ -304,7 +315,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                     disabled={isSubmitLoading == true ? true : false}
                     className={`${wiggleEffect && 'animate-shake'}  ${
                       isSubmitLoading == true ? 'cursor-not-allowed' : ''
-                    }  text-white w-full h-10 transition-all rounded my-2 hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
+                    }  text-white w-56 h-10 transition-all rounded my-2 hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
                       wiggleEffect
                         ? 'bg-rose-600 hover:bg-rose-600'
                         : 'bg-indigo-500'
@@ -322,7 +333,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                     <label
                       className={`${
                         isSubmitLoading
-                          ? 'cursor-not-allowed pointer-events-none font-sans'
+                          ? 'cursor-not-allowed pointer-events-none font-bold'
                           : 'hidden'
                       } `}
                     >
@@ -332,7 +343,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                       className={`${
                         isSubmitLoading
                           ? 'hidden'
-                          : 'cursor-pointer pointer-events-none font-sans'
+                          : 'cursor-pointer pointer-events-none font-bold'
                       } `}
                     >
                       CONFIRM OTP
@@ -341,16 +352,15 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                 </form>
               </>
             ) : null}
-
-            <Button
+            <button
               disabled={isSubmitLoading == true ? true : false}
-              btnLabel="CANCEL OTP"
-              variant="danger"
               className={`${
                 isSubmitLoading == true ? 'cursor-not-allowed' : ''
-              } mb-2 `}
+              }  mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
               onClick={(e) => handleCancel(e)}
-            />
+            >
+              <label className="font-bold cursor-pointer">CANCEL OTP</label>
+            </button>
           </div>
         </>
       ) : null}

@@ -394,10 +394,10 @@ export default function Dashboard({
     }
   }, [isLoading, residentialAddress, permanentAddress]);
 
-  // redirect to closed page
-  useEffect(() => {
-    router.push(`${process.env.NEXT_PUBLIC_PERSONAL_DATA_SHEET}/closed`);
-  }, []);
+  //! uncomment this code if needed to lock, redirect to closed page
+  // useEffect(() => {
+  //   router.push(`${process.env.NEXT_PUBLIC_PERSONAL_DATA_SHEET}/closed`);
+  // }, []);
 
   return (
     <>

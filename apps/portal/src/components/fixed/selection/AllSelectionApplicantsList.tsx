@@ -226,134 +226,124 @@ export const AllSelectionApplicantsList = () => {
       <div className="min-h-auto max-h-[24rem] overflow-y-auto overflow-x-auto bg-slate-100 py-5 rounded-md m-2">
         {applicantList.length > 0 ? (
           <div className="px-5 min-w-[60rem] ">
-            <div className="flex w-full grid-cols-5 gap-4 border-b border-gray-400 w-100">
-              <div className="col-span-1 w-[5%] flex justify-center items-center">
+            <div className="flex w-full grid-cols-6 border-b border-gray-400">
+              <div className="col-span-1 w-[2%] flex justify-center items-center">
                 <p className="text-xs font-light"></p>
               </div>
 
-              <div className="col-span-1 w-[5%] flex justify-center items-center">
-                <p className="font-light whitespace-nowrap">Rank</p>
+              <div className="flex w-[93%] col-span-4 grid-cols-4">
+                <div className="col-span-1 w-[5%] flex justify-center items-center">
+                  <p className="font-light">Rank</p>
+                </div>
+
+                <div className="col-span-1 w-[23%] flex justify-start">
+                  <p className="font-light">Name of Applicants</p>
+                </div>
+
+                <div className="col-span-2 w-[75%] flex">
+                  {selectedPublication.salaryGradeLevel &&
+                  selectedPublication.salaryGradeLevel <= 23 ? (
+                    <div className="flex w-full grid-cols-2">
+                      <div className="col-span-1 flex w-[80%]">
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 1</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 2</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 3</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 4</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 5</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 6</p>
+                        </div>
+                      </div>
+
+                      <div className="items-center w-[20%] flex justify-center   col-span-1">
+                        <p className="font-light">Average</p>
+                      </div>
+                    </div>
+                  ) : selectedPublication.salaryGradeLevel &&
+                    selectedPublication.salaryGradeLevel === 24 ? (
+                    <div className="flex w-full grid-cols-2">
+                      <div className="col-span-1 flex w-[80%]">
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 1</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 2</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 3</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 4</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 5</p>
+                        </div>
+
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 6</p>
+                        </div>
+
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 7</p>
+                        </div>
+
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 8</p>
+                        </div>
+                      </div>
+
+                      <div className="flex w-[20%] items-center justify-center  col-span-1">
+                        <p className="font-light">Average</p>
+                      </div>
+                    </div>
+                  ) : selectedPublication.salaryGradeLevel &&
+                    selectedPublication.salaryGradeLevel >= 26 ? (
+                    <div className="flex w-full grid-cols-2">
+                      <div className="col-span-1 flex w-[80%]">
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="font-light">PSB 1</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 2</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 3</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 4</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 5</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 6</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="font-light">PSB 7</p>
+                        </div>
+                      </div>
+
+                      <div className="flex w-[20%] items-center justify-center col-span-1">
+                        <p className="font-light">Average</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>No Records Found</>
+                  )}
+                </div>
               </div>
-              <div className="col-span-1 w-[20%]  flex justify-left">
-                <p className="font-light whitespace-nowrap">
-                  Name of Applicants
-                </p>
-              </div>
 
-              <div className="col-span-1 w-[70%]">
-                {selectedPublication.salaryGradeLevel &&
-                selectedPublication.salaryGradeLevel <= 23 ? (
-                  <div className="flex w-full">
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 1</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 2</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 3</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 4</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 5</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 6</p>
-                    </div>
-
-                    {/* {applicantScores && applicantScores.map((appScore, index: number) => {
-                                    return (<div key={index} className="flex items-center w-full justify-left">
-                                        <p className="font-light">PSB {index + 1}</p>
-                                    </div>)
-                                })} */}
-
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light">Average</p>
-                    </div>
-                  </div>
-                ) : selectedPublication.salaryGradeLevel &&
-                  selectedPublication.salaryGradeLevel === 24 ? (
-                  <div className="flex w-full">
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 1</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 2</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 3</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 4</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 5</p>
-                    </div>
-
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 6</p>
-                    </div>
-
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 7</p>
-                    </div>
-
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 8</p>
-                    </div>
-
-                    {/* {applicantScores && applicantScores.map((appScore, index: number) => {
-                                    return (<div key={index} className="flex items-center w-full justify-left">
-                                        <p className="font-light">PSB {index + 1}</p>
-                                    </div>)
-                                })} */}
-
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light">Average</p>
-                    </div>
-                  </div>
-                ) : selectedPublication.salaryGradeLevel &&
-                  selectedPublication.salaryGradeLevel >= 25 ? (
-                  <div className="flex w-full">
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 1</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 2</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 3</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 4</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 5</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 6</p>
-                    </div>
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light whitespace-nowrap">PSB 7</p>
-                    </div>
-
-                    {/* {applicantScores && applicantScores.map((appScore, index: number) => {
-                                    return (<div key={index} className="flex items-center w-full justify-left">
-                                        <p className="font-light">PSB {index + 1}</p>
-                                    </div>)
-                                })} */}
-
-                    <div className="flex items-center w-full justify-left">
-                      <p className="font-light">Average</p>
-                    </div>
-                  </div>
-                ) : (
-                  <>No Records Found</>
-                )}
-              </div>
-              <div className="col-span-1 w-[5%]">
+              <div className="col-span-1 flex w-[5%] justify-center items-center  ">
                 <p className="font-light flex justify-center items-center">
                   Actions
                 </p>
@@ -363,140 +353,268 @@ export const AllSelectionApplicantsList = () => {
               {applicantList.map(
                 (applicant: ApplicantWithScores, index: number) => {
                   return (
-                    <div
+                    <li
                       key={index}
-                      className={`flex items-center w-full grid-cols-5 gap-4 justify-left hover:bg-indigo-100  ${
+                      className={`flex items-center w-full  hover:bg-indigo-100  ${
                         applicant.state && 'bg-slate-300 '
                       }  `}
                     >
-                      <div className="w-[5%] flex justify-center">
-                        <input
-                          type="checkbox"
-                          onChange={() =>
-                            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                      <div
+                        className={`flex grid-cols-6 items-center w-full transition-colors ease-in-out`}
+                      >
+                        <div className="w-[2%] flex items-center col-span-1 ">
+                          <input
+                            type="checkbox"
+                            onChange={() =>
+                              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
 
-                            onSelect(applicant.sequenceNo)
-                          }
-                          checked={
-                            swrApplicants?.data.positionDetails
-                              .postingStatus ===
-                            'Appointing authority selection'
-                              ? applicant.state
+                              onSelect(applicant.sequenceNo)
+                            }
+                            checked={
+                              swrApplicants?.data.positionDetails
+                                .postingStatus ===
+                              'Appointing authority selection'
+                                ? applicant.state
+                                  ? true
+                                  : false
+                                : applicant.isSelectedByAppointingAuthority ===
+                                  1
                                 ? true
                                 : false
-                              : applicant.isSelectedByAppointingAuthority === 1
-                              ? true
-                              : false
-                          }
-                          className={`${
-                            swrApplicants?.data.positionDetails
-                              .postingStatus ===
-                            'Appointing authority selection'
-                              ? applicant.state
+                            }
+                            className={`${
+                              swrApplicants?.data.positionDetails
+                                .postingStatus ===
+                              'Appointing authority selection'
+                                ? applicant.state
+                                  ? ''
+                                  : ''
+                                : applicant.isSelectedByAppointingAuthority ===
+                                  1
                                 ? ''
-                                : ''
-                              : applicant.isSelectedByAppointingAuthority === 1
-                              ? ''
-                              : 'hidden'
-                          } p-2 mr-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
-                        />
-                      </div>
-
-                      <li
-                        onClick={() =>
-                          swrApplicants.data.positionDetails.postingStatus ===
-                          'Appointing authority selection'
-                            ? onSelect(applicant.sequenceNo!)
-                            : {}
-                        }
-                        className={`flex grid-cols-3 items-center  gap-4 w-[95%] hover:cursor-pointer  border-l-transparent py-5 transition-colors ease-in-out hover:border-l-indigo-500 `}
-                      >
-                        <div className="w-[5%] flex justify-center items-center">
-                          {/* <RankingPopover data={applicant} /> */}
-                          {applicant.rank}
-                        </div>
-                        <div className="w-[20%] ">
-                          <p className="font-medium text-gray-600">
-                            {applicant.applicantName}
-                          </p>
+                                : 'hidden'
+                            } m-2 p-2 transition-colors border-2 border-gray-300 rounded-sm cursor-pointer checked:bg-indigo-500 focus:ring-indigo-500 focus:checked:bg-indigo-500`}
+                          />
                         </div>
 
-                        <div className="w-[75%]">
-                          <div className="flex w-full gap-4">
-                            <div className="flex items-center w-full justify-left">
-                              <p className="font-normal">
-                                {isEmpty(applicant.psb_1)
-                                  ? `0.00`
-                                  : applicant.psb_1}
-                              </p>
-                            </div>
-                            <div className="flex items-center w-full justify-left">
-                              <p className="font-normal">
-                                {isEmpty(applicant.psb_2)
-                                  ? `0.00`
-                                  : applicant.psb_2}
-                              </p>
-                            </div>
-                            <div className="flex items-center w-full justify-left">
-                              <p className="font-normal">
-                                {isEmpty(applicant.psb_3)
-                                  ? `0.00`
-                                  : applicant.psb_3}
-                              </p>
-                            </div>
-                            <div className="flex items-center w-full justify-left">
-                              <p className="font-normal">
-                                {isEmpty(applicant.psb_4)
-                                  ? `0.00`
-                                  : applicant.psb_4}
-                              </p>
-                            </div>
-                            <div className="flex items-center w-full justify-left">
-                              <p className="font-normal">
-                                {isEmpty(applicant.psb_5)
-                                  ? `0.00`
-                                  : applicant.psb_5}
-                              </p>
-                            </div>
-                            {selectedPublication.salaryGradeLevel <= 23 && (
-                              <div className="flex items-center w-full justify-left">
-                                <p className="font-normal">
-                                  {isEmpty(applicant.psb_6)
-                                    ? `0.00`
-                                    : applicant.psb_6}
-                                </p>
+                        <div
+                          onClick={() =>
+                            swrApplicants.data.positionDetails.postingStatus ===
+                            'Appointing authority selection'
+                              ? onSelect(applicant.sequenceNo!)
+                              : {}
+                          }
+                          className="flex w-[93%] py-5 col-span-4 grid-cols-4 hover:cursor-pointer"
+                        >
+                          <div className="w-[5%] flex justify-center col-span-1  items-center">
+                            {applicant.rank}
+                          </div>
+
+                          <div className="w-[23%] flex justify-start items-center col-span-1 ">
+                            <p className="font-medium text-gray-600">
+                              {applicant.applicantName}
+                            </p>
+                          </div>
+
+                          <div className="w-[75%] flex items-center col-span-2 justify-center">
+                            {selectedPublication.salaryGradeLevel &&
+                            selectedPublication.salaryGradeLevel <= 23 ? (
+                              <div className="flex w-full grid-cols-2">
+                                <div className="w-[80%] flex col-span-1">
+                                  <div className="flex items-center w-full justify-center ">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_1)
+                                        ? `0.00`
+                                        : applicant.psb_1}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center ">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_2)
+                                        ? `0.00`
+                                        : applicant.psb_2}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center ">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_3)
+                                        ? `0.00`
+                                        : applicant.psb_3}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center ">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_4)
+                                        ? `0.00`
+                                        : applicant.psb_4}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center ">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_5)
+                                        ? `0.00`
+                                        : applicant.psb_5}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center w-full justify-center ">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_6)
+                                        ? `0.00`
+                                        : applicant.psb_6}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center w-[20%] justify-center ">
+                                  <p className="font-normal">
+                                    {applicant.average}
+                                  </p>
+                                </div>
                               </div>
-                            )}
-                            {selectedPublication.salaryGradeLevel >= 25 && (
-                              <div className="flex items-center w-full justify-left">
-                                <p className="font-normal">
-                                  {isEmpty(applicant.psb_7)
-                                    ? `0.00`
-                                    : applicant.psb_7}
-                                </p>
+                            ) : selectedPublication.salaryGradeLevel &&
+                              selectedPublication.salaryGradeLevel === 24 ? (
+                              <div className="flex w-full grid-cols-2">
+                                <div className="flex w-[80%] col-span-1">
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_1)
+                                        ? `0.00`
+                                        : applicant.psb_1}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_2)
+                                        ? `0.00`
+                                        : applicant.psb_2}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_3)
+                                        ? `0.00`
+                                        : applicant.psb_3}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_4)
+                                        ? `0.00`
+                                        : applicant.psb_4}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_5)
+                                        ? `0.00`
+                                        : applicant.psb_5}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_6)
+                                        ? `0.00`
+                                        : applicant.psb_6}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_7)
+                                        ? `0.00`
+                                        : applicant.psb_7}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_8)
+                                        ? `0.00`
+                                        : applicant.psb_8}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center w-[20%] justify-center">
+                                  <p className="font-normal">
+                                    {applicant.average}
+                                  </p>
+                                </div>
                               </div>
-                            )}
-                            {selectedPublication.salaryGradeLevel == 24 && (
-                              <div className="flex items-center w-full justify-left">
-                                <p className="font-normal">
-                                  {isEmpty(applicant.psb_8)
-                                    ? `0.00`
-                                    : applicant.psb_8}
-                                </p>
+                            ) : selectedPublication.salaryGradeLevel &&
+                              selectedPublication.salaryGradeLevel >= 26 ? (
+                              <div className="flex w-full grid-cols-2">
+                                <div className="flex w-[80%] col-span-1">
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_1)
+                                        ? `0.00`
+                                        : applicant.psb_1}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_2)
+                                        ? `0.00`
+                                        : applicant.psb_2}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_3)
+                                        ? `0.00`
+                                        : applicant.psb_3}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_4)
+                                        ? `0.00`
+                                        : applicant.psb_4}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_5)
+                                        ? `0.00`
+                                        : applicant.psb_5}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_6)
+                                        ? `0.00`
+                                        : applicant.psb_6}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center w-full justify-center">
+                                    <p className="font-normal">
+                                      {isEmpty(applicant.psb_7)
+                                        ? `0.00`
+                                        : applicant.psb_7}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center w-[20%] justify-center">
+                                  <p className="font-normal">
+                                    {applicant.average}
+                                  </p>
+                                </div>
                               </div>
-                            )}
-                            <div className="flex items-center w-full justify-left">
-                              <p className="font-normal">{applicant.average}</p>
-                            </div>
+                            ) : null}
                           </div>
                         </div>
-                      </li>
-                      <div className="w-[5%]">
-                        <div className="flex items-center justify-center w-full font-medium text-gray-600 hover:cursor-pointer">
+
+                        <div className="flex col-span-1 items-center justify-center w-[5%] font-medium text-gray-600 hover:cursor-pointer">
                           <ActionDropdown applicant={applicant} />
                         </div>
                       </div>
-                    </div>
+                    </li>
                   );
                 }
               )}
@@ -504,7 +622,7 @@ export const AllSelectionApplicantsList = () => {
           </div>
         ) : (
           <>
-            <div className="flex items-center w-full h-full text-gray-500 uppercase justify-left animate-pulse">
+            <div className="flex items-center w-full h-full text-gray-500 uppercase justify-start animate-pulse">
               No Applicant Data
             </div>
           </>

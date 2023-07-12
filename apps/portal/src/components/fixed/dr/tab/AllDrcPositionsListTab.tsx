@@ -64,7 +64,7 @@ export const AllDrcPositionsListTab = ({
                     <h1 className="text-xl font-medium text-gray-600">
                       {position.positionTitle}
                     </h1>
-                    <p className="text-sm text-black font-semibold">
+                    <p className="text-md text-gray-600 font-semibold">
                       {position.itemNumber}
                     </p>
                     <p className="text-xs text-gray-500">
