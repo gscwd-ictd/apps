@@ -28,12 +28,12 @@ import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Applicant } from '../../../types/applicant.type';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
-import AppSelectionModal from '../../../../src/components/fixed/selection/AppSelectionModal';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
+import AppSelectionModal from '../../../components/fixed/selection/AppSelectionModal';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
@@ -409,11 +409,17 @@ export default function AppPosAppointment({
             title="Appointing Authority Selection"
             subtitle="Select an applicant for the position"
           >
-            <Button onClick={openModal} className="hidden lg:block" size={`md`}>
-              <div className="flex items-center w-full gap-2">
-                <HiSearch /> Find a Publication
-              </div>
-            </Button>
+            {tab === 1 ? (
+              <Button
+                onClick={openModal}
+                className="hidden lg:block"
+                size={`md`}
+              >
+                <div className="flex items-center w-full gap-2">
+                  <HiSearch /> Find a Publication
+                </div>
+              </Button>
+            ) : null}
 
             <Button onClick={openModal} className="block lg:hidden" size={`lg`}>
               <div className="flex items-center w-full gap-2">

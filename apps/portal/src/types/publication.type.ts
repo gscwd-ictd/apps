@@ -1,4 +1,5 @@
 export type Publication = {
+  updatedAt?: string;
   vppId: string;
   postingDate: string | null;
   postingDeadline: Date | null;

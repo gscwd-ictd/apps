@@ -121,6 +121,9 @@ export type SelectionState = {
   applicantList: Array<ApplicantWithScores>;
   setApplicantList: (applicants: Array<ApplicantWithScores>) => void;
   filteredPublicationList: Array<Publication>;
+  setFilteredPublicationList: (
+    filteredPublicationList: Array<Publication>
+  ) => void;
   selectedApplicantDetails: ApplicantDetails;
   setSelectedApplicantDetails: (
     selectedApplicantDetails: ApplicantDetails
@@ -136,11 +139,15 @@ export type SelectionState = {
   tab: number;
   setTab: (tab: number) => void;
   emptyResponseAndError: () => void;
-  // psbScores: {psb}
+  filteredValue: string;
+  setFilteredValue: (filteredValue: string) => void;
 };
 
 export const useAppSelectionStore = create<SelectionState>()(
   devtools((set) => ({
+    filteredValue: '',
+    setFilteredValue: (filteredValue: string) =>
+      set((state) => ({ ...state, filteredValue })),
     response: {
       patchResponseApply: {},
     },
@@ -292,11 +299,11 @@ export const useAppSelectionStore = create<SelectionState>()(
     // setPublicationList: (publicationList: Array<Publication>) => {
     //   set((state) => ({ ...state, publicationList }));
     // },
-    // setFilteredPublicationList: (
-    //   filteredPublicationList: Array<Publication>
-    // ) => {
-    //   set((state) => ({ ...state, filteredPublicationList }));
-    // },
+    setFilteredPublicationList: (
+      filteredPublicationList: Array<Publication>
+    ) => {
+      set((state) => ({ ...state, filteredPublicationList }));
+    },
     setPublicationDetails: (publicationDetails: PublicationDetails) => {
       set((state) => ({ ...state, publicationDetails }));
     },
@@ -341,6 +348,7 @@ export const useAppSelectionStore = create<SelectionState>()(
       set((state) => ({
         ...state,
         publicationList: response,
+        filteredPublicationList: response,
         loading: {
           ...state.loading,
           loadingPublicationList: loading,

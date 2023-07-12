@@ -93,9 +93,9 @@ const AppEndModal: FunctionComponent = () => {
       steady
     >
       <Modal.Header>
-        <div className="flex w-full px-5 justifty-between">
-          <div>
-            <h3 className="text-xl font-semibold text-gray-700 md:text-2xl">
+        <div className="flex w-full justifty-between">
+          <div className="flex flex-col px-5 w-full">
+            <h3 className="text-xl  font-semibold text-gray-700 md:text-2xl">
               {modal.page === 1
                 ? 'Applicant Endorsement'
                 : modal.page === 2
@@ -112,6 +112,11 @@ const AppEndModal: FunctionComponent = () => {
                 : null}
             </p>
           </div>
+          <i
+            className="bx bx-x text-2xl"
+            role="button"
+            onClick={modalCancel}
+          ></i>
         </div>
       </Modal.Header>
       <Modal.Body>

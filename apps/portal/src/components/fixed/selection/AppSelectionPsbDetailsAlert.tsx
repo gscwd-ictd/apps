@@ -128,23 +128,25 @@ export const AppSelectionPsbDetailsAlert = ({
                     <div key={psb.psbNo}>
                       {!isEmpty(psb.psbName) ? (
                         <>
-                          <section className="bg-indigo-900 rounded-md m-10 px-5 py-4">
+                          <section className="bg-slate-300 hover:bg-slate-200 hover:scale-105 hover:cursor-pointer transition-all  rounded-tl-xl rounded-br-xl m-10 px-5 py-4">
                             <div className="flex flex-col">
-                              <div className="text-white text-2xl">
+                              <div className="text-gray-800 text-2xl">
                                 <span className="font-semibold">
                                   {psb.psbName}
                                 </span>
                               </div>
-                              <div className="text-white text-xl flex gap-2">
-                                <span className="text-gray-200 font-light">
+                              <div className="text-xl flex gap-2">
+                                <span className="text-gray-700">
                                   Interview Rating:
                                 </span>
-                                <span>{psb.score}</span>
+                                <span className="text-gray-700 font-medium">
+                                  {psb.score}
+                                </span>
                               </div>
-                              <div className="text-white pt-5">
+                              <div className="text-gray-700 pt-5">
                                 {!isEmpty(psb.remarks) ? (
                                   <div className="text-lg flex flex-col gap-2">
-                                    <span className="italic font-extralight px-2 text-justify">
+                                    <span className="italic font-light px-2 text-justify">
                                       ❝ {psb.remarks} ❞
                                     </span>
                                   </div>

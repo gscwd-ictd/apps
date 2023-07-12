@@ -57,10 +57,10 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
     <>
       <Popover.Root>
         <Popover.Trigger
-          className="h-full border border-gray-400 whitespace-nowrap rounded bg-slate-300 px-3 py-[0.2rem] text-gray-700 transition-colors ease-in-out hover:bg-slate-200 active:bg-slate-300"
+          className="h-full select-none border border-gray-400 whitespace-nowrap rounded bg-slate-500 px-3 py-[0.2rem] transition-colors ease-in-out hover:bg-slate-400 active:bg-slate-600"
           asChild
         >
-          <span>...</span>
+          <span className="text-white">...</span>
         </Popover.Trigger>
 
         <Popover.Content
