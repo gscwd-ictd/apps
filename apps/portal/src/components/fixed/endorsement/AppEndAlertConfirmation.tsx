@@ -14,7 +14,11 @@ export const AppEndAlertConfirmation = ({
 
   return (
     <>
+<<<<<<< HEAD
       <div className="flex gap-2 items-center">
+=======
+      <div className="flex items-center gap-2">
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
         <HiExclamationCircle
           className="text-yellow-500 animate-pulse"
           size={30}
@@ -25,7 +29,11 @@ export const AppEndAlertConfirmation = ({
       <hr />
       <div className="flex-row items-center w-full h-auto rounded text-slate-700">
         {selectedApplicants > 0 && (
+<<<<<<< HEAD
           <div className="flex text-xl mt-5">
+=======
+          <div className="flex mt-5 text-xl">
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
             <div className="flex flex-col items-center">
               <p className="w-full text-lg font-light text-left">
                 You have selected
@@ -43,7 +51,11 @@ export const AppEndAlertConfirmation = ({
             </div>
           </div>
         )}
+<<<<<<< HEAD
         <div className="w-full mt-5 text-md font-light text-left ">
+=======
+        <div className="w-full mt-5 font-light text-left text-md ">
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
           <div>This action cannot be undone.</div>
           <div>Do you want to proceed?</div>
         </div>

@@ -53,7 +53,9 @@ export const AllPublicationListTab = ({
                     {item.positionTitle}
                   </h1>
                   {/* <p className="text-gray-500 text-md"></p> */}
-                  <p className="text-sm text-gray-500">{item.itemNumber}</p>
+                  <p className="text-md text-gray-600 font-semibold">
+                    {item.itemNumber}
+                  </p>
                   <p className="text-xs text-gray-500">
                     {item.placeOfAssignment}
                   </p>

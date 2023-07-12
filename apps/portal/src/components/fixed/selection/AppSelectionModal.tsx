@@ -18,44 +18,38 @@ export const AppSelectionModal = ({
   setModalState,
   closeModalAction,
 }: AppSelectionModalProps) => {
-  const router = useRouter();
-
   const publicationDetails = useAppSelectionStore(
     (state) => state.publicationDetails
   );
 
   // get state for the modal
-  const modal = useAppSelectionStore((state) => state.modal);
-
-  // set state for the modal
-  const setModal = useAppSelectionStore((state) => state.setModal);
-
-  // get the selected applicants state
-  const selectedApplicants = useAppSelectionStore(
-    (state) => state.selectedApplicants
-  );
-
-  // set the selected applicants state
-  const setSelectedApplicants = useAppSelectionStore(
-    (state) => state.setSelectedApplicants
-  );
-
-  // confirmation alert
-  const alert = useAppSelectionStore((state) => state.alert);
-
-  // set confirmation alert
-  const setAlert = useAppSelectionStore((state) => state.setAlert);
-
-  // get the selected publication id state
-  const selectedPublication = useAppSelectionStore(
-    (state) => state.selectedPublication
-  );
+  const {
+    alert,
+    modal,
+    selectedApplicants,
+    selectedPublication,
+    setAlert,
+    setFilteredValue,
+  } = useAppSelectionStore((state) => ({
+    modal: state.modal,
+    alert: state.alert,
+    selectedApplicants: state.selectedApplicants,
+    selectedPublication: state.selectedPublication,
+    setAlert: state.setAlert,
+    setFilteredValue: state.setFilteredValue,
+  }));
 
   // confirm action for modal
   const modalAction = async () => {
     if (modal.page === 2) {
       setAlert({ ...alert, isOpen: true });
     }
+  };
+
+  // close modal action
+  const closeModalFunction = () => {
+    setFilteredValue('');
+    closeModalAction();
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -69,6 +63,7 @@ export const AppSelectionModal = ({
         steady
       >
         <Modal.Header>
+<<<<<<< HEAD
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 text-xl">
               {modal.page === 1
@@ -82,6 +77,33 @@ export const AppSelectionModal = ({
                 : null}
             </div>
           </h3>
+=======
+          <div className="w-full flex justify-between">
+            <h3 className="px-5 font-semibold text-gray-700 flex flex-col w-full ">
+              <div className=" text-2xl">Appointing Authority Selection</div>
+              <div className="text-md font-normal text-gray-500">
+                {modal.page === 1
+                  ? 'Select a publication'
+                  : modal.page === 2 &&
+                    !isEmpty(selectedPublication) &&
+                    selectedPublication.postingStatus ===
+                      PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION
+                  ? 'Select Applicant/s'
+                  : modal.page === 2 &&
+                    !isEmpty(selectedPublication) &&
+                    selectedPublication.postingStatus ===
+                      PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
+                  ? 'Selection Done'
+                  : null}
+              </div>
+            </h3>
+            <i
+              role="button"
+              className="bx bx-x text-2xl"
+              onClick={closeModalFunction}
+            ></i>
+          </div>
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
         </Modal.Header>
 
         <Modal.Body>
@@ -91,8 +113,13 @@ export const AppSelectionModal = ({
           <div className="flex justify-end gap-2">
             {modal.page !== 4 ? (
               <button
+<<<<<<< HEAD
                 className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-gray-100 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
                 onClick={closeModalAction}
+=======
+                className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+                onClick={closeModalFunction}
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
               >
                 {modal.page === 1 ? 'Close' : 'Cancel'}
               </button>

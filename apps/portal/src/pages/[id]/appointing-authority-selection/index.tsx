@@ -28,12 +28,12 @@ import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useAppSelectionStore } from '../../../store/selection.store';
 import { Applicant } from '../../../types/applicant.type';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
-import AppSelectionModal from '../../../../src/components/fixed/selection/AppSelectionModal';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
+import AppSelectionModal from '../../../components/fixed/selection/AppSelectionModal';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
@@ -387,20 +387,19 @@ export default function AppPosAppointment({
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             {alert.page === 1 && (
-              <div className="w-[5rem]">
-                <Button
-                  variant="info"
-                  onClick={() => setAlert({ ...alert, isOpen: false })}
-                >
-                  No
-                </Button>
-              </div>
+              <button
+                onClick={() => setAlert({ ...alert, isOpen: false })}
+                className="w-[5rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+              >
+                No
+              </button>
             )}
-            <div className="min-w-[5rem] max-w-auto">
-              <Button onClick={alertAction}>
-                {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
-              </Button>
-            </div>
+            <button
+              onClick={alertAction}
+              className="min-w-[5rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+            >
+              {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
+            </button>
           </div>
         </Alert.Footer>
       </Alert>
@@ -411,11 +410,17 @@ export default function AppPosAppointment({
             title="Appointing Authority Selection"
             subtitle="Select an applicant for the position"
           >
-            <Button onClick={openModal} className="hidden lg:block" size={`md`}>
-              <div className="flex items-center w-full gap-2">
-                <HiSearch /> Find a Publication
-              </div>
-            </Button>
+            {tab === 1 ? (
+              <Button
+                onClick={openModal}
+                className="hidden lg:block"
+                size={`md`}
+              >
+                <div className="flex items-center w-full gap-2">
+                  <HiSearch /> Find a Publication
+                </div>
+              </Button>
+            ) : null}
 
             <Button onClick={openModal} className="block lg:hidden" size={`lg`}>
               <div className="flex items-center w-full gap-2">
@@ -471,9 +476,14 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
     const employeeDetails = getUserDetails();
     // check if user role is rank_and_file
     if (
+<<<<<<< HEAD:apps/portal/src/pages/[id]/applicant-selection/index.tsx
       employeeDetails.employmentDetails.userRole !== UserRole.GENERAL_MANAGER &&
       employeeDetails.employmentDetails.userRole !==
         UserRole.OIC_GENERAL_MANAGER
+=======
+      employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER &&
+      employeeDetails.employmentDetails.userRole !== Roles.OIC_GENERAL_MANAGER
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8:apps/portal/src/pages/[id]/appointing-authority-selection/index.tsx
     ) {
       // if true, the employee is not allowed to access this page
       return {

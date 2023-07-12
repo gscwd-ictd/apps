@@ -32,13 +32,13 @@ export async function UpdateAvailableDrcs(
 
   const tempCoreCheckedDnrs: Array<DutyResponsibility> = checkedDnrs.core;
 
-  // push
-  tempCoreCheckedDnrs.push(...selectedDnrs.core);
+  //! previously push, changed to unshift
+  tempCoreCheckedDnrs.unshift(...selectedDnrs.core);
 
-  // sort
-  tempCoreCheckedDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-    a.description.localeCompare(b.description)
-  );
+  //! removed sorting by description
+  // tempCoreCheckedDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+  //   a.description.localeCompare(b.description)
+  // );
 
   // map and assign new sequence
   tempCoreCheckedDnrs.map((dr: DutyResponsibility, index: number) => {
@@ -47,13 +47,13 @@ export async function UpdateAvailableDrcs(
 
   const tempSupportCheckedDnrs: Array<DutyResponsibility> = checkedDnrs.support;
 
-  // push
-  tempSupportCheckedDnrs.push(...selectedDnrs.support);
+  //! previously push, changed to unshift
+  tempSupportCheckedDnrs.unshift(...selectedDnrs.support);
 
-  // sort
-  tempSupportCheckedDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-    a.description.localeCompare(b.description)
-  );
+  //! removed sorting by description
+  // tempSupportCheckedDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+  //   a.description.localeCompare(b.description)
+  // );
 
   // re-index
   tempSupportCheckedDnrs.map((dr: DutyResponsibility, index: number) => {

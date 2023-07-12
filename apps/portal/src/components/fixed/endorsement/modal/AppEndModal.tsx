@@ -93,9 +93,9 @@ const AppEndModal: FunctionComponent = () => {
       steady
     >
       <Modal.Header>
-        <div className="flex w-full px-5 justifty-between">
-          <div>
-            <h3 className="text-xl md:text-2xl font-semibold text-gray-700">
+        <div className="flex w-full justifty-between">
+          <div className="flex flex-col px-5 w-full">
+            <h3 className="text-xl  font-semibold text-gray-700 md:text-2xl">
               {modal.page === 1
                 ? 'Applicant Endorsement'
                 : modal.page === 2
@@ -112,6 +112,11 @@ const AppEndModal: FunctionComponent = () => {
                 : null}
             </p>
           </div>
+          <i
+            className="bx bx-x text-2xl"
+            role="button"
+            onClick={modalCancel}
+          ></i>
         </div>
       </Modal.Header>
       <Modal.Body>
@@ -122,7 +127,11 @@ const AppEndModal: FunctionComponent = () => {
           {modal.page !== 4 ? (
             <button
               onClick={modalCancel}
+<<<<<<< HEAD
               className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-gray-100 hover:shadow-lg  active:shadow-md active:ring-0 active:scale-95"
+=======
+              className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+>>>>>>> 3a130322bebcc901d48e518732cbe747057ea8c8
             >
               {modal.page === 1 ? 'Close' : 'Cancel'}
             </button>

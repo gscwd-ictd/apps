@@ -24,7 +24,7 @@ export const ForApprovalPrfList: FunctionComponent = () => {
                 Click on each request item to view more details.
               </p>
             </header>
-            <main className="scale-95 grid grid-cols-2 gap-6">
+            <main className="grid grid-cols-2 gap-6">
               <ForApprovalPrfCard prf={forApprovalPrfs} />
             </main>
           </>

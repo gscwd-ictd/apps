@@ -19,10 +19,7 @@ export const AllSelectionApplicantCounter = () => {
       PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION ? (
         <>
           {applicantList.length > 0 ? (
-            <div className="flex w-full justify-between items-center pb-5">
-              <label className="font-medium text-gray-500 text-sm">
-                Select applicants for the position
-              </label>
+            <div className="flex w-full justify-end items-center pb-5 px-2">
               <div className="text-gray-600 font-medium">
                 <div className="flex gap-2">
                   <div
@@ -30,6 +27,9 @@ export const AllSelectionApplicantCounter = () => {
                       selectedApplicants.length >
                       parseInt(selectedPublication.numberOfPositions!)
                         ? 'text-red-500'
+                        : selectedApplicants.length ===
+                          parseInt(selectedPublication.numberOfPositions!)
+                        ? 'text-green-700'
                         : 'text-gray-700'
                     }`}
                   >
@@ -44,9 +44,12 @@ export const AllSelectionApplicantCounter = () => {
                           {selectedApplicants.length}
                         </span>
                       </>
-                    ) : (
-                      selectedApplicants.length
-                    )}{' '}
+                    ) : selectedApplicants.length ===
+                      parseInt(selectedPublication.numberOfPositions!) ? (
+                      <span className="text-green-700">
+                        {selectedApplicants.length}
+                      </span>
+                    ) : null}{' '}
                     / {selectedPublication.numberOfPositions}
                   </div>
                 </div>
