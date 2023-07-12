@@ -14,6 +14,7 @@ import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { employeeDummy } from 'apps/portal/src/types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import {
   getUserDetails,
@@ -196,6 +197,20 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
+    // check if user role is rank_and_file or job order = kick out
+    if (
+      employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+    ) {
+      // if true, the employee is not allowed to access this page
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${employeeDetails.user._id}`,
+        },
+      };
+    } else {
+      return { props: { employeeDetails } };
+    }
   }
 );

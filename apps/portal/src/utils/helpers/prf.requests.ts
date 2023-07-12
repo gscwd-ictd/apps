@@ -4,16 +4,33 @@ import { GetServerSidePropsContext } from 'next';
 import { CreatedPrf, Position, RequestedPosition } from '../../types/prf.types';
 import { post } from '../../utils/helpers/http-request';
 
-const url = process.env.NEXT_PUBLIC_HRIS_URL;
+const API_URL = process.env.NEXT_PUBLIC_HRIS_URL;
+
+const axiosApi = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+});
 
 export const getPendingPrfs = async (employeeId: string) => {
-  const { data } = await axios.get(`${url}/prf/${employeeId}?status=pending`);
+  const { data } = await axios.get(
+    `${API_URL}/prf/${employeeId}?status=pending`
+  );
+
+  return data;
+};
+
+export const getDisapprovedPrfs = async (employeeId: string) => {
+  const { data } = await axios.get(
+    `${API_URL}/prf/${employeeId}?status=disapproved`
+  );
 
   return data;
 };
 
 export const getForApprovalPrfs = async (employeeId: string) => {
-  const { data } = await axios.get(`${url}/prf-trail/employee/${employeeId}`);
+  const { data } = await axios.get(
+    `${API_URL}/prf-trail/employee/${employeeId}`
+  );
 
   return data;
 };
@@ -22,7 +39,7 @@ export const getPrfById = async (
   prfId: string,
   context: GetServerSidePropsContext
 ) => {
-  const { data } = await axios.get(`${url}/prf/details/${prfId}`, {
+  const { data } = await axios.get(`${API_URL}/prf/details/${prfId}`, {
     // make sure to make use of session cookie
     withCredentials: true,
 
@@ -37,7 +54,7 @@ export const getPrfTrailByPrfId = async (
   prfId: string,
   context: GetServerSidePropsContext
 ) => {
-  const { data } = await axios.get(`${url}/prf-trail/${prfId}`, {
+  const { data } = await axios.get(`${API_URL}/prf-trail/${prfId}`, {
     // make sure to make use of session cookie
     withCredentials: true,
 
@@ -48,23 +65,38 @@ export const getPrfTrailByPrfId = async (
   return data;
 };
 
-export const approvePrf = async (
-  prfId: string,
-  status: string,
-  employeeId: string,
-  remarks: string
-) => {
-  const { data } = await axios.patch(`${url}/prf-trail/${prfId}`, {
-    status,
-    employeeId,
-    remarks,
-  });
+//old prf patch
+// export const approvePrf = async (
+//   prfId: string,
+//   status: string,
+//   employeeId: string,
+//   remarks: string
+// ) => {
+//   const { data } = await axios.patch(`${API_URL}/prf-trail/${prfId}`, {
+//     status,
+//     employeeId,
+//     remarks,
+//   });
 
-  return data;
-};
+//   return data;
+// };
+
+//new prf patch with zustand endpoint
+export const patchPrfRequest = async (url: string, data: any, config = {}) =>
+  await axiosApi
+    .patch(url, { ...data }, { ...config })
+    .then((response) => {
+      return { error: false, result: response.data };
+    })
+    .catch((error) => {
+      if (error.message === 'Network Error')
+        return { error: true, result: `Cannot connect to the server.` };
+
+      return { error: true, result: error.response.data.message };
+    });
 
 export const savePrf = async (prfData: CreatedPrf) =>
-  await post(`${url}/prf`, prfData);
+  await post(`${API_URL}/prf`, prfData);
 
 export const createPrf = (
   selectedPositions: Array<Position>,

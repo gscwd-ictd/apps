@@ -38,6 +38,7 @@ import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { Roles } from 'apps/portal/src/utils/constants/user-roles';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function AppPosAppointment({
   employeeDetails,
@@ -469,7 +470,11 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async (context: GetServerSidePropsContext) => {
     const employeeDetails = getUserDetails();
     // check if user role is rank_and_file
-    if (employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER) {
+    if (
+      employeeDetails.employmentDetails.userRole !== UserRole.GENERAL_MANAGER &&
+      employeeDetails.employmentDetails.userRole !==
+        UserRole.OIC_GENERAL_MANAGER
+    ) {
       // if true, the employee is not allowed to access this page
       return {
         redirect: {
