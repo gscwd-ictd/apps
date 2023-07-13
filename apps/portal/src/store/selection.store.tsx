@@ -88,16 +88,18 @@ export type SelectionState = {
   getPsbDetailsFail: (error: string) => void;
   psbDetails: Array<PsbDetails>;
   setPsbDetails: (psbDetails: Array<PsbDetails>) => void;
-  appSelectionModalIsOpen: boolean;
-  setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => void;
+
   pds: Pds;
   setPds: (pds: Pds) => void;
   showPdsAlert: boolean;
   setShowPdsAlert: (showPdsAlert: boolean) => void;
   showPsbDetailsAlert: boolean;
   setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) => void;
-  alert: AlertState;
-  setAlert: (alert: AlertState) => void;
+  alertConfirmationIsOpen: boolean;
+  setAlertConfirmationIsOpen: (alertConfirmation: boolean) => void;
+  alertInfoIsOpen: boolean;
+  setAlertInfoIsOpen: (alertInfoIsOpen: boolean) => void;
+  errorPatch: boolean;
   modal: ModalState;
   setModal: (modal: ModalState) => void;
   action: string;
@@ -107,7 +109,6 @@ export type SelectionState = {
   publicationList: Array<Publication>;
   dropdownAction: string;
   setDropdownAction: (dropdownAction: string) => void;
-  // setPublicationList: (publications: Array<Publication>) => void;
   selectedPublicationId: string;
   setSelectedPublicationId: (value: string) => void;
   selectedPublication: Publication;
@@ -240,11 +241,6 @@ export const useAppSelectionStore = create<SelectionState>()(
     showPsbDetailsAlert: false,
     setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) =>
       set((state) => ({ ...state, showPsbDetailsAlert })),
-    appSelectionModalIsOpen: false,
-
-    setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => {
-      set((state) => ({ ...state, appSelectionModalIsOpen }));
-    },
 
     alert: { isOpen: false, page: 1 },
     modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
@@ -264,6 +260,9 @@ export const useAppSelectionStore = create<SelectionState>()(
     pendingPublicationList: [],
     fulfilledPublicationList: [],
     isLoading: false,
+    alertConfirmationIsOpen: false,
+    alertInfoIsOpen: false,
+    errorPatch: false,
     setAlert: (alert: AlertState) => {
       set((state) => ({ ...state, alert }));
     },
@@ -296,9 +295,6 @@ export const useAppSelectionStore = create<SelectionState>()(
     setApplicantList: (applicantList: Array<ApplicantWithScores>) => {
       set((state) => ({ ...state, applicantList }));
     },
-    // setPublicationList: (publicationList: Array<Publication>) => {
-    //   set((state) => ({ ...state, publicationList }));
-    // },
     setFilteredPublicationList: (
       filteredPublicationList: Array<Publication>
     ) => {
@@ -310,14 +306,7 @@ export const useAppSelectionStore = create<SelectionState>()(
     setApplicantScores: (applicantScores: Array<PsbScores>) => {
       set((state) => ({ ...state, applicantScores }));
     },
-    // setPendingPublicationList: (publicationList: Array<Publication>) => {
-    //   set((state) => ({ ...state, publicationList }));
-    // },
-    // setFulfilledPublicationList: (
-    //   fulfilledPublicationList: Array<Publication>
-    // ) => {
-    //   set((state) => ({ ...state, fulfilledPublicationList }));
-    // },
+
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
     },
@@ -471,6 +460,7 @@ export const useAppSelectionStore = create<SelectionState>()(
           ...state.errors,
           errorResponse: '',
         },
+        errorPatch: false,
       }));
     },
     patchPublicationSuccess: (response) => {
@@ -484,6 +474,10 @@ export const useAppSelectionStore = create<SelectionState>()(
           ...state.loading,
           loadingResponse: false,
         },
+        errorPatch: false,
+        alertConfirmationIsOpen: false,
+        alertInfoIsOpen: true,
+        modal: { ...state.modal, isOpen: false },
       }));
     },
     patchPublicationFail: (error: string) => {
@@ -497,8 +491,17 @@ export const useAppSelectionStore = create<SelectionState>()(
           ...state.errors,
           errorResponse: error,
         },
+        errorPatch: true,
+        alertConfirmationIsOpen: false,
+        alertInfoIsOpen: true,
       }));
     },
+
+    setAlertConfirmationIsOpen: (alertConfirmationIsOpen: boolean) =>
+      set((state) => ({ ...state, alertConfirmationIsOpen })),
+
+    setAlertInfoIsOpen: (alertInfoIsOpen: boolean) =>
+      set((state) => ({ ...state, alertInfoIsOpen })),
 
     emptyResponseAndError: () => {
       set((state) => ({

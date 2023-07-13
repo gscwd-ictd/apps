@@ -1,55 +1,47 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
-import { useRouter } from 'next/router';
+import { Modal } from '@gscwd-apps/oneui';
 import { AppSelectionModalController } from './AppSelectionListController';
 import { useAppSelectionStore } from '../../../../src/store/selection.store';
 import { PublicationPostingStatus } from '../../../../src/types/publication.type';
 import { isEmpty } from 'lodash';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
-type AppSelectionModalProps = {
-  modalState: boolean;
-  setModalState: React.Dispatch<React.SetStateAction<boolean>>;
-  closeModalAction: () => void;
-};
-
-export const AppSelectionModal = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}: AppSelectionModalProps) => {
+export const AppSelectionModal = () => {
   const publicationDetails = useAppSelectionStore(
     (state) => state.publicationDetails
   );
 
   // get state for the modal
   const {
-    alert,
     modal,
     selectedApplicants,
     selectedPublication,
-    setAlert,
+    setModal,
+    setAlertConfirmationIsOpen,
     setFilteredValue,
+    setSelectedApplicants,
   } = useAppSelectionStore((state) => ({
     modal: state.modal,
-    alert: state.alert,
+    setModal: state.setModal,
+    setAlertConfirmationIsOpen: state.setAlertConfirmationIsOpen,
     selectedApplicants: state.selectedApplicants,
     selectedPublication: state.selectedPublication,
-    setAlert: state.setAlert,
+    setSelectedApplicants: state.setSelectedApplicants,
     setFilteredValue: state.setFilteredValue,
   }));
 
   // confirm action for modal
   const modalAction = async () => {
     if (modal.page === 2) {
-      setAlert({ ...alert, isOpen: true });
+      setAlertConfirmationIsOpen(true);
     }
   };
 
   // close modal action
   const closeModalFunction = () => {
     setFilteredValue('');
-    closeModalAction();
+    setSelectedApplicants([]);
+    setModal({ ...modal, isOpen: false, page: 1 });
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -57,8 +49,8 @@ export const AppSelectionModal = ({
   return (
     <>
       <Modal
-        open={modalState}
-        setOpen={setModalState}
+        open={modal.isOpen}
+        setOpen={() => setModal({ ...modal })}
         size={windowWidth > 1024 ? (modal.page === 2 ? 'xl' : 'lg') : 'full'}
         steady
       >
