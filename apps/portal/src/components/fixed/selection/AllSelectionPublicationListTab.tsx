@@ -4,7 +4,6 @@ import {
   Publication,
   PublicationPostingStatus,
 } from '../../../types/publication.type';
-import { useEffect } from 'react';
 import { isEmpty } from 'lodash';
 
 type AllSelectionPublicationListTabProps = {
@@ -16,16 +15,6 @@ export const AllSelectionPublicationListTab = ({
   publications,
   tab,
 }: AllSelectionPublicationListTabProps) => {
-  const {
-    appSelectionModalIsOpen,
-
-    setAppSelectionModalIsOpen,
-  } = useAppSelectionStore((state) => ({
-    appSelectionModalIsOpen: state.appSelectionModalIsOpen,
-
-    setAppSelectionModalIsOpen: state.setAppSelectionModalIsOpen,
-  }));
-
   const modal = useAppSelectionStore((state) => state.modal);
 
   const setSelectedPublication = useAppSelectionStore(
@@ -42,7 +31,6 @@ export const AllSelectionPublicationListTab = ({
     setSelectedPublication(publication);
     setSelectedPublicationId(publication.vppId);
     setModal({ ...modal, page: 2, isOpen: true });
-    setAppSelectionModalIsOpen(true);
   };
 
   return (
