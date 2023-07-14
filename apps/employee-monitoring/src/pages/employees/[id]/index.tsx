@@ -19,6 +19,7 @@ import DailyTimeRecordPdfModal from 'apps/employee-monitoring/src/components/mod
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { EmployeeDtrTable } from 'apps/employee-monitoring/src/components/tables/EmployeeDtrTable';
+import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
 
 export default function Index({
   employeeData,
@@ -54,7 +55,7 @@ export default function Index({
   }, [postResponse]);
 
   useEffect(() => {
-    setEmployeeDtr([]);
+    setEmployeeDtr({} as EmployeeDtrWithScheduleAndSummary);
   }, []);
 
   return (

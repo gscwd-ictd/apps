@@ -287,7 +287,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
       mutateDisapprovedPrfDetails();
       setTimeout(() => {
         emptyResponseAndError();
-      }, 500);
+      }, 2000);
       if (swrForApprovalPrfDetailsList.length <= 1) {
         setTimeout(() => {
           router.reload();

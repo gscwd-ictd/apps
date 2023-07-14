@@ -228,11 +228,7 @@ export const OIReferences = (): JSX.Element => {
       >
         <div
           className={`flex flex-col items-end justify-end ${
-            referencesOnEdit
-              ? '  visible'
-              : !hasPds
-              ? 'visible lg:-mt-6 lg:pb-6'
-              : 'hidden'
+            referencesOnEdit ? '  visible' : !hasPds ? 'visible' : 'hidden'
           }`}
         >
           <Button

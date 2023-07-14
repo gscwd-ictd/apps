@@ -5,6 +5,8 @@ import { EmployeeRowData } from '../utils/types/table-row-types/monitoring/emplo
 import { devtools } from 'zustand/middleware';
 import {
   EmployeeDtrWithSchedule,
+  EmployeeDtrWithScheduleAndSummary,
+  EmployeeDtrWithSummary,
   EmployeeTimeLog,
 } from 'libs/utils/src/lib/types/dtr.type';
 
@@ -66,11 +68,11 @@ export type DailyTimeRecordState = {
   loading: LoadingDtrEmployee;
   error: ErrorDtrEmployee;
   employeeSchedule: ResponseDtrEmployee;
-  employeeDtr: Array<EmployeeDtrWithSchedule>;
-  setEmployeeDtr: (employeeDtr: Array<EmployeeDtrWithSchedule>) => void;
+  employeeDtr: EmployeeDtrWithScheduleAndSummary;
+  setEmployeeDtr: (employeeDtr: EmployeeDtrWithScheduleAndSummary) => void;
 
   getEmployeeDtr: () => void;
-  getEmployeeDtrSuccess: (response: Array<EmployeeDtrWithSchedule>) => void;
+  getEmployeeDtrSuccess: (response: EmployeeDtrWithScheduleAndSummary) => void;
   getEmployeeDtrFail: (error: string) => void;
 
   getDtrEmployees: () => void;
@@ -121,9 +123,9 @@ export const useDtrStore = create<DailyTimeRecordState>()(
 
     selectedMonth: '--',
     selectedYear: '--',
-    employeeDtr: [],
+    employeeDtr: { dtrDays: [], summary: {} as EmployeeDtrWithSummary },
 
-    setEmployeeDtr: (response: Array<EmployeeDtrWithSchedule>) =>
+    setEmployeeDtr: (response: EmployeeDtrWithScheduleAndSummary) =>
       set((state) => ({ ...state, employeeDtr: response })),
 
     setDate: (value: string) => set((state) => ({ ...state, date: value })),
@@ -165,11 +167,11 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         ...state,
         loading: { ...state.loading, loadingEmployeeDtr: true },
         error: { ...state.error, errorEmployeeDtr: '' },
-        employeeDtr: [],
+        employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
         // isDateSearched: true,
       })),
 
-    getEmployeeDtrSuccess: (response: Array<EmployeeDtrWithSchedule>) =>
+    getEmployeeDtrSuccess: (response: EmployeeDtrWithScheduleAndSummary) =>
       set((state) => ({
         ...state,
         loading: { ...state.loading, loadingEmployeeDtr: false },

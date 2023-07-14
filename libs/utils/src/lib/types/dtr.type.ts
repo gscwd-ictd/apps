@@ -24,3 +24,19 @@ export type EmployeeDtrWithSchedule = {
   schedule: Schedule & EmployeeRestDay; // schedule with rest days
   holidayType: HolidayTypes | null; // recently added
 };
+
+export type EmployeeDtrWithSummary = {
+  noOfTimesLate: number;
+  totalMinutesLate: number;
+  lateDates: Array<number> | null;
+  noOfTimesUndertime: number;
+  totalMinutesUndertime: number;
+  undertimeDates: Array<number> | null;
+  noOfTimesHalfDay: number;
+  noAttendance: Array<number> | null;
+};
+
+export type EmployeeDtrWithScheduleAndSummary = {
+  summary: EmployeeDtrWithSummary;
+  dtrDays: Array<EmployeeDtrWithSchedule>;
+};

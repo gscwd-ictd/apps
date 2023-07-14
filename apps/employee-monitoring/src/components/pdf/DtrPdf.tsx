@@ -9,7 +9,10 @@ import {
   View,
   Image,
 } from '@react-pdf/renderer';
-import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import {
+  EmployeeDtrWithSchedule,
+  EmployeeDtrWithScheduleAndSummary,
+} from 'libs/utils/src/lib/types/dtr.type';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
@@ -34,7 +37,7 @@ type EmployeeData = {
 };
 
 type DtrPdfProps = {
-  employeeDtr: Array<EmployeeDtrWithSchedule>;
+  employeeDtr: EmployeeDtrWithScheduleAndSummary;
   employeeData: EmployeeData;
 };
 
@@ -262,13 +265,14 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                     <Text style={{ fontSize: 9, paddingTop: 10 }}>
                       As of{' '}
                       <Text>
-                        {dayjs(employeeDtr[0].day).format('MM/DD/YYYY')}
+                        {dayjs(employeeDtr.dtrDays[0].day).format('MM/DD/YYYY')}
                       </Text>{' '}
                       to{' '}
                       <Text>
-                        {dayjs(employeeDtr[employeeDtr.length - 1].day).format(
-                          'MM/DD/YYYY'
-                        )}
+                        {dayjs(
+                          employeeDtr.dtrDays[employeeDtr.dtrDays.length - 1]
+                            .day
+                        ).format('MM/DD/YYYY')}
                       </Text>
                     </Text>
 
@@ -465,7 +469,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                   <View>
                     {/* For Office Schedule */}
                     {isOfficeSchedule
-                      ? employeeDtr.map((log, index) => {
+                      ? employeeDtr.dtrDays.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';
@@ -683,7 +687,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
 
                     {/* For Field/Pumping Station Schedule | WAITING FOR UPDATES*/}
                     {isFieldStationSchedule
-                      ? employeeDtr.map((log, index) => {
+                      ? employeeDtr.dtrDays.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';

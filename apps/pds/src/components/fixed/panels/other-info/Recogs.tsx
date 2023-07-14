@@ -171,21 +171,21 @@ export const OIRecogs = (): JSX.Element => {
 
   return (
     <>
-      <Card title="Non-academic Distinctions & Recognitions" subtitle="">
-        <>
-          <div className="flex flex-col items-end justify-end w-full pb-4 -mt-10">
+      <Card
+        title="Non-academic Distinctions & Recognitions"
+        subtitle=""
+        remarks={
+          <div className="">
             {allowAddRecog || allowEditRecog || allowDeleteRecog ? (
               <RecognitionsAlert setInitialValues={setInitialValues} />
             ) : null}
           </div>
-
+        }
+      >
+        <>
           <div
-            className={`flex flex-col items-end justify-end pt-6 ${
-              recognitionsOnEdit
-                ? 'visible  mt-6'
-                : !hasPds
-                ? 'visible -mt-6 pb-6 pr-6'
-                : 'hidden'
+            className={`flex flex-col items-end justify-end ${
+              recognitionsOnEdit ? 'visible' : !hasPds ? 'visible' : 'hidden'
             }`}
           >
             {allowAddRecog ? (
@@ -309,7 +309,7 @@ export const OIRecogs = (): JSX.Element => {
                     <TableHeader
                       label="Title"
                       headerWidth="w-[85%]"
-                      className="px-28"
+                      className="pl-4"
                       textSize="sm"
                     />
                     <TableHeader
@@ -328,13 +328,13 @@ export const OIRecogs = (): JSX.Element => {
                           return (
                             <tr
                               key={recogIdx}
-                              className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                              className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                             >
                               <TableDimension
                                 isText={true}
                                 label={recog.recognition}
-                                className="px-28"
-                                textSize="lg"
+                                className="pl-4"
+                                textSize="md"
                               />
                               <TableDimension
                                 isText={false}
