@@ -175,7 +175,7 @@ export const OIRecogs = (): JSX.Element => {
         title="Non-academic Distinctions & Recognitions"
         subtitle=""
         remarks={
-          <div className="">
+          <div>
             {allowAddRecog || allowEditRecog || allowDeleteRecog ? (
               <RecognitionsAlert setInitialValues={setInitialValues} />
             ) : null}

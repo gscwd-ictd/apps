@@ -177,7 +177,7 @@ export const OIOrgs = (): JSX.Element => {
         title="Memberships in Organizations"
         subtitle=""
         remarks={
-          <div className="">
+          <div>
             {allowEditOrganization || allowDeleteOrganization ? (
               <OrganizationsAlert setInitialValues={setInitialValues} />
             ) : null}

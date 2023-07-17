@@ -84,11 +84,7 @@ export const Elementary = (): JSX.Element => {
       <Card
         title="Elementary"
         subtitle="Write your elementary education information. Write 'N/A' if not applicable."
-        remarks={
-          <div className="">
-            <ElementaryAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<ElementaryAlert setInitialValues={setInitialValues} />}
       >
         <>
           <div className="xs:block mt-7 gap-4 lg:flex lg:grid-cols-2">

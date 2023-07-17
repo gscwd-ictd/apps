@@ -235,11 +235,7 @@ export const VolWorkExp = (): JSX.Element => {
       <Card
         title="Voluntary Work Experience"
         subtitle=""
-        remarks={
-          <div className="">
-            <VoluntaryWorkAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<VoluntaryWorkAlert setInitialValues={setInitialValues} />}
       >
         <div
           className={`flex flex-col items-end justify-end ${

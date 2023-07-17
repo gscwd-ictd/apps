@@ -164,7 +164,7 @@ export const GovernmentIdsAlert = ({
       </Alert>
 
       {hasPds && (
-        <div className="h-[1.6rem] w-auto">
+        <div className="w-auto">
           {governmentIssuedIdsOnEdit && (
             <>
               <div className="flex gap-4">

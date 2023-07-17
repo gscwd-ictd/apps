@@ -323,7 +323,7 @@ export const SupportingDetails = (): JSX.Element => {
         title="Questions"
         subtitle=""
         remarks={
-          <div className="">
+          <div>
             <SupportingInfoAlert setInitialValues={setInitialValues} />
           </div>
         }

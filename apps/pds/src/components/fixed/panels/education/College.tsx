@@ -259,11 +259,7 @@ export const College = (): JSX.Element => {
             ? ''
             : "Courses are sorted by 'Year Started' in descending order."
         }
-        remarks={
-          <div className="">
-            <CollegeAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<CollegeAlert setInitialValues={setInitialValues} />}
       >
         <div
           className={`flex flex-col items-end justify-end ${

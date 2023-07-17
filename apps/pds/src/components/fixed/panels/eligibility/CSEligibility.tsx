@@ -239,11 +239,7 @@ export const CSEligibility = (): JSX.Element => {
       <Card
         title="Eligibility"
         subtitle=""
-        remarks={
-          <div className="">
-            <EligibilityAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<EligibilityAlert setInitialValues={setInitialValues} />}
       >
         <div
           className={`flex flex-col items-end justify-end ${

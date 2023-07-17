@@ -258,11 +258,7 @@ export const Graduate = (): JSX.Element => {
             ? ''
             : "Courses are sorted by 'Year Started' in descending order."
         }
-        remarks={
-          <div className="">
-            <GraduateAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<GraduateAlert setInitialValues={setInitialValues} />}
       >
         <>
           <div

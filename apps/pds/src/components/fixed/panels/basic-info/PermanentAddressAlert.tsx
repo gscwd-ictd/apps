@@ -179,7 +179,7 @@ export const PermanentAddressAlert = ({
       </Alert>
 
       {hasPds && (
-        <div className="h-[1.6rem] w-auto">
+        <div className="w-auto">
           {permanentAddressOnEdit && (
             <>
               <div className="flex gap-4">

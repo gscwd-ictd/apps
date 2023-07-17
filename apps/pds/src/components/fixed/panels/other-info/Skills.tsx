@@ -158,7 +158,7 @@ export const OISkills = (): JSX.Element => {
         title="Skills and Hobbies"
         subtitle=""
         remarks={
-          <div className="">
+          <div>
             {allowAddSkill || allowEditSkill || allowDeleteSkill ? (
               <SkillsAlert setInitialValues={setInitialValues} />
             ) : null}

@@ -143,7 +143,7 @@ export const OrganizationsAlert = ({
       </Alert>
 
       {hasPds && (
-        <div className="h-[1.6rem] w-auto">
+        <div className="w-auto">
           {organizationsOnEdit && (
             <>
               <div className="flex gap-4">

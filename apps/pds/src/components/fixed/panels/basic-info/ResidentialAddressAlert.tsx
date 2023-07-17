@@ -209,7 +209,7 @@ export const ResidentialAddressAlert = ({
       </Alert>
 
       {hasPds && (
-        <div className="h-[1.6rem] w-auto">
+        <div className="w-auto">
           {residentialAddressOnEdit && (
             <>
               <div className="flex gap-4">
