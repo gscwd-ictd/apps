@@ -220,19 +220,11 @@ export const OIReferences = (): JSX.Element => {
       <Card
         title="Character References"
         subtitle="Add three(3) references."
-        remarks={
-          <div className="flex flex-col items-end justify-end w-full">
-            <ReferencesAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<ReferencesAlert setInitialValues={setInitialValues} />}
       >
         <div
           className={`flex flex-col items-end justify-end ${
-            referencesOnEdit
-              ? '  visible'
-              : !hasPds
-              ? 'visible lg:-mt-6 lg:pb-6'
-              : 'hidden'
+            referencesOnEdit ? '  visible' : !hasPds ? 'visible' : 'hidden'
           }`}
         >
           <Button

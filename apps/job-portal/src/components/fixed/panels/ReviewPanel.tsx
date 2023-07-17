@@ -979,6 +979,10 @@ export default function ReviewPanel(): JSX.Element {
                                 field={
                                   isGovernmentService.toString() === 'true'
                                     ? 'Yes'
+                                    : Boolean(isGovernmentService) === true
+                                    ? 'Yes'
+                                    : Boolean(isGovernmentService) === false
+                                    ? 'No'
                                     : isGovernmentService.toString() === 'false'
                                     ? 'No'
                                     : 'N/A'

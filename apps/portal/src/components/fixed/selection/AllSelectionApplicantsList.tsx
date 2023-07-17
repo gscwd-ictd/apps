@@ -226,115 +226,117 @@ export const AllSelectionApplicantsList = () => {
       <div className="min-h-auto max-h-[24rem] overflow-y-auto overflow-x-auto bg-slate-100 py-5 rounded-md m-2">
         {applicantList.length > 0 ? (
           <div className="px-5 min-w-[60rem] ">
-            <div className="flex w-full grid-cols-6 border-b border-gray-400">
+            <div className="flex w-full gap-1 grid-cols-6 border-b border-gray-400">
               <div className="col-span-1 w-[2%] flex justify-center items-center">
-                <p className="text-xs font-light"></p>
+                <p className="text-xs font-semibold text-gray-700"></p>
               </div>
 
-              <div className="flex w-[93%] col-span-4 grid-cols-4">
+              <div className="flex w-[93%] gap-1 col-span-4 grid-cols-4">
                 <div className="col-span-1 w-[5%] flex justify-center items-center">
-                  <p className="font-light">Rank</p>
+                  <p className="font-semibold text-gray-700">Rank</p>
                 </div>
 
                 <div className="col-span-1 w-[23%] flex justify-start">
-                  <p className="font-light">Name of Applicants</p>
+                  <p className="font-semibold text-gray-700">
+                    Name of Applicant
+                  </p>
                 </div>
 
                 <div className="col-span-2 w-[75%] flex">
                   {selectedPublication.salaryGradeLevel &&
                   selectedPublication.salaryGradeLevel <= 23 ? (
-                    <div className="flex w-full grid-cols-2">
-                      <div className="col-span-1 flex w-[80%]">
+                    <div className="flex w-full font-semibold text-gray-700 gap-1 grid-cols-2">
+                      <div className="col-span-1 gap-1 flex w-[80%]">
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 1</p>
-                        </div>
-                        <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 2</p>
-                        </div>
-                        <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 3</p>
+                          <p className="">PSB 1</p>
                         </div>
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 4</p>
+                          <p className="">PSB 2</p>
                         </div>
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 5</p>
+                          <p className="">PSB 3</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center col-span-1">
+                          <p className="">PSB 4</p>
                         </div>
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 6</p>
+                          <p className="">PSB 5</p>
+                        </div>
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="">PSB 6</p>
                         </div>
                       </div>
 
                       <div className="items-center w-[20%] flex justify-center   col-span-1">
-                        <p className="font-light">Average</p>
+                        <p className="">Average</p>
                       </div>
                     </div>
                   ) : selectedPublication.salaryGradeLevel &&
                     selectedPublication.salaryGradeLevel === 24 ? (
-                    <div className="flex w-full grid-cols-2">
-                      <div className="col-span-1 flex w-[80%]">
+                    <div className="flex gap-1 w-full font-semibold text-gray-700  grid-cols-2">
+                      <div className="col-span-1 gap-1 flex w-[80%]">
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 1</p>
+                          <p className="">PSB 1</p>
                         </div>
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 2</p>
+                          <p className="">PSB 2</p>
                         </div>
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 3</p>
+                          <p className="">PSB 3</p>
                         </div>
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 4</p>
+                          <p className="">PSB 4</p>
                         </div>
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 5</p>
-                        </div>
-
-                        <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 6</p>
+                          <p className="">PSB 5</p>
                         </div>
 
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 7</p>
+                          <p className="">PSB 6</p>
                         </div>
 
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 8</p>
+                          <p className="">PSB 7</p>
+                        </div>
+
+                        <div className="flex items-center w-full justify-center  col-span-1">
+                          <p className="">PSB 8</p>
                         </div>
                       </div>
 
                       <div className="flex w-[20%] items-center justify-center  col-span-1">
-                        <p className="font-light">Average</p>
+                        <p className="">Average</p>
                       </div>
                     </div>
                   ) : selectedPublication.salaryGradeLevel &&
                     selectedPublication.salaryGradeLevel >= 26 ? (
-                    <div className="flex w-full grid-cols-2">
-                      <div className="col-span-1 flex w-[80%]">
+                    <div className="flex w-full font-semibold text-gray-700  gap-1 grid-cols-2">
+                      <div className="col-span-1 gap-1 flex w-[80%]">
                         <div className="flex items-center w-full justify-center  col-span-1">
-                          <p className="font-light">PSB 1</p>
+                          <p className="">PSB 1</p>
                         </div>
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 2</p>
+                          <p className="">PSB 2</p>
                         </div>
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 3</p>
+                          <p className="">PSB 3</p>
                         </div>
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 4</p>
+                          <p className="">PSB 4</p>
                         </div>
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 5</p>
+                          <p className="">PSB 5</p>
                         </div>
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 6</p>
+                          <p className="">PSB 6</p>
                         </div>
                         <div className="flex items-center w-full justify-center col-span-1">
-                          <p className="font-light">PSB 7</p>
+                          <p className="">PSB 7</p>
                         </div>
                       </div>
 
                       <div className="flex w-[20%] items-center justify-center col-span-1">
-                        <p className="font-light">Average</p>
+                        <p className="">Average</p>
                       </div>
                     </div>
                   ) : (
@@ -343,10 +345,8 @@ export const AllSelectionApplicantsList = () => {
                 </div>
               </div>
 
-              <div className="col-span-1 flex w-[5%] justify-center items-center  ">
-                <p className="font-light flex justify-center items-center">
-                  Actions
-                </p>
+              <div className="col-span-1 flex w-[5%] justify-center items-center  font-semibold text-gray-700   ">
+                <p className=" flex justify-center items-center">Actions</p>
               </div>
             </div>
             <ul className="divide-y">
@@ -360,7 +360,7 @@ export const AllSelectionApplicantsList = () => {
                       }  `}
                     >
                       <div
-                        className={`flex grid-cols-6 items-center w-full transition-colors ease-in-out`}
+                        className={`flex grid-cols-6 gap-1 items-center w-full transition-colors ease-in-out`}
                       >
                         <div className="w-[2%] flex items-center col-span-1 ">
                           <input
@@ -404,7 +404,7 @@ export const AllSelectionApplicantsList = () => {
                               ? onSelect(applicant.sequenceNo!)
                               : {}
                           }
-                          className="flex w-[93%] py-5 col-span-4 grid-cols-4 hover:cursor-pointer"
+                          className="flex gap-1 w-[93%] py-5 col-span-4 grid-cols-4 hover:cursor-pointer"
                         >
                           <div className="w-[5%] flex justify-center col-span-1  items-center">
                             {applicant.rank}
@@ -419,40 +419,40 @@ export const AllSelectionApplicantsList = () => {
                           <div className="w-[75%] flex items-center col-span-2 justify-center">
                             {selectedPublication.salaryGradeLevel &&
                             selectedPublication.salaryGradeLevel <= 23 ? (
-                              <div className="flex w-full grid-cols-2">
-                                <div className="w-[80%] flex col-span-1">
+                              <div className="flex gap-1 w-full grid-cols-2">
+                                <div className="w-[80%] gap-1 flex col-span-1">
                                   <div className="flex items-center w-full justify-center ">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_1)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_1}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center ">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_2)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_2}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center ">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_3)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_3}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center ">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_4)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_4}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center ">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_5)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_5}
                                     </p>
                                   </div>
@@ -460,7 +460,7 @@ export const AllSelectionApplicantsList = () => {
                                   <div className="flex items-center w-full justify-center ">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_6)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_6}
                                     </p>
                                   </div>
@@ -468,46 +468,46 @@ export const AllSelectionApplicantsList = () => {
 
                                 <div className="flex items-center w-[20%] justify-center ">
                                   <p className="font-normal">
-                                    {applicant.average}
+                                    {applicant.average ?? '--'}
                                   </p>
                                 </div>
                               </div>
                             ) : selectedPublication.salaryGradeLevel &&
                               selectedPublication.salaryGradeLevel === 24 ? (
-                              <div className="flex w-full grid-cols-2">
-                                <div className="flex w-[80%] col-span-1">
+                              <div className="flex gap-1 w-full grid-cols-2">
+                                <div className="flex gap-1 w-[80%] col-span-1">
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_1)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_1}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_2)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_2}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_3)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_3}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_4)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_4}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_5)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_5}
                                     </p>
                                   </div>
@@ -515,7 +515,7 @@ export const AllSelectionApplicantsList = () => {
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_6)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_6}
                                     </p>
                                   </div>
@@ -523,7 +523,7 @@ export const AllSelectionApplicantsList = () => {
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_7)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_7}
                                     </p>
                                   </div>
@@ -531,7 +531,7 @@ export const AllSelectionApplicantsList = () => {
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_8)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_8}
                                     </p>
                                   </div>
@@ -539,46 +539,46 @@ export const AllSelectionApplicantsList = () => {
 
                                 <div className="flex items-center w-[20%] justify-center">
                                   <p className="font-normal">
-                                    {applicant.average}
+                                    {applicant.average ?? '--'}
                                   </p>
                                 </div>
                               </div>
                             ) : selectedPublication.salaryGradeLevel &&
                               selectedPublication.salaryGradeLevel >= 26 ? (
-                              <div className="flex w-full grid-cols-2">
-                                <div className="flex w-[80%] col-span-1">
+                              <div className="flex gap-1 w-full grid-cols-2">
+                                <div className="flex gap-1 w-[80%] col-span-1">
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_1)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_1}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_2)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_2}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_3)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_3}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_4)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_4}
                                     </p>
                                   </div>
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_5)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_5}
                                     </p>
                                   </div>
@@ -586,7 +586,7 @@ export const AllSelectionApplicantsList = () => {
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_6)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_6}
                                     </p>
                                   </div>
@@ -594,7 +594,7 @@ export const AllSelectionApplicantsList = () => {
                                   <div className="flex items-center w-full justify-center">
                                     <p className="font-normal">
                                       {isEmpty(applicant.psb_7)
-                                        ? `0.00`
+                                        ? `--`
                                         : applicant.psb_7}
                                     </p>
                                   </div>
@@ -602,7 +602,7 @@ export const AllSelectionApplicantsList = () => {
 
                                 <div className="flex items-center w-[20%] justify-center">
                                   <p className="font-normal">
-                                    {applicant.average}
+                                    {applicant.average ?? '--'}
                                   </p>
                                 </div>
                               </div>

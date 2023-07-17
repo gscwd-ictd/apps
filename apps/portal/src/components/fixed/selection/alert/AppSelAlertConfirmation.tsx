@@ -42,7 +42,6 @@ export const AppSelAlertConfirmation = () => {
       selectedApplicants
     );
 
-    // console.log('FROM APPLICANT IDS: ', applicantIds);
     const postingApplicantIds = {
       postingApplicantIds: applicantIds,
     };

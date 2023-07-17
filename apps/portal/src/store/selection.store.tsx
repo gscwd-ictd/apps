@@ -35,6 +35,7 @@ type ApplicantDetails = {
   applicantAvgScore: string;
   positionTitle: string;
   rank: string;
+  photoUrl?: string;
 };
 
 type PsbDetails = {

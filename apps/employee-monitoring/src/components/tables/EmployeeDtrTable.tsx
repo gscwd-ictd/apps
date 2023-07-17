@@ -78,6 +78,17 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
     }
   );
 
+  const {
+    lateDates,
+    noOfTimesLate,
+    totalMinutesLate,
+    noAttendance,
+    noOfTimesHalfDay,
+    noOfTimesUndertime,
+    totalMinutesUndertime,
+    undertimeDates,
+  } = employeeDtr.summary;
+
   // compare if after
   const compareIfEarly = (
     day: string,
@@ -179,7 +190,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
               selectedMonth !== '--' &&
               selectedYear !== '--' &&
               !isEmpty(employeeDtr) ? (
-                employeeDtr.map((logs, index) => {
+                employeeDtr.dtrDays.map((logs, index) => {
                   const regularHoliday = 'bg-red-400';
                   const specialHoliday = 'bg-blue-400';
                   const underTime =
@@ -287,7 +298,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                           <span
                             className={`${checkIfHoliday(
                               logs.holidayType
-                            )} ${lunchOutColor}`}
+                            )} ${lunchInColor}`}
                           >
                             {logs.dtr.lunchIn
                               ? formatTime(logs.dtr.lunchIn)
@@ -395,7 +406,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
           selectedMonth !== '--' &&
           selectedYear !== '--' &&
           !isEmpty(employeeDtr)
-            ? employeeDtr.map((logs, index) => {
+            ? employeeDtr.dtrDays.map((logs, index) => {
                 const regularHoliday = 'bg-red-400';
                 const specialHoliday = 'bg-blue-400';
                 const underTime =
@@ -525,6 +536,75 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
             : null}
         </>
       ) : null}
+
+      <table className="table-auto">
+        <thead>
+          <tr>
+            <td>No. of Times Late</td>
+            <td>Total Minutes Late</td>
+            <td>Dates Late</td>
+            <td>No. of Times Undertime</td>
+            <td>Total Minutes Undertime</td>
+            <td>Dates/Undertime</td>
+            <td>No. of Times Halfday</td>
+            <td>No Attendance</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{noOfTimesLate}</td>
+            <td>{totalMinutesLate}</td>
+            <td>
+              {lateDates && lateDates.length > 0
+                ? lateDates.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index === lateDates.length - 1 ? (
+                          <>{day}</>
+                        ) : (
+                          <>{day},</>
+                        )}
+                      </span>
+                    );
+                  })
+                : null}
+            </td>
+            <td>{noOfTimesUndertime}</td>
+            <td>{totalMinutesUndertime}</td>
+            <td>
+              {undertimeDates && undertimeDates.length > 0
+                ? undertimeDates.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index === undertimeDates.length - 1 ? (
+                          <>{day}</>
+                        ) : (
+                          <>{day},</>
+                        )}
+                      </span>
+                    );
+                  })
+                : null}
+            </td>
+            <td>{noOfTimesHalfDay}</td>
+            <td>
+              {noAttendance && noAttendance.length > 0
+                ? noAttendance.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index === noAttendance.length - 1 ? (
+                          <>{day}</>
+                        ) : (
+                          <>{day},</>
+                        )}
+                      </span>
+                    );
+                  })
+                : null}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </>
   );
 };

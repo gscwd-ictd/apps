@@ -235,19 +235,11 @@ export const VolWorkExp = (): JSX.Element => {
       <Card
         title="Voluntary Work Experience"
         subtitle=""
-        remarks={
-          <div className="flex flex-col items-end justify-end w-full">
-            <VoluntaryWorkAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<VoluntaryWorkAlert setInitialValues={setInitialValues} />}
       >
         <div
           className={`flex flex-col items-end justify-end ${
-            voluntaryWorkOnEdit
-              ? 'visible'
-              : !hasPds
-              ? 'visible lg:-mt-6 lg:pb-6'
-              : 'hidden'
+            voluntaryWorkOnEdit ? 'visible' : !hasPds ? 'visible' : 'hidden'
           }`}
         >
           <Button
@@ -469,7 +461,7 @@ export const VolWorkExp = (): JSX.Element => {
                         return (
                           <tr
                             key={workIdx}
-                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all "
+                            className="odd:bg-slate-100 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all "
                           >
                             <TableDimension
                               isText={true}
@@ -560,6 +552,21 @@ export const VolWorkExp = (): JSX.Element => {
                                           </div>
                                         </div>
                                       ) : null}
+                                    </div>
+                                  ) : isEmpty(work._id) ? (
+                                    <div className="flex gap-4 items-center justify-center">
+                                      <div className="w-8">
+                                        <EditButton
+                                          action={() => onEdit(work, workIdx)}
+                                        />
+                                      </div>
+                                      <div className="w-8">
+                                        <DeleteButton
+                                          action={() =>
+                                            openRemoveActionModal(workIdx, work)
+                                          }
+                                        />
+                                      </div>
                                     </div>
                                   ) : null}
                                 </>

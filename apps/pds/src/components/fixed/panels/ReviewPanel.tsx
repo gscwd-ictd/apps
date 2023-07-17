@@ -494,7 +494,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {children.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-md shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -503,7 +503,7 @@ export default function ReviewPanel(): JSX.Element {
                             const { birthDate, childName } = child;
                             return (
                               <div
-                                className="h-30 col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-5 px-[5%] text-left align-middle shadow-md hover:border hover:bg-indigo-100"
+                                className="h-30 col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-5 px-[5%] text-left align-middle shadow-md hover:border hover:bg-indigo-100"
                                 key={childIdx}
                               >
                                 <LabelFieldPreview
@@ -541,12 +541,12 @@ export default function ReviewPanel(): JSX.Element {
                     <>
                       {elementary.schoolName === '' ||
                       elementary.schoolName === null ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-md shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
                         <>
-                          <div className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100">
+                          <div className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100">
                             <LabelFieldPreview
                               label="School:"
                               field={
@@ -604,12 +604,12 @@ export default function ReviewPanel(): JSX.Element {
                     <>
                       {secondary.schoolName === '' ||
                       secondary.schoolName === null ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-md shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
                         <>
-                          <div className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100">
+                          <div className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100">
                             <LabelFieldPreview
                               label="School:"
                               field={secondary.schoolName}
@@ -660,7 +660,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {vocational.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-md shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -679,7 +679,7 @@ export default function ReviewPanel(): JSX.Element {
                               return (
                                 <div
                                   key={courseIdx}
-                                  className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                                  className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                                 >
                                   <LabelFieldPreview
                                     label="School:"
@@ -734,7 +734,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {college.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-md shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -754,7 +754,7 @@ export default function ReviewPanel(): JSX.Element {
                               return (
                                 <div
                                   key={courseIdx}
-                                  className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
+                                  className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
                                 >
                                   <LabelFieldPreview
                                     label="School:"
@@ -809,7 +809,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {graduate.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-md shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -828,7 +828,7 @@ export default function ReviewPanel(): JSX.Element {
                               return (
                                 <div
                                   key={courseIdx}
-                                  className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
+                                  className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
                                 >
                                   <LabelFieldPreview
                                     label="School:"
@@ -882,7 +882,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {eligibility.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -902,7 +902,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={eligIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
+                            className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
                           >
                             <LabelFieldPreview
                               label="Name:"
@@ -940,11 +940,12 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
+
             <CardContainer title="Work Experience" className="py-5">
               <>
                 <div className="px-5">
                   {workExperience.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -964,7 +965,7 @@ export default function ReviewPanel(): JSX.Element {
                           return (
                             <div
                               key={workIdx}
-                              className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                              className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                             >
                               <LabelFieldPreview
                                 label="Position Title:"
@@ -991,6 +992,10 @@ export default function ReviewPanel(): JSX.Element {
                                 field={
                                   isGovernmentService.toString() === 'true'
                                     ? 'Yes'
+                                    : Boolean(isGovernmentService) === true
+                                    ? 'Yes'
+                                    : Boolean(isGovernmentService) === false
+                                    ? 'No'
                                     : isGovernmentService.toString() === 'false'
                                     ? 'No'
                                     : 'N/A'
@@ -1026,7 +1031,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {voluntaryWork.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1042,7 +1047,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={workIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview
                               label="Position Title:"
@@ -1078,7 +1083,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {learningDevelopment.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1100,7 +1105,7 @@ export default function ReviewPanel(): JSX.Element {
                           return (
                             <div
                               key={trainingIdx}
-                              className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                              className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                             >
                               <LabelFieldPreview
                                 label="Title:"
@@ -1139,7 +1144,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {skills.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1149,7 +1154,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={titleIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview
                               label="Title"
@@ -1170,7 +1175,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {recognitions.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1181,7 +1186,7 @@ export default function ReviewPanel(): JSX.Element {
                           return (
                             <div
                               key={recogIdx}
-                              className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                              className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                             >
                               <LabelFieldPreview
                                 label="Title"
@@ -1200,7 +1205,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {organizations.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1211,7 +1216,7 @@ export default function ReviewPanel(): JSX.Element {
                           return (
                             <div
                               key={membershipIdx}
-                              className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                              className="col-span-1 mb-[0.2%] justify-between rounded-md bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                             >
                               <LabelFieldPreview
                                 label="Title"
@@ -1226,6 +1231,7 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
+
             <CardContainer title="Questions" className="py-5">
               <>
                 <div className="flex flex-col gap-4 p-5">
@@ -1512,11 +1518,12 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
+
             <CardContainer title="References" className="py-5">
               <>
                 <div className="flex flex-col gap-4 px-5">
                   {references.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-md shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1527,7 +1534,7 @@ export default function ReviewPanel(): JSX.Element {
                           return (
                             <div
                               key={refIdx}
-                              className="col-span-1 mb-[0.2%] justify-between rounded-3xl border bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
+                              className="col-span-1 mb-[0.2%] justify-between rounded-md border bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
                             >
                               <LabelFieldPreview
                                 label="Name: "

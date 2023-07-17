@@ -59,12 +59,13 @@ export const GovernmentIDsBI = (): JSX.Element => {
       <Card
         title="Government IDs"
         subtitle="List down your Government IDs. Write N/A if not applicable"
-      >
-        <>
-          <div className="flex justify-end w-full pb-10 -mt-16">
+        remarks={
+          <div className="">
             <GovernmentIdsAlert setInitialValues={setInitialValues} />
           </div>
-
+        }
+      >
+        <>
           <div className="gap-4 xs:block mt-7 lg:flex lg:grid-cols-3">
             <div className="w-full col-span-1 mb-7">
               <FloatingLabelInputRF

@@ -259,19 +259,11 @@ export const College = (): JSX.Element => {
             ? ''
             : "Courses are sorted by 'Year Started' in descending order."
         }
-        remarks={
-          <div className="flex flex-col items-end justify-end w-full">
-            <CollegeAlert setInitialValues={setInitialValues} />
-          </div>
-        }
+        remarks={<CollegeAlert setInitialValues={setInitialValues} />}
       >
         <div
           className={`flex flex-col items-end justify-end ${
-            collegeOnEdit
-              ? 'visible'
-              : !hasPds
-              ? 'visible lg:-mt-6 lg:pb-6'
-              : 'hidden'
+            collegeOnEdit ? 'visible' : !hasPds ? 'visible' : 'hidden'
           }`}
         >
           <Button
@@ -560,7 +552,7 @@ export const College = (): JSX.Element => {
                       return (
                         <tr
                           key={courseIdx}
-                          className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                          className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                         >
                           <TableDimension
                             isText={true}

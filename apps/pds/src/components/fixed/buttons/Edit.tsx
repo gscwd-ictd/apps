@@ -1,15 +1,22 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 
-interface EditButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
-  action: Function;
+interface EditButtonProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  action: () => void;
 }
 
-export const EditButton = ({ action, ...props }: EditButtonProps): JSX.Element => {
+export const EditButton = ({
+  action,
+  ...props
+}: EditButtonProps): JSX.Element => {
   return (
     <>
       <button
         className="cursor-pointer rounded-md bg-indigo-600 p-2 text-white hover:bg-indigo-900 hover:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
-        onClick={() => action()}
+        onClick={action}
         type="button"
         {...props}
       >
