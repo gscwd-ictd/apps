@@ -322,10 +322,8 @@ export const SupportingDetails = (): JSX.Element => {
       <Card
         title="Questions"
         subtitle=""
-        className="mx-[10%] px-[3%]"
-        titleClassName="w-full mt-5 pl-5 text-2xl"
         remarks={
-          <div className="flex flex-col items-end justify-end w-full">
+          <div className="">
             <SupportingInfoAlert setInitialValues={setInitialValues} />
           </div>
         }

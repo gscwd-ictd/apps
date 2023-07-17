@@ -21,7 +21,7 @@ export const Card = ({
   children,
   className = 'mx-[10%]',
   titleClassName = 'w-full text-2xl',
-  subtitleClassName = ' w-full font-extralight',
+  subtitleClassName = 'text-sm w-full font-extralight',
   remarks,
   isTable = false,
 }: CardProps): JSX.Element => {
@@ -39,11 +39,11 @@ export const Card = ({
                 {title}
                 {icon}
               </h3>
-              <span
+              <div
                 className={`${subtitleClassName} select-none hover:text-indigo-800`}
               >
                 {subtitle}
-              </span>
+              </div>
             </div>
 
             <div className="lg:text-md md:text-md xs:text-xs col-span-1 w-full flex justify-end">

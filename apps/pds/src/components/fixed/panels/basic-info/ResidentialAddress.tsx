@@ -118,6 +118,11 @@ export const ResidentialAddressBI = (): JSX.Element => {
       <Card
         title="Residential Address"
         subtitle="Write the address where you are currently residing. Write N/A if not applicable"
+        remarks={
+          <div>
+            <ResidentialAddressAlert setInitialValues={setInitialValues} />
+          </div>
+        }
       >
         <>
           {resAddrError ? (
@@ -134,9 +139,6 @@ export const ResidentialAddressBI = (): JSX.Element => {
           ) : (
             <></>
           )}
-          <div className="flex justify-end w-full pb-10 -mt-16">
-            <ResidentialAddressAlert setInitialValues={setInitialValues} />
-          </div>
 
           <div className="gap-4 mt-7 sm:block md:block lg:flex lg:grid-cols-3">
             <div className="w-full col-span-1 mb-7">
