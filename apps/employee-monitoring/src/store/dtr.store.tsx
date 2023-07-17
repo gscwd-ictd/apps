@@ -123,7 +123,19 @@ export const useDtrStore = create<DailyTimeRecordState>()(
 
     selectedMonth: '--',
     selectedYear: '--',
-    employeeDtr: { dtrDays: [], summary: {} as EmployeeDtrWithSummary },
+    employeeDtr: {
+      dtrDays: [],
+      summary: {
+        lateDates: [],
+        noAttendance: [],
+        noOfTimesHalfDay: null,
+        noOfTimesLate: null,
+        noOfTimesUndertime: null,
+        totalMinutesLate: null,
+        totalMinutesUndertime: null,
+        undertimeDates: [],
+      } as EmployeeDtrWithSummary,
+    },
 
     setEmployeeDtr: (response: EmployeeDtrWithScheduleAndSummary) =>
       set((state) => ({ ...state, employeeDtr: response })),
@@ -167,7 +179,19 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         ...state,
         loading: { ...state.loading, loadingEmployeeDtr: true },
         error: { ...state.error, errorEmployeeDtr: '' },
-        employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
+        employeeDtr: {
+          dtrDays: [],
+          summary: {
+            lateDates: [],
+            noAttendance: [],
+            noOfTimesHalfDay: null,
+            noOfTimesLate: null,
+            noOfTimesUndertime: null,
+            totalMinutesLate: null,
+            totalMinutesUndertime: null,
+            undertimeDates: [],
+          } as EmployeeDtrWithSummary,
+        } as EmployeeDtrWithScheduleAndSummary,
         // isDateSearched: true,
       })),
 

@@ -78,17 +78,6 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
     }
   );
 
-  const {
-    lateDates,
-    noOfTimesLate,
-    totalMinutesLate,
-    noAttendance,
-    noOfTimesHalfDay,
-    noOfTimesUndertime,
-    totalMinutesUndertime,
-    undertimeDates,
-  } = employeeDtr.summary;
-
   // compare if after
   const compareIfEarly = (
     day: string,
@@ -537,62 +526,36 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
         </>
       ) : null}
 
-      <table className="table-auto">
+      <table className="table-auto mt-5 border ">
         <thead>
-          <tr>
-            <td>No. of Times Late</td>
-            <td>Total Minutes Late</td>
-            <td>Dates Late</td>
-            <td>No. of Times Undertime</td>
-            <td>Total Minutes Undertime</td>
-            <td>Dates/Undertime</td>
-            <td>No. of Times Halfday</td>
-            <td>No Attendance</td>
+          <tr className="text-sm font-medium text-center">
+            <td className="border p-1 text-gray-700">No. of Times Late</td>
+            <td className="border p-1 text-gray-700">Total Minutes Late</td>
+            <td className="border p-1 text-gray-700">Dates Late</td>
+            <td className="border p-1 text-gray-700">No. of Times Undertime</td>
+            <td className="border p-1 text-gray-700">
+              Total Minutes Undertime
+            </td>
+            <td className="border p-1 text-gray-700">Dates/Undertime</td>
+            <td className="border p-1 text-gray-700">No. of Times Halfday</td>
+            <td className="border p-1 text-gray-700">No Attendance</td>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{noOfTimesLate}</td>
-            <td>{totalMinutesLate}</td>
-            <td>
-              {lateDates && lateDates.length > 0
-                ? lateDates.map((day, index) => {
-                    return (
-                      <span key={index}>
-                        {index === lateDates.length - 1 ? (
-                          <>{day}</>
-                        ) : (
-                          <>{day},</>
-                        )}
-                      </span>
-                    );
-                  })
-                : null}
+          <tr className="text-sm font-light text-center">
+            <td className="border p-1">
+              {employeeDtr.summary?.noOfTimesLate ?? '--'}
             </td>
-            <td>{noOfTimesUndertime}</td>
-            <td>{totalMinutesUndertime}</td>
-            <td>
-              {undertimeDates && undertimeDates.length > 0
-                ? undertimeDates.map((day, index) => {
-                    return (
-                      <span key={index}>
-                        {index === undertimeDates.length - 1 ? (
-                          <>{day}</>
-                        ) : (
-                          <>{day},</>
-                        )}
-                      </span>
-                    );
-                  })
-                : null}
+            <td className="border p-1">
+              {employeeDtr.summary?.totalMinutesLate ?? '--'}
             </td>
-            <td>{noOfTimesHalfDay}</td>
-            <td>
-              {noAttendance && noAttendance.length > 0
-                ? noAttendance.map((day, index) => {
+            <td className="border p-1">
+              {employeeDtr.summary?.lateDates &&
+              employeeDtr.summary?.lateDates.length > 0
+                ? employeeDtr.summary?.lateDates.map((day, index) => {
                     return (
                       <span key={index}>
-                        {index === noAttendance.length - 1 ? (
+                        {index === employeeDtr.summary?.lateDates.length - 1 ? (
                           <>{day}</>
                         ) : (
                           <>{day},</>
@@ -600,7 +563,50 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                       </span>
                     );
                   })
-                : null}
+                : '--'}
+            </td>
+            <td className="border p-1">
+              {employeeDtr.summary?.noOfTimesUndertime ?? '--'}
+            </td>
+            <td className="border p-1">
+              {employeeDtr.summary?.totalMinutesUndertime ?? '--'}
+            </td>
+            <td className="border p-1">
+              {employeeDtr.summary?.undertimeDates &&
+              employeeDtr.summary?.undertimeDates.length > 0
+                ? employeeDtr.summary?.undertimeDates.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index ===
+                        employeeDtr.summary?.undertimeDates.length - 1 ? (
+                          <>{day}</>
+                        ) : (
+                          <>{day},</>
+                        )}
+                      </span>
+                    );
+                  })
+                : '--'}
+            </td>
+            <td className="border p-1">
+              {employeeDtr.summary?.noOfTimesHalfDay ?? '--'}
+            </td>
+            <td className="border p-1">
+              {employeeDtr.summary?.noAttendance &&
+              employeeDtr.summary?.noAttendance.length > 0
+                ? employeeDtr.summary?.noAttendance.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index ===
+                        employeeDtr.summary?.noAttendance.length - 1 ? (
+                          <>{day}</>
+                        ) : (
+                          <>{day},</>
+                        )}
+                      </span>
+                    );
+                  })
+                : '--'}
             </td>
           </tr>
         </tbody>
