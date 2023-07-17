@@ -58,21 +58,17 @@ export default function Carousel() {
         <div className="keen-slider__slide number-slide1 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              {`Men's Month`}
+              {`GSCWD conducts DPPR 2023`}
             </label>
             <label className="hidden lg:block text-sm text-slate-500 text-justify">
-              {`Shout out to all men out there who despite all odds and obstacles,
-              paved the way for themselves in the over-ambitious world. May you
-              get more strength and love. Thank you to all your contributions to
-              the community. We appreciate all the positive values you bring to
-              the world, to your families and to your office colleagues. Happy
-              Men's Month! `}
+              {`Targets for CY 2024 were set during the Departmental Planning and Performance Review conducted by different departments of GSCWD.
+Scheduled for the whole month of June, each department revisited accomplishments, tackled concerns focusing on improving performance so to help the district in achieving its goals.(LGL)`}
             </label>
 
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
-                href="https://www.facebook.com/gensanwd/posts/pfbid02NWfndy2GRDYeFWJR6XADqWGsobLun5GkDv8rZ1sKuxnJ2cKJuS82jNcas8hqexQhl"
+                href="https://www.facebook.com/gensanwd/posts/pfbid0uRbNVg7KCCC2yutZjxt1x2ge2FD3XcYn9Q2Bc2EVYdccjhCE27m2eB9Xi1Tisp3Xl"
               >
                 Read More
               </a>
@@ -83,17 +79,18 @@ export default function Carousel() {
         <div className="keen-slider__slide number-slide2 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              {`Men's Month Schedule of Activities`}
+              {`GSCWD conducts DPPR 2023`}
             </label>
 
             <label className="hidden lg:block text-sm text-slate-500 text-justify">
-              {`In celebration of Men's Month, here are the schedule of activities for June 2023.`}
+              {`Targets for CY 2024 were set during the Departmental Planning and Performance Review conducted by different departments of GSCWD.
+Scheduled for the whole month of June, each department revisited accomplishments, tackled concerns focusing on improving performance so to help the district in achieving its goals.(LGL)`}
             </label>
 
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
-                href="https://www.facebook.com/gensanwd/posts/pfbid02NWfndy2GRDYeFWJR6XADqWGsobLun5GkDv8rZ1sKuxnJ2cKJuS82jNcas8hqexQhl"
+                href="https://www.facebook.com/gensanwd/posts/pfbid0uRbNVg7KCCC2yutZjxt1x2ge2FD3XcYn9Q2Bc2EVYdccjhCE27m2eB9Xi1Tisp3Xl"
               >
                 Read More
               </a>
@@ -104,28 +101,17 @@ export default function Carousel() {
         <div className="keen-slider__slide number-slide1 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              Month of June Birthday Celebrants
+              GSCWD conducts DPPR 2023
             </label>
 
             <label className="hidden lg:block text-sm text-slate-500 text-justify">
-              {`Happy Birthday to all June Celebrants! Here's a short poem for you!
-                THE VERY BEST
-                Happy Birthday!
-                You deserve the very best,
-                All the special things in life,
-                Whatever makes you happy,
-                Whatever feels just right.
-                I want these gifts to be yours,
-                Each and every day,
-                To them, I add love and peace,
-                Above all on your birthday.
-                -Kevin Nishmas`}
+              {`Targets for CY 2024 were set during the Departmental Planning and Performance Review conducted by different departments of GSCWD. Scheduled for the whole month of June, each department revisited accomplishments, tackled concerns focusing on improving performance so to help the district in achieving its goals.(LGL)`}
             </label>
 
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
-                href="https://www.facebook.com/gensanwd/videos/568114448560257"
+                href="https://www.facebook.com/gensanwd/posts/pfbid0uRbNVg7KCCC2yutZjxt1x2ge2FD3XcYn9Q2Bc2EVYdccjhCE27m2eB9Xi1Tisp3Xl"
               >
                 Read More
               </a>
@@ -133,26 +119,48 @@ export default function Carousel() {
             <img className="w-100 h-100" src="/03.jpg"></img>
           </div>
         </div>
+
         <div className="keen-slider__slide number-slide1 w-screen h-screen">
           <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
             <label className="text-lg text-slate-600 uppercase">
-              {`Artemio Quimay's Retirement`}
+              Newly Hired Employees
             </label>
 
             <label className="hidden lg:block text-sm text-slate-500 text-justify">
-              {`Mr. Quimay served for 11 years as Water Maintenance Man under the Water Distribution  and Restoration Division. 
-                Effective June 6, he will finally leave the district and vow to devote most of his time to his family according to him. `}
+              {`Congratulations to our newly hired employees who joined our team on July 3, 2023.`}
             </label>
 
             <label className="text-right text-sm text-slate-500 cursor-pointer">
               <a
                 target="blank"
-                href="https://www.facebook.com/gensanwd/posts/pfbid0oJy75ZRNKGzq7XooRYshrTnMvzLeNB3HADdzUXGQksPAVwNohzHB1DeQH14oDapGl"
+                href="https://www.facebook.com/photo/?fbid=314144720967132&set=a.109004071481199"
               >
                 Read More
               </a>
             </label>
             <img className="w-100 h-100" src="/04.jpg"></img>
+          </div>
+        </div>
+
+        <div className="keen-slider__slide number-slide1 w-screen h-screen">
+          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
+            <label className="text-lg text-slate-600 uppercase">
+              July Birthday Celebrants
+            </label>
+
+            <label className="hidden lg:block text-sm text-slate-500 text-justify">
+              {`Happy Birthday to all July Celebrants! `}
+            </label>
+
+            <label className="text-right text-sm text-slate-500 cursor-pointer">
+              <a
+                target="blank"
+                href="https://www.facebook.com/gensanwd/videos/1959878211012530"
+              >
+                Read More
+              </a>
+            </label>
+            <img className="w-100 h-100" src="/05.jpg"></img>
           </div>
         </div>
       </div>
