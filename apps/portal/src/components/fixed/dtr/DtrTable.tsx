@@ -43,8 +43,8 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
             </tr>
           </thead>
           <tbody className="text-sm text-center ">
-            {employeeDtr.length > 0 ? (
-              employeeDtr.map((logs, index) => {
+            {employeeDtr?.dtrDays?.length > 0 ? (
+              employeeDtr.dtrDays.map((logs, index) => {
                 return (
                   <tr key={index}>
                     <td className="py-2 text-center border">{logs.day}</td>

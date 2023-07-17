@@ -19,7 +19,7 @@ const JobOpeningsTable: NextComponentType<
     <>
       <div className="px-[5%] mt-2 flex items-center justify-center ">
         {!isEmpty(jobOpenings) ? (
-          <div className="overflow-y-hidden border rounded-lg shadow dark:border-gray-200">
+          <div className="border rounded-lg shadow dark:border-gray-200">
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-300">
                 <tr>

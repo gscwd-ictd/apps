@@ -157,6 +157,7 @@ export default function Index({
               </div>
             </Card>
           </div>
+
           <div className="mx-5">
             {/* SCHEDULE CARD */}
 
