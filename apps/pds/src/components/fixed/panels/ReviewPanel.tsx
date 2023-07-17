@@ -845,8 +845,8 @@ export default function ReviewPanel(): JSX.Element {
                                   <LabelFieldPreview
                                     label="Year Ended:"
                                     field={
-                                      (isEmpty(to.toString()) || to === null) &&
-                                      (isEmpty(yearGraduated.toString()) ||
+                                      (isEmpty(to) || to === null) &&
+                                      (isEmpty(yearGraduated) ||
                                         yearGraduated === null)
                                         ? 'Present'
                                         : to
