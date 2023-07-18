@@ -12,6 +12,7 @@ type LabelInputProps = {
   type?: string;
   rows?: number;
   cols?: number;
+  isDirty?: boolean;
 };
 
 export const LabelInput: FunctionComponent<
@@ -24,6 +25,7 @@ export const LabelInput: FunctionComponent<
   isError = false,
   errorMessage,
   controller,
+  isDirty = false,
   disabled = false,
   type,
   rows,
@@ -33,9 +35,18 @@ export const LabelInput: FunctionComponent<
   return (
     <div className="flex flex-col">
       <label htmlFor={id}>
-        <span className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
-          {label}
-        </span>
+        <div className="flex justify-between gap-2 mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
+          <span>{label}</span>
+          {isDirty ? (
+            <span
+              className={`font-light rounded ${
+                isError ? 'bg-red-600' : 'bg-green-600'
+              } px-1 text-white`}
+            >
+              {isError ? 'Invalid Changes' : 'Valid Changes'}
+            </span>
+          ) : null}
+        </div>
       </label>
 
       {type === 'textarea' ? (

@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import {
   LeaveBenefit,
   LeaveType,
@@ -100,10 +100,7 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
   };
 
   const handleEditLeave = async (leave: LeaveBenefit) => {
-    const { error, result } = await patchEmpMonitoring(
-      '/leave-benefits',
-      leave
-    );
+    const { error, result } = await putEmpMonitoring('/leave-benefits', leave);
 
     if (error) {
       // request is done so set loading to false and set value for error message
@@ -120,6 +117,10 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
   useEffect(() => {
     if (modalState === true) loadNewDefaultValues(rowData);
   }, [modalState]);
+
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
   return (
     <>
@@ -153,7 +154,7 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="editcumulativemodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="editCumulativeModal">
             <div className="flex flex-col w-full gap-5">
               {/* Recurring Name */}
               <LabelInput

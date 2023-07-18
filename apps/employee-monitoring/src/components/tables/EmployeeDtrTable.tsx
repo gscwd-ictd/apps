@@ -526,30 +526,30 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
         </>
       ) : null}
 
-      <table className="table-auto mt-5 border ">
+      <table className="mt-5 border table-auto ">
         <thead>
           <tr className="text-sm font-medium text-center">
-            <td className="border p-1 text-gray-700">No. of Times Late</td>
-            <td className="border p-1 text-gray-700">Total Minutes Late</td>
-            <td className="border p-1 text-gray-700">Dates Late</td>
-            <td className="border p-1 text-gray-700">No. of Times Undertime</td>
-            <td className="border p-1 text-gray-700">
+            <td className="p-1 text-gray-700 border">No. of Times Late</td>
+            <td className="p-1 text-gray-700 border">Total Minutes Late</td>
+            <td className="p-1 text-gray-700 border">Dates Late</td>
+            <td className="p-1 text-gray-700 border">No. of Times Undertime</td>
+            <td className="p-1 text-gray-700 border">
               Total Minutes Undertime
             </td>
-            <td className="border p-1 text-gray-700">Dates/Undertime</td>
-            <td className="border p-1 text-gray-700">No. of Times Halfday</td>
-            <td className="border p-1 text-gray-700">No Attendance</td>
+            <td className="p-1 text-gray-700 border">Dates/Undertime</td>
+            <td className="p-1 text-gray-700 border">No. of Times Halfday</td>
+            <td className="p-1 text-gray-700 border">No Attendance</td>
           </tr>
         </thead>
         <tbody>
           <tr className="text-sm font-light text-center">
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.noOfTimesLate ?? '--'}
             </td>
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.totalMinutesLate ?? '--'}
             </td>
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.lateDates &&
               employeeDtr.summary?.lateDates.length > 0
                 ? employeeDtr.summary?.lateDates.map((day, index) => {
@@ -565,13 +565,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                   })
                 : '--'}
             </td>
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.noOfTimesUndertime ?? '--'}
             </td>
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.totalMinutesUndertime ?? '--'}
             </td>
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.undertimeDates &&
               employeeDtr.summary?.undertimeDates.length > 0
                 ? employeeDtr.summary?.undertimeDates.map((day, index) => {
@@ -588,10 +588,10 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                   })
                 : '--'}
             </td>
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.noOfTimesHalfDay ?? '--'}
             </td>
-            <td className="border p-1">
+            <td className="p-1 border">
               {employeeDtr.summary?.noAttendance &&
               employeeDtr.summary?.noAttendance.length > 0
                 ? employeeDtr.summary?.noAttendance.map((day, index) => {
