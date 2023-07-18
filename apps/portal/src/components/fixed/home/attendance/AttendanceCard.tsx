@@ -28,16 +28,16 @@ export const AttendanceCard: React.FC<Props> = ({
 
   return (
     <div className="w-full h-32 shadow rounded-md bg-white flex flex-col p-4 gap-2">
-      <label className="text-2xl text-gray-600 font-bold text-center">
-        {now}
-      </label>
-      <div className="flex flex-row justify-around items-center">
-        {swrFaceScanIsLoading ? (
-          <div className="w-full h-full flex flex-col py-2 justify-items-center items-center place-items-center">
-            <LoadingSpinner className="flex w-full h-full" size="sm" />
-          </div>
-        ) : (
-          <>
+      {swrFaceScanIsLoading ? (
+        <div className="w-full h-full flex flex-col py-2 justify-center items-center place-items-center">
+          <LoadingSpinner className="flex w-full h-full" size="lg" />
+        </div>
+      ) : (
+        <>
+          <label className="text-2xl text-gray-600 font-bold text-center">
+            {now}
+          </label>
+          <div className="flex flex-row justify-around items-center">
             <div className="flex flex-col justify-center items-center">
               <label
                 className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}
@@ -132,9 +132,9 @@ export const AttendanceCard: React.FC<Props> = ({
                 </label>
               )}
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
