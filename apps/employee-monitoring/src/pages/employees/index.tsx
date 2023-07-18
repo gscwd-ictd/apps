@@ -21,6 +21,7 @@ import {
 import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 import { UseCapitalizer } from '../../utils/functions/Capitalizer';
 import UseRenderBadgePill from '../../utils/functions/RenderBadgePill';
+import { EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
 
 export default function Index() {
   const {
@@ -200,7 +201,7 @@ export default function Index() {
 
   useEffect(() => {
     setDropdownAction('');
-    setEmployeeDtr([]);
+    setEmployeeDtr({ dtrDays: [], summary: {} as EmployeeDtrWithSummary });
   }, []);
 
   return (
