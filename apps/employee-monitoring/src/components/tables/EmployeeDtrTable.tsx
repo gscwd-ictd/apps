@@ -558,7 +558,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         {index === employeeDtr.summary?.lateDates.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );
@@ -581,7 +581,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         employeeDtr.summary?.undertimeDates.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );
@@ -601,7 +601,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         employeeDtr.summary?.noAttendance.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );
