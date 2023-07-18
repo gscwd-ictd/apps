@@ -223,7 +223,11 @@ export default function Dashboard({
                     <div className="flex flex-row gap-4">
                       <StatsCard
                         name={'Lates Count'}
-                        count={swrDtr?.summary?.noOfTimesLate ?? 0}
+                        count={
+                          swrDtr?.summary?.noOfTimesLate
+                            ? swrDtr?.summary?.noOfTimesLate
+                            : 0
+                        }
                         isLoading={swrDtrIsLoading}
                       />
                       <StatsCard
