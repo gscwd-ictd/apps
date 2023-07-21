@@ -25,6 +25,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { categorySelection } from 'libs/utils/src/lib/constants/schedule-type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ScheduleSchema from '../ScheduleSchema';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+dayjs.extend(localizedFormat);
+
+const removeSeconds = (value: string | null) => {
+  if (isEmpty(value)) return null;
+  else return dayjs('2000/01/01' + ' ' + value).format('HH:mm');
+};
 
 type EditModalProps = {
   modalState: boolean;
@@ -41,65 +49,75 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
 }) => {
   const {
     IsLoading,
-    Error,
     UpdateSchedule,
     UpdateScheduleFail,
     UpdateScheduleSuccess,
   } = useScheduleStore((state) => ({
     SchedulePostResponse: state.schedule.postResponse,
     IsLoading: state.loading.loadingSchedule,
-    Error: state.error.errorSchedule,
-
     UpdateSchedule: state.updateSchedule,
     UpdateScheduleSuccess: state.updateScheduleSuccess,
     UpdateScheduleFail: state.updateScheduleFail,
   }));
 
-  // load default values
-  const loadNewDefaultValues = (sched: Schedule) => {
-    setValue('id', sched.id);
-    setValue('name', sched.name);
-    setValue('scheduleType', sched.scheduleType);
-    setValue('timeIn', sched.timeIn);
-    setValue('timeOut', sched.timeOut);
-
-    if (!isEmpty(sched.lunchIn)) {
-      setWithLunch(true);
-      setValue('withLunch', true);
-    } else {
-      setWithLunch(false);
-      setValue('withLunch', false);
-    }
-
-    setValue('lunchIn', sched.lunchIn);
-    setValue('lunchOut', sched.lunchOut);
-    setValue('shift', sched.shift);
-  };
-
-  const [withLunch, setWithLunch] = useState<boolean>(true);
-
   const {
     setValue,
     handleSubmit,
     watch,
+    getValues,
     reset,
     register,
     clearErrors,
-    formState: { errors, isValid, isDirty, dirtyFields },
+    formState: { errors, isValid, dirtyFields },
   } = useForm<Schedule>({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     reValidateMode: 'onSubmit',
-    defaultValues: {
+  });
+
+  // load default values
+  const loadNewDefaultValues = (sched: Schedule) => {
+    if (
+      sched.withLunch.toString() === 'true' ||
+      sched.withLunch.toString() === '1'
+    )
+      sched.withLunch = true;
+    else sched.withLunch = false;
+
+    setValue('id', sched.id);
+    setValue('name', sched.name);
+    setValue('scheduleType', sched.scheduleType);
+    setValue('timeIn', removeSeconds(sched.timeIn));
+    setValue('timeOut', removeSeconds(sched.timeOut));
+    setValue('scheduleBase', sched.scheduleBase);
+    setValue('withLunch', sched.withLunch);
+    setValue('lunchIn', removeSeconds(sched.lunchIn));
+    setValue('lunchOut', removeSeconds(sched.lunchOut));
+    setValue('shift', sched.shift);
+
+    reset({
       id: rowData.id,
       name: rowData.name,
       scheduleType: rowData.scheduleType,
-      timeIn: rowData.timeIn,
-      timeOut: rowData.timeOut,
+      timeIn: removeSeconds(rowData.timeIn),
+      timeOut: removeSeconds(rowData.timeOut),
       scheduleBase: ScheduleBases.OFFICE,
       shift: rowData.shift,
-    },
-  });
+      lunchIn: removeSeconds(rowData.lunchIn),
+      lunchOut: removeSeconds(rowData.lunchOut),
+      withLunch: rowData.withLunch,
+    });
+
+    // console.log(sched.withLunch);
+
+    if (sched.withLunch) {
+      setWithLunch(true);
+    } else {
+      setWithLunch(false);
+    }
+  };
+
+  const [withLunch, setWithLunch] = useState<boolean>(true);
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
     // set loading to true
@@ -145,7 +163,16 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
   }, [withLunch]);
 
   useEffect(() => {
+    if (Boolean(getValues('withLunch')) === true) {
+      setWithLunch(true);
+    } else if (Boolean(getValues('withLunch')) === false) {
+      setWithLunch(false);
+    }
+  }, [watch('withLunch')]);
+
+  useEffect(() => {
     if (modalState === true) {
+      register('withLunch');
       loadNewDefaultValues(rowData);
       clearErrors();
     }
@@ -187,7 +214,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
               <LabelInput
                 id={'scheduleName'}
                 label={'Schedule Name'}
-                controller={{ ...register('name', { required: true }) }}
+                controller={{ ...register('name') }}
                 isError={errors.name ? true : false}
                 errorMessage={errors.name?.message}
                 disabled={IsLoading ? true : false}
@@ -198,7 +225,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                 id="scheduleCategory"
                 selectList={categorySelection}
                 controller={{
-                  ...register('scheduleType', { required: true }),
+                  ...register('scheduleType'),
                 }}
                 label="Category"
                 isError={errors.scheduleType ? true : false}
@@ -211,7 +238,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                 id={'scheduleTimeIn'}
                 type="time"
                 label={'Time In'}
-                controller={{ ...register('timeIn', { required: true }) }}
+                controller={{ ...register('timeIn') }}
                 isError={errors.timeIn ? true : false}
                 errorMessage={errors.timeIn?.message}
                 disabled={IsLoading ? true : false}
@@ -222,7 +249,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                 id={'scheduleTimeOut'}
                 type="time"
                 label={'Time Out'}
-                controller={{ ...register('timeOut', { required: true }) }}
+                controller={{ ...register('timeOut') }}
                 isError={errors.timeOut ? true : false}
                 errorMessage={errors.timeOut?.message}
                 disabled={IsLoading ? true : false}
@@ -237,6 +264,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                   label={'With Lunch In & Out:'}
                   disabled={IsLoading ? true : false}
                 />
+
                 <div
                   className={`text-xs ${
                     withLunch ? 'text-blue-400' : 'text-gray-400'
@@ -264,19 +292,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                 </div>
               </div>
 
-              {/** Lunch In */}
-              {watch('withLunch') === true ? (
-                <LabelInput
-                  id={'scheduleLunchIn'}
-                  type="time"
-                  label={'Lunch In'}
-                  controller={{ ...register('lunchIn') }}
-                  isError={errors.lunchIn ? true : false}
-                  errorMessage={errors.lunchIn?.message}
-                  disabled={IsLoading ? true : false}
-                />
-              ) : null}
-
               {/** Lunch Out */}
               {watch('withLunch') === true ? (
                 <LabelInput
@@ -286,6 +301,19 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                   controller={{ ...register('lunchOut') }}
                   isError={errors.lunchOut ? true : false}
                   errorMessage={errors.lunchOut?.message}
+                  disabled={IsLoading ? true : false}
+                />
+              ) : null}
+
+              {/** Lunch In */}
+              {watch('withLunch') === true ? (
+                <LabelInput
+                  id={'scheduleLunchIn'}
+                  type="time"
+                  label={'Lunch In'}
+                  controller={{ ...register('lunchIn') }}
+                  isError={errors.lunchIn ? true : false}
+                  errorMessage={errors.lunchIn?.message}
                   disabled={IsLoading ? true : false}
                 />
               ) : null}
@@ -313,9 +341,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
               type="submit"
               form="addoffmodal"
               className="disabled:cursor-not-allowed"
-              disabled={
-                IsLoading ? true : !isValid ? true : !isDirty ? true : false
-              }
+              disabled={IsLoading ? true : !isValid ? true : false}
             >
               <span className="text-xs font-normal">Update</span>
             </Button>
