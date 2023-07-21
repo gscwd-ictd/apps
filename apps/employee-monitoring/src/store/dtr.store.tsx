@@ -4,11 +4,10 @@ import { create } from 'zustand';
 import { EmployeeRowData } from '../utils/types/table-row-types/monitoring/employee.type';
 import { devtools } from 'zustand/middleware';
 import {
-  EmployeeDtrWithSchedule,
   EmployeeDtrWithScheduleAndSummary,
   EmployeeDtrWithSummary,
-  EmployeeTimeLog,
 } from 'libs/utils/src/lib/types/dtr.type';
+import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
 type LoadingDtrEmployee = {
   loadingEmployeesAsOption: boolean;
@@ -28,13 +27,15 @@ type ResponseDtrEmployee = {
   postResponse: EmployeeSchedule;
 };
 
-type EmployeeDtr = {
-  companyId: string | null;
-  dtrDate: string | null;
+export type EmployeeDtr = {
+  companyId: string;
+  dtrDate: string;
   timeIn: string | null;
   lunchOut: string | null;
   lunchIn: string | null;
   timeOut: string | null;
+  shift: ScheduleShifts | null;
+  withLunch: boolean;
 };
 
 export type EmployeeSchedule = {
