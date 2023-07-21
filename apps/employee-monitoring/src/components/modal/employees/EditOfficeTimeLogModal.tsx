@@ -46,6 +46,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   const {
     setValue,
     register,
+    trigger,
     getValues,
     handleSubmit,
     reset,
@@ -138,7 +139,18 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
       withLunch: true,
       shift: rowData.schedule.shift,
     });
-    console.log(removeSeconds(rowData.dtr.timeIn));
+
+    setDefaultDtrValues({
+      companyId: rowData.companyId,
+      dtrDate: rowData.day,
+      timeIn: removeSeconds(rowData.dtr.timeIn),
+      lunchIn: removeSeconds(rowData.dtr.lunchIn),
+      lunchOut: removeSeconds(rowData.dtr.lunchOut),
+      timeOut: removeSeconds(rowData.dtr.timeOut),
+      withLunch: true,
+      shift: rowData.schedule.shift,
+    });
+
     setValue('companyId', rowData.companyId);
     setValue('dtrDate', rowData.day);
     setValue('timeIn', removeSeconds(rowData.dtr.timeIn));
@@ -156,27 +168,23 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   return (
     <>
       <Alert open={confirmAlertIsOpen} setOpen={setConfirmAlertIsOpen}>
-        <Alert.Description>Are you sure you want to proceed?</Alert.Description>
+        <Alert.Description>Are you sure with these changes?</Alert.Description>
         <Alert.Footer>
-          <div className="flex justify-end w-full gap-2">
-            <div className="w-[6rem]">
-              <Button
-                variant="info"
-                onClick={() => setConfirmAlertIsOpen(false)}
-                className="w-full"
-              >
-                <span className="text-xs">Cancel</span>
-              </Button>
-            </div>
-            <div className="w-[6rem]">
-              <Button
-                className="w-full"
-                type="submit"
-                form="editOfficeDtrModal"
-              >
-                <span className="text-xs">Confirm</span>
-              </Button>
-            </div>
+          <div className="flex justify-end w-full gap-1">
+            <button
+              onClick={() => setConfirmAlertIsOpen(false)}
+              className="w-[5rem] rounded bg-gray-200 py-1 px-0 hover:bg-gray-300 active:bg-gray-400"
+            >
+              <span className="text-xs">Cancel</span>
+            </button>
+
+            <button
+              className="w-[5rem] rounded bg-blue-400 py-1 px-0 hover:bg-blue-500 active:bg-blue-600"
+              type="submit"
+              form="editOfficeDtrModal"
+            >
+              <span className="text-xs text-white">Confirm</span>
+            </button>
           </div>
         </Alert.Footer>
       </Alert>
@@ -220,10 +228,12 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   type="time"
                   controller={{
                     ...register('timeIn', {
-                      onChange: (e) =>
+                      onChange: (e) => {
                         setValue('timeIn', e.target.value, {
                           shouldValidate: true,
-                        }),
+                        });
+                        trigger(); // triggers all validations for inputs
+                      },
                     }),
                   }}
                   isError={errors.timeIn ? true : false}
@@ -231,7 +241,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   className={
                     dirtyFields.timeIn && !errors.timeIn
                       ? 'bg-green-300'
-                      : dirtyFields.timeIn && errors.timeIn
+                      : errors.timeIn
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
@@ -245,10 +255,12 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   isDirty={dirtyFields.lunchOut}
                   controller={{
                     ...register('lunchOut', {
-                      onChange: (e) =>
+                      onChange: (e) => {
                         setValue('lunchOut', e.target.value, {
                           shouldValidate: true,
-                        }),
+                        });
+                        trigger(); // trigger all validations for inputs
+                      },
                     }),
                   }}
                   isError={errors.lunchOut ? true : false}
@@ -256,12 +268,11 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   className={
                     dirtyFields.lunchOut && !errors.lunchOut
                       ? 'bg-green-300'
-                      : dirtyFields.lunchOut && errors.lunchOut
+                      : errors.lunchOut
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-
-                  // disabled={IsLoading ? true : false}
+                  disabled={getValues('withLunch') === true ? false : true}
                 />
               </div>
               <div className="">
@@ -272,12 +283,26 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   step="any"
                   isDirty={dirtyFields.lunchIn}
                   required={false}
-                  controller={{ ...register('lunchIn') }}
+                  controller={{
+                    ...register('lunchIn', {
+                      onChange: (e) => {
+                        setValue('lunchIn', e.target.value, {
+                          shouldValidate: true,
+                        });
+                        trigger(); // trigger all validations for inputs
+                      },
+                    }),
+                  }}
                   isError={errors.lunchIn ? true : false}
                   errorMessage={errors.lunchIn?.message}
                   className={
-                    dirtyFields.lunchIn ? 'bg-green-300' : 'bg-inherit'
+                    dirtyFields.lunchIn && !errors.lunchIn
+                      ? 'bg-green-300'
+                      : errors.lunchIn
+                      ? 'bg-red-200'
+                      : 'bg-inherit'
                   }
+                  disabled={getValues('withLunch') === true ? false : true}
                 />
               </div>
               <div className="">
@@ -285,12 +310,26 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   id="timeOut"
                   label="Time out"
                   type="time"
+                  isDirty={dirtyFields.timeOut}
                   step="any"
-                  controller={{ ...register('timeOut') }}
+                  controller={{
+                    ...register('timeOut', {
+                      onChange: (e) => {
+                        setValue('timeOut', e.target.value, {
+                          shouldValidate: true,
+                        });
+                        trigger(); // trigger all validations for all inputs
+                      },
+                    }),
+                  }}
                   isError={errors.timeOut ? true : false}
                   errorMessage={errors.timeOut?.message}
                   className={
-                    dirtyFields.timeOut ? 'bg-green-300' : 'bg-inherit'
+                    dirtyFields.timeOut && !errors.timeOut
+                      ? 'bg-green-300'
+                      : errors.timeOut
+                      ? 'bg-red-200'
+                      : 'bg-inherit'
                   }
                 />
               </div>
@@ -306,7 +345,6 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
               onClick={() => setConfirmAlertIsOpen(true)}
               disabled={isDirty && isValid ? false : true}
             >
-              {JSON.stringify(isValid)}
               <span className="text-xs font-normal">Update</span>
             </Button>
           </div>

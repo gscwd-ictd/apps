@@ -12,6 +12,7 @@ import EditDailySchedModal from 'apps/employee-monitoring/src/components/modal/e
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
+import { LoadingSpinner } from '@gscwd-apps/oneui';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -67,7 +68,11 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
     getIsLoading: state.loading.loadingEmployeeDtr,
   }));
 
-  const { data: swrDtr, error: swrDtrError } = useSWR(
+  const {
+    data: swrDtr,
+    isLoading: swrDtrIsLoading,
+    error: swrDtrError,
+  } = useSWR(
     isDateSearched
       ? `daily-time-record/employees/${employeeData.companyId}/${selectedYear}/${selectedMonth}`
       : null,
@@ -146,6 +151,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
     // error
     if (!isEmpty(swrDtrError)) getEmployeeDtrFail(swrDtrError.message);
   }, [swrDtr, swrDtrError]);
+
+  if (swrDtrIsLoading)
+    return (
+      <>
+        <LoadingSpinner size="lg" />
+      </>
+    );
 
   return (
     <>
@@ -558,7 +570,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         {index === employeeDtr.summary?.lateDates.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );
@@ -581,7 +593,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         employeeDtr.summary?.undertimeDates.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );
@@ -601,7 +613,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         employeeDtr.summary?.noAttendance.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );

@@ -43,7 +43,7 @@ export const LabelInput: FunctionComponent<
                 isError ? 'bg-red-600' : 'bg-green-600'
               } px-1 text-white`}
             >
-              {isError ? 'Invalid Changes' : 'Valid Changes'}
+              {isError ? 'Invalid Change' : 'Valid Change'}
             </span>
           ) : null}
         </div>
