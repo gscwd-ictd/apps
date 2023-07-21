@@ -1,9 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment, FunctionComponent } from 'react';
-import { createPortal } from 'react-dom';
 import { useDtrStore } from '../../store/dtr.store';
 import { EmployeeRowData } from '../../utils/types/table-row-types/monitoring/employee.type';
 import { useRouter } from 'next/router';
+import { EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
 
 type ActionDropdownProps = {
   employee: EmployeeRowData;
@@ -33,7 +34,7 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
     setDropdownAction(item);
     setSelectedEmployee(employee);
     if (item === 'View Daily Time Record') {
-      setEmployeeDtr([]);
+      setEmployeeDtr({ dtrDays: [], summary: {} as EmployeeDtrWithSummary });
       setSelectedMonth('--');
       setSelectedYear('--');
       router.push(`/employees/${employee.id}`);

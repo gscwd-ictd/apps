@@ -10,9 +10,11 @@ import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/Label
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import dayjs from 'dayjs';
 import { listOfShifts } from 'libs/utils/src/lib/constants/shifts.const';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
+import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import ScheduleSchema from '../ScheduleSchema';
@@ -22,6 +24,11 @@ type EditModalProps = {
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   rowData: Schedule;
+};
+
+const removeSeconds = (value: string | null) => {
+  if (isEmpty(value)) return null;
+  else return dayjs('2000/01/01' + ' ' + value).format('HH:mm');
 };
 
 const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
@@ -46,6 +53,13 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
 
   // load default values
   const loadNewDefaultValues = (sched: Schedule) => {
+    if (
+      sched.withLunch.toString() === 'true' ||
+      sched.withLunch.toString() === '1'
+    )
+      sched.withLunch = true;
+    else sched.withLunch = false;
+
     setValue('id', sched.id);
     setValue('name', sched.name);
     setValue('scheduleType', sched.scheduleType);
@@ -55,6 +69,19 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
+
+    reset({
+      id: rowData.id,
+      name: rowData.name,
+      scheduleType: rowData.scheduleType,
+      timeIn: removeSeconds(rowData.timeIn),
+      timeOut: removeSeconds(rowData.timeOut),
+      scheduleBase: ScheduleBases.PUMPING_STATION,
+      shift: rowData.shift,
+      lunchIn: removeSeconds(rowData.lunchIn),
+      lunchOut: removeSeconds(rowData.lunchOut),
+      withLunch: rowData.withLunch,
+    });
   };
 
   const {
@@ -68,15 +95,6 @@ const EditStationSchedModal: FunctionComponent<EditModalProps> = ({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     reValidateMode: 'onSubmit',
-    defaultValues: {
-      id: rowData.id,
-      name: rowData.name,
-      scheduleType: rowData.scheduleType,
-      timeIn: rowData.timeIn,
-      timeOut: rowData.timeOut,
-      scheduleBase: ScheduleBases.PUMPING_STATION,
-      shift: rowData.shift,
-    },
   });
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
