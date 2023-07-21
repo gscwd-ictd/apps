@@ -189,6 +189,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                   let lunchOutColor = '';
                   let lunchInColor = '';
                   let timeOutColor = '';
+                  let isHoliday = false;
 
                   // time in color
                   compareIfLate(
@@ -558,7 +559,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         {index === employeeDtr.summary?.lateDates.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );
@@ -581,7 +582,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         employeeDtr.summary?.undertimeDates.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );
@@ -601,7 +602,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         employeeDtr.summary?.noAttendance.length - 1 ? (
                           <>{day}</>
                         ) : (
-                          <>{day},</>
+                          <>{day}, </>
                         )}
                       </span>
                     );

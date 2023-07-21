@@ -494,7 +494,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {children.length === 0 ? (
-                        <div className="shadow-sm rounded-md shadow-slate-200">
+                        <div className="rounded-md shadow-sm shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -541,7 +541,7 @@ export default function ReviewPanel(): JSX.Element {
                     <>
                       {elementary.schoolName === '' ||
                       elementary.schoolName === null ? (
-                        <div className="shadow-sm rounded-md shadow-slate-200">
+                        <div className="rounded-md shadow-sm shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -604,7 +604,7 @@ export default function ReviewPanel(): JSX.Element {
                     <>
                       {secondary.schoolName === '' ||
                       secondary.schoolName === null ? (
-                        <div className="shadow-sm rounded-md shadow-slate-200">
+                        <div className="rounded-md shadow-sm shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -660,7 +660,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {vocational.length === 0 ? (
-                        <div className="shadow-sm rounded-md shadow-slate-200">
+                        <div className="rounded-md shadow-sm shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -734,7 +734,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {college.length === 0 ? (
-                        <div className="shadow-sm rounded-md shadow-slate-200">
+                        <div className="rounded-md shadow-sm shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -809,7 +809,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {graduate.length === 0 ? (
-                        <div className="shadow-sm rounded-md shadow-slate-200">
+                        <div className="rounded-md shadow-sm shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -882,7 +882,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {eligibility.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -945,7 +945,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {workExperience.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1031,7 +1031,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {voluntaryWork.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1083,7 +1083,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {learningDevelopment.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1144,7 +1144,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {skills.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1175,7 +1175,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {recognitions.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1205,7 +1205,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="px-5">
                   {organizations.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -1523,7 +1523,7 @@ export default function ReviewPanel(): JSX.Element {
               <>
                 <div className="flex flex-col gap-4 px-5">
                   {references.length === 0 ? (
-                    <div className="shadow-sm rounded-md shadow-slate-200">
+                    <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
