@@ -41,11 +41,9 @@ export const MotherInfo = (): JSX.Element => {
       <Card
         title="Mother's Maiden Name"
         subtitle="Write your mother's maiden name (the name when she was single or before marriage). Write 'N/A' if not applicable"
+        remarks={<MotherAlert setInitialValues={setInitialValues} />}
       >
         <>
-          <div className="-mt-16 flex w-full justify-end pb-10">
-            <MotherAlert setInitialValues={setInitialValues} />
-          </div>
           <div className="xs:block mt-7 gap-4 lg:flex lg:grid-cols-2">
             <div className="col-span-1 mb-7 w-full">
               <FloatingLabelInputRF

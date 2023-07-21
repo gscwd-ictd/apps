@@ -53,9 +53,7 @@ export const OIGovtID = (): JSX.Element => {
         title={'Government Issued ID'}
         subtitle=""
         remarks={
-          <div className="flex flex-col items-end justify-end w-full">
-            <GovernmentIssuedIdAlert setInitialValues={setInitialValues} />
-          </div>
+          <GovernmentIssuedIdAlert setInitialValues={setInitialValues} />
         }
       >
         <>

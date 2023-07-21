@@ -16,12 +16,19 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ScheduleSchema from '../ScheduleSchema';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
+import { isEmpty } from 'lodash';
+import dayjs from 'dayjs';
 
 type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   rowData: Schedule;
+};
+
+const removeSeconds = (value: string | null) => {
+  if (isEmpty(value)) return null;
+  else return dayjs('2000/01/01' + ' ' + value).format('HH:mm');
 };
 
 const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
@@ -44,15 +51,35 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
 
   // load default values
   const loadNewDefaultValues = (sched: Schedule) => {
+    if (
+      sched.withLunch.toString() === 'true' ||
+      sched.withLunch.toString() === '1'
+    )
+      sched.withLunch = true;
+    else sched.withLunch = false;
+
     setValue('id', sched.id);
     setValue('name', sched.name);
     setValue('scheduleType', sched.scheduleType);
     setValue('withLunch', false);
-    setValue('timeIn', sched.timeIn);
-    setValue('timeOut', sched.timeOut);
+    setValue('timeIn', removeSeconds(sched.timeIn));
+    setValue('timeOut', removeSeconds(sched.timeOut));
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
+
+    reset({
+      id: rowData.id,
+      name: rowData.name,
+      scheduleType: rowData.scheduleType,
+      timeIn: removeSeconds(rowData.timeIn),
+      timeOut: removeSeconds(rowData.timeOut),
+      scheduleBase: ScheduleBases.OFFICE,
+      shift: rowData.shift,
+      lunchIn: removeSeconds(rowData.lunchIn),
+      lunchOut: removeSeconds(rowData.lunchOut),
+      withLunch: rowData.withLunch,
+    });
   };
 
   const {
@@ -66,17 +93,6 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     resolver: yupResolver(ScheduleSchema),
     mode: 'onChange',
     reValidateMode: 'onSubmit',
-    defaultValues: {
-      id: rowData.id,
-      name: rowData.name,
-      scheduleType: rowData.scheduleType,
-      timeIn: rowData.timeIn,
-      timeOut: rowData.timeOut,
-      scheduleBase: ScheduleBases.FIELD,
-      shift: rowData.shift,
-      lunchIn: rowData.lunchIn,
-      lunchOut: rowData.lunchOut,
-    },
   });
 
   const onSubmit: SubmitHandler<Schedule> = (sched: Schedule) => {
@@ -139,7 +155,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
             </div>
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addfieldmodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="editFieldModal">
             <div className="flex flex-col w-full gap-5">
               {/** name */}
               <LabelInput
@@ -193,7 +209,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
             <Button
               variant="info"
               type="submit"
-              form="addfieldmodal"
+              form="editFieldModal"
               className="disabled:cursor-not-allowed"
               disabled={
                 IsLoading ? true : !isValid ? true : !isDirty ? true : false

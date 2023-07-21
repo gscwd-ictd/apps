@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Alert, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { Alert, Button, ToastNotification } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import {
   GetServerSideProps,
@@ -13,91 +13,59 @@ import { employee } from '../../../utils/constants/data';
 import {
   getUserDetails,
   withCookieSession,
-  withSession,
 } from '../../../utils/helpers/session';
-import { patchData } from '../../../utils/hoc/axios';
 import SideNav from '../../../components/fixed/nav/SideNav';
-import { AppSelAlertController } from '../../../components/fixed/selection/AppSelAlertController';
-import { AppSelectionModalController } from '../../../components/fixed/selection/AppSelectionListController';
 import { AppSelectionTabs } from '../../../components/fixed/selection/AppSelectionTabs';
 import { AppSelectionTabWindow } from '../../../components/fixed/selection/AppSelectionTabWindow';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
-import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useAppSelectionStore } from '../../../store/selection.store';
-import { Applicant } from '../../../types/applicant.type';
-import { employeeDummy } from '../../../types/employee.type';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
-
-import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import AppSelectionModal from '../../../components/fixed/selection/AppSelectionModal';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { Roles } from 'apps/portal/src/utils/constants/user-roles';
-import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import { AppSelAlertConfirmation } from 'apps/portal/src/components/fixed/selection/alert/AppSelAlertConfirmation';
+import { AppSelAlertInfo } from 'apps/portal/src/components/fixed/selection/alert/AppSelAlertInfo';
 
 export default function AppPosAppointment({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
-    loadingPublicationList,
     loadingFulfilledPublicationList,
     loadingPendingPublicationList,
-    loadingResponse,
     errorPublicationList,
     errorFulfilledPublicationList,
     errorPendingPublicationList,
     errorResponse,
     patchResponseApply,
-    appSelectionModalIsOpen,
-
-    setAppSelectionModalIsOpen,
     getPendingPublicationList,
     getPendingPublicationListSuccess,
     getPendingPublicationListFail,
-
     getFulfilledPublicationList,
     getFulfilledPublicationListSuccess,
     getFulfilledPublicationListFail,
-
-    patchPublication,
-    patchPublicationSuccess,
-    patchPublicationFail,
-
     emptyResponseAndError,
   } = useAppSelectionStore((state) => ({
-    loadingPublicationList: state.loading.loadingPublicationList,
     loadingFulfilledPublicationList:
       state.loading.loadingFulfilledPublicationList,
     loadingPendingPublicationList: state.loading.loadingPendingPublicationList,
-    loadingResponse: state.loading.loadingResponse,
-
     errorPublicationList: state.errors.errorPublicationList,
     errorFulfilledPublicationList: state.errors.errorFulfilledPublicationList,
     errorPendingPublicationList: state.errors.errorPendingPublicationList,
     errorResponse: state.errors.errorResponse,
-
     patchResponseApply: state.response.patchResponseApply,
-    appSelectionModalIsOpen: state.appSelectionModalIsOpen,
-
-    setAppSelectionModalIsOpen: state.setAppSelectionModalIsOpen,
     getPendingPublicationList: state.getPendingPublicationList,
     getPendingPublicationListSuccess: state.getPendingPublicationListSuccess,
     getPendingPublicationListFail: state.getPendingPublicationListFail,
-
     getFulfilledPublicationList: state.getFulfilledPublicationList,
     getFulfilledPublicationListSuccess:
       state.getFulfilledPublicationListSuccess,
     getFulfilledPublicationListFail: state.getFulfilledPublicationListFail,
-
-    patchPublication: state.patchPublication,
-    patchPublicationSuccess: state.patchPublicationSuccess,
-    patchPublicationFail: state.patchPublicationFail,
-
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
@@ -117,11 +85,6 @@ export default function AppPosAppointment({
     (state) => state.selectedApplicants
   );
 
-  // set the selected applicants state
-  const setSelectedApplicants = useAppSelectionStore(
-    (state) => state.setSelectedApplicants
-  );
-
   // get the tab state
   const tab = useAppSelectionStore((state) => state.tab);
 
@@ -130,113 +93,10 @@ export default function AppPosAppointment({
     (state) => state.setEmployeeDetails
   );
 
-  // confirmation alert
-  const alert = useAppSelectionStore((state) => state.alert);
-
-  // set confirmation alert
-  const setAlert = useAppSelectionStore((state) => state.setAlert);
-
-  // loading state
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // gets an array of strings of ids of all selected applicants
-  const getArrayOfIdsFromSelectedApplicants = async (
-    applicants: Array<Applicant>
-  ) => {
-    const applicantIds: Array<string> = [];
-    const updatedApplicants = [...applicants];
-    updatedApplicants.map((applicant) => {
-      applicantIds.push(applicant.postingApplicantId);
-    });
-    return applicantIds;
-  };
-
   // open the modal
   const openModal = () => {
     setModal({ ...modal, page: 1, isOpen: true });
-    setAppSelectionModalIsOpen(true);
   };
-
-  // close the modal
-  const closeModal = () => {
-    setIsLoading(true);
-    setModal({ ...modal, isOpen: false });
-  };
-
-  // cancel action for App Selection Modal
-  const closeAppSelectionModal = async () => {
-    setAppSelectionModalIsOpen(false);
-    setSelectedApplicants([]);
-  };
-
-  // confirm action for modal
-  const modalAction = async () => {
-    if (modal.page === 2) {
-      setAlert({ ...alert, isOpen: true });
-    }
-  };
-
-  // cancel action for modal
-  const modalCancel = async () => {
-    if (modal.page === 1)
-      setModal({ ...modal, isOpen: false }); //! Add set state default values
-    else if (modal.page === 2) {
-      setModal({ ...modal, page: 1 });
-      setSelectedApplicants([]);
-    }
-  };
-
-  // open alert
-  const openAlert = () => {
-    setAlert({ ...alert, isOpen: true });
-  };
-
-  // confirm modal action
-  const alertAction = async () => {
-    let data;
-    if (alert.page === 1) {
-      const applicantIds = await getArrayOfIdsFromSelectedApplicants(
-        selectedApplicants
-      );
-      const postingApplicantIds = {
-        postingApplicantIds: applicantIds,
-      };
-      const { error, result } = await patchData(
-        `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/${selectedPublication.vppId}`, //* Changed
-        postingApplicantIds
-      );
-
-      patchPublication();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      data = result;
-
-      if (!error) {
-        patchPublicationSuccess(data);
-        setAlert({ ...alert, page: 2 });
-      } else {
-        patchPublicationFail(data);
-        setAlert({ ...alert, page: 2 });
-      }
-    } else if (alert.page === 2) {
-      setIsLoading(true);
-      setModal({ ...modal, isOpen: false, page: 1 });
-      setAlert({ ...alert, isOpen: false, page: 1 });
-      closeAppSelectionModal();
-    }
-  };
-
-  // set the employee details store from server side props
-  useEffect(() => {
-    setEmployeeDetails(employeeDetails);
-  }, []);
-
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-    }
-  }, [isLoading]);
 
   const pendingUrl = `/applicant-endorsement/appointing-authority-selection/publications/pending`;
   const fulfilledUrl = `/applicant-endorsement/appointing-authority-selection/publications/selected`;
@@ -270,6 +130,11 @@ export default function AppPosAppointment({
       getPendingPublicationList(swrPendingPublicationIsLoading);
     }
   }, [swrPendingPublicationIsLoading]);
+
+  // set the employee details store from server side props
+  useEffect(() => {
+    setEmployeeDetails(employeeDetails);
+  }, []);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
@@ -374,35 +239,11 @@ export default function AppPosAppointment({
 
       <SideNav navDetails={navDetails} />
 
-      <AppSelectionModal
-        modalState={appSelectionModalIsOpen}
-        setModalState={setAppSelectionModalIsOpen}
-        closeModalAction={closeAppSelectionModal}
-      />
+      <AppSelectionModal />
 
-      <Alert open={alert.isOpen} setOpen={openAlert}>
-        <Alert.Description>
-          <AppSelAlertController page={alert.page} />
-        </Alert.Description>
-        <Alert.Footer alignEnd>
-          <div className="flex gap-2">
-            {alert.page === 1 && (
-              <button
-                onClick={() => setAlert({ ...alert, isOpen: false })}
-                className="w-[5rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
-              >
-                No
-              </button>
-            )}
-            <button
-              onClick={alertAction}
-              className="min-w-[5rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
-            >
-              {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
-            </button>
-          </div>
-        </Alert.Footer>
-      </Alert>
+      <AppSelAlertConfirmation />
+
+      <AppSelAlertInfo />
 
       <MainContainer>
         <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>

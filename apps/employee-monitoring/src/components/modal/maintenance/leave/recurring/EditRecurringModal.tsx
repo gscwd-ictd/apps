@@ -9,7 +9,7 @@ import {
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import {
   LeaveBenefit,
   LeaveType,
@@ -98,10 +98,7 @@ const EditRecurringModal: FunctionComponent<EditModalProps> = ({
   };
 
   const handleEditLeave = async (leave: LeaveBenefit) => {
-    const { error, result } = await patchEmpMonitoring(
-      '/leave-benefits',
-      leave
-    );
+    const { error, result } = await putEmpMonitoring('/leave-benefits', leave);
 
     if (error) {
       // request is done so set loading to false and set value for error message

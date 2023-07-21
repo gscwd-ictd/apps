@@ -14,6 +14,9 @@ import { Actions } from '../../../../../utils/helpers/enums/toast.enum';
 import { getPds } from '../../../../../utils/helpers/pds.helper';
 import { Button } from '../../../modular/buttons/Button';
 import { AlertDesc } from '../../alerts/AlertDesc';
+import { EditCardBtn } from '../../buttons/EditCardBtn';
+import { UndoCardBtn } from '../../buttons/UndoCardBtn';
+import { UpdateCardBtn } from '../../buttons/UpdateCardBtn';
 import { Toast } from '../../toast/Toast';
 
 type PermanentAddressAlertProps = {
@@ -176,68 +179,17 @@ export const PermanentAddressAlert = ({
       </Alert>
 
       {hasPds && (
-        <div className="h-[1.6rem] w-auto">
+        <div className="w-auto">
           {permanentAddressOnEdit && (
             <>
-              <div className="flex ">
-                <Button
-                  onClick={() => setAlertCancelIsOpen(true)}
-                  btnLabel=""
-                  variant="light"
-                  type="button"
-                  className="ring-0 focus:ring-0"
-                >
-                  <div className="flex items-center text-gray-400 hover:text-gray-600">
-                    <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        className="h-6 w-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-                        />
-                      </svg>
-                    </div>
-                    <span>Undo</span>
-                  </div>
-                </Button>
-                <Button
-                  onClick={() => setAlertUpdateIsOpen(true)}
-                  btnLabel=""
-                  variant="light"
-                  type="button"
-                  className="ring-0 hover:bg-white focus:ring-0"
-                  muted={allowPermanentAddressSave ? false : true}
-                >
-                  <div className="flex items-center text-indigo-600 hover:text-indigo-800">
-                    <IoIosSave size={20} />
-                    <span>Update</span>
-                  </div>
-                </Button>
+              <div className="flex gap-4">
+                <UndoCardBtn action={() => setAlertCancelIsOpen(true)} />
+                <UpdateCardBtn action={() => setAlertUpdateIsOpen(true)} />
               </div>
             </>
           )}
           {!permanentAddressOnEdit && (
-            <>
-              <Button
-                onClick={() => setPermanentAddressOnEdit!(true)}
-                btnLabel=""
-                variant="light"
-                type="button"
-                className="ring-0 hover:bg-white focus:ring-0"
-              >
-                <div className="flex items-center text-gray-400 hover:text-gray-600">
-                  <HiPencil size={20} />
-                  <span>Edit</span>
-                </div>
-              </Button>
-            </>
+            <EditCardBtn action={() => setPermanentAddressOnEdit!(true)} />
           )}
         </div>
       )}

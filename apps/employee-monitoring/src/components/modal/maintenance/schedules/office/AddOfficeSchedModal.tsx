@@ -234,19 +234,6 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                 </div>
               </div>
 
-              {/** Lunch In */}
-              {watch('withLunch') === true ? (
-                <LabelInput
-                  id={'scheduleLunchIn'}
-                  type="time"
-                  label={'Lunch In'}
-                  controller={{ ...register('lunchIn') }}
-                  isError={errors.lunchIn ? true : false}
-                  errorMessage={errors.lunchIn?.message}
-                  disabled={IsLoading ? true : false}
-                />
-              ) : null}
-
               {/** Lunch Out */}
               {watch('withLunch') === true ? (
                 <LabelInput
@@ -256,6 +243,19 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   controller={{ ...register('lunchOut') }}
                   isError={errors.lunchOut ? true : false}
                   errorMessage={errors.lunchOut?.message}
+                  disabled={IsLoading ? true : false}
+                />
+              ) : null}
+
+              {/** Lunch In */}
+              {watch('withLunch') === true ? (
+                <LabelInput
+                  id={'scheduleLunchIn'}
+                  type="time"
+                  label={'Lunch In'}
+                  controller={{ ...register('lunchIn') }}
+                  isError={errors.lunchIn ? true : false}
+                  errorMessage={errors.lunchIn?.message}
                   disabled={IsLoading ? true : false}
                 />
               ) : null}

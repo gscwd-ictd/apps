@@ -18,10 +18,7 @@ const ScheduleSchema = yup.object().shape({
         .typeError('Time in is a required field')
         .trim()
         .label('Time in'),
-    })
-    .when('withLunch', {
-      is: false,
-      then: yup.string().notRequired().nullable().label('Time in'),
+      otherwise: yup.string().notRequired().nullable().label('Time in'),
     }),
   lunchOut: yup
     .string()
@@ -34,12 +31,10 @@ const ScheduleSchema = yup.object().shape({
         .typeError('Time out is a required field')
         .trim()
         .label('Time out'),
-    })
-    .when('withLunch', {
-      is: false,
-      then: yup.string().notRequired().nullable().label('Time out'),
+      otherwise: yup.string().notRequired().nullable().label('Time out'),
     }),
-  shift: yup.string().nullable().required().label('Shift'),
+
+  shift: yup.string().required().label('Shift'),
 });
 
 export default ScheduleSchema;

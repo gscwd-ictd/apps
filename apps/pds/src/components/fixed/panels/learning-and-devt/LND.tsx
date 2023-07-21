@@ -201,20 +201,24 @@ export const LearningNDevt = (): JSX.Element => {
 
   return (
     <>
-      <Card title="Learning & Development" subtitle="">
-        <>
-          <div className="flex flex-col items-end justify-end w-full pb-4 -mt-10">
+      <Card
+        title="Learning & Development"
+        subtitle=""
+        remarks={
+          <div className="">
             {allowEditLnd || allowDeleteLnd || allowAddLnd ? (
               <LearningDevelopmentAlert setInitialValues={setInitialValues} />
             ) : null}
           </div>
-
+        }
+      >
+        <>
           <div
-            className={`flex flex-col items-end justify-end pt-6 ${
+            className={`flex flex-col items-end justify-end ${
               learningDevelopmentOnEdit
-                ? 'visible  mt-6'
+                ? 'visible'
                 : !hasPds
-                ? 'visible -mt-6 pb-6 pr-6'
+                ? 'visible'
                 : 'hidden'
             }`}
           >
@@ -440,7 +444,7 @@ export const LearningNDevt = (): JSX.Element => {
                         return (
                           <tr
                             key={trainingIdx}
-                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                            className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                           >
                             <TableDimension
                               isText={true}

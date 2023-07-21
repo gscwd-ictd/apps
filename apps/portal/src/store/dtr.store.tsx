@@ -1,10 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import {
+  EmployeeDtrWithSchedule,
+  EmployeeDtrWithScheduleAndSummary,
+} from 'libs/utils/src/lib/types/dtr.type';
 import { devtools } from 'zustand/middleware';
 
 export type DtrState = {
-  employeeDtr: Array<EmployeeDtrWithSchedule>;
+  employeeDtr: EmployeeDtrWithScheduleAndSummary;
   loadingDtr: boolean;
   errorDtr: string;
 
@@ -26,7 +29,7 @@ export type DtrState = {
 
 export const useDtrStore = create<DtrState>()(
   devtools((set) => ({
-    employeeDtr: [],
+    employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
     loadingDtr: false,
     errorDtr: '',
     selectedYear: '',
@@ -47,14 +50,14 @@ export const useDtrStore = create<DtrState>()(
     getEmployeeDtr: (loading: boolean) => {
       set((state) => ({
         ...state,
-        employeeDtr: [],
+        employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
         loadingDtr: loading,
         errorDtr: '',
       }));
     },
     getEmployeeDtrSuccess: (
       loading: boolean,
-      response: Array<EmployeeDtrWithSchedule>
+      response: EmployeeDtrWithScheduleAndSummary
     ) => {
       set((state) => ({
         ...state,

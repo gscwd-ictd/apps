@@ -154,21 +154,21 @@ export const OISkills = (): JSX.Element => {
 
   return (
     <>
-      <Card title="Skills and Hobbies" subtitle="">
-        <>
-          <div className="flex flex-col items-end justify-end w-full pb-4 -mt-10">
+      <Card
+        title="Skills and Hobbies"
+        subtitle=""
+        remarks={
+          <div>
             {allowAddSkill || allowEditSkill || allowDeleteSkill ? (
               <SkillsAlert setInitialValues={setInitialValues} />
             ) : null}
           </div>
-
+        }
+      >
+        <>
           <div
-            className={`flex flex-col items-end justify-end pt-6 ${
-              skillsOnEdit
-                ? 'visible  mt-6'
-                : !hasPds
-                ? 'visible -mt-6 pb-6 pr-6'
-                : 'hidden'
+            className={`flex flex-col items-end justify-end ${
+              skillsOnEdit ? 'visible' : !hasPds ? 'visible' : 'hidden'
             }`}
           >
             {allowAddSkill ? (
@@ -256,7 +256,6 @@ export const OISkills = (): JSX.Element => {
             </Alert.Description>
             <Alert.Footer>
               <div className="flex w-full gap-4">
-                {' '}
                 <Button
                   variant="light"
                   onClick={() => setRemoveSkillIsOpen(false)}
@@ -286,7 +285,7 @@ export const OISkills = (): JSX.Element => {
                     <TableHeader
                       label="Title"
                       headerWidth="w-[85%]"
-                      className="px-28"
+                      className="pl-4"
                       textSize="sm"
                     />
                     <TableHeader
@@ -304,13 +303,13 @@ export const OISkills = (): JSX.Element => {
                         return (
                           <tr
                             key={skillIdx}
-                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                            className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                           >
                             <TableDimension
                               isText={true}
                               label={skill.skill}
-                              className="px-28"
-                              textSize="lg"
+                              className="pl-4"
+                              textSize="md"
                             />
                             <TableDimension
                               isText={false}
