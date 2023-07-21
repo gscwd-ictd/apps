@@ -279,7 +279,7 @@ export const WorkExp = (): JSX.Element => {
         title="Work Experience"
         subtitle=""
         remarks={
-          <div className="flex flex-col items-end justify-end w-full">
+          <div className="">
             {allowEditWorkExperience ? (
               <WorkExperienceAlert setInitialValues={setInitialValues} />
             ) : null}
@@ -288,11 +288,7 @@ export const WorkExp = (): JSX.Element => {
       >
         <div
           className={`flex flex-col items-end justify-end ${
-            workExperienceOnEdit
-              ? 'visible'
-              : !hasPds
-              ? 'visible lg:-mt-6 lg:pb-6'
-              : 'hidden'
+            workExperienceOnEdit ? 'visible' : !hasPds ? 'visible' : 'hidden'
           }`}
         >
           {allowAddWorkExperience ? (
@@ -577,7 +573,7 @@ export const WorkExp = (): JSX.Element => {
                         return (
                           <tr
                             key={workIdx}
-                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                            className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                           >
                             <TableDimension
                               isText={true}

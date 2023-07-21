@@ -53,7 +53,7 @@ export const TableHeader = ({
     <>
       <th
         scope="col"
-        className={`${headerWidth} ${className} py-3 text-${alignment} select-none ${size[textSize]} font-medium tracking-tighter text-gray-500`}
+        className={`${headerWidth} ${className} py-3 text-${alignment} select-none ${size[textSize]} font-semibold tracking-tighter text-gray-700`}
       >
         {label}
       </th>
@@ -74,14 +74,20 @@ export const TableDimension = ({
   labelIfNull = 'Present',
 }: TableDimensionProps) => {
   return (
-    <td className={`${className} py-4 text-gray-500  `}>
+    <td className={`${className} py-2 text-gray-500 font-light`}>
       {isText === false ? (
         <>{tableDimension}</>
       ) : isText === true && isPeriod === false ? (
-        <div className={`${size[textSize]} max-w-fit break-words text-gray-900 `}>{label}</div>
+        <div
+          className={`${size[textSize]} max-w-fit break-words text-gray-900 `}
+        >
+          {label}
+        </div>
       ) : isPeriod === true && isText === true ? (
         <>
-          <div className={`${size[textSize]} max-w-fit place-content-center break-words text-gray-900 `}>
+          <div
+            className={`${size[textSize]} max-w-fit place-content-center break-words text-gray-900 `}
+          >
             {periodLabel1}
             {showPeriodIfNull ? (
               periodLabel2 === null ? (
@@ -110,24 +116,30 @@ export const TableDimension = ({
   );
 };
 
-export const TableBody = ({ children = 'BODY HERE', className = '', mapKey }: TableBodyProps): JSX.Element => {
+export const TableBody = ({
+  children = 'BODY HERE',
+  className = '',
+  mapKey,
+}: TableBodyProps): JSX.Element => {
   return <>{children}</>;
 };
 
-export const Table = ({ tableBody = 'BODY HERE', tableHeader = 'HEADER HERE', className = '' }: TableProps): JSX.Element => {
+export const Table = ({
+  tableBody = 'BODY HERE',
+  tableHeader = 'HEADER HERE',
+  className = '',
+}: TableProps): JSX.Element => {
   return (
-    <div className="mt-5 ">
+    <div className="">
       <div className="flex flex-col">
-        <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className=" overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="overflow-hidden rounded-xl ">
-              <table className="min-w-full divide-y divide-slate-50 ">
-                <>
-                  <thead className="bg-gray-200/90">
-                    <tr className="h-[4rem]">{tableHeader}</tr>
-                  </thead>
-                  {tableBody}
-                </>
+            <div className="overflow-x-auto rounded-sm">
+              <table className="min-w-full divide-y divide-slate-50 px-2 ">
+                <thead className="bg-gray-200/70 ">
+                  <tr className="h-[4rem]">{tableHeader}</tr>
+                </thead>
+                {tableBody}
               </table>
             </div>
           </div>

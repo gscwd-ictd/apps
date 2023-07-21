@@ -170,24 +170,29 @@ export const PermanentAddressBI = (): JSX.Element => {
         title="Permanent Address"
         subtitle="Write the address where you are permanently residing. Write N/A if not applicable"
         remarks={
-          <Checkbox
-            id="checkboxSameAddr"
-            checked={checkboxAddress}
-            label="Same as Residential Address"
-            className={
-              hasPds && !permanentAddressOnEdit
-                ? 'cursor-not-allowed'
-                : 'hover:text-indigo-800'
-            }
-            onChange={checkboxSameAddrListener}
-            disabled={
-              hasPds && permanentAddressOnEdit
-                ? false
-                : hasPds && !permanentAddressOnEdit
-                ? true
-                : !hasPds && false
-            }
-          />
+          <div className="flex flex-col gap-6">
+            <div className="flex justify-end w-full">
+              <PermanentAddressAlert setInitialValues={setInitialValues} />
+            </div>
+            <Checkbox
+              id="checkboxSameAddr"
+              checked={checkboxAddress}
+              label="Same as Residential Address"
+              className={
+                hasPds && !permanentAddressOnEdit
+                  ? 'cursor-not-allowed italic'
+                  : 'hover:text-indigo-800 italic'
+              }
+              onChange={checkboxSameAddrListener}
+              disabled={
+                hasPds && permanentAddressOnEdit
+                  ? false
+                  : hasPds && !permanentAddressOnEdit
+                  ? true
+                  : !hasPds && false
+              }
+            />
+          </div>
         }
       >
         <>
@@ -206,9 +211,6 @@ export const PermanentAddressBI = (): JSX.Element => {
           ) : (
             <></>
           )}
-          <div className="flex justify-end w-full">
-            <PermanentAddressAlert setInitialValues={setInitialValues} />
-          </div>
 
           <div className="gap-4 mt-7 sm:block md:block lg:flex lg:grid-cols-3">
             <div className="w-full col-span-1 mb-7">

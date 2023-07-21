@@ -43,12 +43,13 @@ export const FatherInfo = (): JSX.Element => {
       <Card
         title="Father's Information"
         subtitle="Write your father's information. Write 'N/A' if not applicable."
-      >
-        <>
-          <div className="-mt-16 flex w-full justify-end pb-10">
+        remarks={
+          <div>
             <FatherAlert setInitialValues={setInitialValues} />
           </div>
-
+        }
+      >
+        <>
           <div className="xs:block mt-7 gap-4 lg:flex lg:grid-cols-2">
             <div className="col-span-1 mb-7 w-full">
               <FloatingLabelInputRF

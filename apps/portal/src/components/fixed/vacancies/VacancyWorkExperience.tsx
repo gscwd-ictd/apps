@@ -335,7 +335,7 @@ export const VacancyWorkExperience = (props: {
                     <label className="font-semibold">
                       Government Service:{' '}
                     </label>
-                    {exp.isGovernmentService ? 'True' : 'False'}
+                    {exp.isGovernmentService ? 'Yes' : 'No'}
                   </div>
                   <table className="w-full mt-2">
                     <tbody>

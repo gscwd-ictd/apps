@@ -35,6 +35,7 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
 import { UseNameInitials } from '../../utils/hooks/useNameInitials';
+import { useDtrStore } from '../../store/dtr.store';
 
 export type NavDetails = {
   fullName: string;
@@ -96,6 +97,19 @@ export default function Dashboard({
     getTimeLogsFail: state.getTimeLogsFail,
   }));
 
+  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail } =
+    useDtrStore((state) => ({
+      getEmployeeDtr: state.getEmployeeDtr,
+      getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+      getEmployeeDtrFail: state.getEmployeeDtrFail,
+    }));
+
+  // const  = useDtrStore((state) => state.getEmployeeDtr);
+  // const getEmployeeDtrSuccess = useDtrStore(
+  //   (state) => state.getEmployeeDtrSuccess
+  // );
+  // const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
+
   const faceScanUrl = `${
     process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
   }/v1/daily-time-record/employees/${
@@ -131,12 +145,53 @@ export default function Dashboard({
     }
   }, [swrFaceScan, swrFaceScanError]);
 
+  const monthNow = format(new Date(), 'M');
+  const yearNow = format(new Date(), 'yyyy');
+  const dtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${userDetails.employmentDetails.companyId}/${yearNow}/${monthNow}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrDtr,
+    isLoading: swrDtrIsLoading,
+    error: swrDtrError,
+    mutate: mutateDtrUrl,
+  } = useSWR(dtrUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrDtrIsLoading) {
+      getEmployeeDtr(swrDtrIsLoading);
+    }
+  }, [swrDtrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrDtr)) {
+      console.log(swrDtr);
+      getEmployeeDtrSuccess(swrDtrIsLoading, swrDtr);
+    }
+
+    if (!isEmpty(swrDtrError)) {
+      getEmployeeDtrFail(swrDtrIsLoading, swrDtrError.message);
+    }
+  }, [swrDtr, swrDtrError]);
+
   return (
     <>
       {!isEmpty(swrFaceScanError) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`Face Scans: ${swrFaceScanError.message}.`}
+        />
+      ) : null}
+
+      {!isEmpty(swrDtrError) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`DTR: ${swrDtrError.message}.`}
         />
       ) : null}
 
@@ -166,9 +221,25 @@ export default function Dashboard({
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 ">
                   <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
                     <div className="flex flex-row gap-4">
-                      <StatsCard name={'Lates Count'} count={10} />
-                      <StatsCard name={'Pass Slip Count'} count={10} />
-                      <StatsCard name={'Force Leaves'} count={5} />
+                      <StatsCard
+                        name={'Lates Count'}
+                        count={
+                          swrDtr?.summary?.noOfTimesLate
+                            ? swrDtr?.summary?.noOfTimesLate
+                            : 0
+                        }
+                        isLoading={swrDtrIsLoading}
+                      />
+                      <StatsCard
+                        name={'Pass Slip Count'}
+                        count={0}
+                        isLoading={swrDtrIsLoading}
+                      />
+                      <StatsCard
+                        name={'Force Leaves'}
+                        count={0}
+                        isLoading={swrDtrIsLoading}
+                      />
                     </div>
                   </div>
                   <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">

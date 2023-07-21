@@ -6,7 +6,12 @@ import { SecEducation } from '../../../../types/data/education.type';
 import { Card } from '../../../modular/cards/Card';
 import { FloatingLabelInputRF } from '../../../modular/inputs/FloatingLabelInputRF';
 import { SelectListRFFL } from '../../../modular/select/SelectListRFFL';
-import { secondaryLevel, highestLevelHS, highestLevelJHS, highestLevelSHS } from '../../../../../utils/constants/constants';
+import {
+  secondaryLevel,
+  highestLevelHS,
+  highestLevelJHS,
+  highestLevelSHS,
+} from '../../../../../utils/constants/constants';
 import { SecondaryAlert } from './SecondaryAlert';
 
 export const Secondary = (): JSX.Element => {
@@ -49,7 +54,15 @@ export const Secondary = (): JSX.Element => {
   // if schoolname value is empty or null, set form values to default and clear errors
   useEffect(() => {
     if (getSecSchoolName === null || getSecSchoolName === '') {
-      setSecondary({ ...secondary, degree: '', from: null, to: null, units: '', yearGraduated: null, awards: '' });
+      setSecondary({
+        ...secondary,
+        degree: '',
+        from: null,
+        to: null,
+        units: '',
+        yearGraduated: null,
+        awards: '',
+      });
       setValue('secDegree', '');
       setValue('secFrom', null);
       setValue('secTo', null);
@@ -88,15 +101,23 @@ export const Secondary = (): JSX.Element => {
 
   // assign the employee id on page load
   useEffect(() => {
-    setSecondary({ ...secondary, employeeId: employee.employmentDetails.userId });
+    setSecondary({
+      ...secondary,
+      employeeId: employee.employmentDetails.userId,
+    });
   }, []);
   return (
     <>
-      <Card title="Secondary" subtitle="Leave blank if not applicable.">
-        <>
-          <div className="-mt-16 flex w-full justify-end pb-10">
+      <Card
+        title="Secondary"
+        subtitle="Leave blank if not applicable."
+        remarks={
+          <div className="">
             <SecondaryAlert setInitialValues={setInitialValues} />
           </div>
+        }
+      >
+        <>
           <div className="xs:block mt-7 gap-4 lg:flex lg:grid-cols-2">
             <div className="col-span-1 mb-7 w-full">
               <FloatingLabelInputRF
@@ -106,13 +127,25 @@ export const Secondary = (): JSX.Element => {
                 type="text"
                 controller={{
                   ...register('secSchoolName', {
-                    value: secondary.schoolName ? secondary.schoolName.trim() : '',
-                    onChange: (e) => setSecondary({ ...secondary, schoolName: e.target.value }),
+                    value: secondary.schoolName
+                      ? secondary.schoolName.trim()
+                      : '',
+                    onChange: (e) =>
+                      setSecondary({
+                        ...secondary,
+                        schoolName: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.secSchoolName ? true : false}
                 errorMessage={errors.secSchoolName?.message}
-                muted={hasPds && secondaryOnEdit ? false : hasPds && !secondaryOnEdit ? true : !hasPds && false}
+                muted={
+                  hasPds && secondaryOnEdit
+                    ? false
+                    : hasPds && !secondaryOnEdit
+                    ? true
+                    : !hasPds && false
+                }
               />
             </div>
             <div className="col-span-1 mb-7 w-full">
@@ -125,13 +158,18 @@ export const Secondary = (): JSX.Element => {
                 controller={{
                   ...register('secDegree', {
                     value: secondary.degree ? secondary.degree : '',
-                    onChange: (e) => setSecondary({ ...secondary, degree: e.target.value }),
+                    onChange: (e) =>
+                      setSecondary({ ...secondary, degree: e.target.value }),
                   }),
                 }}
                 isError={errors.secDegree ? true : false}
                 errorMessage={errors.secDegree?.message}
                 muted={
-                  (hasPds && secondaryOnEdit ? false : hasPds && !secondaryOnEdit ? true : !hasPds && false) || (!getSecSchoolName ? true : false)
+                  (hasPds && secondaryOnEdit
+                    ? false
+                    : hasPds && !secondaryOnEdit
+                    ? true
+                    : !hasPds && false) || (!getSecSchoolName ? true : false)
                 }
               />
             </div>
@@ -149,13 +187,18 @@ export const Secondary = (): JSX.Element => {
                   controller={{
                     ...register('secFrom', {
                       value: secondary.from ? secondary.from : null,
-                      onChange: (e) => setSecondary({ ...secondary, from: e.target.value }),
+                      onChange: (e) =>
+                        setSecondary({ ...secondary, from: e.target.value }),
                     }),
                   }}
                   isError={errors.secFrom ? true : false}
                   errorMessage={errors.secFrom?.message}
                   muted={
-                    (hasPds && secondaryOnEdit ? false : hasPds && !secondaryOnEdit ? true : !hasPds && false) || (!getSecSchoolName ? true : false)
+                    (hasPds && secondaryOnEdit
+                      ? false
+                      : hasPds && !secondaryOnEdit
+                      ? true
+                      : !hasPds && false) || (!getSecSchoolName ? true : false)
                   }
                 />
               </div>
@@ -170,13 +213,18 @@ export const Secondary = (): JSX.Element => {
                   controller={{
                     ...register('secTo', {
                       value: secondary.to ? secondary.to : null,
-                      onChange: (e) => setSecondary({ ...secondary, to: e.target.value }),
+                      onChange: (e) =>
+                        setSecondary({ ...secondary, to: e.target.value }),
                     }),
                   }}
                   isError={errors.secTo ? true : false}
                   errorMessage={errors.secTo?.message}
                   muted={
-                    (hasPds && secondaryOnEdit ? false : hasPds && !secondaryOnEdit ? true : !hasPds && false) || (!getSecSchoolName ? true : false)
+                    (hasPds && secondaryOnEdit
+                      ? false
+                      : hasPds && !secondaryOnEdit
+                      ? true
+                      : !hasPds && false) || (!getSecSchoolName ? true : false)
                   }
                 />
               </div>
@@ -200,13 +248,18 @@ export const Secondary = (): JSX.Element => {
                 controller={{
                   ...register('secUnits', {
                     value: secondary.units ? secondary.units : '',
-                    onChange: (e) => setSecondary({ ...secondary, units: e.target.value }),
+                    onChange: (e) =>
+                      setSecondary({ ...secondary, units: e.target.value }),
                   }),
                 }}
                 isError={errors.secUnits ? true : false}
                 errorMessage={errors.secUnits?.message}
                 muted={
-                  (hasPds && secondaryOnEdit ? false : hasPds && !secondaryOnEdit ? true : !hasPds && false) || (!getSecSchoolName ? true : false)
+                  (hasPds && secondaryOnEdit
+                    ? false
+                    : hasPds && !secondaryOnEdit
+                    ? true
+                    : !hasPds && false) || (!getSecSchoolName ? true : false)
                 }
               />
             </div>
@@ -218,13 +271,21 @@ export const Secondary = (): JSX.Element => {
                 id="secYearGrad"
                 onWheel={(e) => e.currentTarget.blur()}
                 muted={true}
-                isRequired={getSecSchoolName && getSecUnits === 'Graduated' ? true : false}
+                isRequired={
+                  getSecSchoolName && getSecUnits === 'Graduated' ? true : false
+                }
                 placeholder="Year Graduated"
                 type="number"
                 controller={{
                   ...register('secYearGraduated', {
-                    value: secondary.yearGraduated ? secondary.yearGraduated : null,
-                    onChange: (e) => setSecondary({ ...secondary, yearGraduated: e.target.value }),
+                    value: secondary.yearGraduated
+                      ? secondary.yearGraduated
+                      : null,
+                    onChange: (e) =>
+                      setSecondary({
+                        ...secondary,
+                        yearGraduated: e.target.value,
+                      }),
                   }),
                 }}
                 isError={errors.secYearGraduated ? true : false}
@@ -235,7 +296,11 @@ export const Secondary = (): JSX.Element => {
               <FloatingLabelInputRF
                 id="secAwards"
                 muted={
-                  (hasPds && secondaryOnEdit ? false : hasPds && !secondaryOnEdit ? true : !hasPds && false) || (!getSecSchoolName ? true : false)
+                  (hasPds && secondaryOnEdit
+                    ? false
+                    : hasPds && !secondaryOnEdit
+                    ? true
+                    : !hasPds && false) || (!getSecSchoolName ? true : false)
                 }
                 placeholder="Scholarship or Academic Honors Received"
                 type="text"
@@ -243,7 +308,8 @@ export const Secondary = (): JSX.Element => {
                 controller={{
                   ...register('secAwards', {
                     value: secondary.awards ? secondary.awards.trim() : '',
-                    onChange: (e) => setSecondary({ ...secondary, awards: e.target.value }),
+                    onChange: (e) =>
+                      setSecondary({ ...secondary, awards: e.target.value }),
                   }),
                 }}
                 isError={errors.secAwards ? true : false}

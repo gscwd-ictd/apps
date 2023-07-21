@@ -4,7 +4,7 @@ export const AppEndAlertFail = () => {
   return (
     <>
       <div className="w-full">
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <HiXCircle className="text-red-500 animate-pulse" size={30} />
           <span className="text-2xl">Success</span>
         </div>

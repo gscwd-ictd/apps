@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
 import { useAppSelectionStore } from '../../../store/selection.store';
-import { Publication } from '../../../types/publication.type';
-import { useEffect } from 'react';
+import {
+  Publication,
+  PublicationPostingStatus,
+} from '../../../types/publication.type';
 import { isEmpty } from 'lodash';
 
 type AllSelectionPublicationListTabProps = {
@@ -13,16 +15,6 @@ export const AllSelectionPublicationListTab = ({
   publications,
   tab,
 }: AllSelectionPublicationListTabProps) => {
-  const {
-    appSelectionModalIsOpen,
-
-    setAppSelectionModalIsOpen,
-  } = useAppSelectionStore((state) => ({
-    appSelectionModalIsOpen: state.appSelectionModalIsOpen,
-
-    setAppSelectionModalIsOpen: state.setAppSelectionModalIsOpen,
-  }));
-
   const modal = useAppSelectionStore((state) => state.modal);
 
   const setSelectedPublication = useAppSelectionStore(
@@ -39,7 +31,6 @@ export const AllSelectionPublicationListTab = ({
     setSelectedPublication(publication);
     setSelectedPublicationId(publication.vppId);
     setModal({ ...modal, page: 2, isOpen: true });
-    setAppSelectionModalIsOpen(true);
   };
 
   return (
@@ -58,14 +49,25 @@ export const AllSelectionPublicationListTab = ({
                     {item.positionTitle}
                   </h1>
                   {/* <p className="text-gray-500 text-md"></p> */}
-                  <p className="text-gray-500 text-md">
-                    Fulfilled on{' '}
-                    {dayjs(item.postingDate).format('MMMM d, YYYY')}
+                  <p className="text-md text-gray-600 font-semibold">
+                    {item.itemNumber}
                   </p>
-                  <p className="text-sm text-gray-500">{item.itemNumber}</p>
                   <p className="text-xs text-gray-500">
                     {item.placeOfAssignment}
                   </p>
+
+                  {item.postingStatus ===
+                  PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION ? (
+                    <p className="text-indigo-500 text-sm">
+                      For Appointing Authority Selection
+                    </p>
+                  ) : item.postingStatus ===
+                    PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE ? (
+                    <p className="text-indigo-500 text-sm">
+                      Appointing Authority Selection Done at{' '}
+                      {dayjs(item.updatedAt).format('MMMM d, YYYY')}
+                    </p>
+                  ) : null}
                 </div>
               </li>
             );

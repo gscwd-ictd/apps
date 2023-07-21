@@ -33,7 +33,7 @@ export const DisapprovedPrfList: FunctionComponent<
               Click on each request item to view its current status.
             </p>
           </header>
-          <main className="scale-95 grid grid-cols-2 gap-6">
+          <main className="grid grid-cols-2 gap-6">
             <DisapprovedPrfCard prf={disapprovedPrfs} />
           </main>
         </>

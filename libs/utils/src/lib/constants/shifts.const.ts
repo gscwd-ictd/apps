@@ -1,6 +1,6 @@
 import { SelectOption } from '../types/select.type';
 
 export const listOfShifts: Array<SelectOption> = [
-  { label: 'Morning', value: 'morning' },
+  { label: 'Day', value: 'day' },
   { label: 'Night', value: 'night' },
 ];

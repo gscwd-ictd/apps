@@ -114,12 +114,13 @@ export const PersonalInfoBI = (): JSX.Element => {
         subtitle={
           'This contains your personal information. Write N/A if not applicable'
         }
-      >
-        <>
-          <div className="flex justify-end w-full pb-10 -mt-16">
+        remarks={
+          <div className="">
             <PersonalInfoAlert setInitialValues={setInitialValues} />
           </div>
-
+        }
+      >
+        <>
           <div className="gap-4 xs:block mt-7 sm:block md:block lg:flex lg:grid-cols-2 ">
             <div className="w-full col-span-1 mb-7">
               <FloatingLabelInputRF
@@ -217,7 +218,10 @@ export const PersonalInfoBI = (): JSX.Element => {
                     onChange: (e) =>
                       setPersonalInfo({
                         ...personalInfo,
-                        nameExtension: e.target.value,
+                        nameExtension:
+                          e.target.value === 'n/a'
+                            ? e.target.value.toUppercase()
+                            : e.target.value,
                       }),
                   }),
                 }}
@@ -567,7 +571,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   />
                 </>
               ) : (
-                <div className="justify-left flex cursor-default select-none rounded-xl border px-5 py-[1rem] text-gray-600  focus-within:border focus-within:border-indigo-600">
+                <div className="justify-left flex cursor-default select-none rounded-xl border px-5 py-[1rem] text-gray-400  focus-within:border focus-within:border-indigo-600">
                   <span className="peer">No dual citizenship.</span>
                 </div>
               )}
