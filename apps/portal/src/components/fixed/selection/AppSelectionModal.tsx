@@ -1,61 +1,47 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
-import { useRouter } from 'next/router';
+import { Modal } from '@gscwd-apps/oneui';
 import { AppSelectionModalController } from './AppSelectionListController';
 import { useAppSelectionStore } from '../../../../src/store/selection.store';
 import { PublicationPostingStatus } from '../../../../src/types/publication.type';
 import { isEmpty } from 'lodash';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
-type AppSelectionModalProps = {
-  modalState: boolean;
-  setModalState: React.Dispatch<React.SetStateAction<boolean>>;
-  closeModalAction: () => void;
-};
-
-export const AppSelectionModal = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}: AppSelectionModalProps) => {
-  const router = useRouter();
-
+export const AppSelectionModal = () => {
   const publicationDetails = useAppSelectionStore(
     (state) => state.publicationDetails
   );
 
   // get state for the modal
-  const modal = useAppSelectionStore((state) => state.modal);
-
-  // set state for the modal
-  const setModal = useAppSelectionStore((state) => state.setModal);
-
-  // get the selected applicants state
-  const selectedApplicants = useAppSelectionStore(
-    (state) => state.selectedApplicants
-  );
-
-  // set the selected applicants state
-  const setSelectedApplicants = useAppSelectionStore(
-    (state) => state.setSelectedApplicants
-  );
-
-  // confirmation alert
-  const alert = useAppSelectionStore((state) => state.alert);
-
-  // set confirmation alert
-  const setAlert = useAppSelectionStore((state) => state.setAlert);
-
-  // get the selected publication id state
-  const selectedPublication = useAppSelectionStore(
-    (state) => state.selectedPublication
-  );
+  const {
+    modal,
+    selectedApplicants,
+    selectedPublication,
+    setModal,
+    setAlertConfirmationIsOpen,
+    setFilteredValue,
+    setSelectedApplicants,
+  } = useAppSelectionStore((state) => ({
+    modal: state.modal,
+    setModal: state.setModal,
+    setAlertConfirmationIsOpen: state.setAlertConfirmationIsOpen,
+    selectedApplicants: state.selectedApplicants,
+    selectedPublication: state.selectedPublication,
+    setSelectedApplicants: state.setSelectedApplicants,
+    setFilteredValue: state.setFilteredValue,
+  }));
 
   // confirm action for modal
   const modalAction = async () => {
     if (modal.page === 2) {
-      setAlert({ ...alert, isOpen: true });
+      setAlertConfirmationIsOpen(true);
     }
+  };
+
+  // close modal action
+  const closeModalFunction = () => {
+    setFilteredValue('');
+    setSelectedApplicants([]);
+    setModal({ ...modal, isOpen: false, page: 1 });
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -63,25 +49,37 @@ export const AppSelectionModal = ({
   return (
     <>
       <Modal
-        open={modalState}
-        setOpen={setModalState}
+        open={modal.isOpen}
+        setOpen={() => setModal({ ...modal })}
         size={windowWidth > 1024 ? (modal.page === 2 ? 'xl' : 'lg') : 'full'}
         steady
       >
         <Modal.Header>
-          <h3 className="font-semibold text-gray-700">
-            <div className="px-5 text-xl">
-              {modal.page === 1
-                ? 'Select a publication'
-                : modal.page === 2 && !isEmpty(selectedPublication)
-                ? 'Select Applicant(s)'
-                : modal.page === 2 &&
-                  selectedPublication.postingStatus ===
-                    PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
-                ? 'Selected Applicant(s)'
-                : null}
-            </div>
-          </h3>
+          <div className="w-full flex justify-between">
+            <h3 className="px-5 font-semibold text-gray-700 flex flex-col w-full ">
+              <div className=" text-2xl">Appointing Authority Selection</div>
+              <div className="text-md font-normal text-gray-500">
+                {modal.page === 1
+                  ? 'Select a publication'
+                  : modal.page === 2 &&
+                    !isEmpty(selectedPublication) &&
+                    selectedPublication.postingStatus ===
+                      PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION
+                  ? 'Select Applicant/s'
+                  : modal.page === 2 &&
+                    !isEmpty(selectedPublication) &&
+                    selectedPublication.postingStatus ===
+                      PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
+                  ? 'Selection Done'
+                  : null}
+              </div>
+            </h3>
+            <i
+              role="button"
+              className="bx bx-x text-2xl"
+              onClick={closeModalFunction}
+            ></i>
+          </div>
         </Modal.Header>
 
         <Modal.Body>
@@ -91,8 +89,8 @@ export const AppSelectionModal = ({
           <div className="flex justify-end gap-2">
             {modal.page !== 4 ? (
               <button
-                className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-gray-100 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
-                onClick={closeModalAction}
+                className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+                onClick={closeModalFunction}
               >
                 {modal.page === 1 ? 'Close' : 'Cancel'}
               </button>

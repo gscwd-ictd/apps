@@ -3,7 +3,7 @@ type PageProps = {
   subtitle: any;
   children: React.ReactNode | React.ReactNode[];
   pageClassName?: string;
-  titleClassName?: String;
+  titleClassName?: string;
   subtitleClassName?: string;
 };
 
@@ -18,8 +18,14 @@ export const Page = ({
   return (
     <>
       <div className={`${pageClassName} select-none`}>
-        <div className={`${titleClassName} select-none hover:text-indigo-800`}>{title}</div>
-        <div className={`${subtitleClassName} select-none hover:text-indigo-800`}>{subtitle}</div>
+        <div className={`${titleClassName} select-none hover:text-indigo-800`}>
+          {title}
+        </div>
+        <div
+          className={`${subtitleClassName} select-none hover:text-indigo-800`}
+        >
+          {subtitle}
+        </div>
         {children}
       </div>
     </>

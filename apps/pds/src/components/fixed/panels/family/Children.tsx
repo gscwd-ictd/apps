@@ -198,18 +198,14 @@ export const ChildrenInfo = (): JSX.Element => {
         title={`Children's Information`}
         subtitle={`List your children's information.`}
         remarks={
-          <div className="flex flex-col items-end justify-end w-full">
+          <div className="">
             <ChildrenAlert setInitialValues={setInitialValues} />
           </div>
         }
       >
         <div
           className={`flex flex-col items-end justify-end ${
-            childrenOnEdit
-              ? 'visible'
-              : !hasPds
-              ? 'visible lg:-mt-6 lg:pb-6'
-              : 'hidden'
+            childrenOnEdit ? 'visible' : !hasPds ? 'visible' : 'hidden'
           }`}
         >
           <Button
@@ -350,27 +346,14 @@ export const ChildrenInfo = (): JSX.Element => {
                       return (
                         <tr
                           key={childIdx}
-                          className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-300"
+                          className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                         >
                           <TableDimension
                             isText={false}
                             tableDimension={
                               <>
                                 <div className="flex items-center px-2">
-                                  <div className="flex-shrink-0 w-10 h-10">
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="w-auto h-auto pl-1"
-                                      viewBox="0 0 24 24"
-                                      fill="indigo"
-                                    >
-                                      <path
-                                        fillRule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                                        clipRule="evenodd"
-                                      />
-                                    </svg>
-                                  </div>
+                                  <i className="bx text-2xl bxs-user-circle"></i>
 
                                   <div className="pl-2 text-sm font-normal text-gray-900 break-words select-none max-w-fit ">
                                     {childName}

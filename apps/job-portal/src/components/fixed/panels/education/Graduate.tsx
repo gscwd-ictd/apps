@@ -377,7 +377,7 @@ export const Graduate = (): JSX.Element => {
                         return (
                           <tr
                             key={courseIdx}
-                            className="odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                            className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                           >
                             <TableDimension
                               isText={true}

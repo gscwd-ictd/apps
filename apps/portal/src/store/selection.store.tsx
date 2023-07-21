@@ -23,7 +23,27 @@ export const RANKING: Ranking = {
   allPsbSubmitted: '',
 };
 
-type ApplicantDetails = Pick<Applicant, 'applicantId' | 'applicantType'>;
+// type ApplicantDetails = Pick<
+//   Applicant,
+//   'applicantId' | 'applicantType' | 'postingApplicantId' | 'applicantName'
+// >;
+type ApplicantDetails = {
+  applicantId: string;
+  applicantType: string;
+  postingApplicantId: string;
+  applicantName: string;
+  applicantAvgScore: string;
+  positionTitle: string;
+  rank: string;
+  photoUrl?: string;
+};
+
+type PsbDetails = {
+  psbNo: number;
+  psbName: string;
+  score: string;
+  remarks: string;
+};
 
 export type SelectionState = {
   response: {
@@ -34,12 +54,14 @@ export type SelectionState = {
     loadingPendingPublicationList: boolean;
     loadingFulfilledPublicationList: boolean;
     loadingResponse: boolean;
+    loadingPsbDetails: boolean;
   };
   errors: {
     errorPublicationList: string;
     errorPendingPublicationList: string;
     errorFulfilledPublicationList: string;
     errorResponse: string;
+    errorPsbDetails: string;
   };
 
   getPublicationList: (loading: boolean) => void;
@@ -58,12 +80,27 @@ export type SelectionState = {
   patchPublicationSuccess: (response: Publication) => void;
   patchPublicationFail: (error: string) => void;
 
-  appSelectionModalIsOpen: boolean;
-  setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => void;
+  getPsbDetails: () => void;
+  getPsbDetailsSuccess: (
+    response: Array<PsbDetails>,
+    applicantList: Array<ApplicantWithScores>,
+    applicantDetails: ApplicantDetails
+  ) => void;
+  getPsbDetailsFail: (error: string) => void;
+  psbDetails: Array<PsbDetails>;
+  setPsbDetails: (psbDetails: Array<PsbDetails>) => void;
+
   pds: Pds;
   setPds: (pds: Pds) => void;
-  alert: AlertState;
-  setAlert: (alert: AlertState) => void;
+  showPdsAlert: boolean;
+  setShowPdsAlert: (showPdsAlert: boolean) => void;
+  showPsbDetailsAlert: boolean;
+  setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) => void;
+  alertConfirmationIsOpen: boolean;
+  setAlertConfirmationIsOpen: (alertConfirmation: boolean) => void;
+  alertInfoIsOpen: boolean;
+  setAlertInfoIsOpen: (alertInfoIsOpen: boolean) => void;
+  errorPatch: boolean;
   modal: ModalState;
   setModal: (modal: ModalState) => void;
   action: string;
@@ -71,7 +108,8 @@ export type SelectionState = {
   error: ErrorState;
   setError: (error: ErrorState) => void;
   publicationList: Array<Publication>;
-  // setPublicationList: (publications: Array<Publication>) => void;
+  dropdownAction: string;
+  setDropdownAction: (dropdownAction: string) => void;
   selectedPublicationId: string;
   setSelectedPublicationId: (value: string) => void;
   selectedPublication: Publication;
@@ -85,6 +123,9 @@ export type SelectionState = {
   applicantList: Array<ApplicantWithScores>;
   setApplicantList: (applicants: Array<ApplicantWithScores>) => void;
   filteredPublicationList: Array<Publication>;
+  setFilteredPublicationList: (
+    filteredPublicationList: Array<Publication>
+  ) => void;
   selectedApplicantDetails: ApplicantDetails;
   setSelectedApplicantDetails: (
     selectedApplicantDetails: ApplicantDetails
@@ -100,10 +141,15 @@ export type SelectionState = {
   tab: number;
   setTab: (tab: number) => void;
   emptyResponseAndError: () => void;
+  filteredValue: string;
+  setFilteredValue: (filteredValue: string) => void;
 };
 
 export const useAppSelectionStore = create<SelectionState>()(
   devtools((set) => ({
+    filteredValue: '',
+    setFilteredValue: (filteredValue: string) =>
+      set((state) => ({ ...state, filteredValue })),
     response: {
       patchResponseApply: {},
     },
@@ -112,30 +158,90 @@ export const useAppSelectionStore = create<SelectionState>()(
       loadingPendingPublicationList: false,
       loadingFulfilledPublicationList: false,
       loadingResponse: false,
+      loadingPsbDetails: false,
     },
     errors: {
       errorPublicationList: '',
       errorPendingPublicationList: '',
       errorFulfilledPublicationList: '',
       errorResponse: '',
+      errorPsbDetails: '',
     },
-    selectedApplicantDetails: { applicantId: '', applicantType: '' },
-
+    selectedApplicantDetails: {
+      applicantId: '',
+      applicantType: '',
+      postingApplicantId: '',
+      applicantName: '',
+      applicantAvgScore: '',
+      positionTitle: '',
+      rank: '',
+    },
     setSelectedApplicantDetails: (
       selectedApplicantDetails: ApplicantDetails
     ) => {
       set((state) => ({ ...state, selectedApplicantDetails }));
     },
+    showPdsAlert: false,
+    setShowPdsAlert: (showPdsAlert: boolean) =>
+      set((state) => ({ ...state, showPdsAlert })),
+    dropdownAction: '',
+    setDropdownAction: (dropdownAction: string) =>
+      set((state) => ({ ...state, dropdownAction })),
+
+    psbDetails: [],
+    setPsbDetails: (psbDetails: Array<PsbDetails>) =>
+      set((state) => ({ ...state, psbDetails })),
+
+    getPsbDetails: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPsbDetails: true },
+        psbDetails: [],
+        errors: { ...state.errors, errorPsbDetails: '' },
+      })),
+
+    getPsbDetailsSuccess: (
+      response: Array<PsbDetails>,
+      applicantList: Array<ApplicantWithScores>,
+      applicantDetails: ApplicantDetails
+    ) => {
+      const filteredApplicant = applicantList.find(
+        (applicant) =>
+          applicant.postingApplicantId === applicantDetails.postingApplicantId
+      );
+      response &&
+        response.map((psb) => {
+          if (psb.psbNo === 1) psb.score = filteredApplicant.psb_1;
+          if (psb.psbNo === 2) psb.score = filteredApplicant.psb_2;
+          if (psb.psbNo === 3) psb.score = filteredApplicant.psb_3;
+          if (psb.psbNo === 4) psb.score = filteredApplicant.psb_4;
+          if (psb.psbNo === 5) psb.score = filteredApplicant.psb_5;
+          if (psb.psbNo === 6) psb.score = filteredApplicant.psb_6;
+          if (psb.psbNo === 7) psb.score = filteredApplicant.psb_7;
+          if (psb.psbNo === 8) psb.score = filteredApplicant.psb_8;
+        });
+
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPsbDetails: false },
+        psbDetails: response,
+      }));
+    },
+
+    getPsbDetailsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPsbDetails: false },
+        errors: { ...state.errors, errorPsbDetails: error },
+      })),
+
     pds: {} as Pds,
     setPds: (pds: Pds) => {
       set((state) => ({ ...state, pds }));
     },
-
-    appSelectionModalIsOpen: false,
-
-    setAppSelectionModalIsOpen: (appSelectionModalIsOpen: boolean) => {
-      set((state) => ({ ...state, appSelectionModalIsOpen }));
-    },
+    showPsbDetailsAlert: false,
+    setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) =>
+      set((state) => ({ ...state, showPsbDetailsAlert })),
 
     alert: { isOpen: false, page: 1 },
     modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
@@ -155,6 +261,9 @@ export const useAppSelectionStore = create<SelectionState>()(
     pendingPublicationList: [],
     fulfilledPublicationList: [],
     isLoading: false,
+    alertConfirmationIsOpen: false,
+    alertInfoIsOpen: false,
+    errorPatch: false,
     setAlert: (alert: AlertState) => {
       set((state) => ({ ...state, alert }));
     },
@@ -187,28 +296,18 @@ export const useAppSelectionStore = create<SelectionState>()(
     setApplicantList: (applicantList: Array<ApplicantWithScores>) => {
       set((state) => ({ ...state, applicantList }));
     },
-    // setPublicationList: (publicationList: Array<Publication>) => {
-    //   set((state) => ({ ...state, publicationList }));
-    // },
-    // setFilteredPublicationList: (
-    //   filteredPublicationList: Array<Publication>
-    // ) => {
-    //   set((state) => ({ ...state, filteredPublicationList }));
-    // },
+    setFilteredPublicationList: (
+      filteredPublicationList: Array<Publication>
+    ) => {
+      set((state) => ({ ...state, filteredPublicationList }));
+    },
     setPublicationDetails: (publicationDetails: PublicationDetails) => {
       set((state) => ({ ...state, publicationDetails }));
     },
     setApplicantScores: (applicantScores: Array<PsbScores>) => {
       set((state) => ({ ...state, applicantScores }));
     },
-    // setPendingPublicationList: (publicationList: Array<Publication>) => {
-    //   set((state) => ({ ...state, publicationList }));
-    // },
-    // setFulfilledPublicationList: (
-    //   fulfilledPublicationList: Array<Publication>
-    // ) => {
-    //   set((state) => ({ ...state, fulfilledPublicationList }));
-    // },
+
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
     },
@@ -239,6 +338,7 @@ export const useAppSelectionStore = create<SelectionState>()(
       set((state) => ({
         ...state,
         publicationList: response,
+        filteredPublicationList: response,
         loading: {
           ...state.loading,
           loadingPublicationList: loading,
@@ -361,6 +461,7 @@ export const useAppSelectionStore = create<SelectionState>()(
           ...state.errors,
           errorResponse: '',
         },
+        errorPatch: false,
       }));
     },
     patchPublicationSuccess: (response) => {
@@ -374,6 +475,10 @@ export const useAppSelectionStore = create<SelectionState>()(
           ...state.loading,
           loadingResponse: false,
         },
+        errorPatch: false,
+        alertConfirmationIsOpen: false,
+        alertInfoIsOpen: true,
+        modal: { ...state.modal, isOpen: false },
       }));
     },
     patchPublicationFail: (error: string) => {
@@ -387,8 +492,17 @@ export const useAppSelectionStore = create<SelectionState>()(
           ...state.errors,
           errorResponse: error,
         },
+        errorPatch: true,
+        alertConfirmationIsOpen: false,
+        alertInfoIsOpen: true,
       }));
     },
+
+    setAlertConfirmationIsOpen: (alertConfirmationIsOpen: boolean) =>
+      set((state) => ({ ...state, alertConfirmationIsOpen })),
+
+    setAlertInfoIsOpen: (alertInfoIsOpen: boolean) =>
+      set((state) => ({ ...state, alertInfoIsOpen })),
 
     emptyResponseAndError: () => {
       set((state) => ({

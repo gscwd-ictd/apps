@@ -52,20 +52,9 @@ import { useRouter } from 'next/router';
 type PrfPageProps = {
   user: User;
   employee: EmployeeDetails;
-  // profile: EmployeeProfile;
-  // pendingRequests: Array<PrfDetails>;
-  // forApproval: Array<any>;
-  // disapprovedRequests: Array<PrfDetails>;
 };
 
-export default function Prf({
-  user,
-  employee,
-}: // profile,
-// pendingRequests,
-// forApproval,
-// disapprovedRequests,
-PrfPageProps) {
+export default function Prf({ user, employee }: PrfPageProps) {
   // access modal-open state from store
   const isOpen = usePrfStore((state) => state.isModalOpen);
 
@@ -293,13 +282,12 @@ PrfPageProps) {
 
   useEffect(() => {
     if (!isEmpty(patchResponse)) {
-      // console.log(employee.user._id, 'userid');
       mutateForApprovalPrfDetails();
       mutatePendingPrfDetails();
       mutateDisapprovedPrfDetails();
       setTimeout(() => {
         emptyResponseAndError();
-      }, 500);
+      }, 2000);
       if (swrForApprovalPrfDetailsList.length <= 1) {
         setTimeout(() => {
           router.reload();
@@ -317,10 +305,6 @@ PrfPageProps) {
 
     // update value of profile
     // setProfile(profile);
-
-    // setPendingPrfs(pendingRequests);
-    // setForApprovalPrfs(forApproval);
-    // setDisapprovedPrfs(disapprovedRequests);
 
     setIsLoading(true);
   }, [employee]);
@@ -371,7 +355,6 @@ PrfPageProps) {
 
     // make the modal visible
     setIsOpen(true);
-    // console.log(employeeDetail, 'employee store');
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -401,7 +384,7 @@ PrfPageProps) {
 
   return (
     <>
-      {/* Disapprove PRF Success */}
+      {/* Patch PRF Success */}
       {!isEmpty(patchResponse) ? (
         <ToastNotification
           toastType="success"
@@ -518,20 +501,6 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
   async () => {
     const employee = getUserDetails();
     // const employee = employeeDummy;
-    // get user details
-    //const user = await getUserDetails(employee.userId);
-
-    // get employee profile
-    //const profile = await getEmployeeProfile(user._id);
-
-    // get all pending prfs
-    // const pendingRequests = await getPendingPrfs(employee.user._id);
-
-    // get all approved prfs
-    // const forApproval = await getForApprovalPrfs(employee.user._id);
-
-    // get all disapproved prfs
-    // const disapprovedRequests = await getDisapprovedPrfs(employee.user._id);
 
     // check if user role is rank_and_file
     if (
@@ -551,10 +520,6 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
       props: {
         user: employee.user,
         employee: employee,
-        // profile: employee.profile,
-        // pendingRequests,
-        // forApproval,
-        // disapprovedRequests,
       },
     };
   }

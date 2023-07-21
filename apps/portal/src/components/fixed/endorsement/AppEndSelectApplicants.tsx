@@ -50,7 +50,7 @@ export const AppEndSelectApplicants = () => {
           <div className="flex justify-end py-2 mb-1 text-sm">
             {applicantList.length > 0 ? (
               <>
-                <p className="text-gray-600 font-medium">
+                <p className="font-medium text-gray-600">
                   {selectedApplicants.length > 0
                     ? selectedApplicants.length
                     : ' '}{' '}

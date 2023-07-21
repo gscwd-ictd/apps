@@ -140,23 +140,25 @@ export const PassSlipCompletedModal = ({
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
               {passSlip.status === 'approved' ? (
-                <Link
-                  href={`/${router.query.id}/pass-slip/${passSlip.id}`}
-                  target={'_blank'}
-                >
-                  <Button variant={'primary'} size={'md'} loading={false}>
-                    Print PDF
-                  </Button>
-                </Link>
+                // <Link
+                //   href={`/${router.query.id}/pass-slip/${passSlip.id}`}
+                //   target={'_blank'}
+                // >
+                //   <Button variant={'primary'} size={'md'} loading={false}>
+                //     Print PDF
+                //   </Button>
+                // </Link>
+                <></>
               ) : (
-                <Button
-                  disabled
-                  variant={'primary'}
-                  size={'md'}
-                  loading={false}
-                >
-                  Print PDF
-                </Button>
+                <></>
+                // <Button
+                //   disabled
+                //   variant={'primary'}
+                //   size={'md'}
+                //   loading={false}
+                // >
+                //   Print PDF
+                // </Button>
               )}
             </div>
           </div>

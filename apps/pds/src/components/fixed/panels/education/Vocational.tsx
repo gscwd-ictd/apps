@@ -265,7 +265,7 @@ export const Vocational = (): JSX.Element => {
             : "Courses are sorted by 'Year Started' in descending order."
         }
         remarks={
-          <div className="flex flex-col items-end justify-end w-full">
+          <div className="">
             <VocationalAlert setInitialValues={setInitialValues} />
           </div>
         }
@@ -275,7 +275,7 @@ export const Vocational = (): JSX.Element => {
             hasPds && vocationalOnEdit
               ? 'visible'
               : !hasPds
-              ? 'visible lg:-mt-6 lg:pb-6'
+              ? 'visible'
               : 'hidden'
           }`}
         >

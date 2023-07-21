@@ -1,7 +1,7 @@
 import { Schedule } from './schedule.type';
 import { HolidayTypes } from '../../../../utils/src/lib/enums/holiday-types.enum';
 
-// dtr
+// dtr / time log
 export type EmployeeTimeLog = {
   id: string;
   companyId: string;
@@ -23,4 +23,20 @@ export type EmployeeDtrWithSchedule = {
   dtr: EmployeeTimeLog; //dtr
   schedule: Schedule & EmployeeRestDay; // schedule with rest days
   holidayType: HolidayTypes | null; // recently added
+};
+
+export type EmployeeDtrWithSummary = {
+  noOfTimesLate: number | null;
+  totalMinutesLate: number | null;
+  lateDates: Array<number>;
+  noOfTimesUndertime: number | null;
+  totalMinutesUndertime: number | null;
+  undertimeDates: Array<number>;
+  noOfTimesHalfDay: number | null;
+  noAttendance: Array<number>;
+};
+
+export type EmployeeDtrWithScheduleAndSummary = {
+  summary: EmployeeDtrWithSummary;
+  dtrDays: Array<EmployeeDtrWithSchedule>;
 };

@@ -945,7 +945,7 @@ export const LeaveApplicationModal = ({
                 loading={false}
                 form="ApplyLeaveForm"
                 type="submit"
-                disabled={true}
+                disabled
                 // disabled={
                 //   vacationBalance < 0 &&
                 //   watch('typeOfLeaveDetails.leaveName') === 'Vacation Leave'
