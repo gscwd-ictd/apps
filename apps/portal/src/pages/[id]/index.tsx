@@ -170,7 +170,6 @@ export default function Dashboard({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrDtr)) {
-      console.log(swrDtr);
       getEmployeeDtrSuccess(swrDtrIsLoading, swrDtr);
     }
 
