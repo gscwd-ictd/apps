@@ -10,13 +10,23 @@ import {
   HiClock,
   HiDocument,
   HiBadgeCheck,
+  HiMail,
+  HiOutlineDocument,
+  HiClipboard,
+  HiDocumentText,
+  HiCalendar,
+  HiDocumentDuplicate,
+  HiClipboardList,
+  HiPuzzle,
+  HiCollection,
+  HiClipboardCheck,
 } from 'react-icons/hi';
 import { Card } from '../../types/allowed-modules.type';
 
 // Declare selection
 export const Modules: Array<Card> = [
   {
-    icon: <HiOutlinePuzzle className="w-6 h-6 text-orange-800" />,
+    icon: <HiPuzzle className="w-10 h-6 text-orange-800" />,
     color: 'orange',
     title: 'Position Duties, Responsibilities, & Competencies',
     description: 'Select and set per position',
@@ -25,7 +35,7 @@ export const Modules: Array<Card> = [
     state: true,
   },
   {
-    icon: <HiOutlineCollection className="w-6 h-6 text-indigo-400" />,
+    icon: <HiCollection className="w-6 h-6 text-indigo-500" />,
     color: 'indigo',
     title: 'Position Request',
     description: 'Request for new positions',
@@ -34,8 +44,8 @@ export const Modules: Array<Card> = [
     state: true,
   },
   {
-    icon: <HiOutlineClipboardList className="w-6 h-6 text-gray-600" />,
-    color: 'gray',
+    icon: <HiClipboardList className="w-10 h-6 text-green-600" />,
+    color: 'lime',
     title: 'Applicant Endorsement',
     description: 'Select from a list of endorsed applicants for shortlisting',
     destination: 'endorsement',
@@ -43,7 +53,7 @@ export const Modules: Array<Card> = [
     state: true,
   },
   {
-    icon: <HiOutlineClipboardCheck className="w-6 h-6 text-green-600" />,
+    icon: <HiClipboardCheck className="w-10 h-6 text-green-600" />,
     color: 'green',
     title: 'Appointing Authority Selection',
     description: 'Applicant Selection',
@@ -51,15 +61,7 @@ export const Modules: Array<Card> = [
     linkType: 'router',
     state: true,
   },
-  {
-    icon: <HiOutlineDocumentDuplicate className="w-6 h-6 text-rose-600" />,
-    color: 'rose',
-    title: 'Personal Data Sheet',
-    description: 'Update your PDS record',
-    destination: 'pds',
-    linkType: 'router',
-    state: true,
-  },
+
   {
     icon: <HiUserGroup className="w-6 h-6 text-indigo-600" />,
     color: 'indigo',
@@ -79,6 +81,16 @@ export const Modules: Array<Card> = [
     state: true,
   },
   {
+    icon: <HiDocumentDuplicate className="w-6 h-6 text-orange-600" />,
+    color: 'orange',
+    title: 'Personal Data Sheet',
+    description: 'Update your PDS record',
+    destination: 'pds',
+    linkType: 'router',
+    state: true,
+  },
+
+  {
     icon: <HiClock className="w-6 h-6 text-rose-600" />,
     color: 'rose',
     title: 'DTR',
@@ -88,22 +100,32 @@ export const Modules: Array<Card> = [
     state: true,
   },
   {
-    icon: <HiOutlineTicket className="w-6 h-6 text-blue-600" />,
+    icon: <HiDocumentText className="w-6 h-6 text-green-600" />,
+    color: 'green',
+    title: 'Pass Slip',
+    description: 'Apply for Pass Slip',
+    destination: 'pass-slip',
+    linkType: 'router',
+    state: true,
+  },
+
+  {
+    icon: <HiCalendar className="w-6 h-6 text-blue-600" />,
     color: 'blue',
     title: 'Leaves',
-    description: 'Apply or view leave credits',
+    description: 'Apply or view Leave Credits',
     destination: 'leaves',
     linkType: 'router',
     state: true,
   },
 
   {
-    icon: <HiDocument className="w-6 h-6 text-green-600" />,
-    color: 'green',
-    title: 'Pass Slip',
-    description: 'Apply for Pass Slip',
-    destination: 'pass-slip',
-    linkType: 'router',
+    icon: <HiMail className="w-6 h-6 text-indigo-700" />,
+    color: 'indigo',
+    title: 'Email',
+    description: 'Check your Emails',
+    destination: 'email',
+    linkType: 'href',
     state: true,
   },
 ];

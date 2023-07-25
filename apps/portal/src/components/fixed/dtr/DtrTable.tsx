@@ -7,6 +7,11 @@ import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
 import { UseUndertimeChecker } from 'libs/utils/src/lib/functions/UndertimeChecker';
 import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
+import { HiOutlineSearch, HiPencil, HiPencilAlt } from 'react-icons/hi';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import { useState } from 'react';
+import UpdateTimeLogModal from './UpdateTimeLogModal';
+import { SpinnerDotted } from 'spinners-react';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -15,10 +20,45 @@ type DtrtableProps = {
 export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
   const date = useDtrStore((state) => state.date);
   const employeeDtr = useDtrStore((state) => state.employeeDtr);
+  const dtrIsLoading = useDtrStore((state) => state.loading.loadingDtr);
   const now = dayjs().toDate().toDateString();
+
+  // Edit modal function
+  const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>(
+    {} as EmployeeDtrWithSchedule
+  );
+  // edit modal state
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+
+  // open edit action modal function
+  const openEditActionModal = (rowData: EmployeeDtrWithSchedule) => {
+    setEditModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+
+  // close edit action modal function
+  const closeEditActionModal = () => setEditModalIsOpen(false);
+
   return (
     <>
-      {employeeDtr?.dtrDays?.length > 0 ? (
+      <UpdateTimeLogModal
+        modalState={editModalIsOpen}
+        setModalState={setEditModalIsOpen}
+        closeModalAction={closeEditActionModal}
+        rowData={currentRowData}
+      />
+
+      {dtrIsLoading ? (
+        <div className="w-full h-[90%] static flex flex-col justify-items-center items-center place-items-center">
+          <SpinnerDotted
+            speed={70}
+            thickness={70}
+            className="flex w-full h-full transition-all "
+            color="slateblue"
+            size={100}
+          />
+        </div>
+      ) : !dtrIsLoading && employeeDtr?.dtrDays?.length > 0 ? (
         <>
           <div className="flex w-full flex-col rounded ">
             <table className="w-full border-0 border-separate bg-slate-50 border-spacing-0">
@@ -41,6 +81,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                   </th>
                   <th className="px-2 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                     Remarks
+                  </th>
+                  <th className="px-2 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    Edit
                   </th>
                 </tr>
               </thead>
@@ -91,6 +134,18 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                         <td className="py-2 text-center border">
                           {logs.dtr.remarks}
                         </td>
+                        <td className="py-2 text-center border">
+                          <Button
+                            variant={'primary'}
+                            size={'sm'}
+                            loading={false}
+                            onClick={() => openEditActionModal(logs)}
+                          >
+                            <div className="flex justify-center">
+                              <HiPencilAlt className="w-3 h-4 md:w-4 md:h-5" />
+                            </div>
+                          </Button>
+                        </td>
                       </tr>
                     );
                   })
@@ -101,7 +156,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                 )}
               </tbody>
             </table>
-            <table className="table-auto mt-5 border bg-slate-50">
+            <table className="hidden md:table table-auto mt-5 border bg-slate-50">
               <thead>
                 <tr className="text-sm font-medium text-center">
                   <td className="border p-1 text-gray-700">
@@ -117,7 +172,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                   <td className="border p-1 text-gray-700">
                     Total Minutes Undertime
                   </td>
-                  <td className="border p-1 text-gray-700">Dates/Undertime</td>
+                  <td className="border p-1 text-gray-700">
+                    Dates / Undertime
+                  </td>
                   <td className="border p-1 text-gray-700">
                     No. of Times Halfday
                   </td>
@@ -198,13 +255,125 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                 </tr>
               </tbody>
             </table>
+
+            {/* MOBILE VIEW */}
+            <table className="table md:hidden table-auto mt-5 border bg-slate-50">
+              <thead>
+                <tr className="text-sm font-medium text-center">
+                  <td className="border p-1 text-gray-700">
+                    No. of Times Late
+                  </td>
+                  <td className="border p-1 text-gray-700">
+                    Total Minutes Late
+                  </td>
+                  <td className="border p-1 text-gray-700">Dates Late</td>
+                  <td className="border p-1 text-gray-700">
+                    No. of Times Undertime
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="text-sm font-light text-center">
+                  <td className="border p-1">
+                    {employeeDtr.summary?.noOfTimesLate ?? '--'}
+                  </td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.totalMinutesLate ?? '--'}
+                  </td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.lateDates &&
+                    employeeDtr.summary?.lateDates.length > 0
+                      ? employeeDtr.summary?.lateDates.map((day, index) => {
+                          return (
+                            <span key={index}>
+                              {index ===
+                              employeeDtr.summary?.lateDates.length - 1 ? (
+                                <>{day}</>
+                              ) : (
+                                <>{day}, </>
+                              )}
+                            </span>
+                          );
+                        })
+                      : '--'}
+                  </td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.noOfTimesUndertime ?? '--'}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table className="table md:hidden table-auto mt-5 border bg-slate-50">
+              <thead>
+                <tr className="text-sm font-medium text-center">
+                  <td className="border p-1 text-gray-700">
+                    Total Minutes Undertime
+                  </td>
+                  <td className="border p-1 text-gray-700">
+                    Dates / Undertime
+                  </td>
+                  <td className="border p-1 text-gray-700">
+                    No. of Times Halfday
+                  </td>
+                  <td className="border p-1 text-gray-700">No Attendance</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="text-sm font-light text-center">
+                  <td className="border p-1">
+                    {employeeDtr.summary?.totalMinutesUndertime ?? '--'}
+                  </td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.undertimeDates &&
+                    employeeDtr.summary?.undertimeDates.length > 0
+                      ? employeeDtr.summary?.undertimeDates.map(
+                          (day, index) => {
+                            return (
+                              <span key={index}>
+                                {index ===
+                                employeeDtr.summary?.undertimeDates.length -
+                                  1 ? (
+                                  <>{day}</>
+                                ) : (
+                                  <>{day}, </>
+                                )}
+                              </span>
+                            );
+                          }
+                        )
+                      : '--'}
+                  </td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.noOfTimesHalfDay ?? '--'}
+                  </td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.noAttendance &&
+                    employeeDtr.summary?.noAttendance.length > 0
+                      ? employeeDtr.summary?.noAttendance.map((day, index) => {
+                          return (
+                            <span key={index}>
+                              {index ===
+                              employeeDtr.summary?.noAttendance.length - 1 ? (
+                                <>{day}</>
+                              ) : (
+                                <>{day}, </>
+                              )}
+                            </span>
+                          );
+                        })
+                      : '--'}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div className="flex justify-end w-full pt-4">
             {/* <Link href={`/123/dtr/${date}`} target={'_blank'}>
-          <Button variant={'primary'} size={'md'} loading={false}>
-            View
-          </Button>
-        </Link> */}
+                <Button variant={'primary'} size={'md'} loading={false}>
+                  View
+                </Button>
+              </Link> */}
           </div>
         </>
       ) : (

@@ -5,11 +5,32 @@ import {
   EmployeeDtrWithScheduleAndSummary,
 } from 'libs/utils/src/lib/types/dtr.type';
 import { devtools } from 'zustand/middleware';
+import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
+
+export type EmployeeDtr = {
+  companyId: string;
+  dtrDate: string;
+  timeIn: string | null;
+  lunchOut: string | null;
+  lunchIn: string | null;
+  timeOut: string | null;
+  shift: ScheduleShifts | null;
+  withLunch: boolean;
+};
 
 export type DtrState = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
-  loadingDtr: boolean;
-  errorDtr: string;
+  employeeDailyRecord: EmployeeDtr;
+
+  loading: {
+    loadingDtr: boolean;
+    loadingUpdateEmployeeDtr: boolean;
+  };
+
+  error: {
+    errorDtr: string;
+    errorUpdateEmployeeDtr: string;
+  };
 
   selectedYear: string;
   setSelectedYear: (value: string) => void;
@@ -25,13 +46,25 @@ export type DtrState = {
   getEmployeeDtrFail: (loading: boolean, error: string) => void;
 
   emptyResponseAndError: () => void;
+
+  updateEmployeeDtr: () => void;
+  updateEmployeeDtrSuccess: (response: EmployeeDtr) => void;
+  updateEmployeeDtrFail: (error: string) => void;
 };
 
 export const useDtrStore = create<DtrState>()(
   devtools((set) => ({
     employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
-    loadingDtr: false,
-    errorDtr: '',
+    employeeDailyRecord: {} as EmployeeDtr,
+    loading: {
+      loadingDtr: false,
+      loadingUpdateEmployeeDtr: false,
+    },
+
+    error: {
+      errorDtr: '',
+      errorUpdateEmployeeDtr: '',
+    },
     selectedYear: '',
     selectedMonth: '',
     date: '01-0001',
@@ -51,8 +84,8 @@ export const useDtrStore = create<DtrState>()(
       set((state) => ({
         ...state,
         employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
-        loadingDtr: loading,
-        errorDtr: '',
+        loading: { ...state.loading, loadingDtr: loading },
+        error: { ...state.error, errorDtr: '' },
       }));
     },
     getEmployeeDtrSuccess: (
@@ -62,22 +95,44 @@ export const useDtrStore = create<DtrState>()(
       set((state) => ({
         ...state,
         employeeDtr: response,
-        loadingDtr: loading,
+        loading: { ...state.loading, loadingDtr: loading },
       }));
     },
     getEmployeeDtrFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
-        loadingDtr: loading,
-        errorDtr: error,
+        loading: { ...state.loading, loadingDtr: loading },
+        error: { ...state.error, errorDtr: error },
       }));
     },
 
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
-        errorDtr: '',
+        error: { ...state.error, errorDtr: '' },
       }));
     },
+
+    updateEmployeeDtr: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateEmployeeDtr: true },
+        employeeDailyRecord: {} as EmployeeDtr,
+        error: { ...state.error, errorUpdateEmployeeDtr: '' },
+      })),
+
+    updateEmployeeDtrSuccess: (response: EmployeeDtr) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateEmployeeDtr: false },
+        employeeDailyRecord: response,
+      })),
+
+    updateEmployeeDtrFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateEmployeeDtr: true },
+        error: { ...state.error, errorUpdateEmployeeDtr: error },
+      })),
   }))
 );
