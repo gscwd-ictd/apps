@@ -24,8 +24,6 @@ export const DrcAllDrcsList = (): JSX.Element => {
   }));
 
   const onSelect = (sequenceNo: number | undefined, drId: string) => {
-    console.log(sequenceNo);
-
     // initialize currently selected drc
     let tempSelectedDr: DutyResponsibility = {} as DutyResponsibility;
 

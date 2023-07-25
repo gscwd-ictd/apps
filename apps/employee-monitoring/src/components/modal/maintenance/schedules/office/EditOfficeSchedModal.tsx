@@ -108,8 +108,6 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
       withLunch: rowData.withLunch,
     });
 
-    // console.log(sched.withLunch);
-
     if (sched.withLunch) {
       setWithLunch(true);
     } else {

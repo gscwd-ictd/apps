@@ -115,7 +115,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     const { error, result } = await patchEmpMonitoring('/daily-time-record/', {
       data: dtr,
     });
-    console.log(dtr);
+
     if (error) {
       // request is done set loading to false and set the error message
 

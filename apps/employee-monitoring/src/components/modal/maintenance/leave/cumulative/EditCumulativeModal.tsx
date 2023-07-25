@@ -118,10 +118,6 @@ const EditCumulativeModal: FunctionComponent<EditModalProps> = ({
     if (modalState === true) loadNewDefaultValues(rowData);
   }, [modalState]);
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
