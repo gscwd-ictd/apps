@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
@@ -19,6 +19,9 @@ import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
 import dayjs from 'dayjs';
+import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 
 // Mock Data REMOVE later
 const TypesMockData: Array<MonitoringLeave> = [
@@ -29,7 +32,7 @@ const TypesMockData: Array<MonitoringLeave> = [
     leaveName: 'Vacation Leave',
     dateOfFiling: '2023-04-12',
     leaveDates: ['2023-05-01', '2023-05-02'],
-    status: 'ongoing',
+    status: LeaveStatus.ONGOING,
   },
   {
     employeeId: 'emp-id-001',
@@ -38,7 +41,7 @@ const TypesMockData: Array<MonitoringLeave> = [
     leaveName: 'Sick Leave',
     dateOfFiling: '2023-04-13',
     leaveDates: ['2023-04-12'],
-    status: 'approved',
+    status: LeaveStatus.APPROVED,
   },
   {
     employeeId: 'emp-id-002',
@@ -47,7 +50,7 @@ const TypesMockData: Array<MonitoringLeave> = [
     leaveName: 'Forced Leave',
     dateOfFiling: '2023-04-14',
     leaveDates: ['2023-04-28', '2023-04-29'],
-    status: 'disapproved',
+    status: LeaveStatus.DISAPPROVED,
   },
   {
     employeeId: 'emp-id-003',
@@ -62,7 +65,23 @@ const TypesMockData: Array<MonitoringLeave> = [
       '2023-04-27',
       '2023-04-28',
     ],
-    status: 'disapproved',
+    status: LeaveStatus.FOR_APPROVAL,
+  },
+
+  {
+    employeeId: 'emp-id-003',
+    fullName: 'Test Employee',
+    id: 'leave-id-005',
+    leaveName: 'Forced Leave',
+    dateOfFiling: '2023-07-14',
+    leaveDates: [
+      '2023-07-24',
+      '2023-07-25',
+      '2023-07-26',
+      '2023-07-27',
+      '2023-07-28',
+    ],
+    status: LeaveStatus.CANCELLED,
   },
 ];
 
@@ -151,7 +170,7 @@ const Index = () => {
     }),
     columnHelper.accessor('leaveName', {
       header: 'Leave Benefit',
-      cell: (info) => info.getValue(),
+      cell: (info) => UseRenderLeaveType(info.getValue()),
     }),
     columnHelper.display({
       id: 'leaveDates',
@@ -161,7 +180,7 @@ const Index = () => {
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      cell: (info) => <p className="capitalize">{info.getValue()}</p>,
+      cell: (info) => UseRenderLeaveStatus(info.getValue()),
     }),
     columnHelper.display({
       id: 'actions',

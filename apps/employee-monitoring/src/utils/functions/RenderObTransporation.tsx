@@ -1,13 +1,14 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* This function is used for rendering pass slip valuees */
 
 import { ObTransportation } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { isEmpty } from 'lodash';
-import CustomBadgePill from '../../components/badges/CustomBadgePill';
+import BadgePill from '../../components/badges/BadgePill';
 
 function UseRenderObTransportation(value: ObTransportation | null | '') {
   if (!isEmpty(value)) {
     return (
-      <CustomBadgePill
+      <BadgePill
         label={
           value === ObTransportation.PUBLIC_VEHICLE
             ? 'Public Vehicle'
@@ -17,8 +18,7 @@ function UseRenderObTransportation(value: ObTransportation | null | '') {
             ? 'Private/Personal'
             : null
         }
-        textColor="text-white"
-        bgColor="bg-blue-300"
+        variant={'primary'}
       />
     );
   } else return <span>-</span>;

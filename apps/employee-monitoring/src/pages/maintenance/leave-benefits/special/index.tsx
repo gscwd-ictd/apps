@@ -126,8 +126,8 @@ export default function Index() {
     columnHelper.accessor('maximumCredits', {
       enableSorting: false,
       enableColumnFilter: false,
-      header: 'Credits',
-      cell: (info) => info.getValue(),
+      header: 'Maximum Credits',
+      cell: (info) => info.getValue() ?? '-',
     }),
 
     columnHelper.accessor('isMonetizable', {

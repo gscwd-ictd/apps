@@ -1,3 +1,4 @@
+import { LeaveStatus } from '../enums/leave.enum';
 import { LeaveBenefitOptions } from './leave-benefits.type';
 
 // Date range picker in leave application form
@@ -72,7 +73,7 @@ export type EmployeeLeave = {
   leaveName: string;
   dateOfFiling: string;
   leaveDates: Array<string>;
-  status: string;
+  status: LeaveStatus; //! changed this to enum
 };
 
 // List of leaves per employee
