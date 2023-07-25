@@ -6,6 +6,7 @@ export enum CreditDistributions {
 export enum LeaveStatus {
   ONGOING = 'ongoing',
   APPROVED = 'approved',
+  FOR_APPROVAL = 'for approval',
   DISAPPROVED = 'disapproved',
   CANCELLED = 'cancelled',
 }

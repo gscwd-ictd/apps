@@ -28,7 +28,7 @@ export const linkClass = (
   isDarkMode: boolean | undefined
 ) => {
   return cls(
-    'flex items-center font-light py-3 duration-100 ease-in-out transition-all',
+    'flex items-center font-medium py-3 duration-100 ease-in-out transition-all',
     {
       'justify-center hover:pl-1': collapsed,
 
