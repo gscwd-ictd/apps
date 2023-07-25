@@ -5,8 +5,8 @@ import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourForm
 import { UseUndertimeChecker } from 'libs/utils/src/lib/functions/UndertimeChecker';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
-import { SpinnerDotted } from 'spinners-react';
-import { LoadingSpinner } from '@gscwd-apps/oneui';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 interface Props {
   timeLogData: EmployeeDtrWithSchedule;
@@ -29,9 +29,9 @@ export const AttendanceCard: React.FC<Props> = ({
   return (
     <div className="w-full h-32 shadow rounded-md bg-white flex flex-col p-4 gap-2">
       {swrFaceScanIsLoading ? (
-        <div className="w-full h-full flex flex-col py-2 justify-center items-center place-items-center">
-          <LoadingSpinner className="flex w-full h-full" size="lg" />
-        </div>
+        <>
+          <Skeleton count={4} />
+        </>
       ) : (
         <>
           <label className="text-2xl text-gray-600 font-bold text-center">

@@ -15,6 +15,7 @@ import { Button } from '../components/modular/common/forms/Button';
 import { Checkbox } from '../components/modular/common/forms/Checkbox';
 import { TextField } from '../components/modular/common/forms/TextField';
 import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 type LoginFormInput = {
   email: string;
@@ -46,6 +47,7 @@ export default function Login() {
 
   // set state for handling backend request loading status
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowPassword, seIsShowPassword] = useState(false);
 
   // initialize router
   const router = useRouter();
@@ -179,16 +181,29 @@ export default function Login() {
                   errorMessage={errors.email?.message}
                 />
 
-                <TextField
-                  controller={{ ...register('password', { required: true }) }}
-                  type="password"
-                  defaultValue=""
-                  placeholder="Password"
-                  isError={
-                    errors.password && errors.password.message ? true : false
-                  }
-                  errorMessage={errors.password?.message}
-                />
+                <div className="relative">
+                  <TextField
+                    controller={{ ...register('password', { required: true }) }}
+                    type={`${isShowPassword ? 'text' : 'password'}`}
+                    defaultValue=""
+                    placeholder="Password"
+                    isError={
+                      errors.password && errors.password.message ? true : false
+                    }
+                    errorMessage={errors.password?.message}
+                  />
+                  {isShowPassword ? (
+                    <HiEyeOff
+                      className="absolute -mt-9 right-0 pr-2 fill-indigo-500 h-8 w-8 hover:fill-indigo-600 cursor-pointer opacity-70"
+                      onClick={() => seIsShowPassword(!isShowPassword)}
+                    ></HiEyeOff>
+                  ) : (
+                    <HiEye
+                      className="absolute -mt-9 right-0 pr-2 fill-indigo-500 h-8 w-8 hover:fill-indigo-600 cursor-pointer opacity-70"
+                      onClick={() => seIsShowPassword(!isShowPassword)}
+                    ></HiEye>
+                  )}
+                </div>
               </section>
 
               <section
