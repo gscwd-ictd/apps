@@ -10,7 +10,7 @@ type ActionDropdownProps = {
   employee: EmployeeRowData;
 };
 
-const actionItems = ['View Daily Time Record'];
+const actionItems = ['View Daily Time Record', 'View Leave Ledger'];
 
 export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
   employee,
@@ -37,7 +37,7 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
       setEmployeeDtr({ dtrDays: [], summary: {} as EmployeeDtrWithSummary });
       setSelectedMonth('--');
       setSelectedYear('--');
-      router.push(`/employees/${employee.id}`);
+      router.push(`/employees/${employee.id}/daily-time-record`);
     }
   };
 
@@ -72,7 +72,13 @@ export const ActionDropdown: FunctionComponent<ActionDropdownProps> = ({
                         rel="noreferrer"
                         // onClick={() => handleSelectAction(item)}
                         target="_blank"
-                        href={`/employees/${employee.id}`}
+                        href={`/employees/${employee.id}/${
+                          item === 'View Daily Time Record'
+                            ? 'daily-time-record'
+                            : item === 'View Leave Ledger'
+                            ? 'leave-ledger'
+                            : ''
+                        }`}
                         className={`${
                           active ? 'bg-slate-50 text-white' : 'text-gray-500'
                         } hover:bg-slate-600 group flex w-full items-center rounded py-3 px-4`}

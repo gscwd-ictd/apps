@@ -12,6 +12,7 @@ type LabelInputProps = {
   type?: string;
   rows?: number;
   cols?: number;
+  radiusClassName?: string;
   isDirty?: boolean;
 };
 
@@ -30,6 +31,7 @@ export const LabelInput: FunctionComponent<
   type,
   rows,
   cols,
+  radiusClassName = 'rounded-lg',
   ...props
 }) => {
   return (
@@ -72,7 +74,7 @@ export const LabelInput: FunctionComponent<
           disabled={disabled}
           type={type}
           {...controller}
-          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
+          className={`${radiusClassName} disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
             isError
               ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
               : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'

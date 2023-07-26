@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 import { useHolidaysStore } from '../../store/holidays.store';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export const Holidays = (): JSX.Element => {
   // fetch data for list of holidays
@@ -56,13 +58,56 @@ export const Holidays = (): JSX.Element => {
             {/* Regular Holidays */}
 
             <div className="text-gray-500"> Regular Holidays</div>
-            <div className="flex flex-col w-full gap-1 px-2 py-1 rounded-lg bg-blue-50">
-              {!isEmpty(holidays) ? (
-                <>
-                  {holidays.map((holiday) => {
+            {swrIsLoading ? (
+              <Skeleton count={4} borderRadius={1} />
+            ) : (
+              <div className="flex flex-col w-full gap-1 px-2 py-1 rounded-lg bg-blue-50">
+                {!isEmpty(holidays) ? (
+                  <>
+                    {holidays.map((holiday) => {
+                      const { holidayDate, id, name, type } = holiday;
+                      if (
+                        type === 'regular' &&
+                        dayjs().isBefore(
+                          dayjs(holidayDate).format('MM DD, YYYY')
+                        ) &&
+                        dayjs().isSame(
+                          dayjs(holidayDate).format('MM DD, YYYY'),
+                          'year'
+                        )
+                      ) {
+                        return (
+                          <div key={id} className="flex gap-2 px-2">
+                            <div className="w-[30%] ">
+                              {dayjs(holidayDate).format('MMMM D')}
+                            </div>
+                            <div className="w-[70%]">{name}</div>
+                          </div>
+                        );
+                      }
+                    })}
+                  </>
+                ) : (
+                  <div className="flex justify-center w-full h-full text-gray-400">
+                    -- No Data --
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Special Holidays */}
+
+            <div className="text-gray-500"> Special non-working Holidays</div>
+
+            {swrIsLoading ? (
+              <Skeleton count={4} borderRadius={1} />
+            ) : (
+              <div className="flex flex-col w-full gap-1 px-2 py-2 rounded-lg bg-blue-50">
+                {!isEmpty(holidays) ? (
+                  holidays.map((holiday) => {
                     const { holidayDate, id, name, type } = holiday;
                     if (
-                      type === 'regular' &&
+                      type === 'special' &&
                       dayjs().isBefore(
                         dayjs(holidayDate).format('MM DD, YYYY')
                       ) &&
@@ -72,56 +117,22 @@ export const Holidays = (): JSX.Element => {
                       )
                     ) {
                       return (
-                        <div key={id} className="flex gap-2 px-2">
+                        <div key={id} className="flex gap-2 px-2 ">
                           <div className="w-[30%] ">
                             {dayjs(holidayDate).format('MMMM D')}
                           </div>
-                          <div className="w-[70%]">{name}</div>
+                          <div className="w-[70%] ">{name}</div>
                         </div>
                       );
                     }
-                  })}
-                </>
-              ) : (
-                <div className="flex justify-center w-full h-full text-gray-400">
-                  -- No Data --
-                </div>
-              )}
-            </div>
-
-            {/* Special Holidays */}
-
-            <div className="text-gray-500"> Special non-working Holidays</div>
-            <div className="flex flex-col w-full gap-1 px-2 py-2 rounded-lg bg-blue-50">
-              {!isEmpty(holidays) ? (
-                holidays.map((holiday) => {
-                  const { holidayDate, id, name, type } = holiday;
-                  if (
-                    type === 'special' &&
-                    dayjs().isBefore(
-                      dayjs(holidayDate).format('MM DD, YYYY')
-                    ) &&
-                    dayjs().isSame(
-                      dayjs(holidayDate).format('MM DD, YYYY'),
-                      'year'
-                    )
-                  ) {
-                    return (
-                      <div key={id} className="flex gap-2 px-2 ">
-                        <div className="w-[30%] ">
-                          {dayjs(holidayDate).format('MMMM D')}
-                        </div>
-                        <div className="w-[70%] ">{name}</div>
-                      </div>
-                    );
-                  }
-                })
-              ) : (
-                <div className="flex justify-center w-full h-full text-gray-400">
-                  -- No Data --
-                </div>
-              )}
-            </div>
+                  })
+                ) : (
+                  <div className="flex justify-center w-full h-full text-gray-400">
+                    -- No Data --
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Button */}
