@@ -53,7 +53,7 @@ export type EmployeeLeaveDetails = {
     id: string;
     leaveDates: Array<string>;
     leaveName: string;
-    status: string;
+    status: LeaveStatus;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;

@@ -40,6 +40,7 @@ export default function Leaves({
     applyLeaveModalIsOpen,
     pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen,
+
     loading,
     errorLeaves,
     errorLeaveDetails,
