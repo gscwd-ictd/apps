@@ -1,4 +1,4 @@
-import { FunctionComponent, InputHTMLAttributes } from 'react';
+import { FunctionComponent, InputHTMLAttributes, ReactNode } from 'react';
 
 type LabelInputProps = {
   id: string;
@@ -12,8 +12,8 @@ type LabelInputProps = {
   type?: string;
   rows?: number;
   cols?: number;
-  radiusClassName?: string;
   isDirty?: boolean;
+  helper?: ReactNode | ReactNode[];
 };
 
 export const LabelInput: FunctionComponent<
@@ -31,14 +31,21 @@ export const LabelInput: FunctionComponent<
   type,
   rows,
   cols,
-  radiusClassName = 'rounded-lg',
+  helper,
   ...props
 }) => {
   return (
     <div className="flex flex-col">
       <label htmlFor={id}>
         <div className="flex justify-between gap-2 mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
-          <span>{label}</span>
+          <div className="flex gap-2">
+            {label}
+            {helper ? (
+              <span className="px-2 font-light text-white bg-orange-500 rounded">
+                {helper}
+              </span>
+            ) : null}
+          </div>
           {isDirty ? (
             <span
               className={`font-light rounded ${
@@ -74,7 +81,7 @@ export const LabelInput: FunctionComponent<
           disabled={disabled}
           type={type}
           {...controller}
-          className={`${radiusClassName} disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
+          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
             isError
               ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
               : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'

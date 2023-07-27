@@ -186,7 +186,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
             className="p-2 border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
             icon={<i className="text-4xl text-cyan-700 bx bx-run"></i>}
             title="Vacation Leave"
-            value={13.75}
+            value={13.656}
           />
         </div>
 

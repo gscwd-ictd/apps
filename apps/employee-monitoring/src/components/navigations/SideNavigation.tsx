@@ -124,16 +124,40 @@ export const SideNavigation = () => {
           />
 
           {/**LEAVE BENEFITS */}
+
           <Sidebar.Item
-            display="Leave Applications"
+            display="Leave"
             className="text-sm"
-            selected={pathname === Paths[2] ? true : false}
-            icon={
+            icon={<i className="text-xl bx bx-run"></i>}
+            path=""
+            hasSubItem
+            selected={pathname === Paths[2] || pathname === Paths[22]}
+            subItems={
               <>
-                <i className="text-xl bx bx-run"></i>
+                <Sidebar.Item
+                  display="Applications"
+                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                  selected={pathname === Paths[2] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-xl bx bxs-user-detail"></i>
+                    </>
+                  }
+                  path={Paths[2]}
+                />
+                <Sidebar.Item
+                  display="Cancellations"
+                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                  selected={pathname === Paths[22] ? true : false}
+                  icon={
+                    <>
+                      <i className="text-xl bx bx-user-x"></i>
+                    </>
+                  }
+                  path={Paths[22]}
+                />
               </>
             }
-            path={Paths[2]}
           />
 
           {/**OVERTIME */}

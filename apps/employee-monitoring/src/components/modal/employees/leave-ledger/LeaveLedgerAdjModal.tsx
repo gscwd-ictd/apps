@@ -1,4 +1,4 @@
-import { Modal } from '@gscwd-apps/oneui';
+import { Button, Modal } from '@gscwd-apps/oneui';
 import {
   LeaveBenefit,
   LeaveType,
@@ -20,7 +20,6 @@ import {
   MutatedLeaveBenefit,
   useLeaveLedgerStore,
 } from 'apps/employee-monitoring/src/store/leave-ledger.store';
-import Select from 'react-select';
 
 enum ActionType {
   CREDIT = 'credit',
@@ -37,18 +36,18 @@ type LeaveLedgerAdjModalProps = {
 type LeaveLedgerForm = {
   employeeId: string;
   actionType: ActionType;
-  particulars: string;
+  particulars?: string;
   leaveBenefitId: string;
   leaveBenefitType: LeaveType;
   leaveBenefitName: string;
   value: number;
-  maxCreditValue: number;
+  maximumCredits: number;
 };
 
 type MutatedLeaveBenefitOption = {
   label: string;
   value: string;
-  leaveType: string;
+  leaveType: LeaveType | null;
   maximumCredits: number | null;
 };
 
@@ -61,10 +60,16 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
   const {
     register,
     reset,
+    getValues,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, defaultValues },
   } = useForm<LeaveLedgerForm>({
-    defaultValues: { employeeId: employeeId },
+    defaultValues: {
+      employeeId: employeeId,
+      leaveBenefitId: null,
+      leaveBenefitName: null,
+      actionType: null,
+    },
   });
 
   // store
@@ -84,7 +89,8 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     getLeaveLedgerFail: state.getLeaveLedgerFail,
   }));
 
-  const onSubmit = () => {
+  const onSubmit = (data: LeaveLedgerForm) => {
+    console.log(data);
     //
   };
 
@@ -95,12 +101,12 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
 
   // selected leave benefit
   const [selectedLeaveBenefit, setSelectedLeaveBenefit] =
-    useState<MutatedLeaveBenefitOption>({
-      label: '',
-      leaveType: '',
+    useState<MutatedLeaveBenefit>({
+      id: null,
+      leaveName: null,
+      leaveType: null,
       maximumCredits: null,
-      value: null,
-    } as MutatedLeaveBenefitOption);
+    } as MutatedLeaveBenefit);
 
   // transform leave benefits
   const transformLeaveBenefits = (leaveBenefits: Array<LeaveBenefit>) => {
@@ -114,6 +120,25 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     });
 
     setTransformedLeaves(tempLeaveBenefits);
+  };
+
+  // select leave benefits by id
+  const getLeaveBenefitById = (id: string) => {
+    const tempLeave = transformedLeaves.find((leave) => leave.value === id);
+
+    setSelectedLeaveBenefit({
+      id: tempLeave.value,
+      leaveName: tempLeave.label,
+      leaveType: tempLeave.leaveType,
+      maximumCredits: tempLeave.maximumCredits,
+    });
+  };
+
+  // close modal function
+  const closeModal = () => {
+    setSelectedLeaveBenefit({} as MutatedLeaveBenefit);
+    reset();
+    closeModalAction();
   };
 
   // swr
@@ -146,18 +171,27 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     }
   }, [swrLeaveBenefits, swrError]);
 
+  // on open
+  useEffect(() => {
+    if (modalState) {
+      register('leaveBenefitName');
+      register('leaveBenefitType');
+      register('maximumCredits');
+    } else if (!modalState) closeModal();
+  }, [modalState]);
+
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} size="sm" steady>
         <Modal.Header>
           <div className="flex justify-end">
             <div className="px-2 text-2xl font-medium text-gray-700">
-              Leave Ledger Adjustment
+              Leave Adjustment
             </div>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              onClick={closeModalAction}
+              onClick={closeModal}
             >
               <i className="bx bx-x"></i>
               <span className="sr-only">Close modal</span>
@@ -166,7 +200,7 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmit)} id="adjModal">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5">
               {/** action type */}
               <SelectListRF
                 id="actionType"
@@ -177,39 +211,58 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
                 label="Category"
                 isError={errors.actionType ? true : false}
                 errorMessage={errors.actionType?.message}
-                radiusClassName="rounded"
 
                 // disabled={IsLoading ? true : false}
               />
 
-              <Select
-                id="customReactSchedule"
-                name="schedules"
-                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                options={transformedLeaves}
-                className="z-50 w-full basic-multi-select"
-                classNamePrefix="select2-selection-leave"
-                value={selectedLeaveBenefit}
-                menuPosition="fixed"
-                menuPlacement="auto"
-                menuShouldScrollIntoView
-                onChange={(newValue) => setSelectedLeaveBenefit(newValue)}
+              <SelectListRF
+                id="leaveBenefitId"
+                selectList={transformedLeaves}
+                controller={{
+                  ...register('leaveBenefitId', {
+                    onChange: (e) => {
+                      getLeaveBenefitById(e.target.value);
+                    },
+                  }),
+                }}
+                label="Leave Benefit"
+                isError={errors.leaveBenefitId ? true : false}
+                errorMessage={errors.leaveBenefitId?.message}
               />
 
               <LabelInput
                 id="creditValue"
                 label="Credit/Debit Value"
+                controller={{ ...register('value') }}
+                helper={
+                  selectedLeaveBenefit.leaveType === LeaveType.SPECIAL
+                    ? ` Maximum credit is ${selectedLeaveBenefit.maximumCredits}`
+                    : ''
+                }
                 max={
                   selectedLeaveBenefit.leaveType === LeaveType.SPECIAL
                     ? selectedLeaveBenefit.maximumCredits
                     : null
                 }
+                min={1}
                 type="number"
-                radiusClassName="rounded"
               />
             </div>
           </form>
         </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end w-full">
+            <Button
+              variant="info"
+              type="submit"
+              form="adjModal"
+              className="disabled:cursor-not-allowed"
+              disabled={swrIsLoading ? true : !isValid ? true : false}
+            >
+              <span className="text-xs font-normal">Submit</span>
+            </Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );

@@ -9,7 +9,6 @@ interface MySelectListRFProps
   label: string;
   isError?: boolean;
   errorMessage?: string;
-  radiusClassName?: string;
 }
 
 type Item = {
@@ -27,7 +26,6 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
   label,
   isError = false,
   errorMessage,
-  radiusClassName = 'rounded-lg',
   ...props
 }) => {
   return (
@@ -41,7 +39,7 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
         id={id}
         {...controller}
         disabled={muted}
-        className={`${radiusClassName} bg-gray-50 border ${
+        className={`rounded-lg bg-gray-50 border ${
           isError
             ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
             : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
