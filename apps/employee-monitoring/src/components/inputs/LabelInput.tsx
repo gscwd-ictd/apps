@@ -1,4 +1,4 @@
-import { FunctionComponent, InputHTMLAttributes } from 'react';
+import { FunctionComponent, InputHTMLAttributes, ReactNode } from 'react';
 
 type LabelInputProps = {
   id: string;
@@ -13,6 +13,7 @@ type LabelInputProps = {
   rows?: number;
   cols?: number;
   isDirty?: boolean;
+  helper?: ReactNode | ReactNode[];
 };
 
 export const LabelInput: FunctionComponent<
@@ -30,13 +31,21 @@ export const LabelInput: FunctionComponent<
   type,
   rows,
   cols,
+  helper,
   ...props
 }) => {
   return (
     <div className="flex flex-col">
       <label htmlFor={id}>
         <div className="flex justify-between gap-2 mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
-          <span>{label}</span>
+          <div className="flex gap-2">
+            {label}
+            {helper ? (
+              <span className="px-2 font-light text-white bg-orange-500 rounded">
+                {helper}
+              </span>
+            ) : null}
+          </div>
           {isDirty ? (
             <span
               className={`font-light rounded ${

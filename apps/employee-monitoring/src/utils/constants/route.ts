@@ -1,7 +1,7 @@
 export const Paths = [
   '/dashboard', //0
   '/employees', //1
-  '/monitoring/leave-applications', //2
+  '/monitoring/leave/leave-applications', //2
   '/monitoring/travel-orders', // 3
   '/monitoring/trainings-and-seminars', // 4
   '/monitoring/overtime', // 5
@@ -21,4 +21,5 @@ export const Paths = [
   '/monitoring/scheduling-sheet/field', // 19
   '/monitoring/scheduling-sheet/station', // 20
   '/settings/custom-groups', //21
+  '/monitoring/leave/leave-cancellations', //22
 ];

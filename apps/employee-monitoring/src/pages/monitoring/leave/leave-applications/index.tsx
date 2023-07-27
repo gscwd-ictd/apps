@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from 'react';
-import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
+import fetcherEMS from '../../../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 
@@ -15,8 +15,8 @@ import {
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
-import { Card } from '../../../components/cards/Card';
-import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
+import { Card } from '../../../../components/cards/Card';
+import { BreadCrumbs } from '../../../../components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
 import dayjs from 'dayjs';
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
