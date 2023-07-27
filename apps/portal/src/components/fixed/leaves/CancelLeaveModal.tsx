@@ -13,6 +13,8 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import Calendar from './LeaveCalendar';
 import CancelLeaveCalendar from './CancelLeaveCalendar';
+import { LeaveApplicationForm } from 'libs/utils/src/lib/types/leave-application.type';
+import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -31,15 +33,36 @@ export const CancelLeaveModal = ({
     loadingLeaveDetails,
     errorLeaveDetails,
     cancelLeaveModalIsOpen,
+    leaveDates,
+
+    postLeave,
+    postLeaveSuccess,
+    postLeaveFail,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
     loadingLeaveDetails: state.loading.loadingIndividualLeave,
     errorLeaveDetails: state.error.errorIndividualLeave,
     cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
+    leaveDates: state.leaveDates,
+
+    postLeave: state.postLeave,
+    postLeaveSuccess: state.postLeaveSuccess,
+    postLeaveFail: state.postLeaveFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+
+  const handlePostResult = async () => {
+    // postLeave();
+    // const { error, result } = await postPortal('/v1/leave-application', data);
+    // if (error) {
+    //   postLeaveFail(result);
+    // } else {
+    //   postLeaveSuccess(result);
+    //   closeModalAction();
+    // }
+  };
 
   const { windowWidth } = UseWindowDimensions();
   return (
@@ -97,7 +120,7 @@ export const CancelLeaveModal = ({
                   ) : null}
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                         Leave Type:
                       </label>
@@ -116,7 +139,7 @@ export const CancelLeaveModal = ({
                   {leaveIndividualDetail.leaveApplicationBasicInfo
                     ?.leaveName ? (
                     <>
-                      <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
                         <label className="text-slate-500 text-md font-medium">
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Vacation Leave' ||
@@ -331,8 +354,9 @@ export const CancelLeaveModal = ({
               variant={'warning'}
               size={'md'}
               loading={false}
-              // onClick={(e) => modalAction(e)}
+              onClick={(e) => handlePostResult()}
               type="submit"
+              disabled
             >
               Request Cancellation/Adjustment
             </Button>

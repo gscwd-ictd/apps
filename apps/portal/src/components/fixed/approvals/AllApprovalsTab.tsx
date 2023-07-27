@@ -1,11 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 
 import {
   EmployeeLeaveDetails,
   MonitoringLeave,
+  SupervisorLeaveDetails,
 } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 import {
@@ -15,7 +15,7 @@ import {
 
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
-  leaves: Array<MonitoringLeave> | null;
+  leaves: Array<SupervisorLeaveDetails> | null;
   tab: number;
 };
 
@@ -33,7 +33,6 @@ export const AllApprovalsTab = ({
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen,
-
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -96,7 +95,7 @@ export const AllApprovalsTab = ({
     }
   };
 
-  const onSelectLeave = (leave: MonitoringLeave) => {
+  const onSelectLeave = (leave: SupervisorLeaveDetails) => {
     setLeaveId(leave.id);
     if (tab === 2) {
       // PENDING APPROVAL LEAVES
@@ -143,7 +142,8 @@ export const AllApprovalsTab = ({
                     Purpose: {item.purposeDestination}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Date Applied: {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
+                    Date Applied:{' '}
+                    {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>
                 </div>
               </li>
@@ -152,7 +152,7 @@ export const AllApprovalsTab = ({
         </ul>
       ) : leaves && leaves.length > 0 ? (
         <ul className="mt-4">
-          {leaves.map((item: MonitoringLeave, index: number) => {
+          {leaves.map((item: SupervisorLeaveDetails, index: number) => {
             return (
               <li
                 key={index}
@@ -161,17 +161,18 @@ export const AllApprovalsTab = ({
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    {item.leaveName} - {item.fullName}
+                    {/* {item.leaveName} - {item.fullName} */}
                   </h1>
                   {/* <p className="text-md text-gray-500"></p> */}
                   <p className="text-sm text-gray-500">
-                    Employee: {item.fullName}
+                    Employee: {item.employee.employeeName}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Days: {item.leaveDates}
+                    {/* Days: {item.leaveDates} */}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Date Applied: {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
+                    Date Applied:{' '}
+                    {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
                   </p>
                 </div>
               </li>

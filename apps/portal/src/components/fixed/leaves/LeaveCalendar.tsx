@@ -112,7 +112,7 @@ export default function Calendar({
           })
         );
       } else {
-        //adds date to arry
+        //adds date to array
 
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
           setSelectedDates((selectedDates) => [
@@ -297,6 +297,12 @@ export default function Calendar({
                               (item) =>
                                 item.date === format(day, 'yyyy-MM-dd') &&
                                 item.type === 'Leave'
+                            ) &&
+                            swrUnavailableDates &&
+                            !swrUnavailableDates.some(
+                              (item) =>
+                                item.date === format(day, 'yyyy-MM-dd') &&
+                                item.type === 'Holiday'
                             ) &&
                             'text-green-600 bg-green-200 rounded-full',
                           !isEqual(day, selectedDay) &&

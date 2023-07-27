@@ -39,35 +39,79 @@ export const setModules = async (userDetails: EmployeeDetails) => {
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER)
   ) {
-    allowed = Modules.filter(
-      (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
-        card.destination === 'pds' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'leaves' ||
-        card.destination === 'email'
-    );
+    if (
+      userDetails.employmentDetails.assignment.name ===
+        'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name ===
+        'Training and Development Division'
+    ) {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'final-leave-approvals' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    } else {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    }
   } else if (
     isEqual(userDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER)
   ) {
-    allowed = Modules.filter(
-      (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
-        card.destination === 'pds' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'leaves' ||
-        card.destination === 'email'
-    );
+    if (
+      userDetails.employmentDetails.assignment.name ===
+        'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name ===
+        'Training and Development Division'
+    ) {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'final-leave-approvals' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    } else {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    }
   } else if (
     isEqual(
       userDetails.employmentDetails.userRole,
@@ -127,38 +171,82 @@ export const setModules = async (userDetails: EmployeeDetails) => {
       UserRole.OIC_DIVISION_MANAGER
     )
   ) {
-    allowed = Modules.filter(
-      (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
-        card.destination === 'pds' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'leaves' ||
-        card.destination === 'email'
-    );
+    if (
+      userDetails.employmentDetails.assignment.name ===
+        'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name ===
+        'Training and Development Division'
+    ) {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'final-leave-approvals' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    } else {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    }
   } else if (
     isEqual(
       userDetails.employmentDetails.userRole,
       UserRole.OIC_DEPARTMENT_MANAGER
     )
   ) {
-    allowed = Modules.filter(
-      (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
-        card.destination === 'pds' ||
-        card.destination === 'dtr' ||
-        card.destination === 'pass-slip' ||
-        card.destination === 'leaves' ||
-        card.destination === 'email'
-    );
+    if (
+      userDetails.employmentDetails.assignment.name ===
+        'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name ===
+        'Training and Development Division'
+    ) {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'final-leave-approvals' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    } else {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dnr' ||
+          card.destination === 'prf' ||
+          card.destination === 'endorsement' ||
+          card.destination === 'psb' ||
+          card.destination === 'approvals' ||
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email'
+      );
+    }
   } else if (
     isEqual(
       userDetails.employmentDetails.userRole,

@@ -104,3 +104,31 @@ export type MonitoringLeave = {
   fullName: string;
   positionTitle?: string;
 } & EmployeeLeave;
+
+export type SupervisorLeaveDetails = {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  id: string;
+  dateOfFiling: string;
+  inPhilippines: string | null;
+  abroad: string | null;
+  inHospital: string | null;
+  outPatient: string | null;
+  splWomen: string | null;
+  forMastersCompletion: string | null;
+  forBarBoardReview: string | null;
+  studyLeaveOther: string | null;
+  forMonetization: boolean;
+  isTerminalLeave: boolean | null;
+  requestedCommutation: boolean | null;
+  status: string;
+  employee: {
+    employeeId: string;
+    employeeName: string;
+  };
+  supervisor: {
+    supervisorId: string;
+    supervisorName: string;
+  };
+};

@@ -28,10 +28,10 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
     approvedPassSlips: state.passSlips.completed.approved,
     disapprovedPassSlips: state.passSlips.completed.disapproved,
     cancelledPassSlips: state.passSlips.completed.cancelled,
-    forApprovalLeaves: state.leaves.forApproval,
-    approvedLeaves: state.leaves.approved,
-    disapprovedLeaves: state.leaves.disapproved,
-    cancelledLeaves: state.leaves.cancelled,
+    forApprovalLeaves: state.leaves,
+    approvedLeaves: state.leaves,
+    disapprovedLeaves: state.leaves,
+    cancelledLeaves: state.leaves,
   }));
 
   return (
@@ -167,9 +167,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 title="Cancelled Leaves"
                 icon={<HiCheck size={26} />}
                 subtitle="Show all cancelled Leave applications"
-                notificationCount={
-                  cancelledLeaves ? cancelledLeaves.length : 0
-                }
+                notificationCount={cancelledLeaves ? cancelledLeaves.length : 0}
                 className="bg-gray-500"
               />
             </>

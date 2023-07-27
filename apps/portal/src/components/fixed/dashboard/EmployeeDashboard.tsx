@@ -63,6 +63,8 @@ const VerticalLayout = (): JSX.Element => {
                       ? `/${router.query.id}/approvals`
                       : destination === 'email'
                       ? `https://7.123.168.184.host.secureserver.net:2096/`
+                      : destination === 'final-leave-approvals'
+                      ? `/${router.query.id}/final-leave-approvals`
                       : destination
                   }
                   // children={<></>}
