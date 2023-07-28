@@ -56,25 +56,26 @@ export default function Carousel() {
         className="keen-slider w-full h-[150%] md:h-[280%] lg:h-screen pb-10 rounded-lg shadow bg-gray-100"
       >
         {Announcements.map((src, i) => (
-          <>
-            <div className="keen-slider__slide number-slide1 w-screen h-screen">
-              <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
-                <label className="text-lg text-slate-600 uppercase">
-                  {src.title}
-                </label>
-                <label className="hidden lg:block text-sm text-slate-500 text-justify">
-                  {src.desc}
-                </label>
+          <div
+            key={i}
+            className="keen-slider__slide number-slide1 w-screen h-screen"
+          >
+            <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
+              <label className="text-lg text-slate-600 uppercase">
+                {src.title}
+              </label>
+              <label className="hidden lg:block text-sm text-slate-500 text-justify">
+                {src.desc}
+              </label>
 
-                <label className="text-right text-sm text-slate-500 cursor-pointer">
-                  <a target="blank" href={src.link}>
-                    Read More
-                  </a>
-                </label>
-                <img className="w-100 h-100" src={src.src}></img>
-              </div>
+              <label className="text-right text-sm text-slate-500 cursor-pointer">
+                <a target="blank" href={src.link}>
+                  Read More
+                </a>
+              </label>
+              <img className="w-100 h-100" src={src.src}></img>
             </div>
-          </>
+          </div>
         ))}
 
         {/* <div className="keen-slider__slide number-slide1 w-screen h-screen">
