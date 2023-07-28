@@ -9,6 +9,7 @@ import {
   EmployeeLeaveList,
   EmployeeLeaveCredits,
   LeaveId,
+  LeaveApplicationResponse,
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 
@@ -26,7 +27,7 @@ export type LeavesState = {
   leaveIndividualDetail: EmployeeLeaveDetails;
   unavailableDates: Array<CalendarDate>;
   response: {
-    postResponseApply: LeaveApplicationForm;
+    postResponseApply: LeaveApplicationResponse;
     deleteResponseCancel: LeaveId;
   };
   loading: {
@@ -69,7 +70,7 @@ export type LeavesState = {
   getLeaveListFail: (loading: boolean, error: string) => void;
 
   postLeave: () => void;
-  postLeaveSuccess: (response: LeaveApplicationForm) => void;
+  postLeaveSuccess: (response: LeaveApplicationResponse) => void;
   postLeaveFail: (error: string) => void;
 
   getLeaveTypes: (loading: boolean) => void;
@@ -115,7 +116,7 @@ export const useLeaveStore = create<LeavesState>()(
     unavailableDates: [] as Array<CalendarDate>,
 
     response: {
-      postResponseApply: {} as LeaveApplicationForm,
+      postResponseApply: {} as LeaveApplicationResponse,
       deleteResponseCancel: {} as LeaveId,
     },
     loading: {
@@ -246,7 +247,7 @@ export const useLeaveStore = create<LeavesState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveApplicationForm,
+          postResponseApply: {} as LeaveApplicationResponse,
         },
         loading: {
           ...state.loading,
@@ -258,7 +259,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    postLeaveSuccess: (response: LeaveApplicationForm) => {
+    postLeaveSuccess: (response: LeaveApplicationResponse) => {
       set((state) => ({
         ...state,
         response: {
@@ -473,7 +474,7 @@ export const useLeaveStore = create<LeavesState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveApplicationForm,
+          postResponseApply: {} as LeaveApplicationResponse,
           deleteResponseCancel: {} as LeaveId,
         },
         error: {

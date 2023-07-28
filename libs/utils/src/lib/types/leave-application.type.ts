@@ -7,6 +7,22 @@ export type LeaveDateRange = {
   to: string;
 };
 
+type LeaveApplicationDatesResponse = {
+  leaveDate: string;
+  leaveApplicationId?: string;
+  deletedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  id: string;
+};
+
+export type LeaveApplicationResponse = Omit<
+  LeaveApplicationForm,
+  'leaveApplicationDates' | 'leaveApplicationDatesRange'
+> & {
+  leaveApplicationDates: Array<LeaveApplicationDatesResponse>;
+};
+
 // Leave application form
 export type LeaveApplicationForm = {
   employeeId: string;
