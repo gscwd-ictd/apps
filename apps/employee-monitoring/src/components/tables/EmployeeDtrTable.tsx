@@ -170,20 +170,18 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
 
       {/* OFFICE EMPLOYEE DTR TABLE */}
       {isOfficeSchedule ? (
-        <div className="flex w-full border rounded">
-          <table className="w-full overflow-auto border-separate bg-slate-50 border-spacing-0">
-            <thead className="border-0">
-              <tr className="text-xs">
-                <th className="px-6 py-2 text-center border">Date</th>
-                <th className="px-5 py-2 text-center border">Time In</th>
-                <th className="px-5 py-2 text-center border">Lunch Out</th>
-                <th className="px-5 py-2 text-center border">Lunch In</th>
-                <th className="px-5 py-2 text-center border">Time Out</th>
-                <th className="px-5 py-2 text-center border">Schedule</th>
-                <th className="px-5 py-2 text-center border w-[12rem]">
-                  Remarks
-                </th>
-                <th className="px-5 py-2 text-center border">Actions</th>
+        <div className="flex w-full mt-2">
+          <table className="w-full overflow-auto border table-fixed border-spacing-0 bg-slate-50">
+            <thead className="">
+              <tr className="text-xs border-b divide-x divide-y">
+                <th className="px-6 py-2 text-center ">Date</th>
+                <th className="px-5 py-2 text-center ">Time In</th>
+                <th className="px-5 py-2 text-center ">Lunch Out</th>
+                <th className="px-5 py-2 text-center ">Lunch In</th>
+                <th className="px-5 py-2 text-center ">Time Out</th>
+                <th className="px-5 py-2 text-center ">Schedule</th>
+                <th className="px-5 py-2 text-center  w-[12rem]">Remarks</th>
+                <th className="px-5 py-2 text-center ">Actions</th>
               </tr>
             </thead>
             <tbody className="text-sm text-center ">
@@ -251,11 +249,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
 
                   return (
                     <Fragment key={index}>
-                      <tr>
-                        <td colSpan={8}></td>
-                      </tr>
                       <tr
-                        className={`text-xs ${
+                        className={`text-xs divide-x divide-y ${
                           logs.holidayType === HolidayTypes.REGULAR
                             ? regularHoliday
                             : logs.holidayType === HolidayTypes.SPECIAL
@@ -264,7 +259,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         } `}
                       >
                         <td
-                          className={`py-2 text-center border max-w-[6rem] ${checkIfHoliday(
+                          className={`py-2 text-center border-b  max-w-[6rem] ${checkIfHoliday(
                             logs.holidayType
                           )}`}
                         >
@@ -273,7 +268,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                             <span>{dayjs(logs.day).format('ddd')}</span>
                           </div>
                         </td>
-                        <td className="py-2 text-center border">
+                        <td className="py-2 text-center ">
                           <span
                             className={`${checkIfHoliday(
                               logs.holidayType
@@ -284,7 +279,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                               : '-'}
                           </span>
                         </td>
-                        <td className="py-2 text-center border">
+                        <td className="py-2 text-center ">
                           <span
                             className={`${checkIfHoliday(
                               logs.holidayType
@@ -295,7 +290,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                               : '-'}
                           </span>
                         </td>
-                        <td className="py-2 text-center border">
+                        <td className="py-2 text-center ">
                           <span
                             className={`${checkIfHoliday(
                               logs.holidayType
@@ -306,7 +301,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                               : '-'}
                           </span>
                         </td>
-                        <td className="py-2 text-center border">
+                        <td className="py-2 text-center ">
                           <span
                             className={`${checkIfHoliday(
                               logs.holidayType
@@ -318,7 +313,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                           </span>
                         </td>
                         <td
-                          className={`py-2 text-center border ${checkIfHoliday(
+                          className={`py-2 text-center  ${checkIfHoliday(
                             logs.holidayType
                           )} `}
                         >
@@ -326,13 +321,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                           {formatTime(logs.schedule.timeOut)}
                         </td>
                         <td
-                          className={`py-2 text-xs text-center break-words border ${checkIfHoliday(
+                          className={`py-2 text-xs text-center break-words  ${checkIfHoliday(
                             logs.holidayType
                           )} `}
                         >
                           {logs.dtr.remarks ? logs.dtr.remarks : '-'}
                         </td>
-                        <td className="py-2 text-center border">
+                        <td className="py-2 text-center ">
                           <div>
                             <button
                               className="text-green-700 disabled:text-red-600"
@@ -538,7 +533,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
         </>
       ) : null}
 
-      <table className="mt-5 border table-auto ">
+      <table className="w-full mt-5 border table-auto ">
         <thead>
           <tr className="text-sm font-medium text-center">
             <td className="p-1 text-gray-700 border">No. of Times Late</td>
@@ -550,6 +545,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
             </td>
             <td className="p-1 text-gray-700 border">Dates/Undertime</td>
             <td className="p-1 text-gray-700 border">No. of Times Halfday</td>
+            <td className="p-1 text-gray-700 border">Dates Halfday</td>
             <td className="p-1 text-gray-700 border">No Attendance</td>
           </tr>
         </thead>
@@ -602,6 +598,23 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
             </td>
             <td className="p-1 border">
               {employeeDtr.summary?.noOfTimesHalfDay ?? '--'}
+            </td>
+            <td className="p-1 border">
+              {employeeDtr.summary?.halfDayDates &&
+              employeeDtr.summary?.halfDayDates.length > 0
+                ? employeeDtr.summary?.halfDayDates.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index ===
+                        employeeDtr.summary?.halfDayDates.length - 1 ? (
+                          <>{day}</>
+                        ) : (
+                          <>{day}, </>
+                        )}
+                      </span>
+                    );
+                  })
+                : '--'}
             </td>
             <td className="p-1 border">
               {employeeDtr.summary?.noAttendance &&

@@ -90,9 +90,9 @@ export default function Index({
         />
 
         {/* LEAVE LEDGER */}
-        <div className="mx-5">
+        <div className="px-5">
           {/** Top Card */}
-          <Card className="px-5">
+          <Card>
             <div className="flex flex-col gap-2">
               {/* HEADER */}
               <div className="grid gap-2 xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
@@ -125,36 +125,8 @@ export default function Index({
                     </div>
                   </div>
                 </section>
-                {/* <section className="flex justify-end">
-                      <div className="px-5 py-2 bg-gray-200 rounded">
-                        <span className="text-sm font-medium">Legend</span>
-                        <div className="grid grid-rows-2">
-                          <div className="grid items-center grid-cols-2 gap-1">
-                            <span className="text-xs font-light">
-                              Regular Holiday -
-                            </span>
-                            <i className="text-2xl text-red-400 bx bxs-checkbox"></i>
-                          </div>
-                          <div className="grid items-center grid-cols-2 gap-1">
-                            <span className="text-xs font-light">
-                              Special Holiday -
-                            </span>
-                            <i className="text-2xl text-blue-400 bx bxs-checkbox"></i>
-                          </div>
-                          <div className="grid items-center grid-cols-2 gap-1">
-                            <span className="text-xs font-light">
-                              Late/Undertime -
-                            </span>
-                            <div className="">
-                              <span className="max-w-[5rem] px-2 py-0.5  text-xs font-light text-center text-black rounded bg-yellow-400">
-                                Time Log
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </section> */}
-                <section className="flex justify-end xs:px-2 sm:px-2 md:px-2 lg:px-0">
+
+                <section className="flex justify-end ">
                   <div className="">
                     <button
                       type="button"

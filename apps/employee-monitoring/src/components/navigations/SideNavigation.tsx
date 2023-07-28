@@ -20,12 +20,12 @@ export const SideNavigation = () => {
   return (
     <Sidebar
       className="relative w-full transition-all"
-      background="bg-slate-900"
+      background="bg-gray-900"
     >
       <Sidebar.Header>
         <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
           <section className="">
-            <div className="text-sky-300/40">
+            <div className="text-cyan-300">
               <i className="text-5xl bx bxs-network-chart"></i>
             </div>
           </section>
@@ -35,8 +35,8 @@ export const SideNavigation = () => {
               isCollapsed ? 'hidden' : ''
             } flex flex-col text-center items-center select-none`}
           >
-            <span className="text-5xl font-medium text-sky-300">HRMS</span>
-            <span className="text-xs font-light text-sky-300">
+            <span className="text-5xl font-medium text-cyan-300">HRMS</span>
+            <span className="text-xs font-light text-cyan-300">
               Employee Monitoring
             </span>
           </section>

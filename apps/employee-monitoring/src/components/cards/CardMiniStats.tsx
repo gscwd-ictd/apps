@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import Skeleton from 'react-loading-skeleton';
 
 type CardMiniStatsProps = {
   title: string | JSX.Element;
@@ -8,6 +9,7 @@ type CardMiniStatsProps = {
   className?: string;
   titleClassName?: string;
   valueClassName?: string;
+  isLoading?: boolean;
 };
 
 export const CardMiniStats: FunctionComponent<CardMiniStatsProps> = ({
@@ -18,6 +20,7 @@ export const CardMiniStats: FunctionComponent<CardMiniStatsProps> = ({
   bgColor = 'bg-white',
   titleClassName = 'text-gray-500',
   valueClassName = 'text-gray-600',
+  isLoading = false,
 }) => {
   return (
     <div className={`flex w-full h-full ${bgColor} ${className}`}>
@@ -29,7 +32,7 @@ export const CardMiniStats: FunctionComponent<CardMiniStatsProps> = ({
             {title}
           </div>
           <div className={`text-xl font-medium ${valueClassName} `}>
-            {value}
+            {isLoading ? <Skeleton /> : value}
           </div>
         </section>
         <section className="w-[30%] h-full shrink-0 flex items-center justify-center">
