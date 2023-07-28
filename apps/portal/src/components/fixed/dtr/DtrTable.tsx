@@ -105,9 +105,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                         <td
                           className={`${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300 border-red-300'
+                              ? 'border-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
-                              ? 'bg-blue-300 border-blue-300'
+                              ? 'border-blue-300'
                               : ''
                           } py-2 text-center border`}
                         >
@@ -123,9 +123,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                               : ''
                           } ${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300 border-red-300'
+                              ? 'border-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
-                              ? 'bg-blue-300 border-blue-300'
+                              ? 'border-blue-300'
                               : ''
                           } py-2 text-center border`}
                         >
@@ -136,9 +136,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                         <td
                           className={`${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300 border-red-300'
+                              ? 'border-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
-                              ? 'bg-blue-300 border-blue-300'
+                              ? 'border-blue-300'
                               : ''
                           } py-2 text-center border`}
                         >
@@ -149,9 +149,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                         <td
                           className={`${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300 border-red-300'
+                              ? 'border-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
-                              ? 'bg-blue-300 border-blue-300'
+                              ? 'border-blue-300'
                               : ''
                           } py-2 text-center border`}
                         >
@@ -169,9 +169,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                               : ''
                           } ${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300 border-red-300'
+                              ? 'border-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
-                              ? 'bg-blue-300 border-blue-300'
+                              ? 'border-blue-300'
                               : ''
                           } py-2 text-center border`}
                         >
@@ -182,9 +182,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                         <td
                           className={`${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300 border-red-300'
+                              ? 'border-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
-                              ? 'bg-blue-300 border-blue-300'
+                              ? 'border-blue-300'
                               : ''
                           } py-2 text-center border`}
                         >
@@ -193,9 +193,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                         <td
                           className={`${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300 border-red-300'
+                              ? 'border-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
-                              ? 'bg-blue-300 border-blue-300'
+                              ? 'border-blue-300'
                               : ''
                           } py-2 text-center border`}
                         >
