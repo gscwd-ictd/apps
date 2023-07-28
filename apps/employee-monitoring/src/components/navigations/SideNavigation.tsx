@@ -20,7 +20,7 @@ export const SideNavigation = () => {
   return (
     <Sidebar
       className="relative w-full transition-all"
-      background="bg-gray-900"
+      background="bg-slate-900"
     >
       <Sidebar.Header>
         <div className="flex items-center justify-center w-full gap-0 py-4 text-white">

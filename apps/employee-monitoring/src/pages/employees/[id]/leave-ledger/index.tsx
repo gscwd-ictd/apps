@@ -194,7 +194,7 @@ export const getServerSideProps: GetServerSideProps = async (
     const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees/${context.query.id}`
     );
-    console.log(data);
+
     return { props: { employeeData: data } };
   } catch (error) {
     return {

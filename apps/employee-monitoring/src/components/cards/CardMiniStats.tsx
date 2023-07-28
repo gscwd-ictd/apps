@@ -6,6 +6,8 @@ type CardMiniStatsProps = {
   value: string | number | JSX.Element;
   bgColor?: string;
   className?: string;
+  titleClassName?: string;
+  valueClassName?: string;
 };
 
 export const CardMiniStats: FunctionComponent<CardMiniStatsProps> = ({
@@ -14,15 +16,21 @@ export const CardMiniStats: FunctionComponent<CardMiniStatsProps> = ({
   value,
   className,
   bgColor = 'bg-white',
+  titleClassName = 'text-gray-500',
+  valueClassName = 'text-gray-600',
 }) => {
   return (
     <div className={`flex w-full h-full ${bgColor} ${className}`}>
       <div className="flex w-full">
         <section className="flex flex-col px-5 h-full justify-evenly text-left w-[70%]">
-          <div className="font-light text-gray-500 sm:text-xs md:text-sm lg:text-sm ">
+          <div
+            className={`font-light ${titleClassName}  sm:text-xs md:text-sm lg:text-sm`}
+          >
             {title}
           </div>
-          <div className="text-xl font-medium text-gray-600">{value}</div>
+          <div className={`text-xl font-medium ${valueClassName} `}>
+            {value}
+          </div>
         </section>
         <section className="w-[30%] h-full shrink-0 flex items-center justify-center">
           {icon}

@@ -26,26 +26,6 @@ type LeaveLedgerTableProps = {
 export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
   employeeData,
 }) => {
-  // temporary, will be used if office schedules will be captured
-  const [isOfficeSchedule, setIsOfficeSchedule] = useState<boolean>(true);
-
-  // Edit modal function
-  const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>(
-    {} as EmployeeDtrWithSchedule
-  );
-
-  // edit modal state
-  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-
-  // open edit action modal function
-  const openEditActionModal = (rowData: EmployeeDtrWithSchedule) => {
-    setEditModalIsOpen(true);
-    setCurrentRowData(rowData);
-  };
-
-  // close edit action modal function
-  const closeEditActionModal = () => setEditModalIsOpen(false);
-
   const {
     employeeDtr,
     isDateSearched,
@@ -162,54 +142,59 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
 
   return (
     <>
-      <EditDailySchedModal
-        modalState={editModalIsOpen}
-        setModalState={setEditModalIsOpen}
-        closeModalAction={closeEditActionModal}
-        rowData={currentRowData}
-      />
-
       {/* Leave Ledger Table */}
 
       <div className="w-full grid-cols-4 gap-5 pb-5 sm:flex sm:flex-col lg:flex lg:flex-row">
         <div className="h-[6rem] w-full">
           <CardMiniStats
-            className="p-2 border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
-            icon={<i className="text-4xl text-cyan-700 bx bxs-hand-right"></i>}
+            className="p-2 border rounded-md shadow hover:cursor-pointer"
+            icon={<i className="text-4xl text-white bx bxs-hand-right"></i>}
             title="Forced Leave"
+            titleClassName="text-gray-100"
+            valueClassName="text-white"
+            bgColor="bg-red-500"
             value={6.25}
           />
         </div>
 
         <div className="h-[6rem] w-full">
           <CardMiniStats
-            className="p-2 border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
-            icon={<i className="text-4xl text-cyan-700 bx bx-run"></i>}
+            className="p-2 border rounded-md shadow hover:cursor-pointer"
+            icon={<i className="text-4xl text-white bx bx-run"></i>}
             title="Vacation Leave"
+            titleClassName="text-gray-100"
+            valueClassName="text-white"
+            bgColor="bg-green-600 "
             value={13.656}
           />
         </div>
 
         <div className="h-[6rem] w-full">
           <CardMiniStats
-            className="p-2 border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
-            icon={<i className="text-4xl text-cyan-700 bx bxs-band-aid "></i>}
+            className="p-2 border rounded-md shadow hover:cursor-pointer"
+            icon={<i className="text-4xl text-white bx bxs-band-aid "></i>}
             title="Sick Leave"
+            titleClassName="text-gray-100"
+            valueClassName="text-white"
+            bgColor="bg-orange-400 "
             value={18.75}
           />
         </div>
 
         <div className="h-[6rem] w-full">
           <CardMiniStats
-            className="p-2 border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
-            icon={<i className="text-4xl text-cyan-700 bx bxs-offer"></i>}
+            className="p-2 border rounded-md shadow hover:cursor-pointer"
+            icon={<i className="text-4xl text-white bx bxs-offer"></i>}
             title="Special Leave Benefits"
+            titleClassName="text-gray-100"
+            valueClassName="text-white"
+            bgColor="bg-cyan-600 "
             value={0}
           />
         </div>
       </div>
 
-      <div className="flex w-full overflow-auto border-2 rounded-lg">
+      <div className="flex w-full overflow-auto border rounded-lg shadow">
         <table className="w-full table-auto bg-slate-50 ">
           <thead className="border-0">
             <tr className="text-xs border-b divide-x">
@@ -396,7 +381,6 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
                         <div>
                           <button
                             className="text-green-700 disabled:text-red-600"
-                            onClick={() => openEditActionModal(logs)}
                             disabled={
                               dayjs().isBefore(dayjs(logs.day)) ||
                               dayjs().isSame(dayjs(logs.day), 'day')
