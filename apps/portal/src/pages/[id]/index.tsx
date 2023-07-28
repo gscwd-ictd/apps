@@ -72,7 +72,6 @@ export default function Dashboard({
   }
 
   useEffect(() => {
-    console.log(userDetails);
     setEmployee(userDetails);
     setIsLoading(true);
     hydration();
