@@ -9,6 +9,7 @@ import {
   EmployeeLeaveList,
   EmployeeLeaveCredits,
   LeaveId,
+  LeaveApplicationResponse,
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 
@@ -26,7 +27,7 @@ export type LeavesState = {
   leaveIndividualDetail: EmployeeLeaveDetails;
   unavailableDates: Array<CalendarDate>;
   response: {
-    postResponseApply: LeaveApplicationForm;
+    postResponseApply: LeaveApplicationResponse;
     deleteResponseCancel: LeaveId;
   };
   loading: {
@@ -54,6 +55,7 @@ export type LeavesState = {
   applyLeaveModalIsOpen: boolean;
   pendingLeaveModalIsOpen: boolean;
   completedLeaveModalIsOpen: boolean;
+  cancelLeaveModalIsOpen: boolean;
   tab: number;
   isGetLeaveLoading: boolean;
 
@@ -68,7 +70,7 @@ export type LeavesState = {
   getLeaveListFail: (loading: boolean, error: string) => void;
 
   postLeave: () => void;
-  postLeaveSuccess: (response: LeaveApplicationForm) => void;
+  postLeaveSuccess: (response: LeaveApplicationResponse) => void;
   postLeaveFail: (error: string) => void;
 
   getLeaveTypes: (loading: boolean) => void;
@@ -90,6 +92,7 @@ export type LeavesState = {
   setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
   setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => void;
+  setCancelLeaveModalIsOpen: (cancelLeaveModalIsOpen: boolean) => void;
 
   setIsGetLeaveLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
@@ -113,7 +116,7 @@ export const useLeaveStore = create<LeavesState>()(
     unavailableDates: [] as Array<CalendarDate>,
 
     response: {
-      postResponseApply: {} as LeaveApplicationForm,
+      postResponseApply: {} as LeaveApplicationResponse,
       deleteResponseCancel: {} as LeaveId,
     },
     loading: {
@@ -142,6 +145,7 @@ export const useLeaveStore = create<LeavesState>()(
     applyLeaveModalIsOpen: false,
     pendingLeaveModalIsOpen: false,
     completedLeaveModalIsOpen: false,
+    cancelLeaveModalIsOpen: false,
 
     isGetLeaveLoading: true,
     tab: 1,
@@ -184,6 +188,10 @@ export const useLeaveStore = create<LeavesState>()(
 
     setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => {
       set((state) => ({ ...state, completedLeaveModalIsOpen }));
+    },
+
+    setCancelLeaveModalIsOpen: (cancelLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, cancelLeaveModalIsOpen }));
     },
 
     //GET LEAVE ACTIONS
@@ -239,7 +247,7 @@ export const useLeaveStore = create<LeavesState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveApplicationForm,
+          postResponseApply: {} as LeaveApplicationResponse,
         },
         loading: {
           ...state.loading,
@@ -251,7 +259,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    postLeaveSuccess: (response: LeaveApplicationForm) => {
+    postLeaveSuccess: (response: LeaveApplicationResponse) => {
       set((state) => ({
         ...state,
         response: {
@@ -466,7 +474,7 @@ export const useLeaveStore = create<LeavesState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveApplicationForm,
+          postResponseApply: {} as LeaveApplicationResponse,
           deleteResponseCancel: {} as LeaveId,
         },
         error: {

@@ -7,6 +7,22 @@ export type LeaveDateRange = {
   to: string;
 };
 
+type LeaveApplicationDatesResponse = {
+  leaveDate: string;
+  leaveApplicationId?: string;
+  deletedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  id: string;
+};
+
+export type LeaveApplicationResponse = Omit<
+  LeaveApplicationForm,
+  'leaveApplicationDates' | 'leaveApplicationDatesRange'
+> & {
+  leaveApplicationDates: Array<LeaveApplicationDatesResponse>;
+};
+
 // Leave application form
 export type LeaveApplicationForm = {
   employeeId: string;
@@ -53,7 +69,7 @@ export type EmployeeLeaveDetails = {
     id: string;
     leaveDates: Array<string>;
     leaveName: string;
-    status: string;
+    status: LeaveStatus;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
@@ -104,3 +120,31 @@ export type MonitoringLeave = {
   fullName: string;
   positionTitle?: string;
 } & EmployeeLeave;
+
+export type SupervisorLeaveDetails = {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  id: string;
+  dateOfFiling: string;
+  inPhilippines: string | null;
+  abroad: string | null;
+  inHospital: string | null;
+  outPatient: string | null;
+  splWomen: string | null;
+  forMastersCompletion: string | null;
+  forBarBoardReview: string | null;
+  studyLeaveOther: string | null;
+  forMonetization: boolean;
+  isTerminalLeave: boolean | null;
+  requestedCommutation: boolean | null;
+  status: string;
+  employee: {
+    employeeId: string;
+    employeeName: string;
+  };
+  supervisor: {
+    supervisorId: string;
+    supervisorName: string;
+  };
+};

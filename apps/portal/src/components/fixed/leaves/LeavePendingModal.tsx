@@ -120,7 +120,7 @@ export const LeavePendingModal = ({
                   ) : null}
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                         Leave Type:
                       </label>
@@ -139,7 +139,7 @@ export const LeavePendingModal = ({
                   {leaveIndividualDetail.leaveApplicationBasicInfo
                     ?.leaveName ? (
                     <>
-                      <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
                         <label className="text-slate-500 text-md font-medium">
                           {leaveIndividualDetail.leaveApplicationBasicInfo
                             .leaveName === 'Vacation Leave' ||

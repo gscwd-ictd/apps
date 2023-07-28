@@ -25,18 +25,20 @@ function classNames(...classes: any) {
 
 type CalendarProps = {
   clickableDate: boolean;
-  type: string; // single or range
+  type: string; // single
+  leaveDates: Array<string>;
 };
 
-export default function Calendar({
+export default function CancelLeaveCalendar({
   type = 'single',
   clickableDate = true,
+  leaveDates,
 }: CalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
-  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [selectedDates, setSelectedDates] = useState<string[]>(leaveDates);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -103,8 +105,14 @@ export default function Calendar({
     if (clickableDate) {
       setSelectedDay(day);
       const specifiedDate = format(day, 'yyyy-MM-dd');
-      //check if selected date exist in array - returns true/false
-      if (selectedDates.includes(specifiedDate)) {
+      //check if selected date exist in overall leave application and also not a holiday, if so employee can remove it
+      if (
+        selectedDates.includes(specifiedDate) &&
+        specifiedDate >= format(today, 'yyyy-MM-dd') &&
+        !swrUnavailableDates.some(
+          (item) => item.date === specifiedDate && item.type === 'Holiday'
+        )
+      ) {
         //removes date
         setSelectedDates(
           selectedDates.filter(function (e) {
@@ -112,9 +120,14 @@ export default function Calendar({
           })
         );
       } else {
-        //adds date to array
-
-        if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
+        //adds date to array, still if date is not a holiday
+        if (
+          leaveDates.includes(specifiedDate) &&
+          specifiedDate >= format(today, 'yyyy-MM-dd') &&
+          !swrUnavailableDates.some(
+            (item) => item.date === specifiedDate && item.type === 'Holiday'
+          )
+        ) {
           setSelectedDates((selectedDates) => [
             ...selectedDates,
             specifiedDate,
@@ -124,37 +137,37 @@ export default function Calendar({
     }
   }
 
-  function getHolidayCount() {
-    const holiday = swrUnavailableDates?.filter(
-      (unavailableDate) =>
-        unavailableDate.type === 'Holiday' &&
-        unavailableDate.date >= leaveDateFrom &&
-        unavailableDate.date <= leaveDateTo
-    ).length;
-    setHolidayCount(holiday);
-  }
+  // function getHolidayCount() {
+  //   const holiday = swrUnavailableDates?.filter(
+  //     (unavailableDate) =>
+  //       unavailableDate.type === 'Holiday' &&
+  //       unavailableDate.date >= leaveDateFrom &&
+  //       unavailableDate.date <= leaveDateTo
+  //   ).length;
+  //   setHolidayCount(holiday);
+  // }
 
-  function getOverlappingLeaveCount() {
-    const leave = swrUnavailableDates?.filter(
-      (unavailableDate) =>
-        unavailableDate.type === 'Leave' &&
-        unavailableDate.date >= leaveDateFrom &&
-        unavailableDate.date <= leaveDateTo
-    ).length;
-    setOverlappingLeaveCount(leave);
-  }
+  // function getOverlappingLeaveCount() {
+  //   const leave = swrUnavailableDates?.filter(
+  //     (unavailableDate) =>
+  //       unavailableDate.type === 'Leave' &&
+  //       unavailableDate.date >= leaveDateFrom &&
+  //       unavailableDate.date <= leaveDateTo
+  //   ).length;
+  //   setOverlappingLeaveCount(leave);
+  // }
 
-  useEffect(() => {
-    setLeaveDateFrom(leaveDateFrom);
-    getHolidayCount();
-    getOverlappingLeaveCount();
-  }, [leaveDateFrom]);
+  // useEffect(() => {
+  //   setLeaveDateFrom(leaveDateFrom);
+  //   getHolidayCount();
+  //   getOverlappingLeaveCount();
+  // }, [leaveDateFrom]);
 
-  useEffect(() => {
-    setLeaveDateTo(leaveDateTo);
-    getHolidayCount();
-    getOverlappingLeaveCount();
-  }, [leaveDateTo]);
+  // useEffect(() => {
+  //   setLeaveDateTo(leaveDateTo);
+  //   getHolidayCount();
+  //   getOverlappingLeaveCount();
+  // }, [leaveDateTo]);
 
   useEffect(() => {
     setLeaveDates(selectedDates);
@@ -280,48 +293,73 @@ export default function Calendar({
                         type="button"
                         onClick={() => viewDateActivities(day)}
                         className={classNames(
-                          isEqual(day, selectedDay) &&
-                            'text-gray-900 font-semibold',
-                          !isEqual(day, selectedDay) &&
-                            isToday(day) &&
-                            'text-red-500',
-                          swrUnavailableDates &&
+                          //date is not part of leave application and a holiday
+                          !leaveDates.includes(format(day, 'yyyy-MM-dd')) &&
+                            swrUnavailableDates &&
                             swrUnavailableDates.some(
                               (item) =>
                                 item.date === format(day, 'yyyy-MM-dd') &&
                                 item.type === 'Holiday'
                             ) &&
-                            'text-red-600 bg-red-200 rounded-full',
-                          swrUnavailableDates &&
+                            'text-red-600 bg-red-200 font-semibold rounded-full cursor-default',
+
+                          //date is part of leave application and a holiday - will overlapped exisitng active leave date
+                          leaveDates.includes(format(day, 'yyyy-MM-dd')) &&
+                            swrUnavailableDates &&
                             swrUnavailableDates.some(
                               (item) =>
                                 item.date === format(day, 'yyyy-MM-dd') &&
-                                item.type === 'Leave'
+                                item.type === 'Holiday'
                             ) &&
+                            'text-red-600 bg-red-200 font-semibold rounded-full cursor-default',
+
+                          //date is not part of leave application and not a holiday
+                          !leaveDates.includes(format(day, 'yyyy-MM-dd')) &&
                             swrUnavailableDates &&
                             !swrUnavailableDates.some(
                               (item) =>
                                 item.date === format(day, 'yyyy-MM-dd') &&
                                 item.type === 'Holiday'
                             ) &&
-                            'text-green-600 bg-green-200 rounded-full',
-                          !isEqual(day, selectedDay) &&
-                            !isToday(day) &&
-                            isSameMonth(day, firstDayCurrentMonth) &&
-                            'text-gray-900 font-semibold',
-                          !isEqual(day, selectedDay) &&
-                            !isToday(day) &&
-                            !isSameMonth(day, firstDayCurrentMonth) &&
-                            'text-gray-900 font-semibold',
-                          isEqual(day, selectedDay) && isToday(day) && '',
-                          isEqual(day, selectedDay) && !isToday(day) && '',
-                          !isEqual(day, selectedDay) && 'hover:bg-blue-200',
-                          (isEqual(day, selectedDay) || isToday(day)) &&
-                            'font-semibold',
-                          'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
-                          selectedDates.includes(format(day, 'yyyy-MM-dd'))
-                            ? 'bg-indigo-200 rounded-full text-gray-900'
-                            : ''
+                            'text-gray-300 font-semibold cursor-default',
+
+                          //date is part of applied date leave but was removed, greater or equal to current date, and not a holiday
+                          //for removed leave date but can be added back
+                          leaveDates.includes(format(day, 'yyyy-MM-dd')) &&
+                            day >= today &&
+                            swrUnavailableDates &&
+                            !swrUnavailableDates.some(
+                              (item) =>
+                                item.date === format(day, 'yyyy-MM-dd') &&
+                                item.type === 'Holiday'
+                            ) &&
+                            'hover:bg-green-200 text-green-600 font-semibold cursor-pointer',
+
+                          //date is part of selected date leaves, greater than current date, and not a holiday
+                          //for removable leave dates
+                          selectedDates.includes(format(day, 'yyyy-MM-dd')) &&
+                            day >= today &&
+                            swrUnavailableDates &&
+                            !swrUnavailableDates.some(
+                              (item) =>
+                                item.date === format(day, 'yyyy-MM-dd') &&
+                                item.type === 'Holiday'
+                            ) &&
+                            'bg-green-300 text-green-700 rounded-full font-semibold hover:bg-green-300 cursor-pointer',
+
+                          //date is part of selected date leaves, less than current date, and not a holiday
+                          //for already used leave dates
+                          selectedDates.includes(format(day, 'yyyy-MM-dd')) &&
+                            day < today &&
+                            swrUnavailableDates &&
+                            !swrUnavailableDates.some(
+                              (item) =>
+                                item.date === format(day, 'yyyy-MM-dd') &&
+                                item.type === 'Holiday'
+                            ) &&
+                            'bg-orange-300 rounded-full text-gray-900 font-semibold cursor-default',
+
+                          'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
                         )}
                       >
                         <time dateTime={format(day, 'yyyy-MM-dd')}>
