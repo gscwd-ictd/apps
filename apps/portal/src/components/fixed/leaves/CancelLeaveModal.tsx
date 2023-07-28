@@ -1,87 +1,70 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../../src/store/leave.store';
+import { useLeaveStore } from '../../../store/leave.store';
 import { HiX } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { SpinnerDotted } from 'spinners-react';
-import { useEmployeeStore } from '../../../../src/store/employee.store';
+import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import CancelLeaveModal from './CancelLeaveModal';
+import Calendar from './LeaveCalendar';
+import CancelLeaveCalendar from './CancelLeaveCalendar';
+import { LeaveApplicationForm } from 'libs/utils/src/lib/types/leave-application.type';
+import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 
-type LeaveCompletedModalProps = {
+type CancelLeaveModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-export const LeaveCompletedModal = ({
+export const CancelLeaveModal = ({
   modalState,
   setModalState,
   closeModalAction,
-}: LeaveCompletedModalProps) => {
+}: CancelLeaveModalProps) => {
   const {
     leaveIndividualDetail,
     leaveId,
     loadingLeaveDetails,
     errorLeaveDetails,
-    completedLeaveModalIsOpen,
     cancelLeaveModalIsOpen,
+    leaveDates,
 
-    getLeaveIndividualDetail,
-    getLeaveIndividualDetailSuccess,
-    getLeaveIndividualDetailFail,
-    setCancelLeaveModalIsOpen,
+    postLeave,
+    postLeaveSuccess,
+    postLeaveFail,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
     loadingLeaveDetails: state.loading.loadingIndividualLeave,
     errorLeaveDetails: state.error.errorIndividualLeave,
-    completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
     cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
+    leaveDates: state.leaveDates,
 
-    getLeaveIndividualDetail: state.getLeaveIndividualDetail,
-    getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
-    getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
-    setCancelLeaveModalIsOpen: state.setCancelLeaveModalIsOpen,
+    postLeave: state.postLeave,
+    postLeaveSuccess: state.postLeaveSuccess,
+    postLeaveFail: state.postLeaveFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const getLeaveDetail = async (leaveId: string) => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${leaveId}`
-      );
-
-      if (!isEmpty(data)) {
-        getLeaveIndividualDetailSuccess(false, data);
-      }
-    } catch (error) {
-      getLeaveIndividualDetailFail(false, error.message);
-    }
+  const handlePostResult = async () => {
+    // postLeave();
+    // const { error, result } = await postPortal('/v1/leave-application', data);
+    // if (error) {
+    //   postLeaveFail(result);
+    // } else {
+    //   postLeaveSuccess(result);
+    //   closeModalAction();
+    // }
   };
-
-  useEffect(() => {
-    if (completedLeaveModalIsOpen) {
-      getLeaveDetail(leaveId);
-      getLeaveIndividualDetail(true);
-    }
-  }, [completedLeaveModalIsOpen, leaveId]);
-
-  const router = useRouter();
 
   const { windowWidth } = UseWindowDimensions();
-
-  // cancel action for Leave Completed Modal
-  const closeCancelLeaveModal = async () => {
-    setCancelLeaveModalIsOpen(false);
-  };
-
   return (
     <>
       <Modal
@@ -93,7 +76,7 @@ export const LeaveCompletedModal = ({
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
               <span className="text-xl md:text-2xl">
-                Completed Leave Application
+                Request Leave Cancellation / Adjustment
               </span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
@@ -105,13 +88,6 @@ export const LeaveCompletedModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {/* Pass Slip Application Modal */}
-          <CancelLeaveModal
-            modalState={cancelLeaveModalIsOpen}
-            setModalState={setCancelLeaveModalIsOpen}
-            closeModalAction={closeCancelLeaveModal}
-          />
-
           {loadingLeaveDetails || errorLeaveDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -226,74 +202,23 @@ export const LeaveCompletedModal = ({
                       </div>
 
                       <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                        <div className="flex flex-col md:flex-col justify-between items-start md:items-start w-full">
                           <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                             Leave Dates:
                           </label>
 
-                          <div className="w-96 ">
-                            <label className="text-slate-500 w-full text-md ">
-                              {leaveIndividualDetail.leaveApplicationBasicInfo
-                                .leaveName === 'Maternity Leave' ||
-                              leaveIndividualDetail.leaveApplicationBasicInfo
-                                .leaveName === 'Study Leave'
-                                ? // show first and last date (array) only if maternity or study leave
-                                  `${
-                                    leaveIndividualDetail
-                                      .leaveApplicationBasicInfo?.leaveDates[0]
-                                  } - ${
-                                    leaveIndividualDetail
-                                      .leaveApplicationBasicInfo?.leaveDates[
-                                      leaveIndividualDetail
-                                        .leaveApplicationBasicInfo?.leaveDates
-                                        .length - 1
-                                    ]
-                                  }`
-                                : // show all dates if not maternity or study leave
-                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates.join(
-                                    ', '
-                                  )}
-                            </label>
+                          <div className="w-full p-4 my-2 bg-gray-50 rounded">
+                            <CancelLeaveCalendar
+                              type={'single'}
+                              clickableDate={true}
+                              leaveDates={
+                                leaveIndividualDetail.leaveApplicationBasicInfo
+                                  ?.leaveDates
+                              }
+                            />
                           </div>
                         </div>
                       </div>
-
-                      {/* {watch('typeOfLeaveDetails.leaveName') === 'Others' &&
-                      watch('other') === 'Monetization of Leave Credits' ? (
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 text-slate-500 text-xl font-medium">
-                              Commutation
-                            </label>
-                          </div>
-
-                          <div className="flex gap-2 w-full items-center">
-                            {watch('other') ===
-                            'Monetization of Leave Credits' ? (
-                              <div className="w-full">
-                                <select
-                                  id="commutation"
-                                  className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
-                                  required
-                                  defaultValue={''}
-                                  {...register('commutation')}
-                                >
-                                  <option value="" disabled>
-                                    Select Other:
-                                  </option>
-                                  {leaveCommutation.map(
-                                    (item: Item, idx: number) => (
-                                      <option value={item.value} key={idx}>
-                                        {item.label}
-                                      </option>
-                                    )
-                                  )}
-                                </select>
-                              </div>
-                            ) : null}
-                          </div>
-                        </div>
-                      ) : null} */}
 
                       {leaveIndividualDetail.leaveApplicationBasicInfo
                         .leaveName === 'Vacation Leave' ||
@@ -429,31 +354,12 @@ export const LeaveCompletedModal = ({
               variant={'warning'}
               size={'md'}
               loading={false}
-              onClick={(e) => setCancelLeaveModalIsOpen(true)}
+              onClick={(e) => handlePostResult()}
               type="submit"
+              disabled
             >
-              Cancel/Adjust Leave
+              Request Cancellation/Adjustment
             </Button>
-            {/* <Link
-              href={`/${router.query.id}/leaves/${leaveId}`}
-              target={'_blank'}
-            >
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                disabled={
-                  isEmpty(errorLeaveDetails)
-                    ? leaveIndividualDetail.leaveApplicationBasicInfo
-                        ?.status === LeaveStatus.APPROVED
-                      ? false
-                      : true
-                    : true
-                }
-              >
-                Print PDF
-              </Button>
-            </Link> */}
           </div>
         </Modal.Footer>
       </Modal>
@@ -461,4 +367,4 @@ export const LeaveCompletedModal = ({
   );
 };
 
-export default LeaveCompletedModal;
+export default CancelLeaveModal;

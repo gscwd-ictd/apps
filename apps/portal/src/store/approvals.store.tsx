@@ -6,16 +6,19 @@ import {
   EmployeeLeave,
   EmployeeLeaveDetails,
   MonitoringLeave,
+  SupervisorLeaveDetails,
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
 export type ApprovalLeaveList = {
-  forApproval: Array<MonitoringLeave>;
-  approved: Array<MonitoringLeave>;
-  disapproved: Array<MonitoringLeave>;
-  cancelled: Array<MonitoringLeave>;
+  completed: {
+    approved: Array<SupervisorLeaveDetails>;
+    disapproved: Array<SupervisorLeaveDetails>;
+    cancelled: Array<SupervisorLeaveDetails>;
+  };
+  forApproval: Array<SupervisorLeaveDetails>;
 };
 
 export type ApprovalPassSlipList = {
@@ -37,12 +40,7 @@ export type ApprovalState = {
   selectedApprovalType: number;
   setSelectedApprovalType: (value: number) => void;
 
-  leaves: {
-    forApproval: Array<MonitoringLeave>;
-    approved: Array<MonitoringLeave>;
-    disapproved: Array<MonitoringLeave>;
-    cancelled: Array<MonitoringLeave>;
-  };
+  leaves: Array<SupervisorLeaveDetails>;
 
   passSlips: {
     completed: {
@@ -76,7 +74,9 @@ export type ApprovalState = {
   };
 
   declineApplicationModalIsOpen: boolean;
-  setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
+  setDeclineApplicationModalIsOpen: (
+    declineApplicationModalIsOpen: boolean
+  ) => void;
 
   pendingLeaveModalIsOpen: boolean;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -109,7 +109,9 @@ export type ApprovalState = {
   ) => void;
 
   cancelledPassSlipModalIsOpen: boolean;
-  setCancelledPassSlipModalIsOpen: (cancelledPassSlipModalIsOpen: boolean) => void;
+  setCancelledPassSlipModalIsOpen: (
+    cancelledPassSlipModalIsOpen: boolean
+  ) => void;
 
   // PASS SLIPS
   passSlipId: string;
@@ -151,12 +153,7 @@ export const useApprovalStore = create<ApprovalState>()(
     action: '',
     selectedApprovalType: 1,
 
-    leaves: {
-      forApproval: [],
-      approved: [],
-      disapproved: [],
-      cancelled: [],
-    },
+    leaves: [],
 
     passSlips: {
       completed: {
@@ -241,10 +238,11 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, tab }));
     },
 
-    setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
+    setDeclineApplicationModalIsOpen: (
+      declineApplicationModalIsOpen: boolean
+    ) => {
       set((state) => ({ ...state, declineApplicationModalIsOpen }));
     },
-
 
     setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => {
       set((state) => ({ ...state, otpPassSlipModalIsOpen }));
@@ -315,16 +313,13 @@ export const useApprovalStore = create<ApprovalState>()(
         },
       }));
     },
-    getLeaveListSuccess: (loading: boolean, response: ApprovalLeaveList) => {
+    getLeaveListSuccess: (
+      loading: boolean,
+      response: Array<SupervisorLeaveDetails>
+    ) => {
       set((state) => ({
         ...state,
-        leaves: {
-          ...state.leaves,
-          forApproval: response.forApproval,
-          approved: response.approved,
-          disapproved: response.disapproved,
-          cancelled: response.cancelled
-        },
+        leaves: response,
         loading: {
           ...state.loading,
           loadingLeaves: loading,
@@ -425,7 +420,7 @@ export const useApprovalStore = create<ApprovalState>()(
           completed: {
             approved: response.completed.approved,
             disapproved: response.completed.disapproved,
-            cancelled: response.completed.cancelled
+            cancelled: response.completed.cancelled,
           },
           forApproval: response.forApproval,
         },

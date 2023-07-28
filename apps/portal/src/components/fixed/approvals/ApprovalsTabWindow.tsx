@@ -30,10 +30,10 @@ export const ApprovalsTabWindow = ({
     approvedPassSlips: state.passSlips.completed.approved,
     disapprovedPassSlips: state.passSlips.completed.disapproved,
     cancelledPassSlips: state.passSlips.completed.cancelled,
-    forApprovalLeaves: state.leaves.forApproval,
-    approvedLeaves: state.leaves.approved,
-    disapprovedLeaves: state.leaves.disapproved,
-    cancelledLeaves: state.leaves.cancelled
+    forApprovalLeaves: state.leaves,
+    approvedLeaves: state.leaves,
+    disapprovedLeaves: state.leaves,
+    cancelledLeaves: state.leaves,
   }));
 
   return (
@@ -86,11 +86,7 @@ export const ApprovalsTabWindow = ({
           />
         )}
         {tab === 8 && selectedApprovalType === 4 && (
-          <AllApprovalsTab
-            passslips={[]}
-            tab={tab}
-            leaves={cancelledLeaves}
-          />
+          <AllApprovalsTab passslips={[]} tab={tab} leaves={cancelledLeaves} />
         )}
       </div>
     </>

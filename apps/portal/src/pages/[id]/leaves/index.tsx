@@ -40,6 +40,7 @@ export default function Leaves({
     applyLeaveModalIsOpen,
     pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen,
+
     loading,
     errorLeaves,
     errorLeaveDetails,
@@ -194,7 +195,7 @@ export default function Leaves({
           <>
             <ToastNotification
               toastType="error"
-              notifMessage={`Failed to load Holiday and Leave dates in calendar.`}
+              notifMessage={`${errorUnavailableDates}: Failed to load Holiday and Leave dates in calendar.`}
             />
           </>
         ) : null}
@@ -203,7 +204,7 @@ export default function Leaves({
         {!isEmpty(errorLeaves) ? (
           <ToastNotification
             toastType="error"
-            notifMessage={`${errorLeaves}.`}
+            notifMessage={`${errorLeaves}: Failed to load Leave List.`}
           />
         ) : null}
 
@@ -222,7 +223,7 @@ export default function Leaves({
           <>
             <ToastNotification
               toastType="error"
-              notifMessage={`${errorResponse}.`}
+              notifMessage={`${errorResponse}: Failed to Submit.`}
             />
           </>
         ) : null}
