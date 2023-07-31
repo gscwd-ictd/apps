@@ -81,95 +81,85 @@ export default function Index({
           />
         ) : null}
 
-        <div className="flex flex-col w-full gap-6">
-          {/* DTR CARD */}
-          <div className="mx-5">
-            <Card>
-              {/** Top Card */}
-              <div className="flex flex-col flex-wrap ">
-                <Card className="rounded-t bg-slate-200">
-                  {/* HEADER */}
-                  <div className="grid gap-2 xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-                    <section className="flex items-center gap-4 px-2">
-                      {employeeData.photoUrl ? (
-                        <div className="flex flex-wrap justify-center">
-                          <div className="w-[6rem]">
-                            <img
-                              src={employeeData.photoUrl}
-                              alt="user-circle"
-                              className="h-auto max-w-full align-middle border-none rounded-full shadow"
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
-                      )}
-
-                      <div className="flex flex-col">
-                        <div className="text-2xl font-semibold text-gray-600">
-                          {employeeData ? employeeData.fullName : null}
-                        </div>
-                        <div className="text-xl text-gray-500">
-                          {employeeData
-                            ? employeeData.assignment.positionTitle
-                            : null}
-                        </div>
-                      </div>
-                    </section>
-                    <section className="flex justify-end">
-                      <div className="px-5 py-2 bg-gray-200 rounded">
-                        <span className="text-sm font-medium">Legend</span>
-                        <div className="grid grid-rows-2">
-                          <div className="grid items-center grid-cols-2 gap-1">
-                            <span className="text-xs font-light">
-                              Regular Holiday -
-                            </span>
-                            <i className="text-2xl text-red-400 bx bxs-checkbox"></i>
-                          </div>
-                          <div className="grid items-center grid-cols-2 gap-1">
-                            <span className="text-xs font-light">
-                              Special Holiday -
-                            </span>
-                            <i className="text-2xl text-blue-400 bx bxs-checkbox"></i>
-                          </div>
-                          <div className="grid items-center grid-cols-2 gap-1">
-                            <span className="text-xs font-light">
-                              Late/Undertime -
-                            </span>
-                            <div className="">
-                              <span className="max-w-[5rem] px-2 py-0.5  text-xs font-light text-center text-black rounded bg-yellow-400">
-                                Time Log
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-
-                  <div className="flex justify-end gap-2">
-                    <DtrDateSelect />
-                    <PrintButton onClick={toggle} />
-                  </div>
-                </Card>
-                {/* EMPLOYEE DTR TABLE */}
-                <EmployeeDtrTable employeeData={employeeData} />
-              </div>
-            </Card>
-          </div>
-
-          <div className="mx-5">
-            {/* SCHEDULE CARD */}
-
-            <CardEmployeeSchedules employeeData={employeeData} />
-          </div>
-        </div>
-
         <DailyTimeRecordPdfModal
           printModalIsOpen={printModalIsOpen}
           toggle={toggle}
           employeeData={employeeData}
         />
+
+        <div className="flex flex-col w-full gap-6 px-5">
+          {/* DTR CARD */}
+          <Card>
+            {/* HEADER */}
+            <div className="grid xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+              <section className="flex items-center gap-4 px-2">
+                {employeeData.photoUrl ? (
+                  <div className="flex flex-wrap justify-center">
+                    <div className="w-[6rem]">
+                      <img
+                        src={employeeData.photoUrl}
+                        alt="user-circle"
+                        className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+                )}
+
+                <div className="flex flex-col">
+                  <div className="text-2xl font-semibold text-gray-600">
+                    {employeeData ? employeeData.fullName : null}
+                  </div>
+                  <div className="text-xl text-gray-500">
+                    {employeeData
+                      ? employeeData.assignment.positionTitle
+                      : null}
+                  </div>
+                </div>
+              </section>
+              <section className="flex justify-end">
+                <div className="px-5 py-2 bg-gray-200 rounded">
+                  <span className="text-sm font-medium">Legend</span>
+                  <div className="grid grid-rows-2">
+                    <div className="grid items-center grid-cols-2 gap-1">
+                      <span className="text-xs font-light">
+                        Regular Holiday -
+                      </span>
+                      <i className="text-2xl text-red-400 bx bxs-checkbox"></i>
+                    </div>
+                    <div className="grid items-center grid-cols-2 gap-1">
+                      <span className="text-xs font-light">
+                        Special Holiday -
+                      </span>
+                      <i className="text-2xl text-blue-400 bx bxs-checkbox"></i>
+                    </div>
+                    <div className="grid items-center grid-cols-2 gap-1">
+                      <span className="text-xs font-light">
+                        Late/Undertime -
+                      </span>
+                      <div className="">
+                        <span className="max-w-[5rem] px-2 py-0.5  text-xs font-light text-center text-black rounded bg-yellow-400">
+                          Time Log
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <DtrDateSelect />
+              <PrintButton onClick={toggle} />
+            </div>
+            {/* EMPLOYEE DTR TABLE */}
+            <EmployeeDtrTable employeeData={employeeData} />
+          </Card>
+
+          {/* SCHEDULE CARD */}
+          <CardEmployeeSchedules employeeData={employeeData} />
+        </div>
       </div>
     </>
   );
@@ -182,7 +172,7 @@ export const getServerSideProps: GetServerSideProps = async (
     const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees/${context.query.id}`
     );
-    console.log(data);
+
     return { props: { employeeData: data } };
   } catch (error) {
     return {

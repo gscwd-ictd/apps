@@ -247,7 +247,7 @@ export default function Index() {
             {swrIsLoading ? (
               <LoadingSpinner size="lg" />
             ) : (
-              <div className="flex flex-col flex-wrap ">
+              <div className="flex flex-col flex-wrap overflow-hidden">
                 {/** Top Card */}
 
                 <DataTable

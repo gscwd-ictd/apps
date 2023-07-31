@@ -1,3 +1,5 @@
+import { ActionType } from '../enums/leave-ledger.type';
+
 export type LeaveLedgerEntry = {
   employeeId: string;
   period: string;
@@ -10,5 +12,6 @@ export type LeaveLedgerEntry = {
   sickLeaveBalance: number;
   specialLeaveBenefit: number;
   specialLeaveBenefitBalance: number;
-  action: string;
+  actionType: ActionType;
+  leaveDates: string;
 };

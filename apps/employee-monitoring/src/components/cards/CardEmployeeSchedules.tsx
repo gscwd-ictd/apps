@@ -273,7 +273,7 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
       ) : null}
 
       <Can I="access" this="Employee_schedules">
-        <Card title="Schedules" className="p-5">
+        <Card title="Schedules">
           <div className="flex flex-row flex-wrap">
             <div className="flex justify-end order-2 w-1/2 pr-4 table-actions-wrapper">
               <button
