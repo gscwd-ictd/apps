@@ -36,6 +36,13 @@ import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
 import { UseNameInitials } from '../../utils/hooks/useNameInitials';
 import { useDtrStore } from '../../store/dtr.store';
+import {
+  HiCalendar,
+  HiClock,
+  HiDocument,
+  HiOutlineClock,
+  HiOutlineDocument,
+} from 'react-icons/hi';
 
 export type NavDetails = {
   fullName: string;
@@ -212,32 +219,55 @@ export default function Dashboard({
               />
             </div>
             <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
-              <div className="h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
+              <div className="z-10 flex flex-col gap-4 h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-2">
                 <Carousel />
+
+                <RemindersCard reminders={''} />
               </div>
 
-              <div className="z-10 order-1 col-span-1 md:col-span-3 lg:col-span-3 lg:order-2">
+              <div className="z-10 order-1 col-span-1 md:col-span-3 lg:col-span-3 lg:order-1">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 ">
-                  <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
-                    <div className="flex flex-row gap-4">
+                  <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-3">
+                    <div className="grid grid-cols-2 gap-4">
                       <StatsCard
-                        name={'Lates Count'}
-                        count={swrDtr?.summary?.noOfTimesLate ?? 0}
-                        isLoading={swrDtrIsLoading}
-                      />
-                      <StatsCard
-                        name={'Pass Slip Count'}
+                        name={'Force Leave'}
                         count={0}
                         isLoading={swrDtrIsLoading}
+                        width={'w-full'}
+                        height={'h-28'}
+                        svg={<HiCalendar className="w-8 h-8 text-rose-500" />}
+                        svgBgColor={'bg-rose-100'}
                       />
                       <StatsCard
-                        name={'Force Leaves'}
+                        name={'Special Privilege Leave'}
                         count={0}
                         isLoading={swrDtrIsLoading}
+                        width={'w-full'}
+                        height={'h-28'}
+                        svg={<HiCalendar className="w-8 h-8 text-orange-500" />}
+                        svgBgColor={'bg-orange-100'}
+                      />
+                      <StatsCard
+                        name={'Vacation Leave'}
+                        count={0}
+                        isLoading={swrDtrIsLoading}
+                        width={'w-full'}
+                        height={'h-28'}
+                        svg={<HiCalendar className="w-8 h-8 text-lime-500" />}
+                        svgBgColor={'bg-lime-100'}
+                      />
+                      <StatsCard
+                        name={'Special Privilege Benefit'}
+                        count={0}
+                        isLoading={swrDtrIsLoading}
+                        width={'w-full'}
+                        height={'h-28'}
+                        svg={<HiCalendar className="w-8 h-8 text-pink-500" />}
+                        svgBgColor={'bg-pink-100'}
                       />
                     </div>
                   </div>
-                  <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
+                  <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
                     <ProfileCard
                       firstName={userDetails.profile.firstName}
                       lastName={userDetails.profile.lastName}
@@ -248,17 +278,34 @@ export default function Dashboard({
                       photoUrl={userDetails.profile.photoUrl}
                     />
                   </div>
-                  <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-3">
+                  <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-2">
                     <AttendanceCard
                       timeLogData={swrFaceScan}
                       swrFaceScanIsLoading={swrFaceScanIsLoading}
                     />
                   </div>
-                  <div className="order-5 col-span-2 md:order-4 md:col-span-2 lg:col-span-2 lg:order-4">
-                    <RemindersCard reminders={''} />
+                  <div className="grid grid-cols-2 gap-4 order-4 col-span-2 md:order-4 md:col-span-2 lg:col-span-2 lg:order-5">
+                    <StatsCard
+                      name={'Lates Count'}
+                      count={swrDtr?.summary?.noOfTimesLate ?? 0}
+                      isLoading={swrDtrIsLoading}
+                      width={'w-full'}
+                      height={'h-32'}
+                      svg={<HiClock className="w-8 h-8 text-indigo-500" />}
+                      svgBgColor={'bg-indigo-100'}
+                    />
+                    <StatsCard
+                      name={'Pass Slip Count'}
+                      count={9}
+                      isLoading={swrDtrIsLoading}
+                      width={'w-full'}
+                      height={'h-32'}
+                      svg={<HiDocument className="w-8 h-8 text-indigo-500" />}
+                      svgBgColor={'bg-indigo-100'}
+                    />
                   </div>
 
-                  <div className="order-4 col-span-2 row-span-3 md:col-span-1 md:order-5 lg:col-span-1 lg:order-5">
+                  <div className="order-5 col-span-2 row-span-3 md:col-span-1 md:order-5 lg:col-span-1 lg:order-4">
                     <EmployeeDashboard />
                   </div>
                   <div className="order-6 col-span-2">
