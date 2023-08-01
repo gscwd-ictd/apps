@@ -27,7 +27,7 @@ export const AttendanceCard: React.FC<Props> = ({
   ); //change to scheduled timeOut prop when ready
 
   return (
-    <div className="w-full h-32 shadow rounded-md bg-white flex flex-col p-4 gap-2">
+    <div className="w-full h-full lg:h-36 shadow rounded-md bg-white flex flex-col justify-center p-4 gap-2">
       {swrFaceScanIsLoading ? (
         <>
           <Skeleton count={4} />
