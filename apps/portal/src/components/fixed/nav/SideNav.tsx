@@ -33,7 +33,7 @@ type NavInfo = {
 
 type NavDetails = {
   navDetails: NavInfo;
-  employeeDetails: EmployeeDetails;
+  employeeDetails?: EmployeeDetails;
 };
 
 export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
