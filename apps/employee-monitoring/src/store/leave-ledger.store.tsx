@@ -1,10 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-import {
-  LeaveBenefit,
-  LeaveType,
-} from 'libs/utils/src/lib/types/leave-benefits.type';
+import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { devtools } from 'zustand/middleware';
 
 export type MutatedLeaveBenefit = Pick<

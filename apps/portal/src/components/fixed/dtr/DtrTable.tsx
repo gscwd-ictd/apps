@@ -12,6 +12,7 @@ import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { useState } from 'react';
 import UpdateTimeLogModal from './UpdateTimeLogModal';
 import { SpinnerDotted } from 'spinners-react';
+import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -91,8 +92,27 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                 {employeeDtr?.dtrDays?.length > 0 ? (
                   employeeDtr.dtrDays.map((logs, index) => {
                     return (
-                      <tr key={index}>
-                        <td className="py-2 text-center border">{logs.day}</td>
+                      <tr
+                        key={index}
+                        className={`${
+                          logs.holidayType === HolidayTypes.REGULAR
+                            ? 'bg-rose-300'
+                            : logs.holidayType === HolidayTypes.SPECIAL
+                            ? 'bg-blue-300'
+                            : ''
+                        }`}
+                      >
+                        <td
+                          className={`${
+                            logs.holidayType === HolidayTypes.REGULAR
+                              ? 'border-rose-300'
+                              : logs.holidayType === HolidayTypes.SPECIAL
+                              ? 'border-blue-300'
+                              : ''
+                          } py-2 text-center border`}
+                        >
+                          {logs.day}
+                        </td>
                         <td
                           className={`border text-center py-2 ${
                             UseLateChecker(
@@ -101,18 +121,40 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                             ) == true && logs.schedule.scheduleBase === 'Office'
                               ? 'text-red-500'
                               : ''
-                          }`}
+                          } ${
+                            logs.holidayType === HolidayTypes.REGULAR
+                              ? 'border-rose-300'
+                              : logs.holidayType === HolidayTypes.SPECIAL
+                              ? 'border-blue-300'
+                              : ''
+                          } py-2 text-center border`}
                         >
                           {logs.dtr.timeIn
                             ? UseTwelveHourFormat(logs.dtr.timeIn)
                             : ''}
                         </td>
-                        <td className="py-2 text-center border">
+                        <td
+                          className={`${
+                            logs.holidayType === HolidayTypes.REGULAR
+                              ? 'border-rose-300'
+                              : logs.holidayType === HolidayTypes.SPECIAL
+                              ? 'border-blue-300'
+                              : ''
+                          } py-2 text-center border`}
+                        >
                           {logs.dtr.lunchOut
                             ? UseTwelveHourFormat(logs.dtr.lunchOut)
                             : ''}
                         </td>
-                        <td className="py-2 text-center border">
+                        <td
+                          className={`${
+                            logs.holidayType === HolidayTypes.REGULAR
+                              ? 'border-rose-300'
+                              : logs.holidayType === HolidayTypes.SPECIAL
+                              ? 'border-blue-300'
+                              : ''
+                          } py-2 text-center border`}
+                        >
                           {logs.dtr.lunchIn
                             ? UseTwelveHourFormat(logs.dtr.lunchIn)
                             : ''}
@@ -125,16 +167,38 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                             ) == true && logs.schedule.scheduleBase === 'Office'
                               ? 'text-red-500'
                               : ''
-                          }`}
+                          } ${
+                            logs.holidayType === HolidayTypes.REGULAR
+                              ? 'border-rose-300'
+                              : logs.holidayType === HolidayTypes.SPECIAL
+                              ? 'border-blue-300'
+                              : ''
+                          } py-2 text-center border`}
                         >
                           {logs.dtr.timeOut
                             ? UseTwelveHourFormat(logs.dtr.timeOut)
                             : ''}
                         </td>
-                        <td className="py-2 text-center border">
+                        <td
+                          className={`${
+                            logs.holidayType === HolidayTypes.REGULAR
+                              ? 'border-rose-300'
+                              : logs.holidayType === HolidayTypes.SPECIAL
+                              ? 'border-blue-300'
+                              : ''
+                          } py-2 text-center border`}
+                        >
                           {logs.dtr.remarks}
                         </td>
-                        <td className="py-2 text-center border">
+                        <td
+                          className={`${
+                            logs.holidayType === HolidayTypes.REGULAR
+                              ? 'border-rose-300'
+                              : logs.holidayType === HolidayTypes.SPECIAL
+                              ? 'border-blue-300'
+                              : ''
+                          } py-2 text-center border`}
+                        >
                           <Button
                             variant={'primary'}
                             size={'sm'}

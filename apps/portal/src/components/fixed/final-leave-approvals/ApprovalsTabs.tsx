@@ -46,7 +46,7 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 onClick={() => {
                   setTab(1);
                 }}
-                title="For Final Approval Leaves"
+                title="Final Leave Approvals"
                 icon={<HiOutlineCheckCircle size={26} />}
                 subtitle="Show all Leaves that require your approval"
                 notificationCount={
