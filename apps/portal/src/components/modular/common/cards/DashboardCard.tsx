@@ -44,7 +44,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
           href={destination}
           // onClick={onClick!()}
           target="_blank"
-          className={`flex md:flex-col items-start w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
+          className={`flex md:flex-row items-start w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
           rel="noreferrer"
         >
           <div
@@ -67,7 +67,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
         <div
           onClick={() => router.push(destination)}
           // onClick={onClick!()}
-          className={`flex md:flex-col items-start w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
+          className={`flex md:flex-row items-start w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
         >
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}

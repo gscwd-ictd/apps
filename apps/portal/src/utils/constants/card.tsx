@@ -16,6 +16,53 @@ import { Card } from '../../types/allowed-modules.type';
 // Declare selection
 export const Modules: Array<Card> = [
   {
+    icon: <HiClock className="w-6 h-6 text-rose-600" />,
+    color: 'rose',
+    title: 'Data Time Record',
+    description: 'View your DTR',
+    destination: 'dtr',
+    linkType: 'router',
+    state: true,
+  },
+  {
+    icon: <HiDocumentText className="w-6 h-6 text-green-600" />,
+    color: 'green',
+    title: 'Pass Slip',
+    description: 'Apply for Pass Slip',
+    destination: 'pass-slip',
+    linkType: 'router',
+    state: true,
+  },
+
+  {
+    icon: <HiCalendar className="w-6 h-6 text-blue-600" />,
+    color: 'blue',
+    title: 'Leaves',
+    description: 'Apply for Leaves',
+    destination: 'leaves',
+    linkType: 'router',
+    state: true,
+  },
+
+  {
+    icon: <HiMail className="w-6 h-6 text-indigo-700" />,
+    color: 'indigo',
+    title: 'Email',
+    description: 'Check your Emails',
+    destination: 'email',
+    linkType: 'href',
+    state: true,
+  },
+  {
+    icon: <HiDocumentDuplicate className="w-6 h-6 text-orange-600" />,
+    color: 'orange',
+    title: 'Personal Data Sheet',
+    description: 'Update your PDS record',
+    destination: 'pds',
+    linkType: 'router',
+    state: true,
+  },
+  {
     icon: <HiPuzzle className="w-10 h-6 text-orange-800" />,
     color: 'orange',
     title: 'Position Duties, Responsibilities, & Competencies',
@@ -77,54 +124,6 @@ export const Modules: Array<Card> = [
     description: 'Approve Leaves/Pass Slips',
     destination: 'approvals',
     linkType: 'router',
-    state: true,
-  },
-  {
-    icon: <HiDocumentDuplicate className="w-6 h-6 text-orange-600" />,
-    color: 'orange',
-    title: 'Personal Data Sheet',
-    description: 'Update your PDS record',
-    destination: 'pds',
-    linkType: 'router',
-    state: true,
-  },
-
-  {
-    icon: <HiClock className="w-6 h-6 text-rose-600" />,
-    color: 'rose',
-    title: 'DTR',
-    description: 'Daily Time Record',
-    destination: 'dtr',
-    linkType: 'router',
-    state: true,
-  },
-  {
-    icon: <HiDocumentText className="w-6 h-6 text-green-600" />,
-    color: 'green',
-    title: 'Pass Slip',
-    description: 'Apply for Pass Slip',
-    destination: 'pass-slip',
-    linkType: 'router',
-    state: true,
-  },
-
-  {
-    icon: <HiCalendar className="w-6 h-6 text-blue-600" />,
-    color: 'blue',
-    title: 'Leaves',
-    description: 'Apply or view Leave Credits',
-    destination: 'leaves',
-    linkType: 'router',
-    state: true,
-  },
-
-  {
-    icon: <HiMail className="w-6 h-6 text-indigo-700" />,
-    color: 'indigo',
-    title: 'Email',
-    description: 'Check your Emails',
-    destination: 'email',
-    linkType: 'href',
     state: true,
   },
 ];

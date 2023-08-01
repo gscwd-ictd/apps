@@ -245,7 +245,7 @@ export default function Inbox({
         <title>Inbox</title>
       </Head>
 
-      <SideNav navDetails={navDetails} />
+      <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
       <Modal
         size={`${windowWidth > 768 ? 'sm' : 'xl'}`}
         open={submitModalIsOpen}

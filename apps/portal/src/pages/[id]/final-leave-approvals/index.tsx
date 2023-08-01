@@ -173,7 +173,7 @@ export default function FinalLeaveApprovals({
             <title>Final Leave Approvals</title>
           </Head>
 
-          <SideNav navDetails={navDetails} />
+          <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
 
           {/* Pending Leave Approval Modal */}
           <ApprovalsPendingLeaveModal

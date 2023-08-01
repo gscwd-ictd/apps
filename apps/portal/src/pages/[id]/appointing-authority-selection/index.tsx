@@ -237,7 +237,7 @@ export default function AppPosAppointment({
         <title>Appointing Authority Selection</title>
       </Head>
 
-      <SideNav navDetails={navDetails} />
+      <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
 
       <AppSelectionModal />
 

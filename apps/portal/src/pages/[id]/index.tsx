@@ -204,7 +204,7 @@ export default function Dashboard({
       <Head>
         <title>{employeeName}</title>
       </Head>
-      <SideNav navDetails={navDetails} />
+      <SideNav navDetails={navDetails} employeeDetails={userDetails} />
 
       <MainContainer>
         <>
@@ -241,7 +241,7 @@ export default function Dashboard({
                   <div className="order-8 col-span-2 row-span-4 md:col-span-4 md:order-8 lg:col-span-2 lg:order-3">
                     <Carousel />
                   </div>
-                  <div className="order-5 col-span-2 row-span-3 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
+                  <div className="order-5 col-span-2 row-span-4 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
                     <EmployeeDashboard />
                   </div>
                   <div className="grid grid-cols-2 gap-4 order-3 col-span-2 md:order-3 md:col-span-2 lg:col-span-2 lg:order-4">
@@ -305,13 +305,13 @@ export default function Dashboard({
                     </div>
                   </div>
 
-                  <div className="order-6 md:order-5 lg:order-7 col-span-2 ">
+                  <div className="order-6 md:order-5 lg:order-7 col-span-2 row-span-2">
                     <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
                       <EmployeeCalendar />
                     </div>
                   </div>
 
-                  <div className="order-7 col-span-2 row-span-4 md:col-span-2 md:order-6 lg:col-span-2 lg:order-8">
+                  <div className="order-7 col-span-2 row-span-1 md:col-span-2 md:order-6 lg:col-span-2 lg:order-8">
                     <RemindersCard reminders={''} />
                   </div>
                 </div>
