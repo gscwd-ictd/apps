@@ -204,7 +204,7 @@ export default function Dashboard({
       <Head>
         <title>{employeeName}</title>
       </Head>
-      <SideNav navDetails={navDetails} employeeDetails={userDetails} />
+      <SideNav employeeDetails={userDetails} />
 
       <MainContainer>
         <>
@@ -241,7 +241,7 @@ export default function Dashboard({
                   <div className="order-8 col-span-2 row-span-4 md:col-span-4 md:order-8 lg:col-span-2 lg:order-3">
                     <Carousel />
                   </div>
-                  <div className="order-5 col-span-2 row-span-4 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
+                  <div className="order-5 col-span-2 md:row-span-2 lg:row-span-4 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
                     <EmployeeDashboard />
                   </div>
                   <div className="grid grid-cols-2 gap-4 order-3 col-span-2 md:order-3 md:col-span-2 lg:col-span-2 lg:order-4">
@@ -325,18 +325,18 @@ export default function Dashboard({
 }
 
 //use for dummy login only
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const userDetails = employeeDummy;
-  return { props: { userDetails } };
-};
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const userDetails = employeeDummy;
+//   return { props: { userDetails } };
+// };
 
 //use for official user
-// export const getServerSideProps: GetServerSideProps = withCookieSession(
-//   async (context: GetServerSidePropsContext) => {
-//     const userDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const userDetails = getUserDetails();
 
-//     return { props: { userDetails } };
-//   }
-// );
+    return { props: { userDetails } };
+  }
+);

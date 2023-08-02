@@ -25,18 +25,11 @@ export type EmployeeLocalStorage = {
   email: string;
 };
 
-type NavInfo = {
-  fullName: string;
-  initials: string;
-  profile: string;
-};
-
 type NavDetails = {
-  navDetails: NavInfo;
-  employeeDetails?: EmployeeDetails;
+  employeeDetails: EmployeeDetails;
 };
 
-export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
+export const SideNav = ({ employeeDetails }: NavDetails) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
   // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -46,7 +39,7 @@ export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
       <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
         <ul className="z-30 flex flex-col items-center gap-2 text-gray-600 mt-14">
           <li className="mb-3 lg:mb-5 ml-10 lg:ml-0">
-            <ProfileMenuDropdown right employeeDetails={navDetails} />
+            <ProfileMenuDropdown right employeeDetails={employeeDetails} />
           </li>
 
           {windowWidth > 1024 ? (
@@ -72,10 +65,6 @@ export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
                   </li>
-
-                  <li className="ml-10 lg:ml-0">
-                    <CommitteeMenuDropdown right />
-                  </li>
                 </>
               ) : null}
 
@@ -91,10 +80,6 @@ export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
                 <>
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
-                  </li>
-
-                  <li className="ml-10 lg:ml-0">
-                    <CommitteeMenuDropdown right />
                   </li>
                 </>
               ) : null}
@@ -112,10 +97,6 @@ export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
                   </li>
-
-                  <li className="ml-10 lg:ml-0">
-                    <CommitteeMenuDropdown right />
-                  </li>
                 </>
               ) : null}
 
@@ -131,10 +112,6 @@ export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
                 <>
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
-                  </li>
-
-                  <li className="ml-10 lg:ml-0">
-                    <CommitteeMenuDropdown right />
                   </li>
                 </>
               ) : null}
@@ -175,6 +152,13 @@ export const SideNav = ({ navDetails, employeeDetails }: NavDetails) => {
                     <HRMenuDropdown right />
                   </li>
                 ) : null
+              ) : null}
+
+              {/* PSB */}
+              {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
+                <li className="ml-10 lg:ml-0">
+                  <CommitteeMenuDropdown right />
+                </li>
               ) : null}
 
               <SideNavLink

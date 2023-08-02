@@ -160,7 +160,7 @@ export default function ApplicantEndorsement({
             <title>Applicant Endorsement</title>
           </Head>
 
-          <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
+          <SideNav employeeDetails={employeeDetails} />
 
           <AppEndModal />
 

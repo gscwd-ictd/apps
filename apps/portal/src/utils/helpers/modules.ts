@@ -10,7 +10,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     if (Boolean(userDetails.employmentDetails.isHRMPSB) === true) {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'psb' ||
+          // card.destination === 'psb' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||

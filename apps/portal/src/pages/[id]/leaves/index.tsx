@@ -242,7 +242,7 @@ export default function Leaves({
           <title>Employee Leaves</title>
         </Head>
 
-        <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
+        <SideNav employeeDetails={employeeDetails} />
 
         {/* Pass Slip Application Modal */}
         <LeaveApplicationModal

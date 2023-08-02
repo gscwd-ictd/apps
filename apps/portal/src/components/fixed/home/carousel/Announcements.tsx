@@ -11,22 +11,22 @@ export const Announcements = [
     link: 'https://www.facebook.com/photo/?fbid=323131660068438&set=a.107191734995766',
     src: '/02.jpg',
   },
-  // {
-  //   title: 'GSCWD conducts DPPR 2023',
-  //   desc: 'Targets for CY 2024 were set during the Departmental Planning and Performance Review conducted by different departments of GSCWD. Scheduled for the whole month of June, each department revisited accomplishments, tackled concerns focusing on improving performance so to help the district in achieving its goals.(LGL)',
-  //   link: 'https://www.facebook.com/gensanwd/posts/pfbid0uRbNVg7KCCC2yutZjxt1x2ge2FD3XcYn9Q2Bc2EVYdccjhCE27m2eB9Xi1Tisp3Xl',
-  //   src: '/03.jpg',
-  // },
-  // {
-  //   title: 'Newly Hired Employees',
-  //   desc: 'Congratulations to our newly hired employees who joined our team on July 3, 2023.',
-  //   link: 'https://www.facebook.com/photo/?fbid=314144720967132&set=a.109004071481199',
-  //   src: '/04.jpg',
-  // },
-  // {
-  //   title: 'July Birthday Celebrants',
-  //   desc: 'Happy Birthday to all July Celebrants!',
-  //   link: 'https://www.facebook.com/gensanwd/videos/1959878211012530',
-  //   src: '/05.jpg',
-  // },
+  {
+    title: 'Happy 25th Work Anniversary!',
+    desc: 'Happy Work Anniversary! Engr. Cornelio T. Turija Jr. - 25 years in service. Please know that you are an important members of GSCWD and your abilities and contributions will be an important part of our continued success. Thank you for your hardwork and dedication!',
+    link: 'https://www.facebook.com/photo/?fbid=323902079991396&set=pcb.323902949991309',
+    src: '/03.jpg',
+  },
+  {
+    title: 'Happy 10th Work Anniversary!',
+    desc: 'Happy Work Anniversary! Levi Al A. Capili, Renato C. Mamac, Erwin M. Irag Jr., Roel B. Mendoza, John B. Lasmarias - 10 years in service. Please know that you are an important members of GSCWD and your abilities and contributions will be an important part of our continued success. Thank you for your hardwork and dedication!',
+    link: 'https://www.facebook.com/photo?fbid=323902036658067&set=pcb.323902949991309',
+    src: '/04.jpg',
+  },
+  {
+    title: 'August Birthday Celebrants',
+    desc: 'Happy Birthday to all August Celebrants!',
+    link: 'https://www.facebook.com/100071148188272/videos/975510890361225',
+    src: '/05.jpg',
+  },
 ];
