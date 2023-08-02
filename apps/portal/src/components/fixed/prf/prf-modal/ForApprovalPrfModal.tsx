@@ -239,6 +239,14 @@ export const ForApprovalPrfModal = ({
                         <h3 className="text-xl font-semibold text-gray-700">
                           <div className="flex justify-between px-2">
                             <span>Decline Position Request</span>
+                            <button
+                              className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
+                              onClick={() => {
+                                setIsDeclineModalOpen(false);
+                              }}
+                            >
+                              <HiX />
+                            </button>
                           </div>
                         </h3>
                       </Modal.Header>
@@ -268,14 +276,14 @@ export const ForApprovalPrfModal = ({
                             >
                               Submit
                             </Button>
-                            <Button
+                            {/* <Button
                               variant={'danger'}
                               onClick={() => {
                                 setIsDeclineModalOpen(false);
                               }}
                             >
                               Cancel
-                            </Button>
+                            </Button> */}
                           </div>
                         </div>
                       </Modal.Footer>

@@ -379,4 +379,4 @@ export const PassSlipPdfView = ({
   );
 };
 
-export default PassSlipPdf;
+export default PassSlipPdfView;

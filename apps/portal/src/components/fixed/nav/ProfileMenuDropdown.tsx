@@ -16,6 +16,7 @@ import {
 } from 'react-icons/hi';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { ManagerMenuDropdown } from './ManagerMenuDropdown';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -36,31 +37,8 @@ export const ProfileMenuDropdown = ({
   right = false,
   employeeDetails,
 }: MenuDropdownProps): JSX.Element => {
-  // set value for employee details
-  // const [employeeDetails, setEmployeeDetails] = useState<EmployeeDetails>(
-  //   {} as EmployeeDetails
-  // );
-
   // intialize royter
   const router = useRouter();
-
-  // useEffect(() => {
-  //   // if (typeof window !== undefined) {
-  //   // if (localStorage.getItem('employee')) {
-  //   //   setEmployeeDetails(JSON.parse(localStorage.getItem('employee')));
-  //   // } else {
-  //   //   setEmployeeDetails(JSON.parse(localStorage.getItem('')));
-  //   // }
-  //   try {
-  //     // setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
-  //     setEmployeeDetails(JSON.parse(localStorage.getItem('employee') || ''));
-  //     console.log(localStorage.getItem('employee'));
-  //   } catch (error) {
-  //     // router.reload();
-  //     // handleLogout();
-  //   }
-  //   // }
-  // }, []);
 
   // method call to handle logout action
   const handleLogout = async () => {
@@ -87,7 +65,7 @@ export const ProfileMenuDropdown = ({
         <>
           <Menu
             as="div"
-            className={`-mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0
+            className={`z-50 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0
          inline-block text-left`}
           >
             <div>
@@ -170,6 +148,18 @@ export const ProfileMenuDropdown = ({
 
                   {windowWidth < 1024 ? (
                     <>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${
+                              active ? 'bg-slate-100' : 'text-gray-900'
+                            } group flex w-full items-center gap-3 rounded-md px-3 py-3 text-sm`}
+                          >
+                            <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                            <ManagerMenuDropdown right />
+                          </button>
+                        )}
+                      </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
                           <button

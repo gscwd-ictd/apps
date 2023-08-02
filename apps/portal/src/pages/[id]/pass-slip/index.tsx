@@ -203,7 +203,7 @@ export default function PassSlip({
           <title>Employee Pass Slips</title>
         </Head>
 
-        <SideNav navDetails={navDetails} />
+        <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
 
         {/* Pass Slip Application Modal */}
         <PassSlipApplicationModal
