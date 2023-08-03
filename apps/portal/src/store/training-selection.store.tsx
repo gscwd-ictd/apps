@@ -1,167 +1,96 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import {
-  PassSlip,
-  PassSlipId,
-  EmployeePassSlipList,
-} from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
-export type PassSlipState = {
-  //PASS SLIP TO SUBMIT
-  passSlips: {
-    forApproval: Array<PassSlip>;
-    completed: Array<PassSlip>;
-  };
+export type TrainingSelectionState = {
+  trainingList: Array<string>;
   response: {
-    postResponseApply: PassSlip;
-    cancelResponse: PassSlip;
+    postResponseApply: any;
+    cancelResponse: any;
   };
 
-  
   loading: {
-    loadingPassSlips: boolean;
+    loadingTrainingList: boolean;
     loadingResponse: boolean;
   };
   error: {
-    errorPassSlips: string;
+    errorTrainingList: string;
     errorResponse: string;
   };
 
-  passSlip: PassSlip;
-  cancelApplicationModalIsOpen: boolean,
-  applyPassSlipModalIsOpen: boolean;
-  pendingPassSlipModalIsOpen: boolean;
-  completedPassSlipModalIsOpen: boolean;
-  tab: number;
+  trainingListModalIsOpen: boolean;
+  setTrainingListModalIsOpen: (trainingListModalIsOpen: boolean) => void;
 
-  getPassSlipList: (loading: boolean) => void;
-  getPassSlipListSuccess: (loading: boolean, response) => void;
-  getPassSlipListFail: (loading: boolean, error: string) => void;
+  getTrainingSelectionList: (loading: boolean) => void;
+  getTrainingSelectionListSuccess: (loading: boolean, response) => void;
+  getTrainingSelectionListFail: (loading: boolean, error: string) => void;
 
-  cancelPassSlip: (loading: boolean) => void;
-  cancelPassSlipSuccess: (response) => void;
-  cancelPassSlipFail: (error: string) => void;
-
-  postPassSlipList: () => void;
-  postPassSlipListSuccess: (response: PassSlip) => void;
-  postPassSlipListFail: (error: string) => void;
-
-  setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => void;
-  setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => void;
-  setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
-  setCompletedPassSlipModalIsOpen: (
-    completedPassSlipModalIsOpen: boolean
-  ) => void;
-
-  getPassSlip: (PassSlip: PassSlip) => void;
-  setTab: (tab: number) => void;
+  postTrainingSelection: () => void;
+  postTrainingSelectionSuccess: (response) => void;
+  postTrainingSelectionFail: (error: string) => void;
 
   emptyResponseAndError: () => void;
 };
 
-export const usePassSlipStore = create<PassSlipState>()(
+export const useTrainingSelectionStore = create<TrainingSelectionState>()(
   devtools((set) => ({
-    passSlips: {
-      forApproval: [],
-      completed: [],
-    },
+    trainingList: [],
+
     response: {
-      postResponseApply: {} as PassSlip,
-      cancelResponse: {} as PassSlip,
+      postResponseApply: {},
+      cancelResponse: {},
     },
+
     loading: {
-      loadingPassSlips: false,
+      loadingTrainingList: false,
       loadingResponse: false,
     },
     error: {
-      errorPassSlips: '',
+      errorTrainingList: '',
       errorResponse: '',
     },
 
-    passSlip: {} as PassSlip,
+    trainingListModalIsOpen: false,
 
-    //APPLY PASS SLIP MODAL
-    applyPassSlipModalIsOpen: false,
-    pendingPassSlipModalIsOpen: false,
-    completedPassSlipModalIsOpen: false,
-
-    cancelApplicationModalIsOpen: false,
-
-    tab: 1,
-
-    setTab: (tab: number) => {
-      set((state) => ({ ...state, tab }));
-    },
-
-    setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => {
-      set((state) => ({ ...state, cancelApplicationModalIsOpen }));
-    },
-
-    setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => {
-      set((state) => ({ ...state, applyPassSlipModalIsOpen }));
-    },
-
-    setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => {
-      set((state) => ({ ...state, pendingPassSlipModalIsOpen }));
-    },
-
-    setCompletedPassSlipModalIsOpen: (
-      completedPassSlipModalIsOpen: boolean
-    ) => {
-      set((state) => ({ ...state, completedPassSlipModalIsOpen }));
-    },
-
-    getPassSlip: (passSlip: PassSlip) => {
-      set((state) => ({ ...state, passSlip }));
+    setTrainingListModalIsOpen: (trainingListModalIsOpen: boolean) => {
+      set((state) => ({ ...state, trainingListModalIsOpen }));
     },
 
     //GET PASS SLIP ACTIONS
-    getPassSlipList: (loading: boolean) => {
+    getTrainingSelectionList: (loading: boolean) => {
       set((state) => ({
         ...state,
-        passSlips: {
-          ...state.passSlips,
-          forApproval: [],
-          completed: [],
-        },
+        trainingList: [],
         loading: {
           ...state.loading,
-          loadingPassSlips: loading,
+          loadingTrainingList: loading,
         },
         error: {
           ...state.error,
-          errorPassSlips: '',
+          errorTrainingList: '',
         },
       }));
     },
-    getPassSlipListSuccess: (
-      loading: boolean,
-      response: EmployeePassSlipList
-    ) => {
+    getTrainingSelectionListSuccess: (loading: boolean, response) => {
       set((state) => ({
         ...state,
-        passSlips: {
-          ...state.passSlips,
-          forApproval: response.forApproval,
-          completed: response.completed,
-        },
+        passSlips: response,
         loading: {
           ...state.loading,
-          loadingPassSlips: loading,
+          loadingTrainingList: loading,
         },
       }));
     },
-    getPassSlipListFail: (loading: boolean, error: string) => {
+    getTrainingSelectionListFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {
           ...state.loading,
-          loadingPassSlips: loading,
+          loadingTrainingList: loading,
         },
         error: {
           ...state.error,
-          errorPassSlips: error,
+          errorTrainingList: error,
         },
         response: {
           ...state.response,
@@ -170,13 +99,12 @@ export const usePassSlipStore = create<PassSlipState>()(
       }));
     },
 
-    //POST PASS SLIP ACTIONS
-    postPassSlipList: () => {
+    postTrainingSelection: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as PassSlip,
+          postResponseApply: {},
         },
         loading: {
           ...state.loading,
@@ -188,7 +116,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-    postPassSlipListSuccess: (response: PassSlip) => {
+    postTrainingSelectionSuccess: (response) => {
       set((state) => ({
         ...state,
         response: {
@@ -201,7 +129,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-    postPassSlipListFail: (error: string) => {
+    postTrainingSelectionFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -214,60 +142,14 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-
-    //DELETE PASS SLIP ACTIONS
-    cancelPassSlip: () => {
-      set((state) => ({
-        ...state,
-        response: {
-          ...state.response,
-          cancelResponse: {} as PassSlip,
-        },
-        loading: {
-          ...state.loading,
-          loadingResponse: true,
-        },
-        error: {
-          ...state.error,
-          errorResponse: '',
-        },
-      }));
-    },
-    cancelPassSlipSuccess: (response: PassSlip) => {
-      set((state) => ({
-        ...state,
-        response: {
-          ...state.response,
-          cancelResponse: response,
-        },
-        loading: {
-          ...state.loading,
-          loadingResponse: false,
-        },
-      }));
-    },
-    cancelPassSlipFail: (error: string) => {
-      set((state) => ({
-        ...state,
-        loading: {
-          ...state.loading,
-          loadingResponse: false,
-        },
-        error: {
-          ...state.error,
-          errorResponse: error,
-        },
-      }));
-    },
-
 
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as PassSlip,
-          cancelResponse: {} as PassSlip,
+          postResponseApply: {},
+          cancelResponse: {},
         },
         error: {
           ...state.error,

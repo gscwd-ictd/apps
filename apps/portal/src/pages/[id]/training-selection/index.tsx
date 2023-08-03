@@ -16,24 +16,13 @@ import {
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
-import { PassSlipTabWindow } from '../../../../src/components/fixed/passslip/PassSlipTabWindow';
-import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import React from 'react';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
-import PassSlipApplicationModal from '../../../../src/components/fixed/passslip/PassSlipApplicationModal';
-import PassSlipPendingModal from '../../../../src/components/fixed/passslip/PassSlipPendingModal';
-import PassSlipCompletedModal from '../../../../src/components/fixed/passslip/PassSlipCompletedModal';
-import { isEmpty } from 'lodash';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import {
   getUserDetails,
   withCookieSession,
 } from '../../../../src/utils/helpers/session';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 
 export default function PassSlip({
   employeeDetails,
@@ -77,12 +66,8 @@ export default function PassSlip({
               <ContentBody>
                 <>
                   <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}>
-                      <PassSlipTabs tab={1} />
-                    </div>
-                    <div className="w-full">
-                      <PassSlipTabWindow />
-                    </div>
+                    <div className={`lg:w-[58rem] w-full`}></div>
+                    <div className="w-full"></div>
                   </div>
                 </>
               </ContentBody>
