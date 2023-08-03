@@ -32,7 +32,7 @@ export const HRMenuDropdown = ({
     <>
       <Menu
         as="div"
-        className={`z-30 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}
+        className={`z-20 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}
       >
         <div>
           <Menu.Button
@@ -80,11 +80,12 @@ export const HRMenuDropdown = ({
                     <button
                       className={`${
                         active ? 'bg-slate-100' : 'text-gray-900'
-                      } group flex w-80 items-center gap-3 px-3 py-3 text-sm`}
+                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
                       // onClick={() =>
                       //   router.push(`/${router.query.id}/approvals`)
                       // }
                     >
+                      <HiBadgeCheck className="w-6 h-6 text-rose-600" />
                       <span className="text-sm tracking-tight text-gray-700 text-left">
                         Final Leave Approvals
                       </span>

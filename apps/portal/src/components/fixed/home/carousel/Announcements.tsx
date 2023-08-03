@@ -29,4 +29,10 @@ export const Announcements = [
     link: 'https://www.facebook.com/100071148188272/videos/975510890361225',
     src: '/05.jpg',
   },
+  {
+    title: 'Milestone achieved!',
+    desc: 'Thank you for your unending commitment to quality service, helping us attain successful ISO Re-Certification this year! This did not come easy. Your great contributions to your respective sections helped GSCWD get this far. Without your effort, this goal would not have been fulfilled.',
+    link: 'https://www.facebook.com/gensanwd/videos/3081392018821321',
+    src: '/06.jpg',
+  },
 ];

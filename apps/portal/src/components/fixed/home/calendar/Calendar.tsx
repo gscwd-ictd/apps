@@ -1,5 +1,10 @@
 import { Menu, Transition } from '@headlessui/react';
-
+import {
+  Holidays,
+  useCalendarStore,
+} from 'apps/portal/src/store/calendar.store';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import useSWR from 'swr';
 import {
   add,
   eachDayOfInterval,
@@ -14,50 +19,24 @@ import {
   parseISO,
   startOfToday,
 } from 'date-fns';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
   HiOutlineChevronLeft,
   HiOutlineChevronRight,
   HiOutlineXCircle,
 } from 'react-icons/hi';
+import { isEmpty } from 'lodash';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
-const meetings = [
-  {
-    id: 1,
-    name: 'Holiday',
-    imageUrl: '/gwdlogo.png',
-    startDatetime: '2022-12-08T13:00',
-    endDatetime: '2022-12-08T14:30',
-  },
-  {
-    id: 2,
-    name: 'Foot Patrol',
-    imageUrl: '/gwdlogo.png',
-    startDatetime: '2022-12-09T08:00',
-    endDatetime: '2022-12-09T14:30',
-  },
-  {
-    id: 3,
-    name: 'GSC Water District Christmas Party',
-    imageUrl: '/gwdlogo.png',
-    startDatetime: '2022-12-09T15:00',
-    endDatetime: '2022-12-09T23:30',
-  },
-  {
-    id: 4,
-    name: 'Christmas',
-    imageUrl: '/gwdlogo.png',
-    startDatetime: '2022-12-25T13:00',
-    endDatetime: '2022-12-25T14:30',
-  },
-  {
-    id: 5,
-    name: 'REGULAR HOLDAY',
-    imageUrl: 'gwdlogo.png',
-    startDatetime: '2022-11-30T00:01',
-    endDatetime: '2022-11-30T23:59',
-  },
-];
+// const meetings = [
+//   {
+//     id: 1,
+//     name: 'GSCWD 36th Anniversary',
+//     imageUrl: '/gwdlogo.png',
+//     startDatetime: '2023-08-21T15:00',
+//     endDatetime: '2023-08-21T22:00',
+//   },
+// ];
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -69,6 +48,48 @@ export default function EmployeeCalendar() {
   const [viewActivities, setViewActivities] = useState<boolean>(false);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
+
+  const { holidays, getHolidays, getHolidaysSuccess, getHolidaysFail } =
+    useCalendarStore((state) => ({
+      holidays: state.dates.holidays,
+      getHolidays: state.getHolidays,
+      getHolidaysSuccess: state.getHolidaysSuccess,
+      getHolidaysFail: state.getHolidaysFail,
+    }));
+
+  const holidaysUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/holidays`;
+
+  const {
+    data: swrHolidays,
+    isLoading: swrHolidaysIsLoading,
+    error: swrHolidaysError,
+    mutate: mutateHolidaysUrl,
+  } = useSWR(holidaysUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  const selectedDayMeetings = swrHolidays?.filter((meeting: Holidays) =>
+    isSameDay(Date.parse(meeting.holidayDate), selectedDay)
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrHolidaysIsLoading) {
+      getHolidays(swrHolidaysIsLoading);
+    }
+  }, [swrHolidaysIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrHolidays)) {
+      getHolidaysSuccess(swrHolidaysIsLoading, swrHolidays);
+    }
+
+    if (!isEmpty(swrHolidaysError)) {
+      getHolidaysFail(swrHolidaysIsLoading, swrHolidaysError.message);
+    }
+  }, [swrHolidays, swrHolidaysError]);
 
   function viewDateActivities(day: Date) {
     setSelectedDay(day);
@@ -90,12 +111,15 @@ export default function EmployeeCalendar() {
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
   }
 
-  const selectedDayMeetings = meetings.filter((meeting) =>
-    isSameDay(parseISO(meeting.startDatetime), selectedDay)
-  );
-
   return (
     <div className="relative">
+      {!isEmpty(swrHolidaysError) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`Calendar: ${swrHolidaysError.message}.`}
+        />
+      ) : null}
+
       <div
         className={`${
           viewActivities
@@ -117,12 +141,12 @@ export default function EmployeeCalendar() {
             </time>
           </h2>
           <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-            {selectedDayMeetings.length > 0 ? (
+            {selectedDayMeetings && selectedDayMeetings.length > 0 ? (
               selectedDayMeetings.map((meeting) => (
                 <Meeting meeting={meeting} key={meeting.id} />
               ))
             ) : (
-              <p>No meetings for today.</p>
+              <p>No events today.</p>
             )}
           </ol>
         </section>
@@ -177,22 +201,29 @@ export default function EmployeeCalendar() {
                       isEqual(day, selectedDay) && 'text-white',
                       !isEqual(day, selectedDay) &&
                         isToday(day) &&
-                        'text-red-500',
+                        'text-blue-500',
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         isSameMonth(day, firstDayCurrentMonth) &&
-                        'text-gray-900',
+                        '',
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-400',
-                      isEqual(day, selectedDay) && isToday(day) && 'bg-red-500',
+                      isEqual(day, selectedDay) &&
+                        isToday(day) &&
+                        'bg-blue-500',
                       isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         'bg-gray-900',
                       !isEqual(day, selectedDay) && 'hover:bg-gray-200',
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
+                      swrHolidays &&
+                        swrHolidays.some((meeting) =>
+                          isSameDay(Date.parse(meeting.holidayDate), day)
+                        ) &&
+                        'bg-red-500 font-semibold text-white',
                       'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
                     )}
                   >
@@ -202,11 +233,12 @@ export default function EmployeeCalendar() {
                   </button>
 
                   <div className="w-1 h-1 mx-auto mt-1">
-                    {meetings.some((meeting) =>
-                      isSameDay(parseISO(meeting.startDatetime), day)
-                    ) && (
-                      <div className="w-1 h-1 rounded-full bg-sky-500"></div>
-                    )}
+                    {swrHolidays &&
+                      swrHolidays.some((meeting) =>
+                        isSameDay(Date.parse(meeting.holidayDate), day)
+                      ) && (
+                        <div className="w-1 h-1 rounded-full bg-sky-500"></div>
+                      )}
                   </div>
                 </div>
               ))}
@@ -219,19 +251,19 @@ export default function EmployeeCalendar() {
 }
 
 function Meeting({ meeting }: any) {
-  const startDateTime = parseISO(meeting.startDatetime);
-  const endDateTime = parseISO(meeting.endDatetime);
+  // const startDateTime = parseISO(meeting.startDatetime);
+  // const endDateTime = parseISO(meeting.endDatetime);
 
   return (
     <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
       <img
-        src={meeting.imageUrl}
+        src={'/gwdlogo.png'}
         alt=""
         className="flex-none w-10 h-10 rounded-full"
       />
       <div className="flex-auto">
         <p className="text-gray-900">{meeting.name}</p>
-        <p className="mt-0.5">
+        {/* <p className="mt-0.5">
           <time dateTime={meeting.startDatetime}>
             {format(startDateTime, 'h:mm a')}
           </time>{' '}
@@ -239,7 +271,7 @@ function Meeting({ meeting }: any) {
           <time dateTime={meeting.endDatetime}>
             {format(endDateTime, 'h:mm a')}
           </time>
-        </p>
+        </p> */}
       </div>
       <Menu
         as="div"

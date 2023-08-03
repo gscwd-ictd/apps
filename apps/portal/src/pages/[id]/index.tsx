@@ -9,16 +9,10 @@ import { useEffect, useState } from 'react';
 import SideNav from '../../components/fixed/nav/SideNav';
 import { MainContainer } from '../../components/modular/custom/containers/MainContainer';
 import { useAllowedModulesStore } from '../../store/allowed-modules.store';
-import {
-  withSession,
-  getUserDetails,
-  withCookieSession,
-} from '../../utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../utils/helpers/session';
 import { useEmployeeStore } from '../../store/employee.store';
 import { EmployeeDashboard } from '../../components/fixed/dashboard/EmployeeDashboard';
-import { SpinnerDotted } from 'spinners-react';
 import { setModules } from '../../utils/helpers/modules';
-import { setLocalStorage } from '../../utils/helpers/local-storage';
 import Carousel from '../../components/fixed/home/carousel/Carousel';
 import Image from 'next/image';
 import EmployeeCalendar from '../../components/fixed/home/calendar/Calendar';
@@ -30,19 +24,11 @@ import { employeeDummy } from '../../types/employee.type';
 import { fetchWithToken } from '../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { format } from 'date-fns';
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
-import { UseNameInitials } from '../../utils/hooks/useNameInitials';
 import { useDtrStore } from '../../store/dtr.store';
-import {
-  HiCalendar,
-  HiClock,
-  HiDocument,
-  HiOutlineClock,
-  HiOutlineDocument,
-} from 'react-icons/hi';
+import { HiCalendar, HiClock, HiDocument } from 'react-icons/hi';
 
 export type NavDetails = {
   fullName: string;
@@ -58,19 +44,8 @@ export default function Dashboard({
   );
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [navDetails, setNavDetails] = useState<NavDetails>();
 
   async function hydration() {
-    // setLocalStorage(userDetails);
-    setNavDetails({
-      profile: userDetails.user.email,
-      fullName: `${userDetails.profile.firstName} ${userDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        userDetails.profile.firstName,
-        userDetails.profile.lastName
-      ),
-    });
-
     const modules = await setModules(userDetails);
 
     setAllowedModules(modules);
@@ -294,7 +269,7 @@ export default function Dashboard({
                         svgBgColor={'bg-lime-100'}
                       />
                       <StatsCard
-                        name={'Special Privilege Benefit'}
+                        name={'Sick Leave'}
                         count={0}
                         isLoading={swrDtrIsLoading}
                         width={'w-full'}

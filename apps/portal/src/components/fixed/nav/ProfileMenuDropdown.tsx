@@ -5,11 +5,18 @@ import { Fragment, useEffect, useState } from 'react';
 // import { postData } from '../../../../utils/hoc/axios';
 // import { deleteCookie } from 'cookies-next'
 import {
+  HiAcademicCap,
+  HiBadgeCheck,
+  HiClipboardCheck,
+  HiClipboardList,
+  HiCollection,
   HiOutlineBell,
   HiOutlineCheck,
   HiOutlineHome,
   HiOutlineLogout,
   HiOutlineNewspaper,
+  HiPuzzle,
+  HiUserGroup,
 } from 'react-icons/hi';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -180,9 +187,13 @@ export const ProfileMenuDropdown = ({
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}`)}
+                              onClick={() =>
+                                router.push(
+                                  `/${router.query.id}/appointing-authority-selection`
+                                )
+                              }
                             >
-                              <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                              <HiClipboardCheck className="h-5 w-5 text-slate-600" />
                               <div className="flex w-full items-end justify-between">
                                 <span className="text-sm tracking-tight text-slate-500 text-left">
                                   Appointing Authority Selection
@@ -234,31 +245,13 @@ export const ProfileMenuDropdown = ({
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
                                 onClick={() =>
-                                  router.push(`/${router.query.id}`)
+                                  router.push(`/${router.query.id}/approvals`)
                                 }
                               >
-                                <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                                <HiBadgeCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
                                     Approvals
-                                  </span>
-                                </div>
-                              </button>
-                            )}
-                          </Menu.Item>
-
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                className={`${
-                                  active ? 'bg-slate-100' : 'text-gray-900'
-                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                // onClick={() => router.push(`/${router.query.id}`)}
-                              >
-                                <HiOutlineHome className="h-5 w-5 text-slate-600" />
-                                <div className="flex w-full items-end justify-between">
-                                  <span className="text-sm tracking-tight text-slate-500 text-left">
-                                    Training Attendee Selection
                                   </span>
                                 </div>
                               </button>
@@ -275,7 +268,29 @@ export const ProfileMenuDropdown = ({
                                   router.push(`/${router.query.id}`)
                                 }
                               >
-                                <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                                <HiAcademicCap className="h-5 w-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">
+                                    Training Attendee Selection
+                                  </span>
+                                </div>
+                              </button>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                                onClick={() =>
+                                  router.push(
+                                    `/${router.query.id}/duties-and-responsibilities`
+                                  )
+                                }
+                              >
+                                <HiPuzzle className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
                                     Position Duties, Responsibilities &
@@ -293,10 +308,10 @@ export const ProfileMenuDropdown = ({
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
                                 onClick={() =>
-                                  router.push(`/${router.query.id}`)
+                                  router.push(`/${router.query.id}/prf`)
                                 }
                               >
-                                <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                                <HiCollection className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
                                     Position Request
@@ -313,10 +328,12 @@ export const ProfileMenuDropdown = ({
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
                                 onClick={() =>
-                                  router.push(`/${router.query.id}`)
+                                  router.push(
+                                    `/${router.query.id}/applicant-endorsement`
+                                  )
                                 }
                               >
-                                <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                                <HiClipboardList className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
                                     Applicant Endorsement
@@ -356,10 +373,12 @@ export const ProfileMenuDropdown = ({
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
                                 onClick={() =>
-                                  router.push(`/${router.query.id}`)
+                                  router.push(
+                                    `/${router.query.id}/final-leave-approvals`
+                                  )
                                 }
                               >
-                                <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                                <HiBadgeCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
                                     Final Leave Approval
@@ -375,19 +394,21 @@ export const ProfileMenuDropdown = ({
                       true ? (
                         <Menu.Item>
                           {({ active }) => (
-                            <button
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
+                              target="_blank"
+                              rel="noreferrer"
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}`)}
                             >
-                              <HiOutlineHome className="h-5 w-5 text-slate-600" />
+                              <HiUserGroup className="h-5 w-5 text-slate-600" />
                               <div className="flex w-full items-end justify-between">
                                 <span className="text-sm tracking-tight text-slate-500 text-left">
                                   Personnel Selection Board
                                 </span>
                               </div>
-                            </button>
+                            </a>
                           )}
                         </Menu.Item>
                       ) : null}
