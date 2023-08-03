@@ -354,6 +354,58 @@ export const SideNavigation = () => {
             }
             path={Paths[21]}
           />
+
+          {/**Settings MODULES */}
+          <Sidebar.Item
+            display="Modules"
+            className="text-sm"
+            selected={pathname === Paths[23] ? true : false}
+            icon={
+              <>
+                <i className="text-xl bx bx-package"></i>
+              </>
+            }
+            path={Paths[23]}
+          />
+
+          {/**Settings USERS */}
+          <Sidebar.Item
+            display="Users"
+            className="text-sm"
+            selected={pathname === Paths[24] ? true : false}
+            icon={
+              <>
+                <i className="text-xl bx bxs-user-account"></i>
+              </>
+            }
+            path={Paths[24]}
+          />
+
+          {/**Settings OFFICER OF THE DAY */}
+          <Sidebar.Item
+            display="Officer of the Day"
+            className="text-sm"
+            selected={pathname === Paths[25] ? true : false}
+            icon={
+              <>
+                <i className="text-xl bx bxs-user-badge"></i>
+              </>
+            }
+            path={Paths[25]}
+          />
+
+          {/**Settings SYSTEM LOGS */}
+          <Sidebar.Item
+            display="System Logs"
+            className="text-sm"
+            selected={pathname === Paths[26] ? true : false}
+            icon={
+              <>
+                <i className="text-xl bx bx-detail"></i>
+              </>
+            }
+            path={Paths[26]}
+          />
         </ul>
       </Sidebar.Content>
       {/* <Sidebar.Footer>Footer</Sidebar.Footer> */}

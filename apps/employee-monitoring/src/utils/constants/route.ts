@@ -21,4 +21,9 @@ export const Paths = [
   '/monitoring/scheduling-sheet/field', // 19
   '/monitoring/scheduling-sheet/station', // 20
   '/settings/custom-groups', //21
+  '/monitoring/leave/leave-cancellations', //22
+  '/settings/modules', // 23
+  '/settings/users', // 24
+  '/settings/officer-of-the-day', // 25
+  '/settings/system-logs', // 26
 ];

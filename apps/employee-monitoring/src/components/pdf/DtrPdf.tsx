@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   },
   tableDataText: {
     paddingVertical: 3,
+    paddingHorizontal: 1,
     textTransform: 'capitalize',
   },
   certifyContainer: {
@@ -864,11 +865,14 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                 <View style={styles.aggregateContainer}>
                   {/* COLUMN HEADER */}
                   <View style={[styles.rowContainer]}>
+                    {/* NO. OF TIMES LATE */}
                     <View style={[styles.tableHeader2, styles.w11]}>
                       <Text style={[styles.tableHeaderText]}>
                         NO. OF TIMES LATE
                       </Text>
                     </View>
+
+                    {/* TOTAL MINUTES LATE */}
                     <View style={[styles.tableHeader2, styles.w9]}>
                       <Text
                         style={[
@@ -879,14 +883,20 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         TOTAL MINUTES LATE
                       </Text>
                     </View>
+
+                    {/* DATE/S LATE */}
                     <View style={[styles.tableHeader2, styles.w15]}>
                       <Text style={[styles.tableHeaderText]}>DATE/S LATE</Text>
                     </View>
+
+                    {/* NO. OF TIMES UNDERTIME */}
                     <View style={[styles.tableHeader2, styles.w8]}>
                       <Text style={[styles.tableHeaderText]}>
                         NO. OF TIMES UNDERTIME
                       </Text>
                     </View>
+
+                    {/* TOTAL MINUTES UNDERTIME */}
                     <View style={[styles.tableHeader2, styles.w9]}>
                       <Text
                         style={[
@@ -897,6 +907,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         TOTAL MINUTES UNDERTIME
                       </Text>
                     </View>
+
+                    {/* DATE/S UNDERTIME */}
                     <View style={[styles.tableHeader2, styles.w15]}>
                       <Text
                         style={[
@@ -907,6 +919,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         DATE/S UNDERTIME
                       </Text>
                     </View>
+
+                    {/* NO. OF TIMES HALF DAY (AM/PM) */}
                     <View style={[styles.tableHeader2, styles.w10]}>
                       <Text
                         style={[
@@ -917,11 +931,15 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         NO. OF TIMES HALF DAY (AM/PM)
                       </Text>
                     </View>
+
+                    {/* DATE/S HALF DAY */}
                     <View style={[styles.tableHeader2, styles.w12]}>
                       <Text style={[styles.tableHeaderText]}>
                         DATE/S HALF DAY
                       </Text>
                     </View>
+
+                    {/* NO ATTENDANCE */}
                     <View
                       style={[
                         styles.tableHeader2,
@@ -937,30 +955,92 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
 
                   {/* TABLE ROW */}
                   <View style={[styles.rowContainer, styles.borderTop]}>
+                    {/* NO. OF TIMES LATE */}
                     <View style={[styles.tableData, styles.w11]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.noOfTimesLate ?? '-'}
+                      </Text>
                     </View>
+
+                    {/* TOTAL MINUTES LATE */}
                     <View style={[styles.tableData, styles.w9]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.totalMinutesLate ?? '-'}
+                      </Text>
                     </View>
+
+                    {/* DATE/S LATE */}
                     <View style={[styles.tableData, styles.w15]}>
-                      <Text style={[styles.tableDataText]}>1,2,3</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.lateDates &&
+                        employeeDtr.summary?.lateDates.length > 0
+                          ? employeeDtr.summary?.lateDates.map((day, index) => {
+                              return (
+                                <Text key={index}>
+                                  {index ===
+                                  employeeDtr.summary?.lateDates.length - 1 ? (
+                                    <Text>{day}</Text>
+                                  ) : (
+                                    <Text>{day}, </Text>
+                                  )}
+                                </Text>
+                              );
+                            })
+                          : '-'}
+                      </Text>
                     </View>
+
+                    {/* NO. OF TIMES UNDERTIME */}
                     <View style={[styles.tableData, styles.w8]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.noOfTimesUndertime ?? '-'}
+                      </Text>
                     </View>
+
+                    {/* TOTAL MINUTES UNDERTIME */}
                     <View style={[styles.tableData, styles.w9]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.totalMinutesUndertime ?? '-'}
+                      </Text>
                     </View>
+
+                    {/* DATE/S UNDERTIME */}
                     <View style={[styles.tableData, styles.w15]}>
-                      <Text style={[styles.tableDataText]}>4,5,6</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.undertimeDates &&
+                        employeeDtr.summary?.undertimeDates.length > 0
+                          ? employeeDtr.summary?.undertimeDates.map(
+                              (day, index) => {
+                                return (
+                                  <Text key={index}>
+                                    {index ===
+                                    employeeDtr.summary?.undertimeDates.length -
+                                      1 ? (
+                                      <Text>{day}</Text>
+                                    ) : (
+                                      <Text>{day}, </Text>
+                                    )}
+                                  </Text>
+                                );
+                              }
+                            )
+                          : '-'}
+                      </Text>
                     </View>
+
+                    {/* NO. OF TIMES HALF DAY (AM/PM) */}
                     <View style={[styles.tableData, styles.w10]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.noOfTimesHalfDay ?? '-'}
+                      </Text>
                     </View>
+
+                    {/* DATE/S HALF DAY */}
                     <View style={[styles.tableData, styles.w12]}>
-                      <Text style={[styles.tableDataText]}>7,8,9</Text>
+                      <Text style={[styles.tableDataText]}>-</Text>
                     </View>
+
+                    {/* NO ATTENDANCE */}
                     <View
                       style={[
                         styles.tableData,
@@ -968,7 +1048,26 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         { borderRight: 'none' },
                       ]}
                     >
-                      <Text style={[styles.tableDataText]}>10,11,12</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.noAttendance &&
+                        employeeDtr.summary?.noAttendance.length > 0
+                          ? employeeDtr.summary?.noAttendance.map(
+                              (day, index) => {
+                                return (
+                                  <Text key={index}>
+                                    {index ===
+                                    employeeDtr.summary?.noAttendance.length -
+                                      1 ? (
+                                      <Text>{day}</Text>
+                                    ) : (
+                                      <Text>{day}, </Text>
+                                    )}
+                                  </Text>
+                                );
+                              }
+                            )
+                          : '-'}
+                      </Text>
                     </View>
                   </View>
                 </View>

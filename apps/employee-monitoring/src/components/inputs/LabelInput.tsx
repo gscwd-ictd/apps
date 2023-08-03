@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { FunctionComponent, InputHTMLAttributes, ReactNode } from 'react';
 
 type LabelInputProps = {
@@ -14,6 +15,7 @@ type LabelInputProps = {
   cols?: number;
   isDirty?: boolean;
   helper?: ReactNode | ReactNode[];
+  prefix?: string;
   textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
 };
 
@@ -33,6 +35,7 @@ export const LabelInput: FunctionComponent<
   rows,
   cols,
   helper,
+  prefix,
   textSize = 'xs',
   ...props
 }) => {
@@ -74,22 +77,39 @@ export const LabelInput: FunctionComponent<
           placeholder={placeholder}
         ></textarea>
       ) : (
-        <input
-          {...props}
-          id={id}
-          readOnly={disabled}
-          disabled={disabled}
-          type={type}
-          {...controller}
-          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none text-${textSize} ${
-            textSize === 'xs' ? 'h-[2.5rem]' : 'h-[3rem]'
-          } text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
+        <div className="flex">
+          {!isEmpty(prefix) ? (
+            <span
+              className={`inline-flex items-center rounded-tl-lg rounded-bl-lg px-3 disabled:hover:cursor-not-allowed outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] bg-gray-300 border
+            ${
+              isError
+                ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+                : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+            }`}
+            >
+              {prefix}
+            </span>
+          ) : null}
+
+          <input
+            {...props}
+            id={id}
+            readOnly={disabled}
+            disabled={disabled}
+            type={type}
+            {...controller}
+            className={`${className} text-${textSize} rounded-lg disabled:hover:cursor-not-allowed w-full outline-none text-gray-900 h-[2.5rem]  block p-2.5 bg-gray-50 border
+          ${textSize === 'xs' ? 'h-[2.5rem]' : 'h-[3rem]'}
+          ${
             isError
               ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
               : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-          }`}
-          placeholder={placeholder}
-        />
+          }
+          ${!isEmpty(prefix) ? 'rounded-tr-lg rounded-br-lg' : 'rounded-lg '}
+          `}
+            placeholder={placeholder}
+          />
+        </div>
       )}
 
       {isError ? (
