@@ -9,7 +9,7 @@ export function Index() {
   return (
     <div className="w-full">
       <BreadCrumbs title="" />
-      <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
+      <div className="sm:px-0 md:px-0 lg:px-5 ">
         <Card>
           <div className="gap-5 lg:flex lg:flex-row md:flex md:flex-col sm:flex sm:flex-col">
             <section className="sm:w-full md:w-full lg:w-[30%] flex flex-col gap-5 ">

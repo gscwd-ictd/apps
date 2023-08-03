@@ -14,6 +14,7 @@ type LabelInputProps = {
   cols?: number;
   isDirty?: boolean;
   helper?: ReactNode | ReactNode[];
+  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
 };
 
 export const LabelInput: FunctionComponent<
@@ -32,19 +33,18 @@ export const LabelInput: FunctionComponent<
   rows,
   cols,
   helper,
+  textSize = 'xs',
   ...props
 }) => {
   return (
     <div className="flex flex-col">
       <label htmlFor={id}>
-        <div className="flex justify-between gap-2 mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
+        <div
+          className={`flex justify-between gap-2 mb-1 text-${textSize} font-medium text-gray-900 dark:text-gray-800`}
+        >
           <div className="flex gap-2">
             {label}
-            {helper ? (
-              <span className="px-2 font-light text-white bg-orange-500 rounded">
-                {helper}
-              </span>
-            ) : null}
+            {helper ? <>{helper}</> : null}
           </div>
           {isDirty ? (
             <span
@@ -66,7 +66,7 @@ export const LabelInput: FunctionComponent<
           rows={rows}
           cols={cols}
           {...controller}
-          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm  text-gray-900 ${className} block p-2.5 bg-gray-50 border ${
+          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs md:text-${textSize} lg:text-${textSize} text-gray-900 ${className} block p-2.5 bg-gray-50 border ${
             isError
               ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
               : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
@@ -81,7 +81,9 @@ export const LabelInput: FunctionComponent<
           disabled={disabled}
           type={type}
           {...controller}
-          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
+          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none text-${textSize} ${
+            textSize === 'xs' ? 'h-[2.5rem]' : 'h-[3rem]'
+          } text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
             isError
               ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
               : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'

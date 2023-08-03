@@ -95,7 +95,7 @@ export default function Index({
           <Card>
             <div className="flex flex-col gap-2">
               {/* HEADER */}
-              <div className="grid gap-2 xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+              <div className="flex gap-2 xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
                 <section className="flex items-center gap-4 px-2">
                   {employeeData.photoUrl ? (
                     <div className="flex flex-wrap justify-center">
@@ -126,11 +126,11 @@ export default function Index({
                   </div>
                 </section>
 
-                <section className="flex justify-end ">
+                <section className="flex justify-end w-full">
                   <div className="">
                     <button
                       type="button"
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center  dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
                       onClick={openAdjustmentModalAction}
                     >
                       <i className="bx bxs-plus-square"></i>&nbsp; Adjustment

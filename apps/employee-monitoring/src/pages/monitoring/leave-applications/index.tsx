@@ -1,11 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
-import fetcherEMS from '../../../../utils/fetcher/FetcherEMS';
+import { useEffect, useState } from 'react';
+import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
-import { MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
+import {
+  EmployeeLeaveDetails,
+  MonitoringLeave,
+} from 'libs/utils/src/lib/types/leave-application.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
 import {
@@ -15,75 +18,13 @@ import {
   LoadingSpinner,
   ToastNotification,
 } from '@gscwd-apps/oneui';
-import { Card } from '../../../../components/cards/Card';
-import { BreadCrumbs } from '../../../../components/navigations/BreadCrumbs';
+import { Card } from '../../../components/cards/Card';
+import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
 import dayjs from 'dayjs';
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
-
-// Mock Data REMOVE later
-const TypesMockData: Array<MonitoringLeave> = [
-  {
-    employeeId: 'emp-id-001',
-    fullName: 'Allyn Cubero',
-    id: 'leave-id-001',
-    leaveName: 'Vacation Leave',
-    dateOfFiling: '2023-04-12',
-    leaveDates: ['2023-05-01', '2023-05-02'],
-    status: LeaveStatus.ONGOING,
-  },
-  {
-    employeeId: 'emp-id-001',
-    fullName: 'Allyn Cubero',
-    id: 'leave-id-002',
-    leaveName: 'Sick Leave',
-    dateOfFiling: '2023-04-13',
-    leaveDates: ['2023-04-12'],
-    status: LeaveStatus.APPROVED,
-  },
-  {
-    employeeId: 'emp-id-002',
-    fullName: 'RV Kuku Cated',
-    id: 'leave-id-003',
-    leaveName: 'Forced Leave',
-    dateOfFiling: '2023-04-14',
-    leaveDates: ['2023-04-28', '2023-04-29'],
-    status: LeaveStatus.DISAPPROVED,
-  },
-  {
-    employeeId: 'emp-id-003',
-    fullName: 'Papa Toya Ting',
-    id: 'leave-id-004',
-    leaveName: 'Paternity Leave',
-    dateOfFiling: '2023-04-14',
-    leaveDates: [
-      '2023-04-24',
-      '2023-04-25',
-      '2023-04-26',
-      '2023-04-27',
-      '2023-04-28',
-    ],
-    status: LeaveStatus.FOR_APPROVAL,
-  },
-
-  {
-    employeeId: 'emp-id-003',
-    fullName: 'Test Employee',
-    id: 'leave-id-005',
-    leaveName: 'Forced Leave',
-    dateOfFiling: '2023-07-14',
-    leaveDates: [
-      '2023-07-24',
-      '2023-07-25',
-      '2023-07-26',
-      '2023-07-27',
-      '2023-07-28',
-    ],
-    status: LeaveStatus.CANCELLED,
-  },
-];
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -97,7 +38,7 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateLeaveApplications,
-  } = useSWR('/leave-applications', fetcherEMS, {
+  } = useSWR('/leave/hrmo', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -108,21 +49,24 @@ const Index = () => {
     setViewModalIsOpen(true);
     setCurrentRowData(rowData);
   };
-  const closeViewActionModal = () => setViewModalIsOpen(false);
+  const closeViewActionModal = () => {
+    setViewModalIsOpen(false);
+    setCurrentRowData({} as MonitoringLeave);
+  };
 
   // Rendering of leave dates in row
   const renderRowLeaveDates = (leaveDates: Array<string>) => {
     if (leaveDates) {
       if (leaveDates.length > 4) {
         return (
-          <span className="bg-gray-500 text-white text-xs font-medium px-1 py-0.5 ml-1 rounded text-center">
+          <span className="bg-gray-300 text-gray-700 text-xs font-medium px-1 py-0.5 ml-1 rounded text-center">
             {leaveDates[0]} to {leaveDates.slice(-1)}
           </span>
         );
       } else {
         return leaveDates.map((leaveDate: string, index: number) => (
           <span
-            className="bg-gray-500 text-white text-xs font-medium px-1 py-0.5 ml-1 rounded text-center"
+            className="bg-gray-300 text-gray-700 text-xs font-medium px-1 py-0.5 ml-1 rounded text-center"
             key={index}
           >
             {leaveDate}
@@ -150,24 +94,23 @@ const Index = () => {
   // Define table columns
   const columnHelper = createColumnHelper<MonitoringLeave>();
   const columns = [
+    // leaveId
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
       filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
-    columnHelper.accessor('employeeId', {
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('fullName', {
+
+    columnHelper.accessor('employee.employeeName', {
       header: 'Employee Name',
       filterFn: 'fuzzy',
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
     }),
-    // leaveId
-    columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
+
     columnHelper.accessor('leaveName', {
       header: 'Leave Benefit',
       cell: (info) => UseRenderLeaveType(info.getValue()),
@@ -184,58 +127,80 @@ const Index = () => {
     }),
     columnHelper.display({
       id: 'actions',
+      header: 'Actions',
       enableColumnFilter: false,
-      cell: (props) => renderRowActions(props.row.original),
+      cell: (props) => (
+        <div className="flex justify-start place-items-start">
+          {renderRowActions(props.row.original)}
+        </div>
+      ),
     }),
   ];
+
+  // Zustand initialization
+  const {
+    LeaveApplication,
+    LeaveApplications,
+    IsLoading,
+    ErrorLeaveApplications,
+    EmptyResponseAndErrors,
+    GetLeaveApplications,
+    GetLeaveApplicationsSuccess,
+    GetLeaveApplicationsFail,
+    setLeaveApplicationDetails,
+  } = useLeaveApplicationStore((state) => ({
+    LeaveApplication: state.leaveApplication.patchResponse,
+    LeaveApplications: state.leaveApplications,
+    IsLoading: state.loading.loadingLeaveApplications,
+    ErrorLeaveApplications: state.error.errorLeaveApplications,
+    setLeaveApplicationDetails: state.setLeaveApplicationDetails,
+    GetLeaveApplications: state.getLeaveApplications,
+    GetLeaveApplicationsSuccess: state.getLeaveApplicationsSuccess,
+    GetLeaveApplicationsFail: state.getLeaveApplicationsFail,
+    EmptyResponseAndErrors: state.emptyResponseAndErrors,
+  }));
 
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: TypesMockData,
+    data: LeaveApplications,
     columnVisibility: { id: false, employeeId: false },
   });
 
-  // Zustand initialization
-  const {
-    LeaveApplications,
-    IsLoading,
-    ErrorLeaveApplications,
-
-    GetLeaveApplications,
-    GetLeaveApplicationsSuccess,
-    GetLeaveApplicationsFail,
-  } = useLeaveApplicationStore((state) => ({
-    LeaveApplications: state.leaveApplications,
-    IsLoading: state.loading.loadingLeaveApplications,
-    ErrorLeaveApplications: state.error.errorLeaveApplications,
-
-    GetLeaveApplications: state.getLeaveApplications,
-    GetLeaveApplicationsSuccess: state.getLeaveApplicationsSuccess,
-    GetLeaveApplicationsFail: state.getLeaveApplicationsFail,
-  }));
-
   // UNCOMMENT IF leave application route is active
   // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrIsLoading) {
-  //     GetLeaveApplications(swrIsLoading);
-  //   }
-  // }, [swrIsLoading]);
+  useEffect(() => {
+    if (swrIsLoading) {
+      GetLeaveApplications();
+    }
+  }, [swrIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrLeaveApplication)) {
-  //     GetLeaveApplicationsSuccess(swrIsLoading, swrLeaveApplication.data);
-  //   }
+  useEffect(() => {
+    if (!isEmpty(swrLeaveApplication)) {
+      GetLeaveApplicationsSuccess(swrLeaveApplication.data);
+    }
 
-  //   if (!isEmpty(swrError)) {
-  //     GetLeaveApplicationsFail(swrIsLoading, swrError.message);
-  //   }
-  // }, [swrLeaveApplication, swrError]);
+    if (!isEmpty(swrError)) {
+      GetLeaveApplicationsFail(swrError.message);
+    }
+  }, [swrLeaveApplication, swrError]);
+
+  // clear
+  useEffect(() => {
+    if (!isEmpty(LeaveApplication)) {
+      setLeaveApplicationDetails({} as EmployeeLeaveDetails);
+      setCurrentRowData({} as MonitoringLeave);
+      closeViewActionModal();
+      mutateLeaveApplications();
+      setTimeout(() => {
+        EmptyResponseAndErrors();
+      }, 1500);
+    }
+  }, [LeaveApplication]);
 
   return (
-    <div className="w-full px-4">
+    <div>
       <BreadCrumbs title="Leave Applications" />
 
       {/* Error Notifications */}
@@ -265,38 +230,22 @@ const Index = () => {
           notifMessage="Travel order deleted successfully"
         />
       ) : null} */}
-
-      <Card>
-        {IsLoading ? (
-          <LoadingSpinner size="lg" />
-        ) : (
-          <div className="flex flex-row flex-wrap">
-            {/* <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                onClick={openAddActionModal}
-              >
-                <i className="bx bxs-plus-square"></i>&nbsp; Add Travel Order
-              </button>
-            </div> */}
-
-            <DataTable
-              model={table}
-              showGlobalFilter={true}
-              showColumnFilter={true}
-              paginate={true}
-            />
-          </div>
-        )}
-      </Card>
-
-      {/* Add modal */}
-      {/* <AddTravelOrderModal
-        modalState={addModalIsOpen}
-        setModalState={setAddModalIsOpen}
-        closeModalAction={closeAddActionModal}
-      /> */}
+      <div className="sm:px-2 md:px-2 lg:px-5">
+        <Card>
+          {IsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <div className="flex flex-row flex-wrap">
+              <DataTable
+                model={table}
+                showGlobalFilter={true}
+                showColumnFilter={true}
+                paginate={true}
+              />
+            </div>
+          )}
+        </Card>
+      </div>
 
       {/* View modal */}
       <ViewLeaveApplicationModal
@@ -305,14 +254,6 @@ const Index = () => {
         closeModalAction={closeViewActionModal}
         rowData={currentRowData}
       />
-
-      {/* Delete modal */}
-      {/* <DeleteTravelOrderModal
-        modalState={deleteModalIsOpen}
-        setModalState={setDeleteModalIsOpen}
-        closeModalAction={closeDeleteActionModal}
-        rowData={currentRowData}
-      /> */}
     </div>
   );
 };

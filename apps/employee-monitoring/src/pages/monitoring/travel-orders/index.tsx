@@ -201,7 +201,7 @@ const Index = () => {
   ]);
 
   return (
-    <div className="w-full px-4">
+    <div>
       <BreadCrumbs title="Travel Orders" />
 
       {/* Error Notifications */}
@@ -232,7 +232,7 @@ const Index = () => {
         />
       ) : null}
 
-      <div className="sm:mx-0 md:mx-0 lg:mx-5">
+      <div className="sm:px-2 md:px-2 lg:px-5">
         <Card>
           {IsLoading ? (
             <LoadingSpinner size="lg" />

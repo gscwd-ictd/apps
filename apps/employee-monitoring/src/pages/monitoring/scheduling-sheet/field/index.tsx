@@ -315,7 +315,7 @@ export default function Index() {
         />
 
         <Can I="access" this="Schedules">
-          <div className="sm:mx-0 lg:mx-5">
+          <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
               {swrGsIsLoading ? (
                 <LoadingSpinner size="lg" />
