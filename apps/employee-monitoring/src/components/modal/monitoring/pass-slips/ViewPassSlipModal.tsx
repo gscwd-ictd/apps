@@ -28,19 +28,29 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="md">
         <Modal.Header withCloseBtn>
-          <div className="flex gap-1 px-5 text-2xl font-semibold text-gray-800">
-            {rowData.status === PassSlipStatus.ONGOING
-              ? 'Ongoing'
-              : rowData.status === PassSlipStatus.FOR_APPROVAL
-              ? 'Pending'
-              : rowData.status === PassSlipStatus.APPROVED
-              ? 'Completed'
-              : rowData.status === PassSlipStatus.DISAPPROVED
-              ? 'Completed'
-              : rowData.status === PassSlipStatus.CANCELLED
-              ? 'Cancelled'
-              : ''}
-            <span>Pass Slip</span>
+          <div className="flex justify-between text-2xl font-semibold text-gray-800">
+            <div className="flex gap-1 px-5 text-2xl font-semibold text-gray-800">
+              {rowData.status === PassSlipStatus.ONGOING
+                ? 'Ongoing'
+                : rowData.status === PassSlipStatus.FOR_APPROVAL
+                ? 'Pending'
+                : rowData.status === PassSlipStatus.APPROVED
+                ? 'Completed'
+                : rowData.status === PassSlipStatus.DISAPPROVED
+                ? 'Completed'
+                : rowData.status === PassSlipStatus.CANCELLED
+                ? 'Cancelled'
+                : ''}
+              <span>Pass Slip</span>
+            </div>
+            <button
+              type="button"
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              onClick={closeModalAction}
+            >
+              <i className="bx bx-x"></i>
+              <span className="sr-only">Close modal</span>
+            </button>
           </div>
         </Modal.Header>
         <Modal.Body>

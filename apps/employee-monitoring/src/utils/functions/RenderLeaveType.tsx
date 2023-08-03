@@ -1,14 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* This function is used for rendering pass slip valuees */
 
-import { ObTransportation } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { isEmpty } from 'lodash';
 import BadgePill from '../../components/badges/BadgePill';
 
 function UseRenderLeaveType(value: string | null | '') {
   if (!isEmpty(value)) {
-    return <BadgePill label={value} variant={'primary'} />;
+    return <BadgePill label={value} variant="success" />;
   } else return <span>-</span>;
 }
 

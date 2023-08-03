@@ -23,13 +23,16 @@ export default defineAbility((can) => {
     { I: 'access', this: 'Trainings_and_seminars' },
     { I: 'access', this: 'Pass_slips' },
     { I: 'access', this: 'Leave_benefits' },
+    { I: 'access', this: 'Leave_applications' },
     { I: 'access', this: 'Scheduling' },
     { I: 'access', this: 'Custom Groups' },
+    { I: 'access', this: 'Employees' },
     { I: 'access', this: 'Employee_schedules' },
     { I: 'access', this: 'Modules' },
     { I: 'access', this: 'Users' },
     { I: 'access', this: 'Officer of the Day' },
     { I: 'access', this: 'System Logs' },
+    { I: 'access', this: 'Leave_ledger' },
   ];
 
   // cookies.get('isSuperUser')

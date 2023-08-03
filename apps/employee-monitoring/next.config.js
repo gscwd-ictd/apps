@@ -12,6 +12,9 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  images: {
+    domains: ['172.20.110.45'],
+  },
 };
 
 module.exports = withNx(nextConfig);

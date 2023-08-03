@@ -1,5 +1,5 @@
 import { LeaveStatus } from '../enums/leave.enum';
-import { LeaveBenefitOptions } from './leave-benefits.type';
+import { LeaveBenefitOptions, LeaveType } from './leave-benefits.type';
 
 // Date range picker in leave application form
 export type LeaveDateRange = {
@@ -59,6 +59,7 @@ export type EmployeeLeaveDetails = {
       positionTitle: string;
       salary: string;
     };
+    photoUrl: string;
     companyId: string;
     userId: string;
     userRole: string;
@@ -67,18 +68,22 @@ export type EmployeeLeaveDetails = {
   leaveApplicationBasicInfo: {
     dateOfFiling: string;
     id: string;
+    debitValue: string;
     leaveDates: Array<string>;
     leaveName: string;
     status: LeaveStatus;
+    leaveType?: LeaveType | null;
+    maximumCredits?: number | null;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
     location?: string;
     hospital?: string;
+    //! outPatient?: string;
     illness?: string;
     splWomen?: string;
-    forMastersCompletion?: string;
-    forBarBoardReview?: string;
+    forMastersCompletion?: string | null;
+    forBarBoardReview?: string | null;
     studyLeaveOther?: string | null;
   };
 };
@@ -114,12 +119,15 @@ export type CalendarDate = {
 // Individual leave id
 export type LeaveId = Pick<EmployeeLeave, 'id'>;
 
+//! Changed 08/02/2023
 // Single row type for collated employee leaves
-export type MonitoringLeave = {
-  employeeId: string;
-  fullName: string;
-  positionTitle?: string;
-} & EmployeeLeave;
+export type MonitoringLeave = EmployeeLeave & {
+  employee: { employeeId: string; employeeName: string };
+  supervisor: {
+    supervisorId: string;
+    supervisorName: string;
+  };
+};
 
 export type SupervisorLeaveDetails = {
   createdAt: string;

@@ -13,6 +13,7 @@ import { CardMiniStats } from '../cards/CardMiniStats';
 import { useLeaveLedgerStore } from '../../store/leave-ledger.store';
 import { ActionType } from '../../../../../libs/utils/src/lib/enums/leave-ledger.type';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import RemarksAndLeaveDatesModal from '../modal/employees/leave-ledger/RemarksAndLeaveDatesModal';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -22,26 +23,40 @@ type LeaveLedgerTableProps = {
   employeeData: EmployeeWithDetails;
 };
 
+type RemarksAndLeaveDates = {
+  leaveDates: Array<string>;
+  remarks: string;
+};
+
 export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
   employeeData,
 }) => {
-  const {
-    getLeaveLedger,
-    getLeaveLedgerFail,
-    getLeaveLedgerSuccess,
-    leaveLedger,
-  } = useLeaveLedgerStore((state) => ({
-    leaveLedger: state.leaveLedger,
-    getLeaveLedger: state.getLeaveLedger,
-    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-    getLeaveLedgerFail: state.getLeaveLedgerFail,
-  }));
+  const { getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger } =
+    useLeaveLedgerStore((state) => ({
+      leaveLedger: state.leaveLedger,
+      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+      getLeaveLedgerFail: state.getLeaveLedgerFail,
+    }));
 
+  // forced leave balance
   const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
+
+  // vacation leave balance
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
+
+  // sick leave balance
   const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
-  const [specialLeaveBenefitsBalance, setSpecialLeaveBenefitsBalance] =
+
+  // special privilege leave balance
+  const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] =
     useState<number>(0);
+
+  // remarks and leave dates
+  const [remarksAndLeaveDates, setRemarksAndLeaveDates] =
+    useState<RemarksAndLeaveDates>({ leaveDates: [], remarks: '' });
+
+  // leave dates and remarks modal
+  const [modalRemarksIsOpen, setModalRemarksIsOpen] = useState<boolean>(false);
 
   const {
     data: swrLeaveLedger,
@@ -56,24 +71,27 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
     }
   );
 
+  // open modal action
+  const openModalAction = (leaveDates: Array<string>, remarks: string) => {
+    setRemarksAndLeaveDates({ leaveDates, remarks });
+    setModalRemarksIsOpen(true);
+  };
+
+  // close modal action
+  const closeModalAction = () => {
+    setRemarksAndLeaveDates({ leaveDates: [], remarks: '' });
+    setModalRemarksIsOpen(false);
+  };
+
   // get the latest balance by last index value
   const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
     const lastIndexValue = leaveLedger[leaveLedger.length - 1];
     setForcedLeaveBalance(lastIndexValue.forcedLeaveBalance);
-    setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance);
-    setSickLeaveBalance(lastIndexValue.sickLeaveBalance);
-    setSpecialLeaveBenefitsBalance(lastIndexValue.specialLeaveBenefitBalance);
-  };
-
-  // month day and year
-  const formatDateInWords = (date: string) => {
-    return dayjs(date).format('MMMM DD, YYYY');
-  };
-
-  // time only with AM or PM
-  const formatTime = (date: string | null) => {
-    if (date === null || isEmpty(date)) return '';
-    else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
+    setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
+    setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
+    setSpecialPrivilegeLeaveBalance(
+      lastIndexValue.specialPrivilegeLeaveBalance ?? 0
+    );
   };
 
   // value color
@@ -89,8 +107,20 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
   useEffect(() => {
     // success
     if (!isEmpty(swrLeaveLedger)) {
-      getLeaveLedgerSuccess(swrLeaveLedger.data);
-      getLatestBalance(swrLeaveLedger.data);
+      // check if leave ledger is empty
+      if (!isEmpty(swrLeaveLedger.data)) {
+        // mutate leave dates from string to array of string
+        const tempLeaveLedger = swrLeaveLedger.data.map((leaveLedger) => {
+          const newLeaveDates = !isEmpty(leaveLedger.leaveDates)
+            ? leaveLedger.leaveDates.toString().split(', ')
+            : null;
+          leaveLedger.leaveDates = newLeaveDates;
+          return leaveLedger;
+        });
+
+        getLeaveLedgerSuccess(tempLeaveLedger);
+        getLatestBalance(tempLeaveLedger);
+      }
     }
 
     // error
@@ -106,6 +136,13 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
 
   return (
     <>
+      <RemarksAndLeaveDatesModal
+        modalState={modalRemarksIsOpen}
+        setModalState={setModalRemarksIsOpen}
+        closeModalAction={closeModalAction}
+        rowData={remarksAndLeaveDates}
+      />
+
       {/* Leave Ledger Table */}
 
       <div className="w-full grid-cols-4 gap-5 pb-5 sm:flex sm:flex-col lg:flex lg:flex-row">
@@ -152,208 +189,144 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
           <CardMiniStats
             className="p-2 border rounded-md shadow hover:cursor-pointer"
             icon={<i className="text-4xl text-white bx bxs-offer"></i>}
-            title="Special Leave Benefits"
+            title="Special Privilege Leave"
             titleClassName="text-gray-100"
             valueClassName="text-white"
             bgColor="bg-cyan-600 "
             isLoading={swrIsLoading}
-            value={specialLeaveBenefitsBalance ?? 0}
+            value={specialPrivilegeLeaveBalance ?? 0}
           />
         </div>
       </div>
 
-      <div className="flex w-full overflow-auto border rounded-lg shadow">
-        <table className="w-full table-auto bg-slate-50 ">
-          <thead className="border-0">
-            <tr className="text-xs border-b divide-x">
-              <th className="px-5 py-2 w-[12rem] font-semibold text-center text-gray-900 uppercase">
+      {/* <LeaveDatesAndRemarksModal 
+      closeModalAction={()=>{}}
+
+      /> */}
+
+      <div className="w-full overflow-auto  max-h-[28rem]">
+        <table className="w-full border table-fixed bg-slate-50">
+          <thead className="sticky top-0 bg-slate-50">
+            <tr className="text-xs divide-x divide-y border-y">
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
                 Period
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">
                 Particulars
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                Forced Leave
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                FL
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                FL Balance
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                FL Bal.
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                Vacation Leave
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                VL
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                VL Balance
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                VL Bal.
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                Sick Leave
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                SL
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                SL Balance
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                SL Bal.
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                Special Leave Benefit
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                SLB
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase">
-                SLB Balance
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                SLB Bal.
               </th>
-              <th className="px-5 py-2 font-semibold text-center text-gray-900 uppercase w-[12rem]">
-                Leave Dates
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                SPL
+              </th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                SPL Bal.
+              </th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
+                View More
               </th>
             </tr>
           </thead>
-          <tbody className="text-sm text-center ">
+          <tbody className="text-sm max-h-[28rem]">
             {!isEmpty(leaveLedger) ? (
               leaveLedger.map((entry, index) => {
                 return (
-                  <Fragment key={index}>
-                    <tr className="divide-x divide-y">
-                      {/* {JSON.stringify(index)} ==={' '}
-                      {JSON.stringify(leaveLedger.length - 1)} */}
-                      <td className="items-center p-2 break-words border-b text-start">
-                        {dayjs(entry.period).format('MM/DD/YYYY')}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {entry.particulars}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {!isEmpty(entry.forcedLeave)
-                          ? valueColorizer(entry.forcedLeave, entry.actionType)
-                          : null}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {entry.forcedLeaveBalance ?? '0.000'}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {!isEmpty(entry.vacationLeave)
-                          ? valueColorizer(
-                              entry.vacationLeave,
-                              entry.actionType
-                            )
-                          : null}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {entry.vacationLeaveBalance ?? '0.000'}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {!isEmpty(entry.sickLeave)
-                          ? valueColorizer(entry.sickLeave, entry.actionType)
-                          : null}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {entry.sickLeaveBalance ?? '0.000'}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {!isEmpty(entry.specialLeaveBenefit)
-                          ? valueColorizer(
-                              entry.specialLeaveBenefit,
-                              entry.actionType
-                            )
-                          : null}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {entry.specialLeaveBenefitBalance ?? '0.000'}
-                      </td>
-                      <td className="items-center p-2 break-words text-start">
-                        {entry.leaveDates ?? null}
-                      </td>
-                    </tr>
-                  </Fragment>
+                  <tr className="divide-x divide-y" key={index}>
+                    <td className="items-center p-2 break-words border-b text-start">
+                      {dayjs(entry.period).format('MM/DD/YYYY')}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {entry.particulars}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {!isEmpty(entry.forcedLeave)
+                        ? valueColorizer(entry.forcedLeave, entry.actionType)
+                        : null}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {entry.forcedLeaveBalance ?? '0.000'}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {!isEmpty(entry.vacationLeave)
+                        ? valueColorizer(entry.vacationLeave, entry.actionType)
+                        : null}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {entry.vacationLeaveBalance ?? '0.000'}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {!isEmpty(entry.sickLeave)
+                        ? valueColorizer(entry.sickLeave, entry.actionType)
+                        : null}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {entry.sickLeaveBalance ?? '0.000'}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {!isEmpty(entry.specialLeaveBenefit)
+                        ? valueColorizer(
+                            entry.specialLeaveBenefit,
+                            entry.actionType
+                          )
+                        : null}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {entry.specialLeaveBenefitBalance ?? '0.000'}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {!isEmpty(entry.specialPrivilegeLeave)
+                        ? valueColorizer(
+                            entry.specialPrivilegeLeave,
+                            entry.actionType
+                          )
+                        : null}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      {entry.specialPrivilegeLeaveBalance ?? '0.000'}
+                    </td>
+                    <td className="items-center p-2 break-words text-start">
+                      <div className="flex justify-center">
+                        <i
+                          className="text-2xl text-blue-500 bx bx-show"
+                          role="button"
+                          onClick={() => {
+                            openModalAction(entry.leaveDates, entry.remarks);
+                          }}
+                        ></i>
+                      </div>
+                    </td>
+                  </tr>
                 );
               })
             ) : (
               <>
                 <tr className="text-sm border-b divide-x divide-y">
-                  {/* <td colSpan={8}>NO DATA FOUND</td> */}
-                  <td className="items-center p-2 break-words text-start"></td>
-                  <td className="items-center p-2 break-words text-start">
-                    CREDIT | Beginning Balance - 2023
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    <span className="text-green-600">5.000</span>
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    5.000
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    <span className="text-green-600">12.500</span>
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    12.500
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    <span className="text-green-600">17.500</span>
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    17.500
-                  </td>
-                  <td className="items-center p-2 break-words text-start"></td>
-                  <td className="items-center p-2 break-words text-start">
-                    0.000
-                  </td>
-                  <td className="items-center p-2 break-words text-start"></td>
-                </tr>
-                <tr className="text-sm tracking-tight border-b divide-x divide-y">
-                  {/* <td colSpan={8}>NO DATA FOUND</td> */}
-                  <td className="items-center p-2 break-words text-start">
-                    01/03/2023
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    CREDIT | Earned Leave - JANUARY 2023
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    <span className="text-green-600">1.250</span>
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    6.250
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    <span className="text-green-600">1.250</span>
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    13.750
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    <span className="text-green-600">1.250</span>
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    18.750
-                  </td>
-                  <td className="items-center p-2 break-words text-start"></td>
-                  <td className="items-center p-2 break-words text-start">
-                    0.000
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    01/03/2023
-                  </td>
-                </tr>
-                <tr className="text-sm divide-x divide-y">
-                  {/* <td colSpan={8}>NO DATA FOUND</td> */}
-                  <td className="items-center p-2 break-words text-start">
-                    01/04/2023
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    DEBIT | Tardiness - 01-04-2023=45
-                  </td>
-                  <td className="items-center p-2 break-words text-start"></td>
-                  <td className="items-center p-2 break-words text-start">
-                    6.250
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    <span className="text-red-600">-0.094</span>
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    13.656
-                  </td>
-                  <td className="items-center p-2 break-words text-start"></td>
-                  <td className="items-center p-2 break-words text-start">
-                    18.750
-                  </td>
-                  <td className="items-center p-2 break-words text-start"></td>
-                  <td className="items-center p-2 break-words text-start">
-                    0.000
-                  </td>
-                  <td className="items-center p-2 break-words text-start">
-                    01/03/2023
+                  <td colSpan={14} className="w-full">
+                    <div className="flex justify-center w-full justify-items-center">
+                      NO DATA FOUND
+                    </div>
                   </td>
                 </tr>
               </>

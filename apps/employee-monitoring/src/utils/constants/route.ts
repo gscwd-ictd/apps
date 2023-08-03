@@ -1,7 +1,7 @@
 export const Paths = [
   '/dashboard', //0
   '/employees', //1
-  '/monitoring/leave/leave-applications', //2
+  '/monitoring/leave-applications', //2
   '/monitoring/travel-orders', // 3
   '/monitoring/trainings-and-seminars', // 4
   '/monitoring/overtime', // 5
@@ -11,7 +11,7 @@ export const Paths = [
   '/maintenance/leave-benefits/cumulative', // 9
   '/maintenance/leave-benefits/special', //10
   '/maintenance/events/holidays', // 11
-  '/maintenance/events/training-and-seminar-types', // 12
+  '/maintenance/events/work-suspensions', // 12
   '/maintenance/overtime', // 13
   '/maintenance/pass-slip', // 14
   '/maintenance/schedules/office', // 15

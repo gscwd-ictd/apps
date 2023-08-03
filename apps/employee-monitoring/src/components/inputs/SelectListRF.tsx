@@ -9,6 +9,7 @@ interface MySelectListRFProps
   label: string;
   isError?: boolean;
   errorMessage?: string;
+  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 }
 
 type Item = {
@@ -26,12 +27,15 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
   label,
   isError = false,
   errorMessage,
+  textSize = 'xs',
   ...props
 }) => {
   return (
     <div className="flex flex-col">
       <label htmlFor={id}>
-        <span className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
+        <span
+          className={`block mb-1 text-${textSize} font-medium text-gray-900 dark:text-gray-800`}
+        >
           {label}
         </span>
       </label>
@@ -43,7 +47,9 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
           isError
             ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
             : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-        } hover:cursor-pointer w-full outline-none text-xs text-gray-900 h-[2.5rem] p-2.5 ${className}`}
+        } hover:cursor-pointer w-full outline-none  text-${textSize}  text-gray-900 ${
+          textSize === 'xs' ? 'h-[2.5rem]' : 'h-[3rem]'
+        } p-2.5 ${className}`}
         {...props}
       >
         <option value="" key="" disabled>

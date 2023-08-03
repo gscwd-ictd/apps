@@ -10,6 +10,7 @@ import {
   TimerResetIcon,
   FileInputIcon,
   LightbulbIcon,
+  CalendarX2,
 } from 'lucide-react';
 import { FunctionComponent } from 'react';
 
@@ -171,6 +172,21 @@ export const MyLightBulbIcon: FunctionComponent<MyIconProps> = ({
 }) => {
   return (
     <LightbulbIcon
+      strokeWidth={1.5}
+      color={color}
+      size={size}
+      className={className}
+    />
+  );
+};
+
+export const MyCalendarX2: FunctionComponent<MyIconProps> = ({
+  color = 'currentColor',
+  size = 25,
+  className,
+}) => {
+  return (
+    <CalendarX2
       strokeWidth={1.5}
       color={color}
       size={size}

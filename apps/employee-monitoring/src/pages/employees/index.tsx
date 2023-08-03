@@ -206,7 +206,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="w-full">
+      <div className="">
         <BreadCrumbs
           title="Employees"
           crumbs={[
@@ -242,7 +242,7 @@ export default function Index() {
           />
         ) : null}
 
-        <div className="mx-5">
+        <div className="sm:px-2 md:px-2 lg:px-5">
           <Card>
             {swrIsLoading ? (
               <LoadingSpinner size="lg" />
