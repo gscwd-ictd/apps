@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import {
   HiBadgeCheck,
   HiOutlineBadgeCheck,
+  HiOutlineBriefcase,
   HiOutlineIdentification,
 } from 'react-icons/hi';
 
@@ -31,13 +32,13 @@ export const HRMenuDropdown = ({
     <>
       <Menu
         as="div"
-        className={`z-20 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}
+        className={`z-30 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}
       >
         <div>
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
           >
-            <HiOutlineBadgeCheck className="w-6 h-6 text-indigo-500" />
+            <HiOutlineBriefcase className="w-6 h-6 text-indigo-500" />
           </Menu.Button>
         </div>
         <Transition

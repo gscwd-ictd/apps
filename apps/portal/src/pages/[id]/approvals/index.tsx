@@ -284,7 +284,7 @@ export default function Approvals({
             <title>Approvals</title>
           </Head>
 
-          <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
+          <SideNav employeeDetails={employeeDetails} />
 
           {/* Pending Leave Approval Modal */}
           <ApprovalsPendingLeaveModal

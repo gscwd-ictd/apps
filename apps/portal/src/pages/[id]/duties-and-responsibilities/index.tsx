@@ -136,7 +136,7 @@ export default function DutiesResponsibilities({
         <title>Setup Duties and Responsibilities</title>
       </Head>
 
-      <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
+      <SideNav employeeDetails={employeeDetails} />
 
       <DrcModal />
 

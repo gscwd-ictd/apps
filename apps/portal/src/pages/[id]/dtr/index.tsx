@@ -86,7 +86,7 @@ export default function DailyTimeRecord({
             <title>Daily Time Record</title>
           </Head>
 
-          <SideNav navDetails={navDetails} employeeDetails={employeeDetails} />
+          <SideNav employeeDetails={employeeDetails} />
 
           <MainContainer>
             <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
