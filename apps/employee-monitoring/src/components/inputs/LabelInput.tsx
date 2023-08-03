@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { FunctionComponent, InputHTMLAttributes, ReactNode } from 'react';
 
 type LabelInputProps = {
@@ -14,6 +15,7 @@ type LabelInputProps = {
   cols?: number;
   isDirty?: boolean;
   helper?: ReactNode | ReactNode[];
+  prefix?: string;
 };
 
 export const LabelInput: FunctionComponent<
@@ -32,6 +34,7 @@ export const LabelInput: FunctionComponent<
   rows,
   cols,
   helper,
+  prefix,
   ...props
 }) => {
   return (
@@ -74,20 +77,39 @@ export const LabelInput: FunctionComponent<
           placeholder={placeholder}
         ></textarea>
       ) : (
-        <input
-          {...props}
-          id={id}
-          readOnly={disabled}
-          disabled={disabled}
-          type={type}
-          {...controller}
-          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border ${
-            isError
-              ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
-              : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-          }`}
-          placeholder={placeholder}
-        />
+        <div className="flex">
+          {!isEmpty(prefix) ? (
+            <span
+              className={`inline-flex items-center rounded-tl-lg rounded-bl-lg px-3 disabled:hover:cursor-not-allowed outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] bg-gray-300 border
+            ${
+              isError
+                ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+                : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+            }`}
+            >
+              /
+            </span>
+          ) : null}
+
+          <input
+            {...props}
+            id={id}
+            readOnly={disabled}
+            disabled={disabled}
+            type={type}
+            {...controller}
+            className={`disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem] ${className} block p-2.5 bg-gray-50 border
+            ${
+              isError
+                ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
+                : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+            }
+            ${
+              !isEmpty(prefix) ? 'rounded-tr-lg rounded-br-lg' : 'rounded-lg '
+            }`}
+            placeholder={placeholder}
+          />
+        </div>
       )}
 
       {isError ? (
