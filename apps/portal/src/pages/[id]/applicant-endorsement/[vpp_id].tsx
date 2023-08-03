@@ -31,13 +31,7 @@ export default function AppEndSummary({
       <Head>
         <title>Applicant Endorsement Summary</title>
       </Head>
-      <SideNav
-        navDetails={{
-          fullName: '',
-          initials: '',
-          profile: '',
-        }}
-      />
+      <SideNav employeeDetails={employee} />
 
       <MainContainer>
         <div className="w-full h-full px-20">

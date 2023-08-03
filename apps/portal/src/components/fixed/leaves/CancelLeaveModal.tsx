@@ -5,7 +5,7 @@ import { HiX } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
@@ -52,8 +52,9 @@ export const CancelLeaveModal = ({
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const [remarks, setRemarks] = useState<string>('');
 
-  const handlePostResult = async () => {
+  const handleCancel = async () => {
     // postLeave();
     // const { error, result } = await postPortal('/v1/leave-application', data);
     // if (error) {
@@ -68,16 +69,14 @@ export const CancelLeaveModal = ({
   return (
     <>
       <Modal
-        size={`${windowWidth > 768 ? 'lg' : 'full'}`}
+        size={`${windowWidth > 1024 ? 'sm' : 'xl'}`}
         open={modalState}
         setOpen={setModalState}
       >
         <Modal.Header>
-          <h3 className="font-semibold text-gray-700">
-            <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">
-                Request Leave Cancellation / Adjustment
-              </span>
+          <h3 className="text-xl font-semibold text-gray-700">
+            <div className="flex justify-between px-2">
+              <span>Cancel Leave Application</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -88,278 +87,36 @@ export const CancelLeaveModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {loadingLeaveDetails || errorLeaveDetails ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                />
-              </div>
-            </>
-          ) : (
-            <div className="w-full h-full flex flex-col  ">
-              <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
-                  {leaveIndividualDetail.leaveApplicationBasicInfo ? (
-                    <AlertNotification
-                      alertType="info"
-                      notifMessage={
-                        leaveIndividualDetail.leaveApplicationBasicInfo?.status
-                          .charAt(0)
-                          .toUpperCase() +
-                        leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
-                          1
-                        )
-                      }
-                      dismissible={false}
-                    />
-                  ) : null}
-
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Leave Type:
-                      </label>
-
-                      <div className="w-96 ">
-                        <label className="text-slate-500 w-full text-md ">
-                          {
-                            leaveIndividualDetail.leaveApplicationBasicInfo
-                              ?.leaveName
-                          }
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {leaveIndividualDetail.leaveApplicationBasicInfo
-                    ?.leaveName ? (
-                    <>
-                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                        <label className="text-slate-500 text-md font-medium">
-                          {leaveIndividualDetail.leaveApplicationBasicInfo
-                            .leaveName === 'Vacation Leave' ||
-                          leaveIndividualDetail.leaveApplicationBasicInfo
-                            .leaveName === 'Special Privilege Leave'
-                            ? 'Location:'
-                            : leaveIndividualDetail.leaveApplicationBasicInfo
-                                .leaveName === 'Sick Leave'
-                            ? 'Hospitalization:'
-                            : leaveIndividualDetail.leaveApplicationBasicInfo
-                                .leaveName === 'Study Leave'
-                            ? 'Study:'
-                            : leaveIndividualDetail.leaveApplicationBasicInfo
-                                .leaveName === 'Others'
-                            ? 'Other Purpose: '
-                            : null}
-                        </label>
-
-                        <div className="flex w-96 ">
-                          {leaveIndividualDetail.leaveApplicationBasicInfo
-                            .leaveName === 'Vacation Leave' ||
-                          leaveIndividualDetail.leaveApplicationBasicInfo
-                            .leaveName === 'Special Privilege Leave' ? (
-                            <div className="text-slate-500 w-full text-md">
-                              {
-                                leaveIndividualDetail.leaveApplicationDetails
-                                  .inPhilippinesOrAbroad
-                              }
-                            </div>
-                          ) : null}
-
-                          {leaveIndividualDetail.leaveApplicationBasicInfo
-                            .leaveName === 'Sick Leave' ? (
-                            <>
-                              <div className="text-slate-500 w-full text-md">
-                                {
-                                  leaveIndividualDetail.leaveApplicationDetails
-                                    .hospital
-                                }
-                              </div>
-                            </>
-                          ) : null}
-
-                          {leaveIndividualDetail.leaveApplicationBasicInfo
-                            .leaveName === 'Study Leave' ? (
-                            <>
-                              <div className="text-slate-500 w-full text-md">
-                                {leaveIndividualDetail.leaveApplicationDetails
-                                  .forBarBoardReview === '1'
-                                  ? 'For BAR/Board Examination Review '
-                                  : leaveIndividualDetail
-                                      .leaveApplicationDetails
-                                      .forMastersCompletion === '1'
-                                  ? `Completion of Master's Degree `
-                                  : 'Other'}
-                              </div>
-                            </>
-                          ) : null}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-col md:flex-col justify-between items-start md:items-start w-full">
-                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                            Leave Dates:
-                          </label>
-
-                          <div className="w-full p-4 my-2 bg-gray-50 rounded">
-                            <CancelLeaveCalendar
-                              type={'single'}
-                              clickableDate={true}
-                              leaveDates={
-                                leaveIndividualDetail.leaveApplicationBasicInfo
-                                  ?.leaveDates
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {leaveIndividualDetail.leaveApplicationBasicInfo
-                        .leaveName === 'Vacation Leave' ||
-                      leaveIndividualDetail.leaveApplicationBasicInfo
-                        .leaveName === 'Special Privilege Leave' ||
-                      leaveIndividualDetail.leaveApplicationBasicInfo
-                        .leaveName === 'Sick Leave' ||
-                      leaveIndividualDetail.leaveApplicationBasicInfo
-                        .leaveName === 'Special Leave Benefits for Women' ||
-                      (leaveIndividualDetail.leaveApplicationBasicInfo
-                        .leaveName === 'Study Leave' &&
-                        leaveIndividualDetail.leaveApplicationDetails
-                          .studyLeaveOther) ? (
-                        <div className="flex flex-col justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                              Specific Details:
-                            </label>
-                          </div>
-                          <textarea
-                            disabled
-                            rows={2}
-                            className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                            value={
-                              leaveIndividualDetail.leaveApplicationBasicInfo
-                                .leaveName === 'Vacation Leave' ||
-                              leaveIndividualDetail.leaveApplicationBasicInfo
-                                .leaveName === 'Special Privilege Leave'
-                                ? leaveIndividualDetail.leaveApplicationDetails
-                                    .location
-                                : leaveIndividualDetail
-                                    .leaveApplicationBasicInfo.leaveName ===
-                                  'Sick Leave'
-                                ? leaveIndividualDetail.leaveApplicationDetails
-                                    .illness
-                                : leaveIndividualDetail
-                                    .leaveApplicationBasicInfo.leaveName ===
-                                  'Special Leave Benefits for Women'
-                                ? leaveIndividualDetail.leaveApplicationDetails
-                                    .splWomen
-                                : leaveIndividualDetail
-                                    .leaveApplicationBasicInfo.leaveName ===
-                                    'Study Leave' &&
-                                  leaveIndividualDetail.leaveApplicationDetails
-                                    .studyLeaveOther
-                                ? leaveIndividualDetail.leaveApplicationDetails
-                                    .studyLeaveOther
-                                : ''
-                            }
-                          ></textarea>
-                        </div>
-                      ) : null}
-                    </>
-                  ) : null}
-
-                  <div className="w-full pb-4">
-                    <span className="text-slate-500 text-md font-medium">
-                      Your current Leave Credits:
-                    </span>
-                    <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                      <tbody>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400"></td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
-                            Vacation Leave
-                          </td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
-                            Forced Leave
-                          </td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
-                            Sick Leave
-                          </td>
-                        </tr>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400 text-sm p-1">
-                            Total Earned
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            10
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            5
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            10
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="border border-slate-400 text-sm p-1">
-                            Less this application
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            0
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            0
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            0
-                          </td>
-                        </tr>
-                        <tr className="border border-slate-400 bg-green-100">
-                          <td className="border border-slate-400 text-sm p-1">
-                            Balance
-                          </td>
-                          <td
-                            className={` border border-slate-400 p-1 text-center text-sm`}
-                          >
-                            0
-                          </td>
-                          <td
-                            className={` border border-slate-400 p-1 text-center text-sm`}
-                          >
-                            0
-                          </td>
-                          <td
-                            className={` border border-slate-400 p-1 text-center text-sm`}
-                          >
-                            0
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
+            {'Please indicate reason for cancelling application:'}
+            <textarea
+              required
+              placeholder="Reason for decline"
+              className={`w-full h-32 p-2 border resize-none`}
+              onChange={(e) => setRemarks(e.target.value as unknown as string)}
+              value={remarks}
+            ></textarea>
+          </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
-            <Button
-              variant={'warning'}
-              size={'md'}
-              loading={false}
-              onClick={(e) => handlePostResult()}
-              type="submit"
-              disabled
-            >
-              Request Cancellation/Adjustment
-            </Button>
+          <div className="flex justify-end">
+            <div className="max-w-auto flex">
+              <Button
+                variant={'primary'}
+                disabled={!isEmpty(remarks) ? false : true}
+                onClick={(e) => handleCancel()}
+              >
+                Submit
+              </Button>
+              {/* <Button
+                variant={'danger'}
+                onClick={() => {
+                  closeModalAction();
+                }}
+              >
+                Cancel
+              </Button> */}
+            </div>
           </div>
         </Modal.Footer>
       </Modal>

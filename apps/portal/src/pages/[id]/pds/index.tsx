@@ -67,7 +67,7 @@ export default function Pds({
         <title>Personal Data Sheet</title>
       </Head>
 
-      <SideNav navDetails={navDetails} />
+      <SideNav employeeDetails={employeeDetails} />
 
       <MainContainer>
         <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>

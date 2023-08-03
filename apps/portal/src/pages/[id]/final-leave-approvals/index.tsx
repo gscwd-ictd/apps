@@ -23,7 +23,7 @@ import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
 import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
@@ -173,7 +173,7 @@ export default function FinalLeaveApprovals({
             <title>Final Leave Approvals</title>
           </Head>
 
-          <SideNav navDetails={navDetails} />
+          <SideNav employeeDetails={employeeDetails} />
 
           {/* Pending Leave Approval Modal */}
           <ApprovalsPendingLeaveModal
@@ -238,18 +238,47 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
 
     // check if user role is rank_and_file or job order = kick out
     if (
-      employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+      isEqual(
+        employeeDetails.employmentDetails.userRole,
+        UserRole.DIVISION_MANAGER
+      ) ||
+      isEqual(
+        employeeDetails.employmentDetails.userRole,
+        UserRole.OIC_DIVISION_MANAGER
+      ) ||
+      isEqual(
+        employeeDetails.employmentDetails.userRole,
+        UserRole.DEPARTMENT_MANAGER
+      ) ||
+      isEqual(
+        employeeDetails.employmentDetails.userRole,
+        UserRole.OIC_DEPARTMENT_MANAGER
+      )
     ) {
-      // if true, the employee is not allowed to access this page
+      if (
+        employeeDetails.employmentDetails.assignment.name ===
+          'Recruitment and Personnel Welfare Division' ||
+        employeeDetails.employmentDetails.assignment.name ===
+          'Training and Development Division'
+      ) {
+        return { props: { employeeDetails } };
+      } else {
+        // if false, the employee is not allowed to access this page
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/${employeeDetails.user._id}`,
+          },
+        };
+      }
+    } else {
+      // if false, the employee is not allowed to access this page
       return {
         redirect: {
           permanent: false,
           destination: `/${employeeDetails.user._id}`,
         },
       };
-    } else {
-      return { props: { employeeDetails } };
     }
   }
 );

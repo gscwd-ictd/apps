@@ -464,7 +464,7 @@ export default function Vacancies({
             </Modal.Footer>
           </Modal>
 
-          <SideNav navDetails={navDetails} />
+          <SideNav employeeDetails={employeeDetails} />
           <MainContainer>
             <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
               <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">

@@ -5,7 +5,10 @@ type SideNavLinkProps = {
   destination: string;
 };
 
-export const SideNavLink = ({ icon, destination }: SideNavLinkProps): JSX.Element => {
+export const SideNavLink = ({
+  icon,
+  destination,
+}: SideNavLinkProps): JSX.Element => {
   const router = useRouter();
   return (
     <li

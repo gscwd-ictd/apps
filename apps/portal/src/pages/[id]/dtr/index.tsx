@@ -33,8 +33,8 @@ import { isEmpty } from 'lodash';
 export default function DailyTimeRecord({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const isLoadingDtr = useDtrStore((state) => state.loadingDtr);
-  const isErrorDtr = useDtrStore((state) => state.errorDtr);
+  const isLoadingDtr = useDtrStore((state) => state.loading.loadingDtr);
+  const isErrorDtr = useDtrStore((state) => state.error.errorDtr);
   const emptyResponseAndError = useDtrStore(
     (state) => state.emptyResponseAndError
   );
@@ -86,7 +86,7 @@ export default function DailyTimeRecord({
             <title>Daily Time Record</title>
           </Head>
 
-          <SideNav navDetails={navDetails} />
+          <SideNav employeeDetails={employeeDetails} />
 
           <MainContainer>
             <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>

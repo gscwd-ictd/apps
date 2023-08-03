@@ -10,7 +10,7 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     if (Boolean(userDetails.employmentDetails.isHRMPSB) === true) {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'psb' ||
+          // card.destination === 'psb' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -47,12 +47,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     ) {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'final-leave-approvals' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -62,11 +56,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     } else {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -85,12 +74,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     ) {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'final-leave-approvals' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -100,11 +83,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     } else {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -120,11 +98,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
   ) {
     allowed = Modules.filter(
       (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
@@ -136,12 +109,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
   ) {
     allowed = Modules.filter(
       (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'selection' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
@@ -153,12 +120,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
   ) {
     allowed = Modules.filter(
       (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'selection' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
@@ -179,12 +140,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     ) {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'final-leave-approvals' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -194,11 +149,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     } else {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -220,12 +170,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     ) {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'final-leave-approvals' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -235,11 +179,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
     } else {
       allowed = Modules.filter(
         (card) =>
-          card.destination === 'dnr' ||
-          card.destination === 'prf' ||
-          card.destination === 'endorsement' ||
-          card.destination === 'psb' ||
-          card.destination === 'approvals' ||
           card.destination === 'pds' ||
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
@@ -255,11 +194,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
   ) {
     allowed = Modules.filter(
       (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
@@ -274,12 +208,6 @@ export const setModules = async (userDetails: EmployeeDetails) => {
   ) {
     allowed = Modules.filter(
       (card) =>
-        card.destination === 'dnr' ||
-        card.destination === 'prf' ||
-        card.destination === 'endorsement' ||
-        card.destination === 'selection' ||
-        card.destination === 'psb' ||
-        card.destination === 'approvals' ||
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
