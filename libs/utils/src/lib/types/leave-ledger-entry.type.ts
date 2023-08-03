@@ -10,8 +10,11 @@ export type LeaveLedgerEntry = {
   vacationLeaveBalance: number;
   sickLeave: number;
   sickLeaveBalance: number;
+  specialPrivilegeLeave: number;
+  specialPrivilegeLeaveBalance: number;
   specialLeaveBenefit: number;
   specialLeaveBenefitBalance: number;
   actionType: ActionType;
-  leaveDates: string;
+  leaveDates: Array<string>;
+  remarks: string;
 };

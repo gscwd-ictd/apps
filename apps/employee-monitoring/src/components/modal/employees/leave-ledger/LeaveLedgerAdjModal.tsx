@@ -42,6 +42,7 @@ type LeaveLedgerForm = {
   leaveBenefitName: string;
   value: number;
   maximumCredits: number;
+  remarks: string | null;
 };
 
 type MutatedLeaveBenefitOption = {
@@ -60,7 +61,7 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
   const {
     register,
     reset,
-    getValues,
+    setValue,
     handleSubmit,
     formState: { errors, isValid, defaultValues },
   } = useForm<LeaveLedgerForm>({
@@ -69,25 +70,17 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
       leaveBenefitId: null,
       leaveBenefitName: null,
       actionType: null,
+      remarks: null,
     },
   });
 
   // store
-  const {
-    getLeaveLedger,
-    getLeaveLedgerSuccess,
-    getLeaveLedgerFail,
-    getLeaveBenefits,
-    getLeaveBenefitsFail,
-    getLeaveBenefitsSuccess,
-  } = useLeaveLedgerStore((state) => ({
-    getLeaveBenefits: state.getLeaveBenefits,
-    getLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
-    getLeaveBenefitsFail: state.getLeaveBenefitsFail,
-    getLeaveLedger: state.getLeaveLedger,
-    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-    getLeaveLedgerFail: state.getLeaveLedgerFail,
-  }));
+  const { getLeaveBenefits, getLeaveBenefitsFail, getLeaveBenefitsSuccess } =
+    useLeaveLedgerStore((state) => ({
+      getLeaveBenefits: state.getLeaveBenefits,
+      getLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
+      getLeaveBenefitsFail: state.getLeaveBenefitsFail,
+    }));
 
   const onSubmit = (data: LeaveLedgerForm) => {
     console.log(data);
@@ -107,6 +100,9 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
       leaveType: null,
       maximumCredits: null,
     } as MutatedLeaveBenefit);
+
+  // show remarks
+  const [showRemarks, setShowRemarks] = useState<boolean>(false);
 
   // transform leave benefits
   const transformLeaveBenefits = (leaveBenefits: Array<LeaveBenefit>) => {
@@ -139,6 +135,12 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     setSelectedLeaveBenefit({} as MutatedLeaveBenefit);
     reset();
     closeModalAction();
+  };
+
+  // handle remarks
+  const handleRemarks = () => {
+    setShowRemarks(!showRemarks);
+    setValue('remarks', null);
   };
 
   // swr
@@ -211,8 +213,6 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
                 label="Category"
                 isError={errors.actionType ? true : false}
                 errorMessage={errors.actionType?.message}
-
-                // disabled={IsLoading ? true : false}
               />
 
               <SelectListRF
@@ -235,9 +235,13 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
                 label="Credit/Debit Value"
                 controller={{ ...register('value') }}
                 helper={
-                  selectedLeaveBenefit.leaveType === LeaveType.SPECIAL
-                    ? ` Maximum credit is ${selectedLeaveBenefit.maximumCredits}`
-                    : ''
+                  selectedLeaveBenefit.leaveType === LeaveType.SPECIAL ? (
+                    <span className="flex items-center px-2 text-xs font-light text-white rounded bg-amber-500">
+                      {selectedLeaveBenefit.leaveType === LeaveType.SPECIAL
+                        ? ` Maximum credit is ${selectedLeaveBenefit.maximumCredits}`
+                        : ''}
+                    </span>
+                  ) : null
                 }
                 max={
                   selectedLeaveBenefit.leaveType === LeaveType.SPECIAL
@@ -247,6 +251,29 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
                 min={1}
                 type="number"
               />
+
+              <div className="flex flex-col gap-2">
+                <div>
+                  <button type="button" onClick={handleRemarks}>
+                    {!showRemarks ? (
+                      <span className="items-center text-xs font-medium text-blue-700">
+                        +Add Remarks
+                      </span>
+                    ) : (
+                      <span className="items-center text-xs font-medium text-red-700">
+                        -Remove Remarks
+                      </span>
+                    )}
+                  </button>
+                </div>
+                {showRemarks ? (
+                  <LabelInput
+                    id="remarks"
+                    label="Remarks"
+                    controller={{ ...register('remarks') }}
+                  />
+                ) : null}
+              </div>
             </div>
           </form>
         </Modal.Body>

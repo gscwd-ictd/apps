@@ -3,11 +3,11 @@ import { FunctionComponent } from 'react';
 type Variant = 'primary' | 'default' | 'success' | 'error' | 'warning';
 
 const background = {
-  primary: 'bg-blue-400',
-  default: 'bg-gray-400',
-  success: 'bg-green-500',
-  error: 'bg-red-400',
-  warning: 'bg-amber-400',
+  primary: 'bg-blue-200 text-blue-800',
+  default: 'bg-gray-200 text-gray-800',
+  success: 'bg-green-200 text-green-800',
+  error: 'bg-red-200 text-red-800',
+  warning: 'bg-amber-200 text-amber-800',
 };
 
 type BadgePillProps = {
@@ -17,9 +17,9 @@ type BadgePillProps = {
 
 const BadgePill: FunctionComponent<BadgePillProps> = ({ label, variant }) => {
   return (
-    <div className="sm:w-[2rem] md:w-[4rem] lg:w-[6rem] text-xs">
+    <div className="w-full text-xs">
       <span
-        className={`px-2 py-[0.2rem] rounded ${background[variant]} text-white  text-center`}
+        className={`px-2 py-[0.2rem] rounded ${background[variant]}   text-center`}
       >
         {label}
       </span>

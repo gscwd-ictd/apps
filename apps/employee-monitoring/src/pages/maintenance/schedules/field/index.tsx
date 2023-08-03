@@ -213,7 +213,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="w-full">
+      <div>
         <BreadCrumbs
           title="Field-based Schedules"
           crumbs={[
@@ -285,7 +285,7 @@ export default function Index() {
         />
 
         <Can I="access" this="Schedules">
-          <div className="mx-5">
+          <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
               {IsLoading ? (
                 <LoadingSpinner size="lg" />

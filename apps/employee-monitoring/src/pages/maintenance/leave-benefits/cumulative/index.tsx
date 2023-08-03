@@ -212,7 +212,7 @@ export default function Index() {
   ]);
 
   return (
-    <div className="w-full">
+    <div>
       <BreadCrumbs
         title="Cumulative Leave"
         crumbs={[
@@ -282,7 +282,7 @@ export default function Index() {
       />
 
       <Can I="access" this="Leave_benefits">
-        <div className="sm:mx-0 lg:mx-5">
+        <div className="sm:px-2 md:px-2 lg:px-5">
           <Card>
             {swrIsLoading ? (
               <LoadingSpinner size="lg" />

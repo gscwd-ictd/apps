@@ -6,6 +6,7 @@ import {
   MyCalendarHeartIcon,
   MyCalendarPlusIcon,
   MyCalendarRangeIcon,
+  MyCalendarX2,
   MyLightBulbIcon,
 } from '../icons/MyLucideIcons';
 import { Paths } from '../../utils/constants/route';
@@ -20,13 +21,13 @@ export const SideNavigation = () => {
   return (
     <Sidebar
       className="relative w-full transition-all"
-      background="bg-gray-900"
+      background="bg-slate-900"
     >
       <Sidebar.Header>
         <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
           <section className="">
-            <div className="text-cyan-300">
-              <i className="text-5xl bx bxs-network-chart"></i>
+            <div className="text-cyan-800">
+              <i className="text-5xl bx bxs-analyse"></i>
             </div>
           </section>
 
@@ -35,8 +36,10 @@ export const SideNavigation = () => {
               isCollapsed ? 'hidden' : ''
             } flex flex-col text-center items-center select-none`}
           >
-            <span className="text-5xl font-medium text-cyan-300">HRMS</span>
-            <span className="text-xs font-light text-cyan-300">
+            <span className="font-sans text-5xl font-medium text-cyan-400">
+              HRMS
+            </span>
+            <span className="text-xs font-medium text-cyan-400">
               Employee Monitoring
             </span>
           </section>
@@ -126,38 +129,11 @@ export const SideNavigation = () => {
           {/**LEAVE BENEFITS */}
 
           <Sidebar.Item
-            display="Leave"
+            display="Leave Applications"
             className="text-sm"
             icon={<i className="text-xl bx bx-run"></i>}
-            path=""
-            hasSubItem
-            selected={pathname === Paths[2] || pathname === Paths[22]}
-            subItems={
-              <>
-                <Sidebar.Item
-                  display="Applications"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[2] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bxs-user-detail"></i>
-                    </>
-                  }
-                  path={Paths[2]}
-                />
-                <Sidebar.Item
-                  display="Cancellations"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[22] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bx-user-x"></i>
-                    </>
-                  }
-                  path={Paths[22]}
-                />
-              </>
-            }
+            path={Paths[2]}
+            selected={pathname === Paths[2] ? true : false}
           />
 
           {/**OVERTIME */}
@@ -339,18 +315,18 @@ export const SideNavigation = () => {
                   path={Paths[11]}
                 />
 
-                {/** REMOVED */}
-                {/* <Sidebar.Item
-                  display="Training & Seminar Types"
+                {/* WORK SUSPENSIONS */}
+                <Sidebar.Item
+                  display="Work Suspensions"
                   className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
                   selected={pathname === Paths[12] ? true : false}
                   icon={
                     <>
-                      <MyLightBulbIcon />
+                      <MyCalendarX2 />
                     </>
                   }
                   path={Paths[12]}
-                /> */}
+                />
               </>
             }
           />

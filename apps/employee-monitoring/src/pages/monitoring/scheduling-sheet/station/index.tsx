@@ -250,7 +250,7 @@ export default function Index() {
   }, [postResponse, updateResponse, deleteResponse, errorScheduleSheets]);
   return (
     <>
-      <div className="w-full">
+      <div>
         <BreadCrumbs
           crumbs={[
             {
@@ -316,7 +316,7 @@ export default function Index() {
         />
 
         <Can I="access" this="Schedules">
-          <div className="sm:mx-0 lg:mx-5">
+          <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
               {swrGsIsLoading ? (
                 <LoadingSpinner size="lg" />
