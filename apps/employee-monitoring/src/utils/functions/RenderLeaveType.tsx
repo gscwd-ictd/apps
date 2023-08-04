@@ -6,7 +6,7 @@ import BadgePill from '../../components/badges/BadgePill';
 
 function UseRenderLeaveType(value: string | null | '') {
   if (!isEmpty(value)) {
-    return <BadgePill label={value} variant="success" />;
+    return <BadgePill label={value} variant="primary" />;
   } else return <span>-</span>;
 }
 

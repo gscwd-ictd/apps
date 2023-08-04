@@ -1,10 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  AlertNotification,
-  Modal,
-  PageContentContext,
-} from '@gscwd-apps/oneui';
-import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
+import { Modal, PageContentContext } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import {
@@ -18,23 +13,24 @@ import React, {
   useState,
 } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
-import userphoto from '../../../../../public/user-photo.jpg';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { SelectListRF } from '../../../inputs/SelectListRF';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { LabelInput } from '../../../inputs/LabelInput';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
+import {
+  LeaveConfirmAction,
+  useLeaveApplicationStore,
+} from 'apps/employee-monitoring/src/store/leave-application.store';
 import { isEmpty } from 'lodash';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
 import { LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
 import UseRenderBadgePill from 'apps/employee-monitoring/src/utils/functions/RenderBadgePill';
-import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 import LeaveApplicationConfirmModal from './LeaveApplicationConfirmModal';
+import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -74,7 +70,9 @@ const ViewLeaveApplicationModal: FunctionComponent<
     isLoading: swrIsLoading,
     error: swrError,
   } = useSWR(
-    `/leave-application/details/${rowData.employee?.employeeId}/${rowData.id}`,
+    modalState && rowData.employee?.employeeId && rowData.id
+      ? `/leave-application/details/${rowData.employee?.employeeId}/${rowData.id}`
+      : null,
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -82,18 +80,24 @@ const ViewLeaveApplicationModal: FunctionComponent<
     }
   );
 
-  // store
+  // leave applicaiton store
   const {
-    data,
     leaveApplicationDetails,
-    setData,
+    leaveConfirmAction,
+    setLeaveConfirmAction,
+    patchLeaveApplication,
+    patchLeaveApplicationFail,
+    patchLeaveApplicationSuccess,
     getLeaveApplicationDetails,
     getLeaveApplicationDetailsFail,
     getLeaveApplicationDetailsSuccess,
   } = useLeaveApplicationStore((state) => ({
+    leaveConfirmAction: state.leaveConfirmAction,
+    setLeaveConfirmAction: state.setLeaveConfirmAction,
+    patchLeaveApplication: state.patchLeaveApplication,
+    patchLeaveApplicationSuccess: state.patchLeaveApplicationSuccess,
+    patchLeaveApplicationFail: state.patchLeaveApplicationFail,
     leaveApplicationDetails: state.leaveApplicationDetails,
-    data: state.leaveDataForSubmission,
-    setData: state.setLeaveDataForSubmission,
     getLeaveApplicationDetails: state.getLeaveApplicationDetails,
     getLeaveApplicationDetailsSuccess: state.getLeaveApplicationDetailsSuccess,
     getLeaveApplicationDetailsFail: state.getLeaveApplicationDetailsFail,
@@ -102,29 +106,8 @@ const ViewLeaveApplicationModal: FunctionComponent<
   // confirm modal
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState<boolean>(false);
 
-  // on submit
-  const onSubmit = async () => {
-    setData({ ...data, id: rowData.id });
-    if (
-      leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
-        LeaveType.CUMULATIVE ||
-      leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
-        LeaveType.RECURRING
-    ) {
-      setData({ ...data, action: 'approve', id: rowData.id });
-    }
-    await openConfirmModal();
-  };
-
-  // open confirm modal
-  const openConfirmModal = async () => {
-    setConfirmModalIsOpen(true);
-  };
-
-  // close confirm modal
-  const closeConfirmModal = () => {
-    setConfirmModalIsOpen(false);
-  };
+  // action to be sent to the modal
+  const [confirmAction, setConfirmAction] = useState<Action | null>(null);
 
   // use form
   const { register, getValues, watch, reset, setValue, handleSubmit } =
@@ -138,9 +121,73 @@ const ViewLeaveApplicationModal: FunctionComponent<
       },
     });
 
+  // on submit
+  const onSubmit = async () => {
+    // const { action, ...rest } = leave;
+
+    const data = {
+      id: rowData.id,
+      status:
+        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
+          LeaveType.CUMULATIVE ||
+        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
+          LeaveType.RECURRING
+          ? LeaveStatus.FOR_SUPERVISOR_APPROVAL
+          : leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
+            LeaveType.SPECIAL
+          ? getValues('action') === Action.APPROVE
+            ? LeaveStatus.FOR_SUPERVISOR_APPROVAL
+            : getValues('action') === Action.DISAPPROVE &&
+              LeaveStatus.DISAPPROVED_BY_HRMO
+          : null,
+    };
+
+    // call the function to start loading
+    patchLeaveApplication();
+
+    // call the patch function
+    await handlePatchLeaveApplication(data);
+  };
+
+  // function for patching the leave application
+  const handlePatchLeaveApplication = async (data: {
+    id: string;
+    status: LeaveStatus;
+  }) => {
+    const { error, result } = await patchEmpMonitoring('leave/hrmo', data);
+
+    if (!error) {
+      // patch leave application success
+      patchLeaveApplicationSuccess(result);
+      closeModalAction();
+    } else if (error) {
+      // patch leave application fail
+      patchLeaveApplicationFail(result);
+
+      // set action to null
+      setLeaveConfirmAction(null);
+    }
+  };
+
+  // open confirm modal and set actions
+  const openConfirmModal = (action: Action) => {
+    setConfirmAction(action);
+
+    setConfirmModalIsOpen(true);
+  };
+
+  // close confirm modal and set actions
+  const closeConfirmModal = () => {
+    // set the confirm modal to false
+    setConfirmModalIsOpen(false);
+  };
+
   // close modal action
   const closeModal = () => {
     closeModalAction();
+
+    // set the confirm modal action to default
+    setLeaveConfirmAction(null);
     reset();
   };
 
@@ -181,8 +228,10 @@ const ViewLeaveApplicationModal: FunctionComponent<
   }, [leaveApplicationDetails]);
 
   useEffect(() => {
-    register('action');
-  }, [modalState]);
+    if (leaveConfirmAction === 'yes') {
+      onSubmit();
+    }
+  }, [leaveConfirmAction, confirmModalIsOpen]);
 
   return (
     <>
@@ -190,6 +239,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
         modalState={confirmModalIsOpen}
         setModalState={setConfirmModalIsOpen}
         closeModalAction={closeConfirmModal}
+        action={confirmAction}
       />
 
       <Modal
@@ -201,13 +251,13 @@ const ViewLeaveApplicationModal: FunctionComponent<
             : windowWidth >= 1280 && windowWidth < 1536
             ? 'md'
             : windowWidth >= 1536
-            ? 'sm'
+            ? 'md'
             : 'full'
         }
         steady
       >
         <Modal.Header withCloseBtn>
-          <div className="flex justify-between text-2xl font-semibold text-gray-800">
+          <div className="flex justify-between text-2xl font-semibold text-black">
             <span className="px-5">Leave Application</span>
             <button
               type="button"
@@ -225,11 +275,11 @@ const ViewLeaveApplicationModal: FunctionComponent<
           ) : (
             <div className="w-full min-h-[14rem]">
               <div className="flex flex-col w-full gap-4 rounded ">
-                <div className="flex flex-col gap-4 px-2 py-2 rounded ">
+                <div className="flex flex-col gap-4 px-3 rounded ">
                   {/* HEADER */}
-                  <div className="flex justify-between w-full px-2 sm:flex-col md:flex-col lg:flex-row">
+                  <div className="flex justify-between w-full px-2 py-1 sm:flex-col md:flex-col lg:flex-row">
                     <section className="flex items-center gap-2">
-                      <div className="flex items-center gap-2 px-2">
+                      <div className="flex items-center gap-2">
                         {leaveApplicationDetails.employeeDetails?.photoUrl ? (
                           <div className="flex flex-wrap justify-center">
                             <div className="w-[6rem]">
@@ -246,17 +296,17 @@ const ViewLeaveApplicationModal: FunctionComponent<
                             </div>
                           </div>
                         ) : (
-                          <i className="text-gray-700 text-8xl bx bxs-user-circle"></i>
+                          <i className="text-gray-700 text-8xl bx bxs-user"></i>
                         )}
                       </div>
 
                       <div className="flex flex-col">
-                        <div className="text-2xl font-semibold">
+                        <div className="text-xl font-semibold">
                           {rowData.employee?.employeeName}
                         </div>
                         <div className="font-light">
                           {leaveApplicationDetails.employeeDetails?.assignment
-                            .positionTitle ?? 'Employee'}
+                            .positionTitle ?? <Skeleton />}
                         </div>
                         <div className="font-semibold ">
                           {leaveApplicationDetails.employeeDetails?.companyId ??
@@ -268,9 +318,9 @@ const ViewLeaveApplicationModal: FunctionComponent<
 
                   <hr />
 
-                  <div className="grid grid-cols-2 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                  <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
-                      label="Leave Name"
+                      label="Leave Type"
                       direction="top-to-bottom"
                       textSize="md"
                       value={rowData.leaveName}
@@ -287,7 +337,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
                       }
                     />
                   </div>
-                  <div className="grid grid-cols-2 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                  <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
                       label="Applied Number of Days"
                       direction="top-to-bottom"
@@ -320,9 +370,12 @@ const ViewLeaveApplicationModal: FunctionComponent<
                           </div>
                         ) : rowData.leaveDates &&
                           rowData.leaveDates.length === 1 ? (
-                          rowData.leaveDates.map((date) => {
+                          rowData.leaveDates.map((date, idx) => {
                             return (
-                              <div className="flex items-center gap-2 text-sm font-light">
+                              <div
+                                className="flex items-center gap-2 text-sm font-light"
+                                key={idx}
+                              >
                                 {UseRenderBadgePill(date)}
                               </div>
                             );
@@ -335,7 +388,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
                   </div>
 
                   {/* VACATION LEAVE */}
-                  <div className="grid grid-cols-2 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                  <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     {!isEmpty(
                       leaveApplicationDetails.leaveApplicationDetails
                         ?.inPhilippinesOrAbroad
@@ -435,7 +488,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
 
                   <hr />
 
-                  <div className="grid grid-cols-2 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                  <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
                       label="Supervisor Name"
                       direction="top-to-bottom"
@@ -454,43 +507,12 @@ const ViewLeaveApplicationModal: FunctionComponent<
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                   {leaveApplicationDetails.leaveApplicationBasicInfo
                     ?.leaveType === LeaveType.SPECIAL &&
                     leaveApplicationDetails.leaveApplicationBasicInfo.status ===
                       LeaveStatus.FOR_HRMO_APPROVAL && (
                       <div className="w-full px-2">
-                        {/* <LabelInput
-                        id="accumulatedCredits"
-                        label="Credits"
-                        disabled
-                        helper={
-                          <span className="flex items-center px-2 font-light text-white bg-green-500 rounded lg:text-xs">{`Maximum credit is ${parseInt(
-                            leaveApplicationDetails.leaveApplicationBasicInfo.maximumCredits.toString()
-                          )}`}</span>
-                        }
-                        textSize="md"
-                        className="w-full"
-                        defaultValue={parseInt(
-                          leaveApplicationDetails.leaveApplicationBasicInfo
-                            .debitValue
-                        )}
-                        type="number"
-                        min={1}
-                        max={parseInt(
-                          leaveApplicationDetails.leaveApplicationBasicInfo?.maximumCredits.toString()
-                        )}
-                        controller={{
-                          ...register('accumulatedCredits', {
-                            onChange: (e) => {
-                              setData({
-                                ...data,
-                                approveValue: e.target.value,
-                              });
-                            },
-                          }),
-                        }}
-                      /> */}
                         <LabelValue
                           label={`Maximum Credit Value is ${parseInt(
                             leaveApplicationDetails.leaveApplicationBasicInfo?.maximumCredits.toString()
@@ -515,12 +537,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
                           textSize="md"
                           selectList={actionTaken}
                           controller={{
-                            ...register('action', {
-                              onChange: (e) => {
-                                console.log(e.target.value);
-                                setData({ ...data, action: e.target.value });
-                              },
-                            }),
+                            ...register('action'),
                           }}
                           label="Action"
                         />
@@ -558,7 +575,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
                   <button
                     className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
                     type="button"
-                    onClick={onSubmit}
+                    onClick={() => openConfirmModal(getValues('action'))}
                   >
                     Submit
                   </button>
@@ -580,7 +597,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
                 <button
                   className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
                   type="button"
-                  onClick={onSubmit}
+                  onClick={() => openConfirmModal(Action.APPROVE)}
                 >
                   Approve
                 </button>

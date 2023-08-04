@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
 import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
 import {
@@ -23,7 +23,6 @@ import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
 import dayjs from 'dayjs';
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 
 const Index = () => {
@@ -59,14 +58,14 @@ const Index = () => {
     if (leaveDates) {
       if (leaveDates.length > 4) {
         return (
-          <span className="bg-gray-300 text-gray-700 text-xs font-medium px-1 py-0.5 ml-1 rounded text-center">
+          <span className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center">
             {leaveDates[0]} to {leaveDates.slice(-1)}
           </span>
         );
       } else {
         return leaveDates.map((leaveDate: string, index: number) => (
           <span
-            className="bg-gray-300 text-gray-700 text-xs font-medium px-1 py-0.5 ml-1 rounded text-center"
+            className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center"
             key={index}
           >
             {leaveDate}
@@ -143,7 +142,10 @@ const Index = () => {
     LeaveApplications,
     IsLoading,
     ErrorLeaveApplications,
+    ErrorPatchLeaveApplication,
+    ErrorLeaveApplicationDetails,
     EmptyResponseAndErrors,
+    setLeaveConfirmAction,
     GetLeaveApplications,
     GetLeaveApplicationsSuccess,
     GetLeaveApplicationsFail,
@@ -153,11 +155,14 @@ const Index = () => {
     LeaveApplications: state.leaveApplications,
     IsLoading: state.loading.loadingLeaveApplications,
     ErrorLeaveApplications: state.error.errorLeaveApplications,
+    ErrorLeaveApplicationDetails: state.error.errorLeaveApplicationDetails,
+    ErrorPatchLeaveApplication: state.error.errorPatchLeaveApplication,
     setLeaveApplicationDetails: state.setLeaveApplicationDetails,
     GetLeaveApplications: state.getLeaveApplications,
     GetLeaveApplicationsSuccess: state.getLeaveApplicationsSuccess,
     GetLeaveApplicationsFail: state.getLeaveApplicationsFail,
     EmptyResponseAndErrors: state.emptyResponseAndErrors,
+    setLeaveConfirmAction: state.setLeaveConfirmAction,
   }));
 
   // React Table initialization
@@ -191,8 +196,17 @@ const Index = () => {
     if (!isEmpty(LeaveApplication)) {
       setLeaveApplicationDetails({} as EmployeeLeaveDetails);
       setCurrentRowData({} as MonitoringLeave);
+      setLeaveConfirmAction(null);
       closeViewActionModal();
       mutateLeaveApplications();
+      setTimeout(() => {
+        EmptyResponseAndErrors();
+      }, 1500);
+    }
+
+    if (!isEmpty(ErrorPatchLeaveApplication)) {
+      setLeaveConfirmAction(null);
+
       setTimeout(() => {
         EmptyResponseAndErrors();
       }, 1500);
@@ -207,29 +221,32 @@ const Index = () => {
       {!isEmpty(ErrorLeaveApplications) ? (
         <ToastNotification
           toastType="error"
-          notifMessage={ErrorLeaveApplications}
+          notifMessage={'Network Error: Failed to retrieve Leave Applications'}
         />
       ) : null}
 
       {/* Success Notifications */}
-      {/* {!isEmpty(PostTravelOrderResponse) ? (
+      {!isEmpty(LeaveApplication) ? (
         <ToastNotification
           toastType="success"
-          notifMessage="Travel order added successfully"
+          notifMessage="Updated Leave Application successfully"
         />
       ) : null}
-      {!isEmpty(UpdateTravelOrderResponse) ? (
+
+      {!isEmpty(ErrorLeaveApplicationDetails) ? (
         <ToastNotification
-          toastType="success"
-          notifMessage="Travel order updated successfully"
+          toastType="error"
+          notifMessage="Cannot retrieve Leave Application details, please try again later!"
         />
       ) : null}
-      {!isEmpty(DeleteTravelOrderResponse) ? (
+
+      {!isEmpty(ErrorPatchLeaveApplication) ? (
         <ToastNotification
-          toastType="success"
-          notifMessage="Travel order deleted successfully"
+          toastType="error"
+          notifMessage="A problem has been encountered, please try in a few seconds!"
         />
-      ) : null} */}
+      ) : null}
+
       <div className="sm:px-2 md:px-2 lg:px-5">
         <Card>
           {IsLoading ? (
