@@ -44,7 +44,7 @@ export const AllApprovalsTab = ({
     setCancelledPassSlipModalIsOpen,
 
     setPassSlipIndividualDetail,
-    setLeaveId,
+    setLeaveIndividualDetail,
   } = useApprovalStore((state) => ({
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
@@ -66,7 +66,7 @@ export const AllApprovalsTab = ({
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
     setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
-    setLeaveId: state.setLeaveId,
+    setLeaveIndividualDetail: state.setLeaveIndividualDetail,
   }));
 
   const onSelectPassSlip = (passslip: PassSlip) => {
@@ -96,7 +96,7 @@ export const AllApprovalsTab = ({
   };
 
   const onSelectLeave = (leave: SupervisorLeaveDetails) => {
-    setLeaveId(leave.id);
+    setLeaveIndividualDetail(leave);
     if (tab === 2) {
       // PENDING APPROVAL LEAVES
       if (!pendingLeaveModalIsOpen) {
@@ -145,6 +145,9 @@ export const AllApprovalsTab = ({
                     Date Applied:{' '}
                     {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>
+                  <p className="text-sm text-indigo-500">
+                    Status: {item.status.toUpperCase()}
+                  </p>
                 </div>
               </li>
             );
@@ -161,18 +164,21 @@ export const AllApprovalsTab = ({
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    {/* {item.leaveName} - {item.fullName} */}
+                    {item.leaveBenefitsId.leaveName} -{' '}
+                    {item.employee.employeeName}
                   </h1>
-                  {/* <p className="text-md text-gray-500"></p> */}
                   <p className="text-sm text-gray-500">
-                    Employee: {item.employee.employeeName}
+                    No. of Days: {item.leaveDates.length}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {/* Days: {item.leaveDates} */}
+                    Dates: {item.leaveDates.join(', ')}
                   </p>
                   <p className="text-sm text-indigo-500">
                     Date Applied:{' '}
                     {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
+                  </p>
+                  <p className="text-sm text-indigo-500">
+                    Status: {item.status.toUpperCase()}
                   </p>
                 </div>
               </li>

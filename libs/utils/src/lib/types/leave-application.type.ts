@@ -155,4 +155,9 @@ export type SupervisorLeaveDetails = {
     supervisorId: string;
     supervisorName: string;
   };
+  leaveBenefitsId: {
+    leaveName: string;
+    leaveType: string;
+  };
+  leaveDates: Array<string>;
 };

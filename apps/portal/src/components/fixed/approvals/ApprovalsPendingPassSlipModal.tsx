@@ -27,14 +27,19 @@ export const ApprovalsPendingPassSlipModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipPendingModalProps) => {
-  const { passSlip, otpPassSlipModalIsOpen, setOtpPassSlipModalIsOpen, declineApplicationModalIsOpen, setDeclineApplicationModalIsOpen } =
-    useApprovalStore((state) => ({
-      passSlip: state.passSlipIndividualDetail,
-      otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
-      setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
-      declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-      setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
-    }));
+  const {
+    passSlip,
+    otpPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen,
+    declineApplicationModalIsOpen,
+    setDeclineApplicationModalIsOpen,
+  } = useApprovalStore((state) => ({
+    passSlip: state.passSlipIndividualDetail,
+    otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
+    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+  }));
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } =
@@ -58,12 +63,11 @@ export const ApprovalsPendingPassSlipModal = ({
 
   const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
     setValue('passSlipId', passSlip.id);
-    if(data.status === 'approved') {
+    if (data.status === 'approved') {
       setOtpPassSlipModalIsOpen(true);
     } else {
       setDeclineApplicationModalIsOpen(true);
     }
-    
   };
 
   // set state for employee store
@@ -193,7 +197,7 @@ export const ApprovalsPendingPassSlipModal = ({
                 ></textarea>
               </div>
               <div className="w-full flex gap-2 justify-start items-center pt-4">
-                <span className="text-slate-500 text-xl font-medium">
+                <span className="text-slate-500 text-md font-medium">
                   Action:
                 </span>
                 <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
