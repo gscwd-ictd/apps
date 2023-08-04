@@ -23,11 +23,10 @@ type ResponseLeaveApplication = {
   patchResponse: EmployeeLeaveDetails;
 };
 
-type Data = {
-  id: string;
-  status: LeaveStatus;
-  action?: 'approve' | 'disapprove' | null;
-};
+export enum LeaveConfirmAction {
+  YES = 'yes',
+  NO = 'no',
+}
 
 type LeaveApplicationState = {
   leaveApplication: ResponseLeaveApplication;
@@ -35,12 +34,11 @@ type LeaveApplicationState = {
   leaveApplicationDetails: EmployeeLeaveDetails;
   loading: LoadingLeaveApplication;
   error: ErrorLeaveApplication;
-  leaveDataForSubmission: Data;
+  leaveConfirmAction: LeaveConfirmAction | null;
   setLeaveApplicationDetails: (
     leaveApplicationDetails: EmployeeLeaveDetails
   ) => void;
   emptyResponseAndErrors: () => void;
-  setLeaveDataForSubmission: (data: Data) => void;
   getLeaveApplications: () => void;
   getLeaveApplicationsSuccess: (response: Array<MonitoringLeave>) => void;
   getLeaveApplicationsFail: (error: string) => void;
@@ -50,6 +48,9 @@ type LeaveApplicationState = {
   patchLeaveApplication: () => void;
   patchLeaveApplicationSuccess: (response: EmployeeLeaveDetails) => void;
   patchLeaveApplicationFail: (error: string) => void;
+  setLeaveConfirmAction: (
+    leaveConfirmAction: LeaveConfirmAction | null
+  ) => void;
 };
 
 export const useLeaveApplicationStore = create<LeaveApplicationState>()(
@@ -67,9 +68,10 @@ export const useLeaveApplicationStore = create<LeaveApplicationState>()(
       errorLeaveApplicationDetails: '',
       errorPatchLeaveApplication: '',
     },
-    leaveDataForSubmission: {} as Data,
-    setLeaveDataForSubmission: (leaveDataForSubmission: Data) =>
-      set((state) => ({ ...state, leaveDataForSubmission })),
+    leaveConfirmAction: null,
+
+    setLeaveConfirmAction: (leaveConfirmAction: LeaveConfirmAction | null) =>
+      set((state) => ({ ...state, leaveConfirmAction })),
 
     emptyResponseAndErrors: () =>
       set((state) => ({

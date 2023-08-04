@@ -138,7 +138,7 @@ export default function Index() {
           className="text-white bg-blue-400 hover:bg-blue-500  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
           onClick={() => openViewActionModal(rowData)}
         >
-          <i className="bx bx-edit-alt"></i>
+          <i className="bx bx-show"></i>
         </button>
 
         <button
