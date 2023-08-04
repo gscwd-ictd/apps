@@ -64,7 +64,7 @@ const AddRecurringModal: FunctionComponent<AddModalProps> = ({
       accumulatedCredits: undefined,
       canBeCarriedOver: false,
       leaveType: LeaveType.RECURRING,
-      creditDistribution: CreditDistribution.YEARLY,
+      creditDistribution: null,
       isMonetizable: false,
     },
   });
