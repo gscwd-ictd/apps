@@ -4,6 +4,8 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+
+import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
 import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
 
 import {
@@ -16,34 +18,35 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
 import AddModulesModal from 'apps/employee-monitoring/src/components/modal/settings/modules/AddModulesModal';
+import EditModulesModal from 'apps/employee-monitoring/src/components/modal/settings/modules/EditModulesModal';
 
 const TypesMockData: Array<Module> = [
   {
-    _id: '11be2691-b7a6-4e84-b8a2-72af24389939',
+    id: '11be2691-b7a6-4e84-b8a2-72af24389939',
     module: 'Duties & Responsibilities',
     slug: 'dutiesResponsibilities',
     url: '/duties-responsibilities',
   },
   {
-    _id: '1ae7df50-c018-43d1-b41b-f1b1a934c0bf',
+    id: '1ae7df50-c018-43d1-b41b-f1b1a934c0bf',
     module: 'Committees',
     slug: 'committees',
     url: '/committees',
   },
   {
-    _id: '22208337-d8c1-4378-9802-6da738714400',
+    id: '22208337-d8c1-4378-9802-6da738714400',
     module: 'Qualification Standards',
     slug: 'qualificationStandards',
     url: '/qualification-standards',
   },
   {
-    _id: '2e4978f2-5070-4091-b89d-6e16f77e187c',
+    id: '2e4978f2-5070-4091-b89d-6e16f77e187c',
     module: 'Salary Grade',
     slug: 'salaryGrade',
     url: '/salary-grade',
   },
   {
-    _id: '3f644125-6fd5-4a9f-9894-7066357e559b',
+    id: '3f644125-6fd5-4a9f-9894-7066357e559b',
     module: 'Employee Registration',
     slug: 'employeeRegistration',
     url: '/employee-registration',
@@ -56,10 +59,10 @@ const Index = () => {
 
   // fetch data for list of custom groups
   // const {
-  //   data: swrCustomGroups,
+  //   data: swrModules,
   //   error: swrError,
   //   isLoading: swrIsLoading,
-  //   mutate: mutateCustomGroups,
+  //   mutate: mutateModules,
   // } = useSWR('/modules', fetcherEMS, {
   //   shouldRetryOnError: false,
   //   revalidateOnFocus: false,
@@ -71,12 +74,12 @@ const Index = () => {
   const closeAddActionModal = () => setAddModalIsOpen(false);
 
   // Edit modal function
-  // const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-  // const openEditActionModal = (rowData: Module) => {
-  //   setEditModalIsOpen(true);
-  //   setCurrentRowData(rowData);
-  // };
-  // const closeEditActionModal = () => setEditModalIsOpen(false);
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+  const openEditActionModal = (rowData: Module) => {
+    setEditModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeEditActionModal = () => setEditModalIsOpen(false);
 
   // Delete modal function
   // const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
@@ -93,7 +96,7 @@ const Index = () => {
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openEditActionModal(rowData)}
+          onClick={() => openEditActionModal(rowData)}
         >
           <i className="bx bx-edit-alt"></i>
         </button>
@@ -112,21 +115,19 @@ const Index = () => {
   // define table columns
   const columnHelper = createColumnHelper<Module>();
   const columns = [
-    columnHelper.accessor('_id', {
+    columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('module', {
-      // enableSorting: false,
       header: 'Module',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('slug', {
-      // enableSorting: false,
       header: 'Slug',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('url', {
-      // enableSorting: false,
+      enableSorting: false,
       header: 'URL',
       cell: (info) => info.getValue(),
     }),
@@ -140,87 +141,73 @@ const Index = () => {
   const { table } = useDataTable({
     columns: columns,
     data: TypesMockData, // change to use Data from SWR
-    columnVisibility: { _id: false },
+    columnVisibility: { id: false },
   });
 
   // Zustand initialization
-  // const {
-  //   CustomGroups,
-  //   PostCustomGroupResponse,
-  //   UpdateCustomGroupResponse,
-  //   DeleteCustomGroupResponse,
-  //   AssignResponse,
-  //   UnassignResponse,
+  const {
+    Modules,
+    PostModuleResponse,
+    UpdateModuleResponse,
+    DeleteModuleResponse,
 
-  //   IsLoading,
-  //   ErrorCustomGroups,
-  //   ErrorAssignedMembers,
-  //   ErrorUnassignedMembers,
+    IsLoading,
+    ErrorModules,
 
-  //   GetCustomGroups,
-  //   GetCustomGroupsSuccess,
-  //   GetCustomGroupsFail,
+    GetModules,
+    GetModulesSuccess,
+    GetModulesFail,
 
-  //   IsRowsSelected,
-  //   IsOptionSelected,
+    EmptyResponse,
+  } = useModulesStore((state) => ({
+    Modules: state.modules,
+    PostModuleResponse: state.module.postResponse,
+    UpdateModuleResponse: state.module.updateResponse,
+    DeleteModuleResponse: state.module.deleteResponse,
 
-  //   EmptyResponse,
-  // } = useCustomGroupStore((state) => ({
-  //   CustomGroups: state.customGroups,
-  //   PostCustomGroupResponse: state.Module.postResponse,
-  //   UpdateCustomGroupResponse: state.Module.updateResponse,
-  //   DeleteCustomGroupResponse: state.Module.deleteResponse,
-  //   AssignResponse: state.members.assignResponse,
-  //   UnassignResponse: state.members.unassignResponse,
+    IsLoading: state.loading.loadingModules,
+    ErrorModules: state.error.errorModules,
 
-  //   IsLoading: state.loading.loadingCustomGroups,
-  //   ErrorCustomGroups: state.error.errorCustomGroups,
-  //   ErrorAssignedMembers: state.error.errorAssignedMembers,
-  //   ErrorUnassignedMembers: state.error.errorUnassignedMembers,
+    GetModules: state.getModules,
+    GetModulesSuccess: state.getModulesSuccess,
+    GetModulesFail: state.getModulesFail,
 
-  //   GetCustomGroups: state.getCustomGroups,
-  //   GetCustomGroupsSuccess: state.getCustomGroupsSuccess,
-  //   GetCustomGroupsFail: state.getCustomGroupsFail,
-
-  //   IsRowsSelected: state.isRowsSelected,
-  //   IsOptionSelected: state.isOptionSelected,
-
-  //   EmptyResponse: state.emptyResponse,
-  // }));
+    EmptyResponse: state.emptyResponse,
+  }));
 
   // Initial zustand state update
   // useEffect(() => {
   //   if (swrIsLoading) {
-  //     GetCustomGroups();
+  //     GetModules();
   //   }
   // }, [swrIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
   // useEffect(() => {
-  //   if (!isEmpty(swrCustomGroups)) {
-  //     GetCustomGroupsSuccess(swrCustomGroups.data);
+  //   if (!isEmpty(swrModules)) {
+  //         GetModulesSuccess,(swrModules.data);
   //   }
 
   //   if (!isEmpty(swrError)) {
-  //     GetCustomGroupsFail(swrError.message);
+  //     GetModulesFail(swrError.message);
   //   }
-  // }, [swrCustomGroups, swrError]);
+  // }, [swrModules, swrError]);
 
   // Reset responses from all modal actions
   // useEffect(() => {
   //   if (
-  //     !isEmpty(PostCustomGroupResponse) ||
+  //     !isEmpty(PostModuleResponse) ||
   //     !isEmpty(UpdateCustomGroupResponse) ||
   //     !isEmpty(DeleteCustomGroupResponse)
   //   ) {
-  //     mutateCustomGroups();
+  //     mutateModules();
 
   //     setTimeout(() => {
   //       EmptyResponse();
   //     }, 3000);
   //   }
   // }, [
-  //   PostCustomGroupResponse,
+  //   PostModuleResponse,
   //   UpdateCustomGroupResponse,
   //   DeleteCustomGroupResponse,
   // ]);
@@ -230,20 +217,17 @@ const Index = () => {
       <div className="w-full">
         <BreadCrumbs title="Custom Groups" />
         {/* Error Notifications */}
-        {/* {!isEmpty(ErrorCustomGroups) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={ErrorCustomGroups}
-          />
-        ) : null} */}
+        {!isEmpty(ErrorModules) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorModules} />
+        ) : null}
 
         {/* Success Notifications */}
-        {/* {!isEmpty(PostCustomGroupResponse) ? (
+        {!isEmpty(PostModuleResponse) ? (
           <ToastNotification
             toastType="success"
             notifMessage="Custom group added successfully"
           />
-        ) : null} */}
+        ) : null}
 
         <Can I="access" this="Modules">
           <div className="mx-5">
@@ -298,6 +282,14 @@ const Index = () => {
             modalState={addModalIsOpen}
             setModalState={setAddModalIsOpen}
             closeModalAction={closeAddActionModal}
+          />
+
+          {/* Edit modal */}
+          <EditModulesModal
+            modalState={editModalIsOpen}
+            setModalState={setEditModalIsOpen}
+            closeModalAction={closeEditActionModal}
+            rowData={currentRowData}
           />
         </Can>
       </div>
