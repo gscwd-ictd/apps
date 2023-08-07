@@ -17,7 +17,7 @@ interface OtpProps {
   mobile: string;
   employeeId: string;
   action: LeaveStatus; // approve or disapprove
-  tokenId: string; //like pass Slip Id, leave Id etc.
+  tokenId: string; //like LEAVE Id, leave Id etc.
   otpName: string;
   remarks?: string;
 }
@@ -163,7 +163,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
     e.preventDefault();
     setOtpLeaveModalIsOpen(false); //close OTP modal first
     setTimeout(() => {
-      setPendingLeaveModalIsOpen(false); //then close Pass Slip modal
+      setPendingLeaveModalIsOpen(false); //then close LEAVE modal
     }, 200);
   };
 
@@ -173,7 +173,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
   };
 
   const handlePatchResult = async (data: leaveAction) => {
-    const { error, result } = await patchPortal('/v1/pass-slip', data);
+    const { error, result } = await patchPortal('/v1/leave/supervisor', data);
     if (error) {
       patchLeaveFail(result);
     } else {
@@ -197,7 +197,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
     }
   }, [otpComplete]);
 
-  // SUBMIT OTP CODE AND COMPLETE PASS SLIP APPROVAL/DISAPPROVAL IF CORRECT
+  // SUBMIT OTP CODE AND COMPLETE LEAVE APPROVAL/DISAPPROVAL IF CORRECT
   async function handleFinalSubmit(e) {
     e.preventDefault();
     setIsSubmitLoading(true);
@@ -225,8 +225,10 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm">
             <div className="mb-2 text-center">
               {`To ${
-                action === LeaveStatus.APPROVED ? 'approve' : 'disapprove'
-              } this Pass Slip request, click Send Code
+                action === LeaveStatus.FOR_HRDM_APPROVAL
+                  ? 'approve'
+                  : 'disapprove'
+              } this Leave request, click Send Code
                               and enter the code sent to your mobile number:
                               ${mobile}. `}
             </div>
@@ -377,7 +379,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
               OTP Verified Successfully!
             </div>
             <div className="text-center text-sm mb-4">
-              Pass Slip has been {action}.
+              Leave has been approved.
             </div>
 
             <Button

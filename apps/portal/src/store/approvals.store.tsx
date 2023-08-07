@@ -59,7 +59,7 @@ export type ApprovalState = {
   };
   response: {
     patchResponsePassSlip: PassSlip;
-    postResponseLeave: SupervisorLeaveDetails;
+    patchResponseLeave: SupervisorLeaveDetails;
   };
   loading: {
     loadingLeaves: boolean;
@@ -187,7 +187,7 @@ export const useApprovalStore = create<ApprovalState>()(
 
     response: {
       patchResponsePassSlip: {} as PassSlip,
-      postResponseLeave: {} as SupervisorLeaveDetails,
+      patchResponseLeave: {} as SupervisorLeaveDetails,
     },
 
     loading: {
@@ -329,7 +329,7 @@ export const useApprovalStore = create<ApprovalState>()(
         },
         response: {
           ...state.response,
-          postResponseLeave: {} as SupervisorLeaveDetails,
+          patchResponseLeave: {} as SupervisorLeaveDetails,
         },
         loading: {
           ...state.loading,
@@ -491,28 +491,28 @@ export const useApprovalStore = create<ApprovalState>()(
         ...state,
         response: {
           ...state.response,
-          patchResponsePassSlip: {} as PassSlip,
+          patchResponseLeave: {} as SupervisorLeaveDetails,
         },
         loading: {
           ...state.loading,
-          loadingPassSlipResponse: true,
+          loadingLeaveResponse: true,
         },
         error: {
           ...state.error,
-          errorPassSlipResponse: '',
+          errorLeaveResponse: '',
         },
       }));
     },
-    patchLeaveSuccess: (response: PassSlip) => {
+    patchLeaveSuccess: (response: SupervisorLeaveDetails) => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          patchResponsePassSlip: response,
+          patchResponseLeave: response,
         },
         loading: {
           ...state.loading,
-          loadingPassSlipResponse: false,
+          loadingLeaveResponse: false,
         },
       }));
     },
@@ -521,11 +521,11 @@ export const useApprovalStore = create<ApprovalState>()(
         ...state,
         loading: {
           ...state.loading,
-          loadingPassSlipResponse: false,
+          loadingLeaveResponse: false,
         },
         error: {
           ...state.error,
-          errorPassSlipResponse: error,
+          errorLeaveResponse: error,
         },
       }));
     },
@@ -536,7 +536,7 @@ export const useApprovalStore = create<ApprovalState>()(
         response: {
           ...state.response,
           patchResponsePassSlip: {} as PassSlip,
-          postResponseLeave: {} as SupervisorLeaveDetails,
+          patchResponseLeave: {} as SupervisorLeaveDetails,
         },
         error: {
           ...state.error,

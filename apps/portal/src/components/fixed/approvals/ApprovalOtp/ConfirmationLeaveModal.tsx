@@ -86,7 +86,7 @@ export const ConfirmationLeaveModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
             {`Are you sure you want to ${
               action === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                 ? 'disapprove'

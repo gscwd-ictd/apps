@@ -53,11 +53,13 @@ export default function Approvals({
     cancelledPassSlipModalIsOpen,
 
     patchResponsePassSlip,
-    postResponseLeave,
+    patchResponseLeave,
     loadingPassSlip,
     loadingLeave,
     errorPassSlip,
+    errorPassSlipResponse,
     errorLeave,
+    errorLeaveResponse,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -90,11 +92,13 @@ export default function Approvals({
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
 
     patchResponsePassSlip: state.response.patchResponsePassSlip,
-    postResponseLeave: state.response.postResponseLeave,
+    patchResponseLeave: state.response.patchResponseLeave,
     loadingPassSlip: state.loading.loadingPassSlips,
     loadingLeave: state.loading.loadingLeaves,
     errorPassSlip: state.error.errorPassSlips,
+    errorPassSlipResponse: state.error.errorPassSlipResponse,
     errorLeave: state.error.errorLeaves,
+    errorLeaveResponse: state.error.errorLeaveResponse,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -186,7 +190,6 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
-      console.log(swrPassSlips);
       getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 
@@ -217,7 +220,6 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
-      console.log(swrLeaves);
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
@@ -233,22 +235,52 @@ export default function Approvals({
         emptyResponseAndError();
       }, 5000);
     }
-    if (!isEmpty(postResponseLeave)) {
+    if (!isEmpty(patchResponseLeave)) {
       mutateLeaves();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [patchResponsePassSlip, postResponseLeave]);
+    if (!isEmpty(patchResponseLeave)) {
+      mutateLeaves();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [patchResponsePassSlip, patchResponseLeave]);
 
   return (
     <>
       <>
-        {/* Pass Slip List Load Failed Error */}
+        {/* Pass Slip Patch Success */}
         {!isEmpty(patchResponsePassSlip) ? (
           <ToastNotification
             toastType="success"
-            notifMessage={`Pass Slip action submitted.`}
+            notifMessage={`Pass Slip Application action submitted.`}
+          />
+        ) : null}
+
+        {/* Leave Patch Success */}
+        {!isEmpty(patchResponseLeave) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage={`Leave Application action submitted.`}
+          />
+        ) : null}
+
+        {/* Pass Slip Patch Failed Error */}
+        {!isEmpty(errorPassSlipResponse) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`Pass Slip Application action failed.`}
+          />
+        ) : null}
+
+        {/* Leave Patch Failed Error */}
+        {!isEmpty(errorLeaveResponse) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`Leave Application action failed.`}
           />
         ) : null}
 

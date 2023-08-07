@@ -156,15 +156,21 @@ export const ApprovalsPendingLeaveModal = ({
                   {leaveIndividualDetail ? (
                     <AlertNotification
                       alertType="warning"
-                      // notifMessage={
-                      //   leaveIndividualDetail.leaveApplicationBasicInfo?.status
-                      //     .charAt(0)
-                      //     .toUpperCase() +
-                      //   leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
-                      //     1
-                      //   )
-                      // }
-                      notifMessage={'Awaiting approval'}
+                      notifMessage={
+                        leaveIndividualDetail?.status ===
+                        LeaveStatus.FOR_HRDM_APPROVAL
+                          ? 'For HRDM Approval'
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'Disapproved by HRDM '
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          ? 'For Supervisor Approval '
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'Disapproved by Supervisor '
+                          : leaveIndividualDetail?.status
+                      }
                       dismissible={false}
                     />
                   ) : null}
@@ -388,11 +394,7 @@ export const ApprovalsPendingLeaveModal = ({
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
               <Button
-                form={`${
-                  watch('status') === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                    ? 'DisapproveForm'
-                    : 'LeaveAction'
-                }`}
+                form={`LeaveAction`}
                 variant={'primary'}
                 size={'md'}
                 loading={false}

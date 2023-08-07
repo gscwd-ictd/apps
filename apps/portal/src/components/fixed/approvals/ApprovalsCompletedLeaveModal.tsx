@@ -20,6 +20,7 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -59,6 +60,11 @@ export const ApprovalsCompletedLeaveModal = ({
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
   }));
+
+  // cancel action for Decline Application Modal
+  const closeDeclineModal = async () => {
+    setDeclineApplicationModalIsOpen(false);
+  };
 
   const [reason, setReason] = useState<string>('');
   const [action, setAction] = useState<string>('');
@@ -140,12 +146,35 @@ export const ApprovalsCompletedLeaveModal = ({
                     <AlertNotification
                       alertType="info"
                       notifMessage={
-                        leaveIndividualDetail?.status.charAt(0).toUpperCase() +
-                        leaveIndividualDetail?.status.slice(1)
+                        leaveIndividualDetail?.status ===
+                        LeaveStatus.FOR_HRDM_APPROVAL
+                          ? 'For HRDM Approval'
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'Disapproved by HRDM '
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          ? 'For Supervisor Approval '
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'Disapproved by Supervisor '
+                          : leaveIndividualDetail?.status
+                              .charAt(0)
+                              .toUpperCase() +
+                            leaveIndividualDetail?.status.slice(1)
                       }
                       dismissible={false}
                     />
                   ) : null}
+
+                  <ConfirmationLeaveModal
+                    modalState={declineApplicationModalIsOpen}
+                    setModalState={setDeclineApplicationModalIsOpen}
+                    closeModalAction={closeDeclineModal}
+                    action={LeaveStatus.CANCELLED}
+                    tokenId={leaveIndividualDetail.id}
+                    remarks={''}
+                  />
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
@@ -189,8 +218,8 @@ export const ApprovalsCompletedLeaveModal = ({
                             'Special Privilege Leave' ? (
                             <div className="w-full text-md text-slate-500">
                               {leaveIndividualDetail?.inPhilippines
-                                ? leaveIndividualDetail.inPhilippines
-                                : leaveIndividualDetail.abroad}
+                                ? 'Within the Philippines'
+                                : 'Abroad'}
                             </div>
                           ) : null}
 
