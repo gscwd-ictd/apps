@@ -17,7 +17,7 @@ type PassSlipCompletedModalProps = {
   closeModalAction: () => void;
 };
 
-export const ApprovalsPendingPassSlipModal = ({
+export const ApprovalsCompletedPassSlipModal = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -189,4 +189,4 @@ export const ApprovalsPendingPassSlipModal = ({
   );
 };
 
-export default ApprovalsPendingPassSlipModal;
+export default ApprovalsCompletedPassSlipModal;

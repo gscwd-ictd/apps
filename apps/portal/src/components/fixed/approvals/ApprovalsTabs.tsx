@@ -2,18 +2,14 @@ import { useApprovalStore } from '../../../../src/store/approvals.store';
 import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 
 import { TabHeader } from '../tab/TabHeader';
+import { ApprovalTypeSelect } from './ApprovalTypeSelect';
+import { useEffect } from 'react';
 
 type ApprovalsTabsProps = {
   tab: number;
 };
 
 export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
-  const setTab = useApprovalStore((state) => state.setTab);
-
-  const selectedApprovalType = useApprovalStore(
-    (state) => state.selectedApprovalType
-  );
-
   const {
     forApprovalPassSlips,
     approvedPassSlips,
@@ -23,20 +19,33 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
     approvedLeaves,
     disapprovedLeaves,
     cancelledLeaves,
+    selectedApprovalType,
+    setTab,
+    setSelectedApprovalType,
   } = useApprovalStore((state) => ({
     forApprovalPassSlips: state.passSlips.forApproval,
     approvedPassSlips: state.passSlips.completed.approved,
     disapprovedPassSlips: state.passSlips.completed.disapproved,
     cancelledPassSlips: state.passSlips.completed.cancelled,
-    forApprovalLeaves: state.leaves,
-    approvedLeaves: state.leaves,
-    disapprovedLeaves: state.leaves,
-    cancelledLeaves: state.leaves,
+    forApprovalLeaves: state.leaves.forApproval,
+    approvedLeaves: state.leaves.completed.approved,
+    disapprovedLeaves: state.leaves.completed.disapproved,
+    cancelledLeaves: state.leaves.completed.cancelled,
+    selectedApprovalType: state.selectedApprovalType,
+    setTab: state.setTab,
+    setSelectedApprovalType: state.setSelectedApprovalType,
   }));
+
+  //defaults page to For Approval filter on load
+  useEffect(() => {
+    setSelectedApprovalType(1);
+    setTab(1);
+  }, []);
 
   return (
     <>
       <div className="lg:h-auto lg:pt-0 lg:pb-10 h-full py-4 w-full px-5 overflow-y-auto">
+        <ApprovalTypeSelect />
         <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500">
           {selectedApprovalType === 1 && (
             <>

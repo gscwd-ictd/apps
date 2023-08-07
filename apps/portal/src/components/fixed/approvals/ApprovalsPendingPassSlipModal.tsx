@@ -7,9 +7,9 @@ import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
-import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
+import { ApprovalOtpContentsPassSlip } from './ApprovalOtp/ApprovalOtpContentsPassSlip';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -223,10 +223,10 @@ export const ApprovalsPendingPassSlipModal = ({
           <OtpModal
             modalState={otpPassSlipModalIsOpen}
             setModalState={setOtpPassSlipModalIsOpen}
-            title={'PASS SLIP OTP'}
+            title={'PASS SLIP APPROVAL OTP'}
           >
             {/* contents */}
-            <ApprovalOtpContents
+            <ApprovalOtpContentsPassSlip
               mobile={employeeDetail.profile.mobileNumber}
               employeeId={employeeDetail.user._id}
               action={watch('status')}

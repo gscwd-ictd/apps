@@ -187,7 +187,7 @@ export const AllApprovalsTab = ({
         </ul>
       ) : (
         <div className="flex justify-center pt-20">
-          <h1 className="text-4xl text-gray-300">
+          <h1 className="text-4xl text-gray-300 text-center">
             No{' '}
             {tab === 1
               ? 'pending approval'

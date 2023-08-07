@@ -22,7 +22,7 @@ interface OtpProps {
   remarks?: string;
 }
 
-export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
+export const ApprovalOtpContentsPassSlip: FunctionComponent<OtpProps> = ({
   mobile,
   employeeId,
   action,

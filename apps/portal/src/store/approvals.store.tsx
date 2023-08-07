@@ -40,7 +40,14 @@ export type ApprovalState = {
   selectedApprovalType: number;
   setSelectedApprovalType: (value: number) => void;
 
-  leaves: Array<SupervisorLeaveDetails>;
+  leaves: {
+    completed: {
+      approved: Array<SupervisorLeaveDetails>;
+      disapproved: Array<SupervisorLeaveDetails>;
+      cancelled: Array<SupervisorLeaveDetails>;
+    };
+    forApproval: Array<SupervisorLeaveDetails>;
+  };
 
   passSlips: {
     completed: {
@@ -160,7 +167,14 @@ export const useApprovalStore = create<ApprovalState>()(
     action: '',
     selectedApprovalType: 1,
 
-    leaves: [],
+    leaves: {
+      completed: {
+        approved: [],
+        disapproved: [],
+        cancelled: [],
+      },
+      forApproval: [],
+    },
 
     passSlips: {
       completed: {
@@ -306,10 +320,12 @@ export const useApprovalStore = create<ApprovalState>()(
         ...state,
         leaves: {
           ...state.leaves,
+          completed: {
+            approved: [],
+            disapproved: [],
+            cancelled: [],
+          },
           forApproval: [],
-          approved: [],
-          disapproved: [],
-          cancelled: [],
         },
         response: {
           ...state.response,
@@ -325,13 +341,18 @@ export const useApprovalStore = create<ApprovalState>()(
         },
       }));
     },
-    getLeaveListSuccess: (
-      loading: boolean,
-      response: Array<SupervisorLeaveDetails>
-    ) => {
+    getLeaveListSuccess: (loading: boolean, response: ApprovalLeaveList) => {
       set((state) => ({
         ...state,
-        leaves: response,
+        leaves: {
+          ...state.leaves,
+          completed: {
+            approved: response.completed.approved,
+            disapproved: response.completed.disapproved,
+            cancelled: [],
+          },
+          forApproval: response.forApproval,
+        },
         loading: {
           ...state.loading,
           loadingLeaves: loading,

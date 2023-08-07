@@ -35,6 +35,7 @@ import ApprovalsCompletedPassSlipModal from '../../../../src/components/fixed/ap
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
 
 export default function Approvals({
   employeeDetails,
@@ -185,6 +186,7 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
+      console.log(swrPassSlips);
       getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 
@@ -215,13 +217,13 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
+      console.log(swrLeaves);
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
     if (!isEmpty(swrLeaveError)) {
       getLeaveListFail(swrLeaveIsLoading, swrLeaveError.message);
     }
-    console.log(swrLeaves);
   }, [swrLeaves, swrLeaveError]);
 
   useEffect(() => {
@@ -238,19 +240,6 @@ export default function Approvals({
       }, 5000);
     }
   }, [patchResponsePassSlip, postResponseLeave]);
-
-  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
-
-  useEffect(() => {
-    setNavDetails({
-      profile: employeeDetails.user.email,
-      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
-    });
-  }, []);
 
   return (
     <>
@@ -293,6 +282,25 @@ export default function Approvals({
             closeModalAction={closePendingLeaveModal}
           />
 
+          {/* Leave Approved/Disapproved/Cancelled ModalApproval Modal */}
+          <ApprovalsCompletedLeaveModal
+            modalState={approvedLeaveModalIsOpen}
+            setModalState={setApprovedLeaveModalIsOpen}
+            closeModalAction={closeApprovedLeaveModal}
+          />
+
+          <ApprovalsCompletedLeaveModal
+            modalState={disapprovedLeaveModalIsOpen}
+            setModalState={setDisapprovedLeaveModalIsOpen}
+            closeModalAction={closeDisapprovedLeaveModal}
+          />
+
+          <ApprovalsCompletedLeaveModal
+            modalState={cancelledLeaveModalIsOpen}
+            setModalState={setCancelledLeaveModalIsOpen}
+            closeModalAction={closeCancelledPassSlipModal}
+          />
+
           {/* Pending Pass Slip For Approval Modal */}
           <ApprovalsPendingPassSlipModal
             modalState={pendingPassSlipModalIsOpen}
@@ -300,7 +308,7 @@ export default function Approvals({
             closeModalAction={closePendingPassSlipModal}
           />
 
-          {/* Pending Pass Slip Approved/Disapproved/Cancelled Modal */}
+          {/* Pass Slip Approved/Disapproved/Cancelled Modal */}
           <ApprovalsCompletedPassSlipModal
             modalState={approvedPassSlipModalIsOpen}
             setModalState={setApprovedPassSlipModalIsOpen}
@@ -324,9 +332,8 @@ export default function Approvals({
               <ContentHeader
                 title="Employee Approvals"
                 subtitle="Approve Employee Pass Slips & Leaves"
-              >
-                <ApprovalTypeSelect />
-              </ContentHeader>
+              ></ContentHeader>
+
               {loadingPassSlip && loadingLeave ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
