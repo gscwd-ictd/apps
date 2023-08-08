@@ -34,4 +34,19 @@ const Authmiddleware = ({ children }: AuthmiddlewareProps) => {
   return <>{children}</>;
 };
 
+export const getServerSideProps: GetServerSideProps = withCookieSession(
+  async (context: GetServerSidePropsContext) => {
+    const employee = getUserLoginDetails();
+
+    try {
+      console.log('employee', employee);
+    } catch {
+      console.log('catch');
+      return {
+        props: { employee, test: {} },
+      };
+    }
+  }
+);
+
 export default Authmiddleware;
