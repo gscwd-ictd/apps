@@ -22,6 +22,7 @@ import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS'
 import { UseCapitalizer } from '../../utils/functions/Capitalizer';
 import UseRenderBadgePill from '../../utils/functions/RenderBadgePill';
 import { EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
+import { ActionDropdownEmployee } from '../../components/dropdown/ActionDropdownEmployee';
 
 export default function Index() {
   const {
@@ -94,7 +95,7 @@ export default function Index() {
     return (
       <>
         <div className="flex items-center justify-start">
-          <ActionDropdown employee={rowData} />
+          <ActionDropdownEmployee employee={rowData} />
         </div>
       </>
     );

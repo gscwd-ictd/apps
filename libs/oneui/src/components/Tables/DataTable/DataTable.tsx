@@ -110,7 +110,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
               <tr>
                 <td
                   colSpan={model?.getAllColumns().length}
-                  className="text-center text-xs py-5 text-gray-500"
+                  className="py-5 text-xs text-center text-gray-500"
                 >
                   --- No Data ---
                 </td>

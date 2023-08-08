@@ -1,20 +1,12 @@
 import axios from 'axios';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
-import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiMail, HiX } from 'react-icons/hi';
-import { withSession } from '../../../utils/helpers/session';
+import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
 import { isEmpty } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification } from '@gscwd-apps/oneui';
-import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;

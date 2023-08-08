@@ -1,23 +1,30 @@
-import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
-import { useEffect, useState } from 'react'
-import { NavTab } from '../../../../components/fixed/tabs/NavTab'
-import { Pds, usePdsStore } from '../../../../store/pds.store'
-import { isEmpty, isEqual } from 'lodash'
-import axios from 'axios'
-import { getPdsDetails, getUserDetails, withSession } from '../../../../../utils/helpers/session'
-import { SpinnerDotted } from 'spinners-react'
-import { fetchWithSession } from '../../../../../utils/hoc/fetcher'
-import { StyledButton } from '../../../../components/modular/buttons/StyledButton'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import { useApplicantStore } from '../../../../store/applicant.store'
-import { usePublicationStore } from '../../../../store/publication.store'
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
+import { useEffect, useState } from 'react';
+import { NavTab } from '../../../../components/fixed/tabs/NavTab';
+import { Pds, usePdsStore } from '../../../../store/pds.store';
+import { isEmpty, isEqual } from 'lodash';
+import axios from 'axios';
+import {
+  getPdsDetails,
+  getUserDetails,
+} from '../../../../../utils/helpers/session';
+import { SpinnerDotted } from 'spinners-react';
+import { fetchWithSession } from '../../../../../utils/hoc/fetcher';
+import { StyledButton } from '../../../../components/modular/buttons/StyledButton';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useApplicantStore } from '../../../../store/applicant.store';
+import { usePublicationStore } from '../../../../store/publication.store';
 
 type DashboardProps = {
-  vppId: string
-  externalApplicantId: string
-  pdsDetails: Pds
-}
+  vppId: string;
+  externalApplicantId: string;
+  pdsDetails: Pds;
+};
 
 // const applicant: Partial<Pds> = {
 //   personalInfo: {
@@ -318,24 +325,32 @@ type DashboardProps = {
 //   },
 // }
 
-export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: DashboardProps) {
-  dayjs.extend(utc)
+export default function Dashboard({
+  vppId,
+  pdsDetails,
+  externalApplicantId,
+}: DashboardProps) {
+  dayjs.extend(utc);
 
-  const publication = usePublicationStore((state) => state.publication)
-  const setPublication = usePublicationStore((state) => state.setPublication)
-  const initialPdsState = usePdsStore((state) => state.initialPdsState)
-  const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState)
-  const [isLoadedInitialState, setIsLoadedInitialState] = useState<boolean>(false)
-  const externalApplicant = useApplicantStore((state) => state.applicant)
-  const setExternalApplicant = useApplicantStore((state) => state.setApplicant)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [isLoadingApplicantData, setIsLoadingApplicantData] = useState<boolean>(false)
-  const [isLoadingPdsData, setIsLoadingPdsData] = useState<boolean>(false)
+  const publication = usePublicationStore((state) => state.publication);
+  const setPublication = usePublicationStore((state) => state.setPublication);
+  const initialPdsState = usePdsStore((state) => state.initialPdsState);
+  const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
+  const [isLoadedInitialState, setIsLoadedInitialState] =
+    useState<boolean>(false);
+  const externalApplicant = useApplicantStore((state) => state.applicant);
+  const setExternalApplicant = useApplicantStore((state) => state.setApplicant);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingApplicantData, setIsLoadingApplicantData] =
+    useState<boolean>(false);
+  const [isLoadingPdsData, setIsLoadingPdsData] = useState<boolean>(false);
 
-  const { isExistingApplicant, setIsExistingApplicant } = useApplicantStore((state) => ({
-    isExistingApplicant: state.isExistingApplicant,
-    setIsExistingApplicant: state.setIsExistingApplicant,
-  }))
+  const { isExistingApplicant, setIsExistingApplicant } = useApplicantStore(
+    (state) => ({
+      isExistingApplicant: state.isExistingApplicant,
+      setIsExistingApplicant: state.setIsExistingApplicant,
+    })
+  );
 
   const {
     personalInfo,
@@ -416,25 +431,26 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
     setOfficeRelation: state.setOfficeRelation,
     setReferences: state.setReferences,
     setGovernmentIssuedId: state.setGovernmentIssuedId,
-  }))
+  }));
 
   useEffect(() => {
-    setIsLoadingApplicantData(true)
+    setIsLoadingApplicantData(true);
     if (isEmpty(pdsDetails)) {
-      setIsExistingApplicant(false)
+      setIsExistingApplicant(false);
     } else {
-      setIsExistingApplicant(true)
+      setIsExistingApplicant(true);
     }
-    setPublication({ ...publication, vppId: vppId })
-  }, [])
+    setPublication({ ...publication, vppId: vppId });
+  }, []);
 
   useEffect(() => {
-    if (isLoadingApplicantData && isExistingApplicant) setPdsDetailsOnLoad()
-    else if (isLoadingApplicantData && isExistingApplicant === false) setApplicantInfo()
+    if (isLoadingApplicantData && isExistingApplicant) setPdsDetailsOnLoad();
+    else if (isLoadingApplicantData && isExistingApplicant === false)
+      setApplicantInfo();
     setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
-  }, [isLoadingApplicantData, isExistingApplicant])
+      setIsLoading(false);
+    }, 1000);
+  }, [isLoadingApplicantData, isExistingApplicant]);
 
   /**
    *  i have delayed the setting of checkbox address to true or false because it picks up a null value from use ref on page load
@@ -444,29 +460,39 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
   useEffect(() => {
     if (isLoading === false) {
       if (isExistingApplicant && isLoadedInitialState === false) {
-        setInitialPdsState({ ...pdsDetails })
-        setIsLoadedInitialState(true)
+        setInitialPdsState({ ...pdsDetails });
+        setIsLoadedInitialState(true);
         if (isEqual(residentialAddress, permanentAddress)) {
           setTimeout(() => {
-            setCheckboxAddress(true)
-          }, 1000)
+            setCheckboxAddress(true);
+          }, 1000);
         }
       }
     }
-  }, [isLoading, isLoadedInitialState, residentialAddress, permanentAddress])
+  }, [isLoading, isLoadedInitialState, residentialAddress, permanentAddress]);
 
   const setPdsDetailsOnLoad = async () => {
-    const applicant = pdsDetails
+    const applicant = pdsDetails;
     // set the external applicant id
-    setExternalApplicant({ ...externalApplicant, applicantId: externalApplicantId })
+    setExternalApplicant({
+      ...externalApplicant,
+      applicantId: externalApplicantId,
+    });
 
     setPersonalInfo({
       ...personalInfo,
       lastName: applicant.personalInfo.lastName,
       firstName: applicant.personalInfo.firstName!,
-      middleName: isEmpty(applicant.personalInfo.middleName) ? 'N/A' : applicant.personalInfo.middleName,
-      nameExtension: isEmpty(applicant.personalInfo.nameExtension) ? 'N/A' : applicant.personalInfo.nameExtension!,
-      birthDate: dayjs.utc(applicant.personalInfo.birthDate).format('YYYY-MM-DD').toString(),
+      middleName: isEmpty(applicant.personalInfo.middleName)
+        ? 'N/A'
+        : applicant.personalInfo.middleName,
+      nameExtension: isEmpty(applicant.personalInfo.nameExtension)
+        ? 'N/A'
+        : applicant.personalInfo.nameExtension!,
+      birthDate: dayjs
+        .utc(applicant.personalInfo.birthDate)
+        .format('YYYY-MM-DD')
+        .toString(),
       sex: applicant.personalInfo.sex,
       birthPlace: applicant.personalInfo.birthPlace,
       civilStatus: applicant.personalInfo.civilStatus,
@@ -475,11 +501,14 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       bloodType: applicant.personalInfo.bloodType,
       citizenship: applicant.personalInfo.citizenship,
       citizenshipType: applicant.personalInfo.citizenshipType,
-      country: applicant.personalInfo.citizenship === 'Filipino' ? 'Philippines' : applicant.personalInfo.country,
+      country:
+        applicant.personalInfo.citizenship === 'Filipino'
+          ? 'Philippines'
+          : applicant.personalInfo.country,
       telephoneNumber: applicant.personalInfo.telephoneNumber,
       mobileNumber: applicant.personalInfo.mobileNumber,
       email: applicant.personalInfo.email,
-    })
+    });
 
     setGovernmentIssuedIds({
       ...governmentIssuedIds,
@@ -489,7 +518,7 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       sssNumber: applicant.governmentIssuedIds.sssNumber,
       tinNumber: applicant.governmentIssuedIds.tinNumber,
       agencyNumber: applicant.governmentIssuedIds.agencyNumber,
-    })
+    });
 
     setResidentialAddress({
       ...residentialAddress,
@@ -503,7 +532,7 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       barangay: applicant.residentialAddress.barangay,
       brgyCode: applicant.residentialAddress.brgyCode,
       zipCode: applicant.residentialAddress.zipCode,
-    })
+    });
 
     setPermanentAddress({
       ...permanentAddress,
@@ -517,7 +546,7 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       barangay: applicant.permanentAddress.barangay,
       brgyCode: applicant.permanentAddress.brgyCode,
       zipCode: applicant.permanentAddress.zipCode,
-    })
+    });
 
     setSpouse({
       ...spouse,
@@ -529,7 +558,7 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       businessAddress: applicant.spouse.businessAddress,
       telephoneNumber: applicant.spouse.telephoneNumber,
       occupation: applicant.spouse.occupation,
-    })
+    });
 
     setParents({
       ...parents,
@@ -540,9 +569,9 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       motherLastName: applicant.parents.motherLastName,
       motherFirstName: applicant.parents.motherFirstName,
       motherMiddleName: applicant.parents.motherMiddleName,
-    })
+    });
 
-    setChildren(applicant.children)
+    setChildren(applicant.children);
 
     setElementary({
       ...elementary,
@@ -553,7 +582,7 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       units: applicant.elementary.units,
       yearGraduated: applicant.elementary.yearGraduated,
       awards: applicant.elementary.awards,
-    })
+    });
 
     setSecondary({
       ...secondary,
@@ -564,48 +593,51 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       units: applicant.secondary.units,
       yearGraduated: applicant.secondary.yearGraduated,
       awards: applicant.secondary.awards,
-    })
+    });
 
-    setCollege(applicant.college)
+    setCollege(applicant.college);
 
-    setVocational(applicant.vocational)
+    setVocational(applicant.vocational);
 
-    setGraduate(applicant.graduate)
+    setGraduate(applicant.graduate);
 
-    setEligibility(applicant.eligibility)
+    setEligibility(applicant.eligibility);
 
-    setWorkExperience(applicant.workExperience)
+    setWorkExperience(applicant.workExperience);
 
-    setVoluntaryWork(applicant.voluntaryWork)
+    setVoluntaryWork(applicant.voluntaryWork);
 
-    setLearningDevelopment(applicant.learningDevelopment)
+    setLearningDevelopment(applicant.learningDevelopment);
 
-    setSkills(applicant.skills)
+    setSkills(applicant.skills);
 
-    setRecognitions(applicant.recognitions)
+    setRecognitions(applicant.recognitions);
 
-    setOrganizations(applicant.organizations)
+    setOrganizations(applicant.organizations);
 
     setOfficeRelation({
       ...officeRelation,
       details: applicant.officeRelation.details,
       withinFourthDegree: applicant.officeRelation.withinFourthDegree,
       withinThirdDegree: applicant.officeRelation.withinThirdDegree,
-    })
+    });
 
-    setReferences(applicant.references)
+    setReferences(applicant.references);
 
     setGovernmentIssuedId({
       ...governmentIssuedId,
       idNumber: applicant.governmentIssuedId.idNumber,
-      issueDate: dayjs.utc(applicant.governmentIssuedId.issueDate).format('YYYY-MM-DD').toString(),
+      issueDate: dayjs
+        .utc(applicant.governmentIssuedId.issueDate)
+        .format('YYYY-MM-DD')
+        .toString(),
       issuedId: applicant.governmentIssuedId.issuedId,
       issuePlace: applicant.governmentIssuedId.issuePlace,
-    })
-  }
+    });
+  };
 
   const setApplicantInfo = async () => {
-    const applicant = JSON.parse(localStorage.getItem('applicant')!)
+    const applicant = JSON.parse(localStorage.getItem('applicant')!);
     setPersonalInfo({
       ...personalInfo,
       lastName: applicant.lastName,
@@ -613,37 +645,37 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
       middleName: applicant.middleName,
       nameExtension: applicant.nameExtension,
       email: applicant.email,
-    })
-  }
+    });
+  };
 
   // prompts when window or tab is being closed
   useEffect(() => {
     const handleTabClose = (e: any) => {
-      e.preventDefault()
+      e.preventDefault();
 
-      return (e.returnValue = 'Are you sure you want to exit?')
-    }
+      return (e.returnValue = 'Are you sure you want to exit?');
+    };
 
-    window.addEventListener('beforeunload', handleTabClose)
+    window.addEventListener('beforeunload', handleTabClose);
 
     return () => {
-      window.removeEventListener('beforeunload', handleTabClose)
-    }
-  }, [])
+      window.removeEventListener('beforeunload', handleTabClose);
+    };
+  }, []);
 
   return (
     <>
-      <div className="col-span-1 min-h-screen w-full">
+      <div className="w-full min-h-screen col-span-1">
         <div className="min-h-screen bg-slate-100">
           {isLoading ? (
             <>
-              <div className="flex h-screen w-full items-center justify-center">
+              <div className="flex items-center justify-center w-full h-screen">
                 <SpinnerDotted
                   speed={150}
                   thickness={120}
                   color="indigo"
                   size={100}
-                  className="flex h-full w-full animate-pulse transition-all "
+                  className="flex w-full h-full transition-all animate-pulse "
                 />
               </div>
             </>
@@ -655,18 +687,29 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   try {
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`, {
-      withCredentials: true,
-      headers: { Cookie: `${context.req.headers.cookie}` },
-    })
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`,
+      {
+        withCredentials: true,
+        headers: { Cookie: `${context.req.headers.cookie}` },
+      }
+    );
 
-    return { props: { vppId: data.vppId, pdsDetails: data.pdsDetails, externalApplicantId: data.externalApplicantId } }
+    return {
+      props: {
+        vppId: data.vppId,
+        pdsDetails: data.pdsDetails,
+        externalApplicantId: data.externalApplicantId,
+      },
+    };
   } catch (error) {
-    return { props: { vppId: context.query.vpp_id } }
+    return { props: { vppId: context.query.vpp_id } };
   }
-}
+};
