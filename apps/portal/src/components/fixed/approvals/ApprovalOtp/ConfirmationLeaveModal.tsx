@@ -2,7 +2,7 @@
 import { leaveAction, passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
@@ -27,13 +27,17 @@ export const ConfirmationLeaveModal = ({
     patchLeave,
     patchLeaveSuccess,
     patchLeaveFail,
+    setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
+    loadingLeaveResponse,
   } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
     patchLeave: state.patchLeave,
     patchLeaveSuccess: state.patchLeaveSuccess,
     patchLeaveFail: state.patchLeaveFail,
-    setApprovedLeaveModalIsOpen: state.setApprovedPassSlipModalIsOpen,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen, // for disapproving leave
+    setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen, // for cancelling approved leave
+    loadingLeaveResponse: state.loading.loadingLeaveResponse,
   }));
 
   const handleSubmit = () => {
@@ -58,7 +62,8 @@ export const ConfirmationLeaveModal = ({
       patchLeaveSuccess(result);
       closeModalAction(); // close confirmation of decline modal
       setTimeout(() => {
-        setApprovedLeaveModalIsOpen(false); // close main pass slip info modal
+        setPendingLeaveModalIsOpen(false); // close leave pending modal
+        setApprovedLeaveModalIsOpen(false);
       }, 200);
     }
   };
@@ -86,6 +91,13 @@ export const ConfirmationLeaveModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {loadingLeaveResponse ? (
+            <AlertNotification
+              alertType="info"
+              notifMessage={'Processing'}
+              dismissible={false}
+            />
+          ) : null}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
             {`Are you sure you want to ${
               action === LeaveStatus.DISAPPROVED_BY_SUPERVISOR

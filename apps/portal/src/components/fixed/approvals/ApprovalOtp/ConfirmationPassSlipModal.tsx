@@ -2,7 +2,7 @@
 import { passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
@@ -26,12 +26,16 @@ export const ConfirmationPassSlipModal = ({
     patchPassSlipSuccess,
     patchPassSlipFail,
     setApprovedPassSlipModalIsOpen,
+    setPendingPassSlipModalIsOpen,
+    loadingPassSlipResponse,
   } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
     patchPassSlip: state.patchPassSlip,
     patchPassSlipSuccess: state.patchPassSlipSuccess,
     patchPassSlipFail: state.patchPassSlipFail,
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
+    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    loadingPassSlipResponse: state.loading.loadingPassSlipResponse,
   }));
 
   const handleSubmit = () => {
@@ -55,7 +59,8 @@ export const ConfirmationPassSlipModal = ({
       patchPassSlipSuccess(result);
       closeModalAction(); // close confirmation of decline modal
       setTimeout(() => {
-        setApprovedPassSlipModalIsOpen(false); // close main pass slip info modal
+        setApprovedPassSlipModalIsOpen(false); // close Approved pass slip modal for cancelling approved pass slips cases
+        setPendingPassSlipModalIsOpen(false); // close Pending modal for disapproving pass slip cases
       }, 200);
     }
   };
@@ -83,6 +88,13 @@ export const ConfirmationPassSlipModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {loadingPassSlipResponse ? (
+            <AlertNotification
+              alertType="info"
+              notifMessage={'Processing'}
+              dismissible={false}
+            />
+          ) : null}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
             {`Are you sure you want to ${
               action === PassSlipStatus.DISAPPROVED

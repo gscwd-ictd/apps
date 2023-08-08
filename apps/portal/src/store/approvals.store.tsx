@@ -349,7 +349,7 @@ export const useApprovalStore = create<ApprovalState>()(
           completed: {
             approved: response.completed.approved,
             disapproved: response.completed.disapproved,
-            cancelled: [],
+            cancelled: response.completed.cancelled,
           },
           forApproval: response.forApproval,
         },

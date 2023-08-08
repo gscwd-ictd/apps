@@ -192,7 +192,7 @@ export const ApprovalsPendingPassSlipModal = ({
                     'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'
                   }
                   value={passSlip.purposeDestination}
-                  rows={3}
+                  rows={2}
                   disabled={true}
                 ></textarea>
               </div>
@@ -244,7 +244,7 @@ export const ApprovalsPendingPassSlipModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto">
+            <div className="w-full flex justify-end">
               <Button
                 variant={'primary'}
                 size={'md'}

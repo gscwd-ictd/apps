@@ -190,6 +190,7 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
+      console.log(swrPassSlips);
       getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 
@@ -220,6 +221,7 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
+      console.log(swrLeaves);
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
@@ -321,12 +323,14 @@ export default function Approvals({
             closeModalAction={closeApprovedLeaveModal}
           />
 
+          {/* Disapproved Leaves */}
           <ApprovalsCompletedLeaveModal
             modalState={disapprovedLeaveModalIsOpen}
             setModalState={setDisapprovedLeaveModalIsOpen}
             closeModalAction={closeDisapprovedLeaveModal}
           />
 
+          {/* Cancelled Leaves */}
           <ApprovalsCompletedLeaveModal
             modalState={cancelledLeaveModalIsOpen}
             setModalState={setCancelledLeaveModalIsOpen}
@@ -347,12 +351,14 @@ export default function Approvals({
             closeModalAction={closeApprovedPassSlipModal}
           />
 
+          {/* Disapproved Pass Slips */}
           <ApprovalsCompletedPassSlipModal
             modalState={disapprovedPassSlipModalIsOpen}
             setModalState={setDisapprovedPassSlipModalIsOpen}
             closeModalAction={closeDisapprovedPassSlipModal}
           />
 
+          {/* Cancelled Pass Slips */}
           <ApprovalsCompletedPassSlipModal
             modalState={cancelledPassSlipModalIsOpen}
             setModalState={setCancelledPassSlipModalIsOpen}

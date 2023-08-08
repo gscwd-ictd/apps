@@ -147,6 +147,8 @@ export type SupervisorLeaveDetails = {
   isTerminalLeave: boolean | null;
   requestedCommutation: boolean | null;
   status: string;
+  supervisorDisapprovalRemarks: string;
+  hrdmDisapprovalRemarks: string;
   employee: {
     employeeId: string;
     employeeName: string;

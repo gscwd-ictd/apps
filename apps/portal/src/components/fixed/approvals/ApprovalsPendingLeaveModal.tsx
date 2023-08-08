@@ -176,6 +176,18 @@ export const ApprovalsPendingLeaveModal = ({
                   ) : null}
 
                   <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
+                      Employee Name:
+                    </label>
+
+                    <div className="w-auto md:w-96">
+                      <label className="text-slate-500 h-12 w-96  text-md ">
+                        {leaveIndividualDetail?.employee?.employeeName}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                     <label className="text-md font-medium text-slate-500 whitespace-nowrap">
                       Leave Type:
                     </label>
@@ -392,7 +404,7 @@ export const ApprovalsPendingLeaveModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto">
+            <div className="w-full flex justify-end">
               <Button
                 form={`LeaveAction`}
                 variant={'primary'}
