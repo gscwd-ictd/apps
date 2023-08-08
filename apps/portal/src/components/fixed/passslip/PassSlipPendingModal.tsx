@@ -17,10 +17,14 @@ export const PassSlipPendingModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipPendingModalProps) => {
-  const { passSlip, cancelApplicationModalIsOpen, setCancelApplicationModalIsOpen } = usePassSlipStore((state) => ({
+  const {
+    passSlip,
+    cancelApplicationModalIsOpen,
+    setCancelApplicationModalIsOpen,
+  } = usePassSlipStore((state) => ({
     passSlip: state.passSlip,
     cancelApplicationModalIsOpen: state.cancelApplicationModalIsOpen,
-    setCancelApplicationModalIsOpen: state.setCancelApplicationModalIsOpen
+    setCancelApplicationModalIsOpen: state.setCancelApplicationModalIsOpen,
   }));
 
   // for cancel pass slip button
@@ -29,10 +33,10 @@ export const PassSlipPendingModal = ({
     setCancelApplicationModalIsOpen(true);
   };
 
-    // cancel action for Confirmation Application Modal
-    const closeConfirmationModal = async () => {
-      setCancelApplicationModalIsOpen(false);
-    };
+  // cancel action for Confirmation Application Modal
+  const closeConfirmationModal = async () => {
+    setCancelApplicationModalIsOpen(false);
+  };
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -59,12 +63,11 @@ export const PassSlipPendingModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <AlertNotification
-                alertType="warning"
-                notifMessage="Awaiting Supervisor Approval"
+                alertType="info"
+                notifMessage="For Supervisor Approval"
                 dismissible={false}
               />
 

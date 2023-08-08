@@ -71,14 +71,16 @@ export const AllPassSlipListTab = ({
                   <p className="text-sm text-indigo-500">
                     Status:{' '}
                     {item.status === PassSlipStatus.ONGOING
-                      ? 'Ongoing'
+                      ? 'ONGOING'
                       : item.status === PassSlipStatus.APPROVED
-                      ? 'Approved'
+                      ? 'APPROVED'
                       : item.status === PassSlipStatus.DISAPPROVED
-                      ? 'Disapproved'
+                      ? 'DISAPPROVED'
                       : item.status === PassSlipStatus.CANCELLED
-                      ? 'Cancelled'
-                      : item.status}
+                      ? 'CANCELLED'
+                      : item.status === PassSlipStatus.FOR_APPROVAL
+                      ? 'FOR APPROVAL'
+                      : item.status.toUpperCase()}
                   </p>
                 </div>
               </li>
