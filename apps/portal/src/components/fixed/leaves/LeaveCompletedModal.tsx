@@ -137,14 +137,46 @@ export const LeaveCompletedModal = ({
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   {leaveIndividualDetail.leaveApplicationBasicInfo ? (
                     <AlertNotification
-                      alertType="info"
+                      alertType={
+                        leaveIndividualDetail.leaveApplicationBasicInfo
+                          ?.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                        leaveIndividualDetail.leaveApplicationBasicInfo
+                          ?.status === LeaveStatus.FOR_HRMO_APPROVAL ||
+                        leaveIndividualDetail.leaveApplicationBasicInfo
+                          ?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                        leaveIndividualDetail.leaveApplicationBasicInfo
+                          ?.status === LeaveStatus.APPROVED
+                          ? 'info'
+                          : 'error'
+                      }
                       notifMessage={
-                        leaveIndividualDetail.leaveApplicationBasicInfo?.status
-                          .charAt(0)
-                          .toUpperCase() +
-                        leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
-                          1
-                        )
+                        leaveIndividualDetail.leaveApplicationBasicInfo
+                          ?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                          ? 'For HRDM Approval'
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'Disapproved by HRDM '
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          ? 'For Supervisor Approval '
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'Disapproved by Supervisor '
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'Disapproved by HRMO '
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.APPROVED
+                          ? 'Approved '
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.CANCELLED
+                          ? 'Cancelled '
+                          : leaveIndividualDetail.leaveApplicationBasicInfo?.status
+                              .charAt(0)
+                              .toUpperCase() +
+                            leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
+                              1
+                            )
                       }
                       dismissible={false}
                     />

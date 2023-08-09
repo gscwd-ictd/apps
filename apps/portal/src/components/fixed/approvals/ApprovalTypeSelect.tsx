@@ -11,6 +11,7 @@ export const ApprovalTypeSelect = () => {
     (state) => state.setSelectedApprovalType
   );
   const setTab = useApprovalStore((state) => state.setTab);
+  const tab = useApprovalStore((state) => state.tab);
 
   const selection = [
     { type: 'For Approval', code: 1 },
@@ -50,9 +51,9 @@ export const ApprovalTypeSelect = () => {
   };
 
   return (
-    <div className="flex justify-end gap-2">
+    <div className="flex w-full justify-start gap-2 mb-4">
       <Select
-        className="w-40 md:w-52"
+        className="w-[95%] md:w-[98%] lg:w-[95%]"
         data={selection}
         initial={selection[0]}
         listDef={list}

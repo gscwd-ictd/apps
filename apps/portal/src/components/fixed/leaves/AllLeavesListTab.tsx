@@ -56,7 +56,8 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                     {leave.leaveName}
                   </h1>
                   <p className="text-sm text-gray-500">
-                    Date of Filing: {dayjs(leave.dateOfFiling).format('MMMM DD, YYYY')}
+                    Date of Filing:{' '}
+                    {dayjs(leave.dateOfFiling).format('MMMM DD, YYYY')}
                   </p>
                   <p className="text-sm text-gray-500">
                     Working Days:{' '}
@@ -69,16 +70,7 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                   </p>
 
                   <p className="text-sm text-indigo-500">
-                    Status:{' '}
-                    {leave.status === LeaveStatus.ONGOING
-                      ? 'Ongoing'
-                      : leave.status === LeaveStatus.APPROVED
-                      ? 'Approved'
-                      : leave.status === LeaveStatus.DISAPPROVED
-                      ? 'Disapproved'
-                      : leave.status === LeaveStatus.CANCELLED
-                      ? 'Cancelled'
-                      : leave.status}
+                    Status: {leave.status.toUpperCase()}
                   </p>
                 </div>
               </li>

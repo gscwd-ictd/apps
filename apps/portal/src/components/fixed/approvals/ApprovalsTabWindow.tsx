@@ -30,10 +30,10 @@ export const ApprovalsTabWindow = ({
     approvedPassSlips: state.passSlips.completed.approved,
     disapprovedPassSlips: state.passSlips.completed.disapproved,
     cancelledPassSlips: state.passSlips.completed.cancelled,
-    forApprovalLeaves: state.leaves,
-    approvedLeaves: state.leaves,
-    disapprovedLeaves: state.leaves,
-    cancelledLeaves: state.leaves,
+    forApprovalLeaves: state.leaves.forApproval,
+    approvedLeaves: state.leaves.completed.approved,
+    disapprovedLeaves: state.leaves.completed.disapproved,
+    cancelledLeaves: state.leaves.completed.cancelled,
   }));
 
   return (

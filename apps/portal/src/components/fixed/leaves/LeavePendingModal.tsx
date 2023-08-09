@@ -8,6 +8,7 @@ import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -113,8 +114,24 @@ export const LeavePendingModal = ({
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   {leaveIndividualDetail.leaveApplicationBasicInfo ? (
                     <AlertNotification
-                      alertType="warning"
-                      notifMessage={'Awaiting approval'}
+                      alertType="info"
+                      notifMessage={
+                        leaveIndividualDetail.leaveApplicationBasicInfo
+                          ?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                          ? 'For HRDM Approval'
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.FOR_HRMO_APPROVAL
+                          ? 'For HRMO Approval'
+                          : leaveIndividualDetail.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          ? 'For Supervisor Approval '
+                          : leaveIndividualDetail.leaveApplicationBasicInfo?.status
+                              .charAt(0)
+                              .toUpperCase() +
+                            leaveIndividualDetail.leaveApplicationBasicInfo?.status.slice(
+                              1
+                            )
+                      }
                       dismissible={false}
                     />
                   ) : null}
