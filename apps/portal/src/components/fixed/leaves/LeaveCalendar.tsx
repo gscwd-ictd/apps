@@ -91,6 +91,7 @@ export default function Calendar({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrUnavailableDates)) {
+      console.log(swrUnavailableDates);
       getUnavailableSuccess(swrIsLoading, swrUnavailableDates);
     }
 

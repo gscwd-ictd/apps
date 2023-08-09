@@ -22,7 +22,7 @@ interface OtpProps {
   remarks?: string;
 }
 
-export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
+export const ApprovalOtpContentsPassSlip: FunctionComponent<OtpProps> = ({
   mobile,
   employeeId,
   action,
@@ -172,7 +172,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     setOtpCode(e);
   };
 
-  const handlePatchResult = async (data: passSlipAction) => {
+  const handlePatchResult_PassSlip = async (data: passSlipAction) => {
     const { error, result } = await patchPortal('/v1/pass-slip', data);
     if (error) {
       patchPassSlipFail(result);
@@ -190,7 +190,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
       localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
       localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
       patchPassSlip();
-      handlePatchResult(data);
+      handlePatchResult_PassSlip(data);
     } else {
       //nothing to do
     }

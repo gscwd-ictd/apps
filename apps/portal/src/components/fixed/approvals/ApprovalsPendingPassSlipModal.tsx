@@ -7,9 +7,9 @@ import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
-import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
+import { ApprovalOtpContentsPassSlip } from './ApprovalOtp/ApprovalOtpContentsPassSlip';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -27,14 +27,19 @@ export const ApprovalsPendingPassSlipModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipPendingModalProps) => {
-  const { passSlip, otpPassSlipModalIsOpen, setOtpPassSlipModalIsOpen, declineApplicationModalIsOpen, setDeclineApplicationModalIsOpen } =
-    useApprovalStore((state) => ({
-      passSlip: state.passSlipIndividualDetail,
-      otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
-      setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
-      declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-      setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
-    }));
+  const {
+    passSlip,
+    otpPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen,
+    declineApplicationModalIsOpen,
+    setDeclineApplicationModalIsOpen,
+  } = useApprovalStore((state) => ({
+    passSlip: state.passSlipIndividualDetail,
+    otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
+    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+  }));
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } =
@@ -58,12 +63,11 @@ export const ApprovalsPendingPassSlipModal = ({
 
   const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
     setValue('passSlipId', passSlip.id);
-    if(data.status === 'approved') {
+    if (data.status === 'approved') {
       setOtpPassSlipModalIsOpen(true);
     } else {
       setDeclineApplicationModalIsOpen(true);
     }
-    
   };
 
   // set state for employee store
@@ -188,12 +192,12 @@ export const ApprovalsPendingPassSlipModal = ({
                     'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'
                   }
                   value={passSlip.purposeDestination}
-                  rows={3}
+                  rows={2}
                   disabled={true}
                 ></textarea>
               </div>
               <div className="w-full flex gap-2 justify-start items-center pt-4">
-                <span className="text-slate-500 text-xl font-medium">
+                <span className="text-slate-500 text-md font-medium">
                   Action:
                 </span>
                 <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
@@ -219,10 +223,10 @@ export const ApprovalsPendingPassSlipModal = ({
           <OtpModal
             modalState={otpPassSlipModalIsOpen}
             setModalState={setOtpPassSlipModalIsOpen}
-            title={'PASS SLIP OTP'}
+            title={'PASS SLIP APPROVAL OTP'}
           >
             {/* contents */}
-            <ApprovalOtpContents
+            <ApprovalOtpContentsPassSlip
               mobile={employeeDetail.profile.mobileNumber}
               employeeId={employeeDetail.user._id}
               action={watch('status')}
@@ -240,7 +244,7 @@ export const ApprovalsPendingPassSlipModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto">
+            <div className="w-full flex justify-end">
               <Button
                 variant={'primary'}
                 size={'md'}

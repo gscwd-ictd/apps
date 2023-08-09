@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiDocumentAdd } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -24,7 +23,7 @@ import {
   withCookieSession,
 } from '../../../../src/utils/helpers/session';
 
-export default function PassSlip({
+export default function TrainingSelection({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -65,10 +64,7 @@ export default function PassSlip({
             ) : (
               <ContentBody>
                 <>
-                  <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}></div>
-                    <div className="w-full"></div>
-                  </div>
+                  <div className={`w-full flex lg:flex-row flex-col`}></div>
                 </>
               </ContentBody>
             )}

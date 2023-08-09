@@ -35,6 +35,7 @@ import ApprovalsCompletedPassSlipModal from '../../../../src/components/fixed/ap
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
 
 export default function Approvals({
   employeeDetails,
@@ -52,11 +53,13 @@ export default function Approvals({
     cancelledPassSlipModalIsOpen,
 
     patchResponsePassSlip,
-    postResponseLeave,
+    patchResponseLeave,
     loadingPassSlip,
     loadingLeave,
     errorPassSlip,
+    errorPassSlipResponse,
     errorLeave,
+    errorLeaveResponse,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -89,11 +92,13 @@ export default function Approvals({
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
 
     patchResponsePassSlip: state.response.patchResponsePassSlip,
-    postResponseLeave: state.response.postResponseLeave,
+    patchResponseLeave: state.response.patchResponseLeave,
     loadingPassSlip: state.loading.loadingPassSlips,
     loadingLeave: state.loading.loadingLeaves,
     errorPassSlip: state.error.errorPassSlips,
+    errorPassSlipResponse: state.error.errorPassSlipResponse,
     errorLeave: state.error.errorLeaves,
+    errorLeaveResponse: state.error.errorLeaveResponse,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -185,6 +190,7 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
+      console.log(swrPassSlips);
       getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 
@@ -215,13 +221,13 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
+      console.log(swrLeaves);
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
     if (!isEmpty(swrLeaveError)) {
       getLeaveListFail(swrLeaveIsLoading, swrLeaveError.message);
     }
-    console.log(swrLeaves);
   }, [swrLeaves, swrLeaveError]);
 
   useEffect(() => {
@@ -231,35 +237,52 @@ export default function Approvals({
         emptyResponseAndError();
       }, 5000);
     }
-    if (!isEmpty(postResponseLeave)) {
+    if (!isEmpty(patchResponseLeave)) {
       mutateLeaves();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [patchResponsePassSlip, postResponseLeave]);
-
-  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
-
-  useEffect(() => {
-    setNavDetails({
-      profile: employeeDetails.user.email,
-      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
-    });
-  }, []);
+    if (!isEmpty(patchResponseLeave)) {
+      mutateLeaves();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [patchResponsePassSlip, patchResponseLeave]);
 
   return (
     <>
       <>
-        {/* Pass Slip List Load Failed Error */}
+        {/* Pass Slip Patch Success */}
         {!isEmpty(patchResponsePassSlip) ? (
           <ToastNotification
             toastType="success"
-            notifMessage={`Pass Slip action submitted.`}
+            notifMessage={`Pass Slip Application action submitted.`}
+          />
+        ) : null}
+
+        {/* Leave Patch Success */}
+        {!isEmpty(patchResponseLeave) ? (
+          <ToastNotification
+            toastType="success"
+            notifMessage={`Leave Application action submitted.`}
+          />
+        ) : null}
+
+        {/* Pass Slip Patch Failed Error */}
+        {!isEmpty(errorPassSlipResponse) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`Pass Slip Application action failed.`}
+          />
+        ) : null}
+
+        {/* Leave Patch Failed Error */}
+        {!isEmpty(errorLeaveResponse) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`Leave Application action failed.`}
           />
         ) : null}
 
@@ -293,6 +316,27 @@ export default function Approvals({
             closeModalAction={closePendingLeaveModal}
           />
 
+          {/* Leave Approved/Disapproved/Cancelled ModalApproval Modal */}
+          <ApprovalsCompletedLeaveModal
+            modalState={approvedLeaveModalIsOpen}
+            setModalState={setApprovedLeaveModalIsOpen}
+            closeModalAction={closeApprovedLeaveModal}
+          />
+
+          {/* Disapproved Leaves */}
+          <ApprovalsCompletedLeaveModal
+            modalState={disapprovedLeaveModalIsOpen}
+            setModalState={setDisapprovedLeaveModalIsOpen}
+            closeModalAction={closeDisapprovedLeaveModal}
+          />
+
+          {/* Cancelled Leaves */}
+          <ApprovalsCompletedLeaveModal
+            modalState={cancelledLeaveModalIsOpen}
+            setModalState={setCancelledLeaveModalIsOpen}
+            closeModalAction={closeCancelledPassSlipModal}
+          />
+
           {/* Pending Pass Slip For Approval Modal */}
           <ApprovalsPendingPassSlipModal
             modalState={pendingPassSlipModalIsOpen}
@@ -300,19 +344,21 @@ export default function Approvals({
             closeModalAction={closePendingPassSlipModal}
           />
 
-          {/* Pending Pass Slip Approved/Disapproved/Cancelled Modal */}
+          {/* Pass Slip Approved/Disapproved/Cancelled Modal */}
           <ApprovalsCompletedPassSlipModal
             modalState={approvedPassSlipModalIsOpen}
             setModalState={setApprovedPassSlipModalIsOpen}
             closeModalAction={closeApprovedPassSlipModal}
           />
 
+          {/* Disapproved Pass Slips */}
           <ApprovalsCompletedPassSlipModal
             modalState={disapprovedPassSlipModalIsOpen}
             setModalState={setDisapprovedPassSlipModalIsOpen}
             closeModalAction={closeDisapprovedPassSlipModal}
           />
 
+          {/* Cancelled Pass Slips */}
           <ApprovalsCompletedPassSlipModal
             modalState={cancelledPassSlipModalIsOpen}
             setModalState={setCancelledPassSlipModalIsOpen}
@@ -324,9 +370,8 @@ export default function Approvals({
               <ContentHeader
                 title="Employee Approvals"
                 subtitle="Approve Employee Pass Slips & Leaves"
-              >
-                <ApprovalTypeSelect />
-              </ContentHeader>
+              ></ContentHeader>
+
               {loadingPassSlip && loadingLeave ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
