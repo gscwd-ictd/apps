@@ -1,9 +1,14 @@
+import { GetServerSideProps, GetServerSidePropsContext } from 'next/types';
 import { Card } from '../../components/cards/Card';
 import { CardEmployee } from '../../components/cards/CardEmployee';
 import { Holidays } from '../../components/cards/Holidays';
 import { TardinessChart } from '../../components/charts/Tardiness';
 import { PendingDashboard } from '../../components/layouts/PendingDashboard';
 import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
+import {
+  getUserLoginDetails,
+  withCookieSession,
+} from '../../utils/helper/session';
 
 export function Index() {
   return (

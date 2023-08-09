@@ -1,9 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Menu, Transition } from '@headlessui/react';
 import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
-import { Fragment } from 'react';
 import { useJobOpeningsStore } from '../../../store/job-openings.store';
 import { usePublicationStore } from '../../../store/publication.store';
+import * as Popover from '@radix-ui/react-popover';
 
 type ActionDropDownProps = {
   publication: Publication;
@@ -31,45 +30,40 @@ export const ActionDropDown = ({ publication }: ActionDropDownProps) => {
 
   return (
     <>
-      <Menu as="div" className="relative inline-block text-left">
-        <div>
-          <Menu.Button className="h-full whitespace-nowrap rounded border-2 border-slate-100 bg-slate-100 px-2 py-[0.2rem] text-gray-700 transition-colors ease-in-out hover:bg-slate-200 active:bg-slate-300">
-            <span>...</span>
-          </Menu.Button>
-        </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
+      <Popover.Root>
+        <Popover.Trigger
+          className="h-full  select-none border border-gray-200 whitespace-nowrap rounded bg-slate-500 px-3 py-[0.2rem] transition-colors ease-in-out hover:bg-slate-400 active:bg-slate-600"
+          asChild
+          tabIndex={-1}
         >
-          <Menu.Items
-            className={`shadow-gray absolute z-50 mb-2 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-gray-100 ring-1 ring-black ring-opacity-5 focus:outline-none`}
-          >
-            {menuItems.map((item: string, idx: number) => {
-              return (
-                <div key={idx}>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        onClick={() => handleSelectAction(item)}
-                        className={`${
-                          active ? 'bg-slate-50 text-gray-900' : 'text-gray-500'
-                        } group flex w-full items-center rounded-md py-3 pl-4 pr-2`}
-                      >
-                        {item}
-                      </button>
-                    )}
-                  </Menu.Item>
-                </div>
-              );
-            })}
-          </Menu.Items>
-        </Transition>
-      </Menu>
+          <span className="text-white">...</span>
+        </Popover.Trigger>
+
+        <Popover.Content
+          className="shadow-2xl PopoverContent"
+          sideOffset={5}
+          collisionPadding={20}
+          avoidCollisions
+          // style={{ width: 'var(--radix-popover-trigger-width)' }}
+        >
+          {menuItems.map((item: string, idx: number) => {
+            return (
+              <div
+                key={idx}
+                className="z-50 flex w-full bg-white outline-none ring-0"
+              >
+                <button
+                  onClick={() => handleSelectAction(item)}
+                  className="flex items-center w-full py-3 pl-4 pr-2 text-gray-500 rounded-md active:bg-slate-50 active:text-gray-900 group"
+                >
+                  {item}
+                </button>
+              </div>
+            );
+          })}
+        </Popover.Content>
+        {/* menu items here */}
+      </Popover.Root>
     </>
   );
 };

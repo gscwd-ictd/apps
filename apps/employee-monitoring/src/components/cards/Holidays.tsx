@@ -78,10 +78,10 @@ export const Holidays = (): JSX.Element => {
                       ) {
                         return (
                           <div key={id} className="flex gap-2 px-2">
-                            <div className="w-[30%] ">
+                            <div className="w-full ">
                               {dayjs(holidayDate).format('MMMM D')}
                             </div>
-                            <div className="w-[70%]">{name}</div>
+                            <div className="w-full">{name}</div>
                           </div>
                         );
                       }
@@ -118,10 +118,10 @@ export const Holidays = (): JSX.Element => {
                     ) {
                       return (
                         <div key={id} className="flex gap-2 px-2 ">
-                          <div className="w-[30%] ">
+                          <div className="w-full ">
                             {dayjs(holidayDate).format('MMMM D')}
                           </div>
-                          <div className="w-[70%] ">{name}</div>
+                          <div className="w-full ">{name}</div>
                         </div>
                       );
                     }

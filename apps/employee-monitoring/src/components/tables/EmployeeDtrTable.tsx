@@ -170,8 +170,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
 
       {/* OFFICE EMPLOYEE DTR TABLE */}
       {isOfficeSchedule ? (
-        <div className="flex w-full mt-2">
-          <table className="w-full overflow-auto border table-fixed border-spacing-0 bg-slate-50">
+        <div className="flex w-full mt-2 overflow-x-auto ">
+          <table className="w-full border table-auto border-spacing-0 bg-slate-50">
             <thead className="">
               <tr className="text-xs border-b divide-x divide-y">
                 <th className="px-6 py-2 text-center ">Date</th>
@@ -330,7 +330,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                         <td className="py-2 text-center ">
                           <div>
                             <button
-                              className="text-green-700 disabled:text-red-600"
+                              className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                               onClick={() => openEditActionModal(logs)}
                               disabled={
                                 dayjs().isBefore(dayjs(logs.day)) ||
@@ -339,7 +339,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                                   : false
                               }
                             >
-                              <i className="text-xl text-inherit bx bxs-edit"></i>
+                              <i className="text-lg text-inherit bx bx-edit"></i>
                             </button>
                           </div>
                         </td>
@@ -514,7 +514,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                     </div>
                     <div className="flex items-center justify-center w-full col-span-1 border">
                       <button
-                        className="text-green-600 disabled:text-red-600"
+                        className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                         onClick={() => openEditActionModal(logs)}
                         disabled={
                           dayjs().isBefore(dayjs(logs.day)) ||
@@ -523,7 +523,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                             : false
                         }
                       >
-                        <i className="text-xl text-inherit bx bxs-edit"></i>
+                        <i className="text-lg text-inherit bx bx-edit"></i>
                       </button>
                     </div>
                   </section>

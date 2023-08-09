@@ -1,28 +1,18 @@
 import axios from 'axios';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
-import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiMail, HiX } from 'react-icons/hi';
-import { withSession } from '../../../utils/helpers/session';
+import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
 import { isEmpty } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification, OtpModal } from '@gscwd-apps/oneui';
-import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { ApprovalOtpContentsLeave } from './ApprovalOtp/ApprovalOtpContentsLeave';
-import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
