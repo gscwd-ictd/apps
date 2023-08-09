@@ -86,8 +86,8 @@ export const LeaveCompletedModal = ({
   const getDateNow = dayjs().toDate();
   const dateNow = dayjs(getDateNow).format('YYYY-MM-DD');
 
-  console.log(leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]);
-  console.log(dayjs(getDateNow).format('YYYY-MM-DD'));
+  // console.log(leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]);
+  // console.log(dayjs(getDateNow).format('YYYY-MM-DD'));
 
   return (
     <>
@@ -464,41 +464,27 @@ export const LeaveCompletedModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Button
-              disabled={
-                dateNow >
-                leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]
-                  ? true
-                  : false
-              }
-              variant={'warning'}
-              size={'md'}
-              loading={false}
-              onClick={(e) => setCancelLeaveModalIsOpen(true)}
-              type="submit"
-            >
-              Cancel Leave
-            </Button>
-            {/* <Link
-              href={`/${router.query.id}/leaves/${leaveId}`}
-              target={'_blank'}
-            >
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                disabled={
-                  isEmpty(errorLeaveDetails)
-                    ? leaveIndividualDetail.leaveApplicationBasicInfo
-                        ?.status === LeaveStatus.APPROVED
-                      ? false
-                      : true
-                    : true
-                }
-              >
-                Print PDF
-              </Button>
-            </Link> */}
+            {dateNow >
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0] ? (
+              <>
+                <Button
+                  disabled={
+                    dateNow >
+                    leaveIndividualDetail.leaveApplicationBasicInfo
+                      ?.leaveDates[0]
+                      ? true
+                      : false
+                  }
+                  variant={'warning'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => setCancelLeaveModalIsOpen(true)}
+                  type="submit"
+                >
+                  Cancel Leave
+                </Button>
+              </>
+            ) : null}
           </div>
         </Modal.Footer>
       </Modal>

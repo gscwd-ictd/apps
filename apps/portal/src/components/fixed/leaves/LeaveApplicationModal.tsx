@@ -339,7 +339,8 @@ export const LeaveApplicationModal = ({
       };
     } else if (
       data.typeOfLeaveDetails.leaveName === 'Maternity Leave' ||
-      data.typeOfLeaveDetails.leaveName === 'Study Leave'
+      data.typeOfLeaveDetails.leaveName === 'Study Leave' ||
+      data.typeOfLeaveDetails.leaveName === 'Rehabilitation Leave'
     ) {
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
@@ -361,14 +362,20 @@ export const LeaveApplicationModal = ({
         leaveApplicationDates: data.leaveApplicationDates,
       };
     }
-    //check first if leave dates are filled
+    //check first if leave dates or leave date range are filled
     if (
       (!isEmpty(watch('leaveApplicationDates')) &&
         watch('typeOfLeaveDetails.leaveName') !== 'Maternity Leave' &&
-        watch('typeOfLeaveDetails.leaveName') !== 'Study Leave') ||
+        watch('typeOfLeaveDetails.leaveName') !== 'Study Leave' &&
+        watch('typeOfLeaveDetails.leaveName') !== 'Rehabilitation Leave' &&
+        watch('typeOfLeaveDetails.leaveName') !==
+          'Special Leave Benefits for Women') ||
       (!isEmpty(watch('leaveApplicationDatesRange')) &&
         (watch('typeOfLeaveDetails.leaveName') === 'Maternity Leave' ||
-          watch('typeOfLeaveDetails.leaveName') === 'Study Leave'))
+          watch('typeOfLeaveDetails.leaveName') === 'Study Leave' ||
+          watch('typeOfLeaveDetails.leaveName') === 'Rehabilitation Leave' ||
+          watch('typeOfLeaveDetails.leaveName') ===
+            'Special Leave Benefits for Women'))
     ) {
       handlePostResult(dataToSend);
       postLeave();
@@ -505,7 +512,7 @@ export const LeaveApplicationModal = ({
                             '10-Day VAWC Leave'
                           ? `It shall be filed in advance or immediately upon the woman employee's return from such leave. It shall be accompanied by any of the following supporting documents: a. Barangay Protection Order (BPO) obtained from the barangay; b. Temporary/Permanent Protection Order (TPO/PPO) obtained from the court; c. If the protection order is not yet issued by the barangay or the court, a certification issued by the Punong Barangay/Kagawad or Prosecutor or the Clerk of Court that the application for the BPO, TPO, or PPO has been filed with the said office shall be sufficient to support the application for the ten-day leave; or d. In the absence of the BPO/TPO/PPO or the certification, a police report specifying the details of the occurence of violence on the victim and medical certificate may be considered, at the discretion of the immediate supervisor of the woman employee concerned.`
                           : watch('typeOfLeaveDetails.leaveName') ===
-                            'Rehabilitation Privilege'
+                            'Rehabilitation Leave'
                           ? `Application shall be made within one (1) week from the time of the accident except when a longer period is warranted. Letter request supported by relevant reports such as the police report, if any. Medical certificate on the nature of the injuries, the course of treatment involved, and the need to undergo rest, recuperation, and rehabilitation, as the case may be. Written concurrence of a government physician should be obtained relative to the recommendation for rehabilitation if the attending physician is a private practitioner, praticularly on the duration of the period of rehabilitation.`
                           : watch('typeOfLeaveDetails.leaveName') ===
                             'Special Leave Benefits for Women'
@@ -738,7 +745,11 @@ export const LeaveApplicationModal = ({
                     {isEmpty(leaveDates) &&
                     watch('typeOfLeaveDetails.leaveName') !==
                       'Maternity Leave' &&
-                    watch('typeOfLeaveDetails.leaveName') !== 'Study Leave' ? (
+                    watch('typeOfLeaveDetails.leaveName') !== 'Study Leave' &&
+                    watch('typeOfLeaveDetails.leaveName') !==
+                      'Rehabilitation Leave' &&
+                    watch('typeOfLeaveDetails.leaveName') !==
+                      'Special Leave Benefits for Women' ? (
                       <AlertNotification
                         alertType="warning"
                         notifMessage="Please select date of leave"
@@ -751,8 +762,11 @@ export const LeaveApplicationModal = ({
                     {leaveDateTo < leaveDateFrom &&
                     (watch('typeOfLeaveDetails.leaveName') ==
                       'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') == 'Study Leave' ||
                       watch('typeOfLeaveDetails.leaveName') ==
-                        'Study Leave') ? (
+                        'Rehabilitation Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ==
+                        'Special Leave Benefits for Women') ? (
                       <AlertNotification
                         alertType="warning"
                         notifMessage="Please select an acceptable date of leave"
@@ -799,8 +813,11 @@ export const LeaveApplicationModal = ({
                     {overlappingLeaveCount > 0 &&
                     (watch('typeOfLeaveDetails.leaveName') ===
                       'Maternity Leave' ||
-                      watch('typeOfLeaveDetails.leaveName') ===
-                        'Study Leave') ? (
+                      watch('typeOfLeaveDetails.leaveName') === 'Study Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ==
+                        'Rehabilitation Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ==
+                        'Special Leave Benefits for Women') ? (
                       <AlertNotification
                         alertType="warning"
                         notifMessage="There are overlapping leaves in your application"
@@ -814,7 +831,9 @@ export const LeaveApplicationModal = ({
                         'Maternity Leave' ||
                       watch('typeOfLeaveDetails.leaveName') === 'Study Leave' ||
                       watch('typeOfLeaveDetails.leaveName') ===
-                        'Rehabilitation Leave' ? (
+                        'Rehabilitation Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') ===
+                        'Special Leave Benefits for Women' ? (
                         <Calendar type={'range'} clickableDate={true} />
                       ) : (
                         <Calendar type={'single'} clickableDate={true} />
@@ -962,17 +981,28 @@ export const LeaveApplicationModal = ({
                         watch('typeOfLeaveDetails.leaveName') ===
                           'Study Leave' ||
                         watch('typeOfLeaveDetails.leaveName') ===
-                          'Rehabilitation Leave')
+                          'Rehabilitation Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') ===
+                          'Special Leave Benefits for Women')
                     ? true
                     : leaveDates.length <= 0 &&
                       watch('typeOfLeaveDetails.leaveName') !==
                         'Maternity Leave' &&
-                      watch('typeOfLeaveDetails.leaveName') !== 'Study Leave'
+                      watch('typeOfLeaveDetails.leaveName') !== 'Study Leave' &&
+                      watch('typeOfLeaveDetails.leaveName') !==
+                        'Rehabilitation Leave' &&
+                      watch('typeOfLeaveDetails.leaveName') !==
+                        'Special Leave Benefits for Women'
                     ? true
                     : leaveDateTo < leaveDateFrom &&
                       (watch('typeOfLeaveDetails.leaveName') ==
                         'Maternity Leave' ||
-                        watch('typeOfLeaveDetails.leaveName') == 'Study Leave')
+                        watch('typeOfLeaveDetails.leaveName') ==
+                          'Study Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') ==
+                          'Rehabilitation Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') ==
+                          'Special Leave Benefits for Women')
                     ? true
                     : false
                 }
