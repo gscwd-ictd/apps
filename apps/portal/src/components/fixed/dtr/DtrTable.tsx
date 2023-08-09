@@ -62,7 +62,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
       ) : !dtrIsLoading && employeeDtr?.dtrDays?.length > 0 ? (
         <>
           <div className="flex overflow-x-hidden w-full md:w-full flex-col rounded">
-            <div className="overflow-x-scroll w-[50rem] md:w-full">
+            <div className="overflow-x-hidden w-[50rem] md:w-full">
               <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                 <thead className="border-0">
                   <tr>
@@ -100,6 +100,8 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                               ? 'bg-rose-300'
                               : logs.holidayType === HolidayTypes.SPECIAL
                               ? 'bg-blue-300'
+                              : logs.dtr.remarks === 'Rest Day'
+                              ? 'bg-gray-200'
                               : ''
                           }`}
                         >

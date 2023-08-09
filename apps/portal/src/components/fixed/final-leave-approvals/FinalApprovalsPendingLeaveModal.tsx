@@ -13,8 +13,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { ApprovalOtpContentsLeave } from './ApprovalOtp/ApprovalOtpContentsLeave';
-import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
+import { ApprovalOtpContentsLeave } from './FinalApprovalOtp/ApprovalOtpContentsLeave';
+import { ConfirmationLeaveModal } from './FinalApprovalOtp/ConfirmationLeaveModal';
+import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -23,11 +24,11 @@ type ApprovalsPendingLeaveModalProps = {
 };
 
 const approvalAction: Array<SelectOption> = [
-  { label: 'Approve', value: `${LeaveStatus.FOR_HRDM_APPROVAL}` },
-  { label: 'Disapprove', value: `${LeaveStatus.DISAPPROVED_BY_SUPERVISOR}` },
+  { label: 'Approve', value: `${LeaveStatus.APPROVED}` },
+  { label: 'Disapprove', value: `${LeaveStatus.DISAPPROVED_BY_HRDM}` },
 ];
 
-export const ApprovalsPendingLeaveModal = ({
+export const FinalApprovalsPendingLeaveModal = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -40,7 +41,7 @@ export const ApprovalsPendingLeaveModal = ({
     setOtpLeaveModalIsOpen,
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
-  } = useApprovalStore((state) => ({
+  } = useFinalLeaveApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
@@ -61,7 +62,7 @@ export const ApprovalsPendingLeaveModal = ({
       defaultValues: {
         id: leaveIndividualDetail.id,
         status: null,
-        supervisorDisapprovalRemarks: '',
+        hrdmDisapprovalRemarks: '',
       },
     });
 
@@ -77,7 +78,7 @@ export const ApprovalsPendingLeaveModal = ({
 
   const onSubmit: SubmitHandler<leaveAction> = (data: leaveAction) => {
     setValue('id', leaveIndividualDetail.id);
-    if (data.status === LeaveStatus.FOR_HRDM_APPROVAL) {
+    if (data.status === LeaveStatus.APPROVED) {
       setOtpLeaveModalIsOpen(true);
     } else {
       setDeclineApplicationModalIsOpen(true);
@@ -348,8 +349,7 @@ export const ApprovalsPendingLeaveModal = ({
                       </select>
                     </div>
 
-                    {watch('status') ===
-                    LeaveStatus.DISAPPROVED_BY_SUPERVISOR ? (
+                    {watch('status') === LeaveStatus.DISAPPROVED_BY_HRDM ? (
                       <textarea
                         required={true}
                         className={
@@ -410,4 +410,4 @@ export const ApprovalsPendingLeaveModal = ({
   );
 };
 
-export default ApprovalsPendingLeaveModal;
+export default FinalApprovalsPendingLeaveModal;
