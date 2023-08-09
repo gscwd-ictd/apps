@@ -42,7 +42,7 @@ export default function FinalLeaveApprovals({
     disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen,
 
-    postResponseLeave,
+    patchResponseLeave,
     loadingLeave,
     errorLeave,
 
@@ -62,7 +62,7 @@ export default function FinalLeaveApprovals({
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
 
-    postResponseLeave: state.response.postResponseLeave,
+    patchResponseLeave: state.response.patchResponseLeave,
     loadingLeave: state.loading.loadingLeaves,
     errorLeave: state.error.errorLeaves,
 
@@ -104,7 +104,7 @@ export default function FinalLeaveApprovals({
     setDisapprovedLeaveModalIsOpen(false);
   };
 
-  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/supervisor/${employeeDetails.employmentDetails.userId}`;
+  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/hrdm`;
 
   const {
     data: swrLeaves,
@@ -126,36 +126,23 @@ export default function FinalLeaveApprovals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
+      console.log(swrLeaves);
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
     if (!isEmpty(swrLeaveError)) {
       getLeaveListFail(swrLeaveIsLoading, swrLeaveError.message);
     }
-    console.log(swrLeaves);
   }, [swrLeaves, swrLeaveError]);
 
   useEffect(() => {
-    if (!isEmpty(postResponseLeave)) {
+    if (!isEmpty(patchResponseLeave)) {
       mutateLeaves();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [postResponseLeave]);
-
-  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
-
-  useEffect(() => {
-    setNavDetails({
-      profile: employeeDetails.user.email,
-      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
-    });
-  }, []);
+  }, [patchResponseLeave]);
 
   return (
     <>

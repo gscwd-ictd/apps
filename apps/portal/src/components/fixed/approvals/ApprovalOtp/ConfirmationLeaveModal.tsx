@@ -1,66 +1,69 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { passSlipAction } from '../../../../types/approvals.type';
+import { leaveAction, passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
-type ConfirmationPassSlipModalProps = {
+type ConfirmationModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  action: PassSlipStatus; // disapprove or cancel
+  action: LeaveStatus; // disapprove or cancel
   tokenId: string; //like pass Slip Id, leave Id etc.
+  remarks: string; //reason for disapproval, cancellation
 };
 
-export const ConfirmationPassSlipModal = ({
+export const ConfirmationLeaveModal = ({
   modalState,
   setModalState,
   closeModalAction,
   action,
   tokenId,
-}: ConfirmationPassSlipModalProps) => {
+  remarks,
+}: ConfirmationModalProps) => {
   const {
-    patchPassSlip,
-    patchPassSlipSuccess,
-    patchPassSlipFail,
-    setApprovedPassSlipModalIsOpen,
-    setPendingPassSlipModalIsOpen,
-    loadingPassSlipResponse,
+    patchLeave,
+    patchLeaveSuccess,
+    patchLeaveFail,
+    setPendingLeaveModalIsOpen,
+    setApprovedLeaveModalIsOpen,
+    loadingLeaveResponse,
   } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
-    patchPassSlip: state.patchPassSlip,
-    patchPassSlipSuccess: state.patchPassSlipSuccess,
-    patchPassSlipFail: state.patchPassSlipFail,
-    setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
-    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
-    loadingPassSlipResponse: state.loading.loadingPassSlipResponse,
+    patchLeave: state.patchLeave,
+    patchLeaveSuccess: state.patchLeaveSuccess,
+    patchLeaveFail: state.patchLeaveFail,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen, // for disapproving leave
+    setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen, // for cancelling approved leave
+    loadingLeaveResponse: state.loading.loadingLeaveResponse,
   }));
 
   const handleSubmit = () => {
     if (tokenId) {
       const data = {
-        passSlipId: tokenId,
+        id: tokenId,
         status: action,
+        supervisorDisapprovalRemarks: remarks,
       };
-      patchPassSlip();
+      patchLeave();
       handlePatchResult(data);
     } else {
       //nothing to do
     }
   };
 
-  const handlePatchResult = async (data: passSlipAction) => {
-    const { error, result } = await patchPortal('/v1/pass-slip', data);
+  const handlePatchResult = async (data: leaveAction) => {
+    const { error, result } = await patchPortal('/v1/leave/supervisor', data);
     if (error) {
-      patchPassSlipFail(result);
+      patchLeaveFail(result);
     } else {
-      patchPassSlipSuccess(result);
+      patchLeaveSuccess(result);
       closeModalAction(); // close confirmation of decline modal
       setTimeout(() => {
-        setApprovedPassSlipModalIsOpen(false); // close Approved pass slip modal for cancelling approved pass slips cases
-        setPendingPassSlipModalIsOpen(false); // close Pending modal for disapproving pass slip cases
+        setPendingLeaveModalIsOpen(false); // close leave pending modal
+        setApprovedLeaveModalIsOpen(false);
       }, 200);
     }
   };
@@ -78,17 +81,17 @@ export const ConfirmationPassSlipModal = ({
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
               <span>
-                {PassSlipStatus.DISAPPROVED
-                  ? 'Disapprove Pass Slip Application'
-                  : PassSlipStatus.CANCELLED
-                  ? 'Disapprove Pass Slip Application'
-                  : 'Pass Slip Application'}
+                {LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                  ? 'Disapprove Leave Application'
+                  : LeaveStatus.CANCELLED
+                  ? 'Disapprove Leave Application'
+                  : 'Leave Application'}
               </span>
             </div>
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {loadingPassSlipResponse ? (
+          {loadingLeaveResponse ? (
             <AlertNotification
               alertType="info"
               notifMessage={'Processing'}
@@ -97,9 +100,9 @@ export const ConfirmationPassSlipModal = ({
           ) : null}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
             {`Are you sure you want to ${
-              action === PassSlipStatus.DISAPPROVED
+              action === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                 ? 'disapprove'
-                : action === PassSlipStatus.CANCELLED
+                : action === LeaveStatus.CANCELLED
                 ? 'cancel or void'
                 : ''
             } this application?`}

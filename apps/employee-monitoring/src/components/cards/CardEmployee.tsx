@@ -7,7 +7,7 @@ export const CardEmployee = () => {
       <section className="min-w-full h-[50%] bg-sky-300/80 rounded-t">
         <div className="flex flex-col m-5">
           <span className="font-medium text-sky-800">Welcome Back!</span>
-          <span className="text-xs font-normal text-sky-800">
+          <span className="z-10 text-xs font-normal text-sky-800">
             Employee Monitoring Dashboard
           </span>
         </div>

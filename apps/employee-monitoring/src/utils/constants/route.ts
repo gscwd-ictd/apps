@@ -1,3 +1,8 @@
+type Path = {
+  name: string;
+  path: string;
+};
+
 export const Paths = [
   '/dashboard', //0
   '/employees', //1
@@ -26,4 +31,58 @@ export const Paths = [
   '/settings/users', // 24
   '/settings/officer-of-the-day', // 25
   '/settings/system-logs', // 26
+];
+
+export const UpdatedPaths: Array<Path> = [
+  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Employees', path: '/employees' },
+  { name: 'Leave Applications', path: '/monitoring/leave-applications' },
+  { name: 'Travel Orders', path: '/monitoring/travel-orders' },
+  {
+    name: 'Trainings and Seminars',
+    path: '/monitoring/trainings-and-seminars',
+  },
+  { name: 'Overtime Monitoring', path: '/monitoring/overtime' },
+  { name: 'Pass Slips Monitoring', path: '/monitoring/pass-slips' },
+  { name: 'Daily Time Record', path: '/maintenance/daily-time-record' },
+  {
+    name: 'Recurring Leave Benefit',
+    path: 'maintenance/leave-benefits/recurring',
+  },
+  {
+    name: 'Cumulative Leave Benefit',
+    path: 'maintenance/leave-benefits/cumulative',
+  },
+  {
+    name: 'Special Leave Benefit',
+    path: 'maintenance/leave-benefits/special',
+  },
+  {
+    name: 'Holidays',
+    path: 'maintenance/events/holidays',
+  },
+  {
+    name: 'Work Suspensions',
+    path: 'maintenance/events/work-suspensions',
+  },
+  {
+    name: 'Overtime Maintenance',
+    path: 'maintenance/overtime',
+  },
+  {
+    name: 'Pass Slips Maintenance',
+    path: 'maintenance/pass-slips',
+  },
+  {
+    name: 'Office Schedules Maintenance',
+    path: 'maintenance/schedules/office',
+  },
+  {
+    name: 'Field Schedules Maintenance',
+    path: 'maintenance/schedules/field',
+  },
+  {
+    name: 'Pumping Station Schedules Maintenance',
+    path: 'maintenance/schedules/pumping-station',
+  },
 ];

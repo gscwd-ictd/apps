@@ -9,27 +9,30 @@ import { Footer } from '../components/navigations/Footer';
 
 import ability from '../context/casl/Ability';
 import { AbilityContext } from '../context/casl/Can';
+import Authmiddleware from '../utils/routes/route';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <AbilityContext.Provider value={ability}>
-        <Head>
-          <title>GSCWD Employee Monitoring</title>
-        </Head>
+      <Authmiddleware>
+        <AbilityContext.Provider value={ability}>
+          <Head>
+            <title>GSCWD Employee Monitoring</title>
+          </Head>
 
-        <PageContent>
-          <Aside>
-            <SideNavigation />
-          </Aside>
+          <PageContent>
+            <Aside>
+              <SideNavigation />
+            </Aside>
 
-          <TopNavigation />
-          <Main>
-            <Component {...pageProps} />
-            <Footer />
-          </Main>
-        </PageContent>
-      </AbilityContext.Provider>
+            <TopNavigation />
+            <Main>
+              <Component {...pageProps} />
+              <Footer />
+            </Main>
+          </PageContent>
+        </AbilityContext.Provider>
+      </Authmiddleware>
     </>
   );
 }

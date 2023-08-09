@@ -812,8 +812,9 @@ export const LeaveApplicationModal = ({
                     <div className="w-full p-4 bg-gray-50 rounded">
                       {watch('typeOfLeaveDetails.leaveName') ===
                         'Maternity Leave' ||
+                      watch('typeOfLeaveDetails.leaveName') === 'Study Leave' ||
                       watch('typeOfLeaveDetails.leaveName') ===
-                        'Study Leave' ? (
+                        'Rehabilitation Leave' ? (
                         <Calendar type={'range'} clickableDate={true} />
                       ) : (
                         <Calendar type={'single'} clickableDate={true} />
@@ -958,7 +959,10 @@ export const LeaveApplicationModal = ({
                     : overlappingLeaveCount > 0 &&
                       (watch('typeOfLeaveDetails.leaveName') ===
                         'Maternity Leave' ||
-                        watch('typeOfLeaveDetails.leaveName') === 'Study Leave')
+                        watch('typeOfLeaveDetails.leaveName') ===
+                          'Study Leave' ||
+                        watch('typeOfLeaveDetails.leaveName') ===
+                          'Rehabilitation Leave')
                     ? true
                     : leaveDates.length <= 0 &&
                       watch('typeOfLeaveDetails.leaveName') !==

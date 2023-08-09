@@ -52,7 +52,7 @@ export const Select = <T extends object>({
   });
 
   return (
-    <div>
+    <div className={`${className}`}>
       <Listbox
         ref={reference}
         as="div"

@@ -17,7 +17,7 @@ type PassSlipCompletedModalProps = {
   closeModalAction: () => void;
 };
 
-export const ApprovalsPendingPassSlipModal = ({
+export const ApprovalsCompletedPassSlipModal = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -151,7 +151,7 @@ export const ApprovalsPendingPassSlipModal = ({
                     'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'
                   }
                   value={passSlip.purposeDestination}
-                  rows={3}
+                  rows={2}
                   disabled={true}
                 ></textarea>
               </div>
@@ -160,7 +160,7 @@ export const ApprovalsPendingPassSlipModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto flex gap-2">
+            <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED ? (
                 <Button
                   variant={'warning'}
@@ -189,4 +189,4 @@ export const ApprovalsPendingPassSlipModal = ({
   );
 };
 
-export default ApprovalsPendingPassSlipModal;
+export default ApprovalsCompletedPassSlipModal;
