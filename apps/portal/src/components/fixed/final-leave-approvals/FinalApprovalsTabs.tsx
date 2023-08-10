@@ -1,4 +1,4 @@
-import { useApprovalStore } from '../../../../src/store/approvals.store';
+import { useApprovalStore } from '../../../store/approvals.store';
 import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 
 import { TabHeader } from '../tab/TabHeader';
@@ -9,19 +9,15 @@ type ApprovalsTabsProps = {
 };
 
 export const FinalApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
-  const {
-    forApprovalLeaves,
-    approvedLeaves,
-    disapprovedLeaves,
-    cancelledLeaves,
-    setTab,
-  } = useFinalLeaveApprovalStore((state) => ({
-    forApprovalLeaves: state.leaves.forApproval,
-    approvedLeaves: state.leaves.completed.approved,
-    disapprovedLeaves: state.leaves.completed.disapproved,
-    cancelledLeaves: state.leaves.completed.cancelled,
-    setTab: state.setTab,
-  }));
+  const { forApprovalLeaves, approvedLeaves, disapprovedLeaves, cancelledLeaves, setTab } = useFinalLeaveApprovalStore(
+    (state) => ({
+      forApprovalLeaves: state.leaves.forApproval,
+      approvedLeaves: state.leaves.completed.approved,
+      disapprovedLeaves: state.leaves.completed.disapproved,
+      cancelledLeaves: state.leaves.completed.cancelled,
+      setTab: state.setTab,
+    })
+  );
 
   return (
     <>

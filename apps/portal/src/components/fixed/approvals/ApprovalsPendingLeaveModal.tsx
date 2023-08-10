@@ -387,7 +387,7 @@ export const ApprovalsPendingLeaveModal = ({
             closeModalAction={closeDeclineModal}
             action={watch('status')}
             tokenId={leaveIndividualDetail.id}
-            remarks={''}
+            remarks={reason}
           />
         </Modal.Body>
         <Modal.Footer>
