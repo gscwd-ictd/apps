@@ -159,7 +159,7 @@ export type SupervisorLeaveDetails = {
   };
   leaveBenefitsId: {
     leaveName: string;
-    leaveType: string;
+    leaveType?: string;
   };
   leaveDates: Array<string>;
 };

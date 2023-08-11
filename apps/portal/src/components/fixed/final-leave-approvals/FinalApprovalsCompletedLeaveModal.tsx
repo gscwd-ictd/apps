@@ -150,9 +150,11 @@ export const ApprovalsCompletedLeaveModal = ({
                     <div className="w-auto sm:w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Maternity Leave' ||
-                        leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave'
+                        leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' ||
+                        leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Rehabilitation Leave' ||
+                        leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Leave Benefits for Women'
                           ? // show first and last date (array) only if maternity or study leave
-                            `From ${leaveIndividualDetail?.leaveDates[0]} To ${
+                            `${leaveIndividualDetail?.leaveDates[0]} - ${
                               leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
                             }`
                           : // show all dates if not maternity or study leave

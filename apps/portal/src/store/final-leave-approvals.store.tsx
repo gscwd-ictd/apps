@@ -1,15 +1,8 @@
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
-import { ErrorState, ModalState } from '../types/modal.type';
+import { ModalState } from '../types/modal.type';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import {
-  EmployeeLeave,
-  EmployeeLeaveDetails,
-  MonitoringLeave,
-  SupervisorLeaveDetails,
-} from '../../../../libs/utils/src/lib/types/leave-application.type';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
+import { SupervisorLeaveDetails } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 
 export type ApprovalLeaveList = {
@@ -53,9 +46,7 @@ export type ApprovalState = {
   };
 
   declineApplicationModalIsOpen: boolean;
-  setDeclineApplicationModalIsOpen: (
-    declineApplicationModalIsOpen: boolean
-  ) => void;
+  setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
 
   pendingLeaveModalIsOpen: boolean;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -64,9 +55,7 @@ export type ApprovalState = {
   setApprovedLeaveModalIsOpen: (approvedLeaveModalIsOpen: boolean) => void;
 
   disapprovedLeaveModalIsOpen: boolean;
-  setDisapprovedLeaveModalIsOpen: (
-    disapprovedLeaveModalIsOpen: boolean
-  ) => void;
+  setDisapprovedLeaveModalIsOpen: (disapprovedLeaveModalIsOpen: boolean) => void;
 
   cancelledLeaveModalIsOpen: boolean;
   setCancelledLeaveModalIsOpen: (cancelledLeaveModalIsOpen: boolean) => void;
@@ -83,9 +72,7 @@ export type ApprovalState = {
   setLeaveId: (id: string) => void;
 
   leaveIndividualDetail: SupervisorLeaveDetails;
-  setLeaveIndividualDetail: (
-    leaveIndividualDetail: SupervisorLeaveDetails
-  ) => void;
+  setLeaveIndividualDetail: (leaveIndividualDetail: SupervisorLeaveDetails) => void;
 
   getLeaveList: (loading: boolean) => void;
   getLeaveListSuccess: (loading: boolean, response) => void;
@@ -156,9 +143,7 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, tab }));
     },
 
-    setDeclineApplicationModalIsOpen: (
-      declineApplicationModalIsOpen: boolean
-    ) => {
+    setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
       set((state) => ({ ...state, declineApplicationModalIsOpen }));
     },
 
@@ -245,9 +230,7 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    setLeaveIndividualDetail: (
-      leaveIndividualDetail: SupervisorLeaveDetails
-    ) => {
+    setLeaveIndividualDetail: (leaveIndividualDetail: SupervisorLeaveDetails) => {
       set((state) => ({ ...state, leaveIndividualDetail }));
     },
 
@@ -301,13 +284,11 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
         ...state,
         response: {
           ...state.response,
-          patchResponsePassSlip: {} as PassSlip,
           patchResponseLeave: {} as SupervisorLeaveDetails,
         },
         error: {
           ...state.error,
           errorLeaveResponse: '',
-          errorPassSlipResponse: '',
         },
       }));
     },
