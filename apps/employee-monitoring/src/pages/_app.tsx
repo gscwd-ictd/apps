@@ -1,4 +1,4 @@
-import { AppProps } from 'next/app';
+import { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import '../../styles/tailwind.css';
 import '../../styles/custom.css';
@@ -6,16 +6,43 @@ import { Aside, Main, PageContent } from '@gscwd-apps/oneui';
 import { SideNavigation } from '../components/navigations/SideNavigation';
 import { TopNavigation } from '../components/navigations/TopNavigation';
 import { Footer } from '../components/navigations/Footer';
+import Authmiddleware from '../components/pages/authmiddleware';
 
-import ability from '../context/casl/Ability';
-import { AbilityContext } from '../context/casl/Can';
-import Authmiddleware from '../utils/routes/route';
+import { getCookieFromServer, UserProfile } from '../utils/helper/session';
+import { createContext, useEffect, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { Navigate } from '../components/router/navigate';
 
-function CustomApp({ Component, pageProps }: AppProps) {
+type AppOwnProps = {
+  userDetails: UserProfile;
+};
+
+type AuthmiddlewareState = {
+  userProfile: UserProfile;
+};
+
+export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
+
+export default function CustomApp({
+  Component,
+  pageProps,
+  userDetails,
+}: AppProps & AppOwnProps) {
+  const [userProfile, setUserProfile] = useState<UserProfile>(null);
+
+  useEffect(() => {
+    if (!isEmpty(userDetails) && isEmpty(userProfile)) {
+      console.log(isEmpty(userDetails));
+      setUserProfile(userDetails);
+    }
+  }, [userDetails, userProfile]);
+
   return (
     <>
-      <Authmiddleware>
-        <AbilityContext.Provider value={ability}>
+      <AuthmiddlewareContext.Provider
+        value={{ userProfile: userDetails ?? userProfile }}
+      >
+        <Authmiddleware>
           <Head>
             <title>GSCWD Employee Monitoring</title>
           </Head>
@@ -31,10 +58,15 @@ function CustomApp({ Component, pageProps }: AppProps) {
               <Footer />
             </Main>
           </PageContent>
-        </AbilityContext.Provider>
-      </Authmiddleware>
+        </Authmiddleware>
+      </AuthmiddlewareContext.Provider>
     </>
   );
 }
 
-export default CustomApp;
+CustomApp.getInitialProps = async (context: AppContext) => {
+  const userDetails = await getCookieFromServer(
+    context.ctx?.req?.headers?.cookie
+  );
+  return { userDetails };
+};

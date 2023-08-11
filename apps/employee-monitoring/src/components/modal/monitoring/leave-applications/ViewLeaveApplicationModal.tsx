@@ -387,8 +387,8 @@ const ViewLeaveApplicationModal: FunctionComponent<
                     />
                   </div>
 
-                  {/* VACATION LEAVE */}
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
+                    {/* VACATION LEAVE */}
                     {!isEmpty(
                       leaveApplicationDetails.leaveApplicationDetails
                         ?.inPhilippinesOrAbroad
@@ -439,6 +439,20 @@ const ViewLeaveApplicationModal: FunctionComponent<
                           }
                         />
                       </>
+                    ) : null}
+
+                    {/* SPL WOMEN */}
+                    {leaveApplicationDetails.leaveApplicationDetails
+                      ?.splWomen ? (
+                      <LabelValue
+                        label="Leave Details"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          leaveApplicationDetails.leaveApplicationDetails
+                            .splWomen
+                        }
+                      />
                     ) : null}
 
                     {/* STUDY LEAVE */}
