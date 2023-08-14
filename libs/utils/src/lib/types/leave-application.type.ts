@@ -74,6 +74,11 @@ export type EmployeeLeaveDetails = {
     status: LeaveStatus;
     leaveType?: LeaveType | null;
     maximumCredits?: number | null;
+    supervisorApprovalDate: string;
+    supervisorDisapprovalRemarks: string;
+    hrdmApprovalDate: string;
+    hrdmDisapprovalRemarks: string;
+    hrmoApprovalDate: string;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;

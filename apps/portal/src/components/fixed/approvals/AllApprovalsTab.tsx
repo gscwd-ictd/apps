@@ -8,7 +8,11 @@ import {
   SupervisorLeaveDetails,
 } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
-import { PassSlip, PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
+import {
+  PassSlip,
+  PassSlipApplicationForm,
+} from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
@@ -16,7 +20,11 @@ type AllApprovalListTabProps = {
   tab: number;
 };
 
-export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabProps) => {
+export const AllApprovalsTab = ({
+  passslips,
+  leaves,
+  tab,
+}: AllApprovalListTabProps) => {
   const {
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
@@ -128,12 +136,19 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
                   <h1 className="font-medium text-lg text-gray-600">
                     {item.natureOfBusiness} - {item.employeeName}
                   </h1>
-                  <p className="text-sm text-gray-500">Estimated Hours: {item.estimateHours}</p>
-                  <p className="text-sm text-gray-500">Purpose: {item.purposeDestination}</p>
                   <p className="text-sm text-gray-500">
-                    Date Applied: {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
+                    Estimated Hours: {item.estimateHours}
                   </p>
-                  <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
+                  <p className="text-sm text-gray-500">
+                    Purpose: {item.purposeDestination}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Date Applied:{' '}
+                    {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
+                  </p>
+                  <p className="text-sm text-indigo-500">
+                    Status: {item.status.toUpperCase()}
+                  </p>
                 </div>
               </li>
             );
@@ -150,22 +165,32 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    {item.leaveBenefitsId.leaveName} - {item.employee.employeeName}
+                    {item.leaveBenefitsId.leaveName} -{' '}
+                    {item.employee.employeeName}
                   </h1>
-                  <p className="text-sm text-gray-500">No. of Days: {item.leaveDates.length}</p>
+                  <p className="text-sm text-gray-500">
+                    No. of Days: {item.leaveDates.length}
+                  </p>
                   <p className="text-sm text-gray-500">
                     Dates:{' '}
-                    {item.leaveBenefitsId.leaveName === 'Maternity Leave' ||
-                    item.leaveBenefitsId.leaveName === 'Study Leave' ||
-                    item.leaveBenefitsId.leaveName === 'Rehabilitation Leave' ||
-                    item.leaveBenefitsId.leaveName === 'Special Leave Benefits for Women'
-                      ? `${item.leaveDates[0]} - ${item.leaveDates[item.leaveDates.length - 1]}`
+                    {item.leaveBenefitsId.leaveName === LeaveName.MATERNITY ||
+                    item.leaveBenefitsId.leaveName === LeaveName.STUDY ||
+                    item.leaveBenefitsId.leaveName ===
+                      LeaveName.REHABILITATION ||
+                    item.leaveBenefitsId.leaveName ===
+                      LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+                      ? `${item.leaveDates[0]} - ${
+                          item.leaveDates[item.leaveDates.length - 1]
+                        }`
                       : item.leaveDates.join(', ')}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Date Applied: {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
+                    Date Applied:{' '}
+                    {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
                   </p>
-                  <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
+                  <p className="text-sm text-indigo-500">
+                    Status: {item.status.toUpperCase()}
+                  </p>
                 </div>
               </li>
             );
@@ -174,7 +199,13 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
       ) : (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300 text-center">
-            No {tab === 1 ? 'pending approval' : tab === 2 ? 'pending approval' : 'data'} at the moment
+            No{' '}
+            {tab === 1
+              ? 'pending approval'
+              : tab === 2
+              ? 'pending approval'
+              : 'data'}{' '}
+            at the moment
           </h1>
         </div>
       )}
