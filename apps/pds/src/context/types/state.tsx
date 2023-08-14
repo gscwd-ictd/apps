@@ -1,21 +1,30 @@
-import { Dispatch, MutableRefObject, SetStateAction } from 'react'
-import EducationInfo from '../../schema/EducationInfo'
-import Eligibility from '../../schema/Eligibility'
-import Organizations from '../../schema/Organizations'
-import Recognitions from '../../schema/Recognitions'
-import Skills from '../../schema/Skills'
-import { Address } from '../../types/data/address.type'
-import { PersonalInfo, GovernmentIssuedIds, BasicInfo } from '../../types/data/basic-info.type'
-import { Child, Parent, Spouse } from '../../types/data/family.type'
-import { LearningDevelopment } from '../../types/data/lnd.type'
-import { OfficeRelation, GuiltyCharged, Convicted, SeparatedService, CandidateResigned, Immigrant, IndigenousPwdSoloParent, GovernmentIssuedId } from '../../types/data/supporting-info.type'
-import { VoluntaryWork } from '../../types/data/vol-work.type'
-import { WorkExperience } from '../../types/data/work.type'
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import EducationInfo from '../../schema/EducationInfo';
+import Eligibility from '../../schema/Eligibility';
+import Organizations from '../../schema/Organizations';
+import Recognitions from '../../schema/Recognitions';
+import Skills from '../../schema/Skills';
+import { Address } from '../../types/data/address.type';
 import {
-
-
-  WorkExpSheet,
-} from './types'
+  PersonalInfo,
+  GovernmentIssuedIds,
+  BasicInfo,
+} from '../../types/data/basic-info.type';
+import { Child, Parent, Spouse } from '../../types/data/family.type';
+import { LearningDevelopment } from '../../types/data/lnd.type';
+import {
+  OfficeRelation,
+  GuiltyCharged,
+  Convicted,
+  SeparatedService,
+  CandidateResigned,
+  Immigrant,
+  IndigenousPwdSoloParent,
+  GovernmentIssuedId,
+} from '../../types/data/supporting-info.type';
+import { VoluntaryWork } from '../../types/data/vol-work.type';
+import { WorkExperience } from '../../types/data/work.type';
+import { WorkExpSheet } from './types';
 
 // export type TabsState = {
 //   tab: number
@@ -24,19 +33,18 @@ import {
 //   setPersonalInfo: Dispatch<SetStateAction<CompleteName>>
 // }
 
-
 export type Employee = {
-  employeeId: string
-  lastName: string
-  middleName: string
-  firstName: string
-  fullName: string
-  email: string
-  nameExt: string
-  assignment: string
-  companyId?: string
-  positionTitle: string
-}
+  employeeId: string;
+  lastName: string;
+  middleName: string;
+  firstName: string;
+  fullName: string;
+  email: string;
+  nameExt: string;
+  assignment: string;
+  companyId?: string;
+  positionTitle: string;
+};
 
 // export type EmployeeData = {
 //   employmentDetails: EmploymentDetails
@@ -150,11 +158,11 @@ export type Employee = {
 // }
 
 export type WorkExpSheetState = {
-  workExpList: Array<WorkExperience>
-  setWorkExpList: Dispatch<SetStateAction<Array<WorkExperience>>>
-  workExpSheet: Array<WorkExpSheet>
-  setWorkExpSheet: Dispatch<SetStateAction<Array<WorkExpSheet>>>
-}
+  workExpList: Array<WorkExperience>;
+  setWorkExpList: Dispatch<SetStateAction<Array<WorkExperience>>>;
+  workExpSheet: Array<WorkExpSheet>;
+  setWorkExpSheet: Dispatch<SetStateAction<Array<WorkExpSheet>>>;
+};
 
 // export type VolWorkState = {
 //   voluntaryWork: Array<VoluntaryWork>
@@ -223,73 +231,72 @@ export type WorkExpSheetState = {
 // }
 
 export type PDSFormInputs = {
-  lastName: string
-  firstName: string
-  middleName: string
-  nameExtension: string
-  birthDate: string
-  sex: string
-  birthPlace: string
-  civilStatus: string
-  height: number
-  weight: number
-  bloodType: string
-  citizenship: string
-  citizenshipType: string
-  country: string
-  telephoneNumber: string
-  mobileNumber: string
-  email: string
-  gsisNumber: string
-  pagibigNumber: string
-  philhealthNumber: string
-  sssNumber: string
-  tinNumber: string
-  agencyNumber: string
-  resHouseNumber: string
-  resZipCode: string
-  elemSchoolName: string
-  elemDegree: string
-  elemFrom: number
-  elemTo: number
-  elemUnits: string
-  elemYearGraduated: number
-  elemAwards: string
-  secSchoolName: string
-  secDegree: string
-  secFrom: number
-  secTo: number
-  secUnits: string
-  secYearGraduated: number
-  secAwards: string
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  nameExtension: string;
+  birthDate: string;
+  sex: string;
+  birthPlace: string;
+  civilStatus: string;
+  height: number;
+  weight: number;
+  bloodType: string;
+  citizenship: string;
+  citizenshipType: string;
+  country: string;
+  telephoneNumber: string;
+  mobileNumber: string;
+  email: string;
+  gsisNumber: string;
+  pagibigNumber: string;
+  philhealthNumber: string;
+  sssNumber: string;
+  tinNumber: string;
+  agencyNumber: string;
+  resHouseNumber: string;
+  resZipCode: string;
+  elemSchoolName: string;
+  elemDegree: string;
+  elemFrom: number;
+  elemTo: number;
+  elemUnits: string;
+  elemYearGraduated: number;
+  elemAwards: string;
+  secSchoolName: string;
+  secDegree: string;
+  secFrom: number;
+  secTo: number;
+  secUnits: string;
+  secYearGraduated: number;
+  secAwards: string;
   // references: Array<References>
-  govtId: string
-  govtIdNo: string
-  issueDate: string
-  issuePlace: string
-}
+  govtId: string;
+  govtIdNo: string;
+  issueDate: string;
+  issuePlace: string;
+};
 
 export type TabState = {
-  selectedTab: number
-  setSelectedTab: Dispatch<SetStateAction<number>>
-  handlePrevTab: Function
-  handleNextTab: Function
+  selectedTab: number;
+  setSelectedTab: Dispatch<SetStateAction<number>>;
+  handlePrevTab: () => void;
+  handleNextTab: () => void;
   // nodeRef: MutableRefObject<any>
-}
+};
 
 export type ErrorState = {
-  resAddrError: boolean
-  setResAddrError: Dispatch<SetStateAction<boolean>>
-  permaAddrError: boolean
-  setPermaAddrError: Dispatch<SetStateAction<boolean>>
-  resAddrRef: MutableRefObject<any>
-  permaAddrRef: MutableRefObject<any>
-  shake: boolean
-  setShake: Dispatch<SetStateAction<boolean>>
-}
-
+  resAddrError: boolean;
+  setResAddrError: Dispatch<SetStateAction<boolean>>;
+  permaAddrError: boolean;
+  setPermaAddrError: Dispatch<SetStateAction<boolean>>;
+  resAddrRef: MutableRefObject<any>;
+  permaAddrRef: MutableRefObject<any>;
+  shake: boolean;
+  setShake: Dispatch<SetStateAction<boolean>>;
+};
 
 export type RefErrorState = {
-  refError: boolean
-  setRefError: Dispatch<SetStateAction<boolean>>
-}
+  refError: boolean;
+  setRefError: Dispatch<SetStateAction<boolean>>;
+};

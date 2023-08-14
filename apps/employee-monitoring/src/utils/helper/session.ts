@@ -7,7 +7,7 @@ type UserAccess = {
   this: string;
 };
 
-type UserProfile = {
+export type UserProfile = {
   _id: string; // employee id
   fullName: string;
   isSuperUser: boolean;
@@ -41,10 +41,34 @@ export const getUserLoginDetails = () => userLoginDetails;
  *
  */
 
+export async function getCookieFromServer(cookie) {
+  // assign the splitted cookie to cookies array of string
+
+  const cookiesArray = cookie ? (cookie.split(';') as string[]) : null;
+
+  // get the element where name is ssid_hrms
+  const hrmsSsid = getHrmsSsid(cookiesArray);
+
+  // get the hrms ssid length else redirect to /login
+  if (hrmsSsid && hrmsSsid.length > 0) {
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/users/details`,
+      {
+        withCredentials: true,
+        headers: { Cookie: `${hrmsSsid}` },
+      }
+    );
+
+    setUserLoginDetails(data);
+    return data;
+  } else return null;
+}
+
 // updated cookie with session
 export function withCookieSession(serverSideProps: GetServerSideProps) {
   console.log('FROM SESSION TS');
   return async (context: GetServerSidePropsContext) => {
+    console.log(context);
     try {
       // assign context cookie to cookie
       const cookie = context.req.headers.cookie;
@@ -95,7 +119,7 @@ export function getHrmsSsid(cookiesArray: Array<string> | null) {
   let cookieSsid: Array<string> = [];
 
   // execute this if there are cookies
-  if (cookiesArray.length > 0) {
+  if (cookiesArray && cookiesArray.length > 0) {
     // filter the cookies array
     cookieSsid = cookiesArray.filter((cookie) => cookie.includes('ssid_hrms'));
 

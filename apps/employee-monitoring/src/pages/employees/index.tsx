@@ -12,7 +12,6 @@ import { EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import useSWR from 'swr';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
-import { ActionDropdown } from 'apps/employee-monitoring/src/components/dropdown/ActionDropdown';
 import { isEmpty } from 'lodash';
 import {
   EmployeeSchedule,
