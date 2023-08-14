@@ -32,7 +32,6 @@ export default function CustomApp({
 
   useEffect(() => {
     if (!isEmpty(userDetails) && isEmpty(userProfile)) {
-      console.log(isEmpty(userDetails));
       setUserProfile(userDetails);
     }
   }, [userDetails, userProfile]);
@@ -68,5 +67,6 @@ CustomApp.getInitialProps = async (context: AppContext) => {
   const userDetails = await getCookieFromServer(
     context.ctx?.req?.headers?.cookie
   );
+
   return { userDetails };
 };
