@@ -1,12 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 
-import {
-  EmployeeLeaveDetails,
-  MonitoringLeave,
-  SupervisorLeaveDetails,
-} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import { SupervisorLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 type AllApprovalListTabProps = {
   leaves: Array<SupervisorLeaveDetails> | null;
@@ -81,14 +78,22 @@ export const FinalAllApprovalsTab = ({
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    {item.leaveBenefitsId?.leaveName} -{' '}
-                    {item.employee.employeeName}
+                    {item.leaveName} - {item.employee.employeeName}
                   </h1>
                   <p className="text-sm text-gray-500">
                     No. of Days: {item.leaveDates.length}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Dates: {item.leaveDates.join(', ')}
+                    Dates:{' '}
+                    {item.leaveName === LeaveName.MATERNITY ||
+                    item.leaveName === LeaveName.STUDY ||
+                    item.leaveName === LeaveName.REHABILITATION ||
+                    item.leaveName ===
+                      LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+                      ? `${item.leaveDates[0]} - ${
+                          item.leaveDates[item.leaveDates.length - 1]
+                        }`
+                      : item.leaveDates.join(', ')}
                   </p>
                   <p className="text-sm text-indigo-500">
                     Date Applied:{' '}

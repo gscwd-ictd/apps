@@ -10,7 +10,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 import { ConfirmationLeaveModal } from './FinalApprovalOtp/ConfirmationLeaveModal';
@@ -55,14 +55,15 @@ export const FinalApprovalsPendingLeaveModal = ({
   const [action, setAction] = useState<string>('');
 
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } = useForm<leaveAction>({
-    mode: 'onChange',
-    defaultValues: {
-      id: leaveIndividualDetail.id,
-      status: null,
-      hrdmDisapprovalRemarks: '',
-    },
-  });
+  const { reset, register, handleSubmit, watch, setValue } =
+    useForm<leaveAction>({
+      mode: 'onChange',
+      defaultValues: {
+        id: leaveIndividualDetail.id,
+        status: null,
+        hrdmDisapprovalRemarks: '',
+      },
+    });
 
   useEffect(() => {
     setValue('id', leaveIndividualDetail.id);
@@ -103,11 +104,17 @@ export const FinalApprovalsPendingLeaveModal = ({
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1024 ? 'lg' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="flex justify-between px-5">
-              <span className="text-xl md:text-2xl">Leave Application For Approval</span>
+              <span className="text-xl md:text-2xl">
+                Leave Application For Approval
+              </span>
               <button
                 className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                 onClick={customClose}
@@ -138,13 +145,17 @@ export const FinalApprovalsPendingLeaveModal = ({
                     <AlertNotification
                       alertType="warning"
                       notifMessage={
-                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                        leaveIndividualDetail?.status ===
+                        LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Approval'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.DISAPPROVED_BY_HRDM
                           ? 'Disapproved by HRDM '
-                          : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.FOR_SUPERVISOR_APPROVAL
                           ? 'For Supervisor Approval '
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          : leaveIndividualDetail?.status ===
+                            LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                           ? 'Disapproved by Supervisor '
                           : leaveIndividualDetail?.status
                       }
@@ -153,7 +164,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                   ) : null}
 
                   <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employee Name:</label>
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                      Employee Name:
+                    </label>
 
                     <div className="w-96">
                       <label className="w-full text-md text-slate-500 ">
@@ -163,58 +176,77 @@ export const FinalApprovalsPendingLeaveModal = ({
                   </div>
 
                   <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">Leave Type:</label>
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                      Leave Type:
+                    </label>
 
                     <div className="w-96 ">
                       <label className="w-full text-md text-slate-500 ">
-                        {leaveIndividualDetail?.leaveBenefitsId?.leaveName}
+                        {leaveIndividualDetail?.leaveName}
                       </label>
                     </div>
                   </div>
 
-                  {leaveIndividualDetail?.leaveBenefitsId?.leaveName ? (
+                  {leaveIndividualDetail?.leaveName ? (
                     <>
-                      {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Others' ? (
+                      {leaveIndividualDetail?.leaveName ===
+                        LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveName ===
+                        LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
+                      leaveIndividualDetail?.leaveName === LeaveName.OTHERS ? (
                         <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                           <label className="text-md font-medium text-slate-500">
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave'
+                            {leaveIndividualDetail?.leaveName ===
+                              LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveName ===
+                              LeaveName.SPECIAL_PRIVILEGE
                               ? 'Location:'
-                              : leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave'
+                              : leaveIndividualDetail?.leaveName ===
+                                LeaveName.SICK
                               ? 'Hospitalization:'
-                              : leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave'
+                              : leaveIndividualDetail?.leaveName ===
+                                LeaveName.STUDY
                               ? 'Study:'
-                              : leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Others'
+                              : leaveIndividualDetail?.leaveName ===
+                                LeaveName.OTHERS
                               ? 'Other Purpose: '
                               : null}
                           </label>
 
                           <div className="w-96 ">
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave' ? (
+                            {leaveIndividualDetail?.leaveName ===
+                              LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveName ===
+                              LeaveName.SPECIAL_PRIVILEGE ? (
                               <div className="w-full text-md text-slate-500">
-                                {leaveIndividualDetail?.inPhilippines ? 'Within the Philippines' : 'Abroad'}
+                                {leaveIndividualDetail?.inPhilippines
+                                  ? 'Within the Philippines'
+                                  : 'Abroad'}
                               </div>
                             ) : null}
 
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave' ? (
+                            {leaveIndividualDetail?.leaveName ===
+                            LeaveName.SICK ? (
                               <>
                                 <div className="w-full text-md text-slate-500">
-                                  {leaveIndividualDetail?.inHospital ? 'In Hospital' : 'Out Patient'}
+                                  {leaveIndividualDetail?.inHospital
+                                    ? 'In Hospital'
+                                    : 'Out Patient'}
                                 </div>
                               </>
                             ) : null}
 
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' ? (
+                            {leaveIndividualDetail?.leaveName ===
+                            LeaveName.STUDY ? (
                               <>
                                 <div className="w-full text-md text-slate-500">
-                                  {leaveIndividualDetail?.forBarBoardReview === '1'
+                                  {leaveIndividualDetail?.forBarBoardReview ===
+                                  '1'
                                     ? 'For BAR/Board Examination Review '
-                                    : leaveIndividualDetail?.forMastersCompletion === '1'
+                                    : leaveIndividualDetail?.forMastersCompletion ===
+                                      '1'
                                     ? `Completion of Master's Degree `
                                     : 'Other'}
                                 </div>
@@ -225,7 +257,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                       ) : null}
 
                       <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center w-full">
-                        <label className="text-md font-medium text-slate-500 whitespace-nowrap">Number of Days:</label>
+                        <label className="text-md font-medium text-slate-500 whitespace-nowrap">
+                          Number of Days:
+                        </label>
 
                         <div className="w-auto sm:w-96">
                           <label className="text-slate-500 h-12 w-96  text-md ">
@@ -235,17 +269,25 @@ export const FinalApprovalsPendingLeaveModal = ({
                       </div>
 
                       <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center w-full">
-                        <label className="text-md font-medium text-slate-500 whitespace-nowrap">Leave Dates:</label>
+                        <label className="text-md font-medium text-slate-500 whitespace-nowrap">
+                          Leave Dates:
+                        </label>
 
                         <div className="w-auto sm:w-96">
                           <label className="text-slate-500 h-12 w-96  text-md ">
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Maternity Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Rehabilitation Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Leave Benefits for Women'
+                            {leaveIndividualDetail?.leaveName ===
+                              LeaveName.MATERNITY ||
+                            leaveIndividualDetail?.leaveName ===
+                              LeaveName.STUDY ||
+                            leaveIndividualDetail?.leaveName ===
+                              LeaveName.REHABILITATION ||
+                            leaveIndividualDetail?.leaveName ===
+                              LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                               ? // show first and last date (array) only if maternity or study leave
                                 `${leaveIndividualDetail?.leaveDates[0]} - ${
-                                  leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
+                                  leaveIndividualDetail?.leaveDates[
+                                    leaveIndividualDetail?.leaveDates.length - 1
+                                  ]
                                 }`
                               : // show all dates if not maternity or study leave
                                 leaveIndividualDetail?.leaveDates?.join(', ')}
@@ -253,12 +295,15 @@ export const FinalApprovalsPendingLeaveModal = ({
                         </div>
                       </div>
 
-                      {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Leave Benefits for Women' ||
-                      (leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' &&
-                        leaveIndividualDetail?.leaveBenefitsId?.leaveName) ? (
+                      {leaveIndividualDetail?.leaveName ===
+                        LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveName ===
+                        LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveName ===
+                        LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                      (leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
+                        leaveIndividualDetail?.leaveName) ? (
                         <div className="flex flex-col items-center justify-between w-full">
                           <div className="flex flex-row items-center justify-between w-full">
                             <label className="text-md font-medium text-slate-500 whitespace-nowrap">
@@ -271,18 +316,22 @@ export const FinalApprovalsPendingLeaveModal = ({
                             className="w-full p-2 mt-2 text-md rounded resize-none text-slate-500 border-slate-300"
                             value={
                               //VACATION OR SPL //
-                              leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                              leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave'
+                              leaveIndividualDetail?.leaveName ===
+                                LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveName ===
+                                LeaveName.SPECIAL_PRIVILEGE
                                 ? leaveIndividualDetail.inPhilippines
                                   ? leaveIndividualDetail.inPhilippines
                                   : leaveIndividualDetail.abroad
                                 : //SICK LEAVE
-                                leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave'
+                                leaveIndividualDetail?.leaveName ===
+                                  LeaveName.SICK
                                 ? leaveIndividualDetail.inHospital
                                   ? leaveIndividualDetail.inHospital
                                   : leaveIndividualDetail.outPatient
                                 : //SLB FOR WOMEN
-                                leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Leave Benefits for Women'
+                                leaveIndividualDetail?.leaveName ===
+                                  LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                                 ? leaveIndividualDetail.splWomen
                                 : //NON OF THE ABOVE
                                   ''
@@ -295,7 +344,9 @@ export const FinalApprovalsPendingLeaveModal = ({
 
                   <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
                     <div className="w-full flex gap-2 justify-start items-center pt-4">
-                      <span className="text-slate-500 text-md font-medium">Action:</span>
+                      <span className="text-slate-500 text-md font-medium">
+                        Action:
+                      </span>
 
                       <select
                         id="action"
@@ -306,21 +357,27 @@ export const FinalApprovalsPendingLeaveModal = ({
                         <option value="" disabled>
                           Select Action
                         </option>
-                        {approvalAction.map((item: SelectOption, idx: number) => (
-                          <option value={item.value} key={idx}>
-                            {item.label}
-                          </option>
-                        ))}
+                        {approvalAction.map(
+                          (item: SelectOption, idx: number) => (
+                            <option value={item.value} key={idx}>
+                              {item.label}
+                            </option>
+                          )
+                        )}
                       </select>
                     </div>
 
                     {watch('status') === LeaveStatus.DISAPPROVED_BY_HRDM ? (
                       <textarea
                         required={true}
-                        className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                        className={
+                          'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'
+                        }
                         placeholder="Enter Reason"
                         rows={3}
-                        onChange={(e) => handleReason(e.target.value as unknown as string)}
+                        onChange={(e) =>
+                          handleReason(e.target.value as unknown as string)
+                        }
                       ></textarea>
                     ) : null}
                   </form>
@@ -354,7 +411,13 @@ export const FinalApprovalsPendingLeaveModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="w-full flex justify-end">
-              <Button form={`LeaveAction`} variant={'primary'} size={'md'} loading={false} type="submit">
+              <Button
+                form={`LeaveAction`}
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                type="submit"
+              >
                 Submit
               </Button>
             </div>
