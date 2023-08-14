@@ -1,10 +1,8 @@
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
-import { ErrorState, ModalState } from '../types/modal.type';
+import { ModalState } from '../types/modal.type';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { SupervisorLeaveDetails } from '../../../../libs/utils/src/lib/types/leave-application.type';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
 export type ApprovalLeaveList = {
@@ -14,15 +12,6 @@ export type ApprovalLeaveList = {
     cancelled: Array<SupervisorLeaveDetails>;
   };
   forApproval: Array<SupervisorLeaveDetails>;
-};
-
-export type ApprovalPassSlipList = {
-  completed: {
-    approved: Array<PassSlip>;
-    disapproved: Array<PassSlip>;
-    cancelled: Array<PassSlip>;
-  };
-  forApproval: Array<PassSlip>;
 };
 
 export type ApprovalState = {
@@ -44,39 +33,20 @@ export type ApprovalState = {
     forApproval: Array<SupervisorLeaveDetails>;
   };
 
-  passSlips: {
-    completed: {
-      approved: Array<PassSlip>;
-      disapproved: Array<PassSlip>;
-      cancelled: Array<PassSlip>;
-    };
-    forApproval: Array<PassSlip>;
-  };
   response: {
-    patchResponsePassSlip: PassSlip;
     patchResponseLeave: SupervisorLeaveDetails;
   };
   loading: {
     loadingLeaves: boolean;
     loadingLeaveResponse: boolean;
-
-    loadingPassSlips: boolean;
-    loadingPassSlipResponse: boolean;
-    loadingIndividualPassSlip: boolean;
   };
   error: {
     errorLeaves: string;
     errorLeaveResponse: string;
-
-    errorPassSlips: string;
-    errorPassSlipResponse: string;
-    errorIndividualPassSlip: string;
   };
 
   declineApplicationModalIsOpen: boolean;
-  setDeclineApplicationModalIsOpen: (
-    declineApplicationModalIsOpen: boolean
-  ) => void;
+  setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
 
   pendingLeaveModalIsOpen: boolean;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -85,50 +55,13 @@ export type ApprovalState = {
   setApprovedLeaveModalIsOpen: (approvedLeaveModalIsOpen: boolean) => void;
 
   disapprovedLeaveModalIsOpen: boolean;
-  setDisapprovedLeaveModalIsOpen: (
-    disapprovedLeaveModalIsOpen: boolean
-  ) => void;
+  setDisapprovedLeaveModalIsOpen: (disapprovedLeaveModalIsOpen: boolean) => void;
 
   cancelledLeaveModalIsOpen: boolean;
   setCancelledLeaveModalIsOpen: (cancelledLeaveModalIsOpen: boolean) => void;
 
-  otpPassSlipModalIsOpen: boolean;
-  setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => void;
-
   otpLeaveModalIsOpen: boolean;
   setOtpLeaveModalIsOpen: (otpLeaveModalIsOpen: boolean) => void;
-
-  pendingPassSlipModalIsOpen: boolean;
-  setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
-
-  approvedPassSlipModalIsOpen: boolean;
-  setApprovedPassSlipModalIsOpen: (
-    approvedPassSlipModalIsOpen: boolean
-  ) => void;
-
-  disapprovedPassSlipModalIsOpen: boolean;
-  setDisapprovedPassSlipModalIsOpen: (
-    disapprovedPassSlipModalIsOpen: boolean
-  ) => void;
-
-  cancelledPassSlipModalIsOpen: boolean;
-  setCancelledPassSlipModalIsOpen: (
-    cancelledPassSlipModalIsOpen: boolean
-  ) => void;
-
-  // PASS SLIPS
-  passSlipId: string;
-  setPassSlipId: (value: string) => void;
-  passSlipIndividualDetail: PassSlip;
-  setPassSlipIndividualDetail: (PassSlip: PassSlip) => void;
-
-  getPassSlipList: (loading: boolean) => void;
-  getPassSlipListSuccess: (loading: boolean, response) => void;
-  getPassSlipListFail: (loading: boolean, error: string) => void;
-
-  patchPassSlip: () => void;
-  patchPassSlipSuccess: (response) => void;
-  patchPassSlipFail: (error: string) => void;
 
   patchLeave: () => void;
   patchLeaveSuccess: (response) => void;
@@ -139,9 +72,7 @@ export type ApprovalState = {
   setLeaveId: (id: string) => void;
 
   leaveIndividualDetail: SupervisorLeaveDetails;
-  setLeaveIndividualDetail: (
-    leaveIndividualDetail: SupervisorLeaveDetails
-  ) => void;
+  setLeaveIndividualDetail: (leaveIndividualDetail: SupervisorLeaveDetails) => void;
 
   getLeaveList: (loading: boolean) => void;
   getLeaveListSuccess: (loading: boolean, response) => void;
@@ -153,7 +84,7 @@ export type ApprovalState = {
   emptyResponseAndError: () => void;
 };
 
-export const useApprovalStore = create<ApprovalState>()(
+export const useFinalLeaveApprovalStore = create<ApprovalState>()(
   devtools((set) => ({
     alert: { isOpen: false, page: 1 },
     modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
@@ -169,38 +100,19 @@ export const useApprovalStore = create<ApprovalState>()(
       forApproval: [],
     },
 
-    passSlips: {
-      completed: {
-        approved: [],
-        disapproved: [],
-        cancelled: [],
-      },
-      forApproval: [],
-    },
-
     response: {
-      patchResponsePassSlip: {} as PassSlip,
       patchResponseLeave: {} as SupervisorLeaveDetails,
     },
 
     loading: {
       loadingLeaves: false,
       loadingLeaveResponse: false,
-
-      loadingPassSlips: false,
-      loadingPassSlipResponse: false,
-      loadingIndividualPassSlip: false,
     },
     error: {
       errorLeaves: '',
       errorLeaveResponse: '',
-
-      errorPassSlips: '',
-      errorPassSlipResponse: '',
-      errorIndividualPassSlip: '',
     },
 
-    otpPassSlipModalIsOpen: false,
     otpLeaveModalIsOpen: false,
 
     declineApplicationModalIsOpen: false,
@@ -209,16 +121,6 @@ export const useApprovalStore = create<ApprovalState>()(
     disapprovedLeaveModalIsOpen: false,
     cancelledLeaveModalIsOpen: false,
 
-    pendingPassSlipModalIsOpen: false,
-    approvedPassSlipModalIsOpen: false,
-    disapprovedPassSlipModalIsOpen: false,
-    cancelledPassSlipModalIsOpen: false,
-
-    // PASS SLIPS
-    passSlipId: '',
-    passSlipIndividualDetail: {} as PassSlip,
-
-    // LEAVES
     leaveId: '',
     leaveIndividualDetail: {} as SupervisorLeaveDetails,
 
@@ -236,25 +138,13 @@ export const useApprovalStore = create<ApprovalState>()(
     setSelectedApprovalType: (selectedApprovalType: number) => {
       set((state) => ({ ...state, selectedApprovalType }));
     },
-    setPassSlipId: (passSlipId: string) => {
-      set((state) => ({ ...state, passSlipId }));
-    },
-    setPassSlipIndividualDetail: (passSlipIndividualDetail: PassSlip) => {
-      set((state) => ({ ...state, passSlipIndividualDetail }));
-    },
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
     },
 
-    setDeclineApplicationModalIsOpen: (
-      declineApplicationModalIsOpen: boolean
-    ) => {
+    setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
       set((state) => ({ ...state, declineApplicationModalIsOpen }));
-    },
-
-    setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => {
-      set((state) => ({ ...state, otpPassSlipModalIsOpen }));
     },
 
     setOtpLeaveModalIsOpen: (otpLeaveModalIsOpen: boolean) => {
@@ -275,26 +165,6 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setCancelledLeaveModalIsOpen: (cancelledLeaveModalIsOpen: boolean) => {
       set((state) => ({ ...state, cancelledLeaveModalIsOpen }));
-    },
-
-    setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => {
-      set((state) => ({ ...state, pendingPassSlipModalIsOpen }));
-    },
-
-    setApprovedPassSlipModalIsOpen: (approvedPassSlipModalIsOpen: boolean) => {
-      set((state) => ({ ...state, approvedPassSlipModalIsOpen }));
-    },
-
-    setDisapprovedPassSlipModalIsOpen: (
-      disapprovedPassSlipModalIsOpen: boolean
-    ) => {
-      set((state) => ({ ...state, disapprovedPassSlipModalIsOpen }));
-    },
-
-    setCancelledPassSlipModalIsOpen: (
-      cancelledPassSlipModalIsOpen: boolean
-    ) => {
-      set((state) => ({ ...state, cancelledPassSlipModalIsOpen }));
     },
 
     setLeaveId: (leaveId: string) => {
@@ -360,116 +230,8 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    setLeaveIndividualDetail: (
-      leaveIndividualDetail: SupervisorLeaveDetails
-    ) => {
+    setLeaveIndividualDetail: (leaveIndividualDetail: SupervisorLeaveDetails) => {
       set((state) => ({ ...state, leaveIndividualDetail }));
-    },
-
-    //GET PASS SLIP ACTIONS
-    getPassSlipList: (loading: boolean) => {
-      set((state) => ({
-        ...state,
-        passSlips: {
-          ...state.passSlips,
-          completed: {
-            approved: [],
-            disapproved: [],
-            cancelled: [],
-          },
-          forApproval: [],
-        },
-        response: {
-          ...state.response,
-          patchResponsePassSlip: {} as PassSlip,
-        },
-        loading: {
-          ...state.loading,
-          loadingPassSlips: loading,
-        },
-        error: {
-          ...state.error,
-          errorPassSlips: '',
-        },
-      }));
-    },
-    getPassSlipListSuccess: (
-      loading: boolean,
-      response: ApprovalPassSlipList
-    ) => {
-      set((state) => ({
-        ...state,
-        passSlips: {
-          ...state.passSlips,
-          completed: {
-            approved: response.completed.approved,
-            disapproved: response.completed.disapproved,
-            cancelled: response.completed.cancelled,
-          },
-          forApproval: response.forApproval,
-        },
-        loading: {
-          ...state.loading,
-          loadingPassSlips: loading,
-        },
-      }));
-    },
-    getPassSlipListFail: (loading: boolean, error: string) => {
-      set((state) => ({
-        ...state,
-        loading: {
-          ...state.loading,
-          loadingPassSlips: loading,
-        },
-        error: {
-          ...state.error,
-          errorPassSlips: error,
-        },
-      }));
-    },
-    //PATCH PASS SLIP ACTIONS
-    patchPassSlip: () => {
-      set((state) => ({
-        ...state,
-        response: {
-          ...state.response,
-          patchResponsePassSlip: {} as PassSlip,
-        },
-        loading: {
-          ...state.loading,
-          loadingPassSlipResponse: true,
-        },
-        error: {
-          ...state.error,
-          errorPassSlipResponse: '',
-        },
-      }));
-    },
-    patchPassSlipSuccess: (response: PassSlip) => {
-      set((state) => ({
-        ...state,
-        response: {
-          ...state.response,
-          patchResponsePassSlip: response,
-        },
-        loading: {
-          ...state.loading,
-          loadingPassSlipResponse: false,
-        },
-      }));
-    },
-    patchPassSlipFail: (error: string) => {
-      set((state) => ({
-        ...state,
-        loading: {
-          ...state.loading,
-          loadingPassSlipResponse: false,
-        },
-        error: {
-          ...state.error,
-          errorPassSlipResponse: error,
-        },
-      }));
     },
 
     //PATCH LEAVE ACTIONS
@@ -522,13 +284,11 @@ export const useApprovalStore = create<ApprovalState>()(
         ...state,
         response: {
           ...state.response,
-          patchResponsePassSlip: {} as PassSlip,
           patchResponseLeave: {} as SupervisorLeaveDetails,
         },
         error: {
           ...state.error,
           errorLeaveResponse: '',
-          errorPassSlipResponse: '',
         },
       }));
     },

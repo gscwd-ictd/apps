@@ -1,11 +1,14 @@
 import { PageContentContext } from '@gscwd-apps/oneui';
 import { useContext, useEffect, useState } from 'react';
+import { AuthmiddlewareContext } from '../../pages/_app';
 
 export const TopNavigation = () => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const {
     aside: { isCollapsed, setIsCollapsed, isMobile, setPreviousState },
   } = useContext(PageContentContext);
+
+  const { userProfile } = useContext(AuthmiddlewareContext);
 
   // on click toggle
   const collapseOnClick = () => {
@@ -92,7 +95,7 @@ export const TopNavigation = () => {
               </div>
               <div className="hidden sm:hidden md:hidden lg:block">
                 <span className="text-xs text-gray-600 select-none ">
-                  user-example@gscwd.com
+                  {userProfile?.email ?? 'Superuseradmin'}
                 </span>
               </div>
               <div className="w-2 h-2 sm:hidden lg:block">

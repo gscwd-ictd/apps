@@ -5,24 +5,24 @@ import { Notice } from '../../../modular/alerts/Notice';
 import { Button } from '../../../modular/forms/buttons/Button';
 import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
-import { passSlipAction } from '../../../../types/approvals.type';
-import { useApprovalStore } from '../../../../store/approvals.store';
+import { leaveAction } from '../../../../types/approvals.type';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 
 interface OtpProps {
   mobile: string;
   employeeId: string;
-  action: PassSlipStatus; // approve or disapprove
-  tokenId: string; //like pass Slip Id, leave Id etc.
+  action: LeaveStatus; // approve or disapprove
+  tokenId: string; //like LEAVE Id, leave Id etc.
   otpName: string;
   remarks?: string;
 }
 
-export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
+export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
   mobile,
   employeeId,
   action,
@@ -45,17 +45,17 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
   const [failedFirstOtp, setFailedFirstOtp] = useState<boolean>(false);
 
   const {
-    patchPassSlip,
-    patchPassSlipSuccess,
-    patchPassSlipFail,
-    setPendingPassSlipModalIsOpen,
-    setOtpPassSlipModalIsOpen,
-  } = useApprovalStore((state) => ({
-    patchPassSlip: state.patchPassSlip,
-    patchPassSlipSuccess: state.patchPassSlipSuccess,
-    patchPassSlipFail: state.patchPassSlipFail,
-    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
-    setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+    patchLeave,
+    patchLeaveSuccess,
+    patchLeaveFail,
+    setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen,
+  } = useFinalLeaveApprovalStore((state) => ({
+    patchLeave: state.patchLeave,
+    patchLeaveSuccess: state.patchLeaveSuccess,
+    patchLeaveFail: state.patchLeaveFail,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
   }));
 
   // set state for controlling the displaying of error status
@@ -154,16 +154,16 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     setErrorMessage('');
     setOtpCode(''); //clears input field
     if (isSubmitLoading == false) {
-      setOtpPassSlipModalIsOpen(false);
+      setOtpLeaveModalIsOpen(false);
     }
   };
 
   //CLOSE FUNCTION FOR COMPLETED OTP
   const handleClose = (e) => {
     e.preventDefault();
-    setOtpPassSlipModalIsOpen(false); //close OTP modal first
+    setOtpLeaveModalIsOpen(false); //close OTP modal first
     setTimeout(() => {
-      setPendingPassSlipModalIsOpen(false); //then close Pass Slip modal
+      setPendingLeaveModalIsOpen(false); //then close LEAVE modal
     }, 200);
   };
 
@@ -172,31 +172,32 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     setOtpCode(e);
   };
 
-  const handlePatchResult = async (data: passSlipAction) => {
-    const { error, result } = await patchPortal('/v1/pass-slip', data);
+  const handlePatchResult = async (data: leaveAction) => {
+    const { error, result } = await patchPortal('/v1/leave/supervisor', data);
     if (error) {
-      patchPassSlipFail(result);
+      patchLeaveFail(result);
     } else {
-      patchPassSlipSuccess(result);
+      patchLeaveSuccess(result);
     }
   };
 
   useEffect(() => {
     if (otpComplete) {
       const data = {
-        passSlipId: tokenId,
+        id: tokenId,
         status: action,
+        supervisorDisapprovalRemarks: remarks,
       };
       localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
       localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
-      patchPassSlip();
+      patchLeave();
       handlePatchResult(data);
     } else {
       //nothing to do
     }
   }, [otpComplete]);
 
-  // SUBMIT OTP CODE AND COMPLETE PASS SLIP APPROVAL/DISAPPROVAL IF CORRECT
+  // SUBMIT OTP CODE AND COMPLETE LEAVE APPROVAL/DISAPPROVAL IF CORRECT
   async function handleFinalSubmit(e) {
     e.preventDefault();
     setIsSubmitLoading(true);
@@ -224,8 +225,10 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm">
             <div className="mb-2 text-center">
               {`To ${
-                action === PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
-              } this Pass Slip request, click Send Code
+                action === LeaveStatus.FOR_HRDM_APPROVAL
+                  ? 'approve'
+                  : 'disapprove'
+              } this Leave request, click Send Code
                               and enter the code sent to your mobile number:
                               ${mobile}. `}
             </div>
@@ -376,7 +379,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
               OTP Verified Successfully!
             </div>
             <div className="text-center text-sm mb-4">
-              Pass Slip has been {action}.
+              Leave has been approved.
             </div>
 
             <Button

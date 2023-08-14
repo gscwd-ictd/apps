@@ -7,9 +7,9 @@ import {
   MyCalendarPlusIcon,
   MyCalendarRangeIcon,
   MyCalendarX2,
-  MyLightBulbIcon,
 } from '../icons/MyLucideIcons';
 import { Paths } from '../../utils/constants/route';
+import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 
 export const SideNavigation = () => {
   const {
@@ -48,13 +48,18 @@ export const SideNavigation = () => {
 
       <Sidebar.Content>
         <ul>
-          <Sidebar.Header
-            className={`py-2 ${isCollapsed ? 'hidden' : 'block'}`}
-          >
-            <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-              Menu
-            </span>
-          </Sidebar.Header>
+          <Can I="access" this={'Employees'}>
+            <Sidebar.Header
+              className={`py-2 ${isCollapsed ? 'hidden' : 'block'}`}
+            >
+              <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
+                Menu
+              </span>
+            </Sidebar.Header>
+          </Can>
+
+          {/* DASHBOARD */}
+
           <Sidebar.Item
             display="Dashboard"
             className="text-sm"
@@ -66,349 +71,434 @@ export const SideNavigation = () => {
             }
             path={Paths[0]}
           />
+
           {/**Employees */}
-          <Sidebar.Item
-            display=" Employees"
-            className="text-sm"
-            selected={pathname === Paths[1] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bxs-user-account"></i>
-              </>
-            }
-            path={Paths[1]}
-          />
+          <Can I="access" this="Employees">
+            <Sidebar.Item
+              display=" Employees"
+              className="text-sm"
+              selected={pathname === Paths[1] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-user-account"></i>
+                </>
+              }
+              path={Paths[1]}
+            />
+          </Can>
 
           {/**Monitoring Header */}
-          <Sidebar.Header className={`py-2`}>
-            <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-              {isCollapsed ? (
-                <hr className="border border-slate-600" />
-              ) : (
-                'Monitoring'
-              )}
-            </span>
-          </Sidebar.Header>
+          <Can
+            I="access"
+            this={
+              'Scheduling_sheets' ||
+              'Leave_applications' ||
+              'Overtime' ||
+              'Pass_slips' ||
+              'Travel_orders'
+            }
+          >
+            <Sidebar.Header className={`py-2`}>
+              <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
+                {isCollapsed ? (
+                  <hr className="border border-slate-600" />
+                ) : (
+                  'Monitoring'
+                )}
+              </span>
+            </Sidebar.Header>
+          </Can>
 
           {/**Monitoring Scheduling Sheet */}
-          <Sidebar.Item
-            display="Scheduling Sheets"
-            className="text-sm"
-            icon={<i className="text-xl bx bxs-spreadsheet"></i>}
-            path=""
-            hasSubItem
-            selected={pathname === Paths[19] || pathname === Paths[20]}
-            subItems={
-              <>
-                <Sidebar.Item
-                  display="Field"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[19] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bxs-hard-hat"></i>
-                    </>
-                  }
-                  path={Paths[19]}
-                />
-                <Sidebar.Item
-                  display="Station"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[20] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bxs-factory"></i>
-                    </>
-                  }
-                  path={Paths[20]}
-                />
-              </>
-            }
-          />
+          <Can I="access" this="Scheduling_sheets">
+            <Sidebar.Item
+              display="Scheduling Sheets"
+              className="text-sm"
+              icon={<i className="text-xl bx bxs-spreadsheet"></i>}
+              path=""
+              hasSubItem
+              selected={pathname === Paths[19] || pathname === Paths[20]}
+              subItems={
+                <>
+                  {/* FIELD */}
+                  <Can I="access" this="Scheduling_sheet_field">
+                    <Sidebar.Item
+                      display="Field"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[19] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-hard-hat"></i>
+                        </>
+                      }
+                      path={Paths[19]}
+                    />
+                  </Can>
 
-          {/**LEAVE BENEFITS */}
+                  {/* STATION */}
+                  <Can I="access" this="Scheduling_sheet_station">
+                    <Sidebar.Item
+                      display="Station"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[20] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-factory"></i>
+                        </>
+                      }
+                      path={Paths[20]}
+                    />
+                  </Can>
+                </>
+              }
+            />
+          </Can>
 
-          <Sidebar.Item
-            display="Leave Applications"
-            className="text-sm"
-            icon={<i className="text-xl bx bx-run"></i>}
-            path={Paths[2]}
-            selected={pathname === Paths[2] ? true : false}
-          />
+          {/**LEAVE APPLICATIONS */}
+          <Can I="access" this="Leave_applications">
+            <Sidebar.Item
+              display="Leave Applications"
+              className="text-sm"
+              icon={<i className="text-xl bx bx-run"></i>}
+              path={Paths[2]}
+              selected={pathname === Paths[2] ? true : false}
+            />
+          </Can>
 
           {/**OVERTIME */}
-          <Sidebar.Item
-            display="Overtime"
-            className="text-sm"
-            selected={pathname === Paths[5] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bx-timer"></i>
-              </>
-            }
-            path={Paths[5]}
-          />
+          <Can I="access" this="Overtime">
+            <Sidebar.Item
+              display="Overtime"
+              className="text-sm"
+              selected={pathname === Paths[5] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bx-timer"></i>
+                </>
+              }
+              path={Paths[5]}
+            />
+          </Can>
 
-          {/**PASS SLIP */}
-          <Sidebar.Item
-            display="Pass Slips"
-            className="text-sm"
-            selected={pathname === Paths[6] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bxs-file-export"></i>
-              </>
-            }
-            path={Paths[6]}
-          />
+          {/**PASS SLIPS */}
+          <Can I="access" this="Pass_slips">
+            <Sidebar.Item
+              display="Pass Slips"
+              className="text-sm"
+              selected={pathname === Paths[6] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-file-export"></i>
+                </>
+              }
+              path={Paths[6]}
+            />
+          </Can>
 
           {/** Monitoring Travel Order */}
-          <Sidebar.Item
-            display="Travel Orders"
-            selected={pathname === Paths[3] ? true : false}
-            path={Paths[3]}
-            className="text-sm"
-            icon={
-              <>
-                <i className="text-xl bx bxs-truck"></i>
-              </>
-            }
-          />
+          <Can I="access" this="Travel_orders">
+            <Sidebar.Item
+              display="Travel Orders"
+              selected={pathname === Paths[3] ? true : false}
+              path={Paths[3]}
+              className="text-sm"
+              icon={
+                <>
+                  <i className="text-xl bx bxs-truck"></i>
+                </>
+              }
+            />
+          </Can>
 
           {/**Maintenance Header */}
-          <Sidebar.Header className={`py-2`}>
-            <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-              {isCollapsed ? (
-                <hr className="border border-slate-600" />
-              ) : (
-                'Maintenance'
-              )}
-            </span>
-          </Sidebar.Header>
+          <Can I="access" this={'Schedules' || 'Leave_benefits' || 'Events'}>
+            <Sidebar.Header className={`py-2`}>
+              <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
+                {isCollapsed ? (
+                  <hr className="border border-slate-600" />
+                ) : (
+                  'Maintenance'
+                )}
+              </span>
+            </Sidebar.Header>
+          </Can>
 
           {/**Maintenance Schedules */}
-          <Sidebar.Item
-            display="Schedules"
-            className="text-sm"
-            icon={<i className="text-xl bx bx-calendar-edit"></i>}
-            path=""
-            hasSubItem
-            selected={
-              pathname === Paths[15] ||
-              pathname === Paths[16] ||
-              pathname === Paths[17]
-            }
-            subItems={
-              <>
-                <Sidebar.Item
-                  display="Office"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[15] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bxs-buildings"></i>
-                    </>
-                  }
-                  path={Paths[15]}
-                />
-                <Sidebar.Item
-                  display="Field"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[16] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bxs-hard-hat"></i>
-                    </>
-                  }
-                  path={Paths[16]}
-                />
-                <Sidebar.Item
-                  display="Station"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[17] ? true : false}
-                  icon={
-                    <>
-                      <i className="text-xl bx bxs-factory"></i>
-                    </>
-                  }
-                  path={Paths[17]}
-                />
-              </>
-            }
-          />
+          <Can I="access" this="Schedules">
+            <Sidebar.Item
+              display="Schedules"
+              className="text-sm"
+              icon={<i className="text-xl bx bx-calendar-edit"></i>}
+              path=""
+              hasSubItem
+              selected={
+                pathname === Paths[15] ||
+                pathname === Paths[16] ||
+                pathname === Paths[17]
+              }
+              subItems={
+                <>
+                  {/* OFFICE */}
+                  <Can I="access" this="Schedule_office">
+                    <Sidebar.Item
+                      display="Office"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[15] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-buildings"></i>
+                        </>
+                      }
+                      path={Paths[15]}
+                    />
+                  </Can>
 
-          {/**Maintenance LEAVE CREDITS */}
+                  {/* FIELD */}
+                  <Can I="access" this="Schedule_field">
+                    <Sidebar.Item
+                      display="Field"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[16] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-hard-hat"></i>
+                        </>
+                      }
+                      path={Paths[16]}
+                    />
+                  </Can>
 
-          <Sidebar.Item
-            display="Leave Benefits"
-            className="text-sm"
-            hasSubItem
-            icon={<i className="text-xl bx bx-run"></i>}
-            selected={
-              pathname === Paths[8] ||
-              pathname === Paths[9] ||
-              pathname === Paths[10]
-            }
-            subItems={
-              <>
-                <Sidebar.Item
-                  display="Recurring"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[8] ? true : false}
-                  icon={
-                    <>
-                      <MyCalendarClockIcon />
-                    </>
-                  }
-                  path={Paths[8]}
-                />
-                <Sidebar.Item
-                  display="Cumulative"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[9] ? true : false}
-                  icon={
-                    <>
-                      <MyCalendarPlusIcon />
-                    </>
-                  }
-                  path={Paths[9]}
-                />
-                <Sidebar.Item
-                  display="Special"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[10] ? true : false}
-                  icon={
-                    <>
-                      <MyCalendarHeartIcon />
-                    </>
-                  }
-                  path={Paths[10]}
-                />
-              </>
-            }
-            path=""
-          />
+                  {/* STATION */}
+                  <Can I="access" this="Schedule_station">
+                    <Sidebar.Item
+                      display="Station"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[17] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-factory"></i>
+                        </>
+                      }
+                      path={Paths[17]}
+                    />
+                  </Can>
+                </>
+              }
+            />
+          </Can>
+
+          {/**Maintenance LEAVE BENEFITS */}
+
+          <Can I="access" this={'Leave_benefits'}>
+            <Sidebar.Item
+              display="Leave Benefits"
+              className="text-sm"
+              hasSubItem
+              icon={<i className="text-xl bx bx-run"></i>}
+              selected={
+                pathname === Paths[8] ||
+                pathname === Paths[9] ||
+                pathname === Paths[10]
+              }
+              subItems={
+                <>
+                  {/* RECURRING */}
+                  <Can I="access" this="Leave_benefit_recurring">
+                    <Sidebar.Item
+                      display="Recurring"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[8] ? true : false}
+                      icon={
+                        <>
+                          <MyCalendarClockIcon />
+                        </>
+                      }
+                      path={Paths[8]}
+                    />
+                  </Can>
+
+                  {/* CUMULATIVE */}
+                  <Can I="access" this="Leave_benefit_cumulative">
+                    <Sidebar.Item
+                      display="Cumulative"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[9] ? true : false}
+                      icon={
+                        <>
+                          <MyCalendarPlusIcon />
+                        </>
+                      }
+                      path={Paths[9]}
+                    />
+                  </Can>
+
+                  {/* SPECIAL */}
+                  <Can I="access" this="Leave_benefit_special">
+                    <Sidebar.Item
+                      display="Special"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[10] ? true : false}
+                      icon={
+                        <>
+                          <MyCalendarHeartIcon />
+                        </>
+                      }
+                      path={Paths[10]}
+                    />
+                  </Can>
+                </>
+              }
+              path=""
+            />
+          </Can>
 
           {/** Maintenance Events */}
-          <Sidebar.Item
-            display="Events"
-            path=""
-            className="text-sm"
-            hasSubItem
-            selected={pathname === Paths[11] || pathname === Paths[12]}
-            icon={
-              <>
-                <i className="text-xl bx bxs-calendar-event"></i>
-              </>
-            }
-            subItems={
-              <>
-                <Sidebar.Item
-                  display="Holidays"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[11] ? true : false}
-                  icon={
-                    <>
-                      <MyCalendarRangeIcon />
-                    </>
-                  }
-                  path={Paths[11]}
-                />
+          <Can I="access" this={'Event_holidays' && 'Event_work_suspensions'}>
+            <Sidebar.Item
+              display="Events"
+              path=""
+              className="text-sm"
+              hasSubItem
+              selected={pathname === Paths[11] || pathname === Paths[12]}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-calendar-event"></i>
+                </>
+              }
+              subItems={
+                <>
+                  {/* HOLIDAYS */}
+                  <Can I="access" this="Event_holidays">
+                    <Sidebar.Item
+                      display="Holidays"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[11] ? true : false}
+                      icon={
+                        <>
+                          <MyCalendarRangeIcon />
+                        </>
+                      }
+                      path={Paths[11]}
+                    />
+                  </Can>
 
-                {/* WORK SUSPENSIONS */}
-                <Sidebar.Item
-                  display="Work Suspensions"
-                  className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                  selected={pathname === Paths[12] ? true : false}
-                  icon={
-                    <>
-                      <MyCalendarX2 />
-                    </>
-                  }
-                  path={Paths[12]}
-                />
-              </>
-            }
-          />
+                  {/* WORK SUSPENSIONS */}
+                  <Can I="access" this="Event_work_suspensions">
+                    <Sidebar.Item
+                      display="Work Suspensions"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[12] ? true : false}
+                      icon={
+                        <>
+                          <MyCalendarX2 />
+                        </>
+                      }
+                      path={Paths[12]}
+                    />
+                  </Can>
+                </>
+              }
+            />
+          </Can>
 
           {/**Settings Header */}
-          <Sidebar.Header className={`py-2`}>
-            <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-              {isCollapsed ? (
-                <hr className="border border-slate-600" />
-              ) : (
-                'Settings'
-              )}
-            </span>
-          </Sidebar.Header>
+          <Can
+            I="access"
+            this={
+              'Custom_groups' &&
+              'Modules' &&
+              'Users' &&
+              'Officer_of_the_day' &&
+              'System_logs'
+            }
+          >
+            <Sidebar.Header className={`py-2`}>
+              <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
+                {isCollapsed ? (
+                  <hr className="border border-slate-600" />
+                ) : (
+                  'Settings'
+                )}
+              </span>
+            </Sidebar.Header>
+          </Can>
 
           {/**Settings CUSTOM GROUPS */}
-          <Sidebar.Item
-            display="Custom Groups"
-            className="text-sm"
-            selected={pathname === Paths[21] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bx-group"></i>
-              </>
-            }
-            path={Paths[21]}
-          />
+          <Can I="access" this="Custom_groups">
+            <Sidebar.Item
+              display="Custom Groups"
+              className="text-sm"
+              selected={pathname === Paths[21] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bx-group"></i>
+                </>
+              }
+              path={Paths[21]}
+            />
+          </Can>
 
           {/**Settings MODULES */}
-          <Sidebar.Item
-            display="Modules"
-            className="text-sm"
-            selected={pathname === Paths[23] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bx-package"></i>
-              </>
-            }
-            path={Paths[23]}
-          />
+          <Can I="access" this="Modules">
+            <Sidebar.Item
+              display="Modules"
+              className="text-sm"
+              selected={pathname === Paths[23] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bx-package"></i>
+                </>
+              }
+              path={Paths[23]}
+            />
+          </Can>
 
           {/**Settings USERS */}
-          <Sidebar.Item
-            display="Users"
-            className="text-sm"
-            selected={pathname === Paths[24] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bxs-user-account"></i>
-              </>
-            }
-            path={Paths[24]}
-          />
+          <Can I="access" this="Users">
+            <Sidebar.Item
+              display="Users"
+              className="text-sm"
+              selected={pathname === Paths[24] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-user-account"></i>
+                </>
+              }
+              path={Paths[24]}
+            />
+          </Can>
 
           {/**Settings OFFICER OF THE DAY */}
-          <Sidebar.Item
-            display="Officer of the Day"
-            className="text-sm"
-            selected={pathname === Paths[25] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bxs-user-badge"></i>
-              </>
-            }
-            path={Paths[25]}
-          />
+          <Can I="access" this="Officer_of_the_day">
+            <Sidebar.Item
+              display="Officer of the Day"
+              className="text-sm"
+              selected={pathname === Paths[25] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-user-badge"></i>
+                </>
+              }
+              path={Paths[25]}
+            />
+          </Can>
 
           {/**Settings SYSTEM LOGS */}
-          <Sidebar.Item
-            display="System Logs"
-            className="text-sm"
-            selected={pathname === Paths[26] ? true : false}
-            icon={
-              <>
-                <i className="text-xl bx bx-detail"></i>
-              </>
-            }
-            path={Paths[26]}
-          />
+          <Can I="access" this="System_logs">
+            <Sidebar.Item
+              display="System Logs"
+              className="text-sm"
+              selected={pathname === Paths[26] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bx-detail"></i>
+                </>
+              }
+              path={Paths[26]}
+            />
+          </Can>
         </ul>
       </Sidebar.Content>
-      {/* <Sidebar.Footer>Footer</Sidebar.Footer> */}
     </Sidebar>
   );
 };

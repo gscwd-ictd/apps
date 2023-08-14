@@ -233,7 +233,7 @@ export default function Leaves({
         {!isEmpty(responseApply) ? (
           <ToastNotification
             toastType="success"
-            notifMessage="Leave Application Successful! Please wait for supervisor's decision on this application."
+            notifMessage="Leave Application Successful!"
           />
         ) : null}
       </>

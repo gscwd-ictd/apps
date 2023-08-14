@@ -10,5 +10,6 @@ export type passSlipAction = {
 export type leaveAction = {
   id: string;
   status: LeaveStatus;
-  supervisorDisapprovalRemarks?: string;
+  supervisorDisapprovalRemarks?: string; //for supervisor disapproval
+  hrdmDisapprovalRemarks?: string; //for hrdm disapproval
 };
