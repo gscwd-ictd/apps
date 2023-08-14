@@ -1,9 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import SideNav from '../../components/fixed/nav/SideNav';
@@ -36,12 +32,8 @@ export type NavDetails = {
   profile: string;
 };
 
-export default function Dashboard({
-  userDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const setAllowedModules = useAllowedModulesStore(
-    (state) => state.setAllowedModules
-  );
+export default function Dashboard({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const setAllowedModules = useAllowedModulesStore((state) => state.setAllowedModules);
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -61,30 +53,22 @@ export default function Dashboard({
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
 
-  const {
-    dtr,
-    schedule,
-    loadingTimeLogs,
-    errorTimeLogs,
-    getTimeLogs,
-    getTimeLogsSuccess,
-    getTimeLogsFail,
-  } = useTimeLogStore((state) => ({
-    dtr: state.dtr,
-    schedule: state.schedule,
-    loadingTimeLogs: state.loading.loadingTimeLogs,
-    errorTimeLogs: state.error.errorTimeLogs,
-    getTimeLogs: state.getTimeLogs,
-    getTimeLogsSuccess: state.getTimeLogsSuccess,
-    getTimeLogsFail: state.getTimeLogsFail,
-  }));
-
-  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail } =
-    useDtrStore((state) => ({
-      getEmployeeDtr: state.getEmployeeDtr,
-      getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
-      getEmployeeDtrFail: state.getEmployeeDtrFail,
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
     }));
+
+  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail } = useDtrStore((state) => ({
+    getEmployeeDtr: state.getEmployeeDtr,
+    getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+    getEmployeeDtrFail: state.getEmployeeDtrFail,
+  }));
 
   // const  = useDtrStore((state) => state.getEmployeeDtr);
   // const getEmployeeDtrSuccess = useDtrStore(
@@ -92,9 +76,7 @@ export default function Dashboard({
   // );
   // const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
 
-  const faceScanUrl = `${
-    process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
-  }/v1/daily-time-record/employees/${
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
     userDetails.employmentDetails.companyId
   }/${format(new Date(), 'yyyy-MM-dd')}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
@@ -163,17 +145,11 @@ export default function Dashboard({
   return (
     <>
       {!isEmpty(swrFaceScanError) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`Face Scans: ${swrFaceScanError.message}.`}
-        />
+        <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
       ) : null}
 
       {!isEmpty(swrDtrError) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`DTR: ${swrDtrError.message}.`}
-        />
+        <ToastNotification toastType="error" notifMessage={`DTR: ${swrDtrError.message}.`} />
       ) : null}
 
       <Head>
@@ -185,13 +161,7 @@ export default function Dashboard({
         <>
           <>
             <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
-              <Image
-                src={'/gwdlogo.png'}
-                className="w-2/4 "
-                alt={''}
-                width={'500'}
-                height={'500'}
-              />
+              <Image src={'/gwdlogo.png'} className="w-2/4 " alt={''} width={'500'} height={'500'} />
             </div>
             <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
               <div className="z-10 order-1 col-span-1 md:col-span-5 lg:col-span-5 lg:order-1">
@@ -200,18 +170,13 @@ export default function Dashboard({
                     <ProfileCard
                       firstName={userDetails.profile.firstName}
                       lastName={userDetails.profile.lastName}
-                      position={
-                        userDetails.employmentDetails.assignment.positionTitle
-                      }
+                      position={userDetails.employmentDetails.assignment.positionTitle}
                       division={userDetails.employmentDetails.assignment.name}
                       photoUrl={userDetails.profile.photoUrl}
                     />
                   </div>
                   <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-2">
-                    <AttendanceCard
-                      timeLogData={swrFaceScan}
-                      swrFaceScanIsLoading={swrFaceScanIsLoading}
-                    />
+                    <AttendanceCard timeLogData={swrFaceScan} swrFaceScanIsLoading={swrFaceScanIsLoading} />
                   </div>
                   <div className="order-8 col-span-2 row-span-4 md:col-span-4 md:order-8 lg:col-span-2 lg:order-3">
                     <Carousel />
@@ -225,8 +190,8 @@ export default function Dashboard({
                       count={swrDtr?.summary?.noOfTimesLate ?? 0}
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
-                      height={''}
-                      svg={<HiClock className="w-8 h-8 text-indigo-500" />}
+                      height={'h-36'}
+                      svg={<HiClock className="w-7 h-7 text-indigo-500" />}
                       svgBgColor={'bg-indigo-100'}
                     />
                     <StatsCard
@@ -234,8 +199,8 @@ export default function Dashboard({
                       count={0}
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
-                      height={''}
-                      svg={<HiDocument className="w-8 h-8 text-indigo-500" />}
+                      height={'h-36'}
+                      svg={<HiDocument className="w-7 h-7 text-indigo-500" />}
                       svgBgColor={'bg-indigo-100'}
                     />
                   </div>
@@ -247,7 +212,7 @@ export default function Dashboard({
                         isLoading={swrDtrIsLoading}
                         width={'w-full'}
                         height={'h-28'}
-                        svg={<HiCalendar className="w-8 h-8 text-rose-500" />}
+                        svg={<HiCalendar className="w-7 h-7 text-rose-500" />}
                         svgBgColor={'bg-rose-100'}
                       />
                       <StatsCard
@@ -256,7 +221,7 @@ export default function Dashboard({
                         isLoading={swrDtrIsLoading}
                         width={'w-full'}
                         height={'h-28'}
-                        svg={<HiCalendar className="w-8 h-8 text-orange-500" />}
+                        svg={<HiCalendar className="w-7 h-7 text-orange-500" />}
                         svgBgColor={'bg-orange-100'}
                       />
                       <StatsCard
@@ -265,7 +230,7 @@ export default function Dashboard({
                         isLoading={swrDtrIsLoading}
                         width={'w-full'}
                         height={'h-28'}
-                        svg={<HiCalendar className="w-8 h-8 text-lime-500" />}
+                        svg={<HiCalendar className="w-7 h-7 text-lime-500" />}
                         svgBgColor={'bg-lime-100'}
                       />
                       <StatsCard
@@ -274,7 +239,7 @@ export default function Dashboard({
                         isLoading={swrDtrIsLoading}
                         width={'w-full'}
                         height={'h-28'}
-                        svg={<HiCalendar className="w-8 h-8 text-pink-500" />}
+                        svg={<HiCalendar className="w-7 h-7 text-pink-500" />}
                         svgBgColor={'bg-pink-100'}
                       />
                     </div>
@@ -308,10 +273,8 @@ export default function Dashboard({
 // };
 
 //use for official user
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const userDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const userDetails = getUserDetails();
 
-    return { props: { userDetails } };
-  }
-);
+  return { props: { userDetails } };
+});

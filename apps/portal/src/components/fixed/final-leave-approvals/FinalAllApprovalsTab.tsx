@@ -1,19 +1,22 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
-import { useApprovalStore } from '../../../../src/store/approvals.store';
 
 import {
   EmployeeLeaveDetails,
   MonitoringLeave,
   SupervisorLeaveDetails,
 } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 
 type AllApprovalListTabProps = {
   leaves: Array<SupervisorLeaveDetails> | null;
   tab: number;
 };
 
-export const AllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) => {
+export const FinalAllApprovalsTab = ({
+  leaves,
+  tab,
+}: AllApprovalListTabProps) => {
   const {
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
@@ -25,8 +28,8 @@ export const AllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) => {
     setDisapprovedLeaveModalIsOpen,
     setCancelledLeaveModalIsOpen,
 
-    setLeaveId,
-  } = useApprovalStore((state) => ({
+    setLeaveIndividualDetail,
+  } = useFinalLeaveApprovalStore((state) => ({
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
@@ -37,11 +40,11 @@ export const AllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) => {
     setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
     setCancelledLeaveModalIsOpen: state.setCancelledLeaveModalIsOpen,
 
-    setLeaveId: state.setLeaveId,
+    setLeaveIndividualDetail: state.setLeaveIndividualDetail,
   }));
 
   const onSelectLeave = (leave: SupervisorLeaveDetails) => {
-    setLeaveId(leave.id);
+    setLeaveIndividualDetail(leave);
     if (tab === 1) {
       // PENDING APPROVAL LEAVES
       if (!pendingLeaveModalIsOpen) {
@@ -51,6 +54,16 @@ export const AllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) => {
       // APPROVED LEAVES
       if (!approvedLeaveModalIsOpen) {
         setApprovedLeaveModalIsOpen(true);
+      }
+    } else if (tab === 3) {
+      // DISAPPROVED LEAVES
+      if (!disapprovedLeaveModalIsOpen) {
+        setDisapprovedLeaveModalIsOpen(true);
+      }
+    } else if (tab === 4) {
+      // DISAPPROVED LEAVES
+      if (!cancelledLeaveModalIsOpen) {
+        setCancelledLeaveModalIsOpen(true);
       }
     }
   };
@@ -68,18 +81,21 @@ export const AllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) => {
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    {/* {item.leaveName} - {item.fullName} */}
+                    {item.leaveBenefitsId?.leaveName} -{' '}
+                    {item.employee.employeeName}
                   </h1>
-                  {/* <p className="text-md text-gray-500"></p> */}
                   <p className="text-sm text-gray-500">
-                    Employee: {item.employee.employeeName}
+                    No. of Days: {item.leaveDates.length}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {/* Days: {item.leaveDates} */}
+                    Dates: {item.leaveDates.join(', ')}
                   </p>
                   <p className="text-sm text-indigo-500">
                     Date Applied:{' '}
                     {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
+                  </p>
+                  <p className="text-sm text-indigo-500">
+                    Status: {item.status.toUpperCase()}
                   </p>
                 </div>
               </li>

@@ -185,7 +185,7 @@ export default function PassSlip({
         {!isEmpty(responseApply) ? (
           <ToastNotification
             toastType="success"
-            notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
+            notifMessage="Pass Slip Application Successful!"
           />
         ) : null}
 

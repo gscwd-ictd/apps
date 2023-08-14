@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -19,18 +19,16 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
-import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
 import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty, isEqual } from 'lodash';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
-import ApprovalsPendingLeaveModal from 'apps/portal/src/components/fixed/final-leave-approvals/ApprovalsPendingLeaveModal';
-import { ApprovalTypeSelect } from 'apps/portal/src/components/fixed/approvals/ApprovalTypeSelect';
-import { ApprovalsTabs } from 'apps/portal/src/components/fixed/final-leave-approvals/ApprovalsTabs';
-import { ApprovalsTabWindow } from 'apps/portal/src/components/fixed/final-leave-approvals/ApprovalsTabWindow';
+import { FinalApprovalsPendingLeaveModal } from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsPendingLeaveModal';
+import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
+import { FinalApprovalsTabs } from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsTabs';
+import { FinalApprovalsTabWindow } from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsTabWindow';
+import FinalApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsCompletedLeaveModal';
 
 export default function FinalLeaveApprovals({
   employeeDetails,
@@ -55,7 +53,7 @@ export default function FinalLeaveApprovals({
     getLeaveListSuccess,
     getLeaveListFail,
     emptyResponseAndError,
-  } = useApprovalStore((state) => ({
+  } = useFinalLeaveApprovalStore((state) => ({
     tab: state.tab,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
@@ -102,6 +100,11 @@ export default function FinalLeaveApprovals({
   // cancel action for Dispproved Leave Application Modal
   const closeDisapprovedLeaveModal = async () => {
     setDisapprovedLeaveModalIsOpen(false);
+  };
+
+  // cancel action for Dispproved Leave Application Modal
+  const closeCancelledLeaveModal = async () => {
+    setCancelledLeaveModalIsOpen(false);
   };
 
   const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/hrdm`;
@@ -163,10 +166,31 @@ export default function FinalLeaveApprovals({
           <SideNav employeeDetails={employeeDetails} />
 
           {/* Pending Leave Approval Modal */}
-          <ApprovalsPendingLeaveModal
+          <FinalApprovalsPendingLeaveModal
             modalState={pendingLeaveModalIsOpen}
             setModalState={setPendingLeaveModalIsOpen}
             closeModalAction={closePendingLeaveModal}
+          />
+
+          {/* Approved Leave Modal */}
+          <FinalApprovalsCompletedLeaveModal
+            modalState={approvedLeaveModalIsOpen}
+            setModalState={setApprovedLeaveModalIsOpen}
+            closeModalAction={closeApprovedLeaveModal}
+          />
+
+          {/* Disapproved Leave Modal */}
+          <FinalApprovalsCompletedLeaveModal
+            modalState={disapprovedLeaveModalIsOpen}
+            setModalState={setDisapprovedLeaveModalIsOpen}
+            closeModalAction={closeDisapprovedLeaveModal}
+          />
+
+          {/* Cancelled Leave Modal */}
+          <FinalApprovalsCompletedLeaveModal
+            modalState={cancelledLeaveModalIsOpen}
+            setModalState={setCancelledLeaveModalIsOpen}
+            closeModalAction={closeCancelledLeaveModal}
           />
 
           <MainContainer>
@@ -177,7 +201,7 @@ export default function FinalLeaveApprovals({
               >
                 {/* <ApprovalTypeSelect /> */}
               </ContentHeader>
-              {!loadingLeave ? (
+              {loadingLeave ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}
@@ -192,10 +216,10 @@ export default function FinalLeaveApprovals({
                   <>
                     <div className={`w-full flex lg:flex-row flex-col`}>
                       <div className={`lg:w-[58rem] w-full`}>
-                        <ApprovalsTabs tab={tab} />
+                        <FinalApprovalsTabs tab={tab} />
                       </div>
                       <div className="w-full">
-                        <ApprovalsTabWindow
+                        <FinalApprovalsTabWindow
                           employeeId={employeeDetails.employmentDetails.userId}
                         />
                       </div>

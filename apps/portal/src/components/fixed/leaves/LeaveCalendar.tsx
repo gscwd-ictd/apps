@@ -44,9 +44,7 @@ export default function Calendar({
   const {
     leaveDateFrom,
     leaveDateTo,
-
     overlappingLeaveCount,
-
     setLeaveDateFrom,
     setLeaveDateTo,
     setLeaveDates,
@@ -187,6 +185,7 @@ export default function Calendar({
             <input
               required
               type="date"
+              value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
               className="text-slate-500 text-md border-slate-300"
               onChange={(e) =>
                 setLeaveDateFrom(e.target.value as unknown as string)
@@ -201,6 +200,7 @@ export default function Calendar({
             <input
               required
               type="date"
+              value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
               className="text-slate-500 text-md border-slate-300"
               onChange={(e) =>
                 setLeaveDateTo(e.target.value as unknown as string)
