@@ -48,7 +48,7 @@ export const SideNavigation = () => {
 
       <Sidebar.Content>
         <ul>
-          <Can I="access" this={'Employees' && 'Dashboard'}>
+          <Can I="access" this={'Employees'}>
             <Sidebar.Header
               className={`py-2 ${isCollapsed ? 'hidden' : 'block'}`}
             >
