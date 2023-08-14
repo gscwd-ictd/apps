@@ -95,7 +95,7 @@ export const TopNavigation = () => {
               </div>
               <div className="hidden sm:hidden md:hidden lg:block">
                 <span className="text-xs text-gray-600 select-none ">
-                  {userProfile.email ?? 'Superuseradmin'}
+                  {userProfile?.email ?? 'Superuseradmin'}
                 </span>
               </div>
               <div className="w-2 h-2 sm:hidden lg:block">
