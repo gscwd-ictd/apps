@@ -52,6 +52,7 @@ export const LeavePendingModal = ({
       );
 
       if (!isEmpty(data)) {
+        console.log(data);
         getLeaveIndividualDetailSuccess(false, data);
       }
     } catch (error) {

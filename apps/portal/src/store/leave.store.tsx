@@ -12,6 +12,7 @@ import {
   LeaveApplicationResponse,
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
+import axios, { AxiosResponse } from 'axios';
 
 export type LeavesState = {
   leaves: {
@@ -303,10 +304,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveTypesSuccess: (
-      loading: boolean,
-      response: Array<LeaveBenefitOptions>
-    ) => {
+    getLeaveTypesSuccess: (loading: boolean, response: Array<LeaveBenefitOptions>) => {
       set((state) => ({
         ...state,
         leaveTypes: response,
@@ -349,10 +347,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveCreditsSuccess: (
-      loading: boolean,
-      response: EmployeeLeaveCredits
-    ) => {
+    getLeaveCreditsSuccess: (loading: boolean, response: EmployeeLeaveCredits) => {
       set((state) => ({
         ...state,
         leaves: {
@@ -398,10 +393,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getUnavailableSuccess: (
-      loading: boolean,
-      response: Array<CalendarDate>
-    ) => {
+    getUnavailableSuccess: (loading: boolean, response: Array<CalendarDate>) => {
       set((state) => ({
         ...state,
         unavailableDates: {
@@ -443,10 +435,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveIndividualDetailSuccess: (
-      loading: boolean,
-      response: EmployeeLeaveDetails
-    ) => {
+    getLeaveIndividualDetailSuccess: (loading: boolean, response: EmployeeLeaveDetails) => {
       set((state) => ({
         ...state,
         leaveIndividualDetail: response,
@@ -485,3 +474,36 @@ export const useLeaveStore = create<LeavesState>()(
     },
   }))
 );
+
+type AppState = {
+  name: string;
+  id: string;
+};
+
+type TestState = {
+  loading: boolean;
+  appState: AppState;
+  setAppState: (appState: AppState) => void;
+  error: boolean;
+};
+
+export const useTestStore = create<TestState>((set) => ({
+  appState: {} as AppState,
+  error: false,
+  loading: false,
+  setAppState: (state) => {
+    // begin
+    set({ loading: true });
+
+    const result = axios.get('') as unknown as AxiosResponse;
+
+    // set error or response
+    if (result.data) {
+      set({ appState: result.data });
+      set({ loading: false });
+    } else {
+      set({ loading: false });
+      set({ error: true });
+    }
+  },
+}));

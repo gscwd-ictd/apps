@@ -1,7 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { leaveAction, passSlipAction } from '../../../../types/approvals.type';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  LoadingSpinner,
+  Modal,
+} from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
@@ -44,7 +49,7 @@ export const ConfirmationLeaveModal = ({
       const data = {
         id: tokenId,
         status: action,
-        supervisorDisapprovalRemarks: remarks,
+        hrdmDisapprovalRemarks: remarks,
       };
       patchLeave();
       handlePatchResult(data);
@@ -54,7 +59,7 @@ export const ConfirmationLeaveModal = ({
   };
 
   const handlePatchResult = async (data: leaveAction) => {
-    const { error, result } = await patchPortal('/v1/leave/supervisor', data);
+    const { error, result } = await patchPortal('/v1/leave/hrdm', data);
     if (error) {
       patchLeaveFail(result);
     } else {
@@ -92,6 +97,7 @@ export const ConfirmationLeaveModal = ({
         <Modal.Body>
           {loadingLeaveResponse ? (
             <AlertNotification
+              logo={<LoadingSpinner size="xs" />}
               alertType="info"
               notifMessage={'Processing'}
               dismissible={false}
@@ -99,7 +105,7 @@ export const ConfirmationLeaveModal = ({
           ) : null}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
             {`Are you sure you want to ${
-              action === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+              action === LeaveStatus.DISAPPROVED_BY_HRDM
                 ? 'disapprove'
                 : action === LeaveStatus.CANCELLED
                 ? 'cancel or void'

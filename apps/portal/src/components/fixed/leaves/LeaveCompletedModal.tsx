@@ -414,6 +414,52 @@ export const LeaveCompletedModal = ({
                     </>
                   ) : null}
 
+                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                    <label className="text-md font-medium text-slate-500 whitespace-nowrap">
+                      {leaveIndividualDetail?.leaveApplicationBasicInfo
+                        ?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                        ? 'Date Disapproved:'
+                        : leaveIndividualDetail?.leaveApplicationBasicInfo
+                            ?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                        ? 'Date Disapproved:'
+                        : leaveIndividualDetail?.leaveApplicationBasicInfo
+                            ?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                        ? 'Date Disapproved:'
+                        : leaveIndividualDetail?.leaveApplicationBasicInfo
+                            ?.status === LeaveStatus.APPROVED
+                        ? 'Date Approved:'
+                        : leaveIndividualDetail?.leaveApplicationBasicInfo
+                            ?.status === LeaveStatus.CANCELLED
+                        ? 'Date Cancelled:'
+                        : null}
+                    </label>
+
+                    <div className="w-96">
+                      <label className="text-slate-500 h-12 w-96  text-md ">
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo
+                          ?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.hrdmApprovalDate
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.supervisorApprovalDate
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.hrmoApprovalDate
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.APPROVED
+                          ? leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.hrdmApprovalDate
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo
+                              ?.status === LeaveStatus.CANCELLED
+                          ? 'N/A'
+                          : null}
+                      </label>
+                    </div>
+                  </div>
+
                   {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                     LeaveStatus.DISAPPROVED_BY_HRDM ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
@@ -465,24 +511,15 @@ export const LeaveCompletedModal = ({
                         <tr className="border border-slate-400">
                           <td className="border border-slate-400"></td>
                           <td className="border border-slate-400 text-center text-sm p-1">
-                            Vacation Leave
-                          </td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
-                            Forced Leave
-                          </td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
-                            Sick Leave
+                            {
+                              leaveIndividualDetail?.leaveApplicationBasicInfo
+                                ?.leaveName
+                            }
                           </td>
                         </tr>
                         <tr className="border border-slate-400">
                           <td className="border border-slate-400 text-sm p-1">
                             Total Earned
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            10
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            5
                           </td>
                           <td className="border border-slate-400 p-1 text-center text-sm">
                             10
@@ -495,26 +532,10 @@ export const LeaveCompletedModal = ({
                           <td className="border border-slate-400 p-1 text-center text-sm">
                             0
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            0
-                          </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            0
-                          </td>
                         </tr>
                         <tr className="border border-slate-400 bg-green-100">
                           <td className="border border-slate-400 text-sm p-1">
                             Balance
-                          </td>
-                          <td
-                            className={` border border-slate-400 p-1 text-center text-sm`}
-                          >
-                            0
-                          </td>
-                          <td
-                            className={` border border-slate-400 p-1 text-center text-sm`}
-                          >
-                            0
                           </td>
                           <td
                             className={` border border-slate-400 p-1 text-center text-sm`}
@@ -532,27 +553,28 @@ export const LeaveCompletedModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            {dateNow >
-            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0] ? (
-              <>
-                <Button
-                  disabled={
-                    dateNow >
-                    leaveIndividualDetail?.leaveApplicationBasicInfo
-                      ?.leaveDates[0]
-                      ? true
-                      : false
-                  }
-                  variant={'warning'}
-                  size={'md'}
-                  loading={false}
-                  onClick={(e) => setCancelLeaveModalIsOpen(true)}
-                  type="submit"
-                >
-                  Cancel Leave
-                </Button>
-              </>
-            ) : null}
+            <Button
+              disabled={
+                dateNow >
+                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0]
+                  ? true
+                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                      LeaveStatus.DISAPPROVED_BY_HRDM ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                      LeaveStatus.DISAPPROVED_BY_HRMO ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                      LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                  ? true
+                  : false
+              }
+              variant={'warning'}
+              size={'md'}
+              loading={false}
+              onClick={(e) => setCancelLeaveModalIsOpen(true)}
+              type="submit"
+            >
+              Cancel Leave
+            </Button>
           </div>
         </Modal.Footer>
       </Modal>
