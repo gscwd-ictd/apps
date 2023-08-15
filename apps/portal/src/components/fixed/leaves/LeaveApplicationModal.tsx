@@ -259,11 +259,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   };
 
   //check if there are pending leaves of the same name being filed, return true/false
-  // useEffect(() => {
-  //   if(pendingleavesList.includes(watch('typeOfLeaveDetails.leaveName'))) {
-
-  //   }
-  // }, [watch('typeOfLeaveDetails.leaveName')]);
+  useEffect(() => {
+    if (pendingleavesList.some((leave) => leave.leaveName === watch('typeOfLeaveDetails.leaveName'))) {
+      setHasPendingLeave(true);
+    } else {
+      setHasPendingLeave(false);
+    }
+  }, [watch('typeOfLeaveDetails.leaveName')]);
 
   useEffect(() => {
     setValue('employeeId', employeeDetails.employmentDetails.userId);
@@ -776,6 +778,16 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       />
                     ) : null}
 
+                    {/* Has Existing Pending Leave of the Same Name - cannot file a new one */}
+                    {hasPendingLeave ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="You have a pending leave application of the same type"
+                        dismissible={false}
+                        className="-mb-1"
+                      />
+                    ) : null}
+
                     <div className="w-full p-4 bg-gray-50 rounded">
                       {watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ||
@@ -921,6 +933,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         watch('typeOfLeaveDetails.leaveName') == LeaveName.STUDY ||
                         watch('typeOfLeaveDetails.leaveName') == LeaveName.REHABILITATION ||
                         watch('typeOfLeaveDetails.leaveName') == LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN)
+                    ? true
+                    : hasPendingLeave
                     ? true
                     : false
                 }
