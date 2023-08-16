@@ -166,7 +166,8 @@ export const ApprovalsCompletedLeaveModal = ({
                         {leaveIndividualDetail?.leaveName === LeaveName.MATERNITY ||
                         leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                         leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
-                        leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+                        leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                        leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
                           ? // show first and last date (array) only if maternity or study leave
                             `${leaveIndividualDetail?.leaveDates[0]} - ${
                               leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
@@ -231,7 +232,7 @@ export const ApprovalsCompletedLeaveModal = ({
 
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
-                        {/* {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
                           ? leaveIndividualDetail?.hrdmApprovalDate
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                           ? leaveIndividualDetail?.supervisorApprovalDate
@@ -241,8 +242,7 @@ export const ApprovalsCompletedLeaveModal = ({
                           ? leaveIndividualDetail?.hrdmApprovalDate
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
                           ? 'N/A'
-                          : null} */}
-                        N/A
+                          : null}
                       </label>
                     </div>
                   </div>

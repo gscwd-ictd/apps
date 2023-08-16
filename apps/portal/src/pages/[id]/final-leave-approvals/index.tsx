@@ -6,15 +6,8 @@ import { ContentHeader } from '../../../components/modular/custom/containers/Con
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { employee } from '../../../utils/constants/data';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../utils/helpers/session';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
@@ -76,9 +69,7 @@ export default function FinalLeaveApprovals({
   }));
 
   // set state for employee store
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
   // set state for employee store
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
@@ -129,6 +120,7 @@ export default function FinalLeaveApprovals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
+      console.log(swrLeaves);
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
@@ -151,18 +143,12 @@ export default function FinalLeaveApprovals({
       <>
         {/* Leave List Load Failed Error */}
         {!isEmpty(errorLeave) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorLeave}: Failed to load Leaves.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${errorLeave}: Failed to load Leaves.`} />
         ) : null}
 
         {/* Leave List Load Failed Error */}
         {!isEmpty(patchResponseLeave) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage={`Leave Application action submitted.`}
-          />
+          <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
         ) : null}
 
         <EmployeeProvider employeeData={employee}>
@@ -202,10 +188,7 @@ export default function FinalLeaveApprovals({
 
           <MainContainer>
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
-              <ContentHeader
-                title="Employee Final Leave Approvals"
-                subtitle="Approve Employee Leaves"
-              >
+              <ContentHeader title="Employee Final Leave Approvals" subtitle="Approve Employee Leaves">
                 {/* <ApprovalTypeSelect /> */}
               </ContentHeader>
               {loadingLeave ? (
@@ -226,9 +209,7 @@ export default function FinalLeaveApprovals({
                         <FinalApprovalsTabs tab={tab} />
                       </div>
                       <div className="w-full">
-                        <FinalApprovalsTabWindow
-                          employeeId={employeeDetails.employmentDetails.userId}
-                        />
+                        <FinalApprovalsTabWindow employeeId={employeeDetails.employmentDetails.userId} />
                       </div>
                     </div>
                   </>
@@ -250,45 +231,21 @@ export default function FinalLeaveApprovals({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    // check if user role is rank_and_file or job order = kick out
+  // check if user role is rank_and_file or job order = kick out
+  if (
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER)
+  ) {
     if (
-      isEqual(
-        employeeDetails.employmentDetails.userRole,
-        UserRole.DIVISION_MANAGER
-      ) ||
-      isEqual(
-        employeeDetails.employmentDetails.userRole,
-        UserRole.OIC_DIVISION_MANAGER
-      ) ||
-      isEqual(
-        employeeDetails.employmentDetails.userRole,
-        UserRole.DEPARTMENT_MANAGER
-      ) ||
-      isEqual(
-        employeeDetails.employmentDetails.userRole,
-        UserRole.OIC_DEPARTMENT_MANAGER
-      )
+      employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
+      employeeDetails.employmentDetails.assignment.name === 'Training and Development Division'
     ) {
-      if (
-        employeeDetails.employmentDetails.assignment.name ===
-          'Recruitment and Personnel Welfare Division' ||
-        employeeDetails.employmentDetails.assignment.name ===
-          'Training and Development Division'
-      ) {
-        return { props: { employeeDetails } };
-      } else {
-        // if false, the employee is not allowed to access this page
-        return {
-          redirect: {
-            permanent: false,
-            destination: `/${employeeDetails.user._id}`,
-          },
-        };
-      }
+      return { props: { employeeDetails } };
     } else {
       // if false, the employee is not allowed to access this page
       return {
@@ -298,5 +255,13 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(
         },
       };
     }
+  } else {
+    // if false, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
   }
-);
+});
