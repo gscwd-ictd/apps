@@ -5,6 +5,10 @@ import { devtools } from 'zustand/middleware';
 
 export type LeaveLedgerState = {
   leaveLedger: Array<LeaveLedgerEntry>;
+  vacationLeaveBalance: number;
+  forcedLeaveBalance: number;
+  sickLeaveBalance: number;
+  specialPrivilegeLeaveBalance: number;
 
   loading: {
     loadingLeaveLedger: boolean;
@@ -12,6 +16,11 @@ export type LeaveLedgerState = {
   error: {
     errorLeaveLedger: string;
   };
+
+  setVacationLeaveBalance: (vacationLeaveBalance: number) => void;
+  setForcedLeaveBalance: (forcedLeaveBalance: number) => void;
+  setSickLeaveBalance: (sickLeaveBalance: number) => void;
+  setSpecialPrivilegeLeaveBalance: (specialPrivilegeLeaveBalance: number) => void;
 
   getLeaveLedger: (loading: boolean) => void;
   getLeaveLedgerSuccess: (loading: boolean, response) => void;
@@ -21,11 +30,32 @@ export type LeaveLedgerState = {
 export const useLeaveLedgerStore = create<LeaveLedgerState>()(
   devtools((set) => ({
     leaveLedger: [],
+    vacationLeaveBalance: 0,
+    forcedLeaveBalance: 0,
+    sickLeaveBalance: 0,
+    specialPrivilegeLeaveBalance: 0,
+
     loading: {
       loadingLeaveLedger: false,
     },
     error: {
       errorLeaveLedger: '',
+    },
+
+    setVacationLeaveBalance: (vacationLeaveBalance: number) => {
+      set((state) => ({ ...state, vacationLeaveBalance }));
+    },
+
+    setForcedLeaveBalance: (forcedLeaveBalance: number) => {
+      set((state) => ({ ...state, forcedLeaveBalance }));
+    },
+
+    setSickLeaveBalance: (sickLeaveBalance: number) => {
+      set((state) => ({ ...state, sickLeaveBalance }));
+    },
+
+    setSpecialPrivilegeLeaveBalance: (specialPrivilegeLeaveBalance: number) => {
+      set((state) => ({ ...state, specialPrivilegeLeaveBalance }));
     },
 
     //GET LEAVE ACTIONS

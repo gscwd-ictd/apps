@@ -80,14 +80,14 @@ const leaveCommutation: Array<SelectOption> = [
 ];
 
 export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAction }: LeaveApplicationModalProps) => {
-  // forced leave balance
-  const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
-  // vacation leave balance
-  const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
-  // sick leave balance
-  const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
-  // special privilege leave balance
-  const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
+  // // forced leave balance
+  // const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
+  // // vacation leave balance
+  // const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
+  // // sick leave balance
+  // const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
+  // // special privilege leave balance
+  // const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
 
   //zustand initialization to access Leave store
   const {
@@ -135,15 +135,31 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setLeaveDateTo: state.setLeaveDateTo,
   }));
 
-  const { leaveLedger, loadingLedger, errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } =
-    useLeaveLedgerStore((state) => ({
-      leaveLedger: state.leaveLedger,
-      loadingLedger: state.loading.loadingLeaveLedger,
-      errorLedger: state.error.errorLeaveLedger,
-      getLeaveLedger: state.getLeaveLedger,
-      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-      getLeaveLedgerFail: state.getLeaveLedgerFail,
-    }));
+  const {
+    vacationLeaveBalance,
+    forcedLeaveBalance,
+    sickLeaveBalance,
+    specialPrivilegeLeaveBalance,
+    setVacationLeaveBalance,
+    setForcedLeaveBalance,
+    setSickLeaveBalance,
+    setSpecialPrivilegeLeaveBalance,
+    getLeaveLedger,
+    getLeaveLedgerSuccess,
+    getLeaveLedgerFail,
+  } = useLeaveLedgerStore((state) => ({
+    vacationLeaveBalance: state.vacationLeaveBalance,
+    forcedLeaveBalance: state.forcedLeaveBalance,
+    sickLeaveBalance: state.sickLeaveBalance,
+    specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    setVacationLeaveBalance: state.setVacationLeaveBalance,
+    setForcedLeaveBalance: state.setForcedLeaveBalance,
+    setSickLeaveBalance: state.setSickLeaveBalance,
+    setSpecialPrivilegeLeaveBalance: state.setSpecialPrivilegeLeaveBalance,
+    getLeaveLedger: state.getLeaveLedger,
+    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+    getLeaveLedgerFail: state.getLeaveLedgerFail,
+  }));
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -198,7 +214,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaveLedger)) {
-      console.log(swrLeaveLedger);
       getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
       getLatestBalance(swrLeaveLedger);
     }

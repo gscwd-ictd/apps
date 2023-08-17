@@ -9,6 +9,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -38,6 +39,14 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
   }));
+
+  const { vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance, specialPrivilegeLeaveBalance } =
+    useLeaveLedgerStore((state) => ({
+      vacationLeaveBalance: state.vacationLeaveBalance,
+      forcedLeaveBalance: state.forcedLeaveBalance,
+      sickLeaveBalance: state.sickLeaveBalance,
+      specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -297,37 +306,41 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     </>
                   ) : null}
 
-                  <div className="w-full pb-4">
-                    <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
-                    <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                      <tbody>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400"></td>
-                          <td className="border border-slate-400 text-center text-sm p-1">Vacation Leave</td>
-                          <td className="border border-slate-400 text-center text-sm p-1">Forced Leave</td>
-                          <td className="border border-slate-400 text-center text-sm p-1">Sick Leave</td>
-                        </tr>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400 text-sm p-1">Total Earned</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">10</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">5</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">10</td>
-                        </tr>
-                        <tr>
-                          <td className="border border-slate-400 text-sm p-1">Less this application</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                        </tr>
-                        <tr className="border border-slate-400 bg-green-100">
-                          <td className="border border-slate-400 text-sm p-1">Balance</td>
-                          <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
-                          <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
-                          <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                    <div className="w-full pb-4">
+                      <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
+                      <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                        <tbody>
+                          <tr className="border border-slate-400">
+                            <td className="border border-slate-400 w-1/2"></td>
+                            <td className="border border-slate-400 text-center text-sm p-1">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName}
+                            </td>
+                          </tr>
+                          <tr className="border border-slate-400">
+                            <td className="border border-slate-400 text-sm p-1">Total Earned</td>
+                            <td className="border border-slate-400 p-1 text-center text-sm">
+                              {/* {
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ?
+                                
+                              } */}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="border border-slate-400 text-sm p-1">Less this application</td>
+                            <td className="border border-slate-400 p-1 text-center text-sm">0</td>
+                          </tr>
+                          <tr className="border border-slate-400 bg-green-100">
+                            <td className="border border-slate-400 text-sm p-1">Balance</td>
+                            <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
