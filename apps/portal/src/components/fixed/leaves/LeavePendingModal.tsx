@@ -311,31 +311,31 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                     <div className="w-full pb-4">
-                      <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
+                      <span className="text-slate-500 text-md font-medium">
+                        Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
+                      </span>
                       <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
                         <tbody>
                           <tr className="border border-slate-400">
-                            <td className="border border-slate-400 w-1/2"></td>
-                            <td className="border border-slate-400 text-center text-sm p-1">
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName}
-                            </td>
+                            <td className="border border-slate-400 text-center">Total Earned</td>
+                            <td className="border border-slate-400 text-center">Less this application</td>
+                            <td className="border border-slate-400 text-center bg-green-100">Balance</td>
                           </tr>
                           <tr className="border border-slate-400">
-                            <td className="border border-slate-400 text-sm p-1">Total Earned</td>
-                            <td className="border border-slate-400 p-1 text-center text-sm">
-                              {/* {
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ?
-                                
-                              } */}
+                            <td className="border border-slate-400 text-center">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                ? vacationLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                ? forcedLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                ? sickLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.SPECIAL_PRIVILEGE
+                                ? specialPrivilegeLeaveBalance
+                                : 'N/A'}
                             </td>
-                          </tr>
-                          <tr>
-                            <td className="border border-slate-400 text-sm p-1">Less this application</td>
-                            <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                          </tr>
-                          <tr className="border border-slate-400 bg-green-100">
-                            <td className="border border-slate-400 text-sm p-1">Balance</td>
-                            <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
+                            <td className="border border-slate-400 text-center">0</td>
+                            <td className="border border-slate-400 text-center bg-green-100">0</td>
                           </tr>
                         </tbody>
                       </table>

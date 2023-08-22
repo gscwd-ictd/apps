@@ -11,6 +11,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import CancelLeaveModal from './CancelLeaveModal';
 import dayjs from 'dayjs';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
 type LeaveCompletedModalProps = {
   modalState: boolean;
@@ -44,6 +45,14 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
     setCancelLeaveModalIsOpen: state.setCancelLeaveModalIsOpen,
   }));
+
+  const { vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance, specialPrivilegeLeaveBalance } =
+    useLeaveLedgerStore((state) => ({
+      vacationLeaveBalance: state.vacationLeaveBalance,
+      forcedLeaveBalance: state.forcedLeaveBalance,
+      sickLeaveBalance: state.sickLeaveBalance,
+      specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -395,31 +404,41 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     </>
                   ) : null}
 
-                  <div className="w-full pb-4">
-                    <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
-                    <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                      <tbody>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400"></td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName}
-                          </td>
-                        </tr>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400 text-sm p-1">Total Earned</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">10</td>
-                        </tr>
-                        <tr>
-                          <td className="border border-slate-400 text-sm p-1">Less this application</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                        </tr>
-                        <tr className="border border-slate-400 bg-green-100">
-                          <td className="border border-slate-400 text-sm p-1">Balance</td>
-                          <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                    <div className="w-full pb-4">
+                      <span className="text-slate-500 text-md font-medium">
+                        Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
+                      </span>
+                      <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                        <tbody>
+                          <tr className="border border-slate-400">
+                            <td className="border border-slate-400 text-center">Total Earned</td>
+                            <td className="border border-slate-400 text-center">Less this application</td>
+                            <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                          </tr>
+                          <tr className="border border-slate-400">
+                            <td className="border border-slate-400 text-center">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                ? vacationLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                ? forcedLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                ? sickLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.SPECIAL_PRIVILEGE
+                                ? specialPrivilegeLeaveBalance
+                                : 'N/A'}
+                            </td>
+                            <td className="border border-slate-400 text-center">0</td>
+                            <td className="border border-slate-400 text-center bg-green-100">0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
