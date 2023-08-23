@@ -88,9 +88,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   const getDateNow = dayjs().toDate();
   const dateNow = dayjs(getDateNow).format('YYYY-MM-DD');
 
-  // console.log(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0]);
-  // console.log(dayjs(getDateNow).format('YYYY-MM-DD'));
-
   return (
     <>
       <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>
@@ -404,7 +401,11 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     </>
                   ) : null}
 
-                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                  {(leaveIndividualDetail?.leaveApplicationBasicInfo?.status !==
+                    LeaveStatus.DISAPPROVED_BY_SUPERVISOR &&
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_HRDM &&
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_HRMO &&
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION) ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
@@ -422,6 +423,41 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                           <tr className="border border-slate-400">
                             <td className="border border-slate-400 text-center">
                               {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                ? (
+                                    Number(parseFloat(`${vacationLeaveBalance}`).toFixed(3)) +
+                                    Number(
+                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                                    )
+                                  ).toFixed(3)
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                ? (
+                                    Number(parseFloat(`${forcedLeaveBalance}`).toFixed(3)) +
+                                    Number(
+                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                                    )
+                                  ).toFixed(3)
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                ? (
+                                    Number(parseFloat(`${sickLeaveBalance}`).toFixed(3)) +
+                                    Number(
+                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                                    )
+                                  ).toFixed(3)
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.SPECIAL_PRIVILEGE
+                                ? (
+                                    Number(parseFloat(`${specialPrivilegeLeaveBalance}`).toFixed(3)) +
+                                    Number(
+                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                                    )
+                                  ).toFixed(3)
+                                : 'N/A'}
+                            </td>
+                            <td className="border border-slate-400 text-center">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)}
+                            </td>
+                            <td className="border border-slate-400 text-center bg-green-100">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
                                 ? vacationLeaveBalance
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
                                 ? forcedLeaveBalance
@@ -432,8 +468,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                 ? specialPrivilegeLeaveBalance
                                 : 'N/A'}
                             </td>
-                            <td className="border border-slate-400 text-center">0</td>
-                            <td className="border border-slate-400 text-center bg-green-100">0</td>
                           </tr>
                         </tbody>
                       </table>

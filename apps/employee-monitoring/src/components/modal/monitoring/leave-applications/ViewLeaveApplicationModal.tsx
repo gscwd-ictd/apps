@@ -2,16 +2,8 @@
 import { Modal, PageContentContext } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import {
-  EmployeeLeaveDetails,
-  MonitoringLeave,
-} from 'libs/utils/src/lib/types/leave-application.type';
-import React, {
-  FunctionComponent,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
+import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
@@ -56,9 +48,12 @@ const actionTaken: Array<SelectOption> = [
 
 // /v1/leave-application/details/${leaveId}
 
-const ViewLeaveApplicationModal: FunctionComponent<
-  ViewLeaveApplicationModalProps
-> = ({ rowData, modalState, closeModalAction, setModalState }) => {
+const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProps> = ({
+  rowData,
+  modalState,
+  closeModalAction,
+  setModalState,
+}) => {
   // use context
   const {
     aside: { windowWidth },
@@ -110,16 +105,12 @@ const ViewLeaveApplicationModal: FunctionComponent<
   const [confirmAction, setConfirmAction] = useState<Action | null>(null);
 
   // use form
-  const { register, getValues, watch, reset, setValue, handleSubmit } =
-    useForm<LeaveForm>({
-      defaultValues: {
-        action: null,
-        accumulatedCredits:
-          parseInt(
-            leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue
-          ) ?? null,
-      },
-    });
+  const { register, getValues, watch, reset, setValue, handleSubmit } = useForm<LeaveForm>({
+    defaultValues: {
+      action: null,
+      accumulatedCredits: parseInt(leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue) ?? null,
+    },
+  });
 
   // on submit
   const onSubmit = async () => {
@@ -128,17 +119,13 @@ const ViewLeaveApplicationModal: FunctionComponent<
     const data = {
       id: rowData.id,
       status:
-        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
-          LeaveType.CUMULATIVE ||
-        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
-          LeaveType.RECURRING
+        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === LeaveType.CUMULATIVE ||
+        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === LeaveType.RECURRING
           ? LeaveStatus.FOR_SUPERVISOR_APPROVAL
-          : leaveApplicationDetails.leaveApplicationBasicInfo.leaveType ===
-            LeaveType.SPECIAL
+          : leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === LeaveType.SPECIAL
           ? getValues('action') === Action.APPROVE
             ? LeaveStatus.FOR_SUPERVISOR_APPROVAL
-            : getValues('action') === Action.DISAPPROVE &&
-              LeaveStatus.DISAPPROVED_BY_HRMO
+            : getValues('action') === Action.DISAPPROVE && LeaveStatus.DISAPPROVED_BY_HRMO
           : null,
     };
 
@@ -150,10 +137,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
   };
 
   // function for patching the leave application
-  const handlePatchLeaveApplication = async (data: {
-    id: string;
-    status: LeaveStatus;
-  }) => {
+  const handlePatchLeaveApplication = async (data: { id: string; status: LeaveStatus }) => {
     const { error, result } = await patchEmpMonitoring('leave/hrmo', data);
 
     if (!error) {
@@ -284,10 +268,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
                           <div className="flex flex-wrap justify-center">
                             <div className="w-[6rem]">
                               <Image
-                                src={
-                                  leaveApplicationDetails.employeeDetails
-                                    ?.photoUrl
-                                }
+                                src={leaveApplicationDetails.employeeDetails?.photoUrl}
                                 width={100}
                                 height={100}
                                 alt="employee-photo"
@@ -301,16 +282,12 @@ const ViewLeaveApplicationModal: FunctionComponent<
                       </div>
 
                       <div className="flex flex-col">
-                        <div className="text-xl font-semibold">
-                          {rowData.employee?.employeeName}
-                        </div>
+                        <div className="text-xl font-semibold">{rowData.employee?.employeeName}</div>
                         <div className="font-light">
-                          {leaveApplicationDetails.employeeDetails?.assignment
-                            .positionTitle ?? <Skeleton />}
+                          {leaveApplicationDetails.employeeDetails?.assignment.positionTitle ?? <Skeleton />}
                         </div>
                         <div className="font-semibold ">
-                          {leaveApplicationDetails.employeeDetails?.companyId ??
-                            '--'}
+                          {leaveApplicationDetails.employeeDetails?.companyId ?? '--'}
                         </div>
                       </div>
                     </section>
@@ -319,22 +296,13 @@ const ViewLeaveApplicationModal: FunctionComponent<
                   <hr />
 
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
-                    <LabelValue
-                      label="Leave Type"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={rowData.leaveName}
-                    />
+                    <LabelValue label="Leave Type" direction="top-to-bottom" textSize="md" value={rowData.leaveName} />
 
                     <LabelValue
                       label="Status"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={
-                        rowData.status
-                          ? UseRenderLeaveStatus(rowData.status)
-                          : ''
-                      }
+                      value={rowData.status ? UseRenderLeaveStatus(rowData.status) : ''}
                     />
                   </div>
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
@@ -343,12 +311,8 @@ const ViewLeaveApplicationModal: FunctionComponent<
                       direction="top-to-bottom"
                       textSize="md"
                       value={
-                        leaveApplicationDetails.leaveApplicationBasicInfo
-                          ?.debitValue
-                          ? parseInt(
-                              leaveApplicationDetails.leaveApplicationBasicInfo
-                                ?.debitValue
-                            )
+                        leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue
+                          ? parseInt(leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue)
                           : 0
                       }
                     />
@@ -360,22 +324,14 @@ const ViewLeaveApplicationModal: FunctionComponent<
                       value={
                         rowData.leaveDates && rowData.leaveDates.length >= 2 ? (
                           <div className="flex items-center gap-2 text-sm font-light">
-                            {UseRenderBadgePill(
-                              firstAndLastDate(rowData.leaveDates).start
-                            )}
+                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).start)}
                             <div>to</div>
-                            {UseRenderBadgePill(
-                              firstAndLastDate(rowData.leaveDates).end
-                            )}
+                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).end)}
                           </div>
-                        ) : rowData.leaveDates &&
-                          rowData.leaveDates.length === 1 ? (
+                        ) : rowData.leaveDates && rowData.leaveDates.length === 1 ? (
                           rowData.leaveDates.map((date, idx) => {
                             return (
-                              <div
-                                className="flex items-center gap-2 text-sm font-light"
-                                key={idx}
-                              >
+                              <div className="flex items-center gap-2 text-sm font-light" key={idx}>
                                 {UseRenderBadgePill(date)}
                               </div>
                             );
@@ -389,99 +345,64 @@ const ViewLeaveApplicationModal: FunctionComponent<
 
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     {/* VACATION LEAVE */}
-                    {!isEmpty(
-                      leaveApplicationDetails.leaveApplicationDetails
-                        ?.inPhilippinesOrAbroad
-                    ) ? (
+                    {!isEmpty(leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad) ? (
                       <>
                         <LabelValue
                           label="Leave Details"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={
-                            leaveApplicationDetails.leaveApplicationDetails
-                              ?.inPhilippinesOrAbroad
-                          }
+                          value={leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad}
                         />
                         <LabelValue
                           label="Location"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={
-                            leaveApplicationDetails.leaveApplicationDetails
-                              ?.location
-                          }
+                          value={leaveApplicationDetails.leaveApplicationDetails?.location}
                         />
                       </>
                     ) : null}
 
                     {/* SICK LEAVE */}
-                    {!isEmpty(
-                      leaveApplicationDetails.leaveApplicationDetails?.hospital
-                    ) ? (
+                    {!isEmpty(leaveApplicationDetails.leaveApplicationDetails?.hospital) ? (
                       <>
                         <LabelValue
                           label="Leave Details"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={
-                            leaveApplicationDetails.leaveApplicationDetails
-                              .hospital
-                          }
+                          value={leaveApplicationDetails.leaveApplicationDetails.hospital}
                         />
                         <LabelValue
                           label="Illness"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={
-                            leaveApplicationDetails.leaveApplicationDetails
-                              ?.illness ?? 'N/A'
-                          }
+                          value={leaveApplicationDetails.leaveApplicationDetails?.illness ?? 'N/A'}
                         />
                       </>
                     ) : null}
 
                     {/* SPL WOMEN */}
-                    {leaveApplicationDetails.leaveApplicationDetails
-                      ?.splWomen ? (
+                    {leaveApplicationDetails.leaveApplicationDetails?.splWomen ? (
                       <LabelValue
                         label="Leave Details"
                         direction="top-to-bottom"
                         textSize="md"
-                        value={
-                          leaveApplicationDetails.leaveApplicationDetails
-                            .splWomen
-                        }
+                        value={leaveApplicationDetails.leaveApplicationDetails.splWomen}
                       />
                     ) : null}
 
                     {/* STUDY LEAVE */}
-                    {!isEmpty(
-                      leaveApplicationDetails.leaveApplicationDetails
-                        ?.forBarBoardReview
-                    ) ||
-                    !isEmpty(
-                      leaveApplicationDetails.leaveApplicationDetails
-                        ?.forMastersCompletion
-                    ) ? (
+                    {!isEmpty(leaveApplicationDetails.leaveApplicationDetails?.forBarBoardReview) ||
+                    !isEmpty(leaveApplicationDetails.leaveApplicationDetails?.forMastersCompletion) ? (
                       <>
-                        {leaveApplicationDetails.leaveApplicationDetails
-                          ?.forBarBoardReview && (
+                        {leaveApplicationDetails.leaveApplicationDetails?.forBarBoardReview && (
                           <LabelValue
                             label="Leave Details"
                             direction="top-to-bottom"
                             textSize="md"
                             value={
-                              parseInt(
-                                leaveApplicationDetails.leaveApplicationDetails
-                                  ?.forBarBoardReview
-                              ) === 1
+                              parseInt(leaveApplicationDetails.leaveApplicationDetails?.forBarBoardReview) === 1
                                 ? 'For Board Review'
-                                : parseInt(
-                                    leaveApplicationDetails
-                                      .leaveApplicationDetails
-                                      ?.forMastersCompletion
-                                  ) === 1
+                                : parseInt(leaveApplicationDetails.leaveApplicationDetails?.forMastersCompletion) === 1
                                 ? 'For Masters Completion'
                                 : ''
                             }
@@ -491,10 +412,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
                           label="Purpose"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={
-                            leaveApplicationDetails.leaveApplicationDetails
-                              ?.studyLeaveOther ?? 'N/A'
-                          }
+                          value={leaveApplicationDetails.leaveApplicationDetails?.studyLeaveOther ?? 'N/A'}
                         />
                       </>
                     ) : null}
@@ -513,19 +431,14 @@ const ViewLeaveApplicationModal: FunctionComponent<
                       label="Assignment"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={
-                        leaveApplicationDetails.employeeDetails?.assignment
-                          ?.name ?? ''
-                      }
+                      value={leaveApplicationDetails.employeeDetails?.assignment?.name ?? ''}
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
-                  {leaveApplicationDetails.leaveApplicationBasicInfo
-                    ?.leaveType === LeaveType.SPECIAL &&
-                    leaveApplicationDetails.leaveApplicationBasicInfo.status ===
-                      LeaveStatus.FOR_HRMO_APPROVAL && (
+                  {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL &&
+                    leaveApplicationDetails.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRMO_APPROVAL && (
                       <div className="w-full px-2">
                         <LabelValue
                           label={`Maximum Credit Value is ${parseInt(
@@ -533,18 +446,13 @@ const ViewLeaveApplicationModal: FunctionComponent<
                           )}`}
                           direction="top-to-bottom"
                           textSize="md"
-                          value={parseInt(
-                            leaveApplicationDetails.leaveApplicationBasicInfo
-                              .debitValue
-                          )}
+                          value={parseInt(leaveApplicationDetails.leaveApplicationBasicInfo.debitValue)}
                         />
                       </div>
                     )}
 
-                  {leaveApplicationDetails.leaveApplicationBasicInfo
-                    ?.leaveType === LeaveType.SPECIAL &&
-                    leaveApplicationDetails.leaveApplicationBasicInfo.status ===
-                      LeaveStatus.FOR_HRMO_APPROVAL && (
+                  {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL &&
+                    leaveApplicationDetails.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRMO_APPROVAL && (
                       <div className="w-full pr-2">
                         <SelectListRF
                           id="action"
@@ -572,8 +480,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
             </div>
           )}
         </Modal.Body>
-        {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType ===
-        LeaveType.SPECIAL ? (
+        {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL ? (
           <Modal.Footer>
             <div className="flex justify-end w-full gap-2">
               <button
@@ -583,8 +490,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
               >
                 Close
               </button>
-              {leaveApplicationDetails.leaveApplicationBasicInfo?.status ===
-                LeaveStatus.FOR_HRMO_APPROVAL &&
+              {leaveApplicationDetails.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL &&
                 watch('action') !== null && (
                   <button
                     className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
@@ -606,8 +512,7 @@ const ViewLeaveApplicationModal: FunctionComponent<
               >
                 Close
               </button>
-              {leaveApplicationDetails.leaveApplicationBasicInfo?.status ===
-                LeaveStatus.FOR_HRMO_APPROVAL && (
+              {leaveApplicationDetails.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL && (
                 <button
                   className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
                   type="button"
