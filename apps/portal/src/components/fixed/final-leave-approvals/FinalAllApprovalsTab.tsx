@@ -1,22 +1,16 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 
-import {
-  EmployeeLeaveDetails,
-  MonitoringLeave,
-  SupervisorLeaveDetails,
-} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import { SupervisorLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 type AllApprovalListTabProps = {
   leaves: Array<SupervisorLeaveDetails> | null;
   tab: number;
 };
 
-export const FinalAllApprovalsTab = ({
-  leaves,
-  tab,
-}: AllApprovalListTabProps) => {
+export const FinalAllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) => {
   const {
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
@@ -81,22 +75,23 @@ export const FinalAllApprovalsTab = ({
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    {item.leaveBenefitsId?.leaveName} -{' '}
-                    {item.employee.employeeName}
+                    {item.leaveName} - {item.employee.employeeName}
                   </h1>
+                  <p className="text-sm text-gray-500">No. of Days: {item.leaveDates.length}</p>
                   <p className="text-sm text-gray-500">
-                    No. of Days: {item.leaveDates.length}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Dates: {item.leaveDates.join(', ')}
+                    Dates:{' '}
+                    {item.leaveName === LeaveName.MATERNITY ||
+                    item.leaveName === LeaveName.STUDY ||
+                    item.leaveName === LeaveName.REHABILITATION ||
+                    item.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                    item.leaveName === LeaveName.ADOPTION
+                      ? `${item.leaveDates[0]} - ${item.leaveDates[item.leaveDates.length - 1]}`
+                      : item.leaveDates.join(', ')}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Date Applied:{' '}
-                    {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
+                    Date Applied: {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
                   </p>
-                  <p className="text-sm text-indigo-500">
-                    Status: {item.status.toUpperCase()}
-                  </p>
+                  <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
                 </div>
               </li>
             );
@@ -104,9 +99,7 @@ export const FinalAllApprovalsTab = ({
         </ul>
       ) : (
         <div className="flex justify-center pt-20">
-          <h1 className="text-4xl text-gray-300">
-            No {tab === 1 ? 'pending approval' : 'data'} at the moment
-          </h1>
+          <h1 className="text-4xl text-gray-300">No {tab === 1 ? 'pending approval' : 'data'} at the moment</h1>
         </div>
       )}
     </>

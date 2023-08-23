@@ -15,3 +15,20 @@ export enum LeaveStatus {
 }
 
 // hrmo_approval(SLB), immediate supervisor, hrdm_approval,
+
+export enum LeaveName {
+  VACATION = 'Vacation Leave',
+  FORCED = 'Forced Leave',
+  SICK = 'Sick Leave',
+  MATERNITY = 'Maternity Leave',
+  PATERNITY = 'Paternity Leave',
+  SPECIAL_PRIVILEGE = 'Special Privilege Leave',
+  SOLO_PARENT = 'Solo Parent Leave',
+  STUDY = 'Study Leave',
+  VAWC = 'VAWC Leave',
+  REHABILITATION = 'Rehabilitation Leave',
+  SPECIAL_LEAVE_BENEFITS_FOR_WOMEN = 'Special Leave Benefits for Women',
+  SPECIAL_EMERGENCY_CALAMITY = 'Special Emergency (Calamity) Leave',
+  ADOPTION = 'Adoption Leave',
+  OTHERS = 'Others',
+}

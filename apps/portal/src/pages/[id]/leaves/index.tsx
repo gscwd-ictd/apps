@@ -7,15 +7,8 @@ import { ContentHeader } from '../../../components/modular/custom/containers/Con
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { employee } from '../../../utils/constants/data';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../utils/helpers/session';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
@@ -31,10 +24,9 @@ import { LeavePendingModal } from '../../../components/fixed/leaves/LeavePending
 import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCompletedModal';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
-export default function Leaves({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
     applyLeaveModalIsOpen,
@@ -84,6 +76,12 @@ export default function Leaves({
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
+  const { leaveLedger, loadingLedger, errorLedger } = useLeaveLedgerStore((state) => ({
+    leaveLedger: state.leaveLedger,
+    loadingLedger: state.loading.loadingLeaveLedger,
+    errorLedger: state.error.errorLeaveLedger,
+  }));
+
   // open the modal
   const openApplyLeaveModal = () => {
     if (!applyLeaveModalIsOpen) {
@@ -107,9 +105,7 @@ export default function Leaves({
   };
 
   // set state for employee store
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
 
   // set the employee details on page load
   useEffect(() => {
@@ -162,32 +158,30 @@ export default function Leaves({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
   return (
     <>
       <>
+        {/* Leave Ledger Load Failed */}
+        {!isEmpty(errorLedger) ? (
+          <>
+            <ToastNotification toastType="error" notifMessage={`${errorLedger}: Failed to load Leave Ledger.`} />
+          </>
+        ) : null}
+
         {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
         {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
           <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`}
-            />
+            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
           </>
         ) : null}
 
         {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
         {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (
           <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`}
-            />
+            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
           </>
         ) : null}
 
@@ -203,38 +197,26 @@ export default function Leaves({
 
         {/* Leave List Load Failed Error */}
         {!isEmpty(errorLeaves) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorLeaves}: Failed to load Leave List.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${errorLeaves}: Failed to load Leave List.`} />
         ) : null}
 
         {/* Leave Types Selection Load Failed Error */}
         {!isEmpty(errorLeaveTypes) ? (
           <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${errorLeaveTypes}: Failed to load Leave Types.`}
-            />
+            <ToastNotification toastType="error" notifMessage={`${errorLeaveTypes}: Failed to load Leave Types.`} />
           </>
         ) : null}
 
         {/* Post/Submit Leave Error*/}
         {!isEmpty(errorResponse) ? (
           <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${errorResponse}: Failed to Submit.`}
-            />
+            <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
           </>
         ) : null}
 
         {/* Post/Submit Leave Success*/}
         {!isEmpty(responseApply) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Leave Application Successful!"
-          />
+          <ToastNotification toastType="success" notifMessage="Leave Application Successful!" />
         ) : null}
       </>
 
@@ -268,25 +250,14 @@ export default function Leaves({
 
         <MainContainer>
           <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-            <ContentHeader
-              title="Employee Leaves"
-              subtitle="Apply for company leave"
-            >
-              <Button
-                onClick={openApplyLeaveModal}
-                className="hidden lg:block"
-                size={`md`}
-              >
+            <ContentHeader title="Employee Leaves" subtitle="Apply for company leave">
+              <Button onClick={openApplyLeaveModal} className="hidden lg:block" size={`md`}>
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd /> Apply for Leave
                 </div>
               </Button>
 
-              <Button
-                onClick={openApplyLeaveModal}
-                className="block lg:hidden"
-                size={`lg`}
-              >
+              <Button onClick={openApplyLeaveModal} className="block lg:hidden" size={`lg`}>
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd />
                 </div>
@@ -331,10 +302,8 @@ export default function Leaves({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDetails } };
+});

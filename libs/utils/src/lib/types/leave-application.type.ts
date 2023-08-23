@@ -74,6 +74,11 @@ export type EmployeeLeaveDetails = {
     status: LeaveStatus;
     leaveType?: LeaveType | null;
     maximumCredits?: number | null;
+    supervisorApprovalDate: string;
+    supervisorDisapprovalRemarks: string;
+    hrdmApprovalDate: string;
+    hrdmDisapprovalRemarks: string;
+    hrmoApprovalDate: string;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
@@ -147,8 +152,11 @@ export type SupervisorLeaveDetails = {
   isTerminalLeave: boolean | null;
   requestedCommutation: boolean | null;
   status: string;
+  supervisorApprovalDate: string;
   supervisorDisapprovalRemarks: string;
+  hrdmApprovalDate: string;
   hrdmDisapprovalRemarks: string;
+  hrmoApprovalDate: string;
   employee: {
     employeeId: string;
     employeeName: string;
@@ -157,9 +165,7 @@ export type SupervisorLeaveDetails = {
     supervisorId: string;
     supervisorName: string;
   };
-  leaveBenefitsId: {
-    leaveName: string;
-    leaveType?: string;
-  };
+  leaveName: string;
+  leaveType?: string;
   leaveDates: Array<string>;
 };

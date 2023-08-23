@@ -2,7 +2,12 @@
 import { leaveAction, passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  LoadingSpinner,
+  Modal,
+} from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
@@ -93,6 +98,7 @@ export const ConfirmationLeaveModal = ({
         <Modal.Body>
           {loadingLeaveResponse ? (
             <AlertNotification
+              logo={<LoadingSpinner size="xs" />}
               alertType="info"
               notifMessage={'Processing'}
               dismissible={false}

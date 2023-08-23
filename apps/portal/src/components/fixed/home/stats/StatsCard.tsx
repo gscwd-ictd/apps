@@ -31,7 +31,7 @@ export const StatsCard: React.FC<Props> = ({
       ) : (
         <>
           <div className="flex justify-between">
-            <label className="text-5xl text-gray-700">{count ? count : '0'}</label>
+            <label className="text-3xl xl:text-5xl text-gray-700">{count ? count : '0'}</label>
             <div className={` ${svgBgColor} flex justify-center items-center rounded-full w-12 h-12`}>{svg}</div>
           </div>
           <label className="text-xs text-stone-500">{name}</label>

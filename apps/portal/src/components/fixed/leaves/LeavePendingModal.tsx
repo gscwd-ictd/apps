@@ -8,7 +8,8 @@ import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -39,6 +40,14 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
   }));
 
+  const { vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance, specialPrivilegeLeaveBalance } =
+    useLeaveLedgerStore((state) => ({
+      vacationLeaveBalance: state.vacationLeaveBalance,
+      forcedLeaveBalance: state.forcedLeaveBalance,
+      sickLeaveBalance: state.sickLeaveBalance,
+      specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    }));
+
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const getLeaveDetail = async (leaveId: string) => {
@@ -48,6 +57,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
       );
 
       if (!isEmpty(data)) {
+        console.log(data);
         getLeaveIndividualDetailSuccess(false, data);
       }
     } catch (error) {
@@ -134,35 +144,35 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
 
                   {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ? (
                     <>
-                      {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Vacation Leave' ||
-                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Special Privilege Leave' ||
-                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Sick Leave' ||
-                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Study Leave' ||
-                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Others' ? (
+                      {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.OTHERS ? (
                         <div className="flex flex-col sm:flex-row justify-between items-start w-full">
                           <label className="text-slate-500 text-md font-medium">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Vacation Leave' ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Special Privilege Leave'
+                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                               ? 'Location:'
-                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Sick Leave'
+                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                               ? 'Hospitalization:'
-                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Study Leave'
+                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY
                               ? 'Study:'
-                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Others'
+                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.OTHERS
                               ? 'Other Purpose: '
                               : null}
                           </label>
 
                           <div className="flex w-96 ">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Vacation Leave' ||
+                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                              'Special Privilege Leave' ? (
+                              LeaveName.SPECIAL_PRIVILEGE ? (
                               <div className="text-slate-500 w-full text-md">
                                 {leaveIndividualDetail?.leaveApplicationDetails?.inPhilippinesOrAbroad}
                               </div>
                             ) : null}
 
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Sick Leave' ? (
+                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ? (
                               <>
                                 <div className="text-slate-500 w-full text-md">
                                   {leaveIndividualDetail?.leaveApplicationDetails?.hospital}
@@ -170,7 +180,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                               </>
                             ) : null}
 
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Study Leave' ? (
+                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ? (
                               <>
                                 <div className="text-slate-500 w-full text-md">
                                   {leaveIndividualDetail?.leaveApplicationDetails?.forBarBoardReview === '1'
@@ -201,11 +211,13 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
 
                           <div className="w-full md:w-96 ">
                             <label className="text-slate-500 w-full text-md ">
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Maternity Leave' ||
-                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Study Leave' ||
-                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Rehabilitation Leave' ||
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                                'Special Leave Benefits for Women'
+                                LeaveName.REHABILITATION ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION
                                 ? // show first and last date (array) only if maternity or study leave
                                   `${leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0]} - ${
                                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[
@@ -219,7 +231,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                         </div>
                       </div>
 
-                      {/* {watch('typeOfLeaveDetails.leaveName') === 'Others' &&
+                      {/* {watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS &&
                       watch('other') === 'Monetization of Leave Credits' ? (
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
@@ -256,12 +268,12 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                         </div>
                       ) : null} */}
 
-                      {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Vacation Leave' ||
-                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Special Privilege Leave' ||
-                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Sick Leave' ||
+                      {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
                       leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                        'Special Leave Benefits for Women' ||
-                      (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Study Leave' &&
+                        LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                      (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
                         leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther) ? (
                         <div className="flex flex-col justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
@@ -274,15 +286,16 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                             rows={2}
                             className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                             value={
-                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Vacation Leave' ||
-                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Special Privilege Leave'
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.SPECIAL_PRIVILEGE
                                 ? leaveIndividualDetail?.leaveApplicationDetails?.location
-                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Sick Leave'
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                 ? leaveIndividualDetail?.leaveApplicationDetails?.illness
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                                  'Special Leave Benefits for Women'
+                                  LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                                 ? leaveIndividualDetail?.leaveApplicationDetails?.splWomen
-                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === 'Study Leave' &&
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
                                   leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
                                 ? leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
                                 : ''
@@ -293,37 +306,41 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     </>
                   ) : null}
 
-                  <div className="w-full pb-4">
-                    <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
-                    <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                      <tbody>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400"></td>
-                          <td className="border border-slate-400 text-center text-sm p-1">Vacation Leave</td>
-                          <td className="border border-slate-400 text-center text-sm p-1">Forced Leave</td>
-                          <td className="border border-slate-400 text-center text-sm p-1">Sick Leave</td>
-                        </tr>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400 text-sm p-1">Total Earned</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">10</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">5</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">10</td>
-                        </tr>
-                        <tr>
-                          <td className="border border-slate-400 text-sm p-1">Less this application</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">0</td>
-                        </tr>
-                        <tr className="border border-slate-400 bg-green-100">
-                          <td className="border border-slate-400 text-sm p-1">Balance</td>
-                          <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
-                          <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
-                          <td className={` border border-slate-400 p-1 text-center text-sm`}>0</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                    <div className="w-full pb-4">
+                      <span className="text-slate-500 text-md font-medium">
+                        Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
+                      </span>
+                      <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                        <tbody>
+                          <tr className="border border-slate-400">
+                            <td className="border border-slate-400 text-center">Total Earned</td>
+                            <td className="border border-slate-400 text-center">Less this application</td>
+                            <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                          </tr>
+                          <tr className="border border-slate-400">
+                            <td className="border border-slate-400 text-center">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                ? vacationLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                ? forcedLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                ? sickLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.SPECIAL_PRIVILEGE
+                                ? specialPrivilegeLeaveBalance
+                                : 'N/A'}
+                            </td>
+                            <td className="border border-slate-400 text-center">0</td>
+                            <td className="border border-slate-400 text-center bg-green-100">0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
