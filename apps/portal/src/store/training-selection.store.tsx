@@ -1,9 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { Training } from '../../../../libs/utils/src/lib/types/training.type';
 
 export type TrainingSelectionState = {
-  trainingList: Array<string>;
+  trainingList: Array<Training>;
+  individualTrainingDetails: Training;
   response: {
     postResponseApply: any;
     cancelResponse: any;
@@ -18,9 +20,10 @@ export type TrainingSelectionState = {
     errorResponse: string;
   };
 
-  trainingListModalIsOpen: boolean;
-  setTrainingListModalIsOpen: (trainingListModalIsOpen: boolean) => void;
+  trainingModalIsOpen: boolean;
+  setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => void;
 
+  setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
   getTrainingSelectionListSuccess: (loading: boolean, response) => void;
   getTrainingSelectionListFail: (loading: boolean, error: string) => void;
@@ -35,7 +38,7 @@ export type TrainingSelectionState = {
 export const useTrainingSelectionStore = create<TrainingSelectionState>()(
   devtools((set) => ({
     trainingList: [],
-
+    individualTrainingDetails: {} as Training,
     response: {
       postResponseApply: {},
       cancelResponse: {},
@@ -50,13 +53,16 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
       errorResponse: '',
     },
 
-    trainingListModalIsOpen: false,
+    trainingModalIsOpen: false,
 
-    setTrainingListModalIsOpen: (trainingListModalIsOpen: boolean) => {
-      set((state) => ({ ...state, trainingListModalIsOpen }));
+    setIndividualTrainingDetails: (individualTrainingDetails: Training) => {
+      set((state) => ({ ...state, individualTrainingDetails }));
     },
 
-    //GET PASS SLIP ACTIONS
+    setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => {
+      set((state) => ({ ...state, trainingModalIsOpen }));
+    },
+
     getTrainingSelectionList: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -74,7 +80,7 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
     getTrainingSelectionListSuccess: (loading: boolean, response) => {
       set((state) => ({
         ...state,
-        passSlips: response,
+        trainingList: response,
         loading: {
           ...state.loading,
           loadingTrainingList: loading,
@@ -91,10 +97,6 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
         error: {
           ...state.error,
           errorTrainingList: error,
-        },
-        response: {
-          ...state.response,
-          postResponseApply: null,
         },
       }));
     },

@@ -25,9 +25,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
   const now = dayjs().toDate().toDateString();
 
   // Edit modal function
-  const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>(
-    {} as EmployeeDtrWithSchedule
-  );
+  const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
   // edit modal state
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
 
@@ -61,7 +59,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
         </div>
       ) : !dtrIsLoading && employeeDtr?.dtrDays?.length > 0 ? (
         <>
-          <div className="flex overflow-x-hidden w-full md:w-full flex-col rounded">
+          <div className="flex overflow-x-hidden w-full md:w-full flex-col">
             <div className="overflow-x-hidden w-[50rem] md:w-full">
               <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                 <thead className="border-0">
@@ -118,10 +116,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                           </td>
                           <td
                             className={`border text-center py-2 ${
-                              UseLateChecker(
-                                logs.dtr.timeIn,
-                                logs.schedule.timeIn
-                              ) == true &&
+                              UseLateChecker(logs.dtr.timeIn, logs.schedule.timeIn) == true &&
                               logs.schedule.scheduleBase === 'Office'
                                 ? 'text-red-500'
                                 : ''
@@ -133,9 +128,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 : ''
                             } py-2 text-center border`}
                           >
-                            {logs.dtr.timeIn
-                              ? UseTwelveHourFormat(logs.dtr.timeIn)
-                              : ''}
+                            {logs.dtr.timeIn ? UseTwelveHourFormat(logs.dtr.timeIn) : ''}
                           </td>
                           <td
                             className={`${
@@ -146,9 +139,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 : ''
                             } py-2 text-center border`}
                           >
-                            {logs.dtr.lunchOut
-                              ? UseTwelveHourFormat(logs.dtr.lunchOut)
-                              : ''}
+                            {logs.dtr.lunchOut ? UseTwelveHourFormat(logs.dtr.lunchOut) : ''}
                           </td>
                           <td
                             className={`${
@@ -159,16 +150,11 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 : ''
                             } py-2 text-center border`}
                           >
-                            {logs.dtr.lunchIn
-                              ? UseTwelveHourFormat(logs.dtr.lunchIn)
-                              : ''}
+                            {logs.dtr.lunchIn ? UseTwelveHourFormat(logs.dtr.lunchIn) : ''}
                           </td>
                           <td
                             className={`border text-center py-2 ${
-                              UseUndertimeChecker(
-                                logs.dtr.timeOut,
-                                logs.schedule.timeOut
-                              ) == true &&
+                              UseUndertimeChecker(logs.dtr.timeOut, logs.schedule.timeOut) == true &&
                               logs.schedule.scheduleBase === 'Office'
                                 ? 'text-red-500'
                                 : ''
@@ -180,9 +166,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 : ''
                             } py-2 text-center border`}
                           >
-                            {logs.dtr.timeOut
-                              ? UseTwelveHourFormat(logs.dtr.timeOut)
-                              : ''}
+                            {logs.dtr.timeOut ? UseTwelveHourFormat(logs.dtr.timeOut) : ''}
                           </td>
                           <td
                             className={`${
@@ -230,94 +214,51 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
             <table className="hidden md:table w-full table-auto mt-5 border bg-slate-50">
               <thead>
                 <tr className="text-sm font-medium text-center">
-                  <td className="border p-1 text-gray-700">
-                    No. of Times Late
-                  </td>
-                  <td className="border p-1 text-gray-700">
-                    Total Minutes Late
-                  </td>
+                  <td className="border p-1 text-gray-700">No. of Times Late</td>
+                  <td className="border p-1 text-gray-700">Total Minutes Late</td>
                   <td className="border p-1 text-gray-700">Dates Late</td>
-                  <td className="border p-1 text-gray-700">
-                    No. of Times Undertime
-                  </td>
-                  <td className="border p-1 text-gray-700">
-                    Total Minutes Undertime
-                  </td>
-                  <td className="border p-1 text-gray-700">
-                    Dates / Undertime
-                  </td>
-                  <td className="border p-1 text-gray-700">
-                    No. of Times Halfday
-                  </td>
+                  <td className="border p-1 text-gray-700">No. of Times Undertime</td>
+                  <td className="border p-1 text-gray-700">Total Minutes Undertime</td>
+                  <td className="border p-1 text-gray-700">Dates / Undertime</td>
+                  <td className="border p-1 text-gray-700">No. of Times Halfday</td>
                   <td className="border p-1 text-gray-700">No Attendance</td>
                 </tr>
               </thead>
               <tbody>
                 <tr className="text-sm font-light text-center">
+                  <td className="border p-1">{employeeDtr.summary?.noOfTimesLate ?? '--'}</td>
+                  <td className="border p-1">{employeeDtr.summary?.totalMinutesLate ?? '--'}</td>
                   <td className="border p-1">
-                    {employeeDtr.summary?.noOfTimesLate ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.totalMinutesLate ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.lateDates &&
-                    employeeDtr.summary?.lateDates.length > 0
+                    {employeeDtr.summary?.lateDates && employeeDtr.summary?.lateDates.length > 0
                       ? employeeDtr.summary?.lateDates.map((day, index) => {
                           return (
                             <span key={index}>
-                              {index ===
-                              employeeDtr.summary?.lateDates.length - 1 ? (
-                                <>{day}</>
-                              ) : (
-                                <>{day}, </>
-                              )}
+                              {index === employeeDtr.summary?.lateDates.length - 1 ? <>{day}</> : <>{day}, </>}
                             </span>
                           );
                         })
                       : '--'}
                   </td>
+                  <td className="border p-1">{employeeDtr.summary?.noOfTimesUndertime ?? '--'}</td>
+                  <td className="border p-1">{employeeDtr.summary?.totalMinutesUndertime ?? '--'}</td>
                   <td className="border p-1">
-                    {employeeDtr.summary?.noOfTimesUndertime ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.totalMinutesUndertime ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.undertimeDates &&
-                    employeeDtr.summary?.undertimeDates.length > 0
-                      ? employeeDtr.summary?.undertimeDates.map(
-                          (day, index) => {
-                            return (
-                              <span key={index}>
-                                {index ===
-                                employeeDtr.summary?.undertimeDates.length -
-                                  1 ? (
-                                  <>{day}</>
-                                ) : (
-                                  <>{day}, </>
-                                )}
-                              </span>
-                            );
-                          }
-                        )
+                    {employeeDtr.summary?.undertimeDates && employeeDtr.summary?.undertimeDates.length > 0
+                      ? employeeDtr.summary?.undertimeDates.map((day, index) => {
+                          return (
+                            <span key={index}>
+                              {index === employeeDtr.summary?.undertimeDates.length - 1 ? <>{day}</> : <>{day}, </>}
+                            </span>
+                          );
+                        })
                       : '--'}
                   </td>
+                  <td className="border p-1">{employeeDtr.summary?.noOfTimesHalfDay ?? '--'}</td>
                   <td className="border p-1">
-                    {employeeDtr.summary?.noOfTimesHalfDay ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.noAttendance &&
-                    employeeDtr.summary?.noAttendance.length > 0
+                    {employeeDtr.summary?.noAttendance && employeeDtr.summary?.noAttendance.length > 0
                       ? employeeDtr.summary?.noAttendance.map((day, index) => {
                           return (
                             <span key={index}>
-                              {index ===
-                              employeeDtr.summary?.noAttendance.length - 1 ? (
-                                <>{day}</>
-                              ) : (
-                                <>{day}, </>
-                              )}
+                              {index === employeeDtr.summary?.noAttendance.length - 1 ? <>{day}</> : <>{day}, </>}
                             </span>
                           );
                         })
@@ -331,46 +272,28 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
             <table className="table w-full md:hidden table-auto mt-5 border bg-slate-50">
               <thead>
                 <tr className="text-sm font-medium text-center">
-                  <td className="border p-1 text-gray-700">
-                    No. of Times Late
-                  </td>
-                  <td className="border p-1 text-gray-700">
-                    Total Minutes Late
-                  </td>
+                  <td className="border p-1 text-gray-700">No. of Times Late</td>
+                  <td className="border p-1 text-gray-700">Total Minutes Late</td>
                   <td className="border p-1 text-gray-700">Dates Late</td>
-                  <td className="border p-1 text-gray-700">
-                    No. of Times Undertime
-                  </td>
+                  <td className="border p-1 text-gray-700">No. of Times Undertime</td>
                 </tr>
               </thead>
               <tbody>
                 <tr className="text-sm font-light text-center">
+                  <td className="border p-1">{employeeDtr.summary?.noOfTimesLate ?? '--'}</td>
+                  <td className="border p-1">{employeeDtr.summary?.totalMinutesLate ?? '--'}</td>
                   <td className="border p-1">
-                    {employeeDtr.summary?.noOfTimesLate ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.totalMinutesLate ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.lateDates &&
-                    employeeDtr.summary?.lateDates.length > 0
+                    {employeeDtr.summary?.lateDates && employeeDtr.summary?.lateDates.length > 0
                       ? employeeDtr.summary?.lateDates.map((day, index) => {
                           return (
                             <span key={index}>
-                              {index ===
-                              employeeDtr.summary?.lateDates.length - 1 ? (
-                                <>{day}</>
-                              ) : (
-                                <>{day}, </>
-                              )}
+                              {index === employeeDtr.summary?.lateDates.length - 1 ? <>{day}</> : <>{day}, </>}
                             </span>
                           );
                         })
                       : '--'}
                   </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.noOfTimesUndertime ?? '--'}
-                  </td>
+                  <td className="border p-1">{employeeDtr.summary?.noOfTimesUndertime ?? '--'}</td>
                 </tr>
               </tbody>
             </table>
@@ -378,58 +301,33 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
             <table className="table md:hidden table-auto mt-5 border bg-slate-50">
               <thead>
                 <tr className="text-sm font-medium text-center">
-                  <td className="border p-1 text-gray-700">
-                    Total Minutes Undertime
-                  </td>
-                  <td className="border p-1 text-gray-700">
-                    Dates / Undertime
-                  </td>
-                  <td className="border p-1 text-gray-700">
-                    No. of Times Halfday
-                  </td>
+                  <td className="border p-1 text-gray-700">Total Minutes Undertime</td>
+                  <td className="border p-1 text-gray-700">Dates / Undertime</td>
+                  <td className="border p-1 text-gray-700">No. of Times Halfday</td>
                   <td className="border p-1 text-gray-700">No Attendance</td>
                 </tr>
               </thead>
               <tbody>
                 <tr className="text-sm font-light text-center">
+                  <td className="border p-1">{employeeDtr.summary?.totalMinutesUndertime ?? '--'}</td>
                   <td className="border p-1">
-                    {employeeDtr.summary?.totalMinutesUndertime ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.undertimeDates &&
-                    employeeDtr.summary?.undertimeDates.length > 0
-                      ? employeeDtr.summary?.undertimeDates.map(
-                          (day, index) => {
-                            return (
-                              <span key={index}>
-                                {index ===
-                                employeeDtr.summary?.undertimeDates.length -
-                                  1 ? (
-                                  <>{day}</>
-                                ) : (
-                                  <>{day}, </>
-                                )}
-                              </span>
-                            );
-                          }
-                        )
+                    {employeeDtr.summary?.undertimeDates && employeeDtr.summary?.undertimeDates.length > 0
+                      ? employeeDtr.summary?.undertimeDates.map((day, index) => {
+                          return (
+                            <span key={index}>
+                              {index === employeeDtr.summary?.undertimeDates.length - 1 ? <>{day}</> : <>{day}, </>}
+                            </span>
+                          );
+                        })
                       : '--'}
                   </td>
+                  <td className="border p-1">{employeeDtr.summary?.noOfTimesHalfDay ?? '--'}</td>
                   <td className="border p-1">
-                    {employeeDtr.summary?.noOfTimesHalfDay ?? '--'}
-                  </td>
-                  <td className="border p-1">
-                    {employeeDtr.summary?.noAttendance &&
-                    employeeDtr.summary?.noAttendance.length > 0
+                    {employeeDtr.summary?.noAttendance && employeeDtr.summary?.noAttendance.length > 0
                       ? employeeDtr.summary?.noAttendance.map((day, index) => {
                           return (
                             <span key={index}>
-                              {index ===
-                              employeeDtr.summary?.noAttendance.length - 1 ? (
-                                <>{day}</>
-                              ) : (
-                                <>{day}, </>
-                              )}
+                              {index === employeeDtr.summary?.noAttendance.length - 1 ? <>{day}</> : <>{day}, </>}
                             </span>
                           );
                         })
@@ -448,9 +346,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
           </div>
         </>
       ) : (
-        <div className="h-80 w-full text-8xl text-slate-200 flex justify-center items-center">
-          NO DATA
-        </div>
+        <div className="h-80 w-full text-8xl text-slate-200 flex justify-center items-center">NO DATA</div>
       )}
     </>
   );
