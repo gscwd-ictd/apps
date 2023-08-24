@@ -10,6 +10,9 @@ export type LeaveLedgerState = {
   sickLeaveBalance: number;
   specialPrivilegeLeaveBalance: number;
 
+  selectedLeaveLedger: Array<LeaveLedgerEntry>;
+  setSelectedLeaveLedger: (leaveLedger: Array<LeaveLedgerEntry>, leaveApplicationId: string) => void;
+
   loading: {
     loadingLeaveLedger: boolean;
   };
@@ -34,6 +37,7 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
     forcedLeaveBalance: 0,
     sickLeaveBalance: 0,
     specialPrivilegeLeaveBalance: 0,
+    selectedLeaveLedger: [] as Array<LeaveLedgerEntry>,
 
     loading: {
       loadingLeaveLedger: false,
@@ -62,7 +66,7 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
     getLeaveLedger: (loading: boolean) => {
       set((state) => ({
         ...state,
-        leaves: [],
+        leaveLedger: [],
         loading: {
           ...state.loading,
           loadingLeaveLedger: loading,
@@ -76,7 +80,7 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
     getLeaveLedgerSuccess: (loading: boolean, response: Array<LeaveLedgerEntry>) => {
       set((state) => ({
         ...state,
-        leaves: response,
+        leaveLedger: response,
         loading: {
           ...state.loading,
           loadingLeaveLedger: loading,
@@ -94,6 +98,12 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
           ...state.error,
           errorLeaveLedger: error,
         },
+      }));
+    },
+
+    setSelectedLeaveLedger: (leaveLedger: Array<LeaveLedgerEntry>, leaveApplicationId: string) => {
+      set((state) => ({
+        selectedLeaveLedger: leaveLedger.filter((ledger) => ledger.leaveApplicationId == leaveApplicationId),
       }));
     },
   }))

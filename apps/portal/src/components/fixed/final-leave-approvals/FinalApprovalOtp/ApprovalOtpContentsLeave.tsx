@@ -44,19 +44,14 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
   const [countingDown, setCountingDown] = useState<boolean>(false);
   const [failedFirstOtp, setFailedFirstOtp] = useState<boolean>(false);
 
-  const {
-    patchLeave,
-    patchLeaveSuccess,
-    patchLeaveFail,
-    setPendingLeaveModalIsOpen,
-    setOtpLeaveModalIsOpen,
-  } = useFinalLeaveApprovalStore((state) => ({
-    patchLeave: state.patchLeave,
-    patchLeaveSuccess: state.patchLeaveSuccess,
-    patchLeaveFail: state.patchLeaveFail,
-    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
-    setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
-  }));
+  const { patchLeave, patchLeaveSuccess, patchLeaveFail, setPendingLeaveModalIsOpen, setOtpLeaveModalIsOpen } =
+    useFinalLeaveApprovalStore((state) => ({
+      patchLeave: state.patchLeave,
+      patchLeaveSuccess: state.patchLeaveSuccess,
+      patchLeaveFail: state.patchLeaveFail,
+      setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+      setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
+    }));
 
   // set state for controlling the displaying of error status
   const [isError, setIsError] = useState({
@@ -102,12 +97,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
         setMinutes(data.minutes);
         setSeconds(data.seconds);
         //TERMINATE OTP COUNTDOWN IF ALL ARE 0
-        if (
-          data.days <= 0 &&
-          data.hours <= 0 &&
-          data.minutes <= 0 &&
-          data.seconds <= 0
-        ) {
+        if (data.days <= 0 && data.hours <= 0 && data.minutes <= 0 && data.seconds <= 0) {
           setCountingDown(false);
           localStorage.removeItem(`${otpName}OtpEndTime_${data.id}`); //delete otp expiration local storage
           localStorage.removeItem(`${otpName}OtpToken_${data.id}`); //delete otp expiration local storage
@@ -173,7 +163,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
   };
 
   const handlePatchResult = async (data: leaveAction) => {
-    const { error, result } = await patchPortal('/v1/leave/supervisor', data);
+    const { error, result } = await patchPortal('/v1/leave/hrdm', data);
     if (error) {
       patchLeaveFail(result);
     } else {
@@ -186,7 +176,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
       const data = {
         id: tokenId,
         status: action,
-        supervisorDisapprovalRemarks: remarks,
+        hrdmDisapprovalRemarks: remarks,
       };
       localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
       localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
@@ -225,22 +215,14 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm">
             <div className="mb-2 text-center">
               {`To ${
-                action === LeaveStatus.FOR_HRDM_APPROVAL
-                  ? 'approve'
-                  : 'disapprove'
+                action === LeaveStatus.FOR_HRDM_APPROVAL ? 'approve' : 'disapprove'
               } this Leave request, click Send Code
                               and enter the code sent to your mobile number:
                               ${mobile}. `}
             </div>
             {isOtpSending ? (
-              <div
-                className={`mb-4 text-center text-green-600 cursor-pointer text-md`}
-              >
-                <PortalSVG.AnimationBlueLoading
-                  width={28}
-                  height={28}
-                  className={`absolute -mt-1 -ml-8`}
-                />
+              <div className={`mb-4 text-center text-green-600 cursor-pointer text-md`}>
+                <PortalSVG.AnimationBlueLoading width={28} height={28} className={`absolute -mt-1 -ml-8`} />
                 <label className={``}>Sending Code</label>
               </div>
             ) : null}
@@ -259,19 +241,13 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                 } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
                 onClick={() => handleSendCode()}
               >
-                <label className="font-bold cursor-pointer">{`${
-                  failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'
-                }`}</label>
+                <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}</label>
               </button>
             )}
 
             {isSendOtpLoading ? (
               <div className="flex flex-col justify-center items-center">
-                <PortalSVG.AnimationBlueLoading
-                  width={120}
-                  height={120}
-                  className={`-mt-1 my-2`}
-                />
+                <PortalSVG.AnimationBlueLoading width={120} height={120} className={`-mt-1 my-2`} />
                 <label className={`absolute -mt-1 my-2 text-red-700 font-bold`}>
                   {minutes}:{seconds}
                 </label>
@@ -280,27 +256,13 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
 
             {isOtpSending || isSendOtpLoading ? (
               <>
-                <form
-                  onSubmit={(e) => handleFinalSubmit(e)}
-                  className="flex flex-col gap-1"
-                >
+                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1">
                   {otpFieldError && (
-                    <section
-                      className="mb-3"
-                      onAnimationEnd={() =>
-                        setIsError({ ...isError, animate: false })
-                      }
-                    >
-                      <Notice
-                        type="error"
-                        message={errorMessage}
-                        animate={otpFieldError}
-                      />
+                    <section className="mb-3" onAnimationEnd={() => setIsError({ ...isError, animate: false })}>
+                      <Notice type="error" message={errorMessage} animate={otpFieldError} />
                     </section>
                   )}
-                  <section
-                    className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}
-                  >
+                  <section className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}>
                     <TextField
                       autoFocus
                       value={otpCode}
@@ -309,9 +271,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                       isError={otpFieldError ? true : false}
                       errorMessage={''}
                       maxLength={6}
-                      onChange={(e) =>
-                        handleOtpInput(e.target.value as unknown as string)
-                      }
+                      onChange={(e) => handleOtpInput(e.target.value as unknown as string)}
                     />
                   </section>
                   <button
@@ -319,9 +279,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                     className={`${wiggleEffect && 'animate-shake'}  ${
                       isSubmitLoading == true ? 'cursor-not-allowed' : ''
                     }  text-white w-56 h-10 transition-all rounded my-2 hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
-                      wiggleEffect
-                        ? 'bg-rose-600 hover:bg-rose-600'
-                        : 'bg-indigo-500'
+                      wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
                     }`}
                     type="submit"
                     onAnimationEnd={() => setWiggleEffect(false)}
@@ -329,25 +287,15 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                     <PortalSVG.AnimationBlueLoading
                       width={30}
                       height={30}
-                      className={`${
-                        isSubmitLoading ? '' : 'hidden'
-                      } absolute -mt-1`}
+                      className={`${isSubmitLoading ? '' : 'hidden'} absolute -mt-1`}
                     />
                     <label
-                      className={`${
-                        isSubmitLoading
-                          ? 'cursor-not-allowed pointer-events-none font-bold'
-                          : 'hidden'
-                      } `}
+                      className={`${isSubmitLoading ? 'cursor-not-allowed pointer-events-none font-bold' : 'hidden'} `}
                     >
                       VERIFYING
                     </label>
                     <label
-                      className={`${
-                        isSubmitLoading
-                          ? 'hidden'
-                          : 'cursor-pointer pointer-events-none font-bold'
-                      } `}
+                      className={`${isSubmitLoading ? 'hidden' : 'cursor-pointer pointer-events-none font-bold'} `}
                     >
                       CONFIRM OTP
                     </label>
@@ -370,24 +318,14 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
 
       {otpComplete ? (
         <>
-          <div
-            className={
-              'flex flex-col p-4 gap-1 justify-center items-center text-md'
-            }
-          >
-            <div className="text-center text-sm">
-              OTP Verified Successfully!
-            </div>
-            <div className="text-center text-sm mb-4">
-              Leave has been approved.
-            </div>
+          <div className={'flex flex-col p-4 gap-1 justify-center items-center text-md'}>
+            <div className="text-center text-sm">OTP Verified Successfully!</div>
+            <div className="text-center text-sm mb-4">Leave has been approved.</div>
 
             <Button
               btnLabel="Close"
               variant="primary"
-              className={`${
-                isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'
-              } `}
+              className={`${isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'} `}
               onClick={(e) => handleClose(e)}
             />
           </div>

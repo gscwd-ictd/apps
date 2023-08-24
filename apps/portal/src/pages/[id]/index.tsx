@@ -118,6 +118,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaveLedger)) {
+      console.log(swrLeaveLedger);
       getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
       getLatestBalance(swrLeaveLedger);
     }

@@ -200,6 +200,42 @@ export const ApprovalsCompletedLeaveModal = ({
                     </div>
                   </div>
 
+                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                    <label className="text-md font-medium text-slate-500 whitespace-nowrap">
+                      {leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                        ? 'Date Approved:'
+                        : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                        ? 'Date Disapproved:'
+                        : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                        ? 'Date Disapproved:'
+                        : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                        ? 'Date Disapproved:'
+                        : leaveIndividualDetail?.status === LeaveStatus.APPROVED
+                        ? 'Date Approved:'
+                        : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
+                        ? 'Date Cancelled:'
+                        : null}
+                    </label>
+
+                    <div className="w-96">
+                      <label className="text-slate-500 h-12 w-96  text-md ">
+                        {leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                          ? leaveIndividualDetail?.supervisorApprovalDate
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? leaveIndividualDetail?.supervisorApprovalDate
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? leaveIndividualDetail?.hrmoApprovalDate
+                          : leaveIndividualDetail?.status === LeaveStatus.APPROVED
+                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
+                          ? 'N/A'
+                          : null}
+                      </label>
+                    </div>
+                  </div>
+
                   {/* {watch('typeOfLeaveDetails.leaveName') === 'Others' &&
                       watch('other') === 'Monetization of Leave Credits' ? (
                         <div className="flex flex-row justify-between items-center w-full">

@@ -199,7 +199,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     data: swrLeaveLedger,
     isLoading: swrLeaveLedgerLoading,
     error: swrLeaveLedgerError,
-  } = useSWR(leaveLedgerUrl, fetchWithToken, {
+  } = useSWR(employeeDetails.user._id && employeeDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -893,7 +893,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           } border border-slate-400 p-1 text-center text-sm`}
                         >
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
-                            ? finalVacationLeaveBalance
+                            ? finalVacationLeaveBalance.toFixed(3)
                             : vacationLeaveBalance}
                         </td>
                         <td
@@ -904,7 +904,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           } border border-slate-400 p-1 text-center text-sm`}
                         >
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
-                            ? finalForcedLeaveBalance
+                            ? finalForcedLeaveBalance.toFixed(3)
                             : forcedLeaveBalance}
                         </td>
                         <td
@@ -915,7 +915,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           } border border-slate-400 p-1 text-center text-sm`}
                         >
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
-                            ? finalSickLeaveBalance
+                            ? finalSickLeaveBalance.toFixed(3)
                             : sickLeaveBalance}
                         </td>
                         <td
@@ -927,7 +927,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           } border border-slate-400 p-1 text-center text-sm`}
                         >
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                            ? finalSpecialPrivilegekBalance
+                            ? finalSpecialPrivilegekBalance.toFixed(3)
                             : specialPrivilegeLeaveBalance}
                         </td>
                       </tr>

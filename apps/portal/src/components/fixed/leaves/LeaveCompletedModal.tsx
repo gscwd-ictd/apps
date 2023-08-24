@@ -46,13 +46,11 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     setCancelLeaveModalIsOpen: state.setCancelLeaveModalIsOpen,
   }));
 
-  const { vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance, specialPrivilegeLeaveBalance } =
-    useLeaveLedgerStore((state) => ({
-      vacationLeaveBalance: state.vacationLeaveBalance,
-      forcedLeaveBalance: state.forcedLeaveBalance,
-      sickLeaveBalance: state.sickLeaveBalance,
-      specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
-    }));
+  const { leaveLedger, selectedLeaveLedger, setSelectedLeaveLedger } = useLeaveLedgerStore((state) => ({
+    leaveLedger: state.leaveLedger,
+    selectedLeaveLedger: state.selectedLeaveLedger,
+    setSelectedLeaveLedger: state.setSelectedLeaveLedger,
+  }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -63,7 +61,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
       );
 
       if (!isEmpty(data)) {
-        console.log(data);
+        setSelectedLeaveLedger(leaveLedger, data.leaveApplicationBasicInfo.id);
         getLeaveIndividualDetailSuccess(false, data);
       }
     } catch (error) {
@@ -408,7 +406,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION) ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                  (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+                    completedLeaveModalIsOpen) ? (
                     <div className="w-full pb-4">
                       <span className="text-slate-500 text-md font-medium">
                         Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
@@ -424,32 +423,27 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             <td className="border border-slate-400 text-center">
                               {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
                                 ? (
-                                    Number(parseFloat(`${vacationLeaveBalance}`).toFixed(3)) +
-                                    Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
+                                    Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
+                                    Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
                                   ).toFixed(3)
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
                                 ? (
-                                    Number(parseFloat(`${forcedLeaveBalance}`).toFixed(3)) +
-                                    Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
+                                    Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
+                                    Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1
                                   ).toFixed(3)
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                 ? (
-                                    Number(parseFloat(`${sickLeaveBalance}`).toFixed(3)) +
-                                    Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
+                                    Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
+                                    Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
                                   ).toFixed(3)
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                   LeaveName.SPECIAL_PRIVILEGE
                                 ? (
-                                    Number(parseFloat(`${specialPrivilegeLeaveBalance}`).toFixed(3)) +
                                     Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
+                                      parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`).toFixed(3)
+                                    ) +
+                                    Number(parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`).toFixed(3)) *
+                                      -1
                                   ).toFixed(3)
                                 : 'N/A'}
                             </td>
@@ -458,14 +452,14 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             </td>
                             <td className="border border-slate-400 text-center bg-green-100">
                               {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
-                                ? vacationLeaveBalance
+                                ? selectedLeaveLedger[0]?.vacationLeaveBalance
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                ? forcedLeaveBalance
+                                ? selectedLeaveLedger[0]?.forcedLeaveBalance
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
-                                ? sickLeaveBalance
+                                ? selectedLeaveLedger[0]?.sickLeaveBalance
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                   LeaveName.SPECIAL_PRIVILEGE
-                                ? specialPrivilegeLeaveBalance
+                                ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
                                 : 'N/A'}
                             </td>
                           </tr>
