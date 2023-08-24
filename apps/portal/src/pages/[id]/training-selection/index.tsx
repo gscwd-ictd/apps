@@ -105,7 +105,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
         <SideNav employeeDetails={employeeDetails} />
 
-        {/* Pass Slip Application Modal */}
         <TrainingDetailsModal
           modalState={trainingModalIsOpen}
           setModalState={setTrainingModalIsOpen}

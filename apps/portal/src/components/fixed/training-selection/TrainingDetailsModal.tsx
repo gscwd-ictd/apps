@@ -15,14 +15,21 @@ type ModalProps = {
 };
 
 export const TrainingDetailsModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
-  const { trainingList, loadingTrainingList, errorTrainingList, trainingModalIsOpen, setIndividualTrainingDetails } =
-    useTrainingSelectionStore((state) => ({
-      trainingList: state.trainingList,
-      loadingTrainingList: state.loading.loadingTrainingList,
-      errorTrainingList: state.error.errorTrainingList,
-      trainingModalIsOpen: state.setTrainingModalIsOpen,
-      setIndividualTrainingDetails: state.setIndividualTrainingDetails,
-    }));
+  const {
+    trainingList,
+    loadingTrainingList,
+    errorTrainingList,
+    individualTrainingDetails,
+    trainingModalIsOpen,
+    setIndividualTrainingDetails,
+  } = useTrainingSelectionStore((state) => ({
+    trainingList: state.trainingList,
+    loadingTrainingList: state.loading.loadingTrainingList,
+    errorTrainingList: state.error.errorTrainingList,
+    individualTrainingDetails: state.individualTrainingDetails,
+    trainingModalIsOpen: state.setTrainingModalIsOpen,
+    setIndividualTrainingDetails: state.setIndividualTrainingDetails,
+  }));
 
   return (
     <>
@@ -30,7 +37,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Completed Pass Slip</span>
+              <span className="text-xl md:text-2xl">{individualTrainingDetails.courseTitle}</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
