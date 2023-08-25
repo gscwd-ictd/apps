@@ -4,3 +4,7 @@ export enum TrainingTypes {
   TECHNICAL = 'technical',
   FOUNDATIONAL = 'foundational',
 }
+
+export enum TrainingStatus {
+  ONGOING = 'on going nomination',
+}

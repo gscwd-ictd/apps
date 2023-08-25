@@ -844,7 +844,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                 <div className="w-full pb-4 pt-2">
                   <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
-                  <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                  <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md table-fixed">
                     <tbody>
                       <tr className="border border-slate-400">
                         <td className="border border-slate-400"></td>
@@ -866,7 +866,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         </td>
                       </tr>
                       <tr>
-                        <td className="border border-slate-400 text-sm p-1">Less this application</td>
+                        <td className="border border-slate-400 text-sm p-1">
+                          <label className="hidden sm:block">Less this application</label>
+                          <label className="block sm:hidden">Less</label>
+                        </td>
                         <td className="border border-slate-400 p-1 text-center text-sm">
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? leaveDates.length : 0}
                         </td>
