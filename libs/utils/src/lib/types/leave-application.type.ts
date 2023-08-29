@@ -159,6 +159,8 @@ export type SupervisorLeaveDetails = {
   hrdmApprovalDate: string;
   hrdmDisapprovalRemarks: string;
   hrmoApprovalDate: string;
+  cancelDate: string;
+  cancelReason: string;
   employee: {
     employeeId: string;
     employeeName: string;

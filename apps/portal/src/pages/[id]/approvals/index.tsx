@@ -152,7 +152,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
   // cancel action for Cancelled Pass Slip Application Modal
   const closeCancelledPassSlipModal = async () => {
-    setCancelledPassSlipModalIsOpen(false);
+    setCancelledLeaveModalIsOpen(false);
   };
 
   const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/supervisor/${employeeDetails.employmentDetails.userId}`;

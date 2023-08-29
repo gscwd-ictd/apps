@@ -230,7 +230,7 @@ export const ApprovalsCompletedLeaveModal = ({
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED
                           ? leaveIndividualDetail?.hrdmApprovalDate
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                          ? 'N/A'
+                          ? leaveIndividualDetail?.cancelDate
                           : null}
                       </label>
                     </div>
@@ -311,7 +311,8 @@ export const ApprovalsCompletedLeaveModal = ({
                   ) : null}
                   {leaveIndividualDetail.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
                   leaveIndividualDetail.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
-                  leaveIndividualDetail.status === LeaveStatus.DISAPPROVED_BY_HRMO ? (
+                  leaveIndividualDetail.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
+                  leaveIndividualDetail.status === LeaveStatus.CANCELLED ? (
                     <>
                       <div className="flex flex-row items-center justify-between w-full">
                         <label className="text-md font-medium text-slate-500 whitespace-nowrap">
@@ -319,8 +320,8 @@ export const ApprovalsCompletedLeaveModal = ({
                             ? 'HRDM Remarks:'
                             : leaveIndividualDetail.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                             ? 'Supervisor Remarks:'
-                            : leaveIndividualDetail.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                            ? 'HRMO Remarks:'
+                            : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
+                            ? 'Cancel Reason:'
                             : 'Remarks:'}
                         </label>
                       </div>
@@ -333,6 +334,8 @@ export const ApprovalsCompletedLeaveModal = ({
                             ? leaveIndividualDetail?.hrdmDisapprovalRemarks
                             : leaveIndividualDetail.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                             ? leaveIndividualDetail?.supervisorDisapprovalRemarks
+                            : leaveIndividualDetail.status === LeaveStatus.CANCELLED
+                            ? leaveIndividualDetail?.cancelReason
                             : 'N/A'
                         }
                       ></textarea>
