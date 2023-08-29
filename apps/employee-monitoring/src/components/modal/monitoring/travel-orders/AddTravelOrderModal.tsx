@@ -33,15 +33,6 @@ import {
 } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
 import Toggle from '../../../switch/Toggle';
 
-// Mock data REMOVE later
-const TypesMockData: Array<EmployeeAsOption> = [
-  { employeeId: '001', fullName: 'Allyn Cubero' },
-  { employeeId: '002', fullName: 'Alexis Aponesto' },
-  { employeeId: '003', fullName: 'Ricardo Vicente Supremo' },
-  { employeeId: '004', fullName: 'Mikhail Sebua' },
-  { employeeId: '005', fullName: 'Eric Sison' },
-];
-
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;

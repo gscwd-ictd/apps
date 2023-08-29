@@ -2,161 +2,56 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { Module, ModuleId } from '../utils/types/module.type';
 
-type ResponseModule = {
-  postResponse: Module;
-  updateResponse: Module;
-  deleteResponse: ModuleId;
-};
-
-type LoadingModule = {
-  loadingModules: boolean;
-  loadingModule: boolean;
-};
-
-type ErrorModule = {
-  errorModules: string;
-  errorModule: string;
-};
-
 export type ModulesState = {
-  modules: Array<Module>;
-  module: ResponseModule;
-  loading: LoadingModule;
-  error: ErrorModule;
+  getModules: Array<Module>;
+  setGetModules: (getModules: Array<Module>) => void;
 
-  getModules: (loading: boolean) => void;
-  getModulesSuccess: (loading: boolean, response: Array<Module>) => void;
-  getModulesFail: (loading: boolean, error: string) => void;
+  errorModules: string;
+  setErrorModules: (errorModules: string) => void;
 
-  postModule: () => void;
-  postModuleSuccess: (response: Module) => void;
-  postModuleFail: (error: string) => void;
+  postModule: Module;
+  setPostModule: (postModule: Module) => void;
 
-  updateModule: () => void;
-  updateModuleSuccess: (response: Module) => void;
-  updateModuleFail: (error: string) => void;
+  updateModule: Module;
+  setUpdateModule: (updateModule: Module) => void;
 
-  deleteModule: () => void;
-  deleteModuleSuccess: (response: ModuleId) => void;
-  deleteModuleFail: (error: string) => void;
+  deleteModule: ModuleId;
+  setDeleteModule: (deleteModule: ModuleId) => void;
+
+  errorModule: string;
+  setErrorModule: (errorModule: string) => void;
 
   emptyResponse: () => void;
 };
 
 export const useModulesStore = create<ModulesState>()(
   devtools((set) => ({
-    modules: [],
-    module: {
-      postResponse: {} as Module,
-      updateResponse: {} as Module,
-      deleteResponse: {} as ModuleId,
-    },
-    loading: {
-      loadingModules: false,
-      loadingModule: false,
-    },
-    error: {
-      errorModules: '',
-      errorModule: '',
-    },
+    getModules: [],
+    setGetModules: (getModules) => set({ getModules }),
 
-    getModules: (loading: boolean) =>
-      set((state) => ({
-        ...state,
-        modules: [],
-        loading: { ...state.loading, loadingModules: loading },
-        error: { ...state.error, errorModules: '' },
-      })),
-    getModulesSuccess: (loading: boolean, response: Array<Module>) =>
-      set((state) => ({
-        ...state,
-        modules: response,
-        loading: { ...state.loading, loadingModules: loading },
-      })),
-    getModulesFail: (loading: boolean, error: string) =>
-      set((state) => ({
-        ...state,
-        loading: { ...state.loading, loadingModules: loading },
-        error: { ...state.error, errorModules: error },
-      })),
+    errorModules: '',
+    setErrorModules: (errorModules) => set({ errorModules }),
 
-    postModule: () =>
-      set((state) => ({
-        ...state,
-        module: { ...state.module, postResponse: {} as Module },
-        loading: { ...state.loading, loadingModule: true },
-        error: { ...state.error, errorModule: '' },
-      })),
-    postModuleSuccess: (response: Module) =>
-      set((state) => ({
-        ...state,
-        module: { ...state.module, postResponse: response },
-        loading: { ...state.loading, loadingModule: false },
-      })),
-    postModuleFail: (error: string) =>
-      set((state) => ({
-        ...state,
-        loading: { ...state.loading, loadingModule: false },
-        error: { ...state.error, errorModule: error },
-      })),
+    postModule: {} as Module,
+    setPostModule: (postModule) => set({ postModule }),
 
-    updateModule: () =>
-      set((state) => ({
-        ...state,
-        module: { ...state.module, updateResponse: {} as Module },
-        loading: { ...state.loading, loadingModule: true },
-        error: { ...state.error, errorModule: '' },
-      })),
-    updateModuleSuccess: (response: Module) =>
-      set((state) => ({
-        ...state,
-        module: {
-          ...state.module,
-          updateResponse: response,
-        },
-        loading: { ...state.loading, loadingModule: false },
-      })),
-    updateModuleFail: (error: string) =>
-      set((state) => ({
-        ...state,
-        loading: { ...state.loading, loadingModule: false },
-        error: { ...state.error, errorModule: error },
-      })),
+    updateModule: {} as Module,
+    setUpdateModule: (updateModule) => set({ updateModule }),
 
-    deleteModule: () =>
-      set((state) => ({
-        ...state,
-        module: { ...state.module, deleteResponse: {} as ModuleId },
-        loading: { ...state.loading, loadingModule: true },
-        error: { ...state.error, errorModule: '' },
-      })),
-    deleteModuleSuccess: (response: ModuleId) =>
-      set((state) => ({
-        ...state,
-        module: { ...state.module, deleteResponse: response },
-        loading: { ...state.loading, loadingModule: false },
-      })),
-    deleteModuleFail: (error: string) =>
-      set((state) => ({
-        ...state,
-        loading: { ...state.loading, loadingModule: false },
-        error: { ...state.error, errorModule: error },
-      })),
+    deleteModule: {} as ModuleId,
+    setDeleteModule: (deleteModule) => set({ deleteModule }),
+
+    errorModule: '',
+    setErrorModule: (errorModule) => set({ errorModule }),
 
     emptyResponse: () =>
-      set((state) => ({
-        ...state,
-        module: {
-          ...state.module,
-          postResponse: {} as Module,
-          updateResponse: {} as Module,
-          deleteResponse: {} as ModuleId,
-        },
-        error: {
-          ...state.error,
-          errorModules: '',
-          errorModule: '',
-        },
-      })),
+      set({
+        postModule: {} as Module,
+        updateModule: {} as Module,
+        deleteModule: {} as ModuleId,
+
+        errorModules: '',
+        errorModule: '',
+      }),
   }))
 );

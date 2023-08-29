@@ -1,26 +1,39 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { isEmpty } from 'lodash';
+import {
+  patchEmpMonitoring,
+  putEmpMonitoring,
+} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
-import { FormPostModule } from 'apps/employee-monitoring/src/utils/types/module.type';
+import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
 
 import {
-  Modal,
   AlertNotification,
-  LoadingSpinner,
   Button,
+  LoadingSpinner,
+  Modal,
+  ToastNotification,
 } from '@gscwd-apps/oneui';
-import { LabelInput } from '../../../inputs/LabelInput';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
-type AddModalProps = {
+type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
+  rowData: Module;
 };
+
+enum ModuleKeys {
+  ID = '_id',
+  MODULE = 'module',
+  SLUG = 'slug',
+  URL = 'url',
+}
 
 // yup error handling initialization
 const yupSchema = yup
@@ -31,80 +44,101 @@ const yupSchema = yup
   })
   .required();
 
-const AddModulesModal: FunctionComponent<AddModalProps> = ({
+const EditModuleModal: FunctionComponent<EditModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
+  rowData,
 }) => {
-  // zustand store initialization for travel order
+  // Zustand initialization
   const {
-    IsLoading,
+    UpdateModuleResponse,
+    SetUpdateModule,
 
-    PostModule,
-    PostModuleSuccess,
-    PostModuleFail,
+    SetErrorModule,
+    EmptyResponse,
   } = useModulesStore((state) => ({
-    IsLoading: state.loading.loadingModule,
+    UpdateModuleResponse: state.updateModule,
+    SetUpdateModule: state.setUpdateModule,
 
-    PostModule: state.postModule,
-    PostModuleSuccess: state.postModuleSuccess,
-    PostModuleFail: state.postModuleFail,
+    SetErrorModule: state.setErrorModule,
+    EmptyResponse: state.emptyResponse,
   }));
 
   // React hook form
   const {
     reset,
     register,
+    setValue,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormPostModule>({
+    formState: { errors, isSubmitting: updateFormLoading },
+  } = useForm<Module>({
     mode: 'onChange',
-    defaultValues: {
-      module: '',
-      slug: '',
-      url: '',
-    },
     resolver: yupResolver(yupSchema),
   });
 
   // form submission
-  const onSubmit: SubmitHandler<FormPostModule> = (data: FormPostModule) => {
-    // set loading to true
-    PostModule();
+  const onSubmit: SubmitHandler<Module> = (data: Module) => {
+    EmptyResponse();
 
-    handlePostResult(data);
-
-    console.log(data);
+    handlePatchResult(data);
   };
 
-  const handlePostResult = async (data: FormPostModule) => {
-    const { error, result } = await postEmpMonitoring('/modules', data);
+  const handlePatchResult = async (data: Module) => {
+    const { error, result } = await putEmpMonitoring(`/modules`, data);
 
     if (error) {
-      // request is done so set loading to false
-      PostModuleFail(result);
+      SetErrorModule(result);
     } else {
-      // request is done so set loading to false
-      PostModuleSuccess(result);
+      SetUpdateModule(result);
 
       reset();
       closeModalAction();
     }
   };
 
-  // If modal is open, reset input values
+  // Remove the initial front slash
+  function FormatUrl(url: string | null) {
+    if (url !== null) return url.substring(1);
+    else return 'error';
+  }
+
+  // Set default values in the form
   useEffect(() => {
-    if (!modalState) {
-      reset();
+    if (!isEmpty(rowData)) {
+      const keys = Object.keys(rowData);
+
+      // traverse to each object and setValue0
+      keys.forEach((key: ModuleKeys) => {
+        if (key === 'url') {
+          setValue('url', FormatUrl(rowData[key]), {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        } else {
+          setValue(key, rowData[key], {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        }
+      });
     }
-  }, [modalState]);
+  }, [rowData]);
 
   return (
     <>
+      {/* Notification */}
+      {!isEmpty(UpdateModuleResponse) ? (
+        <ToastNotification
+          toastType="success"
+          notifMessage="Module details updated successfully"
+        />
+      ) : null}
+
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <span className="text-xl font-medium">New Module</span>
+            <span className="text-xl font-medium">Edit Module</span>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -115,11 +149,10 @@ const AddModulesModal: FunctionComponent<AddModalProps> = ({
             </button>
           </div>
         </Modal.Header>
-
         <Modal.Body>
           <div>
             {/* Notifications */}
-            {IsLoading ? (
+            {updateFormLoading ? (
               <AlertNotification
                 logo={<LoadingSpinner size="xs" />}
                 alertType="info"
@@ -128,7 +161,7 @@ const AddModulesModal: FunctionComponent<AddModalProps> = ({
               />
             ) : null}
 
-            <form onSubmit={handleSubmit(onSubmit)} id="addModuleForm">
+            <form onSubmit={handleSubmit(onSubmit)} id="editModuleForm">
               {/* Module input */}
               <div className="mb-6">
                 <LabelInput
@@ -169,16 +202,15 @@ const AddModulesModal: FunctionComponent<AddModalProps> = ({
             </form>
           </div>
         </Modal.Body>
-
         <Modal.Footer>
           {/* Submit button */}
           <div className="flex justify-end w-full">
             <Button
               variant="info"
               type="submit"
-              form="addModuleForm"
+              form="editModuleForm"
               className="ml-1 text-gray-400 disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : false}
+              disabled={updateFormLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>
@@ -189,4 +221,4 @@ const AddModulesModal: FunctionComponent<AddModalProps> = ({
   );
 };
 
-export default AddModulesModal;
+export default EditModuleModal;

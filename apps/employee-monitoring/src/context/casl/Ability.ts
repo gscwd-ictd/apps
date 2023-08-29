@@ -41,12 +41,12 @@ export default defineAbility((can) => {
     { I: 'access', this: 'Leave_benefit_cumulative' },
     { I: 'access', this: 'Leave_benefit_special' },
     { I: 'access', this: 'Travel_orders' },
-    { I: 'access', this: 'Custom Groups' },
+    { I: 'access', this: 'Custom_groups' },
     { I: 'access', this: 'Employees' },
     { I: 'access', this: 'Modules' },
     { I: 'access', this: 'Users' },
-    { I: 'access', this: 'Officer of the Day' },
-    { I: 'access', this: 'System Logs' },
+    { I: 'access', this: 'Officer_of_the_day' },
+    { I: 'access', this: 'System_logs' },
   ];
 
   // cookies.get('isSuperUser')

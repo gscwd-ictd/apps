@@ -1,11 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 export type Module = {
-  id: string;
+  _id: string;
   module: string;
   slug: string;
   url: string;
 };
 
-export type FormPostModule = Omit<Module, 'id'>;
+export type FormPostModule = Omit<Module, '_id'>;
 
-export type ModuleId = Pick<Module, 'id'>;
+export type ModuleId = Pick<Module, '_id'>;
