@@ -11,7 +11,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { ApprovalOtpContentsLeave } from './ApprovalOtp/ApprovalOtpContentsLeave';
 import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
@@ -166,42 +166,40 @@ export const ApprovalsPendingLeaveModal = ({
                     <label className="text-slate-500 text-md font-medium whitespace-nowrap">Leave Type:</label>
 
                     <div className="w-96 ">
-                      <label className="w-full text-md text-slate-500 ">
-                        {leaveIndividualDetail?.leaveBenefitsId?.leaveName}
-                      </label>
+                      <label className="w-full text-md text-slate-500 ">{leaveIndividualDetail?.leaveName}</label>
                     </div>
                   </div>
 
-                  {leaveIndividualDetail?.leaveBenefitsId?.leaveName ? (
+                  {leaveIndividualDetail?.leaveName ? (
                     <>
-                      {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Others' ? (
+                      {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
+                      leaveIndividualDetail?.leaveName === LeaveName.OTHERS ? (
                         <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                           <label className="text-md font-medium text-slate-500">
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave'
+                            {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                               ? 'Location:'
-                              : leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave'
+                              : leaveIndividualDetail?.leaveName === LeaveName.SICK
                               ? 'Hospitalization:'
-                              : leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave'
+                              : leaveIndividualDetail?.leaveName === LeaveName.STUDY
                               ? 'Study:'
-                              : leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Others'
+                              : leaveIndividualDetail?.leaveName === LeaveName.OTHERS
                               ? 'Other Purpose: '
                               : null}
                           </label>
 
                           <div className="w-96 ">
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave' ? (
+                            {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                               <div className="w-full text-md text-slate-500">
                                 {leaveIndividualDetail?.inPhilippines ? 'Within the Philippines' : 'Abroad'}
                               </div>
                             ) : null}
 
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave' ? (
+                            {leaveIndividualDetail?.leaveName === LeaveName.SICK ? (
                               <>
                                 <div className="w-full text-md text-slate-500">
                                   {leaveIndividualDetail?.inHospital ? 'In Hospital' : 'Out Patient'}
@@ -209,7 +207,7 @@ export const ApprovalsPendingLeaveModal = ({
                               </>
                             ) : null}
 
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' ? (
+                            {leaveIndividualDetail?.leaveName === LeaveName.STUDY ? (
                               <>
                                 <div className="w-full text-md text-slate-500">
                                   {leaveIndividualDetail?.forBarBoardReview === '1'
@@ -239,10 +237,11 @@ export const ApprovalsPendingLeaveModal = ({
 
                         <div className="w-auto sm:w-96">
                           <label className="text-slate-500 h-12 w-96  text-md ">
-                            {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Maternity Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Rehabilitation Leave' ||
-                            leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Leave Benefits for Women'
+                            {leaveIndividualDetail?.leaveName === LeaveName.MATERNITY ||
+                            leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
+                            leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
+                            leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
                               ? // show first and last date (array) only if maternity or study leave
                                 `${leaveIndividualDetail?.leaveDates[0]} - ${
                                   leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
@@ -253,12 +252,11 @@ export const ApprovalsPendingLeaveModal = ({
                         </div>
                       </div>
 
-                      {leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave' ||
-                      leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Leave Benefits for Women' ||
-                      (leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Study Leave' &&
-                        leaveIndividualDetail?.leaveBenefitsId?.leaveName) ? (
+                      {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                      (leaveIndividualDetail?.leaveName === LeaveName.STUDY && leaveIndividualDetail?.leaveName) ? (
                         <div className="flex flex-col items-center justify-between w-full">
                           <div className="flex flex-row items-center justify-between w-full">
                             <label className="text-md font-medium text-slate-500 whitespace-nowrap">
@@ -271,18 +269,18 @@ export const ApprovalsPendingLeaveModal = ({
                             className="w-full p-2 mt-2 text-md rounded resize-none text-slate-500 border-slate-300"
                             value={
                               //VACATION OR SPL //
-                              leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Vacation Leave' ||
-                              leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Privilege Leave'
+                              leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                 ? leaveIndividualDetail.inPhilippines
                                   ? leaveIndividualDetail.inPhilippines
                                   : leaveIndividualDetail.abroad
                                 : //SICK LEAVE
-                                leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Sick Leave'
+                                leaveIndividualDetail?.leaveName === LeaveName.SICK
                                 ? leaveIndividualDetail.inHospital
                                   ? leaveIndividualDetail.inHospital
                                   : leaveIndividualDetail.outPatient
                                 : //SLB FOR WOMEN
-                                leaveIndividualDetail?.leaveBenefitsId?.leaveName === 'Special Leave Benefits for Women'
+                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                                 ? leaveIndividualDetail.splWomen
                                 : //NON OF THE ABOVE
                                   ''

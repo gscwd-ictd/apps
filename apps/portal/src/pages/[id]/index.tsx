@@ -25,6 +25,8 @@ import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
 import { useDtrStore } from '../../store/dtr.store';
 import { HiCalendar, HiClock, HiDocument } from 'react-icons/hi';
+import { useLeaveLedgerStore } from '../../store/leave-ledger.store';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
 export type NavDetails = {
   fullName: string;
@@ -70,11 +72,60 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     getEmployeeDtrFail: state.getEmployeeDtrFail,
   }));
 
-  // const  = useDtrStore((state) => state.getEmployeeDtr);
-  // const getEmployeeDtrSuccess = useDtrStore(
-  //   (state) => state.getEmployeeDtrSuccess
-  // );
-  // const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
+  const { leaveLedger, loadingLedger, errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } =
+    useLeaveLedgerStore((state) => ({
+      leaveLedger: state.leaveLedger,
+      loadingLedger: state.loading.loadingLeaveLedger,
+      errorLedger: state.error.errorLeaveLedger,
+      getLeaveLedger: state.getLeaveLedger,
+      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+      getLeaveLedgerFail: state.getLeaveLedgerFail,
+    }));
+
+  const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
+  const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
+  const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
+  const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
+
+  // get the latest balance by last index value
+  const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
+    const lastIndexValue = leaveLedger[leaveLedger.length - 1];
+    setForcedLeaveBalance(lastIndexValue.forcedLeaveBalance);
+    setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
+    setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
+    setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+  };
+
+  //fetch employee leave ledger
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${userDetails.user._id}/${userDetails.profile.companyId}`;
+
+  const {
+    data: swrLeaveLedger,
+    isLoading: swrLeaveLedgerLoading,
+    error: swrLeaveLedgerError,
+  } = useSWR(leaveLedgerUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveLedgerLoading) {
+      getLeaveLedger(swrLeaveLedgerLoading);
+    }
+  }, [swrLeaveLedgerLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveLedger)) {
+      getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
+      getLatestBalance(swrLeaveLedger);
+    }
+
+    if (!isEmpty(swrLeaveLedgerError)) {
+      getLeaveLedgerFail(swrLeaveLedgerLoading, swrLeaveLedgerError.message);
+    }
+  }, [swrLeaveLedger, swrLeaveLedgerError]);
 
   const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
     userDetails.employmentDetails.companyId
@@ -144,6 +195,13 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   return (
     <>
+      {/* Leave Ledger Load Failed */}
+      {!isEmpty(errorLedger) ? (
+        <>
+          <ToastNotification toastType="error" notifMessage={`${errorLedger}: Failed to load Leave Ledger.`} />
+        </>
+      ) : null}
+
       {!isEmpty(swrFaceScanError) ? (
         <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
       ) : null}
@@ -208,8 +266,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                     <div className="grid grid-cols-2 gap-4">
                       <StatsCard
                         name={'Force Leave'}
-                        count={0}
-                        isLoading={swrDtrIsLoading}
+                        count={forcedLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
                         height={'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-rose-500" />}
@@ -217,8 +275,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       />
                       <StatsCard
                         name={'Special Privilege Leave'}
-                        count={0}
-                        isLoading={swrDtrIsLoading}
+                        count={specialPrivilegeLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
                         height={'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-orange-500" />}
@@ -226,8 +284,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       />
                       <StatsCard
                         name={'Vacation Leave'}
-                        count={0}
-                        isLoading={swrDtrIsLoading}
+                        count={vacationLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
                         height={'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-lime-500" />}
@@ -235,8 +293,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       />
                       <StatsCard
                         name={'Sick Leave'}
-                        count={0}
-                        isLoading={swrDtrIsLoading}
+                        count={sickLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
                         height={'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-pink-500" />}

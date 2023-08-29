@@ -9,6 +9,7 @@ import {
 } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 import { PassSlip, PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
@@ -150,15 +151,16 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    {item.leaveBenefitsId.leaveName} - {item.employee.employeeName}
+                    {item.leaveName} - {item.employee.employeeName}
                   </h1>
                   <p className="text-sm text-gray-500">No. of Days: {item.leaveDates.length}</p>
                   <p className="text-sm text-gray-500">
                     Dates:{' '}
-                    {item.leaveBenefitsId.leaveName === 'Maternity Leave' ||
-                    item.leaveBenefitsId.leaveName === 'Study Leave' ||
-                    item.leaveBenefitsId.leaveName === 'Rehabilitation Leave' ||
-                    item.leaveBenefitsId.leaveName === 'Special Leave Benefits for Women'
+                    {item.leaveName === LeaveName.MATERNITY ||
+                    item.leaveName === LeaveName.STUDY ||
+                    item.leaveName === LeaveName.REHABILITATION ||
+                    item.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                    item.leaveName === LeaveName.ADOPTION
                       ? `${item.leaveDates[0]} - ${item.leaveDates[item.leaveDates.length - 1]}`
                       : item.leaveDates.join(', ')}
                   </p>

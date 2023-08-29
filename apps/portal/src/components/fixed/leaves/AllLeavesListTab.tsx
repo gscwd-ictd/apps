@@ -2,7 +2,7 @@
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { EmployeeLeave } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import dayjs from 'dayjs';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
 type AllLeaveListTabProps = {
   leaves: Array<EmployeeLeave>;
@@ -57,10 +57,11 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                   <p className="text-sm text-gray-500">No. of Days: {leave.leaveDates.length}</p>
                   <p className="text-sm text-gray-500">
                     Dates:{' '}
-                    {leave.leaveName === 'Maternity Leave' ||
-                    leave.leaveName === 'Study Leave' ||
-                    leave.leaveName === 'Rehabilitation Leave' ||
-                    leave.leaveName === 'Special Leave Benefits for Women'
+                    {leave.leaveName === LeaveName.MATERNITY ||
+                    leave.leaveName === LeaveName.STUDY ||
+                    leave.leaveName === LeaveName.REHABILITATION ||
+                    leave.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                    leave.leaveName === LeaveName.ADOPTION
                       ? `${leave.leaveDates[0]} - ${leave.leaveDates[leave.leaveDates.length - 1]}`
                       : leave.leaveDates.join(', ')}
                   </p>
