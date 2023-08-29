@@ -5,7 +5,6 @@ import {
   EmployeeLeave,
   EmployeeLeaveDetails,
   CalendarDate,
-  LeaveApplicationForm,
   EmployeeLeaveList,
   EmployeeLeaveCredits,
   LeaveId,
@@ -29,7 +28,7 @@ export type LeavesState = {
   unavailableDates: Array<CalendarDate>;
   response: {
     postResponseApply: LeaveApplicationResponse;
-    deleteResponseCancel: LeaveId;
+    patchResponseCancel: any;
   };
   loading: {
     loadingLeaves: boolean;
@@ -73,6 +72,10 @@ export type LeavesState = {
   postLeave: () => void;
   postLeaveSuccess: (response: LeaveApplicationResponse) => void;
   postLeaveFail: (error: string) => void;
+
+  patchLeave: () => void;
+  patchLeaveSuccess: (response: any) => void;
+  patchLeaveFail: (error: string) => void;
 
   getLeaveTypes: (loading: boolean) => void;
   getLeaveTypesSuccess: (loading: boolean, response) => void;
@@ -118,7 +121,7 @@ export const useLeaveStore = create<LeavesState>()(
 
     response: {
       postResponseApply: {} as LeaveApplicationResponse,
-      deleteResponseCancel: {} as LeaveId,
+      patchResponseCancel: {} as any,
     },
     loading: {
       loadingLeaves: false,
@@ -242,7 +245,7 @@ export const useLeaveStore = create<LeavesState>()(
       }));
     },
 
-    //POST LEAVE ACTIONS
+    //POST LEAVE ACTIONS (APPLY LEAVE)
     postLeave: () => {
       set((state) => ({
         ...state,
@@ -274,6 +277,51 @@ export const useLeaveStore = create<LeavesState>()(
       }));
     },
     postLeaveFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
+    //POST LEAVE ACTIONS (CANCEL LEAVE)
+    patchLeave: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponseCancel: {} as any,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    patchLeaveSuccess: (response: any) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponseCancel: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    patchLeaveFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -464,7 +512,7 @@ export const useLeaveStore = create<LeavesState>()(
         response: {
           ...state.response,
           postResponseApply: {} as LeaveApplicationResponse,
-          deleteResponseCancel: {} as LeaveId,
+          patchResponseCancel: {} as any,
         },
         error: {
           ...state.error,
@@ -474,36 +522,3 @@ export const useLeaveStore = create<LeavesState>()(
     },
   }))
 );
-
-type AppState = {
-  name: string;
-  id: string;
-};
-
-type TestState = {
-  loading: boolean;
-  appState: AppState;
-  setAppState: (appState: AppState) => void;
-  error: boolean;
-};
-
-export const useTestStore = create<TestState>((set) => ({
-  appState: {} as AppState,
-  error: false,
-  loading: false,
-  setAppState: (state) => {
-    // begin
-    set({ loading: true });
-
-    const result = axios.get('') as unknown as AxiosResponse;
-
-    // set error or response
-    if (result.data) {
-      set({ appState: result.data });
-      set({ loading: false });
-    } else {
-      set({ loading: false });
-      set({ error: true });
-    }
-  },
-}));

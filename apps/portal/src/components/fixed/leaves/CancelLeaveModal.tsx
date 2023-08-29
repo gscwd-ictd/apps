@@ -14,7 +14,7 @@ import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import Calendar from './LeaveCalendar';
 import CancelLeaveCalendar from './CancelLeaveCalendar';
 import { LeaveApplicationForm } from 'libs/utils/src/lib/types/leave-application.type';
-import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -22,11 +22,7 @@ type CancelLeaveModalProps = {
   closeModalAction: () => void;
 };
 
-export const CancelLeaveModal = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}: CancelLeaveModalProps) => {
+export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }: CancelLeaveModalProps) => {
   const {
     leaveIndividualDetail,
     leaveId,
@@ -34,10 +30,12 @@ export const CancelLeaveModal = ({
     errorLeaveDetails,
     cancelLeaveModalIsOpen,
     leaveDates,
-
-    postLeave,
-    postLeaveSuccess,
-    postLeaveFail,
+    setPendingLeaveModalIsOpen,
+    setCompletedLeaveModalIsOpen,
+    patchLeave,
+    patchLeaveSuccess,
+    patchLeaveFail,
+    emptyResponseAndError,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
@@ -45,34 +43,43 @@ export const CancelLeaveModal = ({
     errorLeaveDetails: state.error.errorIndividualLeave,
     cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
     leaveDates: state.leaveDates,
-
-    postLeave: state.postLeave,
-    postLeaveSuccess: state.postLeaveSuccess,
-    postLeaveFail: state.postLeaveFail,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
+    patchLeave: state.patchLeave,
+    patchLeaveSuccess: state.patchLeaveSuccess,
+    patchLeaveFail: state.patchLeaveFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [remarks, setRemarks] = useState<string>('');
 
   const handleCancel = async () => {
-    // postLeave();
-    // const { error, result } = await postPortal('/v1/leave-application', data);
-    // if (error) {
-    //   postLeaveFail(result);
-    // } else {
-    //   postLeaveSuccess(result);
-    //   closeModalAction();
-    // }
+    const data = {
+      id: leaveIndividualDetail.leaveApplicationBasicInfo.id,
+      cancelReason: remarks,
+    };
+    patchLeave();
+    const { error, result } = await patchPortal('/v1/leave/employee', data);
+    if (error) {
+      patchLeaveFail(result);
+    } else {
+      patchLeaveSuccess(result);
+      closeModalAction();
+      setTimeout(() => {
+        setPendingLeaveModalIsOpen(false); //then close LEAVE modal
+        setCompletedLeaveModalIsOpen(false); //then close LEAVE modal
+      }, 200);
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
+    }
   };
 
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal
-        size={`${windowWidth > 1024 ? 'sm' : 'xl'}`}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={`${windowWidth > 1024 ? 'sm' : 'xl'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="text-xl font-semibold text-gray-700">
             <div className="flex justify-between px-2">
@@ -101,21 +108,9 @@ export const CancelLeaveModal = ({
         <Modal.Footer>
           <div className="flex justify-end">
             <div className="max-w-auto flex">
-              <Button
-                variant={'primary'}
-                disabled={!isEmpty(remarks) ? false : true}
-                onClick={(e) => handleCancel()}
-              >
+              <Button variant={'primary'} disabled={!isEmpty(remarks) ? false : true} onClick={(e) => handleCancel()}>
                 Submit
               </Button>
-              {/* <Button
-                variant={'danger'}
-                onClick={() => {
-                  closeModalAction();
-                }}
-              >
-                Cancel
-              </Button> */}
             </div>
           </div>
         </Modal.Footer>

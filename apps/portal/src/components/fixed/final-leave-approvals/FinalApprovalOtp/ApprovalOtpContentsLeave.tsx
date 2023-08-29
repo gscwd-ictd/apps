@@ -256,7 +256,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
 
             {isOtpSending || isSendOtpLoading ? (
               <>
-                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1">
+                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1 w-56">
                   {otpFieldError && (
                     <section className="mb-3" onAnimationEnd={() => setIsError({ ...isError, animate: false })}>
                       <Notice type="error" message={errorMessage} animate={otpFieldError} />

@@ -276,7 +276,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   //check if there are pending leaves of the same name being filed, return true/false
   useEffect(() => {
-    if (pendingleavesList.some((leave) => leave.leaveName === watch('typeOfLeaveDetails.leaveName'))) {
+    if (pendingleavesList?.some((leave) => leave.leaveName === watch('typeOfLeaveDetails.leaveName'))) {
       setHasPendingLeave(true);
     } else {
       setHasPendingLeave(false);
@@ -465,6 +465,123 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           <form id="ApplyLeaveForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
+                <div className="w-full flex flex-col gap-0">
+                  {/* Has Existing Pending Leave of the Same Name - cannot file a new one */}
+                  {hasPendingLeave ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="You have a pending leave application of the same type"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Female Specific Leave Benefit Notification */}
+                  {employeeDetails.profile.sex === 'Male' &&
+                  (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.VAWC ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN) ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="You are not allowed to file this type of leave"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Male Specific Leave Benefit Notification */}
+                  {employeeDetails.profile.sex === 'Female' &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="You are not allowed to file this type of leave"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Notifications */}
+                  {isEmpty(leaveDates) &&
+                  !isEmpty(watch('typeOfLeaveDetails.leaveName')) &&
+                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.MATERNITY &&
+                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.STUDY &&
+                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.REHABILITATION &&
+                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN &&
+                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.ADOPTION ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Please select date of leave"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+                  {/* Notifications */}
+                  {leaveDateTo < leaveDateFrom &&
+                  (watch('typeOfLeaveDetails.leaveName') == LeaveName.MATERNITY ||
+                    watch('typeOfLeaveDetails.leaveName') == LeaveName.STUDY ||
+                    watch('typeOfLeaveDetails.leaveName') == LeaveName.REHABILITATION ||
+                    watch('typeOfLeaveDetails.leaveName') == LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                    watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION) ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Please select an acceptable date of leave"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+                  {/* Vacation Leave Credits Notifications */}
+                  {finalVacationLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Insufficient Vacation Leave Credits"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+                  {/* Vacation Leave Credits Notifications */}
+                  {finalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Insufficient Forced Leave Credits"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+                  {/* Sick Leave Credits Notifications */}
+                  {finalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Insufficient Sick Leave Credits"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+                  {/* Special Privilege Leave Credits Notifications */}
+                  {finalSpecialPrivilegekBalance < 0 &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Insufficient Special Privilege Leave Credits"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+                  {/* Overlapping Leaves Notifications */}
+                  {overlappingLeaveCount > 0 &&
+                  (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ||
+                    watch('typeOfLeaveDetails.leaveName') == LeaveName.REHABILITATION ||
+                    watch('typeOfLeaveDetails.leaveName') == LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                    watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION) ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="There are overlapping leaves in your application"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+                </div>
+
                 <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1">
                   <div className="flex flex-row justify-between items-center w-full">
                     <label className="pt-2 text-slate-500 text-md font-medium">Leave Type:</label>
@@ -714,119 +831,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
                     <label className="text-slate-500 text-md font-medium">Select Leave Dates:</label>
-                    {/* Has Existing Pending Leave of the Same Name - cannot file a new one */}
-                    {hasPendingLeave ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="You have a pending leave application of the same type"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-
-                    {/* Female Specific Leave Benefit Notification */}
-                    {employeeDetails.profile.sex === 'Male' &&
-                    (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.VAWC ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN) ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="You are not allowed to file this type of leave"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-
-                    {/* Male Specific Leave Benefit Notification */}
-                    {employeeDetails.profile.sex === 'Female' &&
-                    watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="You are not allowed to file this type of leave"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-
-                    {/* Notifications */}
-                    {isEmpty(leaveDates) &&
-                    watch('typeOfLeaveDetails.leaveName') !== LeaveName.MATERNITY &&
-                    watch('typeOfLeaveDetails.leaveName') !== LeaveName.STUDY &&
-                    watch('typeOfLeaveDetails.leaveName') !== LeaveName.REHABILITATION &&
-                    watch('typeOfLeaveDetails.leaveName') !== LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN &&
-                    watch('typeOfLeaveDetails.leaveName') !== LeaveName.ADOPTION ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="Please select date of leave"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-                    {/* Notifications */}
-                    {leaveDateTo < leaveDateFrom &&
-                    (watch('typeOfLeaveDetails.leaveName') == LeaveName.MATERNITY ||
-                      watch('typeOfLeaveDetails.leaveName') == LeaveName.STUDY ||
-                      watch('typeOfLeaveDetails.leaveName') == LeaveName.REHABILITATION ||
-                      watch('typeOfLeaveDetails.leaveName') == LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                      watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION) ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="Please select an acceptable date of leave"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-                    {/* Vacation Leave Credits Notifications */}
-                    {finalVacationLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="Insufficient Vacation Leave Credits"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-                    {/* Vacation Leave Credits Notifications */}
-                    {finalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="Insufficient Forced Leave Credits"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-                    {/* Sick Leave Credits Notifications */}
-                    {finalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="Insufficient Sick Leave Credits"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-                    {/* Special Privilege Leave Credits Notifications */}
-                    {finalSpecialPrivilegekBalance < 0 &&
-                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="Insufficient Special Privilege Leave Credits"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
-                    {/* Overlapping Leaves Notifications */}
-                    {overlappingLeaveCount > 0 &&
-                    (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ||
-                      watch('typeOfLeaveDetails.leaveName') == LeaveName.REHABILITATION ||
-                      watch('typeOfLeaveDetails.leaveName') == LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                      watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION) ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage="There are overlapping leaves in your application"
-                        dismissible={false}
-                        className="-mb-1"
-                      />
-                    ) : null}
 
                     <div className="w-full p-4 bg-gray-50 rounded">
                       {watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||

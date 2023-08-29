@@ -10,6 +10,7 @@ import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import CancelLeaveModal from './CancelLeaveModal';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -24,7 +25,8 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     loadingLeaveDetails,
     errorLeaveDetails,
     pendingLeaveModalIsOpen,
-
+    cancelLeaveModalIsOpen,
+    setCancelLeaveModalIsOpen,
     getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail,
@@ -34,7 +36,8 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     loadingLeaveDetails: state.loading.loadingIndividualLeave,
     errorLeaveDetails: state.error.errorIndividualLeave,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
-
+    cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
+    setCancelLeaveModalIsOpen: state.setCancelLeaveModalIsOpen,
     getLeaveIndividualDetail: state.getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
@@ -57,7 +60,6 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
       );
 
       if (!isEmpty(data)) {
-        console.log(data);
         getLeaveIndividualDetailSuccess(false, data);
       }
     } catch (error) {
@@ -72,12 +74,12 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     }
   }, [pendingLeaveModalIsOpen, leaveId]);
 
-  // for cancel pass slip button
-  const modalAction = async (e) => {
-    e.preventDefault();
-  };
-
   const { windowWidth } = UseWindowDimensions();
+
+  // cancel action for Leave Pending Modal
+  const closeCancelLeaveModal = async () => {
+    setCancelLeaveModalIsOpen(false);
+  };
 
   return (
     <>
@@ -96,6 +98,12 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {/* Cancel Leave Application Modal */}
+          <CancelLeaveModal
+            modalState={cancelLeaveModalIsOpen}
+            setModalState={setCancelLeaveModalIsOpen}
+            closeModalAction={closeCancelLeaveModal}
+          />
           {loadingLeaveDetails || errorLeaveDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -385,11 +393,15 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto">
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
-                Cancel Leave
-              </Button>
-            </div>
+            <Button
+              variant={'warning'}
+              size={'md'}
+              loading={false}
+              onClick={(e) => setCancelLeaveModalIsOpen(true)}
+              type="submit"
+            >
+              Cancel Leave
+            </Button>
           </div>
         </Modal.Footer>
       </Modal>

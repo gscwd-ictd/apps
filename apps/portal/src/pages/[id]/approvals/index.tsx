@@ -6,17 +6,9 @@ import { ContentHeader } from '../../../components/modular/custom/containers/Con
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { employee } from '../../../utils/constants/data';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 // import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import {
-  getUserDetails,
-  withCookieSession,
-  withSession,
-} from '../../../utils/helpers/session';
+import { getUserDetails, withCookieSession, withSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
@@ -37,9 +29,7 @@ import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
 
-export default function Approvals({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
     pendingLeaveModalIsOpen,
@@ -121,9 +111,7 @@ export default function Approvals({
   }));
 
   // set state for employee store
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
   // set state for employee store
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
@@ -190,7 +178,6 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
-      console.log(swrPassSlips);
       getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 
@@ -221,7 +208,6 @@ export default function Approvals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
-      console.log(swrLeaves);
       getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
@@ -256,50 +242,32 @@ export default function Approvals({
       <>
         {/* Pass Slip Patch Success */}
         {!isEmpty(patchResponsePassSlip) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage={`Pass Slip Application action submitted.`}
-          />
+          <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
         ) : null}
 
         {/* Leave Patch Success */}
         {!isEmpty(patchResponseLeave) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage={`Leave Application action submitted.`}
-          />
+          <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
         ) : null}
 
         {/* Pass Slip Patch Failed Error */}
         {!isEmpty(errorPassSlipResponse) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`Pass Slip Application action failed.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`Pass Slip Application action failed.`} />
         ) : null}
 
         {/* Leave Patch Failed Error */}
         {!isEmpty(errorLeaveResponse) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`Leave Application action failed.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`Leave Application action failed.`} />
         ) : null}
 
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlip) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`} />
         ) : null}
 
         {/* Leave List Load Failed Error */}
         {!isEmpty(errorLeave) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorLeave}: Failed to load Leaves.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${errorLeave}: Failed to load Leaves.`} />
         ) : null}
 
         <EmployeeProvider employeeData={employee}>
@@ -367,10 +335,7 @@ export default function Approvals({
 
           <MainContainer>
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
-              <ContentHeader
-                title="Employee Approvals"
-                subtitle="Approve Employee Pass Slips & Leaves"
-              ></ContentHeader>
+              <ContentHeader title="Employee Approvals" subtitle="Approve Employee Pass Slips & Leaves"></ContentHeader>
 
               {loadingPassSlip && loadingLeave ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -390,9 +355,7 @@ export default function Approvals({
                         <ApprovalsTabs tab={tab} />
                       </div>
                       <div className="w-full">
-                        <ApprovalsTabWindow
-                          employeeId={employeeDetails.employmentDetails.userId}
-                        />
+                        <ApprovalsTabWindow employeeId={employeeDetails.employmentDetails.userId} />
                       </div>
                     </div>
                   </>
@@ -414,24 +377,22 @@ export default function Approvals({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    // check if user role is rank_and_file or job order = kick out
-    if (
-      employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
-    ) {
-      // if true, the employee is not allowed to access this page
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/${employeeDetails.user._id}`,
-        },
-      };
-    } else {
-      return { props: { employeeDetails } };
-    }
+  // check if user role is rank_and_file or job order = kick out
+  if (
+    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
   }
-);
+});

@@ -79,6 +79,8 @@ export type EmployeeLeaveDetails = {
     hrdmApprovalDate: string;
     hrdmDisapprovalRemarks: string;
     hrmoApprovalDate: string;
+    cancelReason: string;
+    cancelDate: string;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
