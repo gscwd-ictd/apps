@@ -18,11 +18,7 @@ export type LeavesState = {
     onGoing: Array<EmployeeLeave>;
     completed: Array<EmployeeLeave>;
   };
-  leaveCredits: {
-    vacation: number;
-    forced: number;
-    sick: number;
-  };
+
   leaveId: string;
   leaveIndividualDetail: EmployeeLeaveDetails;
   unavailableDates: Array<CalendarDate>;
@@ -81,10 +77,6 @@ export type LeavesState = {
   getLeaveTypesSuccess: (loading: boolean, response) => void;
   getLeaveTypesFail: (loading: boolean, error: string) => void;
 
-  getLeaveCredits: (loading: boolean) => void;
-  getLeaveCreditsSuccess: (loading: boolean, response) => void;
-  getLeaveCreditsFail: (loading: boolean, error: string) => void;
-
   getLeaveIndividualDetail: (loading: boolean) => void;
   getLeaveIndividualDetailSuccess: (loading: boolean, response) => void;
   getLeaveIndividualDetailFail: (loading: boolean, error: string) => void;
@@ -110,11 +102,7 @@ export const useLeaveStore = create<LeavesState>()(
       onGoing: [],
       completed: [],
     },
-    leaveCredits: {
-      vacation: 10.3,
-      forced: 5,
-      sick: 5.8,
-    },
+
     leaveId: '',
     leaveIndividualDetail: {} as EmployeeLeaveDetails,
     unavailableDates: [] as Array<CalendarDate>,
@@ -372,53 +360,6 @@ export const useLeaveStore = create<LeavesState>()(
         error: {
           ...state.error,
           errorLeaveTypes: error,
-        },
-      }));
-    },
-
-    //GET LEAVE CREDIT ACTIONS
-    getLeaveCredits: (loading: boolean) => {
-      set((state) => ({
-        ...state,
-        leaveCredits: {
-          ...state.leaveCredits,
-          vacation: null,
-          sick: null,
-        },
-        loading: {
-          ...state.loading,
-          loadingLeaveCredits: loading,
-        },
-        error: {
-          ...state.error,
-          errorLeaveCredits: '',
-        },
-      }));
-    },
-    getLeaveCreditsSuccess: (loading: boolean, response: EmployeeLeaveCredits) => {
-      set((state) => ({
-        ...state,
-        leaves: {
-          ...state.leaves,
-          vacation: response.vacation,
-          sick: response.sick,
-        },
-        loading: {
-          ...state.loading,
-          loadingLeaveCredits: loading,
-        },
-      }));
-    },
-    getLeaveCreditsFail: (loading: boolean, error: string) => {
-      set((state) => ({
-        ...state,
-        loading: {
-          ...state.loading,
-          loadingLeaveCredits: loading,
-        },
-        error: {
-          ...state.error,
-          errorLeaveCredits: error,
         },
       }));
     },
