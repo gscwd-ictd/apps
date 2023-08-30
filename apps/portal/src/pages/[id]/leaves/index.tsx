@@ -247,7 +247,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
           closeModalAction={closePendingLeaveModal}
         />
 
-        {/* Pass Slip Pending Modal */}
+        {/* Pass Slip Completed Modal */}
         <LeaveCompletedModal
           modalState={completedLeaveModalIsOpen}
           setModalState={setCompletedLeaveModalIsOpen}

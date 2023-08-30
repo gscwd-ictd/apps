@@ -416,7 +416,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       completedLeaveModalIsOpen) ? (
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md font-medium">
-                          Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
+                          Your {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Credits at the time of this
+                          application:
                         </span>
                         <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
                           <tbody>

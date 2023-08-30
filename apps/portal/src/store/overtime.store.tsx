@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { PassSlip, PassSlipId, EmployeePassSlipList } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
-type OvertimeDetails = {
+export type OvertimeDetails = {
   dateOfFiling: string;
   dateOfOvertime: string;
   estimatedHours: string;
@@ -11,7 +11,7 @@ type OvertimeDetails = {
   employees: Array<string>;
 };
 
-type OvertimeList = {
+export type OvertimeList = {
   forApproval: Array<OvertimeDetails>;
   completed: Array<OvertimeDetails>;
 };
@@ -36,7 +36,7 @@ export type OvertimeState = {
   };
 
   overtimeDetails: OvertimeDetails;
-  cancelApplicationModalIsOpen: boolean;
+  cancelOvertimeModalIsOpen: boolean;
   applyOvertimeModalIsOpen: boolean;
   pendingOvertimeModalIsOpen: boolean;
   completedOvertimeModalIsOpen: boolean;
@@ -54,12 +54,12 @@ export type OvertimeState = {
   postOvertimeSuccess: (response: OvertimeDetails) => void;
   postOvertimeFail: (error: string) => void;
 
-  setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => void;
+  setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => void;
   setApplyOvertimeModalIsOpen: (applyOvertimeModalIsOpen: boolean) => void;
   setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => void;
   setCompletedOvertimeModalIsOpen: (completedOvertimeModalIsOpen: boolean) => void;
 
-  getOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
+  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
   setTab: (tab: number) => void;
 
   emptyResponseAndError: () => void;
@@ -68,8 +68,24 @@ export type OvertimeState = {
 export const useOvertimeStore = create<OvertimeState>()(
   devtools((set) => ({
     overtime: {
-      forApproval: [] as Array<OvertimeDetails>,
-      completed: [] as Array<OvertimeDetails>,
+      forApproval: [
+        {
+          dateOfFiling: '09-20-2023 14:00:00',
+          dateOfOvertime: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
+          estimatedHours: '2',
+          purpose: 'Mag overtime ako habang buhay',
+          employees: ['Mikhail Sebua, Ricardo Narvaiza'],
+        },
+      ],
+      completed: [
+        {
+          dateOfFiling: '09-20-2023 14:00:00',
+          dateOfOvertime: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
+          estimatedHours: '2',
+          purpose: 'Gusto kong matuto mag drive',
+          employees: ['Mikhail Sebua, Ricardo Narvaiza'],
+        },
+      ],
     },
     response: {
       postResponseApply: {} as OvertimeDetails,
@@ -90,7 +106,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     pendingOvertimeModalIsOpen: false,
     completedOvertimeModalIsOpen: false,
 
-    cancelApplicationModalIsOpen: false,
+    cancelOvertimeModalIsOpen: false,
 
     tab: 1,
 
@@ -98,8 +114,8 @@ export const useOvertimeStore = create<OvertimeState>()(
       set((state) => ({ ...state, tab }));
     },
 
-    setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => {
-      set((state) => ({ ...state, cancelApplicationModalIsOpen }));
+    setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => {
+      set((state) => ({ ...state, cancelOvertimeModalIsOpen }));
     },
 
     setApplyOvertimeModalIsOpen: (applyOvertimeModalIsOpen: boolean) => {
@@ -114,7 +130,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       set((state) => ({ ...state, completedOvertimeModalIsOpen }));
     },
 
-    getOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
+    setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
       set((state) => ({ ...state, overtimeDetails }));
     },
 

@@ -2,15 +2,15 @@
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../../src/store/leave.store';
+import { useLeaveStore } from '../../../store/leave.store';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
+import { postPortal } from '../../../utils/helpers/portal-axios-helper';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import { useEmployeeStore } from '../../../../src/store/employee.store';
-import Calendar from './LeaveCalendar';
+import { useEmployeeStore } from '../../../store/employee.store';
+
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
 import { CalendarDate, LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -18,7 +18,7 @@ import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
-type LeaveApplicationModalProps = {
+type ModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
@@ -79,7 +79,7 @@ const leaveCommutation: Array<SelectOption> = [
   },
 ];
 
-export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAction }: LeaveApplicationModalProps) => {
+export const OvertimeApplicationModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   // // forced leave balance
   // const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
   // // vacation leave balance
@@ -832,17 +832,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   <>
                     <label className="text-slate-500 text-md font-medium">Select Leave Dates:</label>
 
-                    <div className="w-full p-4 bg-gray-50 rounded">
-                      {watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.REHABILITATION ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION ? (
-                        <Calendar type={'range'} clickableDate={true} />
-                      ) : (
-                        <Calendar type={'single'} clickableDate={true} />
-                      )}
-                    </div>
+                    <div className="w-full p-4 bg-gray-50 rounded"></div>
                   </>
                 ) : null}
 

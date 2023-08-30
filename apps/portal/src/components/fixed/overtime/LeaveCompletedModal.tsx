@@ -9,7 +9,7 @@ import { useEmployeeStore } from '../../../../src/store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import CancelLeaveModal from './CancelLeaveModal';
+import CancelLeaveModal from './CancelOvertimeModal';
 import dayjs from 'dayjs';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
