@@ -39,6 +39,256 @@ const mockDataModules: Array<Overtime> = [
     purpose: 'to finish up emergency task',
     status: OvertimeStatus.FOR_APPROVAL,
   },
+
+  {
+    id: 'dda58b5e-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-09-02',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda598b6-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-08-31',
+    immediateSupervisorName: 'Rizza Baugbog',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda5adce-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-09-24',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda5bc73-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-09-15',
+    immediateSupervisorName: 'Rizza Baugbog',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda5d9c7-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-08-31',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda5e67a-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-08-31',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda5f284-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-08-31',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda5ff92-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-08-31',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda60b5d-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-08-31',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
+
+  {
+    id: 'dda60b5d-3816-11ee-8170-005056b680ac',
+    plannedDate: '2023-08-31',
+    immediateSupervisorName: 'Eric Sison',
+    employees: [
+      {
+        employeeId: '001',
+        companyId: '2000-001',
+        fullName: 'Employee Name 1',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+      {
+        employeeId: '002',
+        companyId: '2000-002',
+        fullName: 'Employee Name 2',
+        scheduleBase: ScheduleBases.OFFICE,
+        assignment: 'SDAD',
+      },
+    ],
+    estimatedNoOfHours: 3,
+    purpose: 'to finish up emergency task',
+    status: OvertimeStatus.FOR_APPROVAL,
+  },
 ];
 
 const Index = () => {
@@ -122,7 +372,7 @@ const Index = () => {
   const { table } = useDataTable({
     columns: columns,
     data: mockDataModules,
-    columnVisibility: { _id: false },
+    columnVisibility: { id: false },
   });
 
   return (
