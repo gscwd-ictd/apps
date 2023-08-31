@@ -130,7 +130,7 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
                     {item.natureOfBusiness} - {item.employeeName}
                   </h1>
                   <p className="text-sm text-gray-500">Estimated Hours: {item.estimateHours}</p>
-                  <p className="text-sm text-gray-500">Purpose: {item.purposeDestination}</p>
+                  <p className="text-sm text-gray-500 break-words w-96">Purpose: {item.purposeDestination}</p>
                   <p className="text-sm text-gray-500">
                     Date Applied: {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>

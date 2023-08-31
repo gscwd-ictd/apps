@@ -1,10 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 
-import {
-  NatureOfBusiness,
-  ObTransportation,
-  PassSlipStatus,
-} from '../enums/pass-slip.enum';
+import { NatureOfBusiness, ObTransportation, PassSlipStatus } from '../enums/pass-slip.enum';
 
 // Pass slip application form
 export type PassSlipApplicationForm = {
@@ -15,8 +11,8 @@ export type PassSlipApplicationForm = {
   obTransportation: ObTransportation | null;
   estimateHours?: number | null;
   purposeDestination: string;
-  timeIn?: string;
-  timeOut?: string;
+  timeIn: string | null;
+  timeOut: string | null;
   isCancelled: boolean;
 };
 
