@@ -58,11 +58,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
       </div>
 
       <div className="order-3 w-full flex overflow-x-auto">
-        {/* <div className="flex flex-col order-4 w-full h-full overflow-y-auto bg-white rounded-md"> */}
-        {/* <div className=""> */}
-        {/* <table className="flex-1 w-full text-left whitespace-no-wrap bg-white table-auto"> */}
         <table className="w-full px-6 py-1 bg-white rounded-md md:px-5 lg:px-4">
-          {/* <thead className="sticky top-0 text-sm text-gray-600 bg-white border-b"> */}
           <thead className="text-sm text-gray-600 border-b">
             {model?.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className={'header_level_' + headerGroup.id}>
