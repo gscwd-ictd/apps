@@ -10,12 +10,7 @@ import fetcherHRIS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRIS'
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
 import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
 
-import {
-  DataTable,
-  LoadingSpinner,
-  ToastNotification,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -137,11 +132,7 @@ const Index = () => {
 
   // Reset responses from all modal actions
   useEffect(() => {
-    if (
-      !isEmpty(PostModuleResponse) ||
-      !isEmpty(UpdateModuleResponse) ||
-      !isEmpty(DeleteModuleResponse)
-    ) {
+    if (!isEmpty(PostModuleResponse) || !isEmpty(UpdateModuleResponse) || !isEmpty(DeleteModuleResponse)) {
       mutateModules();
     }
   }, [PostModuleResponse, UpdateModuleResponse, DeleteModuleResponse]);
@@ -151,13 +142,9 @@ const Index = () => {
       <div className="w-full">
         <BreadCrumbs title="Modules" />
         {/* Notifications */}
-        {!isEmpty(ErrorModules) ? (
-          <ToastNotification toastType="error" notifMessage={ErrorModules} />
-        ) : null}
+        {!isEmpty(ErrorModules) ? <ToastNotification toastType="error" notifMessage={ErrorModules} /> : null}
 
-        {!isEmpty(ErrorModule) ? (
-          <ToastNotification toastType="error" notifMessage={ErrorModule} />
-        ) : null}
+        {!isEmpty(ErrorModule) ? <ToastNotification toastType="error" notifMessage={ErrorModule} /> : null}
 
         <Can I="access" this="Modules">
           <div className="mx-5">
@@ -176,12 +163,7 @@ const Index = () => {
                     </button>
                   </div>
 
-                  <DataTable
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={false}
-                    paginate={true}
-                  />
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
               )}
             </Card>

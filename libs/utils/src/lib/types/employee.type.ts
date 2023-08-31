@@ -1,3 +1,4 @@
+import { ScheduleBases } from '../enums/schedule.enum';
 import { UserRole } from '../enums/user-roles.enum';
 
 export type Assignment = {
@@ -43,20 +44,21 @@ export type EmployeeProfile = {
 
 export type EmployeeId = Pick<EmploymentDetails, 'employeeId'>;
 
-export type EmployeeAsOption = Pick<EmploymentDetails, 'employeeId'> &
-  Pick<PersonalDetails, 'fullName'>;
+export type EmployeeAsOption = Pick<EmploymentDetails, 'employeeId'> & Pick<PersonalDetails, 'fullName'>;
 
-export type EmployeeAsOptionWithPosition = Pick<
-  EmploymentDetails,
-  'employeeId' | 'companyId' | 'positionTitle'
-> &
+export type EmployeeAsOptionWithPosition = Pick<EmploymentDetails, 'employeeId' | 'companyId' | 'positionTitle'> &
   Pick<PersonalDetails, 'fullName'> & { assignment: string };
 
-export type EmployeeAsOptionWithRestDays = Pick<
-  EmploymentDetails,
-  'employeeId' | 'positionTitle' | 'companyId'
-> &
-  Pick<PersonalDetails, 'fullName'> & {
-    restDays: Array<number>;
-    assignment: string;
-  };
+// The as EmployeeAsOptionWithPosition but with restDays
+// export type EmployeeAsOptionWithRestDays = Pick<EmploymentDetails, 'employeeId' | 'companyId' | 'positionTitle'> &
+//   Pick<PersonalDetails, 'fullName'> & {
+//     restDays: Array<number>;
+//     assignment: string;
+//   };
+
+export type EmployeeAsOptionWithRestDays = EmployeeAsOptionWithPosition & {
+  restDays: Array<number>;
+};
+
+export type EmployeeOvertimeDetails = Pick<EmploymentDetails, 'employeeId' | 'companyId'> &
+  Pick<PersonalDetails, 'fullName'> & { scheduleBase: ScheduleBases | null; assignment: string };
