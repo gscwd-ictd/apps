@@ -124,7 +124,7 @@ export const PassSlipCompletedModal = ({
                 <textarea
                   className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
                   value={passSlip.purposeDestination}
-                  rows={4}
+                  rows={2}
                   disabled={true}
                 ></textarea>
               </div>
