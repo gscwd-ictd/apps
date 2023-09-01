@@ -47,7 +47,7 @@ export const StatsCard: React.FC<Props> = ({
                   : count == 9
                   ? 'w-11/12 bg-red-500'
                   : count == 8
-                  ? 'w-4/5 bg-red-500'
+                  ? 'w-4/5 bg-red-500 '
                   : count == 7
                   ? 'w-9/12 bg-orange-500'
                   : count == 6

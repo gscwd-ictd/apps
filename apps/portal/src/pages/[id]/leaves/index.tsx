@@ -32,6 +32,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     applyLeaveModalIsOpen,
     pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen,
+    cancelLeaveModalIsOpen,
 
     loading,
     errorLeaves,
@@ -55,6 +56,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
+    cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
 
     loading: state.loading.loadingLeaves,
     errorLeaves: state.error.errorLeaves,
@@ -64,7 +66,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     errorResponse: state.error.errorResponse,
 
     responseApply: state.response.postResponseApply,
-    responseCancel: state.response.deleteResponseCancel,
+    responseCancel: state.response.patchResponseCancel,
 
     setApplyLeaveModalIsOpen: state.setApplyLeaveModalIsOpen,
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
@@ -134,7 +136,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
-      console.log(swrLeaves);
       getLeaveListSuccess(swrIsLoading, swrLeaves);
     }
 
@@ -218,6 +219,11 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
         {!isEmpty(responseApply) ? (
           <ToastNotification toastType="success" notifMessage="Leave Application Successful!" />
         ) : null}
+
+        {/* Patch Cancel Leave Successs*/}
+        {!isEmpty(responseCancel) ? (
+          <ToastNotification toastType="success" notifMessage="Leave Cancellation Successful!" />
+        ) : null}
       </>
 
       <EmployeeProvider employeeData={employee}>
@@ -241,7 +247,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
           closeModalAction={closePendingLeaveModal}
         />
 
-        {/* Pass Slip Pending Modal */}
+        {/* Pass Slip Completed Modal */}
         <LeaveCompletedModal
           modalState={completedLeaveModalIsOpen}
           setModalState={setCompletedLeaveModalIsOpen}

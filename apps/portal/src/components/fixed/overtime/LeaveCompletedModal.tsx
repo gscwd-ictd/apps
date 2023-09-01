@@ -9,7 +9,7 @@ import { useEmployeeStore } from '../../../../src/store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import CancelLeaveModal from './CancelLeaveModal';
+import CancelLeaveModal from './CancelOvertimeModal';
 import dayjs from 'dayjs';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
@@ -416,8 +416,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       completedLeaveModalIsOpen) ? (
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md font-medium">
-                          Your {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Credits at the time of this
-                          application:
+                          Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
                         </span>
                         <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
                           <tbody>
