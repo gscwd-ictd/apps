@@ -584,7 +584,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                 <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1">
                   <div className="flex flex-row justify-between items-center w-full">
-                    <label className="pt-2 text-slate-500 text-md font-medium">Leave Type:</label>
+                    <label className="pt-2 text-slate-500 text-md font-medium">
+                      Leave Type:<span className="text-red-600">*</span>
+                    </label>
+
                     {swrIsLoading ? <LoadingSpinner size="xs" /> : null}
                   </div>
 
@@ -660,15 +663,23 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="pt-2 text-slate-500 text-md font-medium">
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
-                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                            ? 'Location:'
-                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
-                            ? 'Hospitalization:'
-                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY
-                            ? 'Study:'
-                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS
-                            ? 'Other Purpose: '
-                            : null}
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
+                            <>
+                              Location:<span className="text-red-600">*</span>
+                            </>
+                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
+                            <>
+                              Hospitalization:<span className="text-red-600">*</span>
+                            </>
+                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ? (
+                            <>
+                              Study:<span className="text-red-600">*</span>
+                            </>
+                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS ? (
+                            <>
+                              Other Purpose:<span className="text-red-600">*</span>
+                            </>
+                          ) : null}
                         </label>
                       </div>
 
@@ -830,7 +841,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                 {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
-                    <label className="text-slate-500 text-md font-medium">Select Leave Dates:</label>
+                    <label className="text-slate-500 text-md font-medium">
+                      Select Leave Dates:<span className="text-red-600">*</span>
+                    </label>
 
                     <div className="w-full p-4 bg-gray-50 rounded">
                       {watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
