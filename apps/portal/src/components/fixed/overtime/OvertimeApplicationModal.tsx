@@ -63,7 +63,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>([]);
+  const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeApplication>({
@@ -216,8 +216,8 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     label=""
                     multiple
                     options={listOfEmployees}
-                    onChange={(o) => setSelectedRestDays(o)}
-                    value={selectedRestDays}
+                    onChange={(o) => setSelectedEmployees(o)}
+                    value={selectedEmployees}
                   />
                 </div>
               </div>

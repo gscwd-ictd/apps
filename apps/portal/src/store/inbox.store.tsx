@@ -5,6 +5,9 @@ import { PsbMessageContent } from '../types/inbox.type';
 export type InboxState = {
   message: {
     messages: Array<PsbMessageContent>;
+    psb: PsbMessageContent;
+    overtime: any;
+    training: any;
   };
   response: {
     postResponseApply: unknown;
@@ -17,6 +20,8 @@ export type InboxState = {
     errorMessages: string;
     errorResponse: string;
   };
+
+  setMessagePsb: (psb: PsbMessageContent) => void;
 
   submitModalIsOpen: boolean;
   setSubmitModalIsOpen: (submitModalIsOpen: boolean) => void;
@@ -36,6 +41,9 @@ export const useInboxStore = create<InboxState>()(
   devtools((set) => ({
     message: {
       messages: [],
+      psb: {} as PsbMessageContent,
+      overtime: {} as any,
+      training: {} as any,
     },
     response: {
       postResponseApply: {},
@@ -54,11 +62,23 @@ export const useInboxStore = create<InboxState>()(
       set((state) => ({ ...state, submitModalIsOpen }));
     },
 
+    //SET PSB MESSAGE CONTENT
+    setMessagePsb: (psb: PsbMessageContent) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          psb: psb,
+        },
+      }));
+    },
+
     //GET INBOX MESSAGES
     getMessageList: (loading: boolean) => {
       set((state) => ({
         ...state,
         message: {
+          ...state.message,
           messages: [],
         },
         loading: {
@@ -71,15 +91,14 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    getMessageListSuccess: (
-      loading: boolean,
-      response: Array<PsbMessageContent>
-    ) => {
+    getMessageListSuccess: (loading: boolean, response: Array<PsbMessageContent>) => {
       set((state) => ({
         ...state,
         message: {
+          ...state.message,
           messages: response,
         },
+
         error: {
           ...state.error,
           errorMessages: '',
