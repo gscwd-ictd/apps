@@ -27,6 +27,7 @@ import { useDtrStore } from '../../store/dtr.store';
 import { HiCalendar, HiClock, HiDocument } from 'react-icons/hi';
 import { useLeaveLedgerStore } from '../../store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export type NavDetails = {
   fullName: string;
@@ -193,6 +194,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   }, [swrDtr, swrDtrError]);
 
+  const { windowHeight } = UseWindowDimensions();
+
   return (
     <>
       {/* Leave Ledger Load Failed */}
@@ -248,7 +251,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       count={swrDtr?.summary?.noOfTimesLate ?? 0}
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
-                      height={'h-36'}
+                      height={windowHeight > 820 ? 'h-52' : 'h-36'}
                       svg={<HiClock className="w-7 h-7 text-indigo-500" />}
                       svgBgColor={'bg-indigo-100'}
                     />
@@ -257,7 +260,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       count={0}
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
-                      height={'h-36'}
+                      height={windowHeight > 820 ? 'h-52' : 'h-36'}
                       svg={<HiDocument className="w-7 h-7 text-indigo-500" />}
                       svgBgColor={'bg-indigo-100'}
                     />
@@ -269,7 +272,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         count={forcedLeaveBalance}
                         isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
-                        height={'h-28'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-rose-500" />}
                         svgBgColor={'bg-rose-100'}
                       />
@@ -278,7 +281,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         count={specialPrivilegeLeaveBalance}
                         isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
-                        height={'h-28'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-orange-500" />}
                         svgBgColor={'bg-orange-100'}
                       />
@@ -287,7 +290,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         count={vacationLeaveBalance}
                         isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
-                        height={'h-28'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-lime-500" />}
                         svgBgColor={'bg-lime-100'}
                       />
@@ -296,7 +299,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         count={sickLeaveBalance}
                         isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
-                        height={'h-28'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-pink-500" />}
                         svgBgColor={'bg-pink-100'}
                       />

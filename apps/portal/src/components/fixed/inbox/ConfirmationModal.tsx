@@ -2,103 +2,110 @@
 
 import { Button, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { useInboxStore } from 'apps/portal/src/store/inbox.store';
+import { InboxMessageResponse, InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 
 type ConfirmationApplicationModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  action: PassSlipStatus; // disapprove or cancel
-  tokenId: string; //like pass Slip Id, leave Id etc.
 };
 
-export const ConfirmationApplicationModal = ({
+export const ConfirmationInboxModal = ({
   modalState,
   setModalState,
   closeModalAction,
-  action, tokenId
 }: ConfirmationApplicationModalProps) => {
   const {
-    cancelPassSlip,
-    cancelPassSlipSuccess,
-    cancelPassSlipFail,
-    setPendingPassSlipModalIsOpen
-  } = usePassSlipStore((state) => ({
-    cancelPassSlip: state.cancelPassSlip,
-    cancelPassSlipSuccess: state.cancelPassSlipSuccess,
-    cancelPassSlipFail: state.cancelPassSlipFail,
-    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    selectedVppId,
+    confirmationResponse,
+    confirmationModalTitle,
+    selectedMessageType,
+    declineRemarks,
+    patchInboxReponse,
+    patchInboxReponseFail,
+    patchInboxReponseSuccess,
+    setIsMessageOpen,
+  } = useInboxStore((state) => ({
+    selectedVppId: state.selectedVppId,
+    confirmationResponse: state.confirmationResponse,
+    confirmationModalTitle: state.confirmationModalTitle,
+    selectedMessageType: state.selectedMessageType,
+    declineRemarks: state.declineRemarks,
+    patchInboxReponse: state.patchInboxReponse,
+    patchInboxReponseFail: state.patchInboxReponseSuccess,
+    patchInboxReponseSuccess: state.patchInboxReponseSuccess,
+    setIsMessageOpen: state.setIsMessageOpen,
   }));
 
-  const handleSubmit = () => {
-    if (tokenId) {
-      const data = {
-        passSlipId: tokenId,
-        status: action,
-      };
-      cancelPassSlip(true);
-      handlePatchResult(data);
-    } else {
-      //nothing to do
-    }
+  const { employeeDetails } = useEmployeeStore((state) => ({
+    employeeDetails: state.employeeDetails,
+  }));
 
+  async function handleResponse() {
+    if (selectedMessageType == InboxMessageType.PSB) {
+      handlePsbPatch(declineRemarks);
+    }
   }
-      
-  const handlePatchResult = async (data: passSlipAction) => {
-    const { error, result } = await patchPortal('/v1/pass-slip', data);
-    if (error) {
-      cancelPassSlipFail(result);
+
+  const handlePsbPatch = async (declineRemarks: string) => {
+    const submitPsbResponseRoute = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/acknowledge-schedule/`;
+    patchInboxReponse();
+    if (confirmationResponse == InboxMessageResponse.ACCEPT) {
+      const { error, result } = await patchPortal(
+        submitPsbResponseRoute + selectedVppId + '/' + employeeDetails.employmentDetails.userId + '/accept',
+        {}
+      );
+      if (error) {
+        patchInboxReponseFail(result);
+      } else {
+        patchInboxReponseSuccess(result);
+        closeModalAction(); // close confirmation of decline modal
+        setIsMessageOpen(false);
+      }
     } else {
-      cancelPassSlipSuccess(result);
-      closeModalAction(); // close confirmation of decline modal
-      setTimeout(() => {
-        setPendingPassSlipModalIsOpen(false); // close main pass slip info modal
-      }, 200);
+      const { error, result } = await patchPortal(
+        submitPsbResponseRoute + selectedVppId + '/' + employeeDetails.employmentDetails.userId + '/decline',
+        { declineReason: declineRemarks }
+      );
+      if (error) {
+        patchInboxReponseFail(result);
+      } else {
+        patchInboxReponseSuccess(result);
+        closeModalAction(); // close confirmation of decline modal
+        setIsMessageOpen(false);
+      }
     }
   };
-  
-  
+
   const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
-      <Modal
-        size={`${windowWidth > 768 ? 'sm' : 'xl'}`}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={`${windowWidth > 768 ? 'sm' : 'xl'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
-          <h3 className="font-semibold text-xl text-gray-700">
-            <div className="px-5 flex justify-between">
-              <span>Cancel Application</span>
+          <h3 className="text-xl font-semibold text-gray-700">
+            <div className="flex justify-between px-5">
+              <span>{confirmationModalTitle}</span>
             </div>
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
-            {`Are you sure you want to cancel this application?`}
+          <div className="flex flex-col w-full h-full gap-2 text-lg text-center">
+            {confirmationResponse == InboxMessageResponse.ACCEPT
+              ? 'Are you sure you want accept?'
+              : 'Are you sure you want decline?'}
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => handleSubmit()}
-              >
+              <Button variant={'primary'} size={'lg'} loading={false} onClick={(e) => handleResponse()}>
                 Yes
               </Button>
-              <Button
-                variant={'danger'}
-                size={'md'}
-                loading={false}
-                onClick={closeModalAction}
-              >
+              <Button variant={'danger'} size={'lg'} loading={false} onClick={closeModalAction}>
                 No
               </Button>
             </div>

@@ -20,11 +20,15 @@ import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
+import { InboxPsbContent } from 'apps/portal/src/components/fixed/inbox/InboxPsbContent';
+import { ConfirmationInboxModal } from 'apps/portal/src/components/fixed/inbox/ConfirmationModal';
+import { InboxTrainingContent } from 'apps/portal/src/components/fixed/inbox/InboxTrainingContent';
+import { InboxOvertimeContent } from 'apps/portal/src/components/fixed/inbox/InboxOvertimeContent';
 
 export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [messageContent, setMessageContent] = useState<PsbMessageContent>();
   const [mailMessage, setMailMessage] = useState<string>('');
-  const [isMessageOpen, setIsMessageOpen] = useState<boolean>(false);
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
   const [selectedVppId, setSelectedVppId] = useState<string>(''); // store selected PSB VPP Id for POST
   const [remarks, setRemarks] = useState<string>(''); // store remarks for declining assignment for POST
@@ -33,40 +37,50 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     loadingResponse,
     errorMessage,
     errorResponse,
-    responseApply,
+    patchResponseApply,
 
     getMessageList,
     getMessageListSuccess,
     getMessageListFail,
 
-    postMessage,
-    postMessageSuccess,
-    postMessageFail,
+    patchInboxReponse,
+    patchInboxReponseSuccess,
+    patchInboxReponseFail,
 
-    submitModalIsOpen,
-    setSubmitModalIsOpen,
+    confirmModalIsOpen,
+    setConfirmModalIsOpen,
     emptyResponseAndError,
 
     setMessagePsb,
+    setDeclineRemarks,
+    selectedMessageType,
+    setSelectedMessageType,
+    isMessageOpen,
+    setIsMessageOpen,
   } = useInboxStore((state) => ({
     loadingResponse: state.loading.loadingResponse,
     errorMessage: state.error.errorMessages,
     errorResponse: state.error.errorResponse,
-    responseApply: state.response.postResponseApply,
+    patchResponseApply: state.response.patchResponseApply,
 
     getMessageList: state.getMessageList,
     getMessageListSuccess: state.getMessageListSuccess,
     getMessageListFail: state.getMessageListFail,
 
-    postMessage: state.postMessage,
-    postMessageSuccess: state.postMessageSuccess,
-    postMessageFail: state.postMessageFail,
+    patchInboxReponse: state.patchInboxReponse,
+    patchInboxReponseSuccess: state.patchInboxReponseSuccess,
+    patchInboxReponseFail: state.patchInboxReponseFail,
 
-    submitModalIsOpen: state.submitModalIsOpen,
-    setSubmitModalIsOpen: state.setSubmitModalIsOpen,
+    confirmModalIsOpen: state.confirmModalIsOpen,
+    setConfirmModalIsOpen: state.setConfirmModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
 
     setMessagePsb: state.setMessagePsb,
+    setDeclineRemarks: state.setDeclineRemarks,
+    selectedMessageType: state.selectedMessageType,
+    setSelectedMessageType: state.setSelectedMessageType,
+    isMessageOpen: state.isMessageOpen,
+    setIsMessageOpen: state.setIsMessageOpen,
   }));
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -110,83 +124,33 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
   }, [swrMessages, swrError]);
 
   useEffect(() => {
-    if (!isEmpty(responseApply)) {
+    if (!isEmpty(patchResponseApply)) {
       mutateMessages();
       setTimeout(() => {
         emptyResponseAndError();
-      }, 5000);
+      }, 3000);
     }
-  }, [responseApply]);
+  }, [patchResponseApply]);
 
-  const submitResponseRoute = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/acknowledge-schedule/`;
-
-  async function handleResponse() {
-    postMessage();
-    try {
-      if (isAccepted === true) {
-        const res = await axios.patch(
-          submitResponseRoute + selectedVppId + '/' + employeeDetails.employmentDetails.userId + '/accept',
-          {}
-        );
-
-        postMessageSuccess(res);
-        setRemarks('');
-        closeSubmitModalAction();
-      } else {
-        const res = await axios.patch(
-          submitResponseRoute + selectedVppId + '/' + employeeDetails.employmentDetails.userId + '/decline',
-          {
-            declineReason: remarks,
-          }
-        );
-
-        postMessageSuccess(res);
-        setRemarks('');
-        closeSubmitModalAction();
-      }
-
-      setIsMessageOpen(false);
-    } catch (error) {
-      postMessageFail(error);
-      closeSubmitModalAction();
+  const handleMessage = (acknowledgement?: PsbMessageContent) => {
+    let sampleType = 'psb';
+    if (sampleType == InboxMessageType.PSB) {
+      setSelectedMessageType(InboxMessageType.PSB);
+      setMessagePsb(acknowledgement);
+    } else if (sampleType == InboxMessageType.TRAINING_NOMINATION) {
+      setSelectedMessageType(InboxMessageType.TRAINING_NOMINATION);
+      setMessagePsb(acknowledgement);
+    } else if (sampleType == InboxMessageType.OVERTIME) {
+      setSelectedMessageType(InboxMessageType.OVERTIME);
+      setMessagePsb(acknowledgement);
     }
-  }
-
-  //UPDATE REMARKS ON RESPONSE
-  const handleRemarks = (e: string) => {
-    setRemarks(e);
-  };
-
-  const handleMessage = (acknowledgement: PsbMessageContent) => {
-    setMessagePsb(acknowledgement);
-    setRemarks('');
-    setMailMessage(
-      'You have been requested to become a member of the Personnel Selection Board for the scheduled interview stated below. Do you accept this task?'
-    );
+    setDeclineRemarks('');
     setIsMessageOpen(true);
   };
 
-  const closeSubmitModalAction = async () => {
-    setSubmitModalIsOpen(false);
+  const closeConfirmModalAction = async () => {
+    setConfirmModalIsOpen(false);
   };
-
-  const openSubmitModalAction = async (selectedVppId: any, response: boolean) => {
-    setSelectedVppId(selectedVppId);
-    setIsAccepted(response);
-    setSubmitModalIsOpen(true);
-  };
-
-  const { windowWidth } = UseWindowDimensions();
-
-  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
-
-  useEffect(() => {
-    setNavDetails({
-      profile: employeeDetails.user.email,
-      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
-    });
-  }, []);
 
   return (
     <>
@@ -201,39 +165,21 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
       ) : null}
 
       {/* PSB Member Acknowledgement Success */}
-      {!isEmpty(responseApply) ? <ToastNotification toastType="success" notifMessage={`Response submitted.`} /> : null}
+      {!isEmpty(patchResponseApply) ? (
+        <ToastNotification toastType="success" notifMessage={`Response submitted.`} />
+      ) : null}
 
       <Head>
         <title>Inbox</title>
       </Head>
 
       <SideNav employeeDetails={employeeDetails} />
-      <Modal size={`${windowWidth > 768 ? 'sm' : 'xl'}`} open={submitModalIsOpen} setOpen={setSubmitModalIsOpen}>
-        <Modal.Header>
-          <h3 className="text-xl font-semibold text-gray-700">
-            <div className="flex justify-between px-5">
-              <span>PSB Member Acknowledgement</span>
-            </div>
-          </h3>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="flex flex-col w-full h-full gap-2 text-lg text-center">
-            {isAccepted ? 'Are you sure you want accept?' : 'Are you sure you want decline?'}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button variant={'primary'} size={'lg'} loading={false} onClick={(e) => handleResponse()}>
-                Yes
-              </Button>
-              <Button variant={'danger'} size={'lg'} loading={false} onClick={closeSubmitModalAction}>
-                No
-              </Button>
-            </div>
-          </div>
-        </Modal.Footer>
-      </Modal>
+
+      <ConfirmationInboxModal
+        modalState={confirmModalIsOpen}
+        setModalState={setConfirmModalIsOpen}
+        closeModalAction={closeConfirmModalAction}
+      />
 
       <MainContainer>
         <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
@@ -267,114 +213,21 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
                 <label className="w-full text-4xl text-center text-gray-400 ">NO MESSAGES</label>
               </div>
             )}
+            <MessageCard
+              icon={<HiMail className="w-6 h-6 text-green-800" />}
+              color={`green`}
+              title={'Training Nomination'}
+              description={`Course Title: Sample Training`}
+              // children={<></>}
+              linkType={'router'}
+              onClick={() => handleMessage()}
+            />
           </div>
           {isMessageOpen ? (
             <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
-              {
-                <div className={'w-100 pl-8 pr-8 pt-1 flex flex-col bg-white pb-10'}>
-                  {messageContent?.details.acknowledgedSchedule ? (
-                    <AlertNotification
-                      alertType="success"
-                      notifMessage={'You have accepted this assignment'}
-                      dismissible={false}
-                    />
-                  ) : null}
-
-                  {messageContent?.details.declinedSchedule ? (
-                    <AlertNotification
-                      alertType="info"
-                      notifMessage={'You have declined this assignment'}
-                      dismissible={false}
-                    />
-                  ) : null}
-
-                  {!messageContent?.details.acknowledgedSchedule && !messageContent?.details.declinedSchedule ? (
-                    <AlertNotification alertType="warning" notifMessage={'Awaiting action'} dismissible={false} />
-                  ) : null}
-
-                  <label className="pb-2">{mailMessage}</label>
-                  <div>
-                    <label className="font-bold">Assignment: </label>
-                    {messageContent?.details.assignment}
-                  </div>
-                  <div>
-                    <label className="font-bold">Position: </label>
-                    {messageContent?.details.positionTitle}
-                  </div>
-                  <div>
-                    <label className="font-bold">Schedule: </label>
-                    {messageContent?.details.schedule}
-                  </div>
-                  <div>
-                    <label className="font-bold">Venue: </label>
-                    {messageContent?.details.venue}
-                  </div>
-                  <div>
-                    <label className="font-bold">PSB Members: </label>
-                    <ul>
-                      {messageContent.psbMembers.map((member: PsbMembers, messageIdx: number) => {
-                        return (
-                          <li className="indent-4" key={messageIdx}>
-                            {member.fullName}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-
-                  <div className="pt-2">
-                    <label className="font-bold">
-                      Remarks:{' '}
-                      {messageContent?.details.acknowledgedSchedule ||
-                      messageContent?.details.declinedSchedule ? null : (
-                        <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
-                      )}
-                    </label>
-
-                    <textarea
-                      className={`
-                        w-full h-32 p-2 border resize-none
-                    `}
-                      disabled={
-                        messageContent?.details.acknowledgedSchedule || messageContent?.details.declinedSchedule
-                          ? true
-                          : false
-                      }
-                      value={
-                        messageContent?.details.acknowledgedSchedule
-                          ? 'N/A'
-                          : messageContent?.details.declinedSchedule
-                          ? messageContent.details.declineReason
-                          : remarks
-                      }
-                      placeholder={
-                        'If declining, please state reason and indicate personnel you recommend to be your replacement.'
-                      }
-                      onChange={(e) => handleRemarks(e.target.value as unknown as string)}
-                    ></textarea>
-                  </div>
-
-                  {messageContent?.details.acknowledgedSchedule || messageContent?.details.declinedSchedule ? null : (
-                    <div className="flex flex-row items-center justify-end gap-4">
-                      <Button
-                        variant={'primary'}
-                        size={'md'}
-                        onClick={(e) => openSubmitModalAction(messageContent?.details.vppId, true)}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant={'danger'}
-                        size={'md'}
-                        disabled={remarks ? false : true}
-                        onClick={(e) => openSubmitModalAction(messageContent?.details.vppId, false)}
-                      >
-                        Decline
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              }
+              {selectedMessageType == InboxMessageType.PSB ? <InboxPsbContent /> : null}
+              {selectedMessageType == InboxMessageType.TRAINING_NOMINATION ? <InboxTrainingContent /> : null}
+              {selectedMessageType == InboxMessageType.OVERTIME ? <InboxOvertimeContent /> : null}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center w-full pt-1 text-4xl text-center text-gray-400 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">

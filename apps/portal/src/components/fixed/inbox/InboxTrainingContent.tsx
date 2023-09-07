@@ -1,15 +1,14 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import { useInboxStore } from '../../../../src/store/inbox.store';
+import { useInboxStore } from '../../../store/inbox.store';
 import { PsbMembers } from 'apps/portal/src/types/inbox.type';
 import { InboxMessageResponse } from 'libs/utils/src/lib/enums/inbox.enum';
 
-export const InboxPsbContent = () => {
+export const InboxTrainingContent = () => {
   const {
     psbMessage,
     declineRemarks,
-    setConfirmPsbModalIsOpen,
     setConfirmModalIsOpen,
     setSelectedVppId,
     setConfirmationResponse,
@@ -18,7 +17,6 @@ export const InboxPsbContent = () => {
   } = useInboxStore((state) => ({
     declineRemarks: state.declineRemarks,
     psbMessage: state.message.psb,
-    setConfirmPsbModalIsOpen: state.setConfirmPsbModalIsOpen,
     setConfirmModalIsOpen: state.setConfirmModalIsOpen,
     setSelectedVppId: state.setSelectedVppId,
     setConfirmationResponse: state.setConfirmationResponse,
@@ -34,7 +32,7 @@ export const InboxPsbContent = () => {
   const openSubmitModalAction = async (selectedVppId: any, response: InboxMessageResponse) => {
     setSelectedVppId(selectedVppId); // to be used for psb patch request
     setConfirmationResponse(response); // set as accept or decline
-    setConfirmationModalTitle('PSB Member Acknowledgment');
+    setConfirmationModalTitle('Training Nomination Acknowledgment');
     setConfirmModalIsOpen(true);
   };
 
@@ -44,13 +42,17 @@ export const InboxPsbContent = () => {
         {psbMessage?.details.acknowledgedSchedule ? (
           <AlertNotification
             alertType="success"
-            notifMessage={'You have accepted this assignment'}
+            notifMessage={'You have accepted this training nomination'}
             dismissible={false}
           />
         ) : null}
 
         {psbMessage?.details.declinedSchedule ? (
-          <AlertNotification alertType="info" notifMessage={'You have declined this assignment'} dismissible={false} />
+          <AlertNotification
+            alertType="info"
+            notifMessage={'You have declined this training nomination'}
+            dismissible={false}
+          />
         ) : null}
 
         {!psbMessage?.details.acknowledgedSchedule && !psbMessage?.details.declinedSchedule ? (
@@ -58,35 +60,43 @@ export const InboxPsbContent = () => {
         ) : null}
 
         <label className="pb-2">
-          You have been requested to become a member of the Personnel Selection Board for the scheduled interview stated
-          below. Do you accept this task?
+          This is to inform you that you have been recommended and selected to attend the below detailed training.
         </label>
         <div>
-          <label className="font-bold">Assignment: </label>
-          {psbMessage?.details.assignment}
+          <label className="font-bold">Type of Training: </label>
+          External Training
         </div>
         <div>
-          <label className="font-bold">Position: </label>
-          {psbMessage?.details.positionTitle}
+          <label className="font-bold">Title of the Course: </label>
+          Emotional Intelligence and Leadership
         </div>
         <div>
-          <label className="font-bold">Schedule: </label>
-          {psbMessage?.details.schedule}
+          <label className="font-bold">Facilitator: </label>
+          Civil Service Institute
         </div>
         <div>
-          <label className="font-bold">Venue: </label>
-          {psbMessage?.details.venue}
+          <label className="font-bold">Location: </label>
+          General Santos City via Zoom
         </div>
         <div>
-          <label className="font-bold">PSB Members: </label>
+          <label className="font-bold">Duration: </label>
+          10 hours From Feb. 10, 17, 19, 24 To Feb. 26, 2021
+        </div>
+        <div>
+          <label className="font-bold">Course Content: </label>
           <ul>
-            {psbMessage.psbMembers.map((member: PsbMembers, messageIdx: number) => {
+            {/* {psbMessage.psbMembers.map((member: PsbMembers, messageIdx: number) => {
               return (
                 <li className="indent-4" key={messageIdx}>
                   {member.fullName}
                 </li>
               );
-            })}
+            })} */}
+
+            <li className="indent-4">a. Introduction: The Emotionally Intelligent Leader</li>
+            <li className="indent-4">b. Module 1: Significance of Developing Emotional Intelligence Leadership</li>
+            <li className="indent-4">c. Module 2: The Emotional Damage</li>
+            <li className="indent-4">d. Module 3: Becoming an Emotionally Intelligent Leader</li>
           </ul>
         </div>
 
@@ -108,9 +118,7 @@ export const InboxPsbContent = () => {
                 ? psbMessage.details.declineReason
                 : declineRemarks
             }
-            placeholder={
-              'If declining, please state reason and indicate personnel you recommend to be your replacement.'
-            }
+            placeholder={'If declining, please state reason.'}
             onChange={(e) => handleRemarks(e.target.value as unknown as string)}
             rows={3}
           ></textarea>
@@ -128,7 +136,7 @@ export const InboxPsbContent = () => {
             <Button
               variant={'danger'}
               size={'md'}
-              // disabled={declineRemarks ? false : true}
+              disabled={declineRemarks ? false : true}
               onClick={(e) => openSubmitModalAction(psbMessage?.details.vppId, InboxMessageResponse.DECLINE)}
             >
               Decline
