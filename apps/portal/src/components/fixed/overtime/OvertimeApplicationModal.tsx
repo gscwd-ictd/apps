@@ -18,22 +18,22 @@ import { OvertimeApplication, OvertimeDetails, useOvertimeStore } from 'apps/por
 import { MySelectList } from '../../modular/inputs/SelectList';
 
 const listOfEmployees: Array<SelectOption> = [
-  { label: 'Ricardo Vicente Narvaiza', value: 0 },
-  { label: 'Mikhail Sebua', value: 1 },
-  { label: 'Jay Nosotros', value: 2 },
-  { label: 'Eric Sison', value: 3 },
-  { label: 'Allyn Joseph Cubero', value: 4 },
-  { label: 'John Henry Alfeche', value: 5 },
-  { label: 'Phyll Patrick Fragata', value: 6 },
-  { label: 'Deo Del Rosario', value: 7 },
-  { label: 'Cara Jade Reyes', value: 8 },
-  { label: 'Rizza Baugbog', value: 9 },
-  { label: 'Kumier Lou Arancon', value: 10 },
-  { label: 'Roland Bacayo', value: 11 },
-  { label: 'Alfred Perez', value: 12 },
-  { label: 'Elea Glen Lacerna', value: 13 },
-  { label: 'Ricky Libertad', value: 14 },
-  { label: 'Deo Del Rosario 2', value: 15 },
+  { label: 'Ricardo Vicente Narvaiza', value: '0' },
+  { label: 'Mikhail Sebua', value: '1' },
+  { label: 'Jay Nosotros', value: '2' },
+  { label: 'Eric Sison', value: '3' },
+  { label: 'Allyn Joseph Cubero', value: '4' },
+  { label: 'John Henry Alfeche', value: '5' },
+  { label: 'Phyll Patrick Fragata', value: '6' },
+  { label: 'Deo Del Rosario', value: '7' },
+  { label: 'Cara Jade Reyes', value: '8' },
+  { label: 'Rizza Baugbog', value: '9' },
+  { label: 'Kumier Lou Arancon', value: '10' },
+  { label: 'Roland Bacayo', value: '11' },
+  { label: 'Alfred Perez', value: '12' },
+  { label: 'Elea Glen Lacerna', value: '13' },
+  { label: 'Ricky Libertad', value: '14' },
+  { label: 'Deo Del Rosario 2', value: '15' },
 ];
 
 type ModalProps = {
@@ -44,21 +44,14 @@ type ModalProps = {
 
 export const OvertimeApplicationModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   //zustand initialization to access Leave store
-  const {
-    overtimeDateFrom,
-    overtimeDateTo,
-    applyOvertimeModalIsOpen,
-    loadingResponse,
-    setOvertimeDateFrom,
-    setOvertimeDateTo,
-  } = useOvertimeStore((state) => ({
-    overtimeDateFrom: state.overtimeDateFrom,
-    overtimeDateTo: state.overtimeDateTo,
-    applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
-    loadingResponse: state.loading.loadingResponse,
-    setOvertimeDateFrom: state.setOvertimeDateFrom,
-    setOvertimeDateTo: state.setOvertimeDateTo,
-  }));
+  const { applyOvertimeModalIsOpen, loadingResponse, postOvertime, postOvertimeSuccess, postOvertimeFail } =
+    useOvertimeStore((state) => ({
+      applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
+      loadingResponse: state.loading.loadingResponse,
+      postOvertime: state.postOvertime,
+      postOvertimeSuccess: state.postOvertimeSuccess,
+      postOvertimeFail: state.postOvertimeFail,
+    }));
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -69,15 +62,31 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeApplication>({
     mode: 'onChange',
     defaultValues: {
-      overtimeDateFrom: null,
-      overtimeDateTo: null,
-      purpose: '',
+      overtimeApplication: {
+        overtimeSupervisorId: '',
+        plannedDate: '',
+        estimatedHours: 0,
+        purpose: '',
+      },
+      employees: [],
     },
   });
 
   useEffect(() => {
+    let employeeIdList = [];
+    if (selectedEmployees.length >= 1) {
+      for (let i = 0; i < selectedEmployees.length; i++) {
+        employeeIdList.push(selectedEmployees[i]?.value);
+      }
+    }
+
+    console.log(employeeIdList);
+  }, [selectedEmployees]);
+
+  useEffect(() => {
     if (!applyOvertimeModalIsOpen) {
       reset();
+      setSelectedEmployees([]);
     }
   }, [applyOvertimeModalIsOpen]);
 
@@ -86,16 +95,16 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     // postLeave();
   };
 
-  const handlePostResult = async (data: OvertimeDetails) => {
-    // const { error, result } = await postPortal('/v1/leave-application', data);
-    // if (error) {
-    //   postLeaveFail(result);
-    // } else {
-    //   postLeaveSuccess(result);
-    //   reset();
-    //   setLeaveObject('');
-    //   closeModalAction();
-    // }
+  const handlePostResult = async (data: OvertimeApplication) => {
+    postOvertime();
+    const { error, result } = await postPortal('/v1/overtime/', data);
+    if (error) {
+      postOvertimeFail(result);
+    } else {
+      postOvertimeSuccess(result);
+      reset();
+      closeModalAction();
+    }
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -129,18 +138,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
           <form id="ApplyOvertimeForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 p-4 rounded">
-                <div className="w-full flex flex-col gap-0">
-                  {/* Notifications */}
-                  {overtimeDateTo < overtimeDateFrom ? (
-                    <AlertNotification
-                      alertType="warning"
-                      notifMessage="Please select an acceptable date"
-                      dismissible={false}
-                      className="mb-1"
-                    />
-                  ) : null}
-                </div>
-
                 <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                     Date:
@@ -151,27 +148,10 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       required
                       type="date"
                       className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded"
-                      {...register('overtimeDateFrom')}
-                      // onChange={(e) => setOvertimeDateTo(e.target.value as unknown as string)}
+                      {...register('overtimeApplication.plannedDate')}
                     />
                   </div>
                 </div>
-
-                {/* <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                    Date End:
-                    <span className="text-red-600">*</span>
-                  </label>
-                  <div className="w-full md:w-60">
-                    <input
-                      required
-                      type="date"
-                      className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded"
-                      {...register('overtimeDateTo')}
-                      // onChange={(e) => setOvertimeDateTo(e.target.value as unknown as string)}
-                    />
-                  </div>
-                </div> */}
 
                 <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap">
@@ -187,23 +167,9 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       defaultValue={0}
                       max="8"
                       min="1"
-                      {...register('estimatedHours')}
+                      {...register('overtimeApplication.estimatedHours')}
                     />
                   </div>
-                </div>
-
-                <div className="flex flex-col gap-2 md:pt-3">
-                  <label className="text-slate-500 text-md font-medium">
-                    Purpose:
-                    <span className="text-red-600">*</span>
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder={`Enter Purpose of Overtime`}
-                    className="resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300"
-                    required
-                    {...register('purpose')}
-                  ></textarea>
                 </div>
 
                 <div className="flex flex-col gap-1 md:pt-3">
@@ -219,6 +185,20 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     onChange={(o) => setSelectedEmployees(o)}
                     value={selectedEmployees}
                   />
+                </div>
+
+                <div className="flex flex-col gap-2 md:pt-3">
+                  <label className="text-slate-500 text-md font-medium">
+                    Purpose:
+                    <span className="text-red-600">*</span>
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder={`Enter Purpose of Overtime`}
+                    className="resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300"
+                    required
+                    {...register('overtimeApplication.purpose')}
+                  ></textarea>
                 </div>
               </div>
             </div>

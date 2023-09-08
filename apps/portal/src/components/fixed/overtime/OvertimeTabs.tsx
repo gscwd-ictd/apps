@@ -37,9 +37,9 @@ export const OvertimeTabs = ({ tab }: TabsProps) => {
             onClick={() => {
               setTab(2);
             }}
-            title="Completed Leaves"
+            title="Completed Overtime"
             icon={<HiCheck size={26} />}
-            subtitle="Show all fulfilled Leave applications"
+            subtitle="Show all fulfilled Overtime applications"
             notificationCount={overtimeCompleted ? overtimeCompleted.length : 0}
             className="bg-gray-500"
           />

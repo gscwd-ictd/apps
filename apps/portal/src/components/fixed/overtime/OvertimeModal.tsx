@@ -77,9 +77,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
 
                       <div className="w-96 ">
-                        <label className="text-slate-500 w-full text-md ">
-                          09-23-2023 17:00:00 - 09-23-2023 19:00:00
-                        </label>
+                        <label className="text-slate-500 w-full text-md ">09-23-2023</label>
                       </div>
                     </div>
                   </div>
@@ -90,6 +88,18 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
 
                       <div className="w-96 ">
                         <label className="text-slate-500 w-full text-md ">4</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employees:</label>
+
+                      <div className="w-96 ">
+                        <label className="text-slate-500 w-full text-md ">
+                          Phyll Fragata, Allyn Joseph Cubero, Mikhail Sebua, Ricardo Vicente Narvaiza
+                        </label>
                       </div>
                     </div>
                   </div>

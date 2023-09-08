@@ -106,7 +106,7 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
             id={id}
             ref={containerRef}
             tabIndex={0}
-            className="flex relative w-full bg-gray-50 border border-gray-300/90 rounded-lg min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
+            className="flex relative w-full bg-white border border-gray-300/90 rounded-lg min-h-[2.25rem] h-18 justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600 focus:border-2"
           >
             <span className="grid grid-cols-4 text-xs text-left text-gray-700 ">
               {multiple
@@ -122,7 +122,7 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
                           selectOption(v);
                         }}
                       >
-                        <div className="flex w-full items-center gap-1 py-0.5 px-2 text-xs text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-400 border-gray-300/90">
+                        <div className="flex w-full items-center gap-1 py-0.5 px-2 text-sm text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-500 border-gray-300/90">
                           {v.label}
                           <span className="flex text-sm text-white">&times;</span>
                         </div>
@@ -134,7 +134,7 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
             </span>
             <div className="flex items-center gap-2">
               <div
-                className="flex px-2 text-xl text-gray-500 rounded hover:text-white hover:bg-red-400"
+                className="flex px-2 text-xl text-gray-500 rounded hover:text-white hover:bg-red-500"
                 // type="button"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -172,7 +172,7 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
                 onMouseEnter={() => setHighlightedIndex(index)}
                 className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
                   isOptionSelected(option) && index === highlightedIndex
-                    ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-400 hover hover:cursor-grab '
+                    ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-500 hover hover:cursor-grab '
                     : !isOptionSelected(option) && index === highlightedIndex
                     ? 'hover:bg-blue-600 hover:text-white'
                     : isOptionSelected(option) && index !== highlightedIndex

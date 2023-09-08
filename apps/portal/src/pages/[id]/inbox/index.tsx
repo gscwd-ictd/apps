@@ -213,7 +213,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
                 <label className="w-full text-4xl text-center text-gray-400 ">NO MESSAGES</label>
               </div>
             )}
-            <MessageCard
+            {/* <MessageCard
               icon={<HiMail className="w-6 h-6 text-green-800" />}
               color={`green`}
               title={'Training Nomination'}
@@ -221,7 +221,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
               // children={<></>}
               linkType={'router'}
               onClick={() => handleMessage()}
-            />
+            /> */}
           </div>
           {isMessageOpen ? (
             <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">

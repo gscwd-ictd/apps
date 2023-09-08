@@ -12,11 +12,12 @@ export type OvertimeDetails = {
 };
 
 export type OvertimeApplication = {
-  dateOfFiling: string;
-  overtimeDateFrom: string;
-  overtimeDateTo: string;
-  estimatedHours: string;
-  purpose: string;
+  overtimeApplication: {
+    overtimeSupervisorId: string;
+    plannedDate: string;
+    estimatedHours: number;
+    purpose: string;
+  };
   employees: Array<string>;
 };
 
@@ -31,7 +32,7 @@ export type OvertimeState = {
     completed: Array<OvertimeDetails>;
   };
   response: {
-    postResponseApply: OvertimeDetails;
+    postResponseApply: any;
     cancelResponse: OvertimeDetails;
   };
 
@@ -50,11 +51,6 @@ export type OvertimeState = {
   pendingOvertimeModalIsOpen: boolean;
   completedOvertimeModalIsOpen: boolean;
   tab: number;
-  overtimeDateFrom: string;
-  overtimeDateTo: string;
-
-  setOvertimeDateFrom: (overtimeDateFrom: string) => void;
-  setOvertimeDateTo: (overtimeDateTo: string) => void;
 
   getOvertimeList: (loading: boolean) => void;
   getOvertimeListSuccess: (loading: boolean, response) => void;
@@ -65,7 +61,7 @@ export type OvertimeState = {
   cancelOvertimeFail: (error: string) => void;
 
   postOvertime: () => void;
-  postOvertimeSuccess: (response: OvertimeDetails) => void;
+  postOvertimeSuccess: (response: OvertimeApplication) => void;
   postOvertimeFail: (error: string) => void;
 
   setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => void;
@@ -104,7 +100,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       ],
     },
     response: {
-      postResponseApply: {} as OvertimeDetails,
+      postResponseApply: {},
       cancelResponse: {} as OvertimeDetails,
     },
     loading: {
@@ -123,17 +119,6 @@ export const useOvertimeStore = create<OvertimeState>()(
     completedOvertimeModalIsOpen: false,
     cancelOvertimeModalIsOpen: false,
     tab: 1,
-
-    overtimeDateFrom: '',
-    overtimeDateTo: '',
-
-    setOvertimeDateFrom: (overtimeDateFrom: string) => {
-      set((state) => ({ ...state, overtimeDateFrom }));
-    },
-
-    setOvertimeDateTo: (overtimeDateTo: string) => {
-      set((state) => ({ ...state, overtimeDateTo }));
-    },
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
@@ -216,7 +201,7 @@ export const useOvertimeStore = create<OvertimeState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as OvertimeDetails,
+          postResponseApply: {},
         },
         loading: {
           ...state.loading,
@@ -228,7 +213,7 @@ export const useOvertimeStore = create<OvertimeState>()(
         },
       }));
     },
-    postOvertimeSuccess: (response: OvertimeDetails) => {
+    postOvertimeSuccess: (response) => {
       set((state) => ({
         ...state,
         response: {

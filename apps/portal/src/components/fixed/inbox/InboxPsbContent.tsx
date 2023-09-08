@@ -116,7 +116,7 @@ export const InboxPsbContent = () => {
           ></textarea>
         </div>
 
-        {psbMessage?.details.acknowledgedSchedule && psbMessage?.details.declinedSchedule ? null : (
+        {psbMessage?.details.acknowledgedSchedule || psbMessage?.details.declinedSchedule ? null : (
           <div className="flex flex-row items-center justify-end gap-4">
             <Button
               variant={'primary'}
@@ -128,7 +128,7 @@ export const InboxPsbContent = () => {
             <Button
               variant={'danger'}
               size={'md'}
-              // disabled={declineRemarks ? false : true}
+              disabled={declineRemarks ? false : true}
               onClick={(e) => openSubmitModalAction(psbMessage?.details.vppId, InboxMessageResponse.DECLINE)}
             >
               Decline
