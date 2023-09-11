@@ -17,20 +17,21 @@ export const Paths = [
   '/maintenance/leave-benefits/special', //10
   '/maintenance/events/holidays', // 11
   '/maintenance/events/work-suspensions', // 12
-  '/maintenance/overtime', // 13
-  '/maintenance/pass-slip', // 14
-  '/maintenance/schedules/office', // 15
-  '/maintenance/schedules/field', // 16
-  '/maintenance/schedules/pumping-station', // 17
-  '/monitoring/scheduling-sheet/office', // 18
-  '/monitoring/scheduling-sheet/field', // 19
-  '/monitoring/scheduling-sheet/station', // 20
-  '/settings/custom-groups', //21
-  '/monitoring/leave/leave-cancellations', //22
-  '/settings/modules', // 23
-  '/settings/users', // 24
-  '/settings/officer-of-the-day', // 25
-  '/settings/system-logs', // 26
+  '/monitoring/overtime/applications', // 13
+  '/monitoring/overtime/immediate-supervisors', // 14
+  '/maintenance/pass-slip', // 15
+  '/maintenance/schedules/office', // 16
+  '/maintenance/schedules/field', // 17
+  '/maintenance/schedules/pumping-station', // 18
+  '/monitoring/scheduling-sheet/office', // 19
+  '/monitoring/scheduling-sheet/field', // 20
+  '/monitoring/scheduling-sheet/station', // 21
+  '/settings/custom-groups', //22
+  '/monitoring/leave/leave-cancellations', //23
+  '/settings/modules', // 24
+  '/settings/users', // 25
+  '/settings/officer-of-the-day', // 26
+  '/settings/system-logs', // 27
 ];
 
 export const UpdatedPaths: Array<Path> = [
@@ -66,8 +67,12 @@ export const UpdatedPaths: Array<Path> = [
     path: 'maintenance/events/work-suspensions',
   },
   {
-    name: 'Overtime Maintenance',
-    path: 'maintenance/overtime',
+    name: 'Overtime Applications',
+    path: 'monitoring/overtime/applications',
+  },
+  {
+    name: 'Overtime Immediate Supervisors',
+    path: 'monitoring/overtime/immediate-supervisors',
   },
   {
     name: 'Pass Slips Maintenance',

@@ -5,19 +5,10 @@ import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 
 import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
-import {
-  EmployeeLeaveDetails,
-  MonitoringLeave,
-} from 'libs/utils/src/lib/types/leave-application.type';
+import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
-import {
-  DataTable,
-  useDataTable,
-  fuzzySort,
-  LoadingSpinner,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, fuzzySort, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
@@ -27,9 +18,7 @@ import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/Ren
 
 const Index = () => {
   // Current row data in the table that has been clicked
-  const [currentRowData, setCurrentRowData] = useState<MonitoringLeave>(
-    {} as MonitoringLeave
-  );
+  const [currentRowData, setCurrentRowData] = useState<MonitoringLeave>({} as MonitoringLeave);
 
   // fetch data for list of leave applications
   const {
@@ -102,14 +91,12 @@ const Index = () => {
       filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
-
     columnHelper.accessor('employee.employeeName', {
       header: 'Employee Name',
       filterFn: 'fuzzy',
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
     }),
-
     columnHelper.accessor('leaveName', {
       header: 'Leave Benefit',
       cell: (info) => UseRenderLeaveType(info.getValue()),
@@ -129,9 +116,7 @@ const Index = () => {
       header: 'Actions',
       enableColumnFilter: false,
       cell: (props) => (
-        <div className="flex justify-start place-items-start">
-          {renderRowActions(props.row.original)}
-        </div>
+        <div className="flex justify-start place-items-start">{renderRowActions(props.row.original)}</div>
       ),
     }),
   ];
@@ -219,18 +204,12 @@ const Index = () => {
 
       {/* Error Notifications */}
       {!isEmpty(ErrorLeaveApplications) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={'Network Error: Failed to retrieve Leave Applications'}
-        />
+        <ToastNotification toastType="error" notifMessage={'Network Error: Failed to retrieve Leave Applications'} />
       ) : null}
 
       {/* Success Notifications */}
       {!isEmpty(LeaveApplication) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Updated Leave Application successfully"
-        />
+        <ToastNotification toastType="success" notifMessage="Updated Leave Application successfully" />
       ) : null}
 
       {!isEmpty(ErrorLeaveApplicationDetails) ? (
@@ -253,12 +232,7 @@ const Index = () => {
             <LoadingSpinner size="lg" />
           ) : (
             <div className="flex flex-row flex-wrap">
-              <DataTable
-                model={table}
-                showGlobalFilter={true}
-                showColumnFilter={true}
-                paginate={true}
-              />
+              <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
             </div>
           )}
         </Card>

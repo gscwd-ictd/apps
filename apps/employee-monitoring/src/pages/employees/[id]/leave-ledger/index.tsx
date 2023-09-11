@@ -6,11 +6,7 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import { useEffect, useState } from 'react';
 import { DtrDateSelect } from 'apps/employee-monitoring/src/components/calendar/DtrDateSelect';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
@@ -22,15 +18,12 @@ import { EmployeeDtrTable } from 'apps/employee-monitoring/src/components/tables
 import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables/LeaveLedgerTable';
 import LeaveLedgerAdjModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerAdjModal';
 
-export default function Index({
-  employeeData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
   const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
 
   // adjustment modal function
-  const [adjustmentModalIsOpen, setAdjustmentModalIsOpen] =
-    useState<boolean>(false);
+  const [adjustmentModalIsOpen, setAdjustmentModalIsOpen] = useState<boolean>(false);
 
   const toggle = () => setPrintModalIsOpen(!printModalIsOpen);
 
@@ -45,12 +38,11 @@ export default function Index({
   };
 
   // scheduling store
-  const { postResponse, deleteResponse, emptyResponseAndErrors } =
-    useScheduleSheetStore((state) => ({
-      postResponse: state.employeeSchedule.postResponse,
-      deleteResponse: state.employeeSchedule.deleteResponse,
-      emptyResponseAndErrors: state.emptyResponseAndErrors,
-    }));
+  const { postResponse, deleteResponse, emptyResponseAndErrors } = useScheduleSheetStore((state) => ({
+    postResponse: state.employeeSchedule.postResponse,
+    deleteResponse: state.employeeSchedule.deleteResponse,
+    emptyResponseAndErrors: state.emptyResponseAndErrors,
+  }));
 
   // clear errors
   useEffect(() => {
@@ -76,10 +68,7 @@ export default function Index({
 
         {/* Successfully added */}
         {!isEmpty(postResponse) ? (
-          <ToastNotification
-            notifMessage="Successfully added a schedule!"
-            toastType="success"
-          />
+          <ToastNotification notifMessage="Successfully added a schedule!" toastType="success" />
         ) : null}
 
         <LeaveLedgerAdjModal
@@ -116,9 +105,7 @@ export default function Index({
                       {employeeData ? employeeData.fullName : null}
                     </div>
                     <div className="text-xl text-gray-500">
-                      {employeeData
-                        ? employeeData.assignment.positionTitle
-                        : null}
+                      {employeeData ? employeeData.assignment.positionTitle : null}
                     </div>
                     <div className="text-xl font-medium text-gray-600">
                       {employeeData ? employeeData.companyId : null}
@@ -149,23 +136,15 @@ export default function Index({
           </Card>
         </div>
 
-        <DailyTimeRecordPdfModal
-          printModalIsOpen={printModalIsOpen}
-          toggle={toggle}
-          employeeData={employeeData}
-        />
+        <DailyTimeRecordPdfModal printModalIsOpen={printModalIsOpen} toggle={toggle} employeeData={employeeData} />
       </div>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees/${context.query.id}`
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees/${context.query.id}`);
 
     return { props: { employeeData: data } };
   } catch (error) {

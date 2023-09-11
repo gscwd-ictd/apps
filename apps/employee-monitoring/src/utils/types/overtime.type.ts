@@ -24,3 +24,5 @@ export type OvertimeAccomplishment = {
   status: OvertimeAccomplishmentStatus;
   remarks: string;
 };
+
+// employeeId and orgId

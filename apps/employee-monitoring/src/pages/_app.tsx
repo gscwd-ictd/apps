@@ -30,19 +30,7 @@ const mockData = {
   photoUrl: 'http://172.20.110.45:3001/static/media/avatar-2.feb0f89d.jpg',
   email: 'allyn@gscwd.com',
   userAccess: [
-    { I: 'access', this: 'Duties_responsibilities' },
-    { I: 'access', this: 'Committees' },
-    { I: 'access', this: 'Qualification_standards' },
-    { I: 'access', this: 'Salary_grade' },
-    { I: 'access', this: 'Employee_registration' },
-    { I: 'access', this: 'Competency_models' },
-    { I: 'access', this: 'Results_of_hiring' },
-    { I: 'access', this: 'Prf_list' },
-    { I: 'access', this: 'Occupations' },
-    { I: 'access', this: 'Competency' },
-    { I: 'access', this: 'Organization_structure' },
     { I: 'access', this: 'Settings' },
-    { I: 'access', this: 'Personnel_selection' },
     { I: 'access', this: 'Dashboard' },
     { I: 'access', this: 'Employee_schedules' },
     { I: 'access', this: 'Daily_time_record' },
@@ -51,6 +39,8 @@ const mockData = {
     { I: 'access', this: 'Scheduling_sheet_station' },
     { I: 'access', this: 'Scheduling_sheet_field' },
     { I: 'access', this: 'Overtime' },
+    { I: 'access', this: 'Overtime_applications' },
+    { I: 'access', this: 'Overtime_immediate_supervisors' },
     { I: 'access', this: 'Leave_applications' },
     { I: 'access', this: 'Schedules' },
     { I: 'access', this: 'Schedule_office' },
@@ -75,11 +65,7 @@ const mockData = {
   userId: '123',
 };
 
-export default function CustomApp({
-  Component,
-  pageProps,
-  userDetails,
-}: AppProps & AppOwnProps) {
+export default function CustomApp({ Component, pageProps, userDetails }: AppProps & AppOwnProps) {
   const [userProfile, setUserProfile] = useState<UserProfile>(null);
 
   useEffect(() => {

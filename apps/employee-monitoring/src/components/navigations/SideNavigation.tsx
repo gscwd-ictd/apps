@@ -19,10 +19,7 @@ export const SideNavigation = () => {
   const { pathname } = useRouter();
 
   return (
-    <Sidebar
-      className="relative w-full transition-all"
-      background="bg-slate-900"
-    >
+    <Sidebar className="relative w-full transition-all" background="bg-slate-900">
       <Sidebar.Header>
         <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
           <section className="">
@@ -31,17 +28,9 @@ export const SideNavigation = () => {
             </div>
           </section>
 
-          <section
-            className={`${
-              isCollapsed ? 'hidden' : ''
-            } flex flex-col text-center items-center select-none`}
-          >
-            <span className="font-sans text-5xl font-medium text-cyan-400">
-              HRMS
-            </span>
-            <span className="text-xs font-medium text-cyan-400">
-              Employee Monitoring
-            </span>
+          <section className={`${isCollapsed ? 'hidden' : ''} flex flex-col text-center items-center select-none`}>
+            <span className="font-sans text-5xl font-medium text-cyan-400">HRMS</span>
+            <span className="text-xs font-medium text-cyan-400">Employee Monitoring</span>
           </section>
         </div>
       </Sidebar.Header>
@@ -49,17 +38,12 @@ export const SideNavigation = () => {
       <Sidebar.Content>
         <ul>
           <Can I="access" this={'Employees'}>
-            <Sidebar.Header
-              className={`py-2 ${isCollapsed ? 'hidden' : 'block'}`}
-            >
-              <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-                Menu
-              </span>
+            <Sidebar.Header className={`py-2 ${isCollapsed ? 'hidden' : 'block'}`}>
+              <span className="pl-4 text-xs font-medium text-gray-500 uppercase">Menu</span>
             </Sidebar.Header>
           </Can>
 
           {/* DASHBOARD */}
-
           <Sidebar.Item
             display="Dashboard"
             className="text-sm"
@@ -90,21 +74,11 @@ export const SideNavigation = () => {
           {/**Monitoring Header */}
           <Can
             I="access"
-            this={
-              'Scheduling_sheets' ||
-              'Leave_applications' ||
-              'Overtime' ||
-              'Pass_slips' ||
-              'Travel_orders'
-            }
+            this={'Scheduling_sheets' || 'Leave_applications' || 'Overtime' || 'Pass_slips' || 'Travel_orders'}
           >
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-                {isCollapsed ? (
-                  <hr className="border border-slate-600" />
-                ) : (
-                  'Monitoring'
-                )}
+                {isCollapsed ? <hr className="border border-slate-600" /> : 'Monitoring'}
               </span>
             </Sidebar.Header>
           </Can>
@@ -170,13 +144,43 @@ export const SideNavigation = () => {
             <Sidebar.Item
               display="Overtime"
               className="text-sm"
-              selected={pathname === Paths[5] ? true : false}
-              icon={
+              icon={<i className="text-xl bx bx-timer"></i>}
+              path=""
+              hasSubItem
+              selected={pathname === Paths[13] || pathname === Paths[14]}
+              subItems={
                 <>
-                  <i className="text-xl bx bx-timer"></i>
+                  {/* APPLICATIONS */}
+                  <Can I="access" this="Overtime_applications">
+                    <Sidebar.Item
+                      display="Applications"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[13] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-file-plus"></i>
+                        </>
+                      }
+                      path={Paths[13]}
+                    />
+                  </Can>
+
+                  {/* IMMEDIATE SUPERVISORS */}
+                  <Can I="access" this="Overtime_immediate_supervisors">
+                    <Sidebar.Item
+                      display="Immediate Supervisors"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[14] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-user-plus"></i>
+                        </>
+                      }
+                      path={Paths[14]}
+                    />
+                  </Can>
                 </>
               }
-              path={Paths[5]}
             />
           </Can>
 
@@ -195,7 +199,7 @@ export const SideNavigation = () => {
             />
           </Can>
 
-          {/** Monitoring Travel Order */}
+          {/** TRAVEL ORDER */}
           <Can I="access" this="Travel_orders">
             <Sidebar.Item
               display="Travel Orders"
@@ -214,11 +218,7 @@ export const SideNavigation = () => {
           <Can I="access" this={'Schedules' || 'Leave_benefits' || 'Events'}>
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-                {isCollapsed ? (
-                  <hr className="border border-slate-600" />
-                ) : (
-                  'Maintenance'
-                )}
+                {isCollapsed ? <hr className="border border-slate-600" /> : 'Maintenance'}
               </span>
             </Sidebar.Header>
           </Can>
@@ -231,11 +231,7 @@ export const SideNavigation = () => {
               icon={<i className="text-xl bx bx-calendar-edit"></i>}
               path=""
               hasSubItem
-              selected={
-                pathname === Paths[15] ||
-                pathname === Paths[16] ||
-                pathname === Paths[17]
-              }
+              selected={pathname === Paths[16] || pathname === Paths[17] || pathname === Paths[18]}
               subItems={
                 <>
                   {/* OFFICE */}
@@ -243,13 +239,13 @@ export const SideNavigation = () => {
                     <Sidebar.Item
                       display="Office"
                       className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                      selected={pathname === Paths[15] ? true : false}
+                      selected={pathname === Paths[16] ? true : false}
                       icon={
                         <>
                           <i className="text-xl bx bxs-buildings"></i>
                         </>
                       }
-                      path={Paths[15]}
+                      path={Paths[16]}
                     />
                   </Can>
 
@@ -258,13 +254,13 @@ export const SideNavigation = () => {
                     <Sidebar.Item
                       display="Field"
                       className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                      selected={pathname === Paths[16] ? true : false}
+                      selected={pathname === Paths[17] ? true : false}
                       icon={
                         <>
                           <i className="text-xl bx bxs-hard-hat"></i>
                         </>
                       }
-                      path={Paths[16]}
+                      path={Paths[17]}
                     />
                   </Can>
 
@@ -273,13 +269,13 @@ export const SideNavigation = () => {
                     <Sidebar.Item
                       display="Station"
                       className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                      selected={pathname === Paths[17] ? true : false}
+                      selected={pathname === Paths[18] ? true : false}
                       icon={
                         <>
                           <i className="text-xl bx bxs-factory"></i>
                         </>
                       }
-                      path={Paths[17]}
+                      path={Paths[18]}
                     />
                   </Can>
                 </>
@@ -288,18 +284,13 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Maintenance LEAVE BENEFITS */}
-
           <Can I="access" this={'Leave_benefits'}>
             <Sidebar.Item
               display="Leave Benefits"
               className="text-sm"
               hasSubItem
               icon={<i className="text-xl bx bx-run"></i>}
-              selected={
-                pathname === Paths[8] ||
-                pathname === Paths[9] ||
-                pathname === Paths[10]
-              }
+              selected={pathname === Paths[8] || pathname === Paths[9] || pathname === Paths[10]}
               subItems={
                 <>
                   {/* RECURRING */}
@@ -402,23 +393,10 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Settings Header */}
-          <Can
-            I="access"
-            this={
-              'Custom_groups' &&
-              'Modules' &&
-              'Users' &&
-              'Officer_of_the_day' &&
-              'System_logs'
-            }
-          >
+          <Can I="access" this={'Custom_groups' && 'Modules' && 'Users' && 'Officer_of_the_day' && 'System_logs'}>
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
-                {isCollapsed ? (
-                  <hr className="border border-slate-600" />
-                ) : (
-                  'Settings'
-                )}
+                {isCollapsed ? <hr className="border border-slate-600" /> : 'Settings'}
               </span>
             </Sidebar.Header>
           </Can>
@@ -428,13 +406,13 @@ export const SideNavigation = () => {
             <Sidebar.Item
               display="Custom Groups"
               className="text-sm"
-              selected={pathname === Paths[21] ? true : false}
+              selected={pathname === Paths[22] ? true : false}
               icon={
                 <>
                   <i className="text-xl bx bx-group"></i>
                 </>
               }
-              path={Paths[21]}
+              path={Paths[22]}
             />
           </Can>
 
@@ -443,13 +421,13 @@ export const SideNavigation = () => {
             <Sidebar.Item
               display="Modules"
               className="text-sm"
-              selected={pathname === Paths[23] ? true : false}
+              selected={pathname === Paths[24] ? true : false}
               icon={
                 <>
                   <i className="text-xl bx bx-package"></i>
                 </>
               }
-              path={Paths[23]}
+              path={Paths[24]}
             />
           </Can>
 
@@ -458,13 +436,13 @@ export const SideNavigation = () => {
             <Sidebar.Item
               display="Users"
               className="text-sm"
-              selected={pathname === Paths[24] ? true : false}
+              selected={pathname === Paths[25] ? true : false}
               icon={
                 <>
                   <i className="text-xl bx bxs-user-account"></i>
                 </>
               }
-              path={Paths[24]}
+              path={Paths[25]}
             />
           </Can>
 
@@ -473,13 +451,13 @@ export const SideNavigation = () => {
             <Sidebar.Item
               display="Officer of the Day"
               className="text-sm"
-              selected={pathname === Paths[25] ? true : false}
+              selected={pathname === Paths[26] ? true : false}
               icon={
                 <>
                   <i className="text-xl bx bxs-user-badge"></i>
                 </>
               }
-              path={Paths[25]}
+              path={Paths[26]}
             />
           </Can>
 
@@ -488,13 +466,13 @@ export const SideNavigation = () => {
             <Sidebar.Item
               display="System Logs"
               className="text-sm"
-              selected={pathname === Paths[26] ? true : false}
+              selected={pathname === Paths[27] ? true : false}
               icon={
                 <>
                   <i className="text-xl bx bx-detail"></i>
                 </>
               }
-              path={Paths[26]}
+              path={Paths[27]}
             />
           </Can>
         </ul>
