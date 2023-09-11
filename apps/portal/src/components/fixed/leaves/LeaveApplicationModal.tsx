@@ -584,7 +584,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                 <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1">
                   <div className="flex flex-row justify-between items-center w-full">
-                    <label className="pt-2 text-slate-500 text-md font-medium">Leave Type:</label>
+                    <label className="pt-2 text-slate-500 text-md font-medium">
+                      Leave Type:<span className="text-red-600">*</span>
+                    </label>
+
                     {swrIsLoading ? <LoadingSpinner size="xs" /> : null}
                   </div>
 
@@ -642,7 +645,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_EMERGENCY_CALAMITY
                           ? `The special emergency leave can be applied for a maximum of five (5) straight working days or staggered basis within thirty (30) days from the actual occurence of the natural calamity/disaster. Said privilege shall be enjoyed once a year, not in every instance of calamity or disaster. The head of office shall take full responsibility for teh grant of special emergency leave and verification of teh employee's eligibility to be granted thereof. Said verification shall include: validation of place of residence based on latest available records of the affected employee; verification that the place of residence is covered in the declaration of calamity area by the proper government agency, and such other proofs as may be necessary.`
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION
-                          ? `Application for adoption leave shall be filed with an authenticated copy of the Pre-Adoptive Placement Authority issued by the Department of Scoial Welfare and Development (DSWD).`
+                          ? `Application for adoption leave shall be filed with an authenticated copy of the Pre-Adoptive Placement Authority issued by the Department of Social Welfare and Development (DSWD).`
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS
                           ? `For Monetization of Leave Credits, application for monetization of fifthy percent (50%) or more of the accumulated leave credits shall be accompanied by letter request to the head of the agency stating the valid and justifiable reasons. For Terminal Leave, proof of employee's resignation or retirement or separation from the service.`
                           : ``}
@@ -660,15 +663,23 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="pt-2 text-slate-500 text-md font-medium">
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
-                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                            ? 'Location:'
-                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
-                            ? 'Hospitalization:'
-                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY
-                            ? 'Study:'
-                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS
-                            ? 'Other Purpose: '
-                            : null}
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
+                            <>
+                              Location:<span className="text-red-600">*</span>
+                            </>
+                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
+                            <>
+                              Hospitalization:<span className="text-red-600">*</span>
+                            </>
+                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ? (
+                            <>
+                              Study:<span className="text-red-600">*</span>
+                            </>
+                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS ? (
+                            <>
+                              Other Purpose:<span className="text-red-600">*</span>
+                            </>
+                          ) : null}
                         </label>
                       </div>
 
@@ -830,7 +841,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                 {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
-                    <label className="text-slate-500 text-md font-medium">Select Leave Dates:</label>
+                    <label className="text-slate-500 text-md font-medium">
+                      Select Leave Dates:<span className="text-red-600">*</span>
+                    </label>
 
                     <div className="w-full p-4 bg-gray-50 rounded">
                       {watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||

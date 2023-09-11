@@ -1,13 +1,23 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import { PassSlip, PassSlipId, EmployeePassSlipList } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
 export type OvertimeDetails = {
   dateOfFiling: string;
-  dateOfOvertime: string;
+  overtimeDateFrom: string;
+  overtimeDateTo: string;
   estimatedHours: string;
   purpose: string;
+  employees: Array<string>;
+};
+
+export type OvertimeApplication = {
+  overtimeApplication: {
+    overtimeSupervisorId: string;
+    plannedDate: string;
+    estimatedHours: number;
+    purpose: string;
+  };
   employees: Array<string>;
 };
 
@@ -22,7 +32,7 @@ export type OvertimeState = {
     completed: Array<OvertimeDetails>;
   };
   response: {
-    postResponseApply: OvertimeDetails;
+    postResponseApply: any;
     cancelResponse: OvertimeDetails;
   };
 
@@ -51,7 +61,7 @@ export type OvertimeState = {
   cancelOvertimeFail: (error: string) => void;
 
   postOvertime: () => void;
-  postOvertimeSuccess: (response: OvertimeDetails) => void;
+  postOvertimeSuccess: (response: OvertimeApplication) => void;
   postOvertimeFail: (error: string) => void;
 
   setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => void;
@@ -71,7 +81,8 @@ export const useOvertimeStore = create<OvertimeState>()(
       forApproval: [
         {
           dateOfFiling: '09-20-2023 14:00:00',
-          dateOfOvertime: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
+          overtimeDateFrom: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
+          overtimeDateTo: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
           estimatedHours: '2',
           purpose: 'Mag overtime ako habang buhay',
           employees: ['Mikhail Sebua, Ricardo Narvaiza'],
@@ -80,7 +91,8 @@ export const useOvertimeStore = create<OvertimeState>()(
       completed: [
         {
           dateOfFiling: '09-20-2023 14:00:00',
-          dateOfOvertime: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
+          overtimeDateFrom: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
+          overtimeDateTo: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
           estimatedHours: '2',
           purpose: 'Gusto kong matuto mag drive',
           employees: ['Mikhail Sebua, Ricardo Narvaiza'],
@@ -88,7 +100,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       ],
     },
     response: {
-      postResponseApply: {} as OvertimeDetails,
+      postResponseApply: {},
       cancelResponse: {} as OvertimeDetails,
     },
     loading: {
@@ -105,9 +117,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     applyOvertimeModalIsOpen: false,
     pendingOvertimeModalIsOpen: false,
     completedOvertimeModalIsOpen: false,
-
     cancelOvertimeModalIsOpen: false,
-
     tab: 1,
 
     setTab: (tab: number) => {
@@ -191,7 +201,7 @@ export const useOvertimeStore = create<OvertimeState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as OvertimeDetails,
+          postResponseApply: {},
         },
         loading: {
           ...state.loading,
@@ -203,7 +213,7 @@ export const useOvertimeStore = create<OvertimeState>()(
         },
       }));
     },
-    postOvertimeSuccess: (response: OvertimeDetails) => {
+    postOvertimeSuccess: (response) => {
       set((state) => ({
         ...state,
         response: {

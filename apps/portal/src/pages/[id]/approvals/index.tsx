@@ -135,6 +135,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setDisapprovedLeaveModalIsOpen(false);
   };
 
+  // cancel action for Cancelled Pass Slip Application Modal
+  const closeCancelledLeaveModal = async () => {
+    setCancelledLeaveModalIsOpen(false);
+  };
+
   // cancel action for Pending Pass Slip Application Modal
   const closePendingPassSlipModal = async () => {
     setPendingPassSlipModalIsOpen(false);
@@ -152,7 +157,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
   // cancel action for Cancelled Pass Slip Application Modal
   const closeCancelledPassSlipModal = async () => {
-    setCancelledLeaveModalIsOpen(false);
+    setCancelledPassSlipModalIsOpen(false);
   };
 
   const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/supervisor/${employeeDetails.employmentDetails.userId}`;
@@ -302,7 +307,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
           <ApprovalsCompletedLeaveModal
             modalState={cancelledLeaveModalIsOpen}
             setModalState={setCancelledLeaveModalIsOpen}
-            closeModalAction={closeCancelledPassSlipModal}
+            closeModalAction={closeCancelledLeaveModal}
           />
 
           {/* Pending Pass Slip For Approval Modal */}

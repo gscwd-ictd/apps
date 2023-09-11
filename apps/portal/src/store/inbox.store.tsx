@@ -1,13 +1,18 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { PsbMessageContent } from '../types/inbox.type';
+import { InboxMessageResponse, InboxMessageType } from '../../../../libs/utils/src/lib/enums/inbox.enum';
 
 export type InboxState = {
   message: {
     messages: Array<PsbMessageContent>;
+    psb: PsbMessageContent;
+    overtime: any;
+    training: any;
   };
   response: {
-    postResponseApply: unknown;
+    patchResponseApply: any;
   };
   loading: {
     loadingMessages: boolean;
@@ -18,16 +23,45 @@ export type InboxState = {
     errorResponse: string;
   };
 
-  submitModalIsOpen: boolean;
-  setSubmitModalIsOpen: (submitModalIsOpen: boolean) => void;
+  setMessagePsb: (psb: PsbMessageContent) => void;
+
+  confirmModalIsOpen: boolean;
+  setConfirmModalIsOpen: (submitModalIsOpen: boolean) => void;
+
+  confirmationModalTitle: string;
+  setConfirmationModalTitle: (confirmationModalTitle: string) => void;
+
+  selectedVppId: string;
+  setSelectedVppId: (selectedVppId: string) => void;
+
+  selectedMessageType: InboxMessageType;
+  setSelectedMessageType: (selectedMessageType: InboxMessageType) => void;
+
+  declineRemarks: string;
+  setDeclineRemarks: (declineRemarks: string) => void;
+
+  confirmationResponse: InboxMessageResponse;
+  setConfirmationResponse: (confirmationResponse: InboxMessageResponse) => void;
+
+  confirmPsbModalIsOpen: boolean;
+  setConfirmPsbModalIsOpen: (confirmPsbModalIsOpen: boolean) => void;
+
+  confirmOvertimeModalIsOpen: boolean;
+  setConfirmOvertimeModalIsOpen: (confirmOvertimeModalIsOpen: boolean) => void;
+
+  confirmTrainingModalIsOpen: boolean;
+  setConfirmTrainingModalIsOpen: (confirmTrainingModalIsOpen: boolean) => void;
+
+  isMessageOpen: boolean;
+  setIsMessageOpen: (isMessageOpen: boolean) => void;
 
   getMessageList: (loading: boolean) => void;
   getMessageListSuccess: (loading: boolean, response) => void;
   getMessageListFail: (loading: boolean, error: string) => void;
 
-  postMessage: () => void;
-  postMessageSuccess: (response: any) => void;
-  postMessageFail: (error: string) => void;
+  patchInboxReponse: () => void;
+  patchInboxReponseSuccess: (response: any) => void;
+  patchInboxReponseFail: (error: string) => void;
 
   emptyResponseAndError: () => void;
 };
@@ -36,9 +70,12 @@ export const useInboxStore = create<InboxState>()(
   devtools((set) => ({
     message: {
       messages: [],
+      psb: {} as PsbMessageContent,
+      overtime: {} as any,
+      training: {} as any,
     },
     response: {
-      postResponseApply: {},
+      patchResponseApply: {},
     },
     loading: {
       loadingMessages: false,
@@ -49,9 +86,65 @@ export const useInboxStore = create<InboxState>()(
       errorResponse: '',
     },
 
-    submitModalIsOpen: false,
-    setSubmitModalIsOpen: (submitModalIsOpen: boolean) => {
-      set((state) => ({ ...state, submitModalIsOpen }));
+    confirmModalIsOpen: false,
+    setConfirmModalIsOpen: (confirmModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmModalIsOpen }));
+    },
+
+    confirmationModalTitle: '',
+    setConfirmationModalTitle: (confirmationModalTitle: string) => {
+      set((state) => ({ ...state, confirmationModalTitle }));
+    },
+
+    selectedMessageType: null,
+    setSelectedMessageType: (selectedMessageType: InboxMessageType) => {
+      set((state) => ({ ...state, selectedMessageType }));
+    },
+
+    selectedVppId: '',
+    setSelectedVppId: (selectedVppId: string) => {
+      set((state) => ({ ...state, selectedVppId }));
+    },
+
+    declineRemarks: '',
+    setDeclineRemarks: (declineRemarks: string) => {
+      set((state) => ({ ...state, declineRemarks }));
+    },
+
+    confirmationResponse: null,
+    setConfirmationResponse: (confirmationResponse: InboxMessageResponse) => {
+      set((state) => ({ ...state, confirmationResponse }));
+    },
+
+    confirmPsbModalIsOpen: false,
+    setConfirmPsbModalIsOpen: (confirmPsbModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmPsbModalIsOpen }));
+    },
+
+    confirmOvertimeModalIsOpen: false,
+    setConfirmOvertimeModalIsOpen: (confirmOvertimeModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmOvertimeModalIsOpen }));
+    },
+
+    confirmTrainingModalIsOpen: false,
+    setConfirmTrainingModalIsOpen: (confirmTrainingModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmTrainingModalIsOpen }));
+    },
+
+    isMessageOpen: false,
+    setIsMessageOpen: (isMessageOpen: boolean) => {
+      set((state) => ({ ...state, isMessageOpen }));
+    },
+
+    //SET PSB MESSAGE CONTENT
+    setMessagePsb: (psb: PsbMessageContent) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          psb: psb,
+        },
+      }));
     },
 
     //GET INBOX MESSAGES
@@ -59,6 +152,7 @@ export const useInboxStore = create<InboxState>()(
       set((state) => ({
         ...state,
         message: {
+          ...state.message,
           messages: [],
         },
         loading: {
@@ -71,15 +165,14 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    getMessageListSuccess: (
-      loading: boolean,
-      response: Array<PsbMessageContent>
-    ) => {
+    getMessageListSuccess: (loading: boolean, response: Array<PsbMessageContent>) => {
       set((state) => ({
         ...state,
         message: {
+          ...state.message,
           messages: response,
         },
+
         error: {
           ...state.error,
           errorMessages: '',
@@ -101,12 +194,12 @@ export const useInboxStore = create<InboxState>()(
     },
 
     //POST PASS SLIP ACTIONS
-    postMessage: () => {
+    patchInboxReponse: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {},
+          patchResponseApply: {},
         },
         loading: {
           ...state.loading,
@@ -118,12 +211,12 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    postMessageSuccess: (response) => {
+    patchInboxReponseSuccess: (response) => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: response,
+          patchResponseApply: response,
         },
         loading: {
           ...state.loading,
@@ -131,7 +224,7 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    postMessageFail: (error: string) => {
+    patchInboxReponseFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -149,7 +242,7 @@ export const useInboxStore = create<InboxState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {},
+          patchResponseApply: {},
         },
         error: {
           ...state.error,
