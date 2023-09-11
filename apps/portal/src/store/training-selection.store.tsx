@@ -2,7 +2,13 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { Training } from '../../../../libs/utils/src/lib/types/training.type';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
+type NominatedEmployees = {
+  name: string;
+  id: string;
+  acknowledgment: string;
+};
 export type TrainingSelectionState = {
   trainingList: Array<Training>;
   individualTrainingDetails: Training;
@@ -20,8 +26,17 @@ export type TrainingSelectionState = {
     errorResponse: string;
   };
 
+  nominatedEmployees: Array<SelectOption>;
+  setNominatedEmployees: (nominatedEmployees: Array<SelectOption>) => void;
+
+  auxiliaryEmployees: Array<SelectOption>;
+  setAuxiliaryEmployees: (auxiliaryEmployees: Array<SelectOption>) => void;
+
   trainingModalIsOpen: boolean;
   setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => void;
+
+  trainingNominationModalIsOpen: boolean;
+  setTrainingNominationModalIsOpen: (trainingNominationModalIsOpen: boolean) => void;
 
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
@@ -54,6 +69,17 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
     },
 
     trainingModalIsOpen: false,
+    trainingNominationModalIsOpen: false,
+
+    nominatedEmployees: [],
+    setNominatedEmployees: (nominatedEmployees: Array<SelectOption>) => {
+      set((state) => ({ ...state, nominatedEmployees }));
+    },
+
+    auxiliaryEmployees: [],
+    setAuxiliaryEmployees: (auxiliaryEmployees: Array<SelectOption>) => {
+      set((state) => ({ ...state, auxiliaryEmployees }));
+    },
 
     setIndividualTrainingDetails: (individualTrainingDetails: Training) => {
       set((state) => ({ ...state, individualTrainingDetails }));
@@ -61,6 +87,10 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
 
     setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => {
       set((state) => ({ ...state, trainingModalIsOpen }));
+    },
+
+    setTrainingNominationModalIsOpen: (trainingNominationModalIsOpen: boolean) => {
+      set((state) => ({ ...state, trainingNominationModalIsOpen }));
     },
 
     getTrainingSelectionList: (loading: boolean) => {

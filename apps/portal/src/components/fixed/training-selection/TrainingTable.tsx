@@ -51,7 +51,7 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
         <>
           <div className="flex overflow-x-hidden w-full md:w-full flex-col">
             <div className="overflow-x-hidden w-[50rem] md:w-full">
-              <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
+              <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0 z-0">
                 <thead className="border-0">
                   <tr>
                     <th className="px-2 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">

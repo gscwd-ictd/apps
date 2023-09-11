@@ -21,6 +21,7 @@ import { useTrainingSelectionStore } from 'apps/portal/src/store/training-select
 import { TrainingTable } from 'apps/portal/src/components/fixed/training-selection/TrainingTable';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
+import TrainingNominationModal from 'apps/portal/src/components/fixed/training-selection/TrainingNominationModal';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -41,6 +42,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionList,
     getTrainingSelectionListSuccess,
     getTrainingSelectionListFail,
+    trainingNominationModalIsOpen,
+    setTrainingNominationModalIsOpen,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
     loadingTrainingList: state.loading.loadingTrainingList,
@@ -50,6 +53,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionList: state.getTrainingSelectionList,
     getTrainingSelectionListSuccess: state.getTrainingSelectionListSuccess,
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
+    trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
+    setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
   }));
 
   const trainingUrl = `${process.env.NEXT_PUBLIC_LMS}api/lms/v1/training-details?lsp-type=individual`;
@@ -83,9 +88,12 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     }
   }, [swrTrainingList, swrTrainingListError]);
 
-  // cancel action for Leave Application Modal
   const closeTrainingModal = async () => {
     setTrainingModalIsOpen(false);
+  };
+
+  const closeTrainingNominationModal = async () => {
+    setTrainingNominationModalIsOpen(false);
   };
 
   return (
