@@ -79,8 +79,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
         employeeIdList.push(selectedEmployees[i]?.value);
       }
     }
-
-    console.log(employeeIdList);
+    setValue('employees', employeeIdList);
   }, [selectedEmployees]);
 
   useEffect(() => {
