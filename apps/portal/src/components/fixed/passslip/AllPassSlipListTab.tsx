@@ -9,10 +9,7 @@ type AllPassSlipListTabProps = {
   tab: number;
 };
 
-export const AllPassSlipListTab = ({
-  passslips,
-  tab,
-}: AllPassSlipListTabProps) => {
+export const AllPassSlipListTab = ({ passslips, tab }: AllPassSlipListTabProps) => {
   //zustand initialization to access pass slip store
   const {
     pendingPassSlipModalIsOpen,
@@ -54,20 +51,13 @@ export const AllPassSlipListTab = ({
                 onClick={() => onSelect(item)}
                 className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
               >
-                <div className="w-full px-1 py-2 ">
-                  <h1 className="text-lg font-medium text-gray-600">
-                    {item.natureOfBusiness}
-                  </h1>
+                <div className="w-full px-1 py-2">
+                  <h1 className="text-lg font-medium text-gray-600">{item.natureOfBusiness}</h1>
                   <p className="text-sm text-gray-500">
-                    Date Applied:{' '}
-                    {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
+                    Date Applied: {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    Estimated Hours: {item.estimateHours}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Purpose: {item.purposeDestination}
-                  </p>
+                  <p className="text-sm text-gray-500">Estimated Hours: {item.estimateHours}</p>
+                  <p className="text-sm text-gray-500 break-words w-96">Purpose: {item.purposeDestination}</p>
                   <p className="text-sm text-indigo-500">
                     Status:{' '}
                     {item.status === PassSlipStatus.ONGOING

@@ -46,13 +46,11 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     setCancelLeaveModalIsOpen: state.setCancelLeaveModalIsOpen,
   }));
 
-  const { vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance, specialPrivilegeLeaveBalance } =
-    useLeaveLedgerStore((state) => ({
-      vacationLeaveBalance: state.vacationLeaveBalance,
-      forcedLeaveBalance: state.forcedLeaveBalance,
-      sickLeaveBalance: state.sickLeaveBalance,
-      specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
-    }));
+  const { leaveLedger, selectedLeaveLedger, setSelectedLeaveLedger } = useLeaveLedgerStore((state) => ({
+    leaveLedger: state.leaveLedger,
+    selectedLeaveLedger: state.selectedLeaveLedger,
+    setSelectedLeaveLedger: state.setSelectedLeaveLedger,
+  }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -64,6 +62,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
 
       if (!isEmpty(data)) {
         console.log(data);
+        setSelectedLeaveLedger(leaveLedger, data.leaveApplicationBasicInfo.id);
         getLeaveIndividualDetailSuccess(false, data);
       }
     } catch (error) {
@@ -88,9 +87,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   const getDateNow = dayjs().toDate();
   const dateNow = dayjs(getDateNow).format('YYYY-MM-DD');
 
-  // console.log(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0]);
-  // console.log(dayjs(getDateNow).format('YYYY-MM-DD'));
-
   return (
     <>
       <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>
@@ -108,7 +104,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {/* Pass Slip Application Modal */}
+          {/* Cancel Leave Application Modal */}
           <CancelLeaveModal
             modalState={cancelLeaveModalIsOpen}
             setModalState={setCancelLeaveModalIsOpen}
@@ -146,19 +142,19 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Approval'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? 'Disapproved by HRDM '
+                          ? 'Disapproved by HRDM'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Approval '
+                          ? 'For Supervisor Approval'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? 'Disapproved by Supervisor '
+                          ? 'Disapproved by Supervisor'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? 'Disapproved by HRMO '
+                          ? 'Disapproved by HRMO'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                          ? 'Approved '
+                          ? 'Approved'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                          ? 'Cancelled '
+                          ? 'Cancelled'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status.charAt(0).toUpperCase() +
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.status.slice(1)
                       }
@@ -365,7 +361,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
                           ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                          ? 'N/A'
+                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate
                           : null}
                       </label>
                     </div>
@@ -373,7 +369,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
 
                   {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
-                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ? (
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED ? (
                     <>
                       <div className="flex flex-row items-center justify-between w-full">
                         <label className="text-md font-medium text-slate-500 whitespace-nowrap">
@@ -385,6 +382,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                               LeaveStatus.DISAPPROVED_BY_HRMO
                             ? 'HRMO Remarks:'
+                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
+                            ? 'Cancel Reason:'
                             : 'Remarks:'}
                         </label>
                       </div>
@@ -398,46 +397,85 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                               LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                             ? leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
+                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
+                            ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason
                             : 'N/A'
                         }
                       ></textarea>
                     </>
                   ) : null}
 
-                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
-                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
-                    <div className="w-full pb-4">
-                      <span className="text-slate-500 text-md font-medium">
-                        Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
-                      </span>
-                      <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                        <tbody>
-                          <tr className="border border-slate-400">
-                            <td className="border border-slate-400 text-center">Total Earned</td>
-                            <td className="border border-slate-400 text-center">Less this application</td>
-                            <td className="border border-slate-400 text-center bg-green-100">Balance</td>
-                          </tr>
-                          <tr className="border border-slate-400">
-                            <td className="border border-slate-400 text-center">
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
-                                ? vacationLeaveBalance
-                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                ? forcedLeaveBalance
-                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
-                                ? sickLeaveBalance
-                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                                  LeaveName.SPECIAL_PRIVILEGE
-                                ? specialPrivilegeLeaveBalance
-                                : 'N/A'}
-                            </td>
-                            <td className="border border-slate-400 text-center">0</td>
-                            <td className="border border-slate-400 text-center bg-green-100">0</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_SUPERVISOR &&
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.CANCELLED &&
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_HRDM &&
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_HRMO ? (
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+                      completedLeaveModalIsOpen) ? (
+                      <div className="w-full pb-4">
+                        <span className="text-slate-500 text-md font-medium">
+                          Your {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Credits at the time of this
+                          application:
+                        </span>
+                        <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                          <tbody>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less this application</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                  ? (
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                  ? (
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                    LeaveName.SPECIAL_PRIVILEGE
+                                  ? (
+                                      Number(
+                                        parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`).toFixed(3)
+                                      ) +
+                                      Number(
+                                        parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`).toFixed(3)
+                                      ) *
+                                        -1
+                                    ).toFixed(3)
+                                  : 'N/A'}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                  ? selectedLeaveLedger[0]?.vacationLeaveBalance
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  ? selectedLeaveLedger[0]?.forcedLeaveBalance
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                  ? selectedLeaveLedger[0]?.sickLeaveBalance
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                    LeaveName.SPECIAL_PRIVILEGE
+                                  ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
+                                  : 'N/A'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : null
                   ) : null}
                 </div>
               </div>
@@ -446,24 +484,28 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Button
-              disabled={
-                dateNow > leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0]
-                  ? true
-                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                  ? true
-                  : false
-              }
-              variant={'warning'}
-              size={'md'}
-              loading={false}
-              onClick={(e) => setCancelLeaveModalIsOpen(true)}
-              type="submit"
-            >
-              Cancel Leave
-            </Button>
+            {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ? (
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+                Close
+              </Button>
+            ) : dateNow >= leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0] ? (
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+                Close
+              </Button>
+            ) : (
+              <Button
+                variant={'warning'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => setCancelLeaveModalIsOpen(true)}
+                type="submit"
+              >
+                Cancel Leave
+              </Button>
+            )}
           </div>
         </Modal.Footer>
       </Modal>

@@ -9,6 +9,7 @@ import {
   HiBadgeCheck,
   HiClipboardCheck,
   HiClipboardList,
+  HiClock,
   HiCollection,
   HiOutlineBell,
   HiOutlineCheck,
@@ -41,19 +42,12 @@ export const ProfileMenuDropdown = ({
 }: MenuDropdownProps): JSX.Element => {
   // intialize royter
   const router = useRouter();
-  const employeeInitials = UseNameInitials(
-    employeeDetails.profile.firstName,
-    employeeDetails.profile.lastName
-  );
+  const employeeInitials = UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName);
   // method call to handle logout action
   const handleLogout = async () => {
     // perform http request to invalidate session from the server
     // const signout = await postData(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null);
-    await axios.post(
-      `${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`,
-      null,
-      { withCredentials: true }
-    );
+    await axios.post(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null, { withCredentials: true });
     localStorage.clear();
     // deleteCookie
 
@@ -68,17 +62,12 @@ export const ProfileMenuDropdown = ({
     <>
       {employeeDetails ? (
         <>
-          <Menu
-            as="div"
-            className={`z-50 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}
-          >
+          <Menu as="div" className={`z-50 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
             <div>
               <Menu.Button
                 className={`${className} h-10 w-10 rounded bg-indigo-500 outline-none transition-colors ease-in-out hover:bg-indigo-600 `}
               >
-                <p className={`text-sm font-bold ${labelColor}`}>
-                  {employeeInitials}
-                </p>
+                <p className={`text-sm font-bold ${labelColor}`}>{employeeInitials}</p>
               </Menu.Button>
             </div>
             <Transition
@@ -98,20 +87,13 @@ export const ProfileMenuDropdown = ({
               >
                 <Menu.Item>
                   {({ active }) => (
-                    <div
-                      className={`${
-                        active ? 'bg-slate-50' : null
-                      } cursor-pointer rounded-md p-5`}
-                    >
+                    <div className={`${active ? 'bg-slate-50' : null} cursor-pointer rounded-md p-5`}>
                       <div>
                         <h5 className="truncate font-semibold">
                           {`${employeeDetails.profile.firstName} ${employeeDetails.profile.middleName} ${employeeDetails.profile.lastName}`}
                         </h5>
                         <p className="truncate text-xs text-gray-500">
-                          {
-                            employeeDetails.employmentDetails.assignment
-                              .positionTitle
-                          }
+                          {employeeDetails.employmentDetails.assignment.positionTitle}
                         </p>
                       </div>
                     </div>
@@ -122,9 +104,7 @@ export const ProfileMenuDropdown = ({
                   {windowWidth < 1024 ? null : (
                     <>
                       <Menu.Item>
-                        <button
-                          className={`group flex w-full items-center gap-3 bg-emerald-50 px-3 py-3 text-sm`}
-                        >
+                        <button className={`group flex w-full items-center gap-3 bg-emerald-50 px-3 py-3 text-sm`}>
                           <HiOutlineCheck className="h-5 w-5 text-emerald-600" />
                           <span className="text-sm font-medium tracking-tight text-emerald-600">
                             Terms & Conditions
@@ -164,34 +144,22 @@ export const ProfileMenuDropdown = ({
                           >
                             <HiOutlineHome className="h-5 w-5 text-slate-600" />
                             <div className="flex w-full items-end justify-between">
-                              <span className="text-sm tracking-tight text-slate-500 text-left">
-                                Dashboard
-                              </span>
+                              <span className="text-sm tracking-tight text-slate-500 text-left">Dashboard</span>
                             </div>
                           </button>
                         )}
                       </Menu.Item>
 
                       {/* GENERAL MANAGER */}
-                      {isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.OIC_GENERAL_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.GENERAL_MANAGER
-                      ) ? (
+                      {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
                         <Menu.Item>
                           {({ active }) => (
                             <button
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() =>
-                                router.push(
-                                  `/${router.query.id}/appointing-authority-selection`
-                                )
-                              }
+                              onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
                             >
                               <HiClipboardCheck className="h-5 w-5 text-slate-600" />
                               <div className="flex w-full items-end justify-between">
@@ -205,38 +173,14 @@ export const ProfileMenuDropdown = ({
                       ) : null}
 
                       {/* MANAGERIAL ACTIONS */}
-                      {isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.OIC_GENERAL_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.GENERAL_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.ASSISTANT_GENERAL_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.OIC_ASSISTANT_GENERAL_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.DEPARTMENT_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.OIC_DEPARTMENT_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.DIVISION_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.OIC_DIVISION_MANAGER
-                      ) ? (
+                      {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                         <>
                           <Menu.Item>
                             {({ active }) => (
@@ -244,15 +188,11 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() =>
-                                  router.push(`/${router.query.id}/approvals`)
-                                }
+                                onClick={() => router.push(`/${router.query.id}/approvals`)}
                               >
                                 <HiBadgeCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
-                                  <span className="text-sm tracking-tight text-slate-500 text-left">
-                                    Approvals
-                                  </span>
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
                               </button>
                             )}
@@ -264,9 +204,7 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() =>
-                                  router.push(`/${router.query.id}`)
-                                }
+                                onClick={() => router.push(`/${router.query.id}`)}
                               >
                                 <HiAcademicCap className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -284,17 +222,12 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() =>
-                                  router.push(
-                                    `/${router.query.id}/duties-and-responsibilities`
-                                  )
-                                }
+                                onClick={() => router.push(`/${router.query.id}/duties-and-responsibilities`)}
                               >
                                 <HiPuzzle className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
-                                    Position Duties, Responsibilities &
-                                    Competencies
+                                    Position Duties, Responsibilities & Competencies
                                   </span>
                                 </div>
                               </button>
@@ -307,9 +240,7 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() =>
-                                  router.push(`/${router.query.id}/prf`)
-                                }
+                                onClick={() => router.push(`/${router.query.id}/prf`)}
                               >
                                 <HiCollection className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -327,11 +258,7 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() =>
-                                  router.push(
-                                    `/${router.query.id}/applicant-endorsement`
-                                  )
-                                }
+                                onClick={() => router.push(`/${router.query.id}/applicant-endorsement`)}
                               >
                                 <HiClipboardList className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -346,37 +273,20 @@ export const ProfileMenuDropdown = ({
                       ) : null}
 
                       {/* HR FINAL LEAVE APPROVAL */}
-                      {isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.DEPARTMENT_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.OIC_DEPARTMENT_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.DIVISION_MANAGER
-                      ) ||
-                      isEqual(
-                        employeeDetails.employmentDetails.userRole,
-                        UserRole.OIC_DIVISION_MANAGER
-                      ) ? (
+                      {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                         employeeDetails.employmentDetails.assignment.name ===
                           'Recruitment and Personnel Welfare Division' ||
-                        employeeDetails.employmentDetails.assignment.name ===
-                          'Training and Development Division' ? (
+                        employeeDetails.employmentDetails.assignment.name === 'Training and Development Division' ? (
                           <Menu.Item>
                             {({ active }) => (
                               <button
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() =>
-                                  router.push(
-                                    `/${router.query.id}/final-leave-approvals`
-                                  )
-                                }
+                                onClick={() => router.push(`/${router.query.id}/final-leave-approvals`)}
                               >
                                 <HiBadgeCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -390,27 +300,44 @@ export const ProfileMenuDropdown = ({
                         ) : null
                       ) : null}
 
-                      {Boolean(employeeDetails.employmentDetails.isHRMPSB) ===
-                      true ? (
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className={`${
-                                active ? 'bg-slate-100' : 'text-gray-900'
-                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                            >
-                              <HiUserGroup className="h-5 w-5 text-slate-600" />
-                              <div className="flex w-full items-end justify-between">
-                                <span className="text-sm tracking-tight text-slate-500 text-left">
-                                  Personnel Selection Board
-                                </span>
-                              </div>
-                            </a>
-                          )}
-                        </Menu.Item>
+                      {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
+                        <>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                              >
+                                <HiUserGroup className="h-5 w-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">
+                                    Personnel Selection Board
+                                  </span>
+                                </div>
+                              </a>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                                onClick={() => router.push(`/${router.query.id}/overtime`)}
+                              >
+                                <HiClock className="w-5 h-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">Overtime</span>
+                                </div>
+                              </button>
+                            )}
+                          </Menu.Item>
+                        </>
                       ) : null}
 
                       <Menu.Item>
@@ -419,15 +346,11 @@ export const ProfileMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                            onClick={() =>
-                              router.push(`/${router.query.id}/inbox`)
-                            }
+                            onClick={() => router.push(`/${router.query.id}/inbox`)}
                           >
                             <HiOutlineBell className="h-5 w-5 text-slate-600" />
                             <div className="flex w-full items-end justify-between">
-                              <span className="text-sm tracking-tight text-slate-500 text-left">
-                                Notifications
-                              </span>
+                              <span className="text-sm tracking-tight text-slate-500 text-left">Notifications</span>
                             </div>
                           </button>
                         )}
@@ -439,15 +362,11 @@ export const ProfileMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                            onClick={() =>
-                              router.push(`/${router.query.id}/vacancies`)
-                            }
+                            onClick={() => router.push(`/${router.query.id}/vacancies`)}
                           >
                             <HiOutlineNewspaper className="h-5 w-5 text-slate-600" />
                             <div className="flex w-full items-end justify-between">
-                              <span className="text-sm tracking-tight text-slate-500">
-                                Vacancies
-                              </span>
+                              <span className="text-sm tracking-tight text-slate-500">Vacancies</span>
                             </div>
                           </button>
                         )}
@@ -475,12 +394,8 @@ export const ProfileMenuDropdown = ({
                       >
                         <HiOutlineLogout className="h-5 w-5 text-rose-600" />
                         <div className="flex w-full items-end justify-between">
-                          <span className="text-sm tracking-tight text-rose-500">
-                            Logout
-                          </span>
-                          <p className="font-mono text-xs tracking-tighter text-gray-400">
-                            v1.0.0
-                          </p>
+                          <span className="text-sm tracking-tight text-rose-500">Logout</span>
+                          <p className="font-mono text-xs tracking-tighter text-gray-400">v1.0.0</p>
                         </div>
                       </button>
                     )}

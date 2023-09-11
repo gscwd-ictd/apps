@@ -8,8 +8,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { patchPortal } from '../../../utils/helpers/portal-axios-helper';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
+import dayjs from 'dayjs';
+import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -22,11 +24,7 @@ export const ApprovalsCompletedPassSlipModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipCompletedModalProps) => {
-  const {
-    passSlip,
-    declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen,
-  } = useApprovalStore((state) => ({
+  const { passSlip, declineApplicationModalIsOpen, setDeclineApplicationModalIsOpen } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
@@ -41,11 +39,7 @@ export const ApprovalsCompletedPassSlipModal = ({
 
   return (
     <>
-      <Modal
-        size={windowWidth > 1024 ? 'lg' : 'full'}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold  text-gray-700">
             <div className="px-5 flex justify-between">
@@ -77,14 +71,10 @@ export const ApprovalsCompletedPassSlipModal = ({
               />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                  Employee Name:
-                </label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Employee Name:</label>
 
                 <div className="w-auto md:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">
-                    {passSlip.employeeName}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.employeeName}</label>
                 </div>
               </div>
 
@@ -94,9 +84,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                 </label>
 
                 <div className="w-auto md:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">
-                    {passSlip.dateOfApplication}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.dateOfApplication}</label>
                 </div>
               </div>
 
@@ -106,23 +94,17 @@ export const ApprovalsCompletedPassSlipModal = ({
                 </label>
 
                 <div className="w-auto md:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">
-                    {passSlip.natureOfBusiness}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.natureOfBusiness}</label>
                 </div>
               </div>
 
               {passSlip.natureOfBusiness === 'Official Business' ? (
                 <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label
-                    className={`text-slate-500 text-md whitespace-nowrap font-medium sm:w-80`}
-                  >
+                  <label className={`text-slate-500 text-md whitespace-nowrap font-medium sm:w-80`}>
                     Mode of Transportation:
                   </label>
                   <div className="w-auto md:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">
-                      {passSlip.obTransportation}
-                    </label>
+                    <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.obTransportation}</label>
                   </div>
                 </div>
               ) : null}
@@ -133,23 +115,40 @@ export const ApprovalsCompletedPassSlipModal = ({
                     Estimated Hours:
                   </label>
                   <div className="w-auto md:w-96">
+                    <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.estimateHours}</label>
+                  </div>
+                </div>
+              </div>
+              <div className={` flex flex-col gap-2`}>
+                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Time Out:</label>
+                  <div className="w-auto md:w-96">
                     <label className="text-slate-500 h-12 w-96  text-md ">
-                      {passSlip.estimateHours}
+                      {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
                     </label>
                   </div>
                 </div>
               </div>
+              {passSlip.natureOfBusiness == NatureOfBusiness.UNDERTIME ||
+              passSlip.natureOfBusiness == NatureOfBusiness.HALF_DAY ? null : (
+                <div className={` flex flex-col gap-2`}>
+                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Time In:</label>
+                    <div className="w-auto md:w-96">
+                      <label className="text-slate-500 h-12 w-96  text-md ">
+                        {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div
                 className={`flex flex-col gap-2
             `}
               >
-                <label className="text-slate-500 text-md font-medium">
-                  Purpose/Desination:
-                </label>
+                <label className="text-slate-500 text-md font-medium">Purpose/Desination:</label>
                 <textarea
-                  className={
-                    'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'
-                  }
+                  className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
                   value={passSlip.purposeDestination}
                   rows={2}
                   disabled={true}
@@ -171,16 +170,17 @@ export const ApprovalsCompletedPassSlipModal = ({
                 >
                   Cancel Pass Slip
                 </Button>
-              ) : null}
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => closeModalAction()}
-                type="submit"
-              >
-                Close
-              </Button>
+              ) : (
+                <Button
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => closeModalAction()}
+                  type="submit"
+                >
+                  Close
+                </Button>
+              )}
             </div>
           </div>
         </Modal.Footer>

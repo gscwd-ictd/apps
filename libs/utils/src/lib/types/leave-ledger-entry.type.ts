@@ -17,4 +17,5 @@ export type LeaveLedgerEntry = {
   actionType: ActionType;
   leaveDates: Array<string>;
   remarks: string;
+  leaveApplicationId?: string;
 };
