@@ -7,9 +7,7 @@ export const ApprovalTypeSelect = () => {
   // const selectedApprovalType = useApprovalStore(
   //   (state) => state.selectedApprovalType
   // );
-  const setSelectedApprovalType = useApprovalStore(
-    (state) => state.setSelectedApprovalType
-  );
+  const setSelectedApprovalType = useApprovalStore((state) => state.setSelectedApprovalType);
   const setTab = useApprovalStore((state) => state.setTab);
   const tab = useApprovalStore((state) => state.tab);
 
@@ -23,11 +21,7 @@ export const ApprovalTypeSelect = () => {
   const list: ListDef<ApprovalType> = {
     key: 'type',
     render: (info, state) => (
-      <div
-        className={`${
-          state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''
-        } pl-2 cursor-pointer`}
-      >
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''} pl-2 cursor-pointer`}>
         {info.type}
       </div>
     ),
@@ -40,13 +34,13 @@ export const ApprovalTypeSelect = () => {
       setTab(1); //auto select 1st option in left panel
     }
     if (code === 2) {
-      setTab(3); //auto select 1st option in left panel
+      setTab(4); //auto select 1st option in left panel
     }
     if (code === 3) {
-      setTab(5); //auto select 1st option in left panel
+      setTab(7); //auto select 1st option in left panel
     }
     if (code === 4) {
-      setTab(7); //auto select 1st option in left panel
+      setTab(10); //auto select 1st option in left panel
     }
   };
 

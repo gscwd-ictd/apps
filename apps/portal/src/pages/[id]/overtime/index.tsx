@@ -38,22 +38,35 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     pendingOvertimeModalIsOpen,
     completedOvertimeModalIsOpen,
     overtimeList,
+    employeeList,
+    responseApply,
 
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
     setApplyOvertimeModalIsOpen,
     setOvertimeDetails,
+    getEmployeeList,
+    getEmployeeListSuccess,
+    getEmployeeListFail,
+    emptyResponseAndError,
   } = useOvertimeStore((state) => ({
     tab: state.tab,
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     completedOvertimeModalIsOpen: state.completedOvertimeModalIsOpen,
     overtimeList: state.overtime,
+    employeeList: state.employeeList,
+    responseApply: state.response.postResponseApply,
 
     setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
     setApplyOvertimeModalIsOpen: state.setApplyOvertimeModalIsOpen,
+
+    getEmployeeList: state.getEmployeeList,
+    getEmployeeListSuccess: state.getEmployeeListSuccess,
+    getEmployeeListFail: state.getEmployeeListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const openApplyOvertimeModal = () => {
@@ -85,44 +98,44 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
 
-  // const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/${employeeDetails.employmentDetails.userId}`;
+  const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/supervisor/${employeeDetails.employmentDetails.userId}/employees`;
 
-  // const {
-  //   data: swrLeaves,
-  //   isLoading: swrIsLoading,
-  //   error: swrError,
-  //   mutate: mutateLeaves,
-  // } = useSWR(leaveUrl, fetchWithToken, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
+  const {
+    data: swrEmployeeList,
+    isLoading: swrEmployeeListIsLoading,
+    error: swrEmployeeListError,
+    mutate: mutateLeaves,
+  } = useSWR(employeeListUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
-  // // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrIsLoading) {
-  //     getLeaveList(swrIsLoading);
-  //   }
-  // }, [swrIsLoading]);
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrEmployeeListIsLoading) {
+      getEmployeeList(swrEmployeeListIsLoading);
+    }
+  }, [swrEmployeeListIsLoading]);
 
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrLeaves)) {
-  //     getLeaveListSuccess(swrIsLoading, swrLeaves);
-  //   }
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrEmployeeList)) {
+      getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
+    }
 
-  //   if (!isEmpty(swrError)) {
-  //     getLeaveListFail(swrIsLoading, swrError.message);
-  //   }
-  // }, [swrLeaves, swrError]);
+    if (!isEmpty(swrEmployeeListError)) {
+      getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
+    }
+  }, [swrEmployeeList, swrEmployeeListError]);
 
-  // useEffect(() => {
-  //   if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
-  //     mutateLeaves();
-  //     setTimeout(() => {
-  //       emptyResponseAndError();
-  //     }, 5000);
-  //   }
-  // }, [responseApply, responseCancel]);
+  useEffect(() => {
+    if (!isEmpty(responseApply)) {
+      mutateLeaves();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
+    }
+  }, [responseApply]);
 
   // const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 

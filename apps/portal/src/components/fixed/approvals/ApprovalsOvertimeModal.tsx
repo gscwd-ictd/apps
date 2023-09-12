@@ -5,7 +5,6 @@ import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
-import CancelOvertimeModal from './CancelOvertimeModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -48,12 +47,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {/* Cancel Overtime Application Modal */}
-          <CancelOvertimeModal
-            modalState={cancelOvertimeModalIsOpen}
-            setModalState={setCancelOvertimeModalIsOpen}
-            closeModalAction={closeCancelOvertimeModal}
-          />
           {!overtimeDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">

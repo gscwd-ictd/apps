@@ -44,14 +44,21 @@ type ModalProps = {
 
 export const OvertimeApplicationModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   //zustand initialization to access Leave store
-  const { applyOvertimeModalIsOpen, loadingResponse, postOvertime, postOvertimeSuccess, postOvertimeFail } =
-    useOvertimeStore((state) => ({
-      applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
-      loadingResponse: state.loading.loadingResponse,
-      postOvertime: state.postOvertime,
-      postOvertimeSuccess: state.postOvertimeSuccess,
-      postOvertimeFail: state.postOvertimeFail,
-    }));
+  const {
+    applyOvertimeModalIsOpen,
+    loadingResponse,
+    employeeList,
+    postOvertime,
+    postOvertimeSuccess,
+    postOvertimeFail,
+  } = useOvertimeStore((state) => ({
+    applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
+    loadingResponse: state.loading.loadingResponse,
+    employeeList: state.employeeList,
+    postOvertime: state.postOvertime,
+    postOvertimeSuccess: state.postOvertimeSuccess,
+    postOvertimeFail: state.postOvertimeFail,
+  }));
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -180,7 +187,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     id="employees"
                     label=""
                     multiple
-                    options={listOfEmployees}
+                    options={employeeList}
                     onChange={(o) => setSelectedEmployees(o)}
                     value={selectedEmployees}
                   />
