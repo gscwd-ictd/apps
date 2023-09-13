@@ -9,12 +9,10 @@ import { Navigate } from '../router/navigate';
 
 type AuthmiddlewareProps = {
   children: React.ReactNode | React.ReactNode[];
-  // userDetails: UserProfile;
 };
 
 export default function Index({ children }: AuthmiddlewareProps) {
   const { userProfile } = useContext(AuthmiddlewareContext);
-  // console.log(userDetails);
 
   const ability = defineAbility((can) => {
     const userAccessArr = userProfile?.userAccess?.map((access) => {

@@ -7,3 +7,5 @@ export type Module = {
 };
 
 export type FormPostModule = Omit<Module, '_id'>;
+
+export type ModuleId = Pick<Module, '_id'>;

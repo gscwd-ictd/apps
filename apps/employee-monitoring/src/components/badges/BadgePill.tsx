@@ -18,11 +18,7 @@ type BadgePillProps = {
 const BadgePill: FunctionComponent<BadgePillProps> = ({ label, variant }) => {
   return (
     <div className="w-full text-xs">
-      <span
-        className={`px-2 py-[0.2rem] rounded ${background[variant]} font-mono text-center`}
-      >
-        {label}
-      </span>
+      <span className={`px-2 py-[0.2rem] rounded ${background[variant]} font-mono text-center`}>{label}</span>
     </div>
   );
 };
