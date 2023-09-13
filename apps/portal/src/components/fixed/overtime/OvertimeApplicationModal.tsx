@@ -14,8 +14,9 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
 import { CalendarDate, LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { OvertimeApplication, OvertimeDetails, useOvertimeStore } from 'apps/portal/src/store/overtime.store';
+import { OvertimeDetails, useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { MySelectList } from '../../modular/inputs/SelectList';
+import { OvertimeApplication } from 'libs/utils/src/lib/types/overtime.type';
 
 const listOfEmployees: Array<SelectOption> = [
   { label: 'Ricardo Vicente Narvaiza', value: '0' },
@@ -70,7 +71,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     mode: 'onChange',
     defaultValues: {
       overtimeApplication: {
-        overtimeSupervisorId: '',
+        overtimeSupervisorId: employeeDetails.employmentDetails.userId,
         plannedDate: '',
         estimatedHours: 0,
         purpose: '',
@@ -102,15 +103,16 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   };
 
   const handlePostResult = async (data: OvertimeApplication) => {
-    postOvertime();
-    const { error, result } = await postPortal('/v1/overtime/', data);
-    if (error) {
-      postOvertimeFail(result);
-    } else {
-      postOvertimeSuccess(result);
-      reset();
-      closeModalAction();
-    }
+    console.log(data);
+    // postOvertime();
+    // const { error, result } = await postPortal('/v1/overtime/', data);
+    // if (error) {
+    //   postOvertimeFail(result);
+    // } else {
+    //   postOvertimeSuccess(result);
+    //   reset();
+    //   closeModalAction();
+    // }
   };
 
   const { windowWidth } = UseWindowDimensions();

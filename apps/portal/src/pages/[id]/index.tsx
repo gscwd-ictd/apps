@@ -49,6 +49,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   }
 
   useEffect(() => {
+    console.log(userDetails);
     setEmployee(userDetails);
     setIsLoading(true);
     hydration();

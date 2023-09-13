@@ -28,6 +28,9 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen,
+    pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -37,6 +40,9 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
     setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen,
+    setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen,
 
     setPassSlipIndividualDetail,
     setLeaveIndividualDetail,
@@ -51,6 +57,10 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
 
+    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
+
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
@@ -62,6 +72,10 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
     setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
     setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
     setLeaveIndividualDetail: state.setLeaveIndividualDetail,
+
+    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen: state.setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen: state.setDisapprovedOvertimeModalIsOpen,
   }));
 
   const onSelectPassSlip = (passslip: PassSlip) => {
@@ -111,6 +125,25 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
       // DISAPPROVED LEAVES
       if (!cancelledLeaveModalIsOpen) {
         setCancelledLeaveModalIsOpen(true);
+      }
+    }
+  };
+
+  const onSelectOvertime = (overtimeDetails: any) => {
+    if (tab === 3) {
+      // PENDING APPROVAL OVERTIME
+      if (!pendingOvertimeModalIsOpen) {
+        setPendingOvertimeModalIsOpen(true);
+      }
+    } else if (tab === 4) {
+      // APPROVED OVERTIME
+      if (!approvedOvertimeModalIsOpen) {
+        setApprovedOvertimeModalIsOpen(true);
+      }
+    } else if (tab === 6) {
+      // DISAPPROVED OVERTIME
+      if (!disapprovedOvertimeModalIsOpen) {
+        setDisapprovedOvertimeModalIsOpen(true);
       }
     }
   };
@@ -180,7 +213,7 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
             return (
               <li
                 key={index}
-                onClick={() => onSelectLeave(item)}
+                onClick={() => onSelectOvertime(item)}
                 className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
               >
                 <div className=" w-full py-2 px-1 ">

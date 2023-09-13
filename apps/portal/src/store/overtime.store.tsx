@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { OvertimeApplication } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -9,16 +10,6 @@ export type OvertimeDetails = {
   overtimeDateTo: string;
   estimatedHours: string;
   purpose: string;
-  employees: Array<string>;
-};
-
-export type OvertimeApplication = {
-  overtimeApplication: {
-    overtimeSupervisorId: string;
-    plannedDate: string;
-    estimatedHours: number;
-    purpose: string;
-  };
   employees: Array<string>;
 };
 

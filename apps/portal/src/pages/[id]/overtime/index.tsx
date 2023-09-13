@@ -98,7 +98,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
 
-  const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/supervisor/${employeeDetails.employmentDetails.userId}/employees`;
+  const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/supervisor/${employeeDetails.employmentDetails.userId}/employees/`;
 
   const {
     data: swrEmployeeList,
@@ -137,24 +137,18 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [responseApply]);
 
-  // const [navDetails, setNavDetails] = useState<NavButtonDetails>();
-
-  // useEffect(() => {
-  //   setNavDetails({
-  //     profile: employeeDetails.user.email,
-  //     fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-  //     initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
-  //   });
-  // }, []);
   return (
     <>
       <>
         {/* Leave Ledger Load Failed */}
-        {/* {!isEmpty(errorLedger) ? (
+        {!isEmpty(swrEmployeeListError) ? (
           <>
-            <ToastNotification toastType="error" notifMessage={`${errorLedger}: Failed to load Leave Ledger.`} />
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
+            />
           </>
-        ) : null} */}
+        ) : null}
 
         {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
         {/* {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
