@@ -74,7 +74,7 @@ export type OvertimeState = {
   emptyResponseAndError: () => void;
 };
 
-export const useOvertimeStore = create<OvertimeState>()(
+export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
   devtools((set) => ({
     employeeList: [],
 

@@ -301,43 +301,45 @@ export const ProfileMenuDropdown = ({
                       ) : null}
 
                       {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
-                        <>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className={`${
-                                  active ? 'bg-slate-100' : 'text-gray-900'
-                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              >
-                                <HiUserGroup className="h-5 w-5 text-slate-600" />
-                                <div className="flex w-full items-end justify-between">
-                                  <span className="text-sm tracking-tight text-slate-500 text-left">
-                                    Personnel Selection Board
-                                  </span>
-                                </div>
-                              </a>
-                            )}
-                          </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className={`${
+                                active ? 'bg-slate-100' : 'text-gray-900'
+                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                            >
+                              <HiUserGroup className="h-5 w-5 text-slate-600" />
+                              <div className="flex w-full items-end justify-between">
+                                <span className="text-sm tracking-tight text-slate-500 text-left">
+                                  Personnel Selection Board
+                                </span>
+                              </div>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      ) : null}
 
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                className={`${
-                                  active ? 'bg-slate-100' : 'text-gray-900'
-                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/overtime`)}
-                              >
-                                <HiClock className="w-5 h-5 text-slate-600" />
-                                <div className="flex w-full items-end justify-between">
-                                  <span className="text-sm tracking-tight text-slate-500 text-left">Overtime</span>
-                                </div>
-                              </button>
-                            )}
-                          </Menu.Item>
-                        </>
+                      {employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ? (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              className={`${
+                                active ? 'bg-slate-100' : 'text-gray-900'
+                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                              onClick={() => router.push(`/${router.query.id}/overtime`)}
+                            >
+                              <HiClock className="w-5 h-5 text-slate-600" />
+                              <div className="flex w-full items-end justify-between">
+                                <span className="text-sm tracking-tight text-slate-500 text-left">
+                                  Overtime Application
+                                </span>
+                              </div>
+                            </button>
+                          )}
+                        </Menu.Item>
                       ) : null}
 
                       <Menu.Item>

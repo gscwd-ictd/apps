@@ -5,11 +5,7 @@ import { EmployeeDetails } from '../../../src/types/employee.type';
 
 let userDetails = {} as EmployeeDetails;
 
-const setUserDetails = ({
-  user,
-  profile,
-  employmentDetails,
-}: EmployeeDetails) => {
+const setUserDetails = ({ user, profile, employmentDetails }: EmployeeDetails) => {
   userDetails = { user, profile, employmentDetails };
 
   return userDetails;
@@ -33,13 +29,10 @@ export function withSession(serverSideProps: GetServerSideProps) {
         },
       };
     } else {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-        {
-          withCredentials: true,
-          headers: { Cookie: `${context?.req.headers.cookie}` },
-        }
-      );
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+        withCredentials: true,
+        headers: { Cookie: `${context?.req.headers.cookie}` },
+      });
 
       setUserDetails(data);
 
@@ -124,14 +117,11 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
       const portalSsid = getPortalSsid(cookiesArray);
 
       if (portalSsid.length > 0) {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-          {
-            withCredentials: true,
-            headers: { Cookie: `${portalSsid}` },
-          }
-        );
-
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+          withCredentials: true,
+          headers: { Cookie: `${portalSsid}` },
+        });
+        console.log(data, 'data');
         setUserDetails(data);
         return await serverSideProps(context);
       } else {
@@ -161,9 +151,7 @@ export function getPortalSsid(cookiesArray: Array<string> | null) {
   // execute this if there are cookies
   if (cookiesArray.length > 0) {
     // filter the cookies array
-    cookieSsid = cookiesArray.filter((cookie) =>
-      cookie.includes('ssid_portal')
-    );
+    cookieSsid = cookiesArray.filter((cookie) => cookie.includes('ssid_portal'));
 
     return cookieSsid;
   }
@@ -171,8 +159,5 @@ export function getPortalSsid(cookiesArray: Array<string> | null) {
 }
 
 export function invalidateSession(response: ServerResponse) {
-  response.setHeader(
-    'Set-Cookie',
-    'ssid_portal=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-  );
+  response.setHeader('Set-Cookie', 'ssid_portal=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT');
 }

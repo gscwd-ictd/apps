@@ -16,7 +16,7 @@ import { CalendarDate, LeaveApplicationForm } from '../../../../../../libs/utils
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { OvertimeDetails, useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { MySelectList } from '../../modular/inputs/SelectList';
-import { OvertimeApplication } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
 
 const listOfEmployees: Array<SelectOption> = [
   { label: 'Ricardo Vicente Narvaiza', value: '0' },
@@ -67,15 +67,13 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
 
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeApplication>({
+  const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeForm>({
     mode: 'onChange',
     defaultValues: {
-      overtimeApplication: {
-        overtimeSupervisorId: employeeDetails.employmentDetails.userId,
-        plannedDate: '',
-        estimatedHours: 0,
-        purpose: '',
-      },
+      overtimeSupervisorId: employeeDetails.employmentDetails.userId,
+      plannedDate: '',
+      estimatedHours: 0,
+      purpose: '',
       employees: [],
     },
   });
@@ -97,22 +95,22 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     }
   }, [applyOvertimeModalIsOpen]);
 
-  const onSubmit: SubmitHandler<OvertimeApplication> = (data: OvertimeApplication) => {
+  const onSubmit: SubmitHandler<OvertimeForm> = (data: OvertimeForm) => {
     handlePostResult(data);
     // postLeave();
   };
 
-  const handlePostResult = async (data: OvertimeApplication) => {
+  const handlePostResult = async (data: OvertimeForm) => {
     console.log(data);
-    // postOvertime();
-    // const { error, result } = await postPortal('/v1/overtime/', data);
-    // if (error) {
-    //   postOvertimeFail(result);
-    // } else {
-    //   postOvertimeSuccess(result);
-    //   reset();
-    //   closeModalAction();
-    // }
+    postOvertime();
+    const { error, result } = await postPortal('/v1/overtime/', data);
+    if (error) {
+      postOvertimeFail(result);
+    } else {
+      postOvertimeSuccess(result);
+      reset();
+      closeModalAction();
+    }
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -156,7 +154,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       required
                       type="date"
                       className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded"
-                      {...register('overtimeApplication.plannedDate')}
+                      {...register('plannedDate')}
                     />
                   </div>
                 </div>
@@ -175,7 +173,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       defaultValue={0}
                       max="8"
                       min="1"
-                      {...register('overtimeApplication.estimatedHours')}
+                      {...register('estimatedHours')}
                     />
                   </div>
                 </div>
@@ -205,7 +203,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     placeholder={`Enter Purpose of Overtime`}
                     className="resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300"
                     required
-                    {...register('overtimeApplication.purpose')}
+                    {...register('purpose')}
                   ></textarea>
                 </div>
               </div>

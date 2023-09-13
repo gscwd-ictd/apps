@@ -30,8 +30,11 @@ import { OvertimeApplicationModal } from 'apps/portal/src/components/fixed/overt
 import OvertimeModal from 'apps/portal/src/components/fixed/overtime/OvertimeModal';
 import { OvertimeTabs } from 'apps/portal/src/components/fixed/overtime/OvertimeTabs';
 import { OvertimeTabWindow } from 'apps/portal/src/components/fixed/overtime/OvertimeTabWindow';
+import { OvertimeAccomplishmentTabs } from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentTabs';
 
-export default function Overtime({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function OvertimeAccomplishment({
+  employeeDetails,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
     applyOvertimeModalIsOpen,
@@ -189,7 +192,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
       <EmployeeProvider employeeData={employee}>
         <Head>
-          <title>Employee Overtime</title>
+          <title>Employee Overtime Accomplishment</title>
         </Head>
 
         <SideNav employeeDetails={employeeDetails} />
@@ -217,19 +220,10 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
         <MainContainer>
           <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-            <ContentHeader title="Employee Overtime" subtitle="Apply for overtime">
-              <Button onClick={openApplyOvertimeModal} className="hidden lg:block" size={`md`}>
-                <div className="flex items-center w-full gap-2">
-                  <HiDocumentAdd /> Apply for Overtime
-                </div>
-              </Button>
-
-              <Button onClick={openApplyOvertimeModal} className="block lg:hidden" size={`lg`}>
-                <div className="flex items-center w-full gap-2">
-                  <HiDocumentAdd />
-                </div>
-              </Button>
-            </ContentHeader>
+            <ContentHeader
+              title="Employee Overtime Accomplishment"
+              subtitle="Fill up Overtime Accomplishment Reports"
+            ></ContentHeader>
             {!overtimeList ? (
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -245,7 +239,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
                 <>
                   <div className={`w-full flex lg:flex-row flex-col`}>
                     <div className={`lg:w-[58rem] w-full`}>
-                      <OvertimeTabs tab={tab} />
+                      <OvertimeAccomplishmentTabs tab={tab} />
                     </div>
                     <div className="w-full">
                       <OvertimeTabWindow />

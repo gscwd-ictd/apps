@@ -10,6 +10,7 @@ import {
   HiPuzzle,
   HiCollection,
   HiClipboardCheck,
+  HiClipboard,
 } from 'react-icons/hi';
 import { Card } from '../../types/allowed-modules.type';
 
@@ -43,16 +44,16 @@ export const Modules: Array<Card> = [
     linkType: 'router',
     state: true,
   },
-
   {
-    icon: <HiMail className="w-6 h-6 text-indigo-700" />,
-    color: 'indigo',
-    title: 'Email',
-    description: 'Check your Emails',
-    destination: 'email',
-    linkType: 'href',
+    icon: <HiClipboard className="w-6 h-6 text-rose-600" />,
+    color: 'rose',
+    title: 'Overtime Report',
+    description: 'Overtime Accomplishment Reports',
+    destination: 'overtime-accomplishment',
+    linkType: 'router',
     state: true,
   },
+
   {
     icon: <HiDocumentDuplicate className="w-6 h-6 text-orange-600" />,
     color: 'orange',
@@ -60,6 +61,15 @@ export const Modules: Array<Card> = [
     description: 'Update your PDS record',
     destination: 'pds',
     linkType: 'router',
+    state: true,
+  },
+  {
+    icon: <HiMail className="w-6 h-6 text-indigo-700" />,
+    color: 'indigo',
+    title: 'Email',
+    description: 'Check your Emails',
+    destination: 'email',
+    linkType: 'href',
     state: true,
   },
   {
