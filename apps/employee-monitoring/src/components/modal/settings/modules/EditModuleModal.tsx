@@ -12,13 +12,7 @@ import {
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
 import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
 
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
 type EditModalProps = {
@@ -129,10 +123,7 @@ const EditModuleModal: FunctionComponent<EditModalProps> = ({
     <>
       {/* Notification */}
       {!isEmpty(UpdateModuleResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Module details updated successfully"
-        />
+        <ToastNotification toastType="success" notifMessage="Module details updated successfully" />
       ) : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="sm">

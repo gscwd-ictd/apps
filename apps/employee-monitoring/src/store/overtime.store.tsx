@@ -8,6 +8,12 @@ type OvertimeState = {
 
   errorOvertimeApplications: string;
   setErrorOvertimeApplications: (errorOvertimeApplications: string) => void;
+
+  overtimeAccomplishment: OvertimeAccomplishment;
+  setOvertimeAccomplishment: (overtimeAccomplishment: OvertimeAccomplishment) => void;
+
+  errorOvertimeAccomplishment: string;
+  setErrorOvertimeAccomplishment: (errorOvertimeAccomplishment: string) => void;
 };
 
 export const useOvertimeStore = create<OvertimeState>()(
@@ -17,5 +23,11 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     errorOvertimeApplications: '',
     setErrorOvertimeApplications: (errorOvertimeApplications) => set({ errorOvertimeApplications }),
+
+    overtimeAccomplishment: {} as OvertimeAccomplishment,
+    setOvertimeAccomplishment: (overtimeAccomplishment) => set({ overtimeAccomplishment }),
+
+    errorOvertimeAccomplishment: '',
+    setErrorOvertimeAccomplishment: (errorOvertimeAccomplishment) => set({ errorOvertimeAccomplishment }),
   }))
 );

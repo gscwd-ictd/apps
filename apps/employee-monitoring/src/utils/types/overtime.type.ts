@@ -7,7 +7,7 @@ export type Overtime = {
   plannedDate: string;
   immediateSupervisorName: string;
   employees: Array<EmployeeOvertimeDetails>;
-  estimatedNoOfHours: number;
+  estimatedHours: number;
   purpose: string;
   status: OvertimeStatus;
 };
@@ -16,13 +16,12 @@ export type OvertimeAccomplishment = {
   id: string;
   ivmsTimeIn: string;
   ivmsTimeOut: string;
-  ivmsComputedHours: string;
   encodedTimeIn: string;
   encodedTimeOut: string;
-  encodedComputedHours: string;
   accomplishments: string;
-  status: OvertimeAccomplishmentStatus;
+  followEstimatedHrs: boolean;
   remarks: string;
+  status: OvertimeAccomplishmentStatus;
 };
 
 // employeeId and orgId

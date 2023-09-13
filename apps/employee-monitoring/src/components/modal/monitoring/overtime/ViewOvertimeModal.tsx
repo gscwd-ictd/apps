@@ -1,14 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Modal } from '@gscwd-apps/oneui';
+import { Modal } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
-import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
-import Image from 'next/image';
 import React, { FunctionComponent } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
-import userphoto from '../../../../../public/user-photo.jpg';
 import { Overtime } from 'apps/employee-monitoring/src/utils/types/overtime.type';
-import UseRenderBadgePill from 'apps/employee-monitoring/src/utils/functions/RenderBadgePill';
 import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
 import { EmployeesUnderOvertimeTable } from '../../../tables/EmployeesUnderOvertimeTable';
 
@@ -56,7 +51,7 @@ const ViewOvertimeModal: FunctionComponent<ViewOvertimeModalProps> = ({
                   />
 
                   <LabelValue
-                    label="Pass Slip Date"
+                    label="Overtime Date"
                     direction="top-to-bottom"
                     textSize="md"
                     value={dayjs(rowData.plannedDate).format('MMMM DD, YYYY')}
@@ -97,6 +92,7 @@ const ViewOvertimeModal: FunctionComponent<ViewOvertimeModalProps> = ({
             </div>
           </div>
         </Modal.Body>
+        <Modal.Footer>{}</Modal.Footer>
       </Modal>
     </>
   );

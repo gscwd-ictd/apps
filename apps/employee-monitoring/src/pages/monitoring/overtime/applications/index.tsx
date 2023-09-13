@@ -7,7 +7,7 @@ import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/function
 
 import { EmployeeOvertimeDetails } from 'libs/utils/src/lib/types/employee.type';
 import { Overtime } from 'apps/employee-monitoring/src/utils/types/overtime.type';
-import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime';
+import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
 
 import { DataTable, LoadingSpinner, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
