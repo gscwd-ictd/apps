@@ -1,4 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { OvertimeApplication } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -11,22 +13,13 @@ export type OvertimeDetails = {
   employees: Array<string>;
 };
 
-export type OvertimeApplication = {
-  overtimeApplication: {
-    overtimeSupervisorId: string;
-    plannedDate: string;
-    estimatedHours: number;
-    purpose: string;
-  };
-  employees: Array<string>;
-};
-
 export type OvertimeList = {
   forApproval: Array<OvertimeDetails>;
   completed: Array<OvertimeDetails>;
 };
 
 export type OvertimeState = {
+  employeeList: Array<SelectOption>;
   overtime: {
     forApproval: Array<OvertimeDetails>;
     completed: Array<OvertimeDetails>;
@@ -39,11 +32,17 @@ export type OvertimeState = {
   loading: {
     loadingOvertime: boolean;
     loadingResponse: boolean;
+    loadingEmployeeList: boolean;
   };
   error: {
     errorOvertime: string;
     errorResponse: string;
+    errorEmployeeList: string;
   };
+
+  getEmployeeList: (loading: boolean) => void;
+  getEmployeeListSuccess: (loading: boolean, response) => void;
+  getEmployeeListFail: (loading: boolean, error: string) => void;
 
   overtimeDetails: OvertimeDetails;
   cancelOvertimeModalIsOpen: boolean;
@@ -77,6 +76,8 @@ export type OvertimeState = {
 
 export const useOvertimeStore = create<OvertimeState>()(
   devtools((set) => ({
+    employeeList: [],
+
     overtime: {
       forApproval: [
         {
@@ -106,10 +107,12 @@ export const useOvertimeStore = create<OvertimeState>()(
     loading: {
       loadingOvertime: false,
       loadingResponse: false,
+      loadingEmployeeList: false,
     },
     error: {
       errorOvertime: '',
       errorResponse: '',
+      errorEmployeeList: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
@@ -142,6 +145,45 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
       set((state) => ({ ...state, overtimeDetails }));
+    },
+
+    //GET EMPLOYEE LIST ACTIONS
+    getEmployeeList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        employeeList: [],
+        loading: {
+          ...state.loading,
+          loadingEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorEmployeeList: '',
+        },
+      }));
+    },
+    getEmployeeListSuccess: (loading: boolean, response: Array<SelectOption>) => {
+      set((state) => ({
+        ...state,
+        employeeList: response,
+        loading: {
+          ...state.loading,
+          loadingEmployeeList: loading,
+        },
+      }));
+    },
+    getEmployeeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorEmployeeList: error,
+        },
+      }));
     },
 
     //GET OVERTIME ACTIONS

@@ -14,8 +14,9 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
 import { CalendarDate, LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { OvertimeApplication, OvertimeDetails, useOvertimeStore } from 'apps/portal/src/store/overtime.store';
+import { OvertimeDetails, useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { MySelectList } from '../../modular/inputs/SelectList';
+import { OvertimeApplication } from 'libs/utils/src/lib/types/overtime.type';
 
 const listOfEmployees: Array<SelectOption> = [
   { label: 'Ricardo Vicente Narvaiza', value: '0' },
@@ -44,14 +45,21 @@ type ModalProps = {
 
 export const OvertimeApplicationModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   //zustand initialization to access Leave store
-  const { applyOvertimeModalIsOpen, loadingResponse, postOvertime, postOvertimeSuccess, postOvertimeFail } =
-    useOvertimeStore((state) => ({
-      applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
-      loadingResponse: state.loading.loadingResponse,
-      postOvertime: state.postOvertime,
-      postOvertimeSuccess: state.postOvertimeSuccess,
-      postOvertimeFail: state.postOvertimeFail,
-    }));
+  const {
+    applyOvertimeModalIsOpen,
+    loadingResponse,
+    employeeList,
+    postOvertime,
+    postOvertimeSuccess,
+    postOvertimeFail,
+  } = useOvertimeStore((state) => ({
+    applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
+    loadingResponse: state.loading.loadingResponse,
+    employeeList: state.employeeList,
+    postOvertime: state.postOvertime,
+    postOvertimeSuccess: state.postOvertimeSuccess,
+    postOvertimeFail: state.postOvertimeFail,
+  }));
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -63,7 +71,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     mode: 'onChange',
     defaultValues: {
       overtimeApplication: {
-        overtimeSupervisorId: '',
+        overtimeSupervisorId: employeeDetails.employmentDetails.userId,
         plannedDate: '',
         estimatedHours: 0,
         purpose: '',
@@ -95,15 +103,16 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   };
 
   const handlePostResult = async (data: OvertimeApplication) => {
-    postOvertime();
-    const { error, result } = await postPortal('/v1/overtime/', data);
-    if (error) {
-      postOvertimeFail(result);
-    } else {
-      postOvertimeSuccess(result);
-      reset();
-      closeModalAction();
-    }
+    console.log(data);
+    // postOvertime();
+    // const { error, result } = await postPortal('/v1/overtime/', data);
+    // if (error) {
+    //   postOvertimeFail(result);
+    // } else {
+    //   postOvertimeSuccess(result);
+    //   reset();
+    //   closeModalAction();
+    // }
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -180,7 +189,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     id="employees"
                     label=""
                     multiple
-                    options={listOfEmployees}
+                    options={employeeList}
                     onChange={(o) => setSelectedEmployees(o)}
                     value={selectedEmployees}
                   />

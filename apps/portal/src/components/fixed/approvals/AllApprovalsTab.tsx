@@ -14,10 +14,11 @@ import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
   leaves: Array<SupervisorLeaveDetails> | null;
+  overtime: any | null;
   tab: number;
 };
 
-export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabProps) => {
+export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprovalListTabProps) => {
   const {
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
@@ -27,6 +28,9 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen,
+    pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -36,6 +40,9 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
     setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen,
+    setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen,
 
     setPassSlipIndividualDetail,
     setLeaveIndividualDetail,
@@ -50,6 +57,10 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
 
+    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
+
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
@@ -61,6 +72,10 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
     setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
     setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
     setLeaveIndividualDetail: state.setLeaveIndividualDetail,
+
+    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen: state.setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen: state.setDisapprovedOvertimeModalIsOpen,
   }));
 
   const onSelectPassSlip = (passslip: PassSlip) => {
@@ -110,6 +125,25 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
       // DISAPPROVED LEAVES
       if (!cancelledLeaveModalIsOpen) {
         setCancelledLeaveModalIsOpen(true);
+      }
+    }
+  };
+
+  const onSelectOvertime = (overtimeDetails: any) => {
+    if (tab === 3) {
+      // PENDING APPROVAL OVERTIME
+      if (!pendingOvertimeModalIsOpen) {
+        setPendingOvertimeModalIsOpen(true);
+      }
+    } else if (tab === 4) {
+      // APPROVED OVERTIME
+      if (!approvedOvertimeModalIsOpen) {
+        setApprovedOvertimeModalIsOpen(true);
+      }
+    } else if (tab === 6) {
+      // DISAPPROVED OVERTIME
+      if (!disapprovedOvertimeModalIsOpen) {
+        setDisapprovedOvertimeModalIsOpen(true);
       }
     }
   };
@@ -168,6 +202,30 @@ export const AllApprovalsTab = ({ passslips, leaves, tab }: AllApprovalListTabPr
                     Date Applied: {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
                   </p>
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      ) : overtime && overtime.length > 0 ? (
+        <ul className="mt-4">
+          {overtime.map((item: any, index: number) => {
+            return (
+              <li
+                key={index}
+                onClick={() => onSelectOvertime(item)}
+                className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
+              >
+                <div className=" w-full py-2 px-1 ">
+                  <h1 className="font-medium text-lg text-gray-600">
+                    {/* {item.leaveName} - {item.employee.employeeName} */}
+                  </h1>
+                  <p className="text-sm text-gray-500">
+                    Date Applied: Sept. 20, 2023
+                    {/* {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')} */}
+                  </p>
+                  <p className="text-sm text-gray-500">Employees: </p>
+                  {/* <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p> */}
                 </div>
               </li>
             );

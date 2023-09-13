@@ -1,5 +1,5 @@
 import { useApprovalStore } from '../../../../src/store/approvals.store';
-import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
+import { HiOutlineCheckCircle, HiCheck, HiX, HiCheckCircle, HiXCircle, HiQuestionMarkCircle } from 'react-icons/hi';
 
 import { TabHeader } from '../tab/TabHeader';
 import { ApprovalTypeSelect } from './ApprovalTypeSelect';
@@ -19,6 +19,9 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
     approvedLeaves,
     disapprovedLeaves,
     cancelledLeaves,
+    forApprovalOvertime,
+    approvedOvertime,
+    disapprovedOvertime,
     selectedApprovalType,
     setTab,
     setSelectedApprovalType,
@@ -31,6 +34,9 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
     approvedLeaves: state.leaves.completed.approved,
     disapprovedLeaves: state.leaves.completed.disapproved,
     cancelledLeaves: state.leaves.completed.cancelled,
+    forApprovalOvertime: state.overtime.forApproval,
+    approvedOvertime: state.overtime.completed.approved,
+    disapprovedOvertime: state.overtime.completed.disapproved,
     selectedApprovalType: state.selectedApprovalType,
     setTab: state.setTab,
     setSelectedApprovalType: state.setSelectedApprovalType,
@@ -53,30 +59,36 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
                 tab={tab}
                 tabIndex={1}
                 onClick={() => {
-                  // setIsLoading(true);
                   setTab(1);
                 }}
                 title="Pass Slip Approvals"
-                icon={<HiOutlineCheckCircle size={26} />}
+                icon={<HiQuestionMarkCircle size={26} />}
                 subtitle="Show all Pass Slips that require your approval"
-                notificationCount={
-                  forApprovalPassSlips ? forApprovalPassSlips.length : 0
-                }
+                notificationCount={forApprovalPassSlips ? forApprovalPassSlips.length : 0}
                 className="bg-indigo-500"
               />
               <TabHeader
                 tab={tab}
                 tabIndex={2}
                 onClick={() => {
-                  // setIsLoading(true);
                   setTab(2);
                 }}
                 title="Leave Approvals"
-                icon={<HiOutlineCheckCircle size={26} />}
+                icon={<HiQuestionMarkCircle size={26} />}
                 subtitle="Show all Leaves that require your approval"
-                notificationCount={
-                  forApprovalLeaves ? forApprovalLeaves.length : 0
-                }
+                notificationCount={forApprovalLeaves ? forApprovalLeaves.length : 0}
+                className="bg-indigo-500"
+              />
+              <TabHeader
+                tab={tab}
+                tabIndex={3}
+                onClick={() => {
+                  setTab(3);
+                }}
+                title="Overtime Approvals"
+                icon={<HiQuestionMarkCircle size={26} />}
+                subtitle="Show all Overtime that require your approval"
+                notificationCount={forApprovalOvertime ? forApprovalOvertime.length : 0}
                 className="bg-indigo-500"
               />
             </>
@@ -85,30 +97,39 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
             <>
               <TabHeader
                 tab={tab}
-                tabIndex={3}
+                tabIndex={4}
                 onClick={() => {
-                  // setIsLoading(true);
-                  setTab(3);
+                  setTab(4);
                 }}
                 title="Approved Pass Slips"
-                icon={<HiCheck size={26} />}
+                icon={<HiCheckCircle size={26} />}
                 subtitle="Show all approved Pass Slip applications"
-                notificationCount={
-                  approvedPassSlips ? approvedPassSlips.length : 0
-                }
+                notificationCount={approvedPassSlips ? approvedPassSlips.length : 0}
                 className="bg-gray-500"
               />
               <TabHeader
                 tab={tab}
-                tabIndex={4}
+                tabIndex={5}
                 onClick={() => {
                   // setIsLoading(true);
-                  setTab(4);
+                  setTab(5);
                 }}
                 title="Approved Leaves"
-                icon={<HiCheck size={26} />}
+                icon={<HiCheckCircle size={26} />}
                 subtitle="Show all approved Leave applications"
                 notificationCount={approvedLeaves ? approvedLeaves.length : 0}
+                className="bg-gray-500"
+              />
+              <TabHeader
+                tab={tab}
+                tabIndex={6}
+                onClick={() => {
+                  setTab(6);
+                }}
+                title="Approved Overtime"
+                icon={<HiCheckCircle size={26} />}
+                subtitle="Show all approved Overtime applications"
+                notificationCount={approvedOvertime ? approvedOvertime.length : 0}
                 className="bg-gray-500"
               />
             </>
@@ -118,32 +139,38 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
             <>
               <TabHeader
                 tab={tab}
-                tabIndex={5}
+                tabIndex={7}
                 onClick={() => {
-                  // setIsLoading(true);
-                  setTab(5);
+                  setTab(7);
                 }}
                 title="Disapproved Pass Slips"
-                icon={<HiCheck size={26} />}
+                icon={<HiXCircle size={26} />}
                 subtitle="Show all disapproved Pass Slip applications"
-                notificationCount={
-                  disapprovedPassSlips ? disapprovedPassSlips.length : 0
-                }
+                notificationCount={disapprovedPassSlips ? disapprovedPassSlips.length : 0}
                 className="bg-gray-500"
               />
               <TabHeader
                 tab={tab}
-                tabIndex={6}
+                tabIndex={8}
                 onClick={() => {
-                  // setIsLoading(true);
-                  setTab(6);
+                  setTab(8);
                 }}
                 title="Disapproved Leaves"
-                icon={<HiCheck size={26} />}
+                icon={<HiXCircle size={26} />}
                 subtitle="Show all disapproved Leave applications"
-                notificationCount={
-                  disapprovedLeaves ? disapprovedLeaves.length : 0
-                }
+                notificationCount={disapprovedLeaves ? disapprovedLeaves.length : 0}
+                className="bg-gray-500"
+              />
+              <TabHeader
+                tab={tab}
+                tabIndex={9}
+                onClick={() => {
+                  setTab(9);
+                }}
+                title="Disapproved Overtime"
+                icon={<HiXCircle size={26} />}
+                subtitle="Show all disapproved Overtime applications"
+                notificationCount={disapprovedOvertime ? disapprovedOvertime.length : 0}
                 className="bg-gray-500"
               />
             </>
@@ -153,28 +180,24 @@ export const ApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
             <>
               <TabHeader
                 tab={tab}
-                tabIndex={7}
+                tabIndex={10}
                 onClick={() => {
-                  // setIsLoading(true);
-                  setTab(7);
+                  setTab(10);
                 }}
                 title="Cancelled Pass Slips"
-                icon={<HiCheck size={26} />}
+                icon={<HiXCircle size={26} />}
                 subtitle="Show all cancelled Pass Slip applications"
-                notificationCount={
-                  cancelledPassSlips ? cancelledPassSlips.length : 0
-                }
+                notificationCount={cancelledPassSlips ? cancelledPassSlips.length : 0}
                 className="bg-gray-500"
               />
               <TabHeader
                 tab={tab}
-                tabIndex={8}
+                tabIndex={11}
                 onClick={() => {
-                  // setIsLoading(true);
-                  setTab(8);
+                  setTab(11);
                 }}
                 title="Cancelled Leaves"
-                icon={<HiCheck size={26} />}
+                icon={<HiXCircle size={26} />}
                 subtitle="Show all cancelled Leave applications"
                 notificationCount={cancelledLeaves ? cancelledLeaves.length : 0}
                 className="bg-gray-500"
