@@ -97,7 +97,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
 
   const onSubmit: SubmitHandler<OvertimeForm> = (data: OvertimeForm) => {
     handlePostResult(data);
-    // postLeave();
   };
 
   const handlePostResult = async (data: OvertimeForm) => {
@@ -168,7 +167,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     <input
                       type="number"
                       className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded"
-                      placeholder="Enter number of hours "
+                      placeholder="Enter number of hours"
                       required
                       defaultValue={0}
                       max="8"

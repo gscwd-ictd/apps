@@ -65,7 +65,7 @@ export const FinalAllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) =
   return (
     <>
       {leaves && leaves.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {leaves.map((item: SupervisorLeaveDetails, index: number) => {
             return (
               <li

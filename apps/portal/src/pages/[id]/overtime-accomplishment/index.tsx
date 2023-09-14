@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiDocumentAdd } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -11,86 +10,55 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
-import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../../src/store/leave.store';
+import { ToastNotification } from '@gscwd-apps/oneui';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import { LeaveApplicationModal } from '../../../../src/components/fixed/leaves/LeaveApplicationModal';
-import { LeavePendingModal } from '../../../components/fixed/leaves/LeavePendingModal';
-import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCompletedModal';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
-import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeApplicationModal } from 'apps/portal/src/components/fixed/overtime/OvertimeApplicationModal';
-import OvertimeModal from 'apps/portal/src/components/fixed/overtime/OvertimeModal';
-import { OvertimeTabs } from 'apps/portal/src/components/fixed/overtime/OvertimeTabs';
-import { OvertimeTabWindow } from 'apps/portal/src/components/fixed/overtime/OvertimeTabWindow';
 import { OvertimeAccomplishmentTabs } from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentTabs';
+import { OvertimeAccomplishmentTabWindow } from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentTabWindow';
+import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
+import OvertimeAccomplishmentModal from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentModal';
 
 export default function OvertimeAccomplishment({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
-    applyOvertimeModalIsOpen,
-    pendingOvertimeModalIsOpen,
-    completedOvertimeModalIsOpen,
+
+    pendingOvertimeAccomplishmentModalIsOpen,
+    completedOvertimeAccomplishmentModalIsOpen,
     overtimeList,
-    employeeList,
     responseApply,
 
-    setPendingOvertimeModalIsOpen,
-    setCompletedOvertimeModalIsOpen,
-    setApplyOvertimeModalIsOpen,
+    setPendingOvertimeAccomplishmentModalIsOpen,
+    setCompletedOvertimeAccomplishmentModalIsOpen,
     setOvertimeDetails,
-    getEmployeeList,
-    getEmployeeListSuccess,
-    getEmployeeListFail,
     emptyResponseAndError,
-  } = useOvertimeStore((state) => ({
+  } = useOvertimeAccomplishmentStore((state) => ({
     tab: state.tab,
-    applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
-    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
-    completedOvertimeModalIsOpen: state.completedOvertimeModalIsOpen,
+
+    pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
+    completedOvertimeAccomplishmentModalIsOpen: state.completedOvertimeAccomplishmentModalIsOpen,
     overtimeList: state.overtime,
-    employeeList: state.employeeList,
+
     responseApply: state.response.postResponseApply,
 
     setOvertimeDetails: state.setOvertimeDetails,
-    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
-    setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
-    setApplyOvertimeModalIsOpen: state.setApplyOvertimeModalIsOpen,
-
-    getEmployeeList: state.getEmployeeList,
-    getEmployeeListSuccess: state.getEmployeeListSuccess,
-    getEmployeeListFail: state.getEmployeeListFail,
+    setPendingOvertimeAccomplishmentModalIsOpen: state.setPendingOvertimeAccomplishmentModalIsOpen,
+    setCompletedOvertimeAccomplishmentModalIsOpen: state.setCompletedOvertimeAccomplishmentModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
-  const openApplyOvertimeModal = () => {
-    if (!applyOvertimeModalIsOpen) {
-      setApplyOvertimeModalIsOpen(true);
-    }
-  };
-
-  // cancel action for Overtime Application Modal
-  const closeApplyOvertimeModal = async () => {
-    setApplyOvertimeModalIsOpen(false);
-  };
-
   // cancel action for Overtime Pending Modal
-  const closePendingOvertimeModal = async () => {
-    setPendingOvertimeModalIsOpen(false);
+  const closePendingOvertimeAccomplishmentModal = async () => {
+    setPendingOvertimeAccomplishmentModalIsOpen(false);
   };
 
   // cancel action for Overtime Completed Modal
-  const closeCompletedOvertimeModal = async () => {
-    setCompletedOvertimeModalIsOpen(false);
+  const closeCompletedOvertimeAccomplishmentModal = async () => {
+    setCompletedOvertimeAccomplishmentModalIsOpen(false);
   };
 
   // set state for employee store
@@ -101,63 +69,48 @@ export default function OvertimeAccomplishment({
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
 
-  const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/supervisor/${employeeDetails.employmentDetails.userId}/employees/`;
+  // const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/supervisor/${employeeDetails.employmentDetails.userId}/employees/`;
 
-  const {
-    data: swrEmployeeList,
-    isLoading: swrEmployeeListIsLoading,
-    error: swrEmployeeListError,
-    mutate: mutateLeaves,
-  } = useSWR(employeeListUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // const {
+  //   data: swrEmployeeList,
+  //   isLoading: swrEmployeeListIsLoading,
+  //   error: swrEmployeeListError,
+  //   mutate: mutateLeaves,
+  // } = useSWR(employeeListUrl, fetchWithToken, {
+  //   shouldRetryOnError: false,
+  //   revalidateOnFocus: false,
+  // });
 
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrEmployeeListIsLoading) {
-      getEmployeeList(swrEmployeeListIsLoading);
-    }
-  }, [swrEmployeeListIsLoading]);
+  // // Initial zustand state update
+  // useEffect(() => {
+  //   if (swrEmployeeListIsLoading) {
+  //     getEmployeeList(swrEmployeeListIsLoading);
+  //   }
+  // }, [swrEmployeeListIsLoading]);
 
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrEmployeeList)) {
-      getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
-    }
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrEmployeeList)) {
+  //     getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
+  //   }
 
-    if (!isEmpty(swrEmployeeListError)) {
-      getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
-    }
-  }, [swrEmployeeList, swrEmployeeListError]);
+  //   if (!isEmpty(swrEmployeeListError)) {
+  //     getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
+  //   }
+  // }, [swrEmployeeList, swrEmployeeListError]);
 
-  useEffect(() => {
-    if (!isEmpty(responseApply)) {
-      mutateLeaves();
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 3000);
-    }
-  }, [responseApply]);
+  // useEffect(() => {
+  //   if (!isEmpty(responseApply)) {
+  //     mutateLeaves();
+  //     setTimeout(() => {
+  //       emptyResponseAndError();
+  //     }, 3000);
+  //   }
+  // }, [responseApply]);
 
   return (
     <>
       <>
-        {/* Leave Ledger Load Failed */}
-        {!isEmpty(swrEmployeeListError) ? (
-          <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
-            />
-          </>
-        ) : null}
-
-        {/* Post/Submit Leave Success*/}
-        {!isEmpty(responseApply) ? (
-          <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
-        ) : null}
-
         {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
         {/* {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
           <>
@@ -197,25 +150,18 @@ export default function OvertimeAccomplishment({
 
         <SideNav employeeDetails={employeeDetails} />
 
-        {/* Overtime Application Modal */}
-        <OvertimeApplicationModal
-          modalState={applyOvertimeModalIsOpen}
-          setModalState={setApplyOvertimeModalIsOpen}
-          closeModalAction={closeApplyOvertimeModal}
+        {/* Overtime Pending Accomplishment Modal */}
+        <OvertimeAccomplishmentModal
+          modalState={pendingOvertimeAccomplishmentModalIsOpen}
+          setModalState={setPendingOvertimeAccomplishmentModalIsOpen}
+          closeModalAction={closePendingOvertimeAccomplishmentModal}
         />
 
-        {/* Overtime Pending Modal */}
-        <OvertimeModal
-          modalState={pendingOvertimeModalIsOpen}
-          setModalState={setPendingOvertimeModalIsOpen}
-          closeModalAction={closePendingOvertimeModal}
-        />
-
-        {/* Overtime Completed Modal */}
-        <OvertimeModal
-          modalState={completedOvertimeModalIsOpen}
-          setModalState={setCompletedOvertimeModalIsOpen}
-          closeModalAction={closeCompletedOvertimeModal}
+        {/* Overtime Completed Accomplishment Modal */}
+        <OvertimeAccomplishmentModal
+          modalState={completedOvertimeAccomplishmentModalIsOpen}
+          setModalState={setCompletedOvertimeAccomplishmentModalIsOpen}
+          closeModalAction={closeCompletedOvertimeAccomplishmentModal}
         />
 
         <MainContainer>
@@ -242,7 +188,7 @@ export default function OvertimeAccomplishment({
                       <OvertimeAccomplishmentTabs tab={tab} />
                     </div>
                     <div className="w-full">
-                      <OvertimeTabWindow />
+                      <OvertimeAccomplishmentTabWindow />
                     </div>
                   </div>
                 </>

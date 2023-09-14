@@ -8,13 +8,7 @@ import dayjs from 'dayjs';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { isEmpty, isError } from 'lodash';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { OfficeSchema } from './OfficeSchema';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -59,9 +53,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
 
   // default values
-  const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr>(
-    {} as EmployeeDtr
-  );
+  const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr>({} as EmployeeDtr);
 
   const closeModal = () => {
     reset();
@@ -74,17 +66,14 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     else return dayjs(rowData.dtr.dtrDate + ' ' + value).format('HH:mm');
   };
 
-  const {
-    employeeDailyRecord,
-    updateEmployeeDtr,
-    updateEmployeeDtrFail,
-    updateEmployeeDtrSuccess,
-  } = useDtrStore((state) => ({
-    employeeDailyRecord: state.employeeDailyRecord,
-    updateEmployeeDtr: state.updateEmployeeDtr,
-    updateEmployeeDtrSuccess: state.updateEmployeeDtrSuccess,
-    updateEmployeeDtrFail: state.updateEmployeeDtrFail,
-  }));
+  const { employeeDailyRecord, updateEmployeeDtr, updateEmployeeDtrFail, updateEmployeeDtrSuccess } = useDtrStore(
+    (state) => ({
+      employeeDailyRecord: state.employeeDailyRecord,
+      updateEmployeeDtr: state.updateEmployeeDtr,
+      updateEmployeeDtrSuccess: state.updateEmployeeDtrSuccess,
+      updateEmployeeDtrFail: state.updateEmployeeDtrFail,
+    })
+  );
 
   const onSubmit = async (data: Partial<EmployeeDtr>) => {
     // initialize an empty array
@@ -189,19 +178,11 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         </Alert.Footer>
       </Alert>
 
-      <Modal
-        open={modalState}
-        setOpen={setModalState}
-        steady
-        size={windowWidth > 1024 ? 'sm' : 'full'}
-      >
+      <Modal open={modalState} setOpen={setModalState} steady size={windowWidth > 1024 ? 'sm' : 'full'}>
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full pl-5">
             <span className="text-xl md:text-2xl">Time Log Correction</span>
-            <button
-              className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
-              onClick={closeModal}
-            >
+            <button className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full" onClick={closeModal}>
               <HiX />
             </button>
           </div>
@@ -240,11 +221,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   isError={errors.timeIn ? true : false}
                   errorMessage={errors.timeIn?.message}
                   className={
-                    dirtyFields.timeIn && !errors.timeIn
-                      ? 'bg-green-300'
-                      : errors.timeIn
-                      ? 'bg-red-200'
-                      : 'bg-inherit'
+                    dirtyFields.timeIn && !errors.timeIn ? 'bg-green-300' : errors.timeIn ? 'bg-red-200' : 'bg-inherit'
                   }
                 />
               </div>

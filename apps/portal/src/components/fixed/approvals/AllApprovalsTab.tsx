@@ -151,7 +151,7 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
   return (
     <>
       {passslips && passslips.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {passslips.map((item: PassSlip, index: number) => {
             return (
               <li
@@ -175,7 +175,7 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
           })}
         </ul>
       ) : leaves && leaves.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {leaves.map((item: SupervisorLeaveDetails, index: number) => {
             return (
               <li
@@ -208,7 +208,7 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
           })}
         </ul>
       ) : overtime && overtime.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {overtime.map((item: any, index: number) => {
             return (
               <li

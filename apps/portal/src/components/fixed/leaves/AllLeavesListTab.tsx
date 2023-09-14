@@ -43,7 +43,7 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
   return (
     <>
       {leaves && leaves.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {leaves.map((leave: EmployeeLeave, index: number) => {
             return (
               <li

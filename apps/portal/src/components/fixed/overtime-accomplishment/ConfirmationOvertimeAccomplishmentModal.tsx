@@ -2,25 +2,18 @@
 
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 
 type ConfirmationModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  action: LeaveStatus; // disapprove or cancel
-  tokenId: string; //like pass Slip Id, leave Id etc.
-  remarks: string; //reason for disapproval, cancellation
 };
 
 export const ConfirmationOvertimeAccomplishmentModal = ({
   modalState,
   setModalState,
   closeModalAction,
-  action,
-  tokenId,
-  remarks,
 }: ConfirmationModalProps) => {
   const handleSubmit = () => {
     // if (tokenId) {
@@ -42,10 +35,9 @@ export const ConfirmationOvertimeAccomplishmentModal = ({
   //     patchLeaveFail(result);
   //   } else {
   //     patchLeaveSuccess(result);
-  //     closeModalAction(); // close confirmation of decline modal
+  //     closeModalAction();
   //     setTimeout(() => {
-  //       setPendingLeaveModalIsOpen(false); // close leave pending modal
-  //       setApprovedLeaveModalIsOpen(false);
+  //       setPendingOvertimeAccomplishmentModalIsOpen(false);
   //     }, 200);
   //   }
   // };
@@ -58,14 +50,7 @@ export const ConfirmationOvertimeAccomplishmentModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>
-                {/* {LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                  ? 'Disapprove Leave Application'
-                  : LeaveStatus.CANCELLED
-                  ? 'Disapprove Leave Application'
-                  : 'Leave Application'} */}
-                Overtime Accomplishment Report
-              </span>
+              <span>Overtime Accomplishment Report</span>
             </div>
           </h3>
         </Modal.Header>
@@ -79,7 +64,7 @@ export const ConfirmationOvertimeAccomplishmentModal = ({
             />
           ) : null} */}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
-            {`Are you sure you want to submit this accomplishment report?`}
+            {`Are you sure you want to submit this Overtime Accomplishment Report?`}
           </div>
         </Modal.Body>
         <Modal.Footer>

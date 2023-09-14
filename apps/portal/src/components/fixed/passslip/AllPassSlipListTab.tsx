@@ -43,7 +43,7 @@ export const AllPassSlipListTab = ({ passslips, tab }: AllPassSlipListTabProps) 
   return (
     <>
       {passslips && passslips.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {passslips.map((item: PassSlip, index: number) => {
             return (
               <li
