@@ -7,26 +7,14 @@ import {
   getEmpMonitoring,
   postEmpMonitoring,
 } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import {
-  getHRIS,
-  postHRIS,
-} from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
+import { getHRIS, postHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
 import { isEmpty } from 'lodash';
 
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
-import {
-  PostRequestUserRoles,
-  UserRole,
-} from 'apps/employee-monitoring/src/utils/types/user.type';
+import { PostRequestUserRoles, UserRole } from 'apps/employee-monitoring/src/utils/types/user.type';
 import { useUsersStore } from 'apps/employee-monitoring/src/store/user.store';
 
-import {
-  Modal,
-  AlertNotification,
-  LoadingSpinner,
-  Button,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
 import { SelectListRF } from '../../../inputs/SelectListRF';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
@@ -44,196 +32,17 @@ const yupSchema = yup
   })
   .required();
 
-const mockDataModules: Array<Module> = [
-  {
-    _id: 'dda572e1-3816-11ee-8170-005056b680ac',
-    module: 'Employee Schedules',
-    slug: 'employeeSchedules',
-    url: '/employee-schedules',
-  },
-  {
-    _id: 'dda58b5e-3816-11ee-8170-005056b680ac',
-    module: 'Daily Time Record',
-    slug: 'dailyTimeRecord',
-    url: '/daily-time-record',
-  },
-  {
-    _id: 'dda598b6-3816-11ee-8170-005056b680ac',
-    module: 'Leave Ledger',
-    slug: 'leaveLedger',
-    url: '/leave-ledger',
-  },
-  {
-    _id: 'dda5adce-3816-11ee-8170-005056b680ac',
-    module: 'Scheduling Sheets',
-    slug: 'schedulingSheets',
-    url: '/scheduling-sheets',
-  },
-  {
-    _id: 'dda5bc73-3816-11ee-8170-005056b680ac',
-    module: 'Scheduling Sheet Station',
-    slug: 'schedulingSheetStation',
-    url: '/scheduling-sheet-station',
-  },
-  {
-    _id: 'dda5d9c7-3816-11ee-8170-005056b680ac',
-    module: 'Scheduling Sheet Field',
-    slug: 'schedulingSheetField',
-    url: '/scheduling-sheet-field',
-  },
-  {
-    _id: 'dda5e67a-3816-11ee-8170-005056b680ac',
-    module: 'Overtime',
-    slug: 'overtime',
-    url: '/overtime',
-  },
-  {
-    _id: 'dda5f284-3816-11ee-8170-005056b680ac',
-    module: 'Leave Applications',
-    slug: 'leaveApplications',
-    url: '/leave-applications',
-  },
-  {
-    _id: 'dda5ff92-3816-11ee-8170-005056b680ac',
-    module: 'Schedules',
-    slug: 'schedules',
-    url: '/schedules',
-  },
-  {
-    _id: 'dda60b5d-3816-11ee-8170-005056b680ac',
-    module: 'Schedule Office',
-    slug: 'scheduleOffice',
-    url: '/schedule-office',
-  },
-  {
-    _id: 'dda617f1-3816-11ee-8170-005056b680ac',
-    module: 'Schedule Field',
-    slug: 'scheduleField',
-    url: '/schedule-field',
-  },
-  {
-    _id: 'dda6246b-3816-11ee-8170-005056b680ac',
-    module: 'Schedule Station',
-    slug: 'scheduleStation',
-    url: '/schedule-station',
-  },
-  {
-    _id: 'dda6313d-3816-11ee-8170-005056b680ac',
-    module: 'Pass Slips',
-    slug: 'passSlips',
-    url: '/pass-slips',
-  },
-  {
-    _id: 'dda63de2-3816-11ee-8170-005056b680ac',
-    module: 'Event Holidays',
-    slug: 'eventHolidays',
-    url: '/event-holidays',
-  },
-  {
-    _id: 'dda64b75-3816-11ee-8170-005056b680ac',
-    module: 'Event Work Suspensions',
-    slug: 'eventWorkSuspensions',
-    url: '/event-work-suspensions',
-  },
-  {
-    _id: 'dda65881-3816-11ee-8170-005056b680ac',
-    module: 'Leave Benefits',
-    slug: 'leaveBenefits',
-    url: '/leave-benefits',
-  },
-  {
-    _id: 'dda669f7-3816-11ee-8170-005056b680ac',
-    module: 'Leave Benefit Cumulative',
-    slug: 'leaveBenefitCumulative',
-    url: '/leave-benefit-cumulative',
-  },
-  {
-    _id: 'dda6758d-3816-11ee-8170-005056b680ac',
-    module: 'Leave Benefit Recurring',
-    slug: 'leaveBenefitRecurring',
-    url: '/leave-benefit-recurring',
-  },
-  {
-    _id: 'dda6815b-3816-11ee-8170-005056b680ac',
-    module: 'Leave Benefit Special',
-    slug: 'leaveBenefitSpecial',
-    url: '/leave-benefit-special',
-  },
-  {
-    _id: 'dda68de3-3816-11ee-8170-005056b680ac',
-    module: 'Travel Orders',
-    slug: 'travelOrders',
-    url: '/travel-orders',
-  },
-  {
-    _id: 'dda69a26-3816-11ee-8170-005056b680ac',
-    module: 'Users',
-    slug: 'users',
-    url: '/users',
-  },
-  {
-    _id: 'dda6a5ca-3816-11ee-8170-005056b680ac',
-    module: 'Officer of the Day',
-    slug: 'officerOfTheDay',
-    url: '/officer-of-the-day',
-  },
-  {
-    _id: 'dda6b234-3816-11ee-8170-005056b680ac',
-    module: 'System Logs',
-    slug: 'systemLogs',
-    url: '/system-logs',
-  },
-  {
-    _id: 'e19eba7f-bb64-4936-890c-6f6d51f2c5eb',
-    module: 'Settings Module',
-    slug: 'settings',
-    url: '/settings',
-  },
-  {
-    _id: 'eb3bbd5e-cdbf-4a05-bea0-8d3486fdac1d',
-    module: 'Personnel Selection',
-    slug: 'personnelSelection',
-    url: '/personnel-selection',
-  },
-];
-
-const mockDataUsers: Array<SelectOption> = [
-  {
-    label: 'Aquino, Wilhem R. ',
-    value: '05b065ee-b191-11ed-a79b-000c29f95a80',
-  },
-  {
-    label: 'Decrepito, Haniel O. ',
-    value: 'af595d1a-b26e-11ed-a79b-000c29f95a80',
-  },
-  {
-    label: 'Lucas, Lipsy Grace C. ',
-    value: 'af6f15a4-b26e-11ed-a79b-000c29f95a80',
-  },
-  {
-    label: 'Nudos, Melanie ',
-    value: 'b8544c5a-8f7d-424e-99e8-b035ac41ec5d',
-  },
-];
-
-const AddUserModal: FunctionComponent<AddModalProps> = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}) => {
+const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
   const [userRoles, setUserRoles] = useState<Array<UserRole>>([]);
-  const [isDoneModuleToUserRole, setIsDoneModuleToUserRole] =
-    useState<boolean>(false);
+  const [isDoneModuleToUserRole, setIsDoneModuleToUserRole] = useState<boolean>(false);
 
   // Zustand initialization
-  const { Modules, SetGetModules, SetErrorModules } = useModulesStore(
-    (state) => ({
-      Modules: state.getModules,
-      SetGetModules: state.setGetModules,
+  const { Modules, SetGetModules, SetErrorModules } = useModulesStore((state) => ({
+    Modules: state.getModules,
+    SetGetModules: state.setGetModules,
 
-      SetErrorModules: state.setErrorModules,
-    })
-  );
+    SetErrorModules: state.setErrorModules,
+  }));
 
   const {
     NonEmsUsers,
@@ -279,9 +88,7 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({
   });
 
   // form submission
-  const onSubmit: SubmitHandler<PostRequestUserRoles> = (
-    data: PostRequestUserRoles
-  ) => {
+  const onSubmit: SubmitHandler<PostRequestUserRoles> = (data: PostRequestUserRoles) => {
     EmptyResponse();
 
     handlePostResult(data);
@@ -362,12 +169,7 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({
   return (
     <>
       {/* Notification */}
-      {!isEmpty(PostUser) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="User added successfully"
-        />
-      ) : null}
+      {!isEmpty(PostUser) ? <ToastNotification toastType="success" notifMessage="User added successfully" /> : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header withCloseBtn>
