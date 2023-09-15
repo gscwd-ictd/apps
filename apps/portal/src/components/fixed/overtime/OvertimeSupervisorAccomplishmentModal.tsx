@@ -5,7 +5,6 @@ import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
-import { ConfirmationOvertimeAccomplishmentModal } from './ConfirmationOvertimeAccomplishmentModal';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { useForm } from 'react-hook-form';
@@ -17,7 +16,7 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     overtimeDetails,
     confirmOvertimeAccomplishmentModalIsOpen,
@@ -73,12 +72,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {/* Confirm Overtime Accomplishment Modal */}
-          <ConfirmationOvertimeAccomplishmentModal
-            modalState={confirmOvertimeAccomplishmentModalIsOpen}
-            setModalState={setConfirmOvertimeAccomplishmentModalIsOpen}
-            closeModalAction={closeConfirmOvertimeAccomplishmentModal}
-          />
           {!overtimeDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -95,46 +88,15 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
-                  <AlertNotification alertType="info" notifMessage="Awaiting submission" dismissible={false} />
-
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Name:</label>
 
                       <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.plannedDate}</label>
+                        <label className="text-slate-500 w-full text-md ">{'Test Name'}</label>
                       </div>
                     </div>
                   </div>
-
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Estimated Hours:</label>
-
-                      <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.estimatedHours}</label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employees:</label>
-
-                      <div className="w-full md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">
-                          {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
-                            return (
-                              <label key={index}>
-                                {index == 0 ? null : ', '}
-                                {employee.fullName}
-                              </label>
-                            );
-                          })}
-                        </label>
-                      </div>
-                    </div>
-                  </div> */}
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
@@ -202,7 +164,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             label={''}
                             className="w-full  text-slate-400 font-medium"
                             textSize="md"
+                            disabled
                             controller={{
+                              value: '17:00:00',
                               ...register('encodeTimeIn', {
                                 onChange: (e) => {
                                   setValue('encodeTimeIn', e.target.value, {
@@ -222,7 +186,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             label={''}
                             className="w-full text-slate-400 font-medium"
                             textSize="md"
+                            disabled
                             controller={{
+                              value: '19:00:00',
                               ...register('encodeTimeOut', {
                                 onChange: (e) => {
                                   setValue('encodeTimeOut', e.target.value, {
@@ -240,24 +206,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                   <div className="flex flex-col justify-between items-center w-full">
                     <div className="flex flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Purpose:</label>
-                    </div>
-                    <textarea
-                      disabled
-                      rows={2}
-                      className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={overtimeDetails.purpose}
-                    ></textarea>
-                  </div>
-                  <div className="flex flex-col justify-between items-center w-full">
-                    <div className="flex flex-row justify-between items-center w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Accomplishment:</label>
                     </div>
                     <textarea
                       required
                       rows={3}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      placeholder="Please enter your accomplishments"
+                      placeholder="Accomplishments"
                       {...register('accomplishments')}
                     ></textarea>
                   </div>
@@ -268,14 +223,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Button
-              variant={'primary'}
-              size={'md'}
-              loading={false}
-              onClick={(e) => setConfirmOvertimeAccomplishmentModalIsOpen(true)}
-              type="submit"
-            >
-              Submit Accomplishment
+            <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+              Close
             </Button>
           </div>
         </Modal.Footer>
@@ -284,4 +233,4 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   );
 };
 
-export default OvertimeAccomplishmentModal;
+export default OvertimeSupervisorAccomplishmentModal;

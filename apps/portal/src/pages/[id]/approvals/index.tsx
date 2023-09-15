@@ -7,8 +7,7 @@ import { MainContainer } from '../../../components/modular/custom/containers/Mai
 import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
-// import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { getUserDetails, withCookieSession, withSession } from '../../../utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
@@ -28,6 +27,7 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
+import ApprovalsOvertimeModal from 'apps/portal/src/components/fixed/approvals/ApprovalsOvertimeModal';
 
 export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -41,6 +41,10 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen,
+
+    pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen,
 
     patchResponsePassSlip,
     patchResponseLeave,
@@ -60,6 +64,10 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen,
+
+    setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen,
 
     getPassSlipList,
     getPassSlipListSuccess,
@@ -81,6 +89,10 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
 
+    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
+
     patchResponsePassSlip: state.response.patchResponsePassSlip,
     patchResponseLeave: state.response.patchResponseLeave,
     loadingPassSlip: state.loading.loadingPassSlips,
@@ -99,6 +111,10 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
+
+    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen: state.setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen: state.setDisapprovedOvertimeModalIsOpen,
 
     getPassSlipList: state.getPassSlipList,
     getPassSlipListSuccess: state.getPassSlipListSuccess,
@@ -119,6 +135,21 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
+
+  // cancel action for Pending Overtime Application Modal
+  const closePendingOvertimeModal = async () => {
+    setPendingOvertimeModalIsOpen(false);
+  };
+
+  // cancel action for Approved Overtime Application Modal
+  const closeApprovedOvertimeModal = async () => {
+    setApprovedOvertimeModalIsOpen(false);
+  };
+
+  // cancel action for Approved Overtime Application Modal
+  const closeDisapprovedOvertimeModal = async () => {
+    setDisapprovedOvertimeModalIsOpen(false);
+  };
 
   // cancel action for Pending Leave Application Modal
   const closePendingLeaveModal = async () => {
@@ -281,6 +312,27 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
           </Head>
 
           <SideNav employeeDetails={employeeDetails} />
+
+          {/* Pending Overtime Approval Modal */}
+          <ApprovalsOvertimeModal
+            modalState={pendingOvertimeModalIsOpen}
+            setModalState={setPendingOvertimeModalIsOpen}
+            closeModalAction={closePendingOvertimeModal}
+          />
+
+          {/* Approved Overtime Approval Modal */}
+          <ApprovalsOvertimeModal
+            modalState={approvedOvertimeModalIsOpen}
+            setModalState={setApprovedOvertimeModalIsOpen}
+            closeModalAction={closeApprovedOvertimeModal}
+          />
+
+          {/* Disapproved Overtime Approval Modal */}
+          <ApprovalsOvertimeModal
+            modalState={disapprovedOvertimeModalIsOpen}
+            setModalState={setDisapprovedOvertimeModalIsOpen}
+            closeModalAction={closeDisapprovedOvertimeModal}
+          />
 
           {/* Pending Leave Approval Modal */}
           <ApprovalsPendingLeaveModal

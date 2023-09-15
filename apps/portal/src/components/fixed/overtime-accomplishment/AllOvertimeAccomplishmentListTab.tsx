@@ -1,13 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
-import {
-  EmployeeOvertimeDetail,
-  OvertimeAccomplishmentDetails,
-  useOvertimeAccomplishmentStore,
-} from 'apps/portal/src/store/overtime-accomplishment.store';
+import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
+import { EmployeeOvertimeDetail, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 
 type TabProps = {
-  overtime: Array<OvertimeAccomplishmentDetails>;
+  overtime: Array<OvertimeDetails>;
   tab: number;
 };
 
@@ -27,7 +24,7 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
     setCompletedOvertimeAccomplishmentModalIsOpen: state.setCompletedOvertimeAccomplishmentModalIsOpen,
   }));
 
-  const OnSelect = (overtime: OvertimeAccomplishmentDetails) => {
+  const OnSelect = (overtime: OvertimeDetails) => {
     setOvertimeDetails(overtime);
     if (tab === 1) {
       if (!pendingOvertimeAccomplishmentModalIsOpen) {
@@ -44,7 +41,7 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
     <>
       {overtime && overtime.length > 0 ? (
         <ul className="mt-0">
-          {overtime.map((overtime: OvertimeAccomplishmentDetails, index: number) => {
+          {overtime.map((overtime: OvertimeDetails, index: number) => {
             return (
               <li
                 key={index}

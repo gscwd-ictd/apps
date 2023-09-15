@@ -14,28 +14,9 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
 import { CalendarDate, LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { OvertimeDetails, useOvertimeStore } from 'apps/portal/src/store/overtime.store';
+import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { MySelectList } from '../../modular/inputs/SelectList';
 import { OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
-
-const listOfEmployees: Array<SelectOption> = [
-  { label: 'Ricardo Vicente Narvaiza', value: '0' },
-  { label: 'Mikhail Sebua', value: '1' },
-  { label: 'Jay Nosotros', value: '2' },
-  { label: 'Eric Sison', value: '3' },
-  { label: 'Allyn Joseph Cubero', value: '4' },
-  { label: 'John Henry Alfeche', value: '5' },
-  { label: 'Phyll Patrick Fragata', value: '6' },
-  { label: 'Deo Del Rosario', value: '7' },
-  { label: 'Cara Jade Reyes', value: '8' },
-  { label: 'Rizza Baugbog', value: '9' },
-  { label: 'Kumier Lou Arancon', value: '10' },
-  { label: 'Roland Bacayo', value: '11' },
-  { label: 'Alfred Perez', value: '12' },
-  { label: 'Elea Glen Lacerna', value: '13' },
-  { label: 'Ricky Libertad', value: '14' },
-  { label: 'Deo Del Rosario 2', value: '15' },
-];
 
 type ModalProps = {
   modalState: boolean;
@@ -70,7 +51,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeForm>({
     mode: 'onChange',
     defaultValues: {
-      overtimeSupervisorId: employeeDetails.employmentDetails.userId,
+      overtimeSupervisorId: employeeDetails.employmentDetails.overtimeImmediateSupervisorId,
       plannedDate: '',
       estimatedHours: 0,
       purpose: '',

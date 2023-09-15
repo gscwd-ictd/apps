@@ -1,11 +1,11 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
-import { ErrorState, ModalState } from '../types/modal.type';
-// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ModalState } from '../types/modal.type';
 import { SupervisorLeaveDetails } from '../../../../libs/utils/src/lib/types/leave-application.type';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
+import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 
 export type ApprovalLeaveList = {
   completed: {
@@ -63,10 +63,10 @@ export type ApprovalState = {
 
   overtime: {
     completed: {
-      approved: Array<any>;
-      disapproved: Array<any>;
+      approved: Array<OvertimeDetails>;
+      disapproved: Array<OvertimeDetails>;
     };
-    forApproval: Array<any>;
+    forApproval: Array<OvertimeDetails>;
   };
 
   response: {
@@ -141,6 +141,9 @@ export type ApprovalState = {
 
   otpOvertimeModalIsOpen: boolean;
   setOtpOvertimeModalIsOpen: (otpOvertimeModalIsOpen: boolean) => void;
+
+  overtimeDetails: OvertimeDetails;
+  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
 
   // PASS SLIPS
   passSlipId: string;
@@ -263,6 +266,11 @@ export const useApprovalStore = create<ApprovalState>()(
     approvedOvertimeModalIsOpen: false,
     disapprovedOvertimeModalIsOpen: false,
     cancelledOvertimeModalIsOpen: false,
+
+    overtimeDetails: {} as OvertimeDetails,
+    setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
+      set((state) => ({ ...state, overtimeDetails }));
+    },
 
     // PASS SLIPS
     passSlipId: '',

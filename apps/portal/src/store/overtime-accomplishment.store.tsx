@@ -1,37 +1,19 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeDetails, OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-
-export type OvertimeAccomplishmentDetails = {
-  id: string;
-  plannedDate: string;
-  estimatedHours: string;
-  purpose: string;
-  status: string;
-  immediateSupervisorName: string;
-  employees: Array<EmployeeOvertimeDetail>;
-};
-
-export type EmployeeOvertimeDetail = {
-  employeeId: string;
-  companyId: string;
-  fullName: string;
-  scheduleBase: string;
-  avatarUrl: string;
-  assignment: string;
-};
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 export type OvertimeList = {
-  forApproval: Array<OvertimeAccomplishmentDetails>;
-  completed: Array<OvertimeAccomplishmentDetails>;
+  forApproval: Array<OvertimeDetails>;
+  completed: Array<OvertimeDetails>;
 };
 
 export type OvertimeState = {
   overtime: {
-    forApproval: Array<OvertimeAccomplishmentDetails>;
-    completed: Array<OvertimeAccomplishmentDetails>;
+    forApproval: Array<OvertimeDetails>;
+    completed: Array<OvertimeDetails>;
   };
   response: {
     postResponseApply: any;
@@ -49,7 +31,7 @@ export type OvertimeState = {
     errorEmployeeList: string;
   };
 
-  overtimeDetails: OvertimeAccomplishmentDetails;
+  overtimeDetails: OvertimeDetails;
   pendingOvertimeAccomplishmentModalIsOpen: boolean;
   completedOvertimeAccomplishmentModalIsOpen: boolean;
   confirmOvertimeAccomplishmentModalIsOpen: boolean;
@@ -71,7 +53,7 @@ export type OvertimeState = {
   setCompletedOvertimeAccomplishmentModalIsOpen: (completedOvertimeAccomplishmentModalIsOpen: boolean) => void;
   setConfirmOvertimeAccomplishmentModalIsOpen: (confirmOvertimeAccomplishmentModalIsOpen: boolean) => void;
 
-  setOvertimeDetails: (overtimeDetails: OvertimeAccomplishmentDetails) => void;
+  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
   setTab: (tab: number) => void;
 
   emptyResponseAndError: () => void;
@@ -86,7 +68,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
           plannedDate: '2023-09-08',
           estimatedHours: '3',
           purpose: 'Repair of computers',
-          status: 'pending',
+          status: OvertimeStatus.APPROVED,
           immediateSupervisorName: 'Michael G. Gabales',
           employees: [
             {
@@ -122,7 +104,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
           plannedDate: '2023-09-08',
           estimatedHours: '3',
           purpose: 'Repair of computers',
-          status: 'approved',
+          status: OvertimeStatus.APPROVED,
           immediateSupervisorName: 'Michael G. Gabales',
           employees: [
             {
@@ -155,7 +137,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
     },
     response: {
       postResponseApply: {},
-      cancelResponse: {} as OvertimeAccomplishmentDetails,
+      cancelResponse: {} as OvertimeDetails,
     },
     loading: {
       loadingOvertime: false,
@@ -168,7 +150,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
       errorEmployeeList: '',
     },
 
-    overtimeDetails: {} as OvertimeAccomplishmentDetails,
+    overtimeDetails: {} as OvertimeDetails,
 
     pendingOvertimeAccomplishmentModalIsOpen: false,
     completedOvertimeAccomplishmentModalIsOpen: false,
@@ -192,7 +174,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
       set((state) => ({ ...state, confirmOvertimeAccomplishmentModalIsOpen }));
     },
 
-    setOvertimeDetails: (overtimeDetails: OvertimeAccomplishmentDetails) => {
+    setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
       set((state) => ({ ...state, overtimeDetails }));
     },
 
@@ -298,7 +280,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
         ...state,
         response: {
           ...state.response,
-          cancelResponse: {} as OvertimeAccomplishmentDetails,
+          cancelResponse: {} as OvertimeDetails,
         },
         loading: {
           ...state.loading,
@@ -310,7 +292,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
         },
       }));
     },
-    cancelOvertimeSuccess: (response: OvertimeAccomplishmentDetails) => {
+    cancelOvertimeSuccess: (response: OvertimeDetails) => {
       set((state) => ({
         ...state,
         response: {

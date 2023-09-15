@@ -48,6 +48,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getEmployeeList,
     getEmployeeListSuccess,
     getEmployeeListFail,
+    getOvertimeList,
+    getOvertimeListSuccess,
+    getOvertimeListFail,
     emptyResponseAndError,
   } = useOvertimeStore((state) => ({
     tab: state.tab,
@@ -66,6 +69,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getEmployeeList: state.getEmployeeList,
     getEmployeeListSuccess: state.getEmployeeListSuccess,
     getEmployeeListFail: state.getEmployeeListFail,
+    getOvertimeList: state.getOvertimeList,
+    getOvertimeListSuccess: state.getOvertimeListSuccess,
+    getOvertimeListFail: state.getOvertimeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
@@ -104,7 +110,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     data: swrEmployeeList,
     isLoading: swrEmployeeListIsLoading,
     error: swrEmployeeListError,
-    mutate: mutateLeaves,
+    mutate: mutateEmployeeList,
   } = useSWR(employeeListUrl, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
@@ -128,9 +134,40 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [swrEmployeeList, swrEmployeeListError]);
 
+  const overtimeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.overtimeImmediateSupervisorId}`;
+
+  const {
+    data: swrOvertimeList,
+    isLoading: swrOvertimeListIsLoading,
+    error: swrOvertimeListError,
+    mutate: mutateOvertimeList,
+  } = useSWR(overtimeListUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeListIsLoading) {
+      getOvertimeList(swrOvertimeListIsLoading);
+    }
+  }, [swrOvertimeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    console.log(swrOvertimeList);
+    if (!isEmpty(swrOvertimeList)) {
+      getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
+    }
+
+    if (!isEmpty(swrOvertimeListError)) {
+      getOvertimeListFail(swrOvertimeListIsLoading, swrOvertimeListError.message);
+    }
+  }, [swrOvertimeList, swrOvertimeListError]);
+
   useEffect(() => {
     if (!isEmpty(responseApply)) {
-      mutateLeaves();
+      mutateOvertimeList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 3000);
@@ -140,7 +177,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   return (
     <>
       <>
-        {/* Leave Ledger Load Failed */}
+        {/* Employee List Load Failed */}
         {!isEmpty(swrEmployeeListError) ? (
           <>
             <ToastNotification
@@ -155,12 +192,15 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
           <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
         ) : null}
 
-        {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
-        {/* {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
+        {/* List of Overtime Load Failed */}
+        {!isEmpty(swrOvertimeListError) ? (
           <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`}
+            />
           </>
-        ) : null} */}
+        ) : null}
 
         {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
         {/* {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (

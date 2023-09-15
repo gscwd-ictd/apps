@@ -86,17 +86,17 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
       if (!pendingPassSlipModalIsOpen) {
         setPendingPassSlipModalIsOpen(true);
       }
-    } else if (tab === 3) {
+    } else if (tab === 4) {
       // APPROVED PASS SLIP
       if (!approvedPassSlipModalIsOpen) {
         setApprovedPassSlipModalIsOpen(true);
       }
-    } else if (tab === 5) {
+    } else if (tab === 7) {
       // DISAPPROVED PASS SLIP
       if (!disapprovedPassSlipModalIsOpen) {
         setDisapprovedPassSlipModalIsOpen(true);
       }
-    } else if (tab === 7) {
+    } else if (tab === 10) {
       // DISAPPROVED PASS SLIP
       if (!cancelledPassSlipModalIsOpen) {
         setCancelledPassSlipModalIsOpen(true);
@@ -111,17 +111,17 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
       if (!pendingLeaveModalIsOpen) {
         setPendingLeaveModalIsOpen(true);
       }
-    } else if (tab === 4) {
+    } else if (tab === 5) {
       // APPROVED LEAVES
       if (!approvedLeaveModalIsOpen) {
         setApprovedLeaveModalIsOpen(true);
       }
-    } else if (tab === 6) {
+    } else if (tab === 8) {
       // DISAPPROVED LEAVES
       if (!disapprovedLeaveModalIsOpen) {
         setDisapprovedLeaveModalIsOpen(true);
       }
-    } else if (tab === 8) {
+    } else if (tab === 11) {
       // DISAPPROVED LEAVES
       if (!cancelledLeaveModalIsOpen) {
         setCancelledLeaveModalIsOpen(true);
@@ -135,12 +135,12 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
       if (!pendingOvertimeModalIsOpen) {
         setPendingOvertimeModalIsOpen(true);
       }
-    } else if (tab === 4) {
+    } else if (tab === 6) {
       // APPROVED OVERTIME
       if (!approvedOvertimeModalIsOpen) {
         setApprovedOvertimeModalIsOpen(true);
       }
-    } else if (tab === 6) {
+    } else if (tab === 9) {
       // DISAPPROVED OVERTIME
       if (!disapprovedOvertimeModalIsOpen) {
         setDisapprovedOvertimeModalIsOpen(true);
