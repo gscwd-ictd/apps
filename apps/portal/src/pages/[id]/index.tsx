@@ -336,6 +336,5 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 //use for official user
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const userDetails = getUserDetails();
-  console.log(userDetails);
   return { props: { userDetails } };
 });

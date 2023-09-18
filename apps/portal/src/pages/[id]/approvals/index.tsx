@@ -48,12 +48,17 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
     patchResponsePassSlip,
     patchResponseLeave,
+    patchResponseOvertime,
     loadingPassSlip,
     loadingLeave,
+    loadingOvertime,
+
     errorPassSlip,
     errorPassSlipResponse,
     errorLeave,
     errorLeaveResponse,
+    errorOvertime,
+    errorOvertimeResponse,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -76,6 +81,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     getLeaveList,
     getLeaveListSuccess,
     getLeaveListFail,
+
+    getOvertimeList,
+    getOvertimeListSuccess,
+    getOvertimeListFail,
+
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
     tab: state.tab,
@@ -95,12 +105,16 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
     patchResponsePassSlip: state.response.patchResponsePassSlip,
     patchResponseLeave: state.response.patchResponseLeave,
+    patchResponseOvertime: state.response.patchResponseOvertime,
     loadingPassSlip: state.loading.loadingPassSlips,
     loadingLeave: state.loading.loadingLeaves,
+    loadingOvertime: state.loading.loadingOvertime,
     errorPassSlip: state.error.errorPassSlips,
     errorPassSlipResponse: state.error.errorPassSlipResponse,
     errorLeave: state.error.errorLeaves,
     errorLeaveResponse: state.error.errorLeaveResponse,
+    errorOvertime: state.error.errorOvertime,
+    errorOvertimeResponse: state.error.errorOvertimeResponse,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -123,6 +137,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     getLeaveList: state.getLeaveList,
     getLeaveListSuccess: state.getLeaveListSuccess,
     getLeaveListFail: state.getLeaveListFail,
+
+    getOvertimeList: state.getOvertimeList,
+    getOvertimeListSuccess: state.getOvertimeListSuccess,
+    getOvertimeListFail: state.getOvertimeListFail,
+
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
@@ -252,6 +271,37 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     }
   }, [swrLeaves, swrLeaveError]);
 
+  const overtimeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval`;
+
+  const {
+    data: swrOvertimeList,
+    isLoading: swrOvertimeListIsLoading,
+    error: swrOvertimeListError,
+    mutate: mutateOvertime,
+  } = useSWR(overtimeListUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeListIsLoading) {
+      getOvertimeList(swrOvertimeListIsLoading);
+    }
+  }, [swrOvertimeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    console.log(swrOvertimeList);
+    if (!isEmpty(swrOvertimeList)) {
+      getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
+    }
+
+    if (!isEmpty(swrOvertimeListError)) {
+      getOvertimeListFail(swrOvertimeListIsLoading, swrOvertimeListError.message);
+    }
+  }, [swrOvertimeList, swrOvertimeListError]);
+
   useEffect(() => {
     if (!isEmpty(patchResponsePassSlip)) {
       mutatePassSlips();
@@ -265,17 +315,22 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         emptyResponseAndError();
       }, 5000);
     }
-    if (!isEmpty(patchResponseLeave)) {
-      mutateLeaves();
+    if (!isEmpty(patchResponseOvertime)) {
+      mutateOvertime();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [patchResponsePassSlip, patchResponseLeave]);
+  }, [patchResponsePassSlip, patchResponseLeave, patchResponseOvertime]);
 
   return (
     <>
       <>
+        {/* Pass Slip Patch Success */}
+        {!isEmpty(patchResponseOvertime) ? (
+          <ToastNotification toastType="success" notifMessage={`Overtime Application action submitted.`} />
+        ) : null}
+
         {/* Pass Slip Patch Success */}
         {!isEmpty(patchResponsePassSlip) ? (
           <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
@@ -286,6 +341,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
           <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
         ) : null}
 
+        {/* Overtime Patch Failed Error */}
+        {!isEmpty(errorOvertimeResponse) ? (
+          <ToastNotification toastType="error" notifMessage={`Overtime Application action failed.`} />
+        ) : null}
+
         {/* Pass Slip Patch Failed Error */}
         {!isEmpty(errorPassSlipResponse) ? (
           <ToastNotification toastType="error" notifMessage={`Pass Slip Application action failed.`} />
@@ -294,6 +354,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         {/* Leave Patch Failed Error */}
         {!isEmpty(errorLeaveResponse) ? (
           <ToastNotification toastType="error" notifMessage={`Leave Application action failed.`} />
+        ) : null}
+
+        {/* Overtime List Load Failed Error */}
+        {!isEmpty(errorOvertime) ? (
+          <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtimes.`} />
         ) : null}
 
         {/* Pass Slip List Load Failed Error */}

@@ -2,19 +2,16 @@
 import dayjs from 'dayjs';
 import { useApprovalStore } from '../../../../src/store/approvals.store';
 
-import {
-  EmployeeLeaveDetails,
-  MonitoringLeave,
-  SupervisorLeaveDetails,
-} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import { SupervisorLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 
 import { PassSlip, PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { EmployeeOvertimeDetail, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
   leaves: Array<SupervisorLeaveDetails> | null;
-  overtime: any | null;
+  overtime: Array<OvertimeDetails> | null;
   tab: number;
 };
 
@@ -46,6 +43,7 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
 
     setPassSlipIndividualDetail,
     setLeaveIndividualDetail,
+    setOvertimeDetails,
   } = useApprovalStore((state) => ({
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
@@ -70,8 +68,10 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
+
     setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
     setLeaveIndividualDetail: state.setLeaveIndividualDetail,
+    setOvertimeDetails: state.setOvertimeDetails,
 
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setApprovedOvertimeModalIsOpen: state.setApprovedOvertimeModalIsOpen,
@@ -129,7 +129,8 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
     }
   };
 
-  const onSelectOvertime = (overtimeDetails: any) => {
+  const onSelectOvertime = (overtimeDetails: OvertimeDetails) => {
+    setOvertimeDetails(overtimeDetails);
     if (tab === 3) {
       // PENDING APPROVAL OVERTIME
       if (!pendingOvertimeModalIsOpen) {
@@ -209,7 +210,7 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
         </ul>
       ) : overtime && overtime.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
-          {overtime.map((item: any, index: number) => {
+          {overtime.map((item: OvertimeDetails, index: number) => {
             return (
               <li
                 key={index}
@@ -217,15 +218,25 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                 className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
               >
                 <div className=" w-full py-2 px-1 ">
-                  <h1 className="font-medium text-lg text-gray-600">
-                    {/* {item.leaveName} - {item.employee.employeeName} */}
-                  </h1>
+                  <h1 className="font-medium text-lg text-gray-600">{item.immediateSupervisorName}</h1>
                   <p className="text-sm text-gray-500">
-                    Date Applied: Sept. 20, 2023
-                    {/* {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')} */}
+                    Employees:{' '}
+                    {item?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
+                      return (
+                        <label key={index}>
+                          {index == 0 ? null : ', '}
+                          {employee.fullName}
+                        </label>
+                      );
+                    })}
                   </p>
-                  <p className="text-sm text-gray-500">Employees: </p>
-                  {/* <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p> */}
+                  <p className="text-sm text-gray-500">
+                    Planned Date: {dayjs(item.plannedDate).format('MMMM DD, YYYY')}
+                  </p>
+                  <p className="text-sm text-gray-500">Estimated Hours: {item.estimatedHours}</p>
+                  <p className="text-sm text-gray-500">Purpose: {item.purpose}</p>
+                  <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
+                  <p className="text-sm text-gray-500">ID: {item.id}</p>
                 </div>
               </li>
             );

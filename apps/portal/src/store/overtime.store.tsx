@@ -1,13 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { OvertimeDetails, OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeDetails, OvertimeForm, OvertimeList } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-
-export type OvertimeList = {
-  forApproval: Array<OvertimeDetails>;
-  completed: Array<OvertimeDetails>;
-};
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;

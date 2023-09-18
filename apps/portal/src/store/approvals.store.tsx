@@ -142,9 +142,6 @@ export type ApprovalState = {
   otpOvertimeModalIsOpen: boolean;
   setOtpOvertimeModalIsOpen: (otpOvertimeModalIsOpen: boolean) => void;
 
-  overtimeDetails: OvertimeDetails;
-  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
-
   // PASS SLIPS
   passSlipId: string;
   setPassSlipId: (value: string) => void;
@@ -154,18 +151,6 @@ export type ApprovalState = {
   getPassSlipList: (loading: boolean) => void;
   getPassSlipListSuccess: (loading: boolean, response) => void;
   getPassSlipListFail: (loading: boolean, error: string) => void;
-
-  patchPassSlip: () => void;
-  patchPassSlipSuccess: (response) => void;
-  patchPassSlipFail: (error: string) => void;
-
-  patchLeave: () => void;
-  patchLeaveSuccess: (response) => void;
-  patchLeaveFail: (error: string) => void;
-
-  patchOvertime: () => void;
-  patchOvertimeSuccess: (response) => void;
-  patchOvertimeFail: (error: string) => void;
 
   // LEAVES
   leaveId: string;
@@ -178,8 +163,28 @@ export type ApprovalState = {
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
 
+  // OVERTIME
+  overtimeDetails: OvertimeDetails;
+  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
+
+  getOvertimeList: (loading: boolean) => void;
+  getOvertimeListSuccess: (loading: boolean, response) => void;
+  getOvertimeListFail: (loading: boolean, error: string) => void;
+
   tab: number;
   setTab: (tab: number) => void;
+
+  patchPassSlip: () => void;
+  patchPassSlipSuccess: (response) => void;
+  patchPassSlipFail: (error: string) => void;
+
+  patchLeave: () => void;
+  patchLeaveSuccess: (response) => void;
+  patchLeaveFail: (error: string) => void;
+
+  patchOvertime: () => void;
+  patchOvertimeSuccess: (response) => void;
+  patchOvertimeFail: (error: string) => void;
 
   emptyResponseAndError: () => void;
 };
@@ -490,6 +495,65 @@ export const useApprovalStore = create<ApprovalState>()(
         },
       }));
     },
+
+    //GET OVERTIME ACTIONS
+    getOvertimeList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtime: {
+          ...state.overtime,
+          completed: {
+            approved: [],
+            disapproved: [],
+          },
+          forApproval: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: '',
+        },
+      }));
+    },
+
+    getOvertimeListSuccess: (loading: boolean, response: ApprovalOvertimeList) => {
+      set((state) => ({
+        ...state,
+        overtime: {
+          ...state.overtime,
+          completed: {
+            approved: response.completed.approved,
+            disapproved: response.completed.disapproved,
+          },
+          forApproval: response.forApproval,
+        },
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+      }));
+    },
+    getOvertimeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
+    },
+
     //PATCH PASS SLIP ACTIONS
     patchPassSlip: () => {
       set((state) => ({

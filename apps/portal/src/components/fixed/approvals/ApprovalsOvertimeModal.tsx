@@ -6,9 +6,11 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { overtimeAction } from 'apps/portal/src/types/approvals.type';
 
 type ModalProps = {
   modalState: boolean;
@@ -16,10 +18,16 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
+const approvalAction: Array<SelectOption> = [
+  { label: 'Approve', value: `${OvertimeStatus.APPROVED}` },
+  { label: 'Disapprove', value: `${OvertimeStatus.DISAPPROVED}` },
+];
+
 export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
-  const { overtimeDetails, pendingOvertimeModalIsOpen } = useApprovalStore((state) => ({
+  const { overtimeDetails, pendingOvertimeModalIsOpen, setOtpOvertimeModalIsOpen } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
   }));
 
   // React hook form
@@ -30,6 +38,15 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       // status: null,
     },
   });
+
+  const onSubmit: SubmitHandler<overtimeAction> = (data: overtimeAction) => {
+    // setValue('id', leaveIndividualDetail.id);
+    if (data.status === OvertimeStatus.APPROVED) {
+      setOtpOvertimeModalIsOpen(true);
+    } else {
+      // setDeclineApplicationModalIsOpen(true);
+    }
+  };
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -62,13 +79,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             modalState={cancelOvertimeModalIsOpen}
             setModalState={setCancelOvertimeModalIsOpen}
             closeModalAction={closeCancelOvertimeModal}
-          />
-
-          <OvertimeSupervisorAccomplishmentModal
-            modalState={accomplishmentOvertimeModalIsOpen}
-            setModalState={setAccomplishmentOvertimeModalIsOpen}
-            closeModalAction={closeOvertimeAccomplishmentModal}
           /> */}
+
           {!overtimeDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -137,18 +149,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
                                   <div className="w-full flex flex-row items-center gap-4 text-sm md:text-md">
                                     <label className="w-full">{employee.fullName}</label>
+                                    <label className="w-full">{employee.positionTitle}</label>
                                     <label className="w-full">{employee.assignment}</label>
                                   </div>
-
-                                  <Button
-                                    variant={'primary'}
-                                    size={'sm'}
-                                    loading={false}
-                                    // onClick={(e) => setAccomplishmentOvertimeModalIsOpen(true)}
-                                    type="submit"
-                                  >
-                                    View Accomplishment
-                                  </Button>
                                 </div>
                               </div>
                             );
@@ -169,6 +172,37 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       value={overtimeDetails.purpose}
                     ></textarea>
                   </div>
+                  <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="w-full flex gap-2 justify-start items-center pt-4">
+                      <span className="text-slate-500 text-md font-medium">Action:</span>
+
+                      <select
+                        id="action"
+                        className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
+                        required
+                        {...register('status')}
+                      >
+                        <option value="" disabled>
+                          Select Action
+                        </option>
+                        {approvalAction.map((item: SelectOption, idx: number) => (
+                          <option value={item.value} key={idx}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {watch('status') === OvertimeStatus.DISAPPROVED ? (
+                      <textarea
+                        required={true}
+                        className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                        placeholder="Enter Reason"
+                        rows={3}
+                        // onChange={(e) => handleReason(e.target.value as unknown as string)}
+                      ></textarea>
+                    ) : null}
+                  </form>
                 </div>
               </div>
             </div>
@@ -176,15 +210,17 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Button
-              variant={'primary'}
-              size={'md'}
-              loading={false}
-              // onClick={(e) => setCancelOvertimeModalIsOpen(true)}
-              type="submit"
-            >
-              Submit
-            </Button>
+            {overtimeDetails.status === OvertimeStatus.PENDING ? (
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                // onClick={(e) => setCancelOvertimeModalIsOpen(true)}
+                type="submit"
+              >
+                Submit
+              </Button>
+            ) : null}
           </div>
         </Modal.Footer>
       </Modal>

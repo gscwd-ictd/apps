@@ -9,6 +9,12 @@ export type OvertimeForm = {
   employees: Array<string>;
 };
 
+//for supervisor get overtime application list
+export type OvertimeList = {
+  forApproval: Array<OvertimeDetails>;
+  completed: Array<OvertimeDetails>;
+};
+
 //for viewing of overtime details
 export type OvertimeDetails = {
   id: string;
@@ -24,7 +30,8 @@ export type EmployeeOvertimeDetail = {
   employeeId: string;
   companyId: string;
   fullName: string;
-  scheduleBase: string;
+  scheduleBase?: string;
+  positionTitle?: string;
   avatarUrl: string;
   assignment: string;
 };
