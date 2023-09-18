@@ -15,6 +15,8 @@ import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { ApprovalOtpContentsLeave } from './ApprovalOtp/ApprovalOtpContentsLeave';
 import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -89,7 +91,7 @@ export const ApprovalsPendingLeaveModal = ({
   };
 
   // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const handleReason = (e: string) => {
     setReason(e);
   };
@@ -332,12 +334,19 @@ export const ApprovalsPendingLeaveModal = ({
             title={'LEAVE APPROVAL OTP'}
           >
             {/* contents */}
-            <ApprovalOtpContentsLeave
-              mobile={employeeDetail.profile.mobileNumber}
-              employeeId={employeeDetail.user._id}
+            {/* <ApprovalOtpContentsLeave
+              mobile={employeeDetails.profile.mobileNumber}
+              employeeId={employeeDetails.user._id}
               action={watch('status')}
               tokenId={leaveIndividualDetail.id}
               otpName={'supervisorLeaveApproval'}
+            /> */}
+            <ApprovalOtpContents
+              mobile={employeeDetails.profile.mobileNumber}
+              employeeId={employeeDetails.user._id}
+              actionLeave={watch('status')}
+              tokenId={leaveIndividualDetail.id}
+              otpName={ManagerOtpApproval.LEAVE}
             />
           </OtpModal>
           <ConfirmationLeaveModal

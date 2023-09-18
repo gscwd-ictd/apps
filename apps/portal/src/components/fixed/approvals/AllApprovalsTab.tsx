@@ -236,7 +236,6 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                   <p className="text-sm text-gray-500">Estimated Hours: {item.estimatedHours}</p>
                   <p className="text-sm text-gray-500">Purpose: {item.purpose}</p>
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
-                  <p className="text-sm text-gray-500">ID: {item.id}</p>
                 </div>
               </li>
             );

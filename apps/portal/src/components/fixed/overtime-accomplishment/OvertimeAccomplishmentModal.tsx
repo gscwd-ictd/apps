@@ -10,6 +10,7 @@ import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-a
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
+import dayjs from 'dayjs';
 
 type ModalProps = {
   modalState: boolean;
@@ -102,7 +103,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
 
                       <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.plannedDate}</label>
+                        <label className="text-slate-500 w-full text-md ">
+                          {dayjs(overtimeDetails.plannedDate).format('MM-DD-YYYY')}
+                        </label>
                       </div>
                     </div>
                   </div>

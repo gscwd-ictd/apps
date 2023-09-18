@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -11,6 +11,10 @@ import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { overtimeAction } from 'apps/portal/src/types/approvals.type';
+import { useEffect } from 'react';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
+import dayjs from 'dayjs';
 
 type ModalProps = {
   modalState: boolean;
@@ -24,23 +28,24 @@ const approvalAction: Array<SelectOption> = [
 ];
 
 export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
-  const { overtimeDetails, pendingOvertimeModalIsOpen, setOtpOvertimeModalIsOpen } = useApprovalStore((state) => ({
-    overtimeDetails: state.overtimeDetails,
-    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
-    setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
-  }));
+  const { overtimeDetails, pendingOvertimeModalIsOpen, otpOvertimeModalIsOpen, setOtpOvertimeModalIsOpen } =
+    useApprovalStore((state) => ({
+      overtimeDetails: state.overtimeDetails,
+      pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+      otpOvertimeModalIsOpen: state.otpOvertimeModalIsOpen,
+      setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
+    }));
 
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } = useForm<any>({
+  const { reset, register, handleSubmit, watch, setValue } = useForm<overtimeAction>({
     mode: 'onChange',
     defaultValues: {
       // passSlipId: passSlip.id,
-      // status: null,
+      status: null,
     },
   });
 
   const onSubmit: SubmitHandler<overtimeAction> = (data: overtimeAction) => {
-    // setValue('id', leaveIndividualDetail.id);
     if (data.status === OvertimeStatus.APPROVED) {
       setOtpOvertimeModalIsOpen(true);
     } else {
@@ -49,6 +54,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   };
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+
+  useEffect(() => {
+    reset();
+  }, [pendingOvertimeModalIsOpen]);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -112,7 +121,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
 
                       <div className="w-full md:w-96 ">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.plannedDate}</label>
+                        <label className="text-slate-500 w-full text-md ">
+                          {dayjs(overtimeDetails.plannedDate).format('MM-DD-YYYY')}
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -172,7 +183,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       value={overtimeDetails.purpose}
                     ></textarea>
                   </div>
-                  <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
+                  <form id="OvertimeAction" onSubmit={handleSubmit(onSubmit)}>
                     <div className="w-full flex gap-2 justify-start items-center pt-4">
                       <span className="text-slate-500 text-md font-medium">Action:</span>
 
@@ -207,17 +218,33 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               </div>
             </div>
           )}
+          <OtpModal
+            modalState={otpOvertimeModalIsOpen}
+            setModalState={setOtpOvertimeModalIsOpen}
+            title={'OVERTIME APPROVAL OTP'}
+          >
+            {/* contents */}
+            <ApprovalOtpContents
+              mobile={employeeDetails.profile.mobileNumber}
+              employeeId={employeeDetails.user._id}
+              actionOvertime={watch('status')}
+              tokenId={overtimeDetails.id}
+              otpName={ManagerOtpApproval.OVERTIME}
+            />
+          </OtpModal>
+          {/* <ConfirmationLeaveModal
+            modalState={declineApplicationModalIsOpen}
+            setModalState={setDeclineApplicationModalIsOpen}
+            closeModalAction={closeDeclineModal}
+            action={watch('status')}
+            tokenId={leaveIndividualDetail.id}
+            remarks={reason}
+          /> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             {overtimeDetails.status === OvertimeStatus.PENDING ? (
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                // onClick={(e) => setCancelOvertimeModalIsOpen(true)}
-                type="submit"
-              >
+              <Button variant={'primary'} size={'md'} loading={false} form={`OvertimeAction`} type="submit">
                 Submit
               </Button>
             ) : null}

@@ -9,6 +9,7 @@ import CancelOvertimeModal from './CancelOvertimeModal';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeSupervisorAccomplishmentModal from './OvertimeSupervisorAccomplishmentModal';
+import dayjs from 'dayjs';
 
 type ModalProps = {
   modalState: boolean;
@@ -110,7 +111,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
 
                       <div className="w-full md:w-96 ">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.plannedDate}</label>
+                        <label className="text-slate-500 w-full text-md ">
+                          {dayjs(overtimeDetails.plannedDate).format('MM-DD-YYYY')}
+                        </label>
                       </div>
                     </div>
                   </div>

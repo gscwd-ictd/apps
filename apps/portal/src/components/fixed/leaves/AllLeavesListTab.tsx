@@ -53,6 +53,9 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">{leave.leaveName}</h1>
+                  <p className="text-sm text-gray-500">
+                    Date Applied: {dayjs(leave.dateOfFiling).format('MMMM DD, YYYY')}
+                  </p>
 
                   <p className="text-sm text-gray-500">No. of Days: {leave.leaveDates.length}</p>
                   <p className="text-sm text-gray-500">
@@ -65,9 +68,7 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                       ? `${leave.leaveDates[0]} - ${leave.leaveDates[leave.leaveDates.length - 1]}`
                       : leave.leaveDates.join(', ')}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    Date Applied: {dayjs(leave.dateOfFiling).format('MMMM DD, YYYY')}
-                  </p>
+
                   <p className="text-sm text-indigo-500">Status: {leave.status.toUpperCase()}</p>
                 </div>
               </li>

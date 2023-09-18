@@ -84,7 +84,9 @@ export const ApprovalsCompletedPassSlipModal = ({
                 </label>
 
                 <div className="w-auto md:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.dateOfApplication}</label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">
+                    {dayjs(passSlip.dateOfApplication).format('MM-DD-YYYY')}
+                  </label>
                 </div>
               </div>
 
@@ -161,15 +163,32 @@ export const ApprovalsCompletedPassSlipModal = ({
           <div className="flex justify-end gap-2">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED ? (
-                <Button
-                  variant={'warning'}
-                  size={'md'}
-                  loading={false}
-                  onClick={(e) => setDeclineApplicationModalIsOpen(true)}
-                  type="submit"
-                >
-                  Cancel Pass Slip
-                </Button>
+                ((passSlip.natureOfBusiness === NatureOfBusiness.HALF_DAY || NatureOfBusiness.UNDERTIME) &&
+                  !passSlip.timeOut) ||
+                ((passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ||
+                  NatureOfBusiness.PERSONAL_BUSINESS) &&
+                  !passSlip.timeOut &&
+                  !passSlip.timeIn) ? (
+                  <Button
+                    variant={'warning'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setDeclineApplicationModalIsOpen(true)}
+                    type="submit"
+                  >
+                    Cancel Pass Slip
+                  </Button>
+                ) : (
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => closeModalAction()}
+                    type="submit"
+                  >
+                    Close
+                  </Button>
+                )
               ) : (
                 <Button
                   variant={'primary'}

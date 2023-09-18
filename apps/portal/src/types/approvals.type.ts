@@ -18,5 +18,5 @@ export type leaveAction = {
 export type overtimeAction = {
   id: string;
   status: OvertimeStatus;
-  remarks: string;
+  remarks?: string;
 };

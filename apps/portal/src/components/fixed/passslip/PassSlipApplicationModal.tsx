@@ -1,11 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -15,6 +10,7 @@ import { HiX } from 'react-icons/hi';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { format } from 'date-fns';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import dayjs from 'dayjs';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -70,25 +66,21 @@ export const PassSlipApplicationModal = ({
   }));
 
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } =
-    useForm<PassSlipApplicationForm>({
-      mode: 'onChange',
-      defaultValues: {
-        employeeId: '',
-        dateOfApplication: dateToday,
-        natureOfBusiness: null,
-        estimateHours: 0,
-        purposeDestination: '',
-        isCancelled: false,
-        obTransportation: null,
-      },
-    });
+  const { reset, register, handleSubmit, watch, setValue } = useForm<PassSlipApplicationForm>({
+    mode: 'onChange',
+    defaultValues: {
+      employeeId: '',
+      dateOfApplication: dateToday,
+      natureOfBusiness: null,
+      estimateHours: 0,
+      purposeDestination: '',
+      isCancelled: false,
+      obTransportation: null,
+    },
+  });
 
   useEffect(() => {
-    if (
-      watch('natureOfBusiness') === 'Half Day' ||
-      watch('natureOfBusiness') === 'Undertime'
-    ) {
+    if (watch('natureOfBusiness') === 'Half Day' || watch('natureOfBusiness') === 'Undertime') {
       setValue('estimateHours', 0);
     }
 
@@ -98,9 +90,7 @@ export const PassSlipApplicationModal = ({
     setValue('employeeId', employeeDetails.employmentDetails.userId);
   }, [watch('natureOfBusiness')]);
 
-  const onSubmit: SubmitHandler<PassSlipApplicationForm> = (
-    data: PassSlipApplicationForm
-  ) => {
+  const onSubmit: SubmitHandler<PassSlipApplicationForm> = (data: PassSlipApplicationForm) => {
     handlePostResult(data);
     postPassSlipList();
   };
@@ -120,17 +110,11 @@ export const PassSlipApplicationModal = ({
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal
-        size={windowWidth > 1024 ? 'lg' : 'full'}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">
-                Pass Slip Authorization
-              </span>
+              <span className="text-xl md:text-2xl">Pass Slip Authorization</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -154,10 +138,8 @@ export const PassSlipApplicationModal = ({
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-3 p-4 rounded">
                 <div className="w-full flex gap-2 justify-start items-center">
-                  <span className="text-slate-500 text-md font-medium">
-                    Date:
-                  </span>
-                  <div className="text-slate-500 text-md">{dateToday}</div>
+                  <span className="text-slate-500 text-md font-medium">Date:</span>
+                  <div className="text-slate-500 text-md">{dayjs(dateToday).format('MM-DD-YYYY')}</div>
                 </div>
 
                 <div
@@ -240,8 +222,7 @@ export const PassSlipApplicationModal = ({
                             defaultValue={0}
                             max="8"
                             min={
-                              watch('natureOfBusiness') != 'Half Day' &&
-                              watch('natureOfBusiness') != 'Undertime'
+                              watch('natureOfBusiness') != 'Half Day' && watch('natureOfBusiness') != 'Undertime'
                                 ? '1'
                                 : '0'
                             }
@@ -279,13 +260,7 @@ export const PassSlipApplicationModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                form="ApplyPassSlipForm"
-                type="submit"
-              >
+              <Button variant={'primary'} size={'md'} loading={false} form="ApplyPassSlipForm" type="submit">
                 Apply Pass Slip
               </Button>
             </div>

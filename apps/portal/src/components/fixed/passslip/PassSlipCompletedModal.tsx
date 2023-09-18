@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
+import dayjs from 'dayjs';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -59,7 +60,9 @@ export const PassSlipCompletedModal = ({
                 </label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">{passSlip.dateOfApplication}</label>
+                  <label className="text-slate-500 h-12 w-96 text-md ">
+                    {dayjs(passSlip.dateOfApplication).format('MM-DD-YYYY')}
+                  </label>
                 </div>
               </div>
 
