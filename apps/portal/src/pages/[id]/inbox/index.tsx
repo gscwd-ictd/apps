@@ -9,17 +9,13 @@ import { MessageCard } from '../../../components/modular/common/cards/MessageCar
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
-import { PsbMembers, PsbMessageContent } from '../../../../src/types/inbox.type';
+import { PsbMessageContent } from '../../../../src/types/inbox.type';
 import useSWR from 'swr';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useInboxStore } from '../../../../src/store/inbox.store';
-import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
-import { SpinnerDotted } from 'spinners-react';
+import { ToastNotification } from '@gscwd-apps/oneui';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
 import { InboxPsbContent } from 'apps/portal/src/components/fixed/inbox/InboxPsbContent';
 import { ConfirmationInboxModal } from 'apps/portal/src/components/fixed/inbox/ConfirmationModal';
