@@ -138,7 +138,17 @@ export const ApprovalsPendingLeaveModal = ({
                 <div className="flex flex-col w-full gap-2 p-4 rounded">
                   {leaveIndividualDetail ? (
                     <AlertNotification
-                      alertType="warning"
+                      alertType={
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                          ? 'warning'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'error'
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          ? 'warning'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'error'
+                          : 'info'
+                      }
                       notifMessage={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Approval'

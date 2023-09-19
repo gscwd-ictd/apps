@@ -1,13 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { useEffect, useState } from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
-import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { patchPortal } from '../../../utils/helpers/portal-axios-helper';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
 import dayjs from 'dayjs';
@@ -57,7 +52,17 @@ export const ApprovalsCompletedPassSlipModal = ({
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <AlertNotification
-                alertType="info"
+                alertType={
+                  passSlip.status === PassSlipStatus.APPROVED
+                    ? 'info'
+                    : passSlip.status === PassSlipStatus.CANCELLED
+                    ? 'error'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED
+                    ? 'error'
+                    : passSlip.status === PassSlipStatus.FOR_APPROVAL
+                    ? 'warning'
+                    : 'info'
+                }
                 notifMessage={`This Pass Slip is ${passSlip.status}`}
                 dismissible={false}
               />

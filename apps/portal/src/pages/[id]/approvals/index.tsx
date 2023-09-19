@@ -326,7 +326,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
   return (
     <>
       <>
-        {/* Pass Slip Patch Success */}
+        {/* Overtime Patch Success */}
         {!isEmpty(patchResponseOvertime) ? (
           <ToastNotification toastType="success" notifMessage={`Overtime Application action submitted.`} />
         ) : null}

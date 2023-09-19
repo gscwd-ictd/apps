@@ -52,6 +52,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     emptyResponseAndError,
 
     setMessagePsb,
+    setMessageOvertime,
     setDeclineRemarks,
     selectedMessageType,
     setSelectedMessageType,
@@ -76,6 +77,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     emptyResponseAndError: state.emptyResponseAndError,
 
     setMessagePsb: state.setMessagePsb,
+    setMessageOvertime: state.setMessageOvertime,
     setDeclineRemarks: state.setDeclineRemarks,
     selectedMessageType: state.selectedMessageType,
     setSelectedMessageType: state.setSelectedMessageType,
@@ -132,17 +134,17 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     }
   }, [patchResponseApply]);
 
-  const handleMessage = (acknowledgement?: PsbMessageContent) => {
-    let sampleType = 'psb';
+  const handleMessage = (acknowledgement?: PsbMessageContent, type?: string) => {
+    let sampleType = type;
     if (sampleType == InboxMessageType.PSB) {
       setSelectedMessageType(InboxMessageType.PSB);
       setMessagePsb(acknowledgement);
     } else if (sampleType == InboxMessageType.TRAINING_NOMINATION) {
       setSelectedMessageType(InboxMessageType.TRAINING_NOMINATION);
-      setMessagePsb(acknowledgement);
+      // setMessagePsb(acknowledgement);
     } else if (sampleType == InboxMessageType.OVERTIME) {
       setSelectedMessageType(InboxMessageType.OVERTIME);
-      setMessagePsb(acknowledgement);
+      // setMessageOvertime(acknowledgement);
     }
     setDeclineRemarks('');
     setIsMessageOpen(true);
@@ -201,9 +203,8 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
                       color={`green`}
                       title={'PSB Member Acknowledgement'}
                       description={`Position: ${acknowledgement.details.positionTitle}`}
-                      // children={<></>}
                       linkType={'router'}
-                      onClick={() => handleMessage(acknowledgement)}
+                      onClick={() => handleMessage(acknowledgement, 'psb')}
                     />
                   </div>
                 );
@@ -213,18 +214,26 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
                 <label className="w-full text-4xl text-center text-gray-400 ">NO MESSAGES</label>
               </div>
             )}
-            {/* <MessageCard
+            <MessageCard
               icon={<HiMail className="w-6 h-6 text-green-800" />}
               color={`green`}
               title={'Training Nomination'}
               description={`Course Title: Sample Training`}
-              // children={<></>}
               linkType={'router'}
-              onClick={() => handleMessage()}
-            /> */}
+              onClick={() => handleMessage({} as PsbMessageContent, 'training')}
+            />
+
+            <MessageCard
+              icon={<HiMail className="w-6 h-6 text-green-800" />}
+              color={`green`}
+              title={'Overtime Assignment'}
+              description={`Estimated Hours: 4 `}
+              linkType={'router'}
+              onClick={() => handleMessage({} as PsbMessageContent, 'overtime')}
+            />
           </div>
           {isMessageOpen ? (
-            <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
+            <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4 rounded-xl">
               {selectedMessageType == InboxMessageType.PSB ? <InboxPsbContent /> : null}
               {selectedMessageType == InboxMessageType.TRAINING_NOMINATION ? <InboxTrainingContent /> : null}
               {selectedMessageType == InboxMessageType.OVERTIME ? <InboxOvertimeContent /> : null}

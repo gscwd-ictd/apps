@@ -106,15 +106,27 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
-                  {overtimeDetails.status === OvertimeStatus.PENDING ? (
-                    <AlertNotification alertType="info" notifMessage={'For Supervisor Approval'} dismissible={false} />
-                  ) : null}
-                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
-                    <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
-                  ) : null}
-                  {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
-                    <AlertNotification alertType="warning" notifMessage={'Disapproved'} dismissible={false} />
-                  ) : null}
+                  <AlertNotification
+                    alertType={
+                      overtimeDetails.status === OvertimeStatus.PENDING
+                        ? 'warning'
+                        : overtimeDetails.status === OvertimeStatus.APPROVED
+                        ? 'info'
+                        : overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                        ? 'error'
+                        : 'info'
+                    }
+                    notifMessage={
+                      overtimeDetails.status === OvertimeStatus.PENDING
+                        ? 'For Supervisor Approval'
+                        : overtimeDetails.status === OvertimeStatus.APPROVED
+                        ? 'Approved'
+                        : overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                        ? 'Disapproved'
+                        : 'info'
+                    }
+                    dismissible={false}
+                  />
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">

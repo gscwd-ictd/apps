@@ -107,7 +107,7 @@ export const ApprovalsPendingPassSlipModal = ({
             {/* OTP Modal */}
 
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              <AlertNotification alertType="warning" notifMessage="Awaiting Supervisor Approval" dismissible={false} />
+              <AlertNotification alertType="warning" notifMessage="For Supervisor Approval" dismissible={false} />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Employee Name:</label>

@@ -3,12 +3,14 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { PsbMessageContent } from '../types/inbox.type';
 import { InboxMessageResponse, InboxMessageType } from '../../../../libs/utils/src/lib/enums/inbox.enum';
+import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 export type InboxState = {
   message: {
     messages: Array<PsbMessageContent>;
     psb: PsbMessageContent;
-    overtime: any;
+    overtime: OvertimeDetails;
     training: any;
   };
   response: {
@@ -24,6 +26,8 @@ export type InboxState = {
   };
 
   setMessagePsb: (psb: PsbMessageContent) => void;
+
+  setMessageOvertime: (overtime: OvertimeDetails) => void;
 
   confirmModalIsOpen: boolean;
   setConfirmModalIsOpen: (submitModalIsOpen: boolean) => void;
@@ -71,7 +75,32 @@ export const useInboxStore = create<InboxState>()(
     message: {
       messages: [],
       psb: {} as PsbMessageContent,
-      overtime: {} as any,
+      overtime: {
+        estimatedHours: '8',
+        id: '208bbd7a-0ec7-4b60-8dba-2ebe38795e95',
+        immediateSupervisorName: 'Eric C. Sison',
+        plannedDate: '2023-09-15T16:00:00.000Z',
+        purpose: 'Repair Main Pipeline in National Highway',
+        status: OvertimeStatus.APPROVED,
+        employees: [
+          {
+            assignment: 'Geographical Information System Division',
+            avatarUrl: 'http://172.20.110.45:4500/REYES.jpg',
+            companyId: '2021-019',
+            employeeId: '6e0ef093-0e63-11ee-8b82-005056b680ac',
+            fullName: 'Cara Jade C. Reyes',
+            positionTitle: 'Engineering Assistant',
+          },
+          {
+            assignment: 'Geographical Information System Division',
+            avatarUrl: 'http://172.20.110.45:4500/BAUGBOG.jpg',
+            companyId: '2021-019',
+            employeeId: '6e0ef093-0e63-11ee-8b82-005056b680ac',
+            fullName: 'Rizza R. Baugbog, CE',
+            positionTitle: 'Supervising Data Encoder-Controller',
+          },
+        ],
+      },
       training: {} as any,
     },
     response: {
@@ -143,6 +172,17 @@ export const useInboxStore = create<InboxState>()(
         message: {
           ...state.message,
           psb: psb,
+        },
+      }));
+    },
+
+    //SET OVERTIME MESSAGE CONTENT
+    setMessageOvertime: (overtime: OvertimeDetails) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          overtime: overtime,
         },
       }));
     },

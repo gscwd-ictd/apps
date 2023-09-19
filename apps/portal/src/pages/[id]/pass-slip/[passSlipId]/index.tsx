@@ -5,7 +5,6 @@ import { usePassSlipStore } from '../../../../store/passslip.store';
 import React, { useEffect } from 'react';
 import { PassSlipPdfView } from '../../../../components/fixed/passslip/PassSlipPdf';
 import { employeeDummy } from '../../../../../src/types/employee.type';
-import { useLeaveStore } from '../../../../../src/store/leave.store';
 import useSWR from 'swr';
 import { fetchWithToken } from '../../../../../src/utils/hoc/fetcher';
 import { useRouter } from 'next/router';
