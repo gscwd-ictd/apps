@@ -15,10 +15,11 @@ import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 
 interface OtpProps {
   mobile: string;
-  employeeId: string;
+  employeeId?: string;
   actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
   actionLeave?: LeaveStatus; // approve or disapprove for leave
   actionPassSlip?: PassSlipStatus; // approve or disapprove pass slip
@@ -184,6 +185,8 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     setOtpCode(''); //clears input field
     if (isSubmitLoading == false) {
       setOtpOvertimeModalIsOpen(false);
+      setOtpLeaveModalIsOpen(false);
+      setOtpPassSlipModalIsOpen(false);
     }
   };
 
@@ -213,7 +216,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     } else if (otpName === ManagerOtpApproval.PASSSLIP) {
       otpPatchUrl = '/v1/pass-slip';
     } else if (otpName === ManagerOtpApproval.OVERTIME) {
-      otpPatchUrl = '/v1/overtime';
+      otpPatchUrl = '/v1/overtime/approval';
     }
 
     const { error, result } = await patchPortal(otpPatchUrl, data);
@@ -255,9 +258,10 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
         patchPassSlip();
       } else if (otpName === ManagerOtpApproval.OVERTIME) {
         data = {
-          id: tokenId,
-          status: actionOvertime,
+          managerId: employeeId,
           remarks: remarks,
+          status: actionOvertime,
+          overtimeApplicationId: tokenId,
         };
         patchOvertime();
       }

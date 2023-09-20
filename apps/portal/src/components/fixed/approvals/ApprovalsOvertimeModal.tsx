@@ -11,10 +11,11 @@ import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { overtimeAction } from 'apps/portal/src/types/approvals.type';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import dayjs from 'dayjs';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -28,13 +29,23 @@ const approvalAction: Array<SelectOption> = [
 ];
 
 export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
-  const { overtimeDetails, pendingOvertimeModalIsOpen, otpOvertimeModalIsOpen, setOtpOvertimeModalIsOpen } =
-    useApprovalStore((state) => ({
-      overtimeDetails: state.overtimeDetails,
-      pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
-      otpOvertimeModalIsOpen: state.otpOvertimeModalIsOpen,
-      setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
-    }));
+  const {
+    overtimeDetails,
+    pendingOvertimeModalIsOpen,
+    otpOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen,
+    declineApplicationModalIsOpen,
+    setDeclineApplicationModalIsOpen,
+  } = useApprovalStore((state) => ({
+    overtimeDetails: state.overtimeDetails,
+    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    otpOvertimeModalIsOpen: state.otpOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
+    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
+    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+  }));
+
+  const [reason, setReason] = useState<string>('');
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<overtimeAction>({
@@ -45,15 +56,23 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     },
   });
 
+  // cancel action for Decline Application Modal
+  const closeDeclineModal = async () => {
+    setDeclineApplicationModalIsOpen(false);
+  };
+
   const onSubmit: SubmitHandler<overtimeAction> = (data: overtimeAction) => {
     if (data.status === OvertimeStatus.APPROVED) {
       setOtpOvertimeModalIsOpen(true);
     } else {
-      // setDeclineApplicationModalIsOpen(true);
+      setDeclineApplicationModalIsOpen(true);
     }
   };
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const handleReason = (e: string) => {
+    setReason(e);
+  };
 
   useEffect(() => {
     reset();
@@ -61,7 +80,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   const { windowWidth } = UseWindowDimensions();
 
-  // cancel action for Leave Pending Modal
+  // cancel action for Overtime Pending Modal
   const closeCancelOvertimeModal = async () => {
     // setCancelOvertimeModalIsOpen(false);
   };
@@ -195,37 +214,39 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       value={overtimeDetails.purpose}
                     ></textarea>
                   </div>
-                  <form id="OvertimeAction" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="w-full flex gap-2 justify-start items-center pt-4">
-                      <span className="text-slate-500 text-md font-medium">Action:</span>
+                  {overtimeDetails.status === OvertimeStatus.PENDING ? (
+                    <form id="OvertimeAction" onSubmit={handleSubmit(onSubmit)}>
+                      <div className="w-full flex gap-2 justify-start items-center pt-4">
+                        <span className="text-slate-500 text-md font-medium">Action:</span>
 
-                      <select
-                        id="action"
-                        className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
-                        required
-                        {...register('status')}
-                      >
-                        <option value="" disabled>
-                          Select Action
-                        </option>
-                        {approvalAction.map((item: SelectOption, idx: number) => (
-                          <option value={item.value} key={idx}>
-                            {item.label}
+                        <select
+                          id="action"
+                          className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
+                          required
+                          {...register('status')}
+                        >
+                          <option value="" disabled>
+                            Select Action
                           </option>
-                        ))}
-                      </select>
-                    </div>
+                          {approvalAction.map((item: SelectOption, idx: number) => (
+                            <option value={item.value} key={idx}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
-                    {watch('status') === OvertimeStatus.DISAPPROVED ? (
-                      <textarea
-                        required={true}
-                        className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                        placeholder="Enter Reason"
-                        rows={3}
-                        // onChange={(e) => handleReason(e.target.value as unknown as string)}
-                      ></textarea>
-                    ) : null}
-                  </form>
+                      {watch('status') === OvertimeStatus.DISAPPROVED ? (
+                        <textarea
+                          required={true}
+                          className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                          placeholder="Enter Reason"
+                          rows={3}
+                          onChange={(e) => handleReason(e.target.value as unknown as string)}
+                        ></textarea>
+                      ) : null}
+                    </form>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -244,14 +265,16 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               otpName={ManagerOtpApproval.OVERTIME}
             />
           </OtpModal>
-          {/* <ConfirmationLeaveModal
+          <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
             closeModalAction={closeDeclineModal}
-            action={watch('status')}
-            tokenId={leaveIndividualDetail.id}
+            actionOvertime={watch('status')}
+            tokenId={overtimeDetails.id}
             remarks={reason}
-          /> */}
+            otpName={ManagerOtpApproval.OVERTIME}
+            employeeId={employeeDetails.user._id}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
@@ -259,7 +282,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               <Button variant={'primary'} size={'md'} loading={false} form={`OvertimeAction`} type="submit">
                 Submit
               </Button>
-            ) : null}
+            ) : (
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+                Close
+              </Button>
+            )}
           </div>
         </Modal.Footer>
       </Modal>

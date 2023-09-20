@@ -200,7 +200,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
                       title={'PSB Member Acknowledgement'}
                       description={`Position: ${acknowledgement.details.positionTitle}`}
                       linkType={'router'}
-                      onClick={() => handleMessage(acknowledgement, 'psb')}
+                      onClick={() => handleMessage(acknowledgement, InboxMessageType.PSB)}
                     />
                   </div>
                 );
@@ -216,7 +216,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
               title={'Training Nomination'}
               description={`Course Title: Sample Training`}
               linkType={'router'}
-              onClick={() => handleMessage({} as PsbMessageContent, 'training')}
+              onClick={() => handleMessage({} as PsbMessageContent, InboxMessageType.TRAINING_NOMINATION)}
             />
 
             <MessageCard
@@ -225,7 +225,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
               title={'Overtime Assignment'}
               description={`Estimated Hours: 4 `}
               linkType={'router'}
-              onClick={() => handleMessage({} as PsbMessageContent, 'overtime')}
+              onClick={() => handleMessage({} as PsbMessageContent, InboxMessageType.OVERTIME)}
             />
           </div>
           {isMessageOpen ? (

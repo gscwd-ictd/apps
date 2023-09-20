@@ -2,6 +2,7 @@ import { useLeaveStore } from '../../../store/leave.store';
 import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
 import { TabHeader } from '../tab/TabHeader';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
+import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 
 type TabsProps = {
   tab: number;
@@ -9,7 +10,7 @@ type TabsProps = {
 
 export const OvertimeAccomplishmentTabs = ({ tab }: TabsProps) => {
   //zustand initialization to access leave store
-  const { OvertimeForApproval, overtimeCompleted, setTab } = useOvertimeStore((state) => ({
+  const { OvertimeForApproval, overtimeCompleted, setTab } = useOvertimeAccomplishmentStore((state) => ({
     OvertimeForApproval: state.overtime.forApproval,
     overtimeCompleted: state.overtime.completed,
     setTab: state.setTab,

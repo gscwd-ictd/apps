@@ -164,11 +164,12 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                   <h1 className="font-medium text-lg text-gray-600">
                     {item.natureOfBusiness} - {item.employeeName}
                   </h1>
-                  <p className="text-sm text-gray-500">Estimated Hours: {item.estimateHours}</p>
-                  <p className="text-sm text-gray-500 break-words w-96">Purpose: {item.purposeDestination}</p>
                   <p className="text-sm text-gray-500">
                     Date Applied: {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
                   </p>
+                  <p className="text-sm text-gray-500">Estimated Hours: {item.estimateHours}</p>
+                  <p className="text-sm text-gray-500 break-words w-96">Purpose: {item.purposeDestination}</p>
+
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
                 </div>
               </li>
@@ -188,6 +189,9 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                   <h1 className="font-medium text-lg text-gray-600">
                     {item.leaveName} - {item.employee.employeeName}
                   </h1>
+                  <p className="text-sm text-gray-500">
+                    Date Applied: {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
+                  </p>
                   <p className="text-sm text-gray-500">No. of Days: {item.leaveDates.length}</p>
                   <p className="text-sm text-gray-500">
                     Dates:{' '}
@@ -199,9 +203,7 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                       ? `${item.leaveDates[0]} - ${item.leaveDates[item.leaveDates.length - 1]}`
                       : item.leaveDates.join(', ')}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    Date Applied: {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
-                  </p>
+
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
                 </div>
               </li>
@@ -218,23 +220,12 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                 className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
               >
                 <div className=" w-full py-2 px-1 ">
-                  <h1 className="font-medium text-lg text-gray-600">{item.immediateSupervisorName}</h1>
-                  <p className="text-sm text-gray-500">
-                    Employees:{' '}
-                    {item?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
-                      return (
-                        <label key={index}>
-                          {index == 0 ? null : ', '}
-                          {employee.fullName}
-                        </label>
-                      );
-                    })}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Planned Date: {dayjs(item.plannedDate).format('MMMM DD, YYYY')}
-                  </p>
+                  <h1 className="font-medium text-lg text-gray-600">
+                    {dayjs(item.plannedDate).format('MMMM DD, YYYY')}
+                  </h1>
+                  <p className="text-sm text-gray-500">Immediate Supervisor: {item.immediateSupervisorName}</p>
                   <p className="text-sm text-gray-500">Estimated Hours: {item.estimatedHours}</p>
-                  <p className="text-sm text-gray-500">Purpose: {item.purpose}</p>
+                  <p className="text-sm text-gray-500">No. of Employees: {item.employees.length}</p>
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
                 </div>
               </li>

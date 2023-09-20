@@ -50,22 +50,10 @@ export const AllOvertimeListTab = ({ overtime, tab }: TabProps) => {
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">
-                    Overtime on {dayjs(overtime.plannedDate).format('MMMM DD, YYYY')}
+                    {dayjs(overtime.plannedDate).format('MMMM DD, YYYY')}
                   </h1>
-
                   <p className="text-sm text-gray-500">Estimated Hours: {overtime.estimatedHours}</p>
-                  <p className="text-sm text-gray-500">
-                    Employees:{' '}
-                    {overtime?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
-                      return (
-                        <label key={index}>
-                          {index == 0 ? null : ', '}
-                          {employee.fullName}
-                        </label>
-                      );
-                    })}
-                  </p>
-                  <p className="text-sm text-gray-500">Purpose: {overtime.purpose}</p>
+                  <p className="text-sm text-gray-500">No. of Employees: {overtime.employees.length}</p>
                   <p className="text-sm text-indigo-500">Status: {overtime.status.toUpperCase()}</p>
                 </div>
               </li>

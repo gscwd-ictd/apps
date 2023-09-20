@@ -17,6 +17,7 @@ import { ApprovalOtpContentsLeave } from './ApprovalOtp/ApprovalOtpContentsLeave
 import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -359,13 +360,15 @@ export const ApprovalsPendingLeaveModal = ({
               otpName={ManagerOtpApproval.LEAVE}
             />
           </OtpModal>
-          <ConfirmationLeaveModal
+          <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
             closeModalAction={closeDeclineModal}
-            action={watch('status')}
+            actionLeave={watch('status')}
             tokenId={leaveIndividualDetail.id}
             remarks={reason}
+            otpName={ManagerOtpApproval.LEAVE}
+            employeeId={employeeDetails.user._id}
           />
         </Modal.Body>
         <Modal.Footer>

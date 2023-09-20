@@ -2,7 +2,7 @@ import { OvertimeStatus } from '../enums/overtime.enum';
 
 //for supervisor overtime application
 export type OvertimeForm = {
-  overtimeSupervisorId: string;
+  overtimeImmediateSupervisorId: string;
   plannedDate: string;
   estimatedHours: number;
   purpose: string;
