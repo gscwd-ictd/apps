@@ -13,6 +13,7 @@ import { ApprovalOtpContentsPassSlip } from './ApprovalOtp/ApprovalOtpContentsPa
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import dayjs from 'dayjs';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -215,12 +216,14 @@ export const ApprovalsPendingPassSlipModal = ({
               otpName={ManagerOtpApproval.PASSSLIP}
             />
           </OtpModal>
-          <ConfirmationPassSlipModal
+          <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
             closeModalAction={closeDeclineModal}
-            action={watch('status')}
+            actionPassSlip={watch('status')}
             tokenId={passSlip.id}
+            otpName={ManagerOtpApproval.PASSSLIP}
+            employeeId={employeeDetails.user._id}
           />
         </Modal.Body>
         <Modal.Footer>
