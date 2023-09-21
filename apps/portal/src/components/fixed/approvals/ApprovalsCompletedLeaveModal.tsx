@@ -6,7 +6,9 @@ import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import dayjs from 'dayjs';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -34,11 +36,6 @@ export const ApprovalsCompletedLeaveModal = ({
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
   }));
-
-  // cancel action for Decline Application Modal
-  const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
-  };
 
   const { windowWidth } = UseWindowDimensions();
   return (
@@ -114,15 +111,6 @@ export const ApprovalsCompletedLeaveModal = ({
                       dismissible={false}
                     />
                   ) : null}
-
-                  <ConfirmationLeaveModal
-                    modalState={declineApplicationModalIsOpen}
-                    setModalState={setDeclineApplicationModalIsOpen}
-                    closeModalAction={closeDeclineModal}
-                    action={LeaveStatus.CANCELLED}
-                    tokenId={leaveIndividualDetail.id}
-                    remarks={''}
-                  />
 
                   <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                     <label className="text-md font-medium text-slate-500 whitespace-nowrap">Employee Name:</label>
@@ -211,13 +199,24 @@ export const ApprovalsCompletedLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                         leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                        leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
-                          ? // show first and last date (array) only if maternity or study leave
-                            `${leaveIndividualDetail?.leaveDates[0]} - ${
-                              leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates?.length - 1]
-                            }`
-                          : // show all dates if not maternity or study leave
-                            leaveIndividualDetail?.leaveDates?.join(', ')}
+                        leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
+                          // show first and last date (array) only if maternity or study leave
+                          `${dayjs(leaveIndividualDetail?.leaveDates[0]).format('MM-DD-YYYY')} - ${dayjs(
+                            leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates?.length - 1]
+                          ).format('MM-DD-YYYY')}`
+                        ) : (
+                          // show all dates if not maternity or study leave
+                          <div className="flex flex-wrap flex-row">
+                            {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
+                              return (
+                                <label key={index} className="pr-1">
+                                  {dayjs(dates).format('MM-DD-YYYY')}
+                                  {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        )}
                       </label>
                     </div>
                   </div>
@@ -242,17 +241,17 @@ export const ApprovalsCompletedLeaveModal = ({
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? leaveIndividualDetail?.supervisorApprovalDate
+                          ? dayjs(leaveIndividualDetail?.supervisorApprovalDate).format('MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          ? dayjs(leaveIndividualDetail?.hrdmApprovalDate).format('MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? leaveIndividualDetail?.supervisorApprovalDate
+                          ? dayjs(leaveIndividualDetail?.supervisorApprovalDate).format('MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? leaveIndividualDetail?.hrmoApprovalDate
+                          ? dayjs(leaveIndividualDetail?.hrmoApprovalDate).format('MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          ? dayjs(leaveIndividualDetail?.hrdmApprovalDate).format('MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                          ? leaveIndividualDetail?.cancelDate
+                          ? dayjs(leaveIndividualDetail?.cancelDate).format('MM-DD-YYYY')
                           : null}
                       </label>
                     </div>

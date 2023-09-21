@@ -23,6 +23,7 @@ export type OvertimeDetails = {
   purpose: string;
   status: OvertimeStatus;
   immediateSupervisorName: string;
+  remarks?: string;
   employees: Array<EmployeeOvertimeDetail>;
 };
 

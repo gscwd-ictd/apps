@@ -4,9 +4,10 @@ import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
 import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -67,12 +68,21 @@ export const ApprovalsCompletedPassSlipModal = ({
                 dismissible={false}
               />
 
-              <ConfirmationPassSlipModal
+              {/* <ConfirmationPassSlipModal
                 modalState={declineApplicationModalIsOpen}
                 setModalState={setDeclineApplicationModalIsOpen}
                 closeModalAction={closeDeclineModal}
                 action={PassSlipStatus.CANCELLED}
                 tokenId={passSlip.id}
+              /> */}
+
+              <ConfirmationApprovalModal
+                modalState={declineApplicationModalIsOpen}
+                setModalState={setDeclineApplicationModalIsOpen}
+                closeModalAction={closeDeclineModal}
+                actionPassSlip={PassSlipStatus.CANCELLED}
+                tokenId={passSlip.id}
+                otpName={ManagerOtpApproval.PASSSLIP}
               />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">

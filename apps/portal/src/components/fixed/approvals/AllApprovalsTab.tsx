@@ -199,9 +199,22 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                     item.leaveName === LeaveName.STUDY ||
                     item.leaveName === LeaveName.REHABILITATION ||
                     item.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                    item.leaveName === LeaveName.ADOPTION
-                      ? `${item.leaveDates[0]} - ${item.leaveDates[item.leaveDates.length - 1]}`
-                      : item.leaveDates.join(', ')}
+                    item.leaveName === LeaveName.ADOPTION ? (
+                      `${dayjs(item.leaveDates[0]).format('MM-DD-YYYY')} - ${dayjs(
+                        item.leaveDates[item.leaveDates.length - 1]
+                      ).format('MM-DD-YYYY')}`
+                    ) : (
+                      <>
+                        {item.leaveDates.map((dates: string, index: number) => {
+                          return (
+                            <label key={index} className="pr-1">
+                              {dayjs(dates).format('MM-DD-YYYY')}
+                              {index == item.leaveDates.length - 1 ? '' : ','}
+                            </label>
+                          );
+                        })}
+                      </>
+                    )}
                   </p>
 
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>

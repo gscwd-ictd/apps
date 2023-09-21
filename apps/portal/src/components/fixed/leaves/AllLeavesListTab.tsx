@@ -64,9 +64,22 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                     leave.leaveName === LeaveName.STUDY ||
                     leave.leaveName === LeaveName.REHABILITATION ||
                     leave.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                    leave.leaveName === LeaveName.ADOPTION
-                      ? `${leave.leaveDates[0]} - ${leave.leaveDates[leave.leaveDates.length - 1]}`
-                      : leave.leaveDates.join(', ')}
+                    leave.leaveName === LeaveName.ADOPTION ? (
+                      `${dayjs(leave.leaveDates[0]).format('MM-DD-YYYY')} - ${dayjs(
+                        leave.leaveDates[leave.leaveDates.length - 1]
+                      ).format('MM-DD-YYYY')}`
+                    ) : (
+                      <>
+                        {leave.leaveDates.map((dates: string, index: number) => {
+                          return (
+                            <label key={index} className="pr-1">
+                              {dayjs(dates).format('MM-DD-YYYY')}
+                              {index == leave.leaveDates.length - 1 ? '' : ','}
+                            </label>
+                          );
+                        })}
+                      </>
+                    )}
                   </p>
 
                   <p className="text-sm text-indigo-500">Status: {leave.status.toUpperCase()}</p>

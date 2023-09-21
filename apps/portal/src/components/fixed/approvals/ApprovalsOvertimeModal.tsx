@@ -214,6 +214,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       value={overtimeDetails.purpose}
                     ></textarea>
                   </div>
+
+                  {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
+                    <div className="flex flex-col justify-between items-center w-full">
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Remarks:</label>
+                      </div>
+                      <textarea
+                        disabled
+                        rows={2}
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                        value={overtimeDetails.remarks}
+                      ></textarea>
+                    </div>
+                  ) : null}
                   {overtimeDetails.status === OvertimeStatus.PENDING ? (
                     <form id="OvertimeAction" onSubmit={handleSubmit(onSubmit)}>
                       <div className="w-full flex gap-2 justify-start items-center pt-4">

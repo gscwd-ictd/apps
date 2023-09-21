@@ -11,6 +11,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import CancelLeaveModal from './CancelLeaveModal';
+import dayjs from 'dayjs';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -225,15 +226,33 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                 LeaveName.REHABILITATION ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                 LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION
-                                ? // show first and last date (array) only if maternity or study leave
-                                  `${leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0]} - ${
-                                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
-                                    ]
-                                  }`
-                                : // show all dates if not maternity or study leave
-                                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.join(', ')}
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
+                                // show first and last date (array) only if maternity or study leave
+                                `${dayjs(leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]).format(
+                                  'MM-DD-YYYY'
+                                )} - ${dayjs(
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
+                                    leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                                  ]
+                                ).format('MM-DD-YYYY')}`
+                              ) : (
+                                // show all dates if not maternity or study leave
+                                <div className="flex flex-wrap flex-row">
+                                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.map(
+                                    (dates: string, index: number) => {
+                                      return (
+                                        <label key={index} className="pr-1">
+                                          {dayjs(dates).format('MM-DD-YYYY')}
+                                          {index ==
+                                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                                            ? ''
+                                            : ','}
+                                        </label>
+                                      );
+                                    }
+                                  )}
+                                </div>
+                              )}
                             </label>
                           </div>
                         </div>
@@ -306,7 +325,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
                                   leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
                                 ? leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
-                                : ''
+                                : ' '
                             }
                           ></textarea>
                         </div>

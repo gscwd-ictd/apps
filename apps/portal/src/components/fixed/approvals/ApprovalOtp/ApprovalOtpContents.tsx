@@ -343,7 +343,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                 } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
                 onClick={() => handleSendCode()}
               >
-                <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}</label>
+                <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE' : 'SEND CODE'}`}</label>
               </button>
             )}
 

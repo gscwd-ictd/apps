@@ -8,8 +8,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
-import { ApprovalOtpContentsPassSlip } from './ApprovalOtp/ApprovalOtpContentsPassSlip';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import dayjs from 'dayjs';

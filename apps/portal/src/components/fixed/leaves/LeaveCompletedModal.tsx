@@ -245,15 +245,33 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                               LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION
-                              ? // show first and last date (array) only if maternity or study leave
-                                `${leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]} - ${
-                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
-                                    leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
-                                  ]
-                                }`
-                              : // show all dates if not maternity or study leave
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.join(', ')}
+                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
+                              // show first and last date (array) only if maternity or study leave
+                              `${dayjs(leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]).format(
+                                'MM-DD-YYYY'
+                              )} - ${dayjs(
+                                leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                                ]
+                              ).format('MM-DD-YYYY')}`
+                            ) : (
+                              // show all dates if not maternity or study leave
+                              <div className="flex flex-wrap flex-row">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.map(
+                                  (dates: string, index: number) => {
+                                    return (
+                                      <label key={index} className="pr-1">
+                                        {dayjs(dates).format('MM-DD-YYYY')}
+                                        {index ==
+                                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                                          ? ''
+                                          : ','}
+                                      </label>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            )}
                           </label>
                         </div>
                       </div>
@@ -352,16 +370,24 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate
+                          ? dayjs(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate).format(
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate
+                          ? dayjs(leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate).format(
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate
+                          ? dayjs(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate).format(
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate
+                          ? dayjs(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate).format(
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate
+                          ? dayjs(leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate).format('MM-DD-YYYY')
                           : null}
                       </label>
                     </div>

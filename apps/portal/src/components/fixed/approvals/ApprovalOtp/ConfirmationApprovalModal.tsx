@@ -160,12 +160,13 @@ export const ConfirmationApprovalModal = ({
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
               <span>
-                {/* {LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                  ? 'Disapprove Leave Application'
-                  : LeaveStatus.CANCELLED
-                  ? 'Disapprove Leave Application'
-                  : 'Leave Application'} */}
-                Disapprove Overtime Application
+                {otpName === ManagerOtpApproval.LEAVE
+                  ? 'Leave Application'
+                  : otpName === ManagerOtpApproval.OVERTIME
+                  ? 'Overtime Application'
+                  : otpName === ManagerOtpApproval.PASSSLIP
+                  ? 'Pass Slip Application'
+                  : 'Application'}
               </span>
             </div>
           </h3>
@@ -180,7 +181,16 @@ export const ConfirmationApprovalModal = ({
             />
           ) : null}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
-            {`Are you sure you want to disapprove this application?`}
+            {`Are you sure you want to 
+          
+          ${
+            otpName === ManagerOtpApproval.PASSSLIP && actionPassSlip === PassSlipStatus.CANCELLED
+              ? 'cancel'
+              : otpName === ManagerOtpApproval.PASSSLIP && actionPassSlip === PassSlipStatus.DISAPPROVED
+              ? 'disapprove'
+              : 'disapprove'
+          }
+          this application?`}
           </div>
         </Modal.Body>
         <Modal.Footer>

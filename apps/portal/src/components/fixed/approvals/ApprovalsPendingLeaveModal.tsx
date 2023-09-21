@@ -13,11 +13,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { ApprovalOtpContentsLeave } from './ApprovalOtp/ApprovalOtpContentsLeave';
-import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import dayjs from 'dayjs';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -254,13 +253,25 @@ export const ApprovalsPendingLeaveModal = ({
                             leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                             leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
                             leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
-                              ? // show first and last date (array) only if maternity or study leave
-                                `${leaveIndividualDetail?.leaveDates[0]} - ${
-                                  leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
-                                }`
-                              : // show all dates if not maternity or study leave
-                                leaveIndividualDetail?.leaveDates?.join(', ')}
+                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
+                              // show first and last date (array) only if maternity or study leave
+                              `${leaveIndividualDetail?.leaveDates[0]} - ${
+                                leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
+                              }`
+                            ) : (
+                              // show all dates if not maternity or study leave
+                              // show all dates if not maternity or study leave
+                              <div className="flex flex-wrap flex-row">
+                                {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
+                                  return (
+                                    <label key={index} className="pr-1">
+                                      {dayjs(dates).format('MM-DD-YYYY')}
+                                      {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </label>
                         </div>
                       </div>
