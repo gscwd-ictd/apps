@@ -36,3 +36,20 @@ export type EmployeeOvertimeDetail = {
   avatarUrl: string;
   assignment: string;
 };
+
+export type OvertimeAccomplishment = {
+  id: string;
+  ivmsTimeIn: string;
+  ivmsTimeOut: string;
+  encodedTimeIn: string | null;
+  encodedTimeOut: string | null;
+  accomplishments: string | null;
+  remarks: string | null;
+  status: string;
+  computedIvmsHours: number;
+  didFaceScan: boolean;
+  overtimeApplicationId: string;
+  plannedDate: string;
+  employeeId: string;
+  purpose: string;
+};

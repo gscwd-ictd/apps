@@ -31,24 +31,31 @@ export default function OvertimeAccomplishment({
     completedOvertimeAccomplishmentModalIsOpen,
     overtimeList,
     responseApply,
+    errorOvertimeAccomplishment,
 
     setPendingOvertimeAccomplishmentModalIsOpen,
     setCompletedOvertimeAccomplishmentModalIsOpen,
     setOvertimeDetails,
     emptyResponseAndError,
+    getOvertimeAccomplishmentList,
+    getOvertimeAccomplishmentListSuccess,
+    getOvertimeAccomplishmentListFail,
   } = useOvertimeAccomplishmentStore((state) => ({
     tab: state.tab,
 
     pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen: state.completedOvertimeAccomplishmentModalIsOpen,
     overtimeList: state.overtime,
-
     responseApply: state.response.postResponseApply,
+    errorOvertimeAccomplishment: state.error.errorOvertimeAccomplishment,
 
     setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeAccomplishmentModalIsOpen: state.setPendingOvertimeAccomplishmentModalIsOpen,
     setCompletedOvertimeAccomplishmentModalIsOpen: state.setCompletedOvertimeAccomplishmentModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
+    getOvertimeAccomplishmentList: state.getOvertimeAccomplishmentList,
+    getOvertimeAccomplishmentListSuccess: state.getOvertimeAccomplishmentListSuccess,
+    getOvertimeAccomplishmentListFail: state.getOvertimeAccomplishmentListFail,
   }));
 
   // cancel action for Overtime Pending Modal
@@ -69,54 +76,61 @@ export default function OvertimeAccomplishment({
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
 
-  // const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/supervisor/${employeeDetails.employmentDetails.userId}/employees/`;
+  const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/employees/${employeeDetails.employmentDetails.userId}/accomplishments/`;
 
-  // const {
-  //   data: swrEmployeeList,
-  //   isLoading: swrEmployeeListIsLoading,
-  //   error: swrEmployeeListError,
-  //   mutate: mutateLeaves,
-  // } = useSWR(employeeListUrl, fetchWithToken, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
+  const {
+    data: swrOvertimeAccomplishmentList,
+    isLoading: swrOvertimeAccomplishmentListIsLoading,
+    error: swrOvertimeAccomplishmentListError,
+    mutate: mutateLeaves,
+  } = useSWR(overtimeAccomplishmentUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
-  // // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrEmployeeListIsLoading) {
-  //     getEmployeeList(swrEmployeeListIsLoading);
-  //   }
-  // }, [swrEmployeeListIsLoading]);
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeAccomplishmentListIsLoading) {
+      getOvertimeAccomplishmentList(swrOvertimeAccomplishmentListIsLoading);
+    }
+  }, [swrOvertimeAccomplishmentListIsLoading]);
 
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrEmployeeList)) {
-  //     getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
-  //   }
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeAccomplishmentList)) {
+      console.log(swrOvertimeAccomplishmentList);
+      getOvertimeAccomplishmentListSuccess(swrOvertimeAccomplishmentListIsLoading, swrOvertimeAccomplishmentList);
+    }
 
-  //   if (!isEmpty(swrEmployeeListError)) {
-  //     getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
-  //   }
-  // }, [swrEmployeeList, swrEmployeeListError]);
+    if (!isEmpty(swrOvertimeAccomplishmentListError)) {
+      getOvertimeAccomplishmentListFail(
+        swrOvertimeAccomplishmentListIsLoading,
+        swrOvertimeAccomplishmentListError.message
+      );
+    }
+  }, [swrOvertimeAccomplishmentList, swrOvertimeAccomplishmentListError]);
 
-  // useEffect(() => {
-  //   if (!isEmpty(responseApply)) {
-  //     mutateLeaves();
-  //     setTimeout(() => {
-  //       emptyResponseAndError();
-  //     }, 3000);
-  //   }
-  // }, [responseApply]);
+  useEffect(() => {
+    if (!isEmpty(responseApply)) {
+      mutateLeaves();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
+    }
+  }, [responseApply]);
 
   return (
     <>
       <>
-        {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
-        {/* {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
+        {/* Overtime Accomplishment List Load Faled */}
+        {!isEmpty(errorOvertimeAccomplishment) ? (
           <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${errorOvertimeAccomplishment}: Failed to load Overtime Accomplishment List.`}
+            />
           </>
-        ) : null} */}
+        ) : null}
 
         {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
         {/* {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (

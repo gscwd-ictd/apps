@@ -20,12 +20,12 @@ type ModalProps = {
 
 export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    overtimeDetails,
+    overtimeAccomplishmentDetails,
     confirmOvertimeAccomplishmentModalIsOpen,
     pendingOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen,
   } = useOvertimeAccomplishmentStore((state) => ({
-    overtimeDetails: state.overtimeDetails,
+    overtimeAccomplishmentDetails: state.overtimeAccomplishmentDetails,
     confirmOvertimeAccomplishmentModalIsOpen: state.confirmOvertimeAccomplishmentModalIsOpen,
     pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen: state.setConfirmOvertimeAccomplishmentModalIsOpen,
@@ -80,7 +80,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             setModalState={setConfirmOvertimeAccomplishmentModalIsOpen}
             closeModalAction={closeConfirmOvertimeAccomplishmentModal}
           />
-          {!overtimeDetails ? (
+          {!overtimeAccomplishmentDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -104,7 +104,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                       <div className="md:w-1/2">
                         <label className="text-slate-500 w-full text-md ">
-                          {dayjs(overtimeDetails.plannedDate).format('MM-DD-YYYY')}
+                          {dayjs(overtimeAccomplishmentDetails.plannedDate).format('MM-DD-YYYY')}
                         </label>
                       </div>
                     </div>
@@ -112,32 +112,17 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Estimated Hours:</label>
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                        Computed IVMS Hours:
+                      </label>
 
                       <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.estimatedHours}</label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employees:</label>
-
-                      <div className="w-full md:w-1/2">
                         <label className="text-slate-500 w-full text-md ">
-                          {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
-                            return (
-                              <label key={index}>
-                                {index == 0 ? null : ', '}
-                                {employee.fullName}
-                              </label>
-                            );
-                          })}
+                          {overtimeAccomplishmentDetails?.computedIvmsHours}
                         </label>
                       </div>
                     </div>
-                  </div> */}
+                  </div>
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
@@ -154,7 +139,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             disabled
                             controller={{
                               ...register('ivmsTimeIn', {
-                                value: '17:00:00',
+                                value: overtimeAccomplishmentDetails.ivmsTimeIn.toUpperCase(),
                                 onChange: (e) => {
                                   setValue('ivmsTimeIn', e.target.value, {
                                     shouldValidate: true,
@@ -176,7 +161,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             disabled
                             controller={{
                               ...register('ivmsTimeOut', {
-                                value: '19:00:00',
+                                value: overtimeAccomplishmentDetails.ivmsTimeOut,
                                 onChange: (e) => {
                                   setValue('ivmsTimeOut', e.target.value, {
                                     shouldValidate: true,
@@ -249,7 +234,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       disabled
                       rows={2}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={overtimeDetails.purpose}
+                      value={overtimeAccomplishmentDetails.purpose}
                     ></textarea>
                   </div>
                   <div className="flex flex-col justify-between items-center w-full">

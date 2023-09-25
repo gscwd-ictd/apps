@@ -1,10 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
-import { EmployeeOvertimeDetail, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeAccomplishment, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 
 type TabProps = {
-  overtime: Array<OvertimeDetails>;
+  overtime: Array<OvertimeAccomplishment>;
   tab: number;
 };
 
@@ -24,7 +24,7 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
     setCompletedOvertimeAccomplishmentModalIsOpen: state.setCompletedOvertimeAccomplishmentModalIsOpen,
   }));
 
-  const OnSelect = (overtime: OvertimeDetails) => {
+  const OnSelect = (overtime: OvertimeAccomplishment) => {
     setOvertimeDetails(overtime);
     if (tab === 1) {
       if (!pendingOvertimeAccomplishmentModalIsOpen) {
@@ -41,7 +41,7 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
     <>
       {overtime && overtime.length > 0 ? (
         <ul className="mt-0">
-          {overtime.map((overtime: OvertimeDetails, index: number) => {
+          {overtime.map((overtime: OvertimeAccomplishment, index: number) => {
             return (
               <li
                 key={index}
@@ -55,8 +55,8 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
                   {/* <p className="text-sm text-gray-500">
                     Planned Date: {dayjs(overtime.plannedDate).format('MMMM DD, YYYY')}
                   </p> */}
-                  <p className="text-sm text-gray-500">Immediate Supervisor: {overtime.immediateSupervisorName}</p>
-                  <p className="text-sm text-gray-500">Estimated Hours: {overtime.estimatedHours}</p>
+                  <p className="text-sm text-gray-500">Purpose: {overtime.purpose}</p>
+                  <p className="text-sm text-gray-500">Estimated Hours: {overtime.computedIvmsHours}</p>
                   <p className="text-sm text-indigo-500">Status: {overtime.status?.toUpperCase()}</p>
                 </div>
               </li>
