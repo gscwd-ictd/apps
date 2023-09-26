@@ -2,15 +2,15 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
-import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { ConfirmationOvertimeAccomplishmentModal } from './ConfirmationOvertimeAccomplishmentModal';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
+import { OvertimeAccomplishmentPatch } from 'libs/utils/src/lib/types/overtime.type';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -24,14 +24,16 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     confirmOvertimeAccomplishmentModalIsOpen,
     pendingOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen,
+    setOvertimeAccomplishmentPatchDetails,
   } = useOvertimeAccomplishmentStore((state) => ({
     overtimeAccomplishmentDetails: state.overtimeAccomplishmentDetails,
     confirmOvertimeAccomplishmentModalIsOpen: state.confirmOvertimeAccomplishmentModalIsOpen,
     pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen: state.setConfirmOvertimeAccomplishmentModalIsOpen,
+    setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
   }));
 
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -46,12 +48,29 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     getValues,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isDirty, dirtyFields, isValid },
   } = useForm<any>({
-    // resolver: yupResolver(OfficeSchema),
     mode: 'onChange',
     reValidateMode: 'onBlur',
+    defaultValues: {
+      employeeId: overtimeAccomplishmentDetails.employeeId,
+      overtimeApplicationId: overtimeAccomplishmentDetails.overtimeApplicationId,
+      encodedTimeIn: null,
+      encodedTimeOut: null,
+      accomplishments: '',
+    },
   });
+
+  const onSubmit: SubmitHandler<OvertimeAccomplishmentPatch> = (data: OvertimeAccomplishmentPatch) => {
+    setOvertimeAccomplishmentPatchDetails(data);
+    setConfirmOvertimeAccomplishmentModalIsOpen(true);
+  };
+
+  useEffect(() => {
+    setValue('employeeId', overtimeAccomplishmentDetails.employeeId);
+    setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
+  }, [watch('accomplishments')]);
 
   useEffect(() => {
     reset();
@@ -93,165 +112,165 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               </div>
             </>
           ) : (
-            <div className="w-full h-full flex flex-col  ">
-              <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
-                  <AlertNotification alertType="info" notifMessage="Awaiting submission" dismissible={false} />
+            <form id="SubmitAccomplishmentForm" onSubmit={handleSubmit(onSubmit)}>
+              <div className="w-full h-full flex flex-col  ">
+                <div className="w-full h-full flex flex-col gap-2 ">
+                  <div className="w-full flex flex-col gap-2 p-4 rounded">
+                    <AlertNotification alertType="info" notifMessage="Awaiting submission" dismissible={false} />
 
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
-
-                      <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">
-                          {dayjs(overtimeAccomplishmentDetails.plannedDate).format('MM-DD-YYYY')}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Computed IVMS Hours:
-                      </label>
-
-                      <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">
-                          {overtimeAccomplishmentDetails?.computedIvmsHours}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">IVMS In & Out:</label>
-
-                      <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
-                        <label className="text-slate-500 w-full text-md ">
-                          <LabelInput
-                            id={'ivmsTimeIn'}
-                            type="time"
-                            label={''}
-                            className="w-full  text-slate-400 font-medium"
-                            textSize="md"
-                            disabled
-                            controller={{
-                              ...register('ivmsTimeIn', {
-                                value: overtimeAccomplishmentDetails.ivmsTimeIn.toUpperCase(),
-                                onChange: (e) => {
-                                  setValue('ivmsTimeIn', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
-                          />
-                        </label>
-                        <label className="text-slate-500 w-auto text-lg">-</label>
-                        <label className="text-slate-500 w-full text-md ">
-                          <LabelInput
-                            id={'ivmsTimeOut'}
-                            type="time"
-                            label={''}
-                            className="w-full text-slate-400 font-medium"
-                            textSize="md"
-                            disabled
-                            controller={{
-                              ...register('ivmsTimeOut', {
-                                value: overtimeAccomplishmentDetails.ivmsTimeOut,
-                                onChange: (e) => {
-                                  setValue('ivmsTimeOut', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Encode Time In & Out:
-                      </label>
-
-                      <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
-                        <label className="text-slate-500 w-full text-md ">
-                          <LabelInput
-                            id={'encodeTimeIn'}
-                            type="time"
-                            label={''}
-                            className="w-full  text-slate-400 font-medium"
-                            textSize="md"
-                            controller={{
-                              ...register('encodeTimeIn', {
-                                onChange: (e) => {
-                                  setValue('encodeTimeIn', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
-                          />
-                        </label>
-                        <label className="text-slate-500 w-auto text-lg">-</label>
-                        <label className="text-slate-500 w-full text-md ">
-                          <LabelInput
-                            id={'encodeTimeOut'}
-                            type="time"
-                            label={''}
-                            className="w-full text-slate-400 font-medium"
-                            textSize="md"
-                            controller={{
-                              ...register('encodeTimeOut', {
-                                onChange: (e) => {
-                                  setValue('encodeTimeOut', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col justify-between items-center w-full">
                     <div className="flex flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Purpose:</label>
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
+
+                        <div className="md:w-1/2">
+                          <label className="text-slate-500 w-full text-md ">
+                            {DateFormatter(overtimeAccomplishmentDetails.plannedDate)}
+                          </label>
+                        </div>
+                      </div>
                     </div>
-                    <textarea
-                      disabled
-                      rows={2}
-                      className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={overtimeAccomplishmentDetails.purpose}
-                    ></textarea>
-                  </div>
-                  <div className="flex flex-col justify-between items-center w-full">
+
                     <div className="flex flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Accomplishment:</label>
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                          Computed IVMS Hours:
+                        </label>
+
+                        <div className="md:w-1/2">
+                          <label className="text-slate-500 w-full text-md ">
+                            {overtimeAccomplishmentDetails?.computedIvmsHours}
+                          </label>
+                        </div>
+                      </div>
                     </div>
-                    <textarea
-                      required
-                      rows={3}
-                      className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      placeholder="Please enter your accomplishments"
-                      {...register('accomplishments')}
-                    ></textarea>
+
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">IVMS In & Out:</label>
+
+                        <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              id={'ivmsTimeIn'}
+                              type="text"
+                              label={''}
+                              className="w-full  text-slate-400 font-medium"
+                              textSize="md"
+                              disabled
+                              value={
+                                overtimeAccomplishmentDetails.ivmsTimeIn
+                                  ? overtimeAccomplishmentDetails.ivmsTimeIn
+                                  : '--:--:--'
+                              }
+                            />
+                          </label>
+                          <label className="text-slate-500 w-auto text-lg">-</label>
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              id={'ivmsTimeOut'}
+                              type="text"
+                              label={''}
+                              className="w-full text-slate-400 font-medium"
+                              textSize="md"
+                              disabled
+                              value={
+                                overtimeAccomplishmentDetails.ivmsTimeOut
+                                  ? overtimeAccomplishmentDetails.ivmsTimeOut
+                                  : '--:--:--'
+                              }
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                          Encode Time In & Out:
+                        </label>
+
+                        <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              required={
+                                overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
+                                  ? false
+                                  : true
+                              }
+                              id={'encodedTimeIn'}
+                              type="time"
+                              label={''}
+                              className="w-full text-slate-400 font-medium cursor-pointer"
+                              textSize="md"
+                              controller={{
+                                ...register('encodedTimeIn', {
+                                  onChange: (e) => {
+                                    setValue('encodedTimeIn', e.target.value, {
+                                      shouldValidate: true,
+                                    });
+                                    trigger(); // triggers all validations for inputs
+                                  },
+                                }),
+                              }}
+                            />
+                          </label>
+                          <label className="text-slate-500 w-auto text-lg">-</label>
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              required={
+                                overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
+                                  ? false
+                                  : true
+                              }
+                              id={'encodedTimeOut'}
+                              type="time"
+                              label={''}
+                              className="w-full text-slate-400 font-medium cursor-pointer"
+                              textSize="md"
+                              controller={{
+                                ...register('encodedTimeOut', {
+                                  onChange: (e) => {
+                                    setValue('encodedTimeOut', e.target.value, {
+                                      shouldValidate: true,
+                                    });
+                                    trigger(); // triggers all validations for inputs
+                                  },
+                                }),
+                              }}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between items-center w-full">
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Purpose:</label>
+                      </div>
+                      <textarea
+                        disabled
+                        rows={2}
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                        value={overtimeAccomplishmentDetails.purpose}
+                      ></textarea>
+                    </div>
+                    <div className="flex flex-col justify-between items-center w-full">
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Accomplishment:</label>
+                      </div>
+                      <textarea
+                        required
+                        rows={3}
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                        placeholder="Please enter your accomplishments"
+                        {...register('accomplishments')}
+                      ></textarea>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
           )}
         </Modal.Body>
         <Modal.Footer>
@@ -260,7 +279,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               variant={'primary'}
               size={'md'}
               loading={false}
-              onClick={(e) => setConfirmOvertimeAccomplishmentModalIsOpen(true)}
+              form="SubmitAccomplishmentForm"
+              // onClick={(e) => setConfirmOvertimeAccomplishmentModalIsOpen(true)}
               type="submit"
             >
               Submit Accomplishment

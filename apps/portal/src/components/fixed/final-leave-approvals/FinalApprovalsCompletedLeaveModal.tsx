@@ -8,6 +8,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { ConfirmationLeaveModal } from './FinalApprovalOtp/ConfirmationLeaveModal';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -168,13 +169,24 @@ export const ApprovalsCompletedLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                         leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                        leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
-                          ? // show first and last date (array) only if maternity or study leave
-                            `${leaveIndividualDetail?.leaveDates[0]} - ${
-                              leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
-                            }`
-                          : // show all dates if not maternity or study leave
-                            leaveIndividualDetail?.leaveDates?.join(', ')}
+                        leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
+                          // show first and last date (array) only if maternity or study leave
+                          `${DateFormatter(leaveIndividualDetail?.leaveDates[0])} - ${DateFormatter(
+                            leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
+                          )}`
+                        ) : (
+                          // show all dates if not maternity or study leave
+                          <div className="flex flex-wrap flex-row">
+                            {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
+                              return (
+                                <label key={index} className="pr-1">
+                                  {DateFormatter(dates)}
+                                  {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        )}
                       </label>
                     </div>
                   </div>
@@ -234,15 +246,15 @@ export const ApprovalsCompletedLeaveModal = ({
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate)
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? leaveIndividualDetail?.supervisorApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate)
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? leaveIndividualDetail?.hrmoApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.hrmoApprovalDate)
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate)
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                          ? leaveIndividualDetail?.cancelDate
+                          ? DateFormatter(leaveIndividualDetail?.cancelDate)
                           : null}
                       </label>
                     </div>

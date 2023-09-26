@@ -3,6 +3,8 @@
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
+import { OvertimeAccomplishmentPatch } from 'libs/utils/src/lib/types/overtime.type';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -15,32 +17,44 @@ export const ConfirmationOvertimeAccomplishmentModal = ({
   setModalState,
   closeModalAction,
 }: ConfirmationModalProps) => {
+  const {
+    overtimeAccomplishmentPatchDetails,
+    loadingResponse,
+    patchOvertimeAccomplishment,
+    patchOvertimeAccomplishmentSuccess,
+    patchOvertimeAccomplishmentFail,
+    setPendingOvertimeAccomplishmentModalIsOpen,
+  } = useOvertimeAccomplishmentStore((state) => ({
+    overtimeAccomplishmentPatchDetails: state.overtimeAccomplishmentPatchDetails,
+    loadingResponse: state.loading.loadingResponse,
+    patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
+    patchOvertimeAccomplishmentSuccess: state.patchOvertimeAccomplishmentSuccess,
+    patchOvertimeAccomplishmentFail: state.patchOvertimeAccomplishmentFail,
+    setPendingOvertimeAccomplishmentModalIsOpen: state.setPendingOvertimeAccomplishmentModalIsOpen,
+  }));
+
   const handleSubmit = () => {
-    // if (tokenId) {
-    //   const data = {
-    //     id: tokenId,
-    //     status: action,
-    //     supervisorDisapprovalRemarks: remarks,
-    //   };
-    //   patchLeave();
-    //   handlePatchResult(data);
-    // } else {
-    //   //nothing to do
-    // }
+    if (overtimeAccomplishmentPatchDetails) {
+      const data = overtimeAccomplishmentPatchDetails;
+      patchOvertimeAccomplishment();
+      handlePatchResult(data);
+    } else {
+      //nothing to do
+    }
   };
 
-  // const handlePatchResult = async (data: leaveAction) => {
-  //   const { error, result } = await patchPortal('/v1/leave/supervisor', data);
-  //   if (error) {
-  //     patchLeaveFail(result);
-  //   } else {
-  //     patchLeaveSuccess(result);
-  //     closeModalAction();
-  //     setTimeout(() => {
-  //       setPendingOvertimeAccomplishmentModalIsOpen(false);
-  //     }, 200);
-  //   }
-  // };
+  const handlePatchResult = async (data: OvertimeAccomplishmentPatch) => {
+    const { error, result } = await patchPortal('/v1/overtime/employees/accomplishments/', data);
+    if (error) {
+      patchOvertimeAccomplishmentFail(result);
+    } else {
+      patchOvertimeAccomplishmentSuccess(result);
+      closeModalAction();
+      setTimeout(() => {
+        setPendingOvertimeAccomplishmentModalIsOpen(false);
+      }, 200);
+    }
+  };
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -55,14 +69,14 @@ export const ConfirmationOvertimeAccomplishmentModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {/* {loadingLeaveResponse ? (
+          {loadingResponse ? (
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
               notifMessage={'Processing'}
               dismissible={false}
             />
-          ) : null} */}
+          ) : null}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
             {`Are you sure you want to submit this Overtime Accomplishment Report?`}
           </div>

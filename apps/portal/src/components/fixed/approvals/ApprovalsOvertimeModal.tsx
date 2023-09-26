@@ -4,7 +4,6 @@ import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
@@ -14,8 +13,8 @@ import { overtimeAction } from 'apps/portal/src/types/approvals.type';
 import { useEffect, useState } from 'react';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
-import dayjs from 'dayjs';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -51,7 +50,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   const { reset, register, handleSubmit, watch, setValue } = useForm<overtimeAction>({
     mode: 'onChange',
     defaultValues: {
-      // passSlipId: passSlip.id,
       status: null,
     },
   });
@@ -70,20 +68,12 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   };
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-  const handleReason = (e: string) => {
-    setReason(e);
-  };
 
   useEffect(() => {
     reset();
   }, [pendingOvertimeModalIsOpen]);
 
   const { windowWidth } = UseWindowDimensions();
-
-  // cancel action for Overtime Pending Modal
-  const closeCancelOvertimeModal = async () => {
-    // setCancelOvertimeModalIsOpen(false);
-  };
 
   return (
     <>
@@ -153,7 +143,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
                       <div className="w-full md:w-96 ">
                         <label className="text-slate-500 w-full text-md ">
-                          {dayjs(overtimeDetails.plannedDate).format('MM-DD-YYYY')}
+                          {DateFormatter(overtimeDetails.plannedDate)}
                         </label>
                       </div>
                     </div>
@@ -256,7 +246,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                           className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
                           placeholder="Enter Reason"
                           rows={3}
-                          onChange={(e) => handleReason(e.target.value as unknown as string)}
+                          onChange={(e) => setReason(e.target.value as unknown as string)}
                         ></textarea>
                       ) : null}
                     </form>

@@ -11,7 +11,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import CancelLeaveModal from './CancelLeaveModal';
-import dayjs from 'dayjs';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -228,13 +228,13 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                 LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
                                 // show first and last date (array) only if maternity or study leave
-                                `${dayjs(leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]).format(
-                                  'MM-DD-YYYY'
-                                )} - ${dayjs(
+                                `${DateFormatter(
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]
+                                )} - ${DateFormatter(
                                   leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
                                     leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
                                   ]
-                                ).format('MM-DD-YYYY')}`
+                                )}`
                               ) : (
                                 // show all dates if not maternity or study leave
                                 <div className="flex flex-wrap flex-row">
@@ -242,7 +242,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                     (dates: string, index: number) => {
                                       return (
                                         <label key={index} className="pr-1">
-                                          {dayjs(dates).format('MM-DD-YYYY')}
+                                          {DateFormatter(dates)}
                                           {index ==
                                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
                                             ? ''

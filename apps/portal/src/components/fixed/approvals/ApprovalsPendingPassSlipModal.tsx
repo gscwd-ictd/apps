@@ -10,8 +10,8 @@ import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
-import dayjs from 'dayjs';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -123,7 +123,7 @@ export const ApprovalsPendingPassSlipModal = ({
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96  text-md ">
-                    {dayjs(passSlip.dateOfApplication).format('MM-DD-YYYY')}
+                    {DateFormatter(passSlip.dateOfApplication)}
                   </label>
                 </div>
               </div>

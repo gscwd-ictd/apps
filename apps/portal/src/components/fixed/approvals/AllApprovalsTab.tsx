@@ -7,6 +7,7 @@ import { SupervisorLeaveDetails } from '../../../../../../libs/utils/src/lib/typ
 import { PassSlip, PassSlipApplicationForm } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import { EmployeeOvertimeDetail, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type AllApprovalListTabProps = {
   passslips: Array<PassSlipApplicationForm> | null;
@@ -200,15 +201,15 @@ export const AllApprovalsTab = ({ passslips, leaves, overtime, tab }: AllApprova
                     item.leaveName === LeaveName.REHABILITATION ||
                     item.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     item.leaveName === LeaveName.ADOPTION ? (
-                      `${dayjs(item.leaveDates[0]).format('MM-DD-YYYY')} - ${dayjs(
+                      `${DateFormatter(item.leaveDates[0])} - ${DateFormatter(
                         item.leaveDates[item.leaveDates.length - 1]
-                      ).format('MM-DD-YYYY')}`
+                      )}`
                     ) : (
                       <>
                         {item.leaveDates.map((dates: string, index: number) => {
                           return (
                             <label key={index} className="pr-1">
-                              {dayjs(dates).format('MM-DD-YYYY')}
+                              {DateFormatter(dates)}
                               {index == item.leaveDates.length - 1 ? '' : ','}
                             </label>
                           );

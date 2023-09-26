@@ -1,10 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { useForm } from 'react-hook-form';
@@ -23,7 +22,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
     pendingOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen,
   } = useOvertimeAccomplishmentStore((state) => ({
-    overtimeDetails: state.overtimeDetails,
+    overtimeDetails: state.overtimeAccomplishmentDetails,
     confirmOvertimeAccomplishmentModalIsOpen: state.confirmOvertimeAccomplishmentModalIsOpen,
     pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen: state.setConfirmOvertimeAccomplishmentModalIsOpen,

@@ -3,6 +3,7 @@ import { useLeaveStore } from '../../../../src/store/leave.store';
 import { EmployeeLeave } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import dayjs from 'dayjs';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type AllLeaveListTabProps = {
   leaves: Array<EmployeeLeave>;
@@ -65,15 +66,15 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                     leave.leaveName === LeaveName.REHABILITATION ||
                     leave.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     leave.leaveName === LeaveName.ADOPTION ? (
-                      `${dayjs(leave.leaveDates[0]).format('MM-DD-YYYY')} - ${dayjs(
+                      `${DateFormatter(leave.leaveDates[0])} - ${DateFormatter(
                         leave.leaveDates[leave.leaveDates.length - 1]
-                      ).format('MM-DD-YYYY')}`
+                      )}`
                     ) : (
                       <>
                         {leave.leaveDates.map((dates: string, index: number) => {
                           return (
                             <label key={index} className="pr-1">
-                              {dayjs(dates).format('MM-DD-YYYY')}
+                              {DateFormatter(dates)}
                               {index == leave.leaveDates.length - 1 ? '' : ','}
                             </label>
                           );

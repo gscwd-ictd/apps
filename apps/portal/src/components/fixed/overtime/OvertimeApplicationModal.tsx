@@ -2,17 +2,10 @@
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../store/leave.store';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { postPortal } from '../../../utils/helpers/portal-axios-helper';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
-import { fetchWithToken } from '../../../utils/hoc/fetcher';
-import useSWR from 'swr';
-import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../store/employee.store';
-
-import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
-import { CalendarDate, LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { MySelectList } from '../../modular/inputs/SelectList';
@@ -68,7 +61,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     }
     setValue('employees', employeeIdList);
     setValue('overtimeImmediateSupervisorId', employeeDetails.employmentDetails.overtimeImmediateSupervisorId);
-    console.log(employeeDetails.employmentDetails.overtimeImmediateSupervisorId);
   }, [selectedEmployees]);
 
   useEffect(() => {
@@ -83,7 +75,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   };
 
   const handlePostResult = async (data: OvertimeForm) => {
-    console.log(data);
     postOvertime();
     const { error, result } = await postPortal('/v1/overtime/', data);
     if (error) {

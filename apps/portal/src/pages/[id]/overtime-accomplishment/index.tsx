@@ -30,7 +30,8 @@ export default function OvertimeAccomplishment({
     pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen,
     overtimeList,
-    responseApply,
+    patchResponse,
+    errorResponse,
     errorOvertimeAccomplishment,
 
     setPendingOvertimeAccomplishmentModalIsOpen,
@@ -46,7 +47,8 @@ export default function OvertimeAccomplishment({
     pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen: state.completedOvertimeAccomplishmentModalIsOpen,
     overtimeList: state.overtime,
-    responseApply: state.response.postResponseApply,
+    patchResponse: state.response.patchResponse,
+    errorResponse: state.error.errorResponse,
     errorOvertimeAccomplishment: state.error.errorOvertimeAccomplishment,
 
     setOvertimeDetails: state.setOvertimeDetails,
@@ -82,7 +84,7 @@ export default function OvertimeAccomplishment({
     data: swrOvertimeAccomplishmentList,
     isLoading: swrOvertimeAccomplishmentListIsLoading,
     error: swrOvertimeAccomplishmentListError,
-    mutate: mutateLeaves,
+    mutate: mutateOvertimeAccomplishments,
   } = useSWR(overtimeAccomplishmentUrl, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
@@ -98,7 +100,6 @@ export default function OvertimeAccomplishment({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishmentList)) {
-      console.log(swrOvertimeAccomplishmentList);
       getOvertimeAccomplishmentListSuccess(swrOvertimeAccomplishmentListIsLoading, swrOvertimeAccomplishmentList);
     }
 
@@ -111,13 +112,13 @@ export default function OvertimeAccomplishment({
   }, [swrOvertimeAccomplishmentList, swrOvertimeAccomplishmentListError]);
 
   useEffect(() => {
-    if (!isEmpty(responseApply)) {
-      mutateLeaves();
+    if (!isEmpty(patchResponse)) {
+      mutateOvertimeAccomplishments();
       setTimeout(() => {
         emptyResponseAndError();
       }, 3000);
     }
-  }, [responseApply]);
+  }, [patchResponse]);
 
   return (
     <>
@@ -132,29 +133,17 @@ export default function OvertimeAccomplishment({
           </>
         ) : null}
 
-        {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
-        {/* {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
-          </>
-        ) : null} */}
-
-        {/* Post/Submit Leave Error*/}
-        {/* {!isEmpty(errorResponse) ? (
+        {/* Submit Accomplishment Error*/}
+        {!isEmpty(errorResponse) ? (
           <>
             <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
           </>
-        ) : null} */}
+        ) : null}
 
-        {/* Post/Submit Leave Success*/}
-        {/* {!isEmpty(responseApply) ? (
-          <ToastNotification toastType="success" notifMessage="Leave Application Successful!" />
-        ) : null} */}
-
-        {/* Patch Cancel Leave Successs*/}
-        {/* {!isEmpty(responseCancel) ? (
-          <ToastNotification toastType="success" notifMessage="Leave Cancellation Successful!" />
-        ) : null} */}
+        {/* Submit Accomplishment Success*/}
+        {!isEmpty(patchResponse) ? (
+          <ToastNotification toastType="success" notifMessage="Overtime Accomplishment Submitted!" />
+        ) : null}
       </>
 
       <EmployeeProvider employeeData={employee}>

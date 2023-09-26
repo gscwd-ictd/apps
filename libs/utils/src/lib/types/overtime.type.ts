@@ -53,3 +53,11 @@ export type OvertimeAccomplishment = {
   employeeId: string;
   purpose: string;
 };
+
+export type OvertimeAccomplishmentPatch = {
+  employeeId: string;
+  overtimeApplicationId: string;
+  accomplishments: string;
+  encodedTimeIn?: string;
+  encodedTimeOut?: string;
+};

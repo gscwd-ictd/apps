@@ -5,7 +5,7 @@ import { usePassSlipStore } from '../../../store/passslip.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationApplicationModal } from './ConfirmationModal';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import dayjs from 'dayjs';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -69,7 +69,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96  txt-md ">
-                    {dayjs(passSlip.dateOfApplication).format('MM-DD-YYYY')}
+                    {DateFormatter(passSlip.dateOfApplication)}
                   </label>
                 </div>
               </div>

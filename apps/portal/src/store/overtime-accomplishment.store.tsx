@@ -1,6 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { OvertimeAccomplishment, OvertimeDetails, OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
+import {
+  OvertimeAccomplishment,
+  OvertimeAccomplishmentPatch,
+  OvertimeDetails,
+  OvertimeForm,
+} from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
@@ -16,7 +21,7 @@ export type OvertimeState = {
     completed: Array<OvertimeAccomplishment>;
   };
   response: {
-    postResponseApply: any;
+    patchResponse: any;
     cancelResponse: any;
   };
 
@@ -30,6 +35,7 @@ export type OvertimeState = {
   };
 
   overtimeAccomplishmentDetails: OvertimeAccomplishment;
+  overtimeAccomplishmentPatchDetails: OvertimeAccomplishmentPatch;
   pendingOvertimeAccomplishmentModalIsOpen: boolean;
   completedOvertimeAccomplishmentModalIsOpen: boolean;
   confirmOvertimeAccomplishmentModalIsOpen: boolean;
@@ -39,15 +45,16 @@ export type OvertimeState = {
   getOvertimeAccomplishmentListSuccess: (loading: boolean, response) => void;
   getOvertimeAccomplishmentListFail: (loading: boolean, error: string) => void;
 
-  postOvertimeAccomplishment: () => void;
-  postOvertimeAccomplishmentSuccess: (response: OvertimeForm) => void;
-  postOvertimeAccomplishmentFail: (error: string) => void;
+  patchOvertimeAccomplishment: () => void;
+  patchOvertimeAccomplishmentSuccess: (response: OvertimeForm) => void;
+  patchOvertimeAccomplishmentFail: (error: string) => void;
 
   setPendingOvertimeAccomplishmentModalIsOpen: (pendingOvertimeAccomplishmentModalIsOpen: boolean) => void;
   setCompletedOvertimeAccomplishmentModalIsOpen: (completedOvertimeAccomplishmentModalIsOpen: boolean) => void;
   setConfirmOvertimeAccomplishmentModalIsOpen: (confirmOvertimeAccomplishmentModalIsOpen: boolean) => void;
 
   setOvertimeDetails: (overtimeAccomplishmentDetails: OvertimeAccomplishment) => void;
+  setOvertimeAccomplishmentPatchDetails: (overtimeAccomplishmentPatchDetails: OvertimeAccomplishmentPatch) => void;
   setTab: (tab: number) => void;
 
   emptyResponseAndError: () => void;
@@ -60,7 +67,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
       completed: [],
     },
     response: {
-      postResponseApply: {},
+      patchResponse: {},
       cancelResponse: {} as OvertimeAccomplishment,
     },
     loading: {
@@ -74,7 +81,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
     },
 
     overtimeAccomplishmentDetails: {} as OvertimeAccomplishment,
-
+    overtimeAccomplishmentPatchDetails: {} as OvertimeAccomplishmentPatch,
     pendingOvertimeAccomplishmentModalIsOpen: false,
     completedOvertimeAccomplishmentModalIsOpen: false,
     confirmOvertimeAccomplishmentModalIsOpen: false,
@@ -99,6 +106,10 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
 
     setOvertimeDetails: (overtimeAccomplishmentDetails: OvertimeAccomplishment) => {
       set((state) => ({ ...state, overtimeAccomplishmentDetails }));
+    },
+
+    setOvertimeAccomplishmentPatchDetails: (overtimeAccomplishmentPatchDetails: OvertimeAccomplishmentPatch) => {
+      set((state) => ({ ...state, overtimeAccomplishmentPatchDetails }));
     },
 
     //GET OVERTIME ACTIONS
@@ -147,18 +158,18 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
         },
         response: {
           ...state.response,
-          postResponseApply: null,
+          patchResponse: null,
         },
       }));
     },
 
-    //POST OVERTIME ACTIONS
-    postOvertimeAccomplishment: () => {
+    //PATCH OVERTIME ACCOMPLISHMENT ACTIONS
+    patchOvertimeAccomplishment: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {},
+          patchResponse: {},
         },
         loading: {
           ...state.loading,
@@ -170,12 +181,12 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
         },
       }));
     },
-    postOvertimeAccomplishmentSuccess: (response) => {
+    patchOvertimeAccomplishmentSuccess: (response) => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: response,
+          patchResponse: response,
         },
         loading: {
           ...state.loading,
@@ -183,7 +194,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
         },
       }));
     },
-    postOvertimeAccomplishmentFail: (error: string) => {
+    patchOvertimeAccomplishmentFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -202,7 +213,7 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {},
+          patchResponse: {},
           cancelResponse: {},
         },
         error: {

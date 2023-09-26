@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
-import { OvertimeAccomplishment, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeAccomplishment } from 'libs/utils/src/lib/types/overtime.type';
 
 type TabProps = {
   overtime: Array<OvertimeAccomplishment>;

@@ -4,7 +4,6 @@ import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { isEmpty } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification, OtpModal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -16,7 +15,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
-import dayjs from 'dayjs';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -92,9 +91,6 @@ export const ApprovalsPendingLeaveModal = ({
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-  const handleReason = (e: string) => {
-    setReason(e);
-  };
 
   const customClose = () => {
     setReason('');
@@ -265,7 +261,7 @@ export const ApprovalsPendingLeaveModal = ({
                                 {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
                                   return (
                                     <label key={index} className="pr-1">
-                                      {dayjs(dates).format('MM-DD-YYYY')}
+                                      {DateFormatter(dates)}
                                       {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
                                     </label>
                                   );
@@ -342,7 +338,7 @@ export const ApprovalsPendingLeaveModal = ({
                         className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
                         placeholder="Enter Reason"
                         rows={3}
-                        onChange={(e) => handleReason(e.target.value as unknown as string)}
+                        onChange={(e) => setReason(e.target.value as unknown as string)}
                       ></textarea>
                     ) : null}
                   </form>

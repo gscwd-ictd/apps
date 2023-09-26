@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
@@ -10,7 +10,7 @@ import { HiX } from 'react-icons/hi';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { format } from 'date-fns';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import dayjs from 'dayjs';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -139,7 +139,7 @@ export const PassSlipApplicationModal = ({
               <div className="w-full flex flex-col gap-3 p-4 rounded">
                 <div className="w-full flex gap-2 justify-start items-center">
                   <span className="text-slate-500 text-md font-medium">Date:</span>
-                  <div className="text-slate-500 text-md">{dayjs(dateToday).format('MM-DD-YYYY')}</div>
+                  <div className="text-slate-500 text-md">{DateFormatter(dateToday)}</div>
                 </div>
 
                 <div

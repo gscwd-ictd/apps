@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import Calendar from './LeaveCalendar';
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
-import { CalendarDate, LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import { LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';

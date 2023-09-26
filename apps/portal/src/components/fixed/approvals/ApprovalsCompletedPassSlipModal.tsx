@@ -4,10 +4,10 @@ import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -100,7 +100,7 @@ export const ApprovalsCompletedPassSlipModal = ({
 
                 <div className="w-auto md:w-96">
                   <label className="text-slate-500 h-12 w-96  text-md ">
-                    {dayjs(passSlip.dateOfApplication).format('MM-DD-YYYY')}
+                    {DateFormatter(passSlip.dateOfApplication)}
                   </label>
                 </div>
               </div>

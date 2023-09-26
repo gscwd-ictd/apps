@@ -6,6 +6,7 @@ import { PsbMembers } from 'apps/portal/src/types/inbox.type';
 import { InboxMessageResponse } from 'libs/utils/src/lib/enums/inbox.enum';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
 import dayjs from 'dayjs';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 export const InboxOvertimeContent = () => {
   const { overtimeDetails, setConfirmModalIsOpen, setSelectedVppId, setConfirmationResponse, setDeclineRemarks } =
@@ -26,7 +27,7 @@ export const InboxOvertimeContent = () => {
         </label>
         <div>
           <label className="font-bold">Date: </label>
-          {dayjs(overtimeDetails.plannedDate).format('MM-DD-YYYY')}
+          {DateFormatter(overtimeDetails.plannedDate)}
         </div>
         <div>
           <label className="font-bold">Estimated Hours: </label>

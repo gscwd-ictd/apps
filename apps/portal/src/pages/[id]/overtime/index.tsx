@@ -146,7 +146,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    console.log(swrOvertimeList);
     if (!isEmpty(swrOvertimeList)) {
       getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
     }

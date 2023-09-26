@@ -1,6 +1,5 @@
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import { AllOvertimeAccomplishmentListTab } from './AllOvertimeAccomplishmentListTab';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 
 export const OvertimeAccomplishmentTabWindow = (): JSX.Element => {
   //zustand initialization to access pass slip store
