@@ -1,3 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Publication } from '../../../types/publication.type';
 import dayjs from 'dayjs';
@@ -49,9 +51,9 @@ export const AllPublicationListTab = ({ publications, tab }: AllPublicationListT
                   <p className="text-sm text-indigo-500">
                     {tab === 1 ? 'Publication Posting Date: ' : tab === 2 ? 'Fulfilled on ' : null}
                     {tab === 1
-                      ? dayjs(item.postingDate).format('MMMM DD, YYYY')
+                      ? DateFormatter(item.postingDate, 'MMMM DD, YYYY')
                       : tab === 2
-                      ? dayjs(item.requestingEntitySelectionDate).format('MMMM DD, YYYY')
+                      ? DateFormatter(item.requestingEntitySelectionDate, 'MMMM DD, YYYY')
                       : null}
                   </p>
                 </div>

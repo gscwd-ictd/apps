@@ -14,6 +14,7 @@ import { OfficeSchema } from './OfficeSchema';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { HiX } from 'react-icons/hi';
 import { EmployeeDtr, useDtrStore } from 'apps/portal/src/store/dtr.store';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type EditDailySchedModalProps = {
   modalState: boolean;
@@ -193,7 +194,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
               <div className="">
                 <LabelValue
                   label="Date"
-                  value={dayjs(rowData.day).format('MMMM DD, YYYY')}
+                  value={DateFormatter(rowData.day, 'MMMM DD, YYYY')}
                   direction="top-to-bottom"
                   textSize="md"
                 />

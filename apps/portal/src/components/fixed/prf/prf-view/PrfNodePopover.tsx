@@ -1,8 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Popover } from '@headlessui/react';
 import dayjs from 'dayjs';
 import { FunctionComponent } from 'react';
 import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
 import { PrfStatus } from '../../../../types/prf.types';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PrfNodePopoverProps = {
   children: React.ReactNode;
@@ -43,7 +45,7 @@ export const PrfNodePopover: FunctionComponent<PrfNodePopoverProps> = ({
                   <div className="flex items-center gap-1">
                     <HiOutlineCalendar className="text-indigo-700" />
                     <p className="font-medium text-indigo-500">
-                      {dayjs(`${status === PrfStatus.SENT ? createdAt : updatedAt}`).format('MMMM DD, YYYY')}
+                      {DateFormatter(`${status === PrfStatus.SENT ? createdAt : updatedAt}`, 'MMMM DD, YYYY')}
                     </p>
                   </div>
 
@@ -76,7 +78,7 @@ export const PrfNodePopover: FunctionComponent<PrfNodePopoverProps> = ({
                           : 'text-rose-500'
                       }`}
                     >
-                      {status === PrfStatus.DISAPPROVED ? dayjs(updatedAt).format('MMMM DD, YYYY') : status}
+                      {status === PrfStatus.DISAPPROVED ? DateFormatter(updatedAt, 'MMMM DD, YYYY') : status}
                     </p>
                   </div>
 

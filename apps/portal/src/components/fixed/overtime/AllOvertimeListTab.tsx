@@ -49,7 +49,9 @@ export const AllOvertimeListTab = ({ overtime, tab }: TabProps) => {
                 className="flex bg-white rounded-xl rounded-tr-none rounded-bl-none border-b border-b-gray-200 hover:bg-indigo-50 cursor-pointer items-center justify-between px-5 py-4 transition-colors ease-in-out"
               >
                 <div className=" w-full py-2 px-1 ">
-                  <h1 className="font-medium text-lg text-gray-600">{DateFormatter(overtime.plannedDate)}</h1>
+                  <h1 className="font-medium text-lg text-gray-600">
+                    {DateFormatter(overtime.plannedDate, 'MMMM DD, YYYY')}
+                  </h1>
                   <p className="text-sm text-gray-500">Estimated Hours: {overtime.estimatedHours}</p>
                   <p className="text-sm text-gray-500">No. of Employees: {overtime.employees.length}</p>
                   <p className="text-sm text-indigo-500">Status: {overtime.status.toUpperCase()}</p>

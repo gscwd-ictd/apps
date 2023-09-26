@@ -124,7 +124,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                         <div className="md:w-1/2">
                           <label className="text-slate-500 w-full text-md ">
-                            {DateFormatter(overtimeAccomplishmentDetails.plannedDate)}
+                            {DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')}
                           </label>
                         </div>
                       </div>

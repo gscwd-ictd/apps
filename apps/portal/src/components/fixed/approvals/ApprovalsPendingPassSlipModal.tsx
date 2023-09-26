@@ -123,7 +123,7 @@ export const ApprovalsPendingPassSlipModal = ({
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96  text-md ">
-                    {DateFormatter(passSlip.dateOfApplication)}
+                    {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
                   </label>
                 </div>
               </div>

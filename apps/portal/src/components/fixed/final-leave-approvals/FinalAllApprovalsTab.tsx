@@ -87,7 +87,9 @@ export const FinalAllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) =
                       ? `${item.leaveDates[0]} - ${item.leaveDates[item.leaveDates.length - 1]}`
                       : item.leaveDates.join(', ')}
                   </p>
-                  <p className="text-sm text-indigo-500">Date Applied: {DateFormatter(item.dateOfFiling)}</p>
+                  <p className="text-sm text-indigo-500">
+                    Date Applied: {DateFormatter(item.dateOfFiling, 'MMMM DD, YYYY')}
+                  </p>
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
                 </div>
               </li>

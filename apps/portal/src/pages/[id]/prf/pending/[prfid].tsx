@@ -18,6 +18,7 @@ import { getPrfById, getPrfTrailByPrfId } from '../../../../utils/helpers/prf.re
 import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
 import { Position, PrfDetails, PrfTrail } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../../src/utils/helpers/session';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PrfDocumentProps = {
   profile: EmployeeProfile;
@@ -68,7 +69,7 @@ export default function PendingPrf({ profile, employee, prfDetails, prfTrail }: 
 
               <section className="flex items-center gap-4">
                 <HiOutlineCalendar className="text-gray-700 shrink-0" />
-                <p className="font-medium text-gray-600">{dayjs(prfDetails.createdAt).format('MMMM DD, YYYY')}</p>
+                <p className="font-medium text-gray-600">{DateFormatter(prfDetails.createdAt, 'MMMM DD, YYYY')}</p>
               </section>
 
               <section className="flex items-center gap-4">

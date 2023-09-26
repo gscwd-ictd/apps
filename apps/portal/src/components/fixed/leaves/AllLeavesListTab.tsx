@@ -53,7 +53,9 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">{leave.leaveName}</h1>
-                  <p className="text-sm text-gray-500">Date Applied: {DateFormatter(leave.dateOfFiling)}</p>
+                  <p className="text-sm text-gray-500">
+                    Date Applied: {DateFormatter(leave.dateOfFiling, 'MMMM DD, YYYY')}
+                  </p>
 
                   <p className="text-sm text-gray-500">No. of Days: {leave.leaveDates.length}</p>
                   <p className="text-sm text-gray-500">
@@ -63,15 +65,16 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                     leave.leaveName === LeaveName.REHABILITATION ||
                     leave.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     leave.leaveName === LeaveName.ADOPTION ? (
-                      `${DateFormatter(leave.leaveDates[0])} - ${DateFormatter(
-                        leave.leaveDates[leave.leaveDates.length - 1]
+                      `${DateFormatter(leave.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                        leave.leaveDates[leave.leaveDates.length - 1],
+                        'MM-DD-YYYY'
                       )}`
                     ) : (
                       <>
                         {leave.leaveDates.map((dates: string, index: number) => {
                           return (
                             <label key={index} className="pr-1">
-                              {DateFormatter(dates)}
+                              {DateFormatter(dates, 'MM-DD-YYYY')}
                               {index == leave.leaveDates.length - 1 ? '' : ','}
                             </label>
                           );

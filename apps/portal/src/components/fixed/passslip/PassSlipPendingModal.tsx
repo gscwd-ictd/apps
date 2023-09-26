@@ -69,7 +69,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96  txt-md ">
-                    {DateFormatter(passSlip.dateOfApplication)}
+                    {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
                   </label>
                 </div>
               </div>

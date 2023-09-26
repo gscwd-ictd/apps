@@ -248,11 +248,13 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
                               // show first and last date (array) only if maternity or study leave
                               `${DateFormatter(
-                                leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]
+                                leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0],
+                                'MM-DD-YYYY'
                               )} - ${DateFormatter(
                                 leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
                                   leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
-                                ]
+                                ],
+                                'MM-DD-YYYY'
                               )}`
                             ) : (
                               // show all dates if not maternity or study leave
@@ -261,7 +263,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                   (dates: string, index: number) => {
                                     return (
                                       <label key={index} className="pr-1">
-                                        {DateFormatter(dates)}
+                                        {DateFormatter(dates, 'MM-DD-YYYY')}
                                         {index ==
                                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
                                           ? ''
@@ -370,16 +372,28 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate)
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate)
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate)
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                          ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate)
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                          ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate)
+                          ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate, 'MM-DD-YYYY')
                           : null}
                       </label>
                     </div>

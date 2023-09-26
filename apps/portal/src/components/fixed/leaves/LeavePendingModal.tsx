@@ -229,11 +229,13 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
                                 // show first and last date (array) only if maternity or study leave
                                 `${DateFormatter(
-                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0],
+                                  'MM-DD-YYYY'
                                 )} - ${DateFormatter(
                                   leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
                                     leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
-                                  ]
+                                  ],
+                                  'MM-DD-YYYY'
                                 )}`
                               ) : (
                                 // show all dates if not maternity or study leave
@@ -242,7 +244,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                     (dates: string, index: number) => {
                                       return (
                                         <label key={index} className="pr-1">
-                                          {DateFormatter(dates)}
+                                          {DateFormatter(dates, 'MM-DD-YYYY')}
                                           {index ==
                                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
                                             ? ''

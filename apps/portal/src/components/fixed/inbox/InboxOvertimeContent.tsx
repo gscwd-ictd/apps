@@ -27,7 +27,7 @@ export const InboxOvertimeContent = () => {
         </label>
         <div>
           <label className="font-bold">Date: </label>
-          {DateFormatter(overtimeDetails.plannedDate)}
+          {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
         </div>
         <div>
           <label className="font-bold">Estimated Hours: </label>

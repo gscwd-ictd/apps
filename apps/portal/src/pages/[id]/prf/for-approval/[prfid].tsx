@@ -1,5 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import dayjs from 'dayjs';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import {
@@ -16,20 +15,9 @@ import {
   getEmployeeDetailsFromHr,
   getEmployeeProfile,
 } from '../../../../utils/helpers/http-requests/employee-requests';
-import {
-  getPrfById,
-  patchPrfRequest,
-} from '../../../../utils/helpers/prf.requests';
-import {
-  EmployeeDetailsPrf,
-  EmployeeProfile,
-  employeeDummy,
-} from '../../../../types/employee.type';
-import {
-  Position,
-  PrfDetailsForApproval,
-  PrfStatus,
-} from '../../../../types/prf.types';
+import { getPrfById, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
+import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
+import { Position, PrfDetailsForApproval, PrfStatus } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../../src/utils/helpers/session';
 import { Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
 import { PrfOtpContents } from '../../../../../src/components/fixed/prf/prfOtp/PrfOtpContents';
@@ -37,6 +25,7 @@ import { usePrfStore } from '../../../../../src/store/prf.store';
 import { useEffect, useState } from 'react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { isEmpty } from 'lodash';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ForApprovalProps = {
   profile: EmployeeProfile;
@@ -44,11 +33,7 @@ type ForApprovalProps = {
   prfDetails: PrfDetailsForApproval;
 };
 
-export default function ForApproval({
-  profile,
-  employee,
-  prfDetails,
-}: ForApprovalProps) {
+export default function ForApproval({ profile, employee, prfDetails }: ForApprovalProps) {
   const {
     prfOtpModalIsOpen,
     patchError,
@@ -79,14 +64,11 @@ export default function ForApproval({
   const handleDecline = async (e) => {
     if (!isEmpty(remarks)) {
       patchPrf();
-      const { error, result } = await patchPrfRequest(
-        `/prf-trail/${router.query.prfid}`,
-        {
-          status: PrfStatus.DISAPPROVED,
-          employeeId: employee.userId,
-          remarks,
-        }
-      );
+      const { error, result } = await patchPrfRequest(`/prf-trail/${router.query.prfid}`, {
+        status: PrfStatus.DISAPPROVED,
+        employeeId: employee.userId,
+        remarks,
+      });
 
       if (error) {
         // request is done set loading to false and set the error message
@@ -116,27 +98,15 @@ export default function ForApproval({
     <>
       {/* Disapprove PRF Failed Error */}
       {!isEmpty(patchError) && !prfOtpModalIsOpen ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`Network Error: ${patchError}`}
-        />
+        <ToastNotification toastType="error" notifMessage={`Network Error: ${patchError}`} />
       ) : null}
 
       {/* Disapprove PRF Success */}
-      {!isEmpty(patchSuccess) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage={`PRF Action Submitted.`}
-        />
-      ) : null}
+      {!isEmpty(patchSuccess) ? <ToastNotification toastType="success" notifMessage={`PRF Action Submitted.`} /> : null}
 
       <PageTitle title={prfDetails.prfNo} />
 
-      <OtpModal
-        modalState={prfOtpModalIsOpen}
-        setModalState={setPrfOtpModalIsOpen}
-        title={'APPROVE PRF OTP'}
-      >
+      <OtpModal modalState={prfOtpModalIsOpen} setModalState={setPrfOtpModalIsOpen} title={'APPROVE PRF OTP'}>
         {/* contents */}
         <PrfOtpContents
           mobile={profile.mobileNumber}
@@ -148,11 +118,7 @@ export default function ForApproval({
         />
       </OtpModal>
 
-      <Modal
-        size={`${windowWidth > 1024 ? 'sm' : 'xl'}`}
-        open={isDeclineModalOpen}
-        setOpen={setIsDeclineModalOpen}
-      >
+      <Modal size={`${windowWidth > 1024 ? 'sm' : 'xl'}`} open={isDeclineModalOpen} setOpen={setIsDeclineModalOpen}>
         <Modal.Header>
           <h3 className="text-xl font-semibold text-gray-700">
             <div className="flex justify-between px-2">
@@ -202,9 +168,7 @@ export default function ForApproval({
         </button>
         <header className="flex items-center justify-between">
           <section className="shrink-0">
-            <h1 className="text-2xl font-semibold text-gray-700">
-              Pending Request
-            </h1>
+            <h1 className="text-2xl font-semibold text-gray-700">Pending Request</h1>
             <p className="text-gray-500">{prfDetails.prfNo}</p>
           </section>
         </header>
@@ -214,35 +178,25 @@ export default function ForApproval({
             <aside className="shrink-0 w-[20rem]">
               <section className="flex items-center gap-4">
                 <HiOutlineUser className="text-gray-700 shrink-0" />
-                <p className="font-medium text-gray-600 truncate">
-                  {prfDetails.from.name}
-                </p>
+                <p className="font-medium text-gray-600 truncate">{prfDetails.from.name}</p>
               </section>
 
               <section className="flex items-center gap-4">
                 <HiOutlineDocumentDuplicate className="text-gray-700 shrink-0" />
-                <p className="font-medium text-gray-600 truncate">
-                  {prfDetails.from.position}
-                </p>
+                <p className="font-medium text-gray-600 truncate">{prfDetails.from.position}</p>
               </section>
 
               <section className="flex items-center gap-4">
                 <HiOutlineCalendar className="text-gray-700 shrink-0" />
-                <p className="font-medium text-gray-600">
-                  {dayjs(prfDetails.createdAt).format('MMMM DD, YYYY')}
-                </p>
+                <p className="font-medium text-gray-600">{DateFormatter(prfDetails.createdAt, 'MMMM DD, YYYY')}</p>
               </section>
 
               <section className="flex items-center gap-4">
                 <HiOutlinePencil className="text-gray-700 shrink-0" />
                 {prfDetails.withExam ? (
-                  <p className="font-medium text-indigo-500">
-                    Examination is required
-                  </p>
+                  <p className="font-medium text-indigo-500">Examination is required</p>
                 ) : (
-                  <p className="font-medium text-orange-500">
-                    No examination required
-                  </p>
+                  <p className="font-medium text-orange-500">No examination required</p>
                 )}
               </section>
 
@@ -273,52 +227,38 @@ export default function ForApproval({
             </aside>
             <section className="w-full">
               <main className="scale-95 h-[31rem] w-full overflow-y-auto px-5">
-                {prfDetails.prfPositions.map(
-                  (position: Position, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className={`${
-                          position.remarks
-                            ? 'hover:border-l-green-600'
-                            : 'hover:border-l-red-500'
-                        } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                      >
-                        <section className="w-full space-y-3">
-                          <header>
-                            <section className="flex items-center justify-between">
-                              <h3 className="text-lg font-medium text-gray-600">
-                                {position.positionTitle}
-                              </h3>
-                              <p className="text-sm text-gray-600">
-                                {position.itemNumber}
-                              </p>
-                            </section>
-                            <p className="text-sm text-gray-400">
-                              {position.designation}
-                            </p>
-                          </header>
+                {prfDetails.prfPositions.map((position: Position, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className={`${
+                        position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
+                      } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
+                    >
+                      <section className="w-full space-y-3">
+                        <header>
+                          <section className="flex items-center justify-between">
+                            <h3 className="text-lg font-medium text-gray-600">{position.positionTitle}</h3>
+                            <p className="text-sm text-gray-600">{position.itemNumber}</p>
+                          </section>
+                          <p className="text-sm text-gray-400">{position.designation}</p>
+                        </header>
 
-                          <main>
-                            {position.remarks ? (
-                              <section className="flex items-center gap-2">
-                                <p className="text-emerald-600">
-                                  {position.remarks}
-                                </p>
-                              </section>
-                            ) : (
-                              <section className="flex items-center gap-2">
-                                <p className="text-red-400">
-                                  No remarks set for this position.
-                                </p>
-                              </section>
-                            )}
-                          </main>
-                        </section>
-                      </div>
-                    );
-                  }
-                )}
+                        <main>
+                          {position.remarks ? (
+                            <section className="flex items-center gap-2">
+                              <p className="text-emerald-600">{position.remarks}</p>
+                            </section>
+                          ) : (
+                            <section className="flex items-center gap-2">
+                              <p className="text-red-400">No remarks set for this position.</p>
+                            </section>
+                          )}
+                        </main>
+                      </section>
+                    </div>
+                  );
+                })}
               </main>
             </section>
           </main>
@@ -328,23 +268,21 @@ export default function ForApproval({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    try {
-      const employee = await getEmployeeDetailsFromHr(context);
-      const profile = await getEmployeeProfile(employee.userId);
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  try {
+    const employee = await getEmployeeDetailsFromHr(context);
+    const profile = await getEmployeeProfile(employee.userId);
 
-      // const employee = employeeDummy;
-      // const profile = await getEmployeeProfile(employee.user._id);
+    // const employee = employeeDummy;
+    // const profile = await getEmployeeProfile(employee.user._id);
 
-      // get prf details
-      const prfDetails = await getPrfById(`${context.query.prfid}`, context);
+    // get prf details
+    const prfDetails = await getPrfById(`${context.query.prfid}`, context);
 
-      // return the result
+    // return the result
 
-      return { props: { profile, employee, prfDetails } };
-    } catch (error) {
-      return { notFound: true };
-    }
+    return { props: { profile, employee, prfDetails } };
+  } catch (error) {
+    return { notFound: true };
   }
-);
+});

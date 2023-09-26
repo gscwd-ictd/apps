@@ -261,7 +261,7 @@ export const ApprovalsPendingLeaveModal = ({
                                 {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
                                   return (
                                     <label key={index} className="pr-1">
-                                      {DateFormatter(dates)}
+                                      {DateFormatter(dates, 'MM-DD-YYYY')}
                                       {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
                                     </label>
                                   );

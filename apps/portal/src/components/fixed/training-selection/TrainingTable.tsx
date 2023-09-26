@@ -85,9 +85,15 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
                         <tr key={index}>
                           <td className={`py-2 text-center border`}>{training.courseTitle}</td>
                           <td className={`border text-center py-2`}>{training.location}</td>
-                          <td className={`border text-center py-2`}>{DateFormatter(training.trainingStart)}</td>
-                          <td className={`border text-center py-2`}>{DateFormatter(training.trainingEnd)}</td>
-                          <td className={`border text-center py-2`}>{DateFormatter(training.deadlineForSubmission)}</td>
+                          <td className={`border text-center py-2`}>
+                            {DateFormatter(training.trainingStart, 'MM-DD-YYYY')}
+                          </td>
+                          <td className={`border text-center py-2`}>
+                            {DateFormatter(training.trainingEnd, 'MM-DD-YYYY')}
+                          </td>
+                          <td className={`border text-center py-2`}>
+                            {DateFormatter(training.deadlineForSubmission, 'MM-DD-YYYY')}
+                          </td>
                           <td className={`border text-center py-2 capitalize`}>{training.status}</td>
 
                           <td className={`py-2 text-center border`}>

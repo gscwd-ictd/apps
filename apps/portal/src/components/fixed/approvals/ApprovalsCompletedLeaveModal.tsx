@@ -199,8 +199,9 @@ export const ApprovalsCompletedLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
                           // show first and last date (array) only if maternity or study leave
-                          `${DateFormatter(leaveIndividualDetail?.leaveDates[0])} - ${DateFormatter(
-                            leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates?.length - 1]
+                          `${DateFormatter(leaveIndividualDetail?.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                            leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates?.length - 1],
+                            'MM-DD-YYYY'
                           )}`
                         ) : (
                           // show all dates if not maternity or study leave
@@ -208,7 +209,7 @@ export const ApprovalsCompletedLeaveModal = ({
                             {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
                               return (
                                 <label key={index} className="pr-1">
-                                  {DateFormatter(dates)}
+                                  {DateFormatter(dates, 'MM-DD-YYYY')}
                                   {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
                                 </label>
                               );
@@ -239,17 +240,17 @@ export const ApprovalsCompletedLeaveModal = ({
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate)
+                          ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate)
+                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate)
+                          ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? DateFormatter(leaveIndividualDetail?.hrmoApprovalDate)
+                          ? DateFormatter(leaveIndividualDetail?.hrmoApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate)
+                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                          ? DateFormatter(leaveIndividualDetail?.cancelDate)
+                          ? DateFormatter(leaveIndividualDetail?.cancelDate, 'MM-DD-YYYY')
                           : null}
                       </label>
                     </div>
