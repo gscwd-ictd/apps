@@ -15,6 +15,7 @@ import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { Training } from 'libs/utils/src/lib/types/training.type';
 import TrainingDetailsModal from './TrainingDetailsModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type TrainingProps = {
   employeeDetails: EmployeeDetails;
@@ -84,15 +85,9 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
                         <tr key={index}>
                           <td className={`py-2 text-center border`}>{training.courseTitle}</td>
                           <td className={`border text-center py-2`}>{training.location}</td>
-                          <td className={`border text-center py-2`}>
-                            {dayjs(training.trainingStart).format('MMMM DD, YYYY')}
-                          </td>
-                          <td className={`border text-center py-2`}>
-                            {dayjs(training.trainingEnd).format('MMMM DD, YYYY')}
-                          </td>
-                          <td className={`border text-center py-2`}>
-                            {dayjs(training.deadlineForSubmission).format('MMMM DD, YYYY')}
-                          </td>
+                          <td className={`border text-center py-2`}>{DateFormatter(training.trainingStart)}</td>
+                          <td className={`border text-center py-2`}>{DateFormatter(training.trainingEnd)}</td>
+                          <td className={`border text-center py-2`}>{DateFormatter(training.deadlineForSubmission)}</td>
                           <td className={`border text-center py-2 capitalize`}>{training.status}</td>
 
                           <td className={`py-2 text-center border`}>

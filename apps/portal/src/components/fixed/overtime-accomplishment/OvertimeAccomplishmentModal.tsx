@@ -58,7 +58,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       overtimeApplicationId: overtimeAccomplishmentDetails.overtimeApplicationId,
       encodedTimeIn: null,
       encodedTimeOut: null,
-      accomplishments: '',
+      accomplishments: overtimeAccomplishmentDetails.remarks,
     },
   });
 
@@ -265,6 +265,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                         placeholder="Please enter your accomplishments"
                         {...register('accomplishments')}
+                        value={overtimeAccomplishmentDetails?.remarks ?? ''}
                       ></textarea>
                     </div>
                   </div>
