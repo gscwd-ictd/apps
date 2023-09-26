@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import {

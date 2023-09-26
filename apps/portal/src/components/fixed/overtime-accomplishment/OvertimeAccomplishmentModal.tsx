@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import dayjs from 'dayjs';
 import { OvertimeAccomplishmentPatch } from 'libs/utils/src/lib/types/overtime.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -157,11 +158,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               className="w-full  text-slate-400 font-medium"
                               textSize="md"
                               disabled
-                              value={
-                                overtimeAccomplishmentDetails.ivmsTimeIn
-                                  ? overtimeAccomplishmentDetails.ivmsTimeIn
-                                  : '--:--:--'
-                              }
+                              value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeIn)}
                             />
                           </label>
                           <label className="text-slate-500 w-auto text-lg">-</label>
@@ -173,11 +170,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               className="w-full text-slate-400 font-medium"
                               textSize="md"
                               disabled
-                              value={
-                                overtimeAccomplishmentDetails.ivmsTimeOut
-                                  ? overtimeAccomplishmentDetails.ivmsTimeOut
-                                  : '--:--:--'
-                              }
+                              value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeOut)}
                             />
                           </label>
                         </div>
@@ -203,6 +196,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               label={''}
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
+                              defaultValue={overtimeAccomplishmentDetails?.encodedTimeIn ?? '--:-- --'}
                               controller={{
                                 ...register('encodedTimeIn', {
                                   onChange: (e) => {
@@ -228,6 +222,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               label={''}
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
+                              defaultValue={overtimeAccomplishmentDetails?.encodedTimeOut ?? '--:-- --'}
                               controller={{
                                 ...register('encodedTimeOut', {
                                   onChange: (e) => {
@@ -265,7 +260,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                         placeholder="Please enter your accomplishments"
                         {...register('accomplishments')}
-                        value={overtimeAccomplishmentDetails?.remarks ?? ''}
+                        defaultValue={overtimeAccomplishmentDetails?.accomplishments ?? ''}
                       ></textarea>
                     </div>
                   </div>
