@@ -1,4 +1,4 @@
-import { OvertimeStatus } from '../enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from '../enums/overtime.enum';
 
 //for supervisor overtime application
 export type OvertimeForm = {
@@ -60,4 +60,12 @@ export type OvertimeAccomplishmentPatch = {
   accomplishments: string;
   encodedTimeIn?: string;
   encodedTimeOut?: string;
+};
+
+export type OvertimeAccomplishmentApprovalPatch = {
+  employeeId: string;
+  overtimeApplicationId: string;
+  remarks: string;
+  status: OvertimeAccomplishmentStatus;
+  followEstimatedHrs: false;
 };

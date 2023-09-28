@@ -147,11 +147,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   src={employee?.avatarUrl ?? ''}
                                   alt={'photo'}
                                 ></img>
-                                <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
-                                  <div className="w-full flex flex-row items-center gap-4 text-sm md:text-md">
-                                    <label className="w-full">{employee.fullName}</label>
-                                    <label className="w-full">{employee.assignment}</label>
-                                  </div>
+                                <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
+                                  <label className="w-full">{employee.fullName}</label>
+                                  <label className="w-full">{employee.assignment}</label>
 
                                   <Button
                                     variant={'primary'}

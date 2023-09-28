@@ -15,6 +15,7 @@ import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import ApprovalAccomplishmentModal from './ApprovalAccomplishmentModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -35,6 +36,13 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setOtpOvertimeModalIsOpen,
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
+    overtimeAccomplishmentModalIsOpen,
+    setOvertimeAccomplishmentModalIsOpen,
+    overtimeAccomplishmentEmployeeId,
+    setOvertimeAccomplishmentEmployeeId,
+    overtimeAccomplishmentApplicationId,
+    setOvertimeAccomplishmentApplicationId,
+    setOvertimeAccomplishmentEmployeeName,
   } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
@@ -42,6 +50,13 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    overtimeAccomplishmentModalIsOpen: state.overtimeAccomplishmentModalIsOpen,
+    setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
+    overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
+    setOvertimeAccomplishmentEmployeeId: state.setOvertimeAccomplishmentEmployeeId,
+    overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
+    setOvertimeAccomplishmentApplicationId: state.setOvertimeAccomplishmentApplicationId,
+    setOvertimeAccomplishmentEmployeeName: state.setOvertimeAccomplishmentEmployeeName,
   }));
 
   const [reason, setReason] = useState<string>('');
@@ -57,6 +72,17 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
     setDeclineApplicationModalIsOpen(false);
+  };
+
+  const closeAccomplishmentModal = async () => {
+    setOvertimeAccomplishmentModalIsOpen(false);
+  };
+
+  const handleEmployeeAccomplishment = async (employeeId: string, employeeName: string) => {
+    setOvertimeAccomplishmentEmployeeId(employeeId);
+    setOvertimeAccomplishmentEmployeeName(employeeName);
+    setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
+    setOvertimeAccomplishmentModalIsOpen(true);
   };
 
   const onSubmit: SubmitHandler<overtimeAction> = (data: overtimeAction) => {
@@ -171,19 +197,28 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 key={index}
                                 className={`${
                                   index != 0 ? 'border-t border-slate-200' : ''
-                                } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
+                                } px-2 py-4 md:px-4 md:py-4 flex flex-row justify-between items-center gap-8 `}
                               >
                                 <img
                                   className="rounded-full border border-stone-100 shadow w-20"
                                   src={employee?.avatarUrl ?? ''}
                                   alt={'photo'}
                                 ></img>
-                                <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
-                                  <div className="w-full flex flex-row items-center gap-4 text-sm md:text-md">
-                                    <label className="w-full">{employee.fullName}</label>
-                                    <label className="w-full">{employee.positionTitle}</label>
-                                    <label className="w-full">{employee.assignment}</label>
-                                  </div>
+                                <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
+                                  <label className="w-full">{employee.fullName}</label>
+                                  <label className="w-full">{employee.positionTitle}</label>
+                                  <label className="w-full">{employee.assignment}</label>
+
+                                  <Button
+                                    variant={'primary'}
+                                    size={'sm'}
+                                    loading={false}
+                                    onClick={(e) =>
+                                      handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
+                                    }
+                                  >
+                                    View Accomplishment
+                                  </Button>
                                 </div>
                               </div>
                             );
@@ -278,6 +313,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             remarks={reason}
             otpName={ManagerOtpApproval.OVERTIME}
             employeeId={employeeDetails.user._id}
+          />
+          <ApprovalAccomplishmentModal
+            modalState={overtimeAccomplishmentModalIsOpen}
+            setModalState={setOvertimeAccomplishmentModalIsOpen}
+            closeModalAction={closeAccomplishmentModal}
           />
         </Modal.Body>
         <Modal.Footer>

@@ -177,7 +177,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
           </>
         ) : null}
 
-        {/* Post/Submit Leave Success*/}
+        {/* Post/Submit Overtime Application Success*/}
         {!isEmpty(responseApply) ? (
           <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
         ) : null}
@@ -191,30 +191,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
             />
           </>
         ) : null}
-
-        {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
-        {/* {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
-          </>
-        ) : null} */}
-
-        {/* Post/Submit Leave Error*/}
-        {/* {!isEmpty(errorResponse) ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
-          </>
-        ) : null} */}
-
-        {/* Post/Submit Leave Success*/}
-        {/* {!isEmpty(responseApply) ? (
-          <ToastNotification toastType="success" notifMessage="Leave Application Successful!" />
-        ) : null} */}
-
-        {/* Patch Cancel Leave Successs*/}
-        {/* {!isEmpty(responseCancel) ? (
-          <ToastNotification toastType="success" notifMessage="Leave Cancellation Successful!" />
-        ) : null} */}
       </>
 
       <EmployeeProvider employeeData={employee}>
