@@ -92,7 +92,7 @@ export const LabelInput: FunctionComponent<LabelInputProps & InputHTMLAttributes
             disabled={disabled}
             type={type}
             {...controller}
-            className={`${className} text-${textSize} disabled:hover:cursor-not-allowed w-full outline-none text-gray-900 h-[2.5rem]  block p-2.5 bg-gray-50 border
+            className={`${className} text-${textSize} disabled:hover:cursor-not-allowed w-full outline-none h-[2.5rem]  block p-2.5 bg-gray-50 border
           ${textSize === 'xs' ? 'h-[2.5rem]' : 'h-[3rem]'}
           ${
             isError

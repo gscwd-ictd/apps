@@ -59,6 +59,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     errorLeaveResponse,
     errorOvertime,
     errorOvertimeResponse,
+    errorAccomplishment,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -109,12 +110,14 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     loadingPassSlip: state.loading.loadingPassSlips,
     loadingLeave: state.loading.loadingLeaves,
     loadingOvertime: state.loading.loadingOvertime,
+
     errorPassSlip: state.error.errorPassSlips,
     errorPassSlipResponse: state.error.errorPassSlipResponse,
     errorLeave: state.error.errorLeaves,
     errorLeaveResponse: state.error.errorLeaveResponse,
     errorOvertime: state.error.errorOvertime,
     errorOvertimeResponse: state.error.errorOvertimeResponse,
+    errorAccomplishment: state.error.errorAccomplishment,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -368,6 +371,14 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         {/* Leave List Load Failed Error */}
         {!isEmpty(errorLeave) ? (
           <ToastNotification toastType="error" notifMessage={`${errorLeave}: Failed to load Leaves.`} />
+        ) : null}
+
+        {/* Overtime Accomplishment Data Load Failed Error */}
+        {!isEmpty(errorAccomplishment) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment Report.`}
+          />
         ) : null}
 
         <EmployeeProvider employeeData={employee}>

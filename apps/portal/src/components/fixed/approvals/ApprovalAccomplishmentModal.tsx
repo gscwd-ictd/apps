@@ -16,6 +16,7 @@ import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/ov
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { Checkbox } from '../../modular/forms/Checkbox';
+import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 
 type ModalProps = {
   modalState: boolean;
@@ -60,6 +61,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     defaultValues: {
       status: null,
       remarks: '',
+      followEstimatedHrs: false,
     },
   });
 
@@ -79,7 +81,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     isLoading: swrOvertimeAccomplishmentIsLoading,
     error: swrOvertimeAccomplishmentError,
     mutate: mutateOvertimeAccomplishments,
-  } = useSWR(overtimeAccomplishmentUrl, fetchWithToken, {
+  } = useSWR(overtimeAccomplishmentModalIsOpen ? overtimeAccomplishmentUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -101,6 +103,36 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
       getAccomplishmentDetailsFail(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishmentError.message);
     }
   }, [swrOvertimeAccomplishment, swrOvertimeAccomplishmentError]);
+
+  const [encodedHours, setEncodedHours] = useState<number>(0);
+  const [finalEncodedHours, setFinalEncodedHours] = useState<number>(0);
+
+  useEffect(() => {
+    setEncodedHours(
+      GetDateDifference(
+        `2023-01-01 ${accomplishmentDetails.encodedTimeIn}:00`,
+        `2023-01-01 ${accomplishmentDetails.encodedTimeOut}:00`
+      ).hours
+    );
+  }, [accomplishmentDetails]);
+
+  //compute encoded overtime duration based on encoded time IN and OUT
+  useEffect(() => {
+    if (encodedHours % 5 == 0 || encodedHours >= 5) {
+      if (encodedHours % 5 == 0) {
+        setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 5));
+        // console.log(Math.floor(encodedHours / 5));
+      } else if (encodedHours / 5 > 0) {
+        setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 5));
+        // console.log(Math.floor(encodedHours / 5), 'else');
+      } else {
+        setFinalEncodedHours(encodedHours);
+        // console.log(encodedHours, 'else 2');
+      }
+    } else {
+      setFinalEncodedHours(encodedHours);
+    }
+  }, [encodedHours]);
 
   const onSubmit: SubmitHandler<OvertimeAccomplishmentApprovalPatch> = (data: OvertimeAccomplishmentApprovalPatch) => {
     if (data.status === OvertimeAccomplishmentStatus.APPROVED) {
@@ -127,7 +159,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!accomplishmentDetails ? (
+          {!accomplishmentDetails || swrOvertimeAccomplishmentIsLoading ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -199,7 +231,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                             className="w-full text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            value={`${accomplishmentDetails.computedIvmsHours} Hour(s)`}
+                            value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
                           />
                         </label>
                       </div>
@@ -244,7 +276,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                             className="w-full text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            value={`${accomplishmentDetails.computedIvmsHours} Hour(s)`}
+                            value={`${!finalEncodedHours || isNaN(finalEncodedHours) ? 0 : finalEncodedHours} Hours(s)`}
                           />
                         </label>
                       </div>
@@ -259,8 +291,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       disabled
                       rows={3}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      placeholder="None"
-                      value={accomplishmentDetails.accomplishments}
+                      value={accomplishmentDetails.accomplishments ?? 'N/A'}
                     ></textarea>
                   </div>
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
@@ -268,10 +299,11 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <div className="w-full flex gap-2 justify-start items-center pt-4">
                         <span className="text-slate-500 text-md font-medium">Follow Estimated Hours:</span>
                         <Checkbox
-                          checkboxId="with-exam"
+                          checkboxId="followEstimatedHrs"
                           label=""
-                          // checked={withExam}
+                          checked={watch('followEstimatedHrs')}
                           // onChange={() => setWithExam(!withExam)}
+                          {...register('followEstimatedHrs')}
                         />
                       </div>
                       <div className="w-full flex gap-2 justify-start items-center pt-4">

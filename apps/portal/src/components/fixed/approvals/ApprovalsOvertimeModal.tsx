@@ -209,16 +209,18 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   <label className="w-full">{employee.positionTitle}</label>
                                   <label className="w-full">{employee.assignment}</label>
 
-                                  <Button
-                                    variant={'primary'}
-                                    size={'sm'}
-                                    loading={false}
-                                    onClick={(e) =>
-                                      handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
-                                    }
-                                  >
-                                    View Accomplishment
-                                  </Button>
+                                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                                    <Button
+                                      variant={'primary'}
+                                      size={'sm'}
+                                      loading={false}
+                                      onClick={(e) =>
+                                        handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
+                                      }
+                                    >
+                                      View Accomplishment
+                                    </Button>
+                                  ) : null}
                                 </div>
                               </div>
                             );

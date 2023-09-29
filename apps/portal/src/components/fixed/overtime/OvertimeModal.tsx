@@ -25,6 +25,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     accomplishmentOvertimeModalIsOpen,
     setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen,
+    setOvertimeAccomplishmentEmployeeId,
+    setOvertimeAccomplishmentEmployeeName,
+    setOvertimeAccomplishmentApplicationId,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
@@ -32,6 +35,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
     setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen: state.setAccomplishmentOvertimeModalIsOpen,
+    setOvertimeAccomplishmentEmployeeId: state.setOvertimeAccomplishmentEmployeeId,
+    setOvertimeAccomplishmentEmployeeName: state.setOvertimeAccomplishmentEmployeeName,
+    setOvertimeAccomplishmentApplicationId: state.setOvertimeAccomplishmentApplicationId,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -44,6 +50,13 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   const closeOvertimeAccomplishmentModal = async () => {
     setAccomplishmentOvertimeModalIsOpen(false);
+  };
+
+  const handleEmployeeAccomplishment = async (employeeId: string, employeeName: string) => {
+    setOvertimeAccomplishmentEmployeeId(employeeId);
+    setOvertimeAccomplishmentEmployeeName(employeeName);
+    setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
+    setAccomplishmentOvertimeModalIsOpen(true);
   };
 
   return (
@@ -151,15 +164,19 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   <label className="w-full">{employee.fullName}</label>
                                   <label className="w-full">{employee.assignment}</label>
 
-                                  <Button
-                                    variant={'primary'}
-                                    size={'sm'}
-                                    loading={false}
-                                    onClick={(e) => setAccomplishmentOvertimeModalIsOpen(true)}
-                                    type="submit"
-                                  >
-                                    View Accomplishment
-                                  </Button>
+                                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                                    <Button
+                                      variant={'primary'}
+                                      size={'sm'}
+                                      loading={false}
+                                      onClick={(e) =>
+                                        handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
+                                      }
+                                      type="submit"
+                                    >
+                                      View Accomplishment
+                                    </Button>
+                                  ) : null}
                                 </div>
                               </div>
                             );

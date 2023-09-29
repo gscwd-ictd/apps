@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -8,6 +8,12 @@ import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-a
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
+import useSWR from 'swr';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
+import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
+import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
+import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 type ModalProps = {
   modalState: boolean;
@@ -18,41 +24,57 @@ type ModalProps = {
 export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     overtimeDetails,
-    confirmOvertimeAccomplishmentModalIsOpen,
-    pendingOvertimeAccomplishmentModalIsOpen,
-    setConfirmOvertimeAccomplishmentModalIsOpen,
-  } = useOvertimeAccomplishmentStore((state) => ({
-    overtimeDetails: state.overtimeAccomplishmentDetails,
-    confirmOvertimeAccomplishmentModalIsOpen: state.confirmOvertimeAccomplishmentModalIsOpen,
-    pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
-    setConfirmOvertimeAccomplishmentModalIsOpen: state.setConfirmOvertimeAccomplishmentModalIsOpen,
+    overtimeAccomplishmentEmployeeId,
+    overtimeAccomplishmentApplicationId,
+    overtimeAccomplishmentEmployeeName,
+    accomplishmentDetails,
+    getAccomplishmentDetails,
+    getAccomplishmentDetailsSuccess,
+    getAccomplishmentDetailsFail,
+  } = useOvertimeStore((state) => ({
+    overtimeDetails: state.overtimeDetails,
+    overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
+    overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
+    overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
+    accomplishmentDetails: state.accomplishmentDetails,
+    getAccomplishmentDetails: state.getAccomplishmentDetails,
+    getAccomplishmentDetailsSuccess: state.getAccomplishmentDetailsSuccess,
+    getAccomplishmentDetailsFail: state.getAccomplishmentDetailsFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
 
-  const closeConfirmOvertimeAccomplishmentModal = async () => {
-    setConfirmOvertimeAccomplishmentModalIsOpen(false);
-  };
+  const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
 
   const {
-    setValue,
-    register,
-    trigger,
-    getValues,
-    handleSubmit,
-    reset,
-    formState: { errors, isDirty, dirtyFields, isValid },
-  } = useForm<any>({
-    // resolver: yupResolver(OfficeSchema),
-    mode: 'onChange',
-    reValidateMode: 'onBlur',
+    data: swrOvertimeAccomplishment,
+    isLoading: swrOvertimeAccomplishmentIsLoading,
+    error: swrOvertimeAccomplishmentError,
+    mutate: mutateOvertimeAccomplishments,
+  } = useSWR(overtimeAccomplishmentUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
   });
 
+  // Initial zustand state update
   useEffect(() => {
-    reset();
-  }, [pendingOvertimeAccomplishmentModalIsOpen]);
+    if (swrOvertimeAccomplishmentIsLoading) {
+      getAccomplishmentDetails(swrOvertimeAccomplishmentIsLoading);
+    }
+  }, [swrOvertimeAccomplishmentIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeAccomplishment)) {
+      getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
+    }
+
+    if (!isEmpty(swrOvertimeAccomplishmentError)) {
+      getAccomplishmentDetailsFail(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishmentError.message);
+    }
+  }, [swrOvertimeAccomplishment, swrOvertimeAccomplishmentError]);
 
   return (
     <>
@@ -87,12 +109,25 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
+                  {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage={'For Supervisor Approval'}
+                      dismissible={false}
+                    />
+                  ) : null}
+                  {accomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                    <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
+                  ) : null}
+                  {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                    <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
+                  ) : null}
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Name:</label>
 
                       <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">{'Test Name'}</label>
+                        <label className="text-slate-500 w-full text-md ">{overtimeAccomplishmentEmployeeName}</label>
                       </div>
                     </div>
                   </div>
@@ -105,44 +140,35 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                         <label className="text-slate-500 w-full text-md ">
                           <LabelInput
                             id={'ivmsTimeIn'}
-                            type="time"
+                            type="text"
                             label={''}
                             className="w-full  text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            controller={{
-                              ...register('ivmsTimeIn', {
-                                value: '17:00:00',
-                                onChange: (e) => {
-                                  setValue('ivmsTimeIn', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
+                            value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeIn)}
                           />
                         </label>
                         <label className="text-slate-500 w-auto text-lg">-</label>
                         <label className="text-slate-500 w-full text-md ">
                           <LabelInput
                             id={'ivmsTimeOut'}
-                            type="time"
+                            type="text"
+                            label={''}
+                            className="w-full  text-slate-400 font-medium"
+                            textSize="md"
+                            disabled
+                            value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeOut)}
+                          />
+                        </label>
+                        <label className="text-slate-500 w-full text-md ">
+                          <LabelInput
+                            id={'estimate'}
+                            type="text"
                             label={''}
                             className="w-full text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            controller={{
-                              ...register('ivmsTimeOut', {
-                                value: '19:00:00',
-                                onChange: (e) => {
-                                  setValue('ivmsTimeOut', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
+                            value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
                           />
                         </label>
                       </div>
@@ -158,45 +184,36 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
                         <label className="text-slate-500 w-full text-md ">
                           <LabelInput
-                            id={'encodeTimeIn'}
-                            type="time"
+                            id={'ivmsTimeOut'}
+                            type="text"
                             label={''}
                             className="w-full  text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            controller={{
-                              value: '17:00:00',
-                              ...register('encodeTimeIn', {
-                                onChange: (e) => {
-                                  setValue('encodeTimeIn', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
+                            value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeIn)}
                           />
                         </label>
                         <label className="text-slate-500 w-auto text-lg">-</label>
                         <label className="text-slate-500 w-full text-md ">
                           <LabelInput
-                            id={'encodeTimeOut'}
-                            type="time"
+                            id={'ivmsTimeOut'}
+                            type="text"
+                            label={''}
+                            className="w-full  text-slate-400 font-medium"
+                            textSize="md"
+                            disabled
+                            value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeOut)}
+                          />
+                        </label>
+                        <label className="text-slate-500 w-full text-md ">
+                          <LabelInput
+                            id={'estimate'}
+                            type="text"
                             label={''}
                             className="w-full text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            controller={{
-                              value: '19:00:00',
-                              ...register('encodeTimeOut', {
-                                onChange: (e) => {
-                                  setValue('encodeTimeOut', e.target.value, {
-                                    shouldValidate: true,
-                                  });
-                                  trigger(); // triggers all validations for inputs
-                                },
-                              }),
-                            }}
+                            value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
                           />
                         </label>
                       </div>
@@ -208,11 +225,11 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Accomplishment:</label>
                     </div>
                     <textarea
-                      required
+                      disabled
                       rows={3}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      placeholder="Accomplishments"
-                      {...register('accomplishments')}
+                      placeholder="N/A"
+                      value={accomplishmentDetails.accomplishments}
                     ></textarea>
                   </div>
                 </div>

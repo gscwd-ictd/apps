@@ -26,3 +26,4 @@ export * from './functions/WindowDimensions';
 export * from './functions/UndertimeChecker';
 export * from './functions/LateChecker';
 export * from './functions/DateFormatter';
+export * from './functions/GetDateDifference';
