@@ -1,20 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import axios from 'axios';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { HiNewspaper, HiX } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
-import {
-  JobOpeningDetails,
-  VacancyDetails,
-} from '../../../types/vacancies.type';
+import { JobOpeningDetails, VacancyDetails } from '../../../types/vacancies.type';
 import { GenerateCaptcha } from '../../../components/fixed/captcha/CaptchaGenerator';
 import {
   getJobOpeningDetails,
@@ -22,17 +15,9 @@ import {
   applyJobPost,
   getWorkExp,
 } from '../../../utils/helpers/http-requests/applicants-requests';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { isEmpty } from 'lodash';
-import {
-  AlertNotification,
-  Button,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsPanel';
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
@@ -64,9 +49,7 @@ export default function Vacancies({
   // const workExperienceArray = useWorkExpStore((state) => state.workExperience);
   const resetExperience = useWorkExpStore((state) => state.resetWorkExperience);
   const workExperienceArray = useWorkExpStore((state) => state.workExperience);
-  const withRelevantExperience = useWorkExpStore(
-    (state) => state.withRelevantExperience
-  );
+  const withRelevantExperience = useWorkExpStore((state) => state.withRelevantExperience);
 
   const {
     errorJobOpening,
@@ -110,10 +93,6 @@ export default function Vacancies({
     subtitle: '',
   });
 
-  const handlePassword = (e: string) => {
-    setPassword(e);
-  };
-
   const handleMessage = async (vacancies: VacancyDetails) => {
     setIsApplied(false); //initial values when opening job basic info
     setHasApplied(false); //initial values when opening job basic info
@@ -132,10 +111,7 @@ export default function Vacancies({
       }
     }
 
-    const applicantApplication = await checkIfApplied(
-      vacancies.vppId,
-      employeeId
-    );
+    const applicantApplication = await checkIfApplied(vacancies.vppId, employeeId);
     if (applicantApplication.hasApplied) {
       setHasApplied(applicantApplication.hasApplied);
     }
@@ -206,11 +182,7 @@ export default function Vacancies({
         setIsCaptchaError(true);
         setWiggleEffect(true);
         setErrorMessage('Failed to load message contents!');
-      } else if (
-        password != captchaPassword ||
-        password == '' ||
-        captchaPassword == ''
-      ) {
+      } else if (password != captchaPassword || password == '' || captchaPassword == '') {
         setIsCaptchaError(true);
         setWiggleEffect(true);
         setErrorCaptcha('Incorrect Captcha!');
@@ -222,12 +194,7 @@ export default function Vacancies({
 
   // complete appilcation
   const completeApplication = async () => {
-    const data = await applyJobPost(
-      messageContent.vppId,
-      employeeId,
-      withRelevantExperience,
-      workExperienceArray
-    );
+    const data = await applyJobPost(messageContent.vppId, employeeId, withRelevantExperience, workExperienceArray);
     if (data && data.internalApplicant?.applicantStatus == 'For review') {
       setIsApplied(true);
       setIsCaptchaError(false);
@@ -269,10 +236,7 @@ export default function Vacancies({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
 
@@ -280,49 +244,22 @@ export default function Vacancies({
     <>
       {
         //error response from POST if tried to POST with empty supervisor/office
-        !isEmpty(errorApplyJob) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorApplyJob}`}
-          />
-        ) : null
+        !isEmpty(errorApplyJob) ? <ToastNotification toastType="error" notifMessage={`${errorApplyJob}`} /> : null
       }
 
-      {!isEmpty(errorIfApplied) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`${errorIfApplied}`}
-        />
-      ) : null}
+      {!isEmpty(errorIfApplied) ? <ToastNotification toastType="error" notifMessage={`${errorIfApplied}`} /> : null}
 
       {!isEmpty(errorWorkExperience) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`${errorWorkExperience}`}
-        />
+        <ToastNotification toastType="error" notifMessage={`${errorWorkExperience}`} />
       ) : null}
 
-      {!isEmpty(errorJobOpening) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`${errorJobOpening}`}
-        />
-      ) : null}
+      {!isEmpty(errorJobOpening) ? <ToastNotification toastType="error" notifMessage={`${errorJobOpening}`} /> : null}
 
-      {!isEmpty(errorCaptcha) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorCaptcha}`} />
-      ) : null}
+      {!isEmpty(errorCaptcha) ? <ToastNotification toastType="error" notifMessage={`${errorCaptcha}`} /> : null}
 
-      {!isEmpty(errorMessage) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorMessage}`} />
-      ) : null}
+      {!isEmpty(errorMessage) ? <ToastNotification toastType="error" notifMessage={`${errorMessage}`} /> : null}
 
-      {!isEmpty(responseApply) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage={`${responseApply}`}
-        />
-      ) : null}
+      {!isEmpty(responseApply) ? <ToastNotification toastType="success" notifMessage={`${responseApply}`} /> : null}
 
       {data && (
         <div>
@@ -362,23 +299,15 @@ export default function Vacancies({
                 />
               ) : null}
 
-              <VacancyModalController
-                page={modal.page}
-                dataJobOpening={jobDetails}
-                workExperience={workExperience}
-              />
+              <VacancyModalController page={modal.page} dataJobOpening={jobDetails} workExperience={workExperience} />
             </Modal.Body>
 
-            <Modal.Footer
-              className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}
-            >
+            <Modal.Footer className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}>
               <div className="flex flex-col justify-center w-full h-full">
                 {modal.page === 1 ? (
                   <div className="flex flex-col items-end w-full">
                     <Button
-                      className={`${
-                        isApplied || hasApplied ? 'hidden' : 'h-10'
-                      }`}
+                      className={`${isApplied || hasApplied ? 'hidden' : 'h-10'}`}
                       onClick={(e) => changeModalPage(2)}
                     >
                       Next
@@ -402,16 +331,11 @@ export default function Vacancies({
                             : 'hidden lg:flex justify-start items-center text-xs text-red-600'
                         }`}
                       >
-                        Warning: Going back or closing the window will reset
-                        your entries.
+                        Warning: Going back or closing the window will reset your entries.
                       </div>
 
                       <div className="flex flex-col justify-end gap-2 w-36 md:w-auto md:flex-row">
-                        <Button
-                          variant="danger"
-                          onClick={getCaptcha}
-                          size={`${windowWidth > 768 ? 'md' : 'sm'}`}
-                        >
+                        <Button variant="danger" onClick={getCaptcha} size={`${windowWidth > 768 ? 'md' : 'sm'}`}>
                           Generate Captcha
                         </Button>
                         {/* captcha */}
@@ -423,9 +347,7 @@ export default function Vacancies({
                           <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
                             {pwdArray && pwdArray[0]}
                           </div>
-                          <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">
-                            {pwdArray && pwdArray[1]}
-                          </div>
+                          <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">{pwdArray && pwdArray[1]}</div>
                           <div className="w-4 font-light text-red-800 scale-105 rotate-45">
                             {pwdArray && pwdArray[2]}
                           </div>
@@ -443,17 +365,11 @@ export default function Vacancies({
                           type="text"
                           value={password}
                           placeholder="Enter Captcha"
-                          className={`${
-                            wiggleEffect && 'animate-shake border-red-600'
-                          } ${
-                            isCaptchaError
-                              ? 'border-red-600'
-                              : 'border-stone-200'
+                          className={`${wiggleEffect && 'animate-shake border-red-600'} ${
+                            isCaptchaError ? 'border-red-600' : 'border-stone-200'
                           }  md:w-28 border text-xs`}
                           onAnimationEnd={() => setWiggleEffect(false)}
-                          onChange={(e) =>
-                            handlePassword(e.target.value as unknown as string)
-                          }
+                          onChange={(e) => setPassword(e.target.value as unknown as string)}
                         />
                       </div>
                       <Button onClick={modalAction}>Apply</Button>
@@ -470,66 +386,46 @@ export default function Vacancies({
               <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">
                 <label className="pb-4">Job Vacancies</label>
 
-                {employeeDetails.employmentDetails.userRole !==
-                UserRole.JOB_ORDER ? (
+                {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
                   data && data.length > 0 ? (
-                    data.map(
-                      (vacancies: VacancyDetails, messageIdx: number) => {
-                        return (
-                          <div key={messageIdx}>
-                            <MessageCard
-                              icon={
-                                <HiNewspaper className="w-6 h-6 text-green-800" />
-                              }
-                              color={`green`}
-                              title={vacancies.positionTitle}
-                              description={vacancies.occupationName}
-                              linkType={'router'}
-                              onClick={() => handleMessage(vacancies)}
-                            />
-                          </div>
-                        );
-                      }
-                    )
+                    data.map((vacancies: VacancyDetails, messageIdx: number) => {
+                      return (
+                        <div key={messageIdx}>
+                          <MessageCard
+                            icon={<HiNewspaper className="w-6 h-6 text-green-800" />}
+                            color={`green`}
+                            title={vacancies.positionTitle}
+                            description={vacancies.occupationName}
+                            linkType={'router'}
+                            onClick={() => handleMessage(vacancies)}
+                          />
+                        </div>
+                      );
+                    })
                   ) : (
                     <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                      <label className="w-full text-4xl text-center text-gray-400 ">
-                        NO VACANCIES
-                      </label>
+                      <label className="w-full text-4xl text-center text-gray-400 ">NO VACANCIES</label>
                     </div>
                   )
                 ) : (
                   <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                    <label className="w-full text-4xl text-center text-gray-400 ">
-                      NO DATA
-                    </label>
+                    <label className="w-full text-4xl text-center text-gray-400 ">NO DATA</label>
                   </div>
                 )}
               </div>
               {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
                 <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
                   <div
-                    className={`${
-                      isMessageOpen
-                        ? 'w-full md:ml-10 md:mr-10 p-8 flex flex-col bg-white'
-                        : 'hidden'
-                    }`}
+                    className={`${isMessageOpen ? 'w-full md:ml-10 md:mr-10 p-8 flex flex-col bg-white' : 'hidden'}`}
                   >
                     <label className="pb-2">{mailMessage}</label>
-                    <JobDetailsPanel
-                      data={jobDetails}
-                      details={messageContent}
-                    />
+                    <JobDetailsPanel data={jobDetails} details={messageContent} />
 
-                    <label className="pt-2 pb-2">
-                      Click Details button for more information.
-                    </label>
+                    <label className="pt-2 pb-2">Click Details button for more information.</label>
                     <div className="flex flex-row justify-end gap-4">
                       <div
                         className={`${
-                          messageContent?.postingDeadline
-                            ? ''
-                            : 'flex flex-row gap-4 items-center justify-end'
+                          messageContent?.postingDeadline ? '' : 'flex flex-row gap-4 items-center justify-end'
                         }`}
                       >
                         <button
@@ -575,26 +471,22 @@ export default function Vacancies({
 // };
 
 //get list of all posted job positions
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    try {
-      const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
-      );
-      if (data) {
-        return {
-          props: {
-            data,
-            employeeId: userDetails.user._id,
-            employeeDetails: userDetails,
-          },
-        };
-      } else {
-        return { props: {} };
-      }
-    } catch (error) {
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  try {
+    const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`);
+    if (data) {
+      return {
+        props: {
+          data,
+          employeeId: userDetails.user._id,
+          employeeDetails: userDetails,
+        },
+      };
+    } else {
       return { props: {} };
     }
+  } catch (error) {
+    return { props: {} };
   }
-);
+});

@@ -49,6 +49,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     patchResponsePassSlip,
     patchResponseLeave,
     patchResponseOvertime,
+    patchResponseAccomplishment,
     loadingPassSlip,
     loadingLeave,
     loadingOvertime,
@@ -60,6 +61,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     errorOvertime,
     errorOvertimeResponse,
     errorAccomplishment,
+    errorAccomplishmentResponse,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -107,6 +109,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     patchResponsePassSlip: state.response.patchResponsePassSlip,
     patchResponseLeave: state.response.patchResponseLeave,
     patchResponseOvertime: state.response.patchResponseOvertime,
+    patchResponseAccomplishment: state.response.patchResponseAccomplishment,
+
     loadingPassSlip: state.loading.loadingPassSlips,
     loadingLeave: state.loading.loadingLeaves,
     loadingOvertime: state.loading.loadingOvertime,
@@ -118,6 +122,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     errorOvertime: state.error.errorOvertime,
     errorOvertimeResponse: state.error.errorOvertimeResponse,
     errorAccomplishment: state.error.errorAccomplishment,
+    errorAccomplishmentResponse: state.error.errorAccomplishmentResponse,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -328,19 +333,24 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
   return (
     <>
       <>
-        {/* Overtime Patch Success */}
+        {/* Overtime Approval Patch Success */}
         {!isEmpty(patchResponseOvertime) ? (
           <ToastNotification toastType="success" notifMessage={`Overtime Application action submitted.`} />
         ) : null}
 
-        {/* Pass Slip Patch Success */}
+        {/* Pass Slip Approval Patch Success */}
         {!isEmpty(patchResponsePassSlip) ? (
           <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
         ) : null}
 
-        {/* Leave Patch Success */}
+        {/* Leave Approval Patch Success */}
         {!isEmpty(patchResponseLeave) ? (
           <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
+        ) : null}
+
+        {/* OT Accomplishment Approval Patch Success */}
+        {!isEmpty(patchResponseAccomplishment) ? (
+          <ToastNotification toastType="success" notifMessage={`Overtime Accomplishment Report action submitted.`} />
         ) : null}
 
         {/* Overtime Patch Failed Error */}
@@ -356,6 +366,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         {/* Leave Patch Failed Error */}
         {!isEmpty(errorLeaveResponse) ? (
           <ToastNotification toastType="error" notifMessage={`Leave Application action failed.`} />
+        ) : null}
+
+        {/* OT AccomplishmentReport Approval Patch Failed Error */}
+        {!isEmpty(errorAccomplishmentResponse) ? (
+          <ToastNotification toastType="error" notifMessage={`Overtime Accomplishment Report action failed.`} />
         ) : null}
 
         {/* Overtime List Load Failed Error */}
