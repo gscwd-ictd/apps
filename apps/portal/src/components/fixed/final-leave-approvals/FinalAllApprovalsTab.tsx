@@ -1,9 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import dayjs from 'dayjs';
-
 import { SupervisorLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type AllApprovalListTabProps = {
   leaves: Array<SupervisorLeaveDetails> | null;
@@ -65,7 +64,7 @@ export const FinalAllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) =
   return (
     <>
       {leaves && leaves.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {leaves.map((item: SupervisorLeaveDetails, index: number) => {
             return (
               <li
@@ -89,7 +88,7 @@ export const FinalAllApprovalsTab = ({ leaves, tab }: AllApprovalListTabProps) =
                       : item.leaveDates.join(', ')}
                   </p>
                   <p className="text-sm text-indigo-500">
-                    Date Applied: {dayjs(item.dateOfFiling).format('MMMM DD, YYYY')}
+                    Date Applied: {DateFormatter(item.dateOfFiling, 'MMMM DD, YYYY')}
                   </p>
                   <p className="text-sm text-indigo-500">Status: {item.status.toUpperCase()}</p>
                 </div>

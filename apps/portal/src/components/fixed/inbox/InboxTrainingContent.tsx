@@ -38,8 +38,8 @@ export const InboxTrainingContent = () => {
 
   return (
     <>
-      <div className={'w-100 pl-8 pr-8 pt-1 flex flex-col bg-white pb-10'}>
-        {psbMessage?.details.acknowledgedSchedule ? (
+      <div className={'w-100 pl-8 pr-8 pt-1 flex flex-col pb-10'}>
+        {/* {psbMessage?.details.acknowledgedSchedule ? (
           <AlertNotification
             alertType="success"
             notifMessage={'You have accepted this training nomination'}
@@ -53,12 +53,16 @@ export const InboxTrainingContent = () => {
             notifMessage={'You have declined this training nomination'}
             dismissible={false}
           />
-        ) : null}
+        ) : null} */}
 
-        {!psbMessage?.details.acknowledgedSchedule && !psbMessage?.details.declinedSchedule ? (
+        {/* {!psbMessage?.details.acknowledgedSchedule && !psbMessage?.details.declinedSchedule ? (
           <AlertNotification alertType="warning" notifMessage={'Awaiting action'} dismissible={false} />
-        ) : null}
-
+        ) : null} */}
+        <AlertNotification
+          alertType="warning"
+          notifMessage={'Training Nomination: Awaiting action'}
+          dismissible={false}
+        />
         <label className="pb-2">
           This is to inform you that you have been recommended and selected to attend the below detailed training.
         </label>
@@ -103,46 +107,47 @@ export const InboxTrainingContent = () => {
         <div className="pt-2">
           <label className="font-bold">
             Remarks:{' '}
-            {psbMessage?.details.acknowledgedSchedule || psbMessage?.details.declinedSchedule ? null : (
+            {/* {psbMessage?.details.acknowledgedSchedule || psbMessage?.details.declinedSchedule ? null : (
               <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
-            )}
+            )} */}
+            <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
           </label>
 
           <textarea
             className={`w-full p-2 border resize-none`}
-            disabled={psbMessage?.details.acknowledgedSchedule || psbMessage?.details.declinedSchedule ? true : false}
-            value={
-              psbMessage?.details.acknowledgedSchedule
-                ? 'N/A'
-                : psbMessage?.details.declinedSchedule
-                ? psbMessage.details.declineReason
-                : declineRemarks
-            }
+            // disabled={psbMessage?.details.acknowledgedSchedule || psbMessage?.details.declinedSchedule ? true : false}
+            // value={
+            //   psbMessage?.details.acknowledgedSchedule
+            //     ? 'N/A'
+            //     : psbMessage?.details.declinedSchedule
+            //     ? psbMessage.details.declineReason
+            //     : declineRemarks
+            // }
             placeholder={'If declining, please state reason.'}
             onChange={(e) => handleRemarks(e.target.value as unknown as string)}
             rows={3}
           ></textarea>
         </div>
 
-        {psbMessage?.details.acknowledgedSchedule && psbMessage?.details.declinedSchedule ? null : (
-          <div className="flex flex-row items-center justify-end gap-4">
-            <Button
-              variant={'primary'}
-              size={'md'}
-              onClick={(e) => openSubmitModalAction(psbMessage?.details.vppId, InboxMessageResponse.ACCEPT)}
-            >
-              Accept
-            </Button>
-            <Button
-              variant={'danger'}
-              size={'md'}
-              disabled={declineRemarks ? false : true}
-              onClick={(e) => openSubmitModalAction(psbMessage?.details.vppId, InboxMessageResponse.DECLINE)}
-            >
-              Decline
-            </Button>
-          </div>
-        )}
+        {/* {psbMessage?.details.acknowledgedSchedule && psbMessage?.details.declinedSchedule ? null : ( */}
+        <div className="flex flex-row items-center justify-end gap-4">
+          <Button
+            variant={'primary'}
+            size={'md'}
+            // onClick={(e) => openSubmitModalAction(psbMessage?.details.vppId, InboxMessageResponse.ACCEPT)}
+          >
+            Accept
+          </Button>
+          <Button
+            variant={'danger'}
+            size={'md'}
+            disabled={declineRemarks ? false : true}
+            // onClick={(e) => openSubmitModalAction(psbMessage?.details.vppId, InboxMessageResponse.DECLINE)}
+          >
+            Decline
+          </Button>
+        </div>
+        {/* )} */}
       </div>
     </>
   );

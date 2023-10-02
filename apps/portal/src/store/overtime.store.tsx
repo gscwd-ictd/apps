@@ -1,22 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { OvertimeApplication } from 'libs/utils/src/lib/types/overtime.type';
+import {
+  OvertimeAccomplishment,
+  OvertimeDetails,
+  OvertimeForm,
+  OvertimeList,
+} from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-
-export type OvertimeDetails = {
-  dateOfFiling: string;
-  overtimeDateFrom: string;
-  overtimeDateTo: string;
-  estimatedHours: string;
-  purpose: string;
-  employees: Array<string>;
-};
-
-export type OvertimeList = {
-  forApproval: Array<OvertimeDetails>;
-  completed: Array<OvertimeDetails>;
-};
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;
@@ -26,19 +17,29 @@ export type OvertimeState = {
   };
   response: {
     postResponseApply: any;
-    cancelResponse: OvertimeDetails;
+    cancelResponse: any;
   };
-
   loading: {
     loadingOvertime: boolean;
     loadingResponse: boolean;
     loadingEmployeeList: boolean;
+    loadingAccomplishment: boolean;
   };
   error: {
     errorOvertime: string;
     errorResponse: string;
     errorEmployeeList: string;
+    errorAccomplishment: string;
   };
+
+  overtimeAccomplishmentEmployeeId: string;
+  setOvertimeAccomplishmentEmployeeId: (overtimeAccomplishmentEmployeeId: string) => void;
+
+  overtimeAccomplishmentEmployeeName: string;
+  setOvertimeAccomplishmentEmployeeName: (overtimeAccomplishmentEmployeeName: string) => void;
+
+  overtimeAccomplishmentApplicationId: string;
+  setOvertimeAccomplishmentApplicationId: (overtimeAccomplishmentApplicationId: string) => void;
 
   getEmployeeList: (loading: boolean) => void;
   getEmployeeListSuccess: (loading: boolean, response) => void;
@@ -49,7 +50,13 @@ export type OvertimeState = {
   applyOvertimeModalIsOpen: boolean;
   pendingOvertimeModalIsOpen: boolean;
   completedOvertimeModalIsOpen: boolean;
+  accomplishmentOvertimeModalIsOpen: boolean;
   tab: number;
+
+  accomplishmentDetails: OvertimeAccomplishment;
+  getAccomplishmentDetails: (loading: boolean) => void;
+  getAccomplishmentDetailsSuccess: (loading: boolean, response) => void;
+  getAccomplishmentDetailsFail: (loading: boolean, error: string) => void;
 
   getOvertimeList: (loading: boolean) => void;
   getOvertimeListSuccess: (loading: boolean, response) => void;
@@ -60,13 +67,14 @@ export type OvertimeState = {
   cancelOvertimeFail: (error: string) => void;
 
   postOvertime: () => void;
-  postOvertimeSuccess: (response: OvertimeApplication) => void;
+  postOvertimeSuccess: (response: OvertimeForm) => void;
   postOvertimeFail: (error: string) => void;
 
   setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => void;
   setApplyOvertimeModalIsOpen: (applyOvertimeModalIsOpen: boolean) => void;
   setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => void;
   setCompletedOvertimeModalIsOpen: (completedOvertimeModalIsOpen: boolean) => void;
+  setAccomplishmentOvertimeModalIsOpen: (accomplishmentOvertimeModalIsOpen: boolean) => void;
 
   setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
   setTab: (tab: number) => void;
@@ -79,26 +87,8 @@ export const useOvertimeStore = create<OvertimeState>()(
     employeeList: [],
 
     overtime: {
-      forApproval: [
-        {
-          dateOfFiling: '09-20-2023 14:00:00',
-          overtimeDateFrom: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
-          overtimeDateTo: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
-          estimatedHours: '2',
-          purpose: 'Mag overtime ako habang buhay',
-          employees: ['Mikhail Sebua, Ricardo Narvaiza'],
-        },
-      ],
-      completed: [
-        {
-          dateOfFiling: '09-20-2023 14:00:00',
-          overtimeDateFrom: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
-          overtimeDateTo: '09-20-2023 17:00:00 - 09-20-2023 19:00:00',
-          estimatedHours: '2',
-          purpose: 'Gusto kong matuto mag drive',
-          employees: ['Mikhail Sebua, Ricardo Narvaiza'],
-        },
-      ],
+      forApproval: [],
+      completed: [],
     },
     response: {
       postResponseApply: {},
@@ -108,23 +98,31 @@ export const useOvertimeStore = create<OvertimeState>()(
       loadingOvertime: false,
       loadingResponse: false,
       loadingEmployeeList: false,
+      loadingAccomplishment: false,
     },
     error: {
       errorOvertime: '',
       errorResponse: '',
       errorEmployeeList: '',
+      errorAccomplishment: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
+    accomplishmentDetails: {} as OvertimeAccomplishment,
 
     applyOvertimeModalIsOpen: false,
     pendingOvertimeModalIsOpen: false,
     completedOvertimeModalIsOpen: false,
     cancelOvertimeModalIsOpen: false,
+    accomplishmentOvertimeModalIsOpen: false,
     tab: 1,
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
+    },
+
+    setAccomplishmentOvertimeModalIsOpen: (accomplishmentOvertimeModalIsOpen: boolean) => {
+      set((state) => ({ ...state, accomplishmentOvertimeModalIsOpen }));
     },
 
     setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => {
@@ -145,6 +143,65 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
       set((state) => ({ ...state, overtimeDetails }));
+    },
+
+    overtimeAccomplishmentEmployeeId: '',
+    setOvertimeAccomplishmentEmployeeId: (overtimeAccomplishmentEmployeeId: string) => {
+      set((state) => ({ ...state, overtimeAccomplishmentEmployeeId }));
+    },
+
+    overtimeAccomplishmentEmployeeName: '',
+    setOvertimeAccomplishmentEmployeeName: (overtimeAccomplishmentEmployeeName: string) => {
+      set((state) => ({ ...state, overtimeAccomplishmentEmployeeName }));
+    },
+
+    overtimeAccomplishmentApplicationId: '',
+    setOvertimeAccomplishmentApplicationId: (overtimeAccomplishmentApplicationId: string) => {
+      set((state) => ({ ...state, overtimeAccomplishmentApplicationId }));
+    },
+
+    //GET OVERTIME ACCOMPLISHMENTS ACTIONS
+    getAccomplishmentDetails: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        accomplishmentDetails: {} as OvertimeAccomplishment,
+        loading: {
+          ...state.loading,
+          loadingAccomplishment: loading,
+        },
+        error: {
+          ...state.error,
+          errorAccomplishment: '',
+        },
+      }));
+    },
+
+    getAccomplishmentDetailsSuccess: (loading: boolean, response: OvertimeAccomplishment) => {
+      set((state) => ({
+        ...state,
+        accomplishmentDetails: response,
+        loading: {
+          ...state.loading,
+          loadingAccomplishment: loading,
+        },
+      }));
+    },
+    getAccomplishmentDetailsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingAccomplishment: loading,
+        },
+        error: {
+          ...state.error,
+          errorAccomplishment: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
     },
 
     //GET EMPLOYEE LIST ACTIONS
@@ -332,8 +389,8 @@ export const useOvertimeStore = create<OvertimeState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as OvertimeDetails,
-          cancelResponse: {} as OvertimeDetails,
+          postResponseApply: {},
+          cancelResponse: {},
         },
         error: {
           ...state.error,

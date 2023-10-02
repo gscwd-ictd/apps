@@ -5,27 +5,38 @@ import { Notice } from '../../../modular/alerts/Notice';
 import { Button } from '../../../modular/forms/buttons/Button';
 import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
-import { leaveAction } from '../../../../types/approvals.type';
+import { overtimeAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 
 interface OtpProps {
   mobile: string;
-  employeeId: string;
-  action: LeaveStatus; // approve or disapprove
-  tokenId: string; //like LEAVE Id, leave Id etc.
-  otpName: string;
+  employeeId?: string;
+  actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
+  actionLeave?: LeaveStatus; // approve or disapprove for leave
+  actionPassSlip?: PassSlipStatus; // approve or disapprove pass slip
+  tokenId: string; //like pass Slip Id, leave Id etc.
+  otpName: ManagerOtpApproval;
   remarks?: string;
+  passSlipId?: string;
+  supervisorDisapprovalRemarks?: string; //for supervisor disapproval for leave
+  hrdmDisapprovalRemarks?: string; //for hrdm disapproval for leave
 }
 
-export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
+export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
   mobile,
   employeeId,
-  action,
+  actionOvertime,
+  actionLeave,
+  actionPassSlip,
   tokenId,
   otpName,
   remarks,
@@ -44,14 +55,43 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
   const [countingDown, setCountingDown] = useState<boolean>(false);
   const [failedFirstOtp, setFailedFirstOtp] = useState<boolean>(false);
 
-  const { patchLeave, patchLeaveSuccess, patchLeaveFail, setPendingLeaveModalIsOpen, setOtpLeaveModalIsOpen } =
-    useApprovalStore((state) => ({
-      patchLeave: state.patchLeave,
-      patchLeaveSuccess: state.patchLeaveSuccess,
-      patchLeaveFail: state.patchLeaveFail,
-      setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
-      setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
-    }));
+  const {
+    patchOvertime,
+    patchOvertimeSuccess,
+    patchOvertimeFail,
+    setPendingOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen,
+
+    patchLeave,
+    patchLeaveSuccess,
+    patchLeaveFail,
+    setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen,
+
+    patchPassSlip,
+    patchPassSlipSuccess,
+    patchPassSlipFail,
+    setPendingPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen,
+  } = useApprovalStore((state) => ({
+    patchOvertime: state.patchOvertime,
+    patchOvertimeSuccess: state.patchOvertimeSuccess,
+    patchOvertimeFail: state.patchOvertimeFail,
+    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
+
+    patchLeave: state.patchLeave,
+    patchLeaveSuccess: state.patchLeaveSuccess,
+    patchLeaveFail: state.patchLeaveFail,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
+
+    patchPassSlip: state.patchPassSlip,
+    patchPassSlipSuccess: state.patchPassSlipSuccess,
+    patchPassSlipFail: state.patchPassSlipFail,
+    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+  }));
 
   // set state for controlling the displaying of error status
   const [isError, setIsError] = useState({
@@ -144,16 +184,22 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
     setErrorMessage('');
     setOtpCode(''); //clears input field
     if (isSubmitLoading == false) {
+      setOtpOvertimeModalIsOpen(false);
       setOtpLeaveModalIsOpen(false);
+      setOtpPassSlipModalIsOpen(false);
     }
   };
 
   //CLOSE FUNCTION FOR COMPLETED OTP
   const handleClose = (e) => {
     e.preventDefault();
+    setOtpOvertimeModalIsOpen(false); //close OTP modal first
+    setOtpPassSlipModalIsOpen(false); //close OTP modal first
     setOtpLeaveModalIsOpen(false); //close OTP modal first
     setTimeout(() => {
-      setPendingLeaveModalIsOpen(false); //then close LEAVE modal
+      setPendingOvertimeModalIsOpen(false); //then close Pass Slip modal
+      setPendingPassSlipModalIsOpen(false); //then close Pass Slip modal
+      setPendingLeaveModalIsOpen(false); //then close Pass Slip modal
     }, 200);
   };
 
@@ -162,32 +208,74 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
     setOtpCode(e);
   };
 
-  const handlePatchResult = async (data: leaveAction) => {
-    const { error, result } = await patchPortal('/v1/leave/supervisor', data);
+  const handlePatchResultOtp = async (data) => {
+    let otpPatchUrl;
+
+    if (otpName === ManagerOtpApproval.LEAVE) {
+      otpPatchUrl = '/v1/leave/supervisor';
+    } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+      otpPatchUrl = '/v1/pass-slip';
+    } else if (otpName === ManagerOtpApproval.OVERTIME) {
+      otpPatchUrl = '/v1/overtime/approval';
+    }
+
+    const { error, result } = await patchPortal(otpPatchUrl, data);
     if (error) {
-      patchLeaveFail(result);
+      if (otpName === ManagerOtpApproval.LEAVE) {
+        patchLeaveFail(result);
+      } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+        patchPassSlipFail(result);
+      } else if (otpName === ManagerOtpApproval.OVERTIME) {
+        patchOvertimeFail(result);
+      }
     } else {
-      patchLeaveSuccess(result);
+      if (otpName === ManagerOtpApproval.LEAVE) {
+        patchLeaveSuccess(result);
+      } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+        patchPassSlipSuccess(result);
+      } else if (otpName === ManagerOtpApproval.OVERTIME) {
+        patchOvertimeSuccess(result);
+      }
     }
   };
 
   useEffect(() => {
     if (otpComplete) {
-      const data = {
-        id: tokenId,
-        status: action,
-        supervisorDisapprovalRemarks: remarks,
-      };
+      let data;
+
+      if (otpName === ManagerOtpApproval.LEAVE) {
+        data = {
+          id: tokenId,
+          status: actionLeave,
+          supervisorDisapprovalRemarks: remarks,
+        };
+        patchLeave();
+      } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+        data = {
+          passSlipId: tokenId,
+          status: actionPassSlip,
+        };
+        patchPassSlip();
+      } else if (otpName === ManagerOtpApproval.OVERTIME) {
+        data = {
+          managerId: employeeId,
+          remarks: remarks,
+          status: actionOvertime,
+          overtimeApplicationId: tokenId,
+        };
+        patchOvertime();
+      }
+
       localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
       localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);
-      patchLeave();
-      handlePatchResult(data);
+
+      handlePatchResultOtp(data);
     } else {
       //nothing to do
     }
   }, [otpComplete]);
 
-  // SUBMIT OTP CODE AND COMPLETE LEAVE APPROVAL/DISAPPROVAL IF CORRECT
+  // SUBMIT OTP CODE AND COMPLETE PASS SLIP APPROVAL/DISAPPROVAL IF CORRECT
   async function handleFinalSubmit(e) {
     e.preventDefault();
     setIsSubmitLoading(true);
@@ -212,13 +300,27 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
     <>
       {!otpComplete ? (
         <>
-          <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
+          <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm">
             <div className="mb-2 text-center">
-              {`To ${
-                action === LeaveStatus.FOR_HRDM_APPROVAL ? 'approve' : 'disapprove'
-              } this Leave request, click Send Code
+              {otpName === ManagerOtpApproval.LEAVE
+                ? `To ${
+                    actionLeave === LeaveStatus.FOR_HRDM_APPROVAL ? 'approve' : 'disapprove'
+                  } this Leave request, click Send Code
                               and enter the code sent to your mobile number:
-                              ${mobile}. `}
+                              ${mobile}. `
+                : otpName === ManagerOtpApproval.PASSSLIP
+                ? `To ${
+                    actionPassSlip === PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this Pass Slip request, click Send Code
+                                and enter the code sent to your mobile number:
+                                ${mobile}. `
+                : otpName === ManagerOtpApproval.OVERTIME
+                ? `To ${
+                    actionOvertime === OvertimeStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this Overtime request, click Send Code
+                                and enter the code sent to your mobile number:
+                                ${mobile}. `
+                : null}
             </div>
             {isOtpSending ? (
               <div className={`mb-4 text-center text-green-600 cursor-pointer text-md`}>
@@ -241,7 +343,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                 } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
                 onClick={() => handleSendCode()}
               >
-                <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}</label>
+                <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE' : 'SEND CODE'}`}</label>
               </button>
             )}
 
@@ -256,7 +358,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
 
             {isOtpSending || isSendOtpLoading ? (
               <>
-                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1 w-56">
+                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1">
                   {otpFieldError && (
                     <section className="mb-3" onAnimationEnd={() => setIsError({ ...isError, animate: false })}>
                       <Notice type="error" message={errorMessage} animate={otpFieldError} />
@@ -272,7 +374,6 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                       errorMessage={''}
                       maxLength={6}
                       onChange={(e) => handleOtpInput(e.target.value as unknown as string)}
-                      className="w-1/2"
                     />
                   </section>
                   <button
@@ -321,7 +422,15 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
         <>
           <div className={'flex flex-col p-4 gap-1 justify-center items-center text-md'}>
             <div className="text-center text-sm">OTP Verified Successfully!</div>
-            <div className="text-center text-sm mb-4">Leave has been approved.</div>
+            <div className="text-center text-sm mb-4">
+              {otpName === ManagerOtpApproval.LEAVE
+                ? `Leave has been ${actionLeave}.`
+                : otpName === ManagerOtpApproval.PASSSLIP
+                ? `Pass Slip has been ${actionPassSlip}.`
+                : otpName === ManagerOtpApproval.OVERTIME
+                ? `Overtime has been ${actionOvertime}.`
+                : null}
+            </div>
 
             <Button
               btnLabel="Close"

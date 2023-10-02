@@ -6,16 +6,8 @@ import { ContentHeader } from '../../../components/modular/custom/containers/Con
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { employee } from '../../../utils/constants/data';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
-import {
-  getUserDetails,
-  withCookieSession,
-  withSession,
-} from '../../../utils/helpers/session';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ListDef, Select, ToastNotification } from '@gscwd-apps/oneui';
@@ -30,19 +22,13 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { isEmpty } from 'lodash';
 
-export default function DailyTimeRecord({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function DailyTimeRecord({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const isLoadingDtr = useDtrStore((state) => state.loading.loadingDtr);
   const isErrorDtr = useDtrStore((state) => state.error.errorDtr);
-  const emptyResponseAndError = useDtrStore(
-    (state) => state.emptyResponseAndError
-  );
+  const emptyResponseAndError = useDtrStore((state) => state.emptyResponseAndError);
 
   // set state for employee store
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
 
   // set the employee details on page load
   useEffect(() => {
@@ -55,10 +41,7 @@ export default function DailyTimeRecord({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
 
@@ -75,10 +58,7 @@ export default function DailyTimeRecord({
       <>
         {/* DTR Fetch Error */}
         {!isEmpty(isErrorDtr) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${isErrorDtr}: Failed to load DTR.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${isErrorDtr}: Failed to load DTR.`} />
         ) : null}
 
         <EmployeeProvider employeeData={employee}>
@@ -90,10 +70,7 @@ export default function DailyTimeRecord({
 
           <MainContainer>
             <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-              <ContentHeader
-                title="Daily Time Record"
-                subtitle="View schedules, time in and time out"
-              >
+              <ContentHeader title="Daily Time Record" subtitle="View schedules, time in and time out">
                 <DtrDateSelect employeeDetails={employeeDetails} />
               </ContentHeader>
 
@@ -130,10 +107,8 @@ export default function DailyTimeRecord({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDetails } };
+});

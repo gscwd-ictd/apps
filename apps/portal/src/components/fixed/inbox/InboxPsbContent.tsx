@@ -40,21 +40,25 @@ export const InboxPsbContent = () => {
 
   return (
     <>
-      <div className={'w-100 pl-8 pr-8 pt-1 flex flex-col bg-white pb-10'}>
+      <div className={'w-100 pl-8 pr-8 pt-1 flex flex-col pb-10'}>
         {psbMessage?.details.acknowledgedSchedule ? (
           <AlertNotification
             alertType="success"
-            notifMessage={'You have accepted this assignment'}
+            notifMessage={'PSB: You have accepted this assignment'}
             dismissible={false}
           />
         ) : null}
 
         {psbMessage?.details.declinedSchedule ? (
-          <AlertNotification alertType="info" notifMessage={'You have declined this assignment'} dismissible={false} />
+          <AlertNotification
+            alertType="info"
+            notifMessage={'PSB: You have declined this assignment'}
+            dismissible={false}
+          />
         ) : null}
 
         {!psbMessage?.details.acknowledgedSchedule && !psbMessage?.details.declinedSchedule ? (
-          <AlertNotification alertType="warning" notifMessage={'Awaiting action'} dismissible={false} />
+          <AlertNotification alertType="warning" notifMessage={'PSB: Awaiting acknowledgment'} dismissible={false} />
         ) : null}
 
         <label className="pb-2">

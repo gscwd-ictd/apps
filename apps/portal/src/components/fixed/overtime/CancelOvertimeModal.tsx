@@ -35,8 +35,8 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
   const [remarks, setRemarks] = useState<string>('');
 
   const handleCancel = async () => {
-    setPendingOvertimeModalIsOpen(false); //then close LEAVE modal
-    setCompletedOvertimeModalIsOpen(false); //then close LEAVE modal
+    setPendingOvertimeModalIsOpen(false);
+    setCompletedOvertimeModalIsOpen(false);
 
     // const data = {
     //   id: leaveIndividualDetail.leaveApplicationBasicInfo.id,
@@ -81,7 +81,7 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
             {'Please indicate reason for cancelling application:'}
             <textarea
               required
-              placeholder="Reason for decline"
+              placeholder="Reason for cancellation"
               className={`w-full h-32 p-2 border resize-none`}
               onChange={(e) => setRemarks(e.target.value as unknown as string)}
               value={remarks}

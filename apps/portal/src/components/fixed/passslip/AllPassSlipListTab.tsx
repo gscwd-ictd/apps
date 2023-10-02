@@ -1,8 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { usePassSlipStore } from '../../../store/passslip.store';
-import dayjs from 'dayjs';
 import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type AllPassSlipListTabProps = {
   passslips: Array<PassSlip> | null;
@@ -43,7 +43,7 @@ export const AllPassSlipListTab = ({ passslips, tab }: AllPassSlipListTabProps) 
   return (
     <>
       {passslips && passslips.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {passslips.map((item: PassSlip, index: number) => {
             return (
               <li
@@ -54,7 +54,7 @@ export const AllPassSlipListTab = ({ passslips, tab }: AllPassSlipListTabProps) 
                 <div className="w-full px-1 py-2">
                   <h1 className="text-lg font-medium text-gray-600">{item.natureOfBusiness}</h1>
                   <p className="text-sm text-gray-500">
-                    Date Applied: {dayjs(item.dateOfApplication).format('MMMM DD, YYYY')}
+                    Date Applied: {DateFormatter(item.dateOfApplication, 'MMMM DD, YYYY')}
                   </p>
                   <p className="text-sm text-gray-500">Estimated Hours: {item.estimateHours}</p>
                   <p className="text-sm text-gray-500 break-words w-96">Purpose: {item.purposeDestination}</p>

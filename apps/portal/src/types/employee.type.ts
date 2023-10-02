@@ -31,6 +31,7 @@ export type EmploymentDetails = {
   assignment: Assignment;
   userRole: string;
   isHRMPSB?: boolean;
+  overtimeImmediateSupervisorId: string;
 };
 
 export type EmployeeDetails = {
@@ -84,6 +85,7 @@ export const employeeDummy: EmployeeDetails = {
     photoUrl: '/profile.jpg',
   },
   employmentDetails: {
+    overtimeImmediateSupervisorId: '',
     userId: '62fef63c-b26f-11ed-a79b-000c29f95a80',
     companyId: '2020-007',
     assignment: {

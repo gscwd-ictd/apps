@@ -4,7 +4,6 @@ import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { isEmpty } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification, OtpModal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -13,8 +12,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { ApprovalOtpContentsLeave } from './ApprovalOtp/ApprovalOtpContentsLeave';
-import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -89,10 +90,7 @@ export const ApprovalsPendingLeaveModal = ({
   };
 
   // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
-  const handleReason = (e: string) => {
-    setReason(e);
-  };
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const customClose = () => {
     setReason('');
@@ -136,7 +134,17 @@ export const ApprovalsPendingLeaveModal = ({
                 <div className="flex flex-col w-full gap-2 p-4 rounded">
                   {leaveIndividualDetail ? (
                     <AlertNotification
-                      alertType="warning"
+                      alertType={
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                          ? 'warning'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'error'
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          ? 'warning'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'error'
+                          : 'info'
+                      }
                       notifMessage={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Approval'
@@ -241,13 +249,25 @@ export const ApprovalsPendingLeaveModal = ({
                             leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                             leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
                             leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
-                              ? // show first and last date (array) only if maternity or study leave
-                                `${leaveIndividualDetail?.leaveDates[0]} - ${
-                                  leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
-                                }`
-                              : // show all dates if not maternity or study leave
-                                leaveIndividualDetail?.leaveDates?.join(', ')}
+                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
+                              // show first and last date (array) only if maternity or study leave
+                              `${leaveIndividualDetail?.leaveDates[0]} - ${
+                                leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
+                              }`
+                            ) : (
+                              // show all dates if not maternity or study leave
+                              // show all dates if not maternity or study leave
+                              <div className="flex flex-wrap flex-row">
+                                {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
+                                  return (
+                                    <label key={index} className="pr-1">
+                                      {DateFormatter(dates, 'MM-DD-YYYY')}
+                                      {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </label>
                         </div>
                       </div>
@@ -318,7 +338,7 @@ export const ApprovalsPendingLeaveModal = ({
                         className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
                         placeholder="Enter Reason"
                         rows={3}
-                        onChange={(e) => handleReason(e.target.value as unknown as string)}
+                        onChange={(e) => setReason(e.target.value as unknown as string)}
                       ></textarea>
                     ) : null}
                   </form>
@@ -332,21 +352,30 @@ export const ApprovalsPendingLeaveModal = ({
             title={'LEAVE APPROVAL OTP'}
           >
             {/* contents */}
-            <ApprovalOtpContentsLeave
-              mobile={employeeDetail.profile.mobileNumber}
-              employeeId={employeeDetail.user._id}
+            {/* <ApprovalOtpContentsLeave
+              mobile={employeeDetails.profile.mobileNumber}
+              employeeId={employeeDetails.user._id}
               action={watch('status')}
               tokenId={leaveIndividualDetail.id}
               otpName={'supervisorLeaveApproval'}
+            /> */}
+            <ApprovalOtpContents
+              mobile={employeeDetails.profile.mobileNumber}
+              employeeId={employeeDetails.user._id}
+              actionLeave={watch('status')}
+              tokenId={leaveIndividualDetail.id}
+              otpName={ManagerOtpApproval.LEAVE}
             />
           </OtpModal>
-          <ConfirmationLeaveModal
+          <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
             closeModalAction={closeDeclineModal}
-            action={watch('status')}
+            actionLeave={watch('status')}
             tokenId={leaveIndividualDetail.id}
             remarks={reason}
+            otpName={ManagerOtpApproval.LEAVE}
+            employeeId={employeeDetails.user._id}
           />
         </Modal.Body>
         <Modal.Footer>

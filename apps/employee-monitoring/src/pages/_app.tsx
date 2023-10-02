@@ -106,10 +106,8 @@ export default function CustomApp({ Component, pageProps, userDetails }: AppProp
   );
 }
 
-// CustomApp.getInitialProps = async (context: AppContext) => {
-//   const userDetails = await getCookieFromServer(
-//     context.ctx?.req?.headers?.cookie
-//   );
+CustomApp.getInitialProps = async (context: AppContext) => {
+  const userDetails = await getCookieFromServer(context.ctx?.req?.headers?.cookie);
 
-//   return { userDetails };
-// };
+  return { userDetails };
+};

@@ -1,8 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { EmployeeLeave } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
-import dayjs from 'dayjs';
-import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type AllLeaveListTabProps = {
   leaves: Array<EmployeeLeave>;
@@ -43,7 +43,7 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
   return (
     <>
       {leaves && leaves.length > 0 ? (
-        <ul className="mt-4">
+        <ul className={'mt-4 lg:mt-0'}>
           {leaves.map((leave: EmployeeLeave, index: number) => {
             return (
               <li
@@ -53,6 +53,9 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
               >
                 <div className=" w-full py-2 px-1 ">
                   <h1 className="font-medium text-lg text-gray-600">{leave.leaveName}</h1>
+                  <p className="text-sm text-gray-500">
+                    Date Applied: {DateFormatter(leave.dateOfFiling, 'MMMM DD, YYYY')}
+                  </p>
 
                   <p className="text-sm text-gray-500">No. of Days: {leave.leaveDates.length}</p>
                   <p className="text-sm text-gray-500">
@@ -61,13 +64,25 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                     leave.leaveName === LeaveName.STUDY ||
                     leave.leaveName === LeaveName.REHABILITATION ||
                     leave.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                    leave.leaveName === LeaveName.ADOPTION
-                      ? `${leave.leaveDates[0]} - ${leave.leaveDates[leave.leaveDates.length - 1]}`
-                      : leave.leaveDates.join(', ')}
+                    leave.leaveName === LeaveName.ADOPTION ? (
+                      `${DateFormatter(leave.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                        leave.leaveDates[leave.leaveDates.length - 1],
+                        'MM-DD-YYYY'
+                      )}`
+                    ) : (
+                      <>
+                        {leave.leaveDates.map((dates: string, index: number) => {
+                          return (
+                            <label key={index} className="pr-1">
+                              {DateFormatter(dates, 'MM-DD-YYYY')}
+                              {index == leave.leaveDates.length - 1 ? '' : ','}
+                            </label>
+                          );
+                        })}
+                      </>
+                    )}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    Date Applied: {dayjs(leave.dateOfFiling).format('MMMM DD, YYYY')}
-                  </p>
+
                   <p className="text-sm text-indigo-500">Status: {leave.status.toUpperCase()}</p>
                 </div>
               </li>

@@ -1,10 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
-import {
-  HiOutlineBell,
-  HiOutlineHome,
-  HiOutlineNewspaper,
-} from 'react-icons/hi';
+import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -49,14 +45,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 destination={`/${router.query.id}`}
               />
               {/* GENERAL MANAGER */}
-              {isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.OIC_GENERAL_MANAGER
-              ) ||
-              isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.GENERAL_MANAGER
-              ) ? (
+              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
+              isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
                     <GeneralManagerMenuDropdown right />
@@ -69,14 +59,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               ) : null}
 
               {/* ASSISTANT GENERAL MANAGER */}
-              {isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.ASSISTANT_GENERAL_MANAGER
-              ) ||
-              isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.OIC_ASSISTANT_GENERAL_MANAGER
-              ) ? (
+              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
@@ -85,14 +69,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               ) : null}
 
               {/* DEPARTMENT MANAGER */}
-              {isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.DEPARTMENT_MANAGER
-              ) ||
-              isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.OIC_DEPARTMENT_MANAGER
-              ) ? (
+              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
@@ -101,14 +79,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               ) : null}
 
               {/* DIVISION MANAGER */}
-              {isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.DIVISION_MANAGER
-              ) ||
-              isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.OIC_DIVISION_MANAGER
-              ) ? (
+              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
@@ -117,18 +89,10 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               ) : null}
 
               {/* DEPARTMENT MANAGER HR LEAVE APPROVAL */}
-              {isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.DEPARTMENT_MANAGER
-              ) ||
-              isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.OIC_DEPARTMENT_MANAGER
-              ) ? (
-                employeeDetails.employmentDetails.assignment.name ===
-                  'Recruitment and Personnel Welfare Division' ||
-                employeeDetails.employmentDetails.assignment.name ===
-                  'Training and Development Division' ? (
+              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ? (
+                employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
+                employeeDetails.employmentDetails.assignment.name === 'Training and Development Division' ? (
                   <li className="ml-10 lg:ml-0">
                     <HRMenuDropdown right />
                   </li>
@@ -136,26 +100,19 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               ) : null}
 
               {/* DIVISION MANAGER HR LEAVE APPROVAL */}
-              {isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.DIVISION_MANAGER
-              ) ||
-              isEqual(
-                employeeDetails.employmentDetails.userRole,
-                UserRole.OIC_DIVISION_MANAGER
-              ) ? (
-                employeeDetails.employmentDetails.assignment.name ===
-                  'Recruitment and Personnel Welfare Division' ||
-                employeeDetails.employmentDetails.assignment.name ===
-                  'Training and Development Division' ? (
+              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
+                employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
+                employeeDetails.employmentDetails.assignment.name === 'Training and Development Division' ? (
                   <li className="ml-10 lg:ml-0">
                     <HRMenuDropdown right />
                   </li>
                 ) : null
               ) : null}
 
-              {/* PSB */}
-              {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
+              {/* PSB / OVERTIME SUPERVISOR */}
+              {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ||
+              employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ? (
                 <li className="ml-10 lg:ml-0">
                   <CommitteeMenuDropdown right />
                 </li>
@@ -167,9 +124,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               />
 
               <SideNavLink
-                icon={
-                  <HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />
-                }
+                icon={<HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />}
                 destination={`/${router.query.id}/vacancies`}
               />
             </>

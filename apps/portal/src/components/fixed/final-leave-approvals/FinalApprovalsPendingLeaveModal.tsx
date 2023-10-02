@@ -15,6 +15,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 import { ConfirmationLeaveModal } from './FinalApprovalOtp/ConfirmationLeaveModal';
 import { ApprovalOtpContentsLeave } from './FinalApprovalOtp/ApprovalOtpContentsLeave';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -241,13 +242,25 @@ export const FinalApprovalsPendingLeaveModal = ({
                             leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                             leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
                             leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
-                              ? // show first and last date (array) only if maternity or study leave
-                                `${leaveIndividualDetail?.leaveDates[0]} - ${
-                                  leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1]
-                                }`
-                              : // show all dates if not maternity or study leave
-                                leaveIndividualDetail?.leaveDates?.join(', ')}
+                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
+                              // show first and last date (array) only if maternity or study leave
+                              `${DateFormatter(leaveIndividualDetail?.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                                leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1],
+                                'MM-DD-YYYY'
+                              )}`
+                            ) : (
+                              // show all dates if not maternity or study leave
+                              <div className="flex flex-wrap flex-row">
+                                {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
+                                  return (
+                                    <label key={index} className="pr-1">
+                                      {DateFormatter(dates, 'MM-DD-YYYY')}
+                                      {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </label>
                         </div>
                       </div>
