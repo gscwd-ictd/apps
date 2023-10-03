@@ -20,3 +20,4 @@ export * from './components/Spinner/LoadingSpinner';
 export * from './components/ToastNotification/ToastNotification';
 export * from './components/AlertNotification/AlertNotification';
 export * from './components/OtpModal';
+export * from './components/CaptchaModal';
