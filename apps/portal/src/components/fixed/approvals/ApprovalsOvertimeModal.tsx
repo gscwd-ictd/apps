@@ -158,7 +158,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         ? 'Approved'
                         : overtimeDetails.status === OvertimeStatus.DISAPPROVED
                         ? 'Disapproved'
-                        : 'info'
+                        : overtimeDetails.status
                     }
                     dismissible={false}
                   />
@@ -189,43 +189,41 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     <div className="flex flex-col justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employees:</label>
 
-                      <div className="w-full ">
-                        <label className="text-slate-500 w-full text-md flex flex-col">
-                          {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
-                            return (
-                              <div
-                                key={index}
-                                className={`${
-                                  index != 0 ? 'border-t border-slate-200' : ''
-                                } px-2 py-4 md:px-4 md:py-4 flex flex-row justify-between items-center gap-8 `}
-                              >
-                                <img
-                                  className="rounded-full border border-stone-100 shadow w-20"
-                                  src={employee?.avatarUrl ?? ''}
-                                  alt={'photo'}
-                                ></img>
-                                <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
-                                  <label className="w-full">{employee.fullName}</label>
-                                  <label className="w-full">{employee.positionTitle}</label>
-                                  <label className="w-full">{employee.assignment}</label>
+                      <div className="text-slate-500 w-full text-md flex flex-col">
+                        {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className={`${
+                                index != 0 ? 'border-t border-slate-200' : ''
+                              } px-2 py-4 md:px-4 md:py-4 flex flex-row justify-between items-center gap-8 `}
+                            >
+                              <img
+                                className="rounded-full border border-stone-100 shadow w-20"
+                                src={employee?.avatarUrl ?? ''}
+                                alt={'photo'}
+                              ></img>
+                              <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
+                                <label className="w-full">{employee.fullName}</label>
+                                <label className="w-full">{employee.positionTitle}</label>
+                                <label className="w-full">{employee.assignment}</label>
 
-                                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
-                                    <Button
-                                      variant={'primary'}
-                                      size={'sm'}
-                                      loading={false}
-                                      onClick={(e) =>
-                                        handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
-                                      }
-                                    >
-                                      View Accomplishment
-                                    </Button>
-                                  ) : null}
-                                </div>
+                                {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                                  <Button
+                                    variant={'primary'}
+                                    size={'sm'}
+                                    loading={false}
+                                    onClick={(e) =>
+                                      handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
+                                    }
+                                  >
+                                    View Accomplishment
+                                  </Button>
+                                ) : null}
                               </div>
-                            );
-                          })}
-                        </label>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>

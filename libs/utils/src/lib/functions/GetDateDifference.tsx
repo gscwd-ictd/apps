@@ -13,7 +13,7 @@ export function GetDateDifference(dateFrom: string, dateTo: string) {
   const m = Math.floor((difference % (1 * 60 * 60)) / (1 * 60));
   //COMPUTE SECONDS
   const s = Math.floor((difference % (1 * 60)) / 1);
-  console.log(d, h, m, s);
+
   return {
     days: d,
     hours: h,

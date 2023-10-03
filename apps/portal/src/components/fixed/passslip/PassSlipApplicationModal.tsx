@@ -130,7 +130,7 @@ export const PassSlipApplicationModal = ({
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
-              notifMessage="Submitting request"
+              notifMessage="Submitting Request"
               dismissible={true}
             />
           ) : null}

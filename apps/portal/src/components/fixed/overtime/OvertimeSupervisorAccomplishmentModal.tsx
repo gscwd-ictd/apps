@@ -175,50 +175,52 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                     </div>
                   </div>
 
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Encode Time In & Out:
-                      </label>
+                  {!accomplishmentDetails.ivmsTimeIn || !accomplishmentDetails.ivmsTimeOut ? (
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                          Encode Time In & Out:
+                        </label>
 
-                      <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
-                        <label className="text-slate-500 w-full text-md ">
-                          <LabelInput
-                            id={'ivmsTimeOut'}
-                            type="text"
-                            label={''}
-                            className="w-full  text-slate-400 font-medium"
-                            textSize="md"
-                            disabled
-                            value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeIn)}
-                          />
-                        </label>
-                        <label className="text-slate-500 w-auto text-lg">-</label>
-                        <label className="text-slate-500 w-full text-md ">
-                          <LabelInput
-                            id={'ivmsTimeOut'}
-                            type="text"
-                            label={''}
-                            className="w-full  text-slate-400 font-medium"
-                            textSize="md"
-                            disabled
-                            value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeOut)}
-                          />
-                        </label>
-                        <label className="text-slate-500 w-full text-md ">
-                          <LabelInput
-                            id={'estimate'}
-                            type="text"
-                            label={''}
-                            className="w-full text-slate-400 font-medium"
-                            textSize="md"
-                            disabled
-                            value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
-                          />
-                        </label>
+                        <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              id={'ivmsTimeOut'}
+                              type="text"
+                              label={''}
+                              className="w-full  text-slate-400 font-medium"
+                              textSize="md"
+                              disabled
+                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeIn)}
+                            />
+                          </label>
+                          <label className="text-slate-500 w-auto text-lg">-</label>
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              id={'ivmsTimeOut'}
+                              type="text"
+                              label={''}
+                              className="w-full  text-slate-400 font-medium"
+                              textSize="md"
+                              disabled
+                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeOut)}
+                            />
+                          </label>
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              id={'estimate'}
+                              type="text"
+                              label={''}
+                              className="w-full text-slate-400 font-medium"
+                              textSize="md"
+                              disabled
+                              value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
+                            />
+                          </label>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : null}
 
                   <div className="flex flex-col justify-between items-center w-full">
                     <div className="flex flex-row justify-between items-center w-full">
@@ -229,7 +231,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       rows={3}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                       placeholder="N/A"
-                      value={accomplishmentDetails.accomplishments}
+                      value={accomplishmentDetails.accomplishments ?? 'None'}
                     ></textarea>
                   </div>
                 </div>

@@ -458,7 +458,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
-              notifMessage="Submitting request"
+              notifMessage="Submitting Request"
               dismissible={true}
             />
           ) : null}

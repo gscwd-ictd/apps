@@ -54,6 +54,15 @@ export type OvertimeAccomplishment = {
   purpose: string;
 };
 
+//approving/disapproving of overtime application by manager
+export type OvertimeApprovalPatch = {
+  managerId: string;
+  remarks: string;
+  status: OvertimeStatus;
+  overtimeApplicationId?: string;
+};
+
+//updating of employee's own accomplishment report
 export type OvertimeAccomplishmentPatch = {
   employeeId: string;
   overtimeApplicationId: string;
@@ -62,10 +71,11 @@ export type OvertimeAccomplishmentPatch = {
   encodedTimeOut?: string;
 };
 
+//updating of employee's accomplishment report by manager (approve/disapprove)
 export type OvertimeAccomplishmentApprovalPatch = {
   employeeId: string;
   overtimeApplicationId: string;
   remarks: string;
   status: OvertimeAccomplishmentStatus;
-  followEstimatedHrs: false;
+  followEstimatedHrs: boolean;
 };
