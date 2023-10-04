@@ -231,9 +231,23 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       rows={3}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                       placeholder="N/A"
-                      value={accomplishmentDetails.accomplishments ?? 'None'}
+                      value={accomplishmentDetails.accomplishments ?? 'Not yet filled'}
                     ></textarea>
                   </div>
+                  {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                    <div className="flex flex-col justify-between items-center w-full">
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Remarks:</label>
+                      </div>
+                      <textarea
+                        required
+                        rows={3}
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                        placeholder="N/A"
+                        defaultValue={accomplishmentDetails?.remarks ?? 'N/A'}
+                      ></textarea>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

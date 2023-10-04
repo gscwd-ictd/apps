@@ -274,7 +274,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                     notifMessage={
                       accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
                       !loadingAccomplishmentResponse
-                        ? 'For Supervisor Approval'
+                        ? accomplishmentDetails.accomplishments
+                          ? 'For Supervisor Approval'
+                          : 'Awaitng Completion from Employee'
                         : accomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED &&
                           !loadingAccomplishmentResponse
                         ? 'Approved'
@@ -387,7 +389,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                             className="w-full text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            value={`${!finalEncodedHours || isNaN(finalEncodedHours) ? 0 : finalEncodedHours} Hours(s)`}
+                            value={`${accomplishmentDetails?.computedEncodedHours} Hours(s)`}
                           />
                         </label>
                       </div>
@@ -402,7 +404,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       disabled
                       rows={3}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={accomplishmentDetails.accomplishments ?? 'None'}
+                      value={accomplishmentDetails.accomplishments ?? 'Not yet filled out'}
                     ></textarea>
                   </div>
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
@@ -472,6 +474,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
               <>
                 {/*  */}
                 <Button
+                  disabled={accomplishmentDetails.accomplishments ? false : true}
                   className="w-36 md:w-auto"
                   variant={'primary'}
                   size={'md'}

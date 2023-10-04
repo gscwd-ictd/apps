@@ -18,6 +18,7 @@ export type PassSlipApplicationForm = {
 
 // List of pass slips per employee
 export type EmployeePassSlipList = {
+  allowedToApplyForNew?: boolean;
   completed: Array<PassSlip>;
   forApproval: Array<PassSlip>;
 };

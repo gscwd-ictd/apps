@@ -1,15 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import {
-  PassSlip,
-  PassSlipId,
-  EmployeePassSlipList,
-} from '../../../../libs/utils/src/lib/types/pass-slip.type';
+import { PassSlip, PassSlipId, EmployeePassSlipList } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
 export type PassSlipState = {
   //PASS SLIP TO SUBMIT
   passSlips: {
+    allowedToApplyForNew: boolean;
     forApproval: Array<PassSlip>;
     completed: Array<PassSlip>;
   };
@@ -18,7 +15,6 @@ export type PassSlipState = {
     cancelResponse: PassSlip;
   };
 
-  
   loading: {
     loadingPassSlips: boolean;
     loadingResponse: boolean;
@@ -29,7 +25,7 @@ export type PassSlipState = {
   };
 
   passSlip: PassSlip;
-  cancelApplicationModalIsOpen: boolean,
+  cancelApplicationModalIsOpen: boolean;
   applyPassSlipModalIsOpen: boolean;
   pendingPassSlipModalIsOpen: boolean;
   completedPassSlipModalIsOpen: boolean;
@@ -50,9 +46,7 @@ export type PassSlipState = {
   setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => void;
   setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => void;
   setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
-  setCompletedPassSlipModalIsOpen: (
-    completedPassSlipModalIsOpen: boolean
-  ) => void;
+  setCompletedPassSlipModalIsOpen: (completedPassSlipModalIsOpen: boolean) => void;
 
   getPassSlip: (PassSlip: PassSlip) => void;
   setTab: (tab: number) => void;
@@ -63,6 +57,7 @@ export type PassSlipState = {
 export const usePassSlipStore = create<PassSlipState>()(
   devtools((set) => ({
     passSlips: {
+      allowedToApplyForNew: false,
       forApproval: [],
       completed: [],
     },
@@ -106,9 +101,7 @@ export const usePassSlipStore = create<PassSlipState>()(
       set((state) => ({ ...state, pendingPassSlipModalIsOpen }));
     },
 
-    setCompletedPassSlipModalIsOpen: (
-      completedPassSlipModalIsOpen: boolean
-    ) => {
+    setCompletedPassSlipModalIsOpen: (completedPassSlipModalIsOpen: boolean) => {
       set((state) => ({ ...state, completedPassSlipModalIsOpen }));
     },
 
@@ -122,6 +115,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         ...state,
         passSlips: {
           ...state.passSlips,
+          allowedToApplyForNew: false,
           forApproval: [],
           completed: [],
         },
@@ -135,14 +129,12 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-    getPassSlipListSuccess: (
-      loading: boolean,
-      response: EmployeePassSlipList
-    ) => {
+    getPassSlipListSuccess: (loading: boolean, response: EmployeePassSlipList) => {
       set((state) => ({
         ...state,
         passSlips: {
           ...state.passSlips,
+          allowedToApplyForNew: response.allowedToApplyForNew,
           forApproval: response.forApproval,
           completed: response.completed,
         },
@@ -259,7 +251,6 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-
 
     emptyResponseAndError: () => {
       set((state) => ({

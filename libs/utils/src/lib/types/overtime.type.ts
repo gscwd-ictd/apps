@@ -47,6 +47,7 @@ export type OvertimeAccomplishment = {
   remarks: string | null;
   status: string;
   computedIvmsHours: number;
+  computedEncodedHours: number;
   didFaceScan: boolean;
   overtimeApplicationId: string;
   plannedDate: string;
