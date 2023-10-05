@@ -1,9 +1,4 @@
-import {
-  DataTable,
-  useDataTable,
-  LoadingSpinner,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
@@ -48,9 +43,7 @@ export default function Index() {
     EmptyResponse: state.emptyResponse,
     EmptyErrors: state.emptyErrors,
   }));
-  const [currentRowData, setCurrentRowData] = useState<LeaveBenefit>(
-    {} as LeaveBenefit
-  );
+  const [currentRowData, setCurrentRowData] = useState<LeaveBenefit>({} as LeaveBenefit);
 
   const {
     data: swrLeaveBenefits,
@@ -133,20 +126,12 @@ export default function Index() {
     columnHelper.accessor('isMonetizable', {
       enableSorting: false,
       header: 'Monetizable',
-      cell: (info) => (
-        <div className="w-[3rem]">
-          {UseRenderBooleanYesOrNo(info.getValue())}
-        </div>
-      ),
+      cell: (info) => <div className="w-[3rem]">{UseRenderBooleanYesOrNo(info.getValue())}</div>,
     }),
     columnHelper.accessor('canBeCarriedOver', {
       enableSorting: false,
       header: 'Can be carried over',
-      cell: (info) => (
-        <div className="w-[3rem]">
-          {UseRenderBooleanYesOrNo(info.getValue())}
-        </div>
-      ),
+      cell: (info) => <div className="w-[3rem]">{UseRenderBooleanYesOrNo(info.getValue())}</div>,
     }),
     columnHelper.display({
       header: () => 'Actions',
@@ -196,13 +181,7 @@ export default function Index() {
         EmptyErrors();
       }, 3000);
     }
-  }, [
-    PostResponse,
-    UpdateResponse,
-    DeleteResponse,
-    LeaveBenefitError,
-    LeaveBenefitsError,
-  ]);
+  }, [PostResponse, UpdateResponse, DeleteResponse, LeaveBenefitError, LeaveBenefitsError]);
 
   return (
     <div>
@@ -218,41 +197,19 @@ export default function Index() {
       />
 
       {/* Notification error */}
-      {!isEmpty(LeaveBenefitsError) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={LeaveBenefitsError}
-        />
-      ) : null}
+      {!isEmpty(LeaveBenefitsError) ? <ToastNotification toastType="error" notifMessage={LeaveBenefitsError} /> : null}
 
       {/* Notification error */}
-      {!isEmpty(LeaveBenefitError) ? (
-        <ToastNotification toastType="error" notifMessage={LeaveBenefitError} />
-      ) : null}
+      {!isEmpty(LeaveBenefitError) ? <ToastNotification toastType="error" notifMessage={LeaveBenefitError} /> : null}
 
       {/* Notification Add Success */}
-      {!isEmpty(PostResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Successfully added!"
-        />
-      ) : null}
+      {!isEmpty(PostResponse) ? <ToastNotification toastType="success" notifMessage="Successfully added!" /> : null}
 
       {/* Notification Update Success */}
-      {!isEmpty(UpdateResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Successfully updated!"
-        />
-      ) : null}
+      {!isEmpty(UpdateResponse) ? <ToastNotification toastType="success" notifMessage="Successfully updated!" /> : null}
 
       {/* Notification Delete Success */}
-      {!isEmpty(DeleteResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Successfully deleted!"
-        />
-      ) : null}
+      {!isEmpty(DeleteResponse) ? <ToastNotification toastType="success" notifMessage="Successfully deleted!" /> : null}
 
       <AddSpecialModal
         modalState={addModalIsOpen}
@@ -287,17 +244,11 @@ export default function Index() {
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
                     onClick={openAddActionModal}
                   >
-                    <i className="bx bxs-plus-square"></i>&nbsp; Add Leave
-                    Benefit
+                    <i className="bx bxs-plus-square"></i>&nbsp; Add Leave Benefit
                   </button>
                 </div>
 
-                <DataTable
-                  model={table}
-                  showGlobalFilter={true}
-                  showColumnFilter={true}
-                  paginate={true}
-                />
+                <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
               </div>
             )}
           </Card>

@@ -1,11 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { isEmpty } from 'lodash';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
-import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
-import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
+import { OvertimeImmediateSupervisor } from 'libs/utils/src/lib/types/overtime.type';
+import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 
@@ -13,26 +13,26 @@ type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: TravelOrder;
+  rowData: OvertimeImmediateSupervisor;
 };
 
-const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteImmediateSupervisorModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
   rowData,
 }) => {
-  // zustand store initialization for travel order
+  // zustand initialization for unassigning of immediate supervisor for overtime application
   const {
-    SetDeleteTravelOrder,
+    SetUnassignImmediateSupervisor,
 
-    SetErrorTravelOrder,
+    SetErrorUnassignImmediateSupervisor,
 
     EmptyResponse,
-  } = useTravelOrderStore((state) => ({
-    SetDeleteTravelOrder: state.setDeleteTravelOrder,
+  } = useOvertimeStore((state) => ({
+    SetUnassignImmediateSupervisor: state.setUnassignImmediateSupervisor,
 
-    SetErrorTravelOrder: state.setErrorTravelOrder,
+    SetErrorUnassignImmediateSupervisor: state.setErrorUnassignImmediateSupervisor,
 
     EmptyResponse: state.emptyResponse,
   }));
@@ -40,23 +40,22 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
   const {
     handleSubmit,
     formState: { isSubmitting: deleteFormLoading },
-  } = useForm<TravelOrder>();
+  } = useForm();
 
-  const onSubmit: SubmitHandler<TravelOrder> = () => {
+  const onSubmit = () => {
     if (!isEmpty(rowData.id)) {
       EmptyResponse();
-
-      handleDeleteResult();
+      handleDeleteResult(rowData.id);
     }
   };
 
-  const handleDeleteResult = async () => {
-    const { error, result } = await deleteEmpMonitoring(`/travel-order/${rowData.id}`);
+  const handleDeleteResult = async (immediateSupervisorId: string) => {
+    const { error, result } = await deleteEmpMonitoring(`/overtime/immediate-supervisors/${immediateSupervisorId}`); // change deleteHRIS to deleteEmpMonitoring
 
     if (error) {
-      SetErrorTravelOrder(result);
+      SetErrorUnassignImmediateSupervisor(result);
     } else {
-      SetDeleteTravelOrder(result);
+      SetUnassignImmediateSupervisor(result);
 
       closeModalAction();
     }
@@ -80,8 +79,11 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
-                  Are you sure you want to delete entry
-                  <span className="px-2 font-bold text-center text-md">{JSON.stringify(rowData.travelOrderNo)}</span>?
+                  Are you sure you want remove{' '}
+                  <span className="px-2 font-bold text-center text-md">
+                    {JSON.stringify(rowData.immediateSupervisorName)}
+                  </span>
+                  as Immediate Supervisor?
                 </p>
               </div>
             </div>
@@ -112,4 +114,4 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteTravelOrderModal;
+export default DeleteImmediateSupervisorModal;

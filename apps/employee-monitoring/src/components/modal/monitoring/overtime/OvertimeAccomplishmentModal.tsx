@@ -1,17 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import useSWR from 'swr';
-import dayjs from 'dayjs';
-import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import Image from 'next/image';
 import React, { FunctionComponent, useEffect } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
-import userphoto from '../../../../../public/user-photo.jpg';
-import { Overtime } from 'apps/employee-monitoring/src/utils/types/overtime.type';
-import UseRenderBadgePill from 'apps/employee-monitoring/src/utils/functions/RenderBadgePill';
-import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
-import { EmployeesUnderOvertimeTable } from '../../../tables/EmployeesUnderOvertimeTable';
 import { EmployeeOvertimeDetails } from 'libs/utils/src/lib/types/employee.type';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
@@ -210,7 +202,7 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                         value={
                           OvertimeAccomplishment.accomplishments
                             ? OvertimeAccomplishment.accomplishments
-                            : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.'
+                            : 'Not yet filled.'
                         }
                       />
                     </div>

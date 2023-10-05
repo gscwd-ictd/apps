@@ -6,354 +6,53 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
 
 import { EmployeeOvertimeDetails } from 'libs/utils/src/lib/types/employee.type';
-import { Overtime } from 'apps/employee-monitoring/src/utils/types/overtime.type';
+import { Overtime } from 'libs/utils/src/lib/types/overtime.type';
 import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
 
-import { DataTable, LoadingSpinner, useDataTable } from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import ViewOvertimeModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/ViewOvertimeModal';
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
-// const mockDataModules: Array<Overtime> = [
-//   {
-//     id: 'dda572e1-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Eric Sison',
-//     employees: [
-//       {
-//         employeeId: '001',
-//         companyId: '2000-001',
-//         fullName: 'Ricardo Vicente Narvaiza',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '002',
-//         companyId: '2000-002',
-//         fullName: 'Mikhail Anthony Sebua',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '003',
-//         companyId: '2000-003',
-//         fullName: 'Allyn Joseph Cubero',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '004',
-//         companyId: '2000-004',
-//         fullName: 'Alexis Aponesto',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//     ],
-//     estimatedNoOfHours: 3,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.FOR_APPROVAL,
-//   },
-
-//   {
-//     id: 'dda58b5e-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-09-02',
-//     immediateSupervisorName: 'Eric Sison',
-//     employees: [
-//       {
-//         employeeId: '005',
-//         companyId: '2000-005',
-//         fullName: 'Deo Delos Reyes',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '006',
-//         companyId: '2000-006',
-//         fullName: 'Phyll Patrick Fragata',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '007',
-//         companyId: '2000-007',
-//         fullName: 'John Henry Alfeche',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//     ],
-//     estimatedNoOfHours: 2,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.FOR_APPROVAL,
-//   },
-
-//   {
-//     id: 'dda598b6-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Rizza Baugbog',
-//     employees: [
-//       {
-//         employeeId: '008',
-//         companyId: '2000-008',
-//         fullName: 'Kumier Lou Arancon',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'GIS',
-//       },
-//       {
-//         employeeId: '009',
-//         companyId: '2000-009',
-//         fullName: 'Cara Jade Reyes',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'GIS',
-//       },
-//     ],
-//     estimatedNoOfHours: 3,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.APPROVED,
-//   },
-
-//   {
-//     id: 'dda5adce-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-09-24',
-//     immediateSupervisorName: 'Darwin Dave Sarsale',
-//     employees: [
-//       {
-//         employeeId: '010',
-//         companyId: '2000-010',
-//         fullName: 'Noel A. Alava',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'BAG',
-//       },
-//     ],
-//     estimatedNoOfHours: 4,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.DISAPPROVED,
-//   },
-
-//   {
-//     id: 'dda5bc73-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-09-15',
-//     immediateSupervisorName: 'Melanie Nudos',
-//     employees: [
-//       {
-//         employeeId: '011',
-//         companyId: '2000-011',
-//         fullName: 'Lipsy Grace C. Lucas',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'HRD',
-//       },
-//       {
-//         employeeId: '012',
-//         companyId: '2000-012',
-//         fullName: 'Wilhem R. Aquino',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'HRD',
-//       },
-//       {
-//         employeeId: '013',
-//         companyId: '2000-013',
-//         fullName: 'Haniel O. Decrepito',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'HRD',
-//       },
-//     ],
-//     estimatedNoOfHours: 3,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.FOR_APPROVAL,
-//   },
-
-//   {
-//     id: 'dda5d9c7-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Rizza Baugbog',
-//     employees: [
-//       {
-//         employeeId: '014',
-//         companyId: '2000-014',
-//         fullName: 'Enriquito R. Carmona',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'GIS',
-//       },
-//       {
-//         employeeId: '015',
-//         companyId: '2000-015',
-//         fullName: 'Gefrey O. Dumangcas',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'GIS',
-//       },
-//       {
-//         employeeId: '016',
-//         companyId: '2000-016',
-//         fullName: 'Ricky C. Libertad',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'GIS',
-//       },
-//       {
-//         employeeId: '017',
-//         companyId: '2000-017',
-//         fullName: 'Alfred V. Perez',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'GIS',
-//       },
-//     ],
-//     estimatedNoOfHours: 8,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.APPROVED,
-//   },
-
-//   {
-//     id: 'dda5e67a-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Lorevin V. Evangelio, ME',
-//     employees: [
-//       {
-//         employeeId: '018',
-//         companyId: '2000-018',
-//         fullName: 'Jay M. Sabio',
-//         scheduleBase: ScheduleBases.PUMPING_STATION,
-//         assignment: 'WQD',
-//       },
-//       {
-//         employeeId: '019',
-//         companyId: '2000-019',
-//         fullName: 'Nestor D. Sacor, Jr.',
-//         scheduleBase: ScheduleBases.PUMPING_STATION,
-//         assignment: 'WQD',
-//       },
-//     ],
-//     estimatedNoOfHours: 3,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.APPROVED,
-//   },
-
-//   {
-//     id: 'dda5f284-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Jennifer B. Manguramas',
-//     employees: [
-//       {
-//         employeeId: '020',
-//         companyId: '2000-020',
-//         fullName: 'Ricky P. Gallibot',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'CSD',
-//       },
-//       {
-//         employeeId: '021',
-//         companyId: '2000-021',
-//         fullName: 'Carlito C. Saron',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'CSD',
-//       },
-//       {
-//         employeeId: '022',
-//         companyId: '2000-022',
-//         fullName: 'Rey M. Alcarde',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'CSD',
-//       },
-//       {
-//         employeeId: '023',
-//         companyId: '2000-023',
-//         fullName: 'Conrad Ian N. Sudario',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'CSD',
-//       },
-//       {
-//         employeeId: '024',
-//         companyId: '2000-024',
-//         fullName: 'Antonio Jose T. Turija',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'CSD',
-//       },
-//       {
-//         employeeId: '025',
-//         companyId: '2000-025',
-//         fullName: 'Eduardo M. Zarate, Jr.',
-//         scheduleBase: ScheduleBases.FIELD,
-//         assignment: 'CSD',
-//       },
-//     ],
-//     estimatedNoOfHours: 2,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.DISAPPROVED,
-//   },
-
-//   {
-//     id: 'dda5ff92-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Eric Sison',
-//     employees: [
-//       {
-//         employeeId: '001',
-//         companyId: '2000-001',
-//         fullName: 'Employee Name 1',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '002',
-//         companyId: '2000-002',
-//         fullName: 'Employee Name 2',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//     ],
-//     estimatedNoOfHours: 3,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.FOR_APPROVAL,
-//   },
-
-//   {
-//     id: 'dda60b5d-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Eric Sison',
-//     employees: [
-//       {
-//         employeeId: '001',
-//         companyId: '2000-001',
-//         fullName: 'Employee Name 1',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '002',
-//         companyId: '2000-002',
-//         fullName: 'Employee Name 2',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//     ],
-//     estimatedNoOfHours: 3,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.FOR_APPROVAL,
-//   },
-
-//   {
-//     id: 'dda60b5d-3816-11ee-8170-005056b680ac',
-//     plannedDate: '2023-08-31',
-//     immediateSupervisorName: 'Eric Sison',
-//     employees: [
-//       {
-//         employeeId: '001',
-//         companyId: '2000-001',
-//         fullName: 'Employee Name 1',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//       {
-//         employeeId: '002',
-//         companyId: '2000-002',
-//         fullName: 'Employee Name 2',
-//         scheduleBase: ScheduleBases.OFFICE,
-//         assignment: 'SDAD',
-//       },
-//     ],
-//     estimatedNoOfHours: 3,
-//     purpose: 'to finish up emergency task',
-//     status: OvertimeStatus.FOR_APPROVAL,
-//   },
-// ];
+const mockData: Array<Overtime> = [
+  {
+    id: 'e5d69068-3ed6-459f-9b86-f08463454fc6',
+    plannedDate: '2023-09-08',
+    immediateSupervisorName: 'Michael G. Gabales',
+    employees: [
+      {
+        employeeId: '05b0614c-b191-11ed-a79b-000c29f95a80',
+        companyId: '2019-016',
+        fullName: 'John Henry S. Alfeche',
+        scheduleBase: ScheduleBases.OFFICE,
+        avatarUrl: 'http://172.20.110.45:4500/ALFECHE.jpg',
+        assignment: 'Systems Development and Application Division',
+      },
+      {
+        employeeId: '62f1cd41-b26f-11ed-a79b-000c29f95a80',
+        companyId: '2015-003',
+        fullName: 'Jay M. Sabio',
+        scheduleBase: ScheduleBases.PUMPING_STATION,
+        avatarUrl: 'http://172.20.110.45:4500/SABIO.jpg',
+        assignment: 'Water Quality, Production and Electromechanical Division',
+      },
+      {
+        employeeId: 'af635f15-b26e-11ed-a79b-000c29f95a80',
+        companyId: '2020-003',
+        fullName: 'Phyll Patrick C. Fragata',
+        scheduleBase: ScheduleBases.OFFICE,
+        avatarUrl: null,
+        assignment: 'Systems Development and Application Division',
+      },
+    ],
+    estimatedHours: 3,
+    purpose: 'Repair of computers',
+    status: OvertimeStatus.APPROVED,
+  },
+];
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -364,7 +63,7 @@ const Index = () => {
     data: overtimeApplications,
     error: overtimeApplicationsError,
     isLoading: overtimeApplicationsLoading,
-    mutate: mutateOvertimeApplications,
+    // mutate: mutateOvertimeApplications,
   } = useSWR('/overtime', fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
@@ -496,13 +195,9 @@ const Index = () => {
       <div className="w-full">
         <BreadCrumbs title="Overtime Applications" />
         {/* Notifications */}
-        {/* {!isEmpty(ErrorModules) ? (
-          <ToastNotification toastType="error" notifMessage={ErrorModules} />
-        ) : null} */}
-
-        {/* {!isEmpty(ErrorModule) ? (
-          <ToastNotification toastType="error" notifMessage={ErrorModule} />
-        ) : null} */}
+        {!isEmpty(ErrorOvertimeApplications) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorOvertimeApplications} />
+        ) : null}
 
         <Can I="access" this="Overtime_applications">
           <div className="mx-5">

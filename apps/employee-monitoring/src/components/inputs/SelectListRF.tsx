@@ -1,5 +1,8 @@
-interface MySelectListRFProps
-  extends React.InputHTMLAttributes<HTMLSelectElement> {
+import { isEmpty } from 'lodash';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
+interface MySelectListRFProps extends React.InputHTMLAttributes<HTMLSelectElement> {
   id: string;
   className?: string;
   selectList: Array<object>;
@@ -10,6 +13,7 @@ interface MySelectListRFProps
   isError?: boolean;
   errorMessage?: string;
   textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  isLoading?: boolean;
 }
 
 type Item = {
@@ -28,17 +32,30 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
   isError = false,
   errorMessage,
   textSize = 'xs',
+  isLoading,
   ...props
 }) => {
   return (
     <div className="flex flex-col">
-      <label htmlFor={id}>
-        <span
-          className={`block mb-1 text-${textSize} font-medium text-gray-900 dark:text-gray-800`}
-        >
-          {label}
-        </span>
-      </label>
+      <div className="flex flex-row items-center h-7">
+        <label htmlFor={id}>
+          <span className={`block text-${textSize} font-medium text-gray-900 dark:text-gray-800`}>{label}</span>
+        </label>
+
+        <div className="block p-1 mb-2 w-7 h-7">
+          {isLoading ? (
+            <div
+              className="inline-block h-4 w-4 animate-spin color rounded-full border-[3px] border-solid border-current border-gray-800 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+              role="status"
+            >
+              <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                Loading...
+              </span>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
       <select
         id={id}
         {...controller}
@@ -55,16 +72,16 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
         <option value="" key="" disabled>
           -
         </option>
-        {/* <option value="">Select {defaultOption}...</option> */}
-        {selectList.map((item: Item, idx: number) => (
-          <option value={item.value} key={idx}>
-            {item.label}
-          </option>
-        ))}
+
+        {!isEmpty(selectList)
+          ? selectList.map((item: Item, idx: number) => (
+              <option value={item.value} key={idx}>
+                {item.label}
+              </option>
+            ))
+          : null}
       </select>
-      {errorMessage && (
-        <span className="mt-1 text-xs text-red-400">{errorMessage}</span>
-      )}
+      {errorMessage && <span className="mt-1 text-xs text-red-400">{errorMessage}</span>}
     </div>
   );
 };

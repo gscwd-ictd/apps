@@ -19,9 +19,7 @@ type LabelInputProps = {
   textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
 };
 
-export const LabelInput: FunctionComponent<
-  LabelInputProps & InputHTMLAttributes<HTMLInputElement>
-> = ({
+export const LabelInput: FunctionComponent<LabelInputProps & InputHTMLAttributes<HTMLInputElement>> = ({
   id,
   label,
   placeholder = '',
@@ -41,25 +39,23 @@ export const LabelInput: FunctionComponent<
 }) => {
   return (
     <div className="flex flex-col">
-      <label htmlFor={id}>
-        <div
-          className={`flex justify-between gap-2 mb-1 text-${textSize} font-medium text-gray-900 dark:text-gray-800`}
-        >
-          <div className="flex gap-2">
-            {label}
-            {helper ? <>{helper}</> : null}
+      <div className="flex flex-row items-center h-7">
+        <label htmlFor={id}>
+          <div
+            className={`flex justify-between gap-2 mb-1 text-${textSize} font-medium text-gray-900 dark:text-gray-800`}
+          >
+            <div className="flex gap-2">
+              {label}
+              {helper ? <>{helper}</> : null}
+            </div>
+            {isDirty ? (
+              <span className={`font-light rounded ${isError ? 'bg-red-600' : 'bg-green-600'} px-1 text-white`}>
+                {isError ? 'Invalid Change' : 'Valid Change'}
+              </span>
+            ) : null}
           </div>
-          {isDirty ? (
-            <span
-              className={`font-light rounded ${
-                isError ? 'bg-red-600' : 'bg-green-600'
-              } px-1 text-white`}
-            >
-              {isError ? 'Invalid Change' : 'Valid Change'}
-            </span>
-          ) : null}
-        </div>
-      </label>
+        </label>
+      </div>
 
       {type === 'textarea' ? (
         <textarea
@@ -112,9 +108,7 @@ export const LabelInput: FunctionComponent<
         </div>
       )}
 
-      {isError ? (
-        <div className="mt-1 text-xs text-red-400">{errorMessage}</div>
-      ) : null}
+      {isError ? <div className="mt-1 text-xs text-red-400">{errorMessage}</div> : null}
     </div>
   );
 };

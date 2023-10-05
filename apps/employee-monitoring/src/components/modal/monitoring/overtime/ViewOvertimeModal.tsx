@@ -3,7 +3,7 @@ import { Modal } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
 import React, { FunctionComponent } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
-import { Overtime } from 'apps/employee-monitoring/src/utils/types/overtime.type';
+import { Overtime } from 'libs/utils/src/lib/types/overtime.type';
 import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
 import { EmployeesUnderOvertimeTable } from '../../../tables/EmployeesUnderOvertimeTable';
 
