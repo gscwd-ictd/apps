@@ -1,10 +1,9 @@
 // import cookies
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { AbilityContext } from '../../context/casl/Can';
 import { defineAbility } from '@casl/ability';
 import { isEmpty } from 'lodash';
 import { AuthmiddlewareContext } from '../../pages/_app';
-import { UserProfile } from '../../utils/helper/session';
 import { Navigate } from '../router/navigate';
 
 type AuthmiddlewareProps = {
@@ -19,11 +18,7 @@ export default function Index({ children }: AuthmiddlewareProps) {
       return access;
     });
 
-    if (
-      userProfile &&
-      userProfile.isSuperUser === true &&
-      isEmpty(userAccessArr)
-    ) {
+    if (userProfile && userProfile.isSuperUser === true && isEmpty(userAccessArr)) {
       can('access', 'all');
     } else {
       if (!isEmpty(userAccessArr)) {
@@ -40,9 +35,7 @@ export default function Index({ children }: AuthmiddlewareProps) {
         {!isEmpty(userProfile) ? (
           <>{children}</>
         ) : (
-          <Navigate
-            to={`${process.env.NEXT_PUBLIC_HRIS_DOMAIN_FE}/module-dashboard`}
-          />
+          <Navigate to={`${process.env.NEXT_PUBLIC_HRIS_DOMAIN_FE}/module-dashboard`} />
         )}
       </AbilityContext.Provider>
     </>
