@@ -3,14 +3,13 @@ import { EmployeeAsOption } from './employee.type';
 export type TravelOrder = {
   id: string;
   employee: EmployeeAsOption;
-  // employeeId: string;
+  employeeId: string;
   travelOrderNo: string;
   purposeOfTravel: string;
   dateFrom: string;
   dateTo: string;
   itinerary: Array<Itinerary>;
   dateRequested: string;
-  isPtrRequired: boolean;
 };
 
 export type Itinerary = {

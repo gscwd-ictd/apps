@@ -53,13 +53,15 @@ export const PassSlipApplicationModal = ({
   //zustand initialization to access pass slip store
   const {
     loadingResponse,
-
+    passSlipsForApproval,
+    allowedToApplyForNew,
     postPassSlipList,
     postPassSlipListSuccess,
     postPassSlipListFail,
   } = usePassSlipStore((state) => ({
     loadingResponse: state.loading.loadingResponse,
-
+    passSlipsForApproval: state.passSlips.forApproval,
+    allowedToApplyForNew: state.passSlips.allowedToApplyForNew,
     postPassSlipList: state.postPassSlipList,
     postPassSlipListSuccess: state.postPassSlipListSuccess,
     postPassSlipListFail: state.postPassSlipListFail,
@@ -132,6 +134,14 @@ export const PassSlipApplicationModal = ({
               alertType="info"
               notifMessage="Submitting Request"
               dismissible={true}
+            />
+          ) : null}
+
+          {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
+            <AlertNotification
+              alertType="warning"
+              notifMessage="You already have an active Pass Slip request"
+              dismissible={false}
             />
           ) : null}
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
@@ -260,7 +270,14 @@ export const PassSlipApplicationModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Button variant={'primary'} size={'md'} loading={false} form="ApplyPassSlipForm" type="submit">
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                form="ApplyPassSlipForm"
+                type="submit"
+                disabled={!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? true : false}
+              >
                 Apply Pass Slip
               </Button>
             </div>

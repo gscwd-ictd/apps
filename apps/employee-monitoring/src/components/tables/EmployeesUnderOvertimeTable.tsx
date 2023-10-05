@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 import Image from 'next/image';
 
 import OvertimeAccomplishmentModal from '../modal/monitoring/overtime/OvertimeAccomplishmentModal';
+import UseRenderNameIcon from '../../utils/functions/RenderNameIcon';
 
 type EmployeesUnderOvertimeTableProps = {
   overtimeId: string;
@@ -31,10 +32,6 @@ export const EmployeesUnderOvertimeTable: FunctionComponent<EmployeesUnderOverti
     setCurrentRowData({ overtimeId, employee });
   };
   const closeViewActionModal = () => setViewModalIsOpen(false);
-
-  useEffect(() => {
-    console.log(currentRowData);
-  }, [currentRowData]);
 
   return (
     <>
@@ -64,7 +61,7 @@ export const EmployeesUnderOvertimeTable: FunctionComponent<EmployeesUnderOverti
                           className="m-auto w-[4rem] h-[4rem] rounded-full"
                         />
                       ) : (
-                        <i className="text-gray-700 text-8xl bx bxs-user"></i>
+                        <>{UseRenderNameIcon(employee.fullName)}</>
                       )}
                     </td>
 

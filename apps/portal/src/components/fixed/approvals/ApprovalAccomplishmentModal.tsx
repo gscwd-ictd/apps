@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -19,6 +19,7 @@ import { Checkbox } from '../../modular/forms/Checkbox';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
+import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 
 type ModalProps = {
   modalState: boolean;
@@ -41,6 +42,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     overtimeDetails,
     loadingAccomplishmentResponse,
     patchResponseAccomplishment,
+    captchaModalIsOpen,
+    setCaptchaModalIsOpen,
     getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail,
@@ -58,6 +61,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     overtimeDetails: state.overtimeDetails,
     loadingAccomplishmentResponse: state.loading.loadingAccomplishmentResponse,
     patchResponseAccomplishment: state.response.patchResponseAccomplishment,
+    captchaModalIsOpen: state.captchaModalIsOpen,
+    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
     getAccomplishmentDetails: state.getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess: state.getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail: state.getAccomplishmentDetailsFail,
@@ -162,6 +167,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   const [encodedHours, setEncodedHours] = useState<number>(0);
   const [finalEncodedHours, setFinalEncodedHours] = useState<number>(0);
+  const [dataToSubmit, setDataToSubmit] = useState<OvertimeAccomplishmentApprovalPatch>();
 
   useEffect(() => {
     setEncodedHours(
@@ -193,23 +199,26 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   const onSubmit: SubmitHandler<OvertimeAccomplishmentApprovalPatch> = async (
     data: OvertimeAccomplishmentApprovalPatch
   ) => {
-    if (password != captchaPassword || password == '' || captchaPassword == '') {
-      setIsCaptchaError(true);
-      setWiggleEffect(true);
-      setErrorCaptcha('Incorrect Captcha!');
-    } else {
-      patchOvertimeAccomplishment();
-      const { error, result } = await patchPortal('/v1/overtime/accomplishments/approval', data);
-      if (error) {
-        patchOvertimeAccomplishmentFail(result);
-      } else {
-        patchOvertimeAccomplishmentSuccess(result);
-        closeModalAction(); // close confirmation of decline modal
-        setTimeout(() => {
-          setOvertimeAccomplishmentModalIsOpen(false); // close accomplishment modal
-        }, 200);
-      }
-    }
+    setDataToSubmit(data);
+    setCaptchaModalIsOpen(true);
+
+    // if (password != captchaPassword || password == '' || captchaPassword == '') {
+    //   setIsCaptchaError(true);
+    //   setWiggleEffect(true);
+    //   setErrorCaptcha('Incorrect Captcha!');
+    // } else {
+    //   patchOvertimeAccomplishment();
+    //   const { error, result } = await patchPortal('/v1/overtime/accomplishments/approval', data);
+    //   if (error) {
+    //     patchOvertimeAccomplishmentFail(result);
+    //   } else {
+    //     patchOvertimeAccomplishmentSuccess(result);
+    //     closeModalAction(); // close confirmation of decline modal
+    //     setTimeout(() => {
+    //       setOvertimeAccomplishmentModalIsOpen(false); // close accomplishment modal
+    //     }, 200);
+    //   }
+    // }
   };
 
   return (
@@ -265,7 +274,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                     notifMessage={
                       accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
                       !loadingAccomplishmentResponse
-                        ? 'For Supervisor Approval'
+                        ? accomplishmentDetails.accomplishments
+                          ? 'For Supervisor Approval'
+                          : 'Awaitng Completion from Employee'
                         : accomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED &&
                           !loadingAccomplishmentResponse
                         ? 'Approved'
@@ -378,7 +389,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                             className="w-full text-slate-400 font-medium"
                             textSize="md"
                             disabled
-                            value={`${!finalEncodedHours || isNaN(finalEncodedHours) ? 0 : finalEncodedHours} Hours(s)`}
+                            value={`${accomplishmentDetails?.computedEncodedHours} Hours(s)`}
                           />
                         </label>
                       </div>
@@ -393,7 +404,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       disabled
                       rows={3}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={accomplishmentDetails.accomplishments ?? 'None'}
+                      value={accomplishmentDetails.accomplishments ?? 'Not yet filled out'}
                     ></textarea>
                   </div>
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
@@ -443,63 +454,36 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
               </div>
             </div>
           )}
+          <CaptchaModal
+            modalState={captchaModalIsOpen}
+            setModalState={setCaptchaModalIsOpen}
+            title={'OVERTIME ACCOMPLISHMENT CAPTCHA'}
+          >
+            {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetails.user._id}
+              dataToSubmit={dataToSubmit}
+              tokenId={overtimeDetails.id}
+              captchaName={'Accomplishment Captcha'}
+            />
+          </CaptchaModal>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 w-full">
             {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
               <>
-                <div className="flex flex-col items-end justify-start gap-2 w-full md:w-auto md:flex-row">
-                  <div className="flex flex-row flex-wrap justify-end gap-2 w-full">
-                    <Button
-                      variant="danger"
-                      onClick={getCaptcha}
-                      className="w-36 md:w-auto"
-                      size={`${windowWidth > 768 ? 'md' : 'sm'}`}
-                    >
-                      {windowWidth > 768 ? 'Generate Captcha' : 'Generate Captcha'}
-                    </Button>
-                    {/* captcha */}
-                    <div
-                      className={`${
-                        pwdArray ? '' : 'animate-pulse'
-                      } w-36 select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex lex-rowf justify-center items-center gap-1`}
-                    >
-                      <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
-                        {pwdArray && pwdArray[0]}
-                      </div>
-                      <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">{pwdArray && pwdArray[1]}</div>
-                      <div className="w-4 font-light text-red-800 scale-105 rotate-45">{pwdArray && pwdArray[2]}</div>
-                      <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
-                        {pwdArray && pwdArray[3]}
-                      </div>
-                      <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">{pwdArray && pwdArray[4]}</div>
-                      <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">
-                        {pwdArray && pwdArray[5]}
-                      </div>
-                    </div>
-                    <input
-                      type="text"
-                      value={password}
-                      placeholder="Enter Captcha"
-                      className={`${wiggleEffect && 'animate-shake border-red-600'} ${
-                        isCaptchaError ? 'border-red-600' : 'border-stone-200'
-                      }  w-36 border text-md`}
-                      onAnimationEnd={() => setWiggleEffect(false)}
-                      onChange={(e) => setPassword(e.target.value as unknown as string)}
-                    />
-
-                    <Button
-                      className="w-36"
-                      variant={'primary'}
-                      size={'md'}
-                      loading={false}
-                      form={`OvertimeAccomplishmentAction`}
-                      type="submit"
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </div>
+                {/*  */}
+                <Button
+                  disabled={accomplishmentDetails.accomplishments ? false : true}
+                  className="w-36 md:w-auto"
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  form={`OvertimeAccomplishmentAction`}
+                  type="submit"
+                >
+                  Submit
+                </Button>
               </>
             ) : (
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">

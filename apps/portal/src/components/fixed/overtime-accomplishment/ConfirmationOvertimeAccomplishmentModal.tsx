@@ -45,6 +45,7 @@ export const ConfirmationOvertimeAccomplishmentModal = ({
 
   const handlePatchResult = async (data: OvertimeAccomplishmentPatch) => {
     const { error, result } = await patchPortal('/v1/overtime/employees/accomplishments/', data);
+    console.log(data);
     if (error) {
       patchOvertimeAccomplishmentFail(result);
     } else {

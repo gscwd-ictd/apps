@@ -7,19 +7,11 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import fetcherHRIS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRIS';
 
 import { useUsersStore } from 'apps/employee-monitoring/src/store/user.store';
-import {
-  User,
-  UserId,
-} from 'apps/employee-monitoring/src/utils/types/user.type';
+import { User, UserId } from 'apps/employee-monitoring/src/utils/types/user.type';
 
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
 
-import {
-  DataTable,
-  LoadingSpinner,
-  ToastNotification,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -59,6 +51,7 @@ const Index = () => {
     DeleteUserResponse,
 
     ErrorUser,
+    EmptyResponse,
   } = useUsersStore((state) => ({
     EmsUsers: state.getEmsUsers,
     SetGetEmsUsers: state.setGetEmsUsers,
@@ -75,6 +68,7 @@ const Index = () => {
     DeleteUserResponse: state.deleteUser,
 
     ErrorUser: state.errorUser,
+    EmptyResponse: state.emptyResponse,
   }));
 
   const { ErrorModules } = useModulesStore((state) => ({
@@ -144,10 +138,14 @@ const Index = () => {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    // data: TypesMockData, // change to use Data from SWR
     data: EmsUsers,
     columnVisibility: { employeeId: false },
   });
+
+  // Reset responses on load of page
+  useEffect(() => {
+    EmptyResponse();
+  }, []);
 
   // Initial zustand state update
   useEffect(() => {
@@ -162,11 +160,7 @@ const Index = () => {
 
   // Reset responses from all modal actions
   useEffect(() => {
-    if (
-      !isEmpty(PostUserResponse) ||
-      !isEmpty(UpdateUserResponse) ||
-      !isEmpty(DeleteUserResponse)
-    ) {
+    if (!isEmpty(PostUserResponse) || !isEmpty(UpdateUserResponse) || !isEmpty(DeleteUserResponse)) {
       mutateEmsUsers();
     }
   }, [PostUserResponse, UpdateUserResponse, DeleteUserResponse]);
@@ -176,31 +170,15 @@ const Index = () => {
       <div className="w-full">
         <BreadCrumbs title="Users" />
         {/* Notifications */}
-        {!isEmpty(ErrorEmsUsers) ? (
-          <ToastNotification toastType="error" notifMessage={ErrorEmsUsers} />
-        ) : null}
+        {!isEmpty(ErrorEmsUsers) ? <ToastNotification toastType="error" notifMessage={ErrorEmsUsers} /> : null}
 
-        {!isEmpty(ErrorNonEmsUsers) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={ErrorNonEmsUsers}
-          />
-        ) : null}
+        {!isEmpty(ErrorNonEmsUsers) ? <ToastNotification toastType="error" notifMessage={ErrorNonEmsUsers} /> : null}
 
-        {!isEmpty(ErrorGetUserRoles) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={ErrorGetUserRoles}
-          />
-        ) : null}
+        {!isEmpty(ErrorGetUserRoles) ? <ToastNotification toastType="error" notifMessage={ErrorGetUserRoles} /> : null}
 
-        {!isEmpty(ErrorUser) ? (
-          <ToastNotification toastType="error" notifMessage={ErrorUser} />
-        ) : null}
+        {!isEmpty(ErrorUser) ? <ToastNotification toastType="error" notifMessage={ErrorUser} /> : null}
 
-        {!isEmpty(ErrorModules) ? (
-          <ToastNotification toastType="error" notifMessage={ErrorModules} />
-        ) : null}
+        {!isEmpty(ErrorModules) ? <ToastNotification toastType="error" notifMessage={ErrorModules} /> : null}
 
         <Can I="access" this="Users">
           <div className="mx-5">
@@ -219,12 +197,7 @@ const Index = () => {
                     </button>
                   </div>
 
-                  <DataTable
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={false}
-                    paginate={true}
-                  />
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
               )}
             </Card>
