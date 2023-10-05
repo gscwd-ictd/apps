@@ -1,7 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { Overtime, OvertimeAccomplishment, OvertimeImmediateSupervisor } from 'libs/utils/src/lib/types/overtime.type';
+import {
+  Overtime,
+  OvertimeAccomplishment,
+  OvertimeImmediateSupervisor,
+  PostImmediateSupervisor,
+  DeleteImmediateSupervisor,
+} from 'libs/utils/src/lib/types/overtime.type';
 
 type OvertimeState = {
   overtimeApplications: Array<Overtime>;
@@ -21,6 +27,20 @@ type OvertimeState = {
 
   errorOvertimeImmediateSupervisors: string;
   setErrorOvertimeImmediateSupervisors: (errorOvertimeImmediateSupervisors: string) => void;
+
+  assignImmediateSupervisor: PostImmediateSupervisor;
+  setAssignImmediateSupervisor: (postAssignImmediateSupervisor: PostImmediateSupervisor) => void;
+
+  errorAssignImmediateSupervisor: string;
+  setErrorAssignImmediateSupervisor: (errorAssignImmediateSupervisor: string) => void;
+
+  unassignImmediateSupervisor: DeleteImmediateSupervisor;
+  setUnassignImmediateSupervisor: (postAssignImmediateSupervisor: DeleteImmediateSupervisor) => void;
+
+  errorUnassignImmediateSupervisor: string;
+  setErrorUnassignImmediateSupervisor: (errorAssignImmediateSupervisor: string) => void;
+
+  emptyResponse: () => void;
 };
 
 export const useOvertimeStore = create<OvertimeState>()(
@@ -43,5 +63,27 @@ export const useOvertimeStore = create<OvertimeState>()(
     errorOvertimeImmediateSupervisors: '',
     setErrorOvertimeImmediateSupervisors: (errorOvertimeImmediateSupervisors) =>
       set({ errorOvertimeImmediateSupervisors }),
+
+    assignImmediateSupervisor: {} as PostImmediateSupervisor,
+    setAssignImmediateSupervisor: (assignImmediateSupervisor) => set({ assignImmediateSupervisor }),
+
+    errorAssignImmediateSupervisor: '',
+    setErrorAssignImmediateSupervisor: (errorAssignImmediateSupervisor) => set({ errorAssignImmediateSupervisor }),
+
+    unassignImmediateSupervisor: {} as DeleteImmediateSupervisor,
+    setUnassignImmediateSupervisor: (unassignImmediateSupervisor) => set({ unassignImmediateSupervisor }),
+
+    errorUnassignImmediateSupervisor: '',
+    setErrorUnassignImmediateSupervisor: (errorUnassignImmediateSupervisor) =>
+      set({ errorUnassignImmediateSupervisor }),
+
+    emptyResponse: () =>
+      set({
+        assignImmediateSupervisor: {} as PostImmediateSupervisor,
+        unassignImmediateSupervisor: {} as DeleteImmediateSupervisor,
+
+        errorAssignImmediateSupervisor: '',
+        errorUnassignImmediateSupervisor: '',
+      }),
   }))
 );

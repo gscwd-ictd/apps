@@ -4,34 +4,17 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { isEmpty } from 'lodash';
-import {
-  getEmpMonitoring,
-  postEmpMonitoring,
-} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
-import {
-  EmployeeAsOption,
-  EmployeeProfile,
-} from 'libs/utils/src/lib/types/employee.type';
+import { EmployeeOption, EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 
-import {
-  Modal,
-  AlertNotification,
-  LoadingSpinner,
-  Button,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
-import { Combobox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
+import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../../inputs/LabelInput';
-import {
-  getHRIS,
-  postHRIS,
-} from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
-import Toggle from '../../../switch/Toggle';
+import { getHRIS, postHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
+import { SelectListRF } from '../../../inputs/SelectListRF';
 
 type AddModalProps = {
   modalState: boolean;
@@ -43,9 +26,7 @@ type AddModalProps = {
 const yupSchema = yup
   .object({
     travelOrderNo: yup.string().required('Travel Order No is required'),
-    employee: yup
-      .object()
-      .shape({ employeeId: yup.string().required('Employee is required') }),
+    employeeId: yup.string().required('Employee is required'),
     dateRequested: yup.string().required('Date requested is required'),
     itinerary: yup.array().of(
       yup.object().shape({
@@ -56,52 +37,37 @@ const yupSchema = yup
   })
   .required();
 
-const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}) => {
-  // selected employee from combobox option
-  const [selectedEmployee, setSelectedEmployee] = useState<EmployeeAsOption>(
-    {} as EmployeeAsOption
-  );
-  // value from combobox input
-  const [employeeQuery, setEmployeeQuery] = useState('');
-
-  const [isPtrRequired, setIsPtrRequired] = useState<boolean>(false);
+const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
+  const [isLoadingEmployeeOptions, setIsLoadingEmployeeOptions] = useState<boolean>(false);
 
   // zustand store initialization for travel order
   const {
-    IsLoading,
+    SetPostTravelOrder,
 
-    PostTravelOrder,
-    PostTravelOrderSuccess,
-    PostTravelOrderFail,
+    SetErrorTravelOrder,
+
+    EmptyResponse,
   } = useTravelOrderStore((state) => ({
-    IsLoading: state.loading.loadingTravelOrder,
+    SetPostTravelOrder: state.setPostTravelOrder,
 
-    PostTravelOrder: state.postTravelOrder,
-    PostTravelOrderSuccess: state.postTravelOrderSuccess,
-    PostTravelOrderFail: state.postTravelOrderFail,
+    SetErrorTravelOrder: state.setErrorTravelOrder,
+
+    EmptyResponse: state.emptyResponse,
   }));
 
-  // zustand initialization for employee
+  // zustand initialization for employees
   const {
-    EmployeeAsOptions,
-    IsLoadingEAO,
-    ErrorEAO,
+    EmployeeOptions,
+    SetEmployeeOptions,
 
-    GetEmployeeAsOptions,
-    GetEmployeeAsOptionsSuccess,
-    GetEmployeeAsOptionsFail,
+    ErrorEmployeeOptions,
+    SetErrorEmployeeOptions,
   } = useEmployeeStore((state) => ({
-    EmployeeAsOptions: state.employeeAsOptions,
-    IsLoadingEAO: state.loading.loadingEmployeeAsOptions,
-    ErrorEAO: state.error.errorEmployeeAsOptions,
+    EmployeeOptions: state.employeeOptions,
+    SetEmployeeOptions: state.setEmployeeOptions,
 
-    GetEmployeeAsOptions: state.getEmployeeAsOptions,
-    GetEmployeeAsOptionsSuccess: state.getEmployeeAsOptionsSuccess,
-    GetEmployeeAsOptionsFail: state.getEmployeeAsOptionsFail,
+    ErrorEmployeeOptions: state.errorEmployeeOptions,
+    SetErrorEmployeeOptions: state.setErrorEmployeeOptions,
   }));
 
   // React hook form
@@ -109,33 +75,18 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
     reset,
     register,
     control,
-    setValue,
     handleSubmit,
-    clearErrors,
-    formState: { errors },
+    formState: { errors, isSubmitting: postFormLoading },
   } = useForm<TravelOrder>({
     mode: 'onChange',
     defaultValues: {
       travelOrderNo: '',
-      isPtrRequired: false,
+      employeeId: '',
       dateRequested: '',
       itinerary: [{ scheduleDate: '', schedulePlace: '' }],
     },
     resolver: yupResolver(yupSchema),
   });
-
-  // filter employee list based on query value
-  const filteredEmployee =
-    employeeQuery === ''
-      ? EmployeeAsOptions
-      : // ? EmployeeAsOptions
-        EmployeeAsOptions.filter((employee) =>
-          // : EmployeeAsOptions.filter((employee) =>
-          employee.fullName
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(employeeQuery.toLowerCase().replace(/\s+/g, ''))
-        );
 
   // dynamic fields in the itinerary
   const { fields, append, remove } = useFieldArray({
@@ -146,7 +97,7 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
   // form submission
   const onSubmit: SubmitHandler<TravelOrder> = (data: TravelOrder) => {
     // set loading to true
-    PostTravelOrder();
+    EmptyResponse();
 
     handlePostResult(data);
   };
@@ -155,11 +106,9 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
     const { error, result } = await postEmpMonitoring('/travel-order', data);
 
     if (error) {
-      // request is done so set loading to false
-      PostTravelOrderFail(result);
+      SetErrorTravelOrder(result);
     } else {
-      // request is done so set loading to false
-      PostTravelOrderSuccess(result);
+      SetPostTravelOrder(result);
 
       reset();
       closeModalAction();
@@ -168,25 +117,15 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
 
   // asynchronous request to fetch employee list
   const fetchEmployeeList = async () => {
-    const { error, result } = await getHRIS('/employees');
+    const { error, result } = await getHRIS(`/employees/options`);
+    setIsLoadingEmployeeOptions(true);
 
     if (error) {
-      GetEmployeeAsOptionsFail(result);
+      SetErrorEmployeeOptions(result);
+      setIsLoadingEmployeeOptions(false);
     } else {
-      const employeesDetails: Array<EmployeeAsOption> = result.map(
-        (employeeDetails: EmployeeProfile) => {
-          const { employmentDetails, personalDetails } = employeeDetails;
-
-          return {
-            employeeId: employmentDetails.employeeId,
-            fullName: personalDetails.fullName,
-            assignment: employmentDetails.assignment,
-            positionTitle: employmentDetails.positionTitle,
-          };
-        }
-      );
-
-      GetEmployeeAsOptionsSuccess(employeesDetails);
+      SetEmployeeOptions(result);
+      setIsLoadingEmployeeOptions(false);
     }
   };
 
@@ -194,33 +133,13 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
   useEffect(() => {
     if (modalState) {
       fetchEmployeeList();
-      GetEmployeeAsOptions();
     } else {
       reset();
-      setSelectedEmployee({} as EmployeeAsOption);
     }
   }, [modalState]);
 
-  // Set employeeId value upon change on selectedEmployee state
-  useEffect(() => {
-    if (!isEmpty(selectedEmployee)) {
-      setValue('employee.employeeId', selectedEmployee.employeeId);
-      setValue('employee.fullName', selectedEmployee.fullName);
-      clearErrors('employee');
-    }
-  }, [selectedEmployee]);
-
-  useEffect(() => {
-    setValue('isPtrRequired', isPtrRequired);
-  }, [isPtrRequired]);
-
   return (
     <>
-      {/* Error Notifications */}
-      {!isEmpty(ErrorEAO) ? (
-        <ToastNotification toastType="error" notifMessage={ErrorEAO} />
-      ) : null}
-
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
@@ -239,13 +158,17 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
         <Modal.Body>
           <div>
             {/* Notifications */}
-            {IsLoading ? (
+            {postFormLoading ? (
               <AlertNotification
                 logo={<LoadingSpinner size="xs" />}
                 alertType="info"
                 notifMessage="Submitting request"
                 dismissible={true}
               />
+            ) : null}
+
+            {ErrorEmployeeOptions ? (
+              <AlertNotification alertType="info" notifMessage={ErrorEmployeeOptions} dismissible={true} />
             ) : null}
 
             <form onSubmit={handleSubmit(onSubmit)} id="addTravelForm">
@@ -277,113 +200,18 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
               <div className="grid md:grid-cols-2 md:gap-6">
                 {/** Employee */}
                 <div className="z-20 mb-6">
-                  <label
-                    htmlFor="countries"
-                    className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800"
-                  >
-                    Employee
-                  </label>
-                  <Combobox
-                    value={selectedEmployee}
-                    onChange={setSelectedEmployee}
-                    disabled={IsLoadingEAO ? true : false}
-                  >
-                    <div className="relative mt-1">
-                      <div className="relative w-full overflow-hidden text-left bg-white rounded-lg cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-                        <Combobox.Input
-                          className={`rounded-lg disabled:hover:cursor-not-allowed w-full outline-none sm:text-xs text-sm text-gray-900 h-[2.5rem]
-                        block p-2.5
-                        bg-gray-50 border ${
-                          errors.employee
-                            ? 'border-red-400 focus:ring-red-500 focus:border-red-500'
-                            : ' border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                        }`}
-                          displayValue={(selectedEmployee: EmployeeAsOption) =>
-                            selectedEmployee.fullName
-                          }
-                          onChange={(event) => {
-                            setEmployeeQuery(event.target.value);
-                          }}
-                        />
-                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                          {IsLoadingEAO ? (
-                            <LoadingSpinner size="xs" />
-                          ) : (
-                            <ChevronDownIcon
-                              className="w-5 h-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                          )}
-                        </Combobox.Button>
-                      </div>
-
-                      <Transition
-                        as={Fragment}
-                        leave="transition ease-in duration-100"
-                        leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
-                        afterLeave={() => setEmployeeQuery('')}
-                      >
-                        <Combobox.Options
-                          className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-30 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm
-                        max-h-[14rem]"
-                        >
-                          {filteredEmployee.length === 0 &&
-                          employeeQuery !== '' ? (
-                            <div className="relative px-4 py-2 text-gray-700 cursor-default select-none">
-                              Nothing found.
-                            </div>
-                          ) : (
-                            filteredEmployee.map((employee) => (
-                              <Combobox.Option
-                                key={employee.employeeId}
-                                className={({ active }) =>
-                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                    active
-                                      ? 'bg-gray-500 text-white'
-                                      : 'text-gray-900'
-                                  }`
-                                }
-                                value={employee}
-                              >
-                                {({ selected, active }) => (
-                                  <>
-                                    <span
-                                      className={`block truncate ${
-                                        selected ? 'text-sm' : 'text-xs'
-                                      }`}
-                                    >
-                                      {employee.fullName}
-                                    </span>
-
-                                    {selected ? (
-                                      <span
-                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                          active
-                                            ? 'text-white'
-                                            : 'text-blue-400'
-                                        }`}
-                                      >
-                                        <CheckIcon
-                                          className="w-5 h-5"
-                                          aria-hidden="true"
-                                        />
-                                      </span>
-                                    ) : null}
-                                  </>
-                                )}
-                              </Combobox.Option>
-                            ))
-                          )}
-                        </Combobox.Options>
-                      </Transition>
-                    </div>
-                  </Combobox>
-                  {errors.employee ? (
-                    <div className="mt-1 text-xs text-red-400">
-                      {errors.employee?.message}
-                    </div>
-                  ) : null}
+                  <SelectListRF
+                    id="employeeId"
+                    selectList={EmployeeOptions}
+                    controller={{
+                      ...register('employeeId'),
+                    }}
+                    label="Employee"
+                    isError={errors.employeeId ? true : false}
+                    errorMessage={errors.employeeId?.message}
+                    disabled={isLoadingEmployeeOptions}
+                    isLoading={isLoadingEmployeeOptions}
+                  />
                 </div>
 
                 {/* Purpose of Travel*/}
@@ -401,15 +229,10 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
 
               {/* Itinerary dynamic fields */}
               <div className="mb-6">
-                <label className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800">
-                  Itinerary
-                </label>
+                <label className="block mb-2 text-xs font-medium text-gray-900 dark:text-gray-800">Itinerary</label>
                 {fields.map((item, index) => {
                   return (
-                    <div
-                      className="grid pb-1 md:grid-cols-11 md:gap-3"
-                      key={item.id}
-                    >
+                    <div className="grid pb-1 md:grid-cols-11 md:gap-3" key={item.id}>
                       <div className="col-span-5">
                         <input
                           type="date"
@@ -461,53 +284,13 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
                           <i className="bx bx-plus"></i>
                         </Button>
                       ) : (
-                        <Button
-                          variant="danger"
-                          type="button"
-                          onClick={() => remove(index)}
-                        >
+                        <Button variant="danger" type="button" onClick={() => remove(index)}>
                           <i className="bx bx-minus"></i>
                         </Button>
                       )}
                     </div>
                   );
                 })}
-              </div>
-
-              {/* IS PTR Required */}
-              <div className="flex items-center gap-2 mb-6 text-start">
-                <Toggle
-                  labelPosition="right"
-                  enabled={isPtrRequired}
-                  setEnabled={setIsPtrRequired}
-                  label={'Post-training report required: '}
-                  disabled={IsLoading ? true : false}
-                />
-                <div
-                  className={`text-xs ${
-                    isPtrRequired ? 'text-blue-400' : 'text-gray-400'
-                  }`}
-                >
-                  {isPtrRequired ? (
-                    <button
-                      onClick={() => setIsPtrRequired((prev) => !prev)}
-                      className="underline"
-                      type="button"
-                      disabled={IsLoading ? true : false}
-                    >
-                      <span>Yes</span>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsPtrRequired((prev) => !prev)}
-                      className="underline"
-                      type="button"
-                      disabled={IsLoading ? true : false}
-                    >
-                      <span>No</span>
-                    </button>
-                  )}
-                </div>
               </div>
             </form>
           </div>
@@ -520,7 +303,7 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({
               type="submit"
               form="addTravelForm"
               className="ml-1 text-gray-400 disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : false}
+              disabled={postFormLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>

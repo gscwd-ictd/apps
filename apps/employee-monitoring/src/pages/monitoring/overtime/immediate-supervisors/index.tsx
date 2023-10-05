@@ -17,52 +17,81 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import ViewOvertimeModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/ViewOvertimeModal';
 import UseRenderNameIcon from 'apps/employee-monitoring/src/utils/functions/RenderNameIcon';
 import AddImmediateSupervisorModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/AddImmediateSupervisorModal';
+import { useOrganizationStructureStore } from 'apps/employee-monitoring/src/store/organization-structure.store';
+import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
+import DeleteImmediateSupervisorModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/DeleteImmediateSupervisorModal';
 
-const mockDataModules: Array<OvertimeImmediateSupervisor> = [
-  {
-    id: '001',
-    immediateSupervisorName: 'Eric Sison',
-    positionTitle: 'Management Information System Researcher',
-    assignment: 'Systems Development and Application Division',
-    avatarUrl: 'http://172.20.110.45:4500/SISON.jpg',
-  },
-  {
-    id: '002',
-    immediateSupervisorName: 'Rizza Baugbog',
-    positionTitle: 'Supervising Data Encoder-Controller',
-    assignment: 'Geographic Information System Division',
-    avatarUrl: 'http://172.20.110.45:4500/BAUGBOG.jpg',
-  },
-];
+// const mockDataModules: Array<OvertimeImmediateSupervisors> = [
+//   {
+//     id: '001',
+//     immediateSupervisorName: 'Eric Sison',
+//     positionTitle: 'Management Information System Researcher',
+//     assignment: 'Systems Development and Application Division',
+//     avatarUrl: 'http://172.20.110.45:4500/SISON.jpg',
+//   },
+//   {
+//     id: '002',
+//     immediateSupervisorName: 'Rizza Baugbog',
+//     positionTitle: 'Supervising Data Encoder-Controller',
+//     assignment: 'Geographic Information System Division',
+//     avatarUrl: 'http://172.20.110.45:4500/BAUGBOG.jpg',
+//   },
+// ];
 
 const Index = () => {
   // Current row data in the table that has been clicked
-  const [currentRowData, setCurrentRowData] = useState<Overtime>({} as Overtime);
+  const [currentRowData, setCurrentRowData] = useState<OvertimeImmediateSupervisor>({} as OvertimeImmediateSupervisor);
 
   // fetch data for overtime immediate supervisors
   const {
-    data: overtimeImmediateSupervisor,
-    error: overtimeImmediateSupervisorError,
-    isLoading: overtimeImmediateSupervisorLoading,
-    mutate: mutateOvertimeApplications,
+    data: overtimeImmediateSupervisors,
+    error: overtimeImmediateSupervisorsError,
+    isLoading: overtimeImmediateSupervisorsLoading,
+    mutate: mutateOvertimeImmediateSupervisors,
   } = useSWR('/overtime/immediate-supervisors/', fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
 
-  // Zustand initialization
+  // Zustand initialization for overtime
   const {
     OvertimeImmediateSupervisors,
     SetOvertimeImmediateSupervisors,
 
     ErrorOvertimeImmediateSupervisors,
     SetErrorOvertimeImmediateSupervisors,
+
+    AssignImmediateSupervisor,
+    ErrorAssignImmediateSupervisor,
+
+    UnassignImmediateSupervisor,
+    ErrorUnassignImmediateSupervisor,
+
+    EmptyResponse,
   } = useOvertimeStore((state) => ({
     OvertimeImmediateSupervisors: state.overtimeImmediateSupervisors,
     SetOvertimeImmediateSupervisors: state.setOvertimeImmediateSupervisors,
 
     ErrorOvertimeImmediateSupervisors: state.errorOvertimeImmediateSupervisors,
     SetErrorOvertimeImmediateSupervisors: state.setErrorOvertimeImmediateSupervisors,
+
+    AssignImmediateSupervisor: state.assignImmediateSupervisor,
+    ErrorAssignImmediateSupervisor: state.errorAssignImmediateSupervisor,
+
+    UnassignImmediateSupervisor: state.unassignImmediateSupervisor,
+    ErrorUnassignImmediateSupervisor: state.errorUnassignImmediateSupervisor,
+
+    EmptyResponse: state.emptyResponse,
+  }));
+
+  // zustand initialization for employees
+  const { ErrorEmployeeOptions } = useEmployeeStore((state) => ({
+    ErrorEmployeeOptions: state.errorEmployeeOptions,
+  }));
+
+  // zustand store initialization for organizations
+  const { ErrorOrganizationOptions } = useOrganizationStructureStore((state) => ({
+    ErrorOrganizationOptions: state.errorOrganizationOptions,
   }));
 
   // Add modal function
@@ -70,13 +99,13 @@ const Index = () => {
   const openAddActionModal = () => setAddModalIsOpen(true);
   const closeAddActionModal = () => setAddModalIsOpen(false);
 
-  // Edit modal function
-  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-  const openEditActionModal = (rowData: Overtime) => {
-    setEditModalIsOpen(true);
+  // Delete modal function
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+  const openDeleteActionModal = (rowData: OvertimeImmediateSupervisor) => {
+    setDeleteModalIsOpen(true);
     setCurrentRowData(rowData);
   };
-  const closeEditActionModal = () => setEditModalIsOpen(false);
+  const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
   // Render row actions in the table component
   const renderRowActions = (rowData: OvertimeImmediateSupervisor) => {
@@ -84,10 +113,10 @@ const Index = () => {
       <div className="text-center">
         <button
           type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openEditActionModal(rowData)}
+          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+          onClick={() => openDeleteActionModal(rowData)}
         >
-          <i className="bx bx-edit-alt"></i>
+          <i className="bx bx-trash-alt"></i>
         </button>
       </div>
     );
@@ -142,20 +171,32 @@ const Index = () => {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    // data: OvertimeApplications,
-    data: mockDataModules,
+    data: OvertimeImmediateSupervisors,
     columnVisibility: { id: false },
   });
 
+  // Reset responses on load of page
   useEffect(() => {
-    if (!isEmpty(overtimeImmediateSupervisor)) {
-      SetOvertimeImmediateSupervisors(overtimeImmediateSupervisor.data);
+    EmptyResponse();
+  }, []);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(overtimeImmediateSupervisors)) {
+      SetOvertimeImmediateSupervisors(overtimeImmediateSupervisors.data);
     }
 
-    if (!isEmpty(overtimeImmediateSupervisorError)) {
-      SetErrorOvertimeImmediateSupervisors(overtimeImmediateSupervisorError.message);
+    if (!isEmpty(overtimeImmediateSupervisorsError)) {
+      SetErrorOvertimeImmediateSupervisors(overtimeImmediateSupervisorsError.message);
     }
-  }, [overtimeImmediateSupervisor, overtimeImmediateSupervisorError]);
+  }, [overtimeImmediateSupervisors, overtimeImmediateSupervisorsError]);
+
+  // Get new list of immediate supervisors
+  useEffect(() => {
+    if (!isEmpty(AssignImmediateSupervisor) || !isEmpty(UnassignImmediateSupervisor)) {
+      mutateOvertimeImmediateSupervisors();
+    }
+  }, [AssignImmediateSupervisor, UnassignImmediateSupervisor]);
 
   return (
     <>
@@ -166,10 +207,34 @@ const Index = () => {
           <ToastNotification toastType="error" notifMessage={ErrorOvertimeImmediateSupervisors} />
         ) : null}
 
+        {!isEmpty(ErrorOrganizationOptions) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorOrganizationOptions} />
+        ) : null}
+
+        {!isEmpty(ErrorEmployeeOptions) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorEmployeeOptions} />
+        ) : null}
+
+        {!isEmpty(ErrorAssignImmediateSupervisor) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorAssignImmediateSupervisor} />
+        ) : null}
+
+        {!isEmpty(ErrorUnassignImmediateSupervisor) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorUnassignImmediateSupervisor} />
+        ) : null}
+
+        {!isEmpty(AssignImmediateSupervisor) ? (
+          <ToastNotification toastType="success" notifMessage="Successfully assigned as immediate supervisor" />
+        ) : null}
+
+        {!isEmpty(UnassignImmediateSupervisor) ? (
+          <ToastNotification toastType="success" notifMessage="Successfully unassigned as immediate supervisor" />
+        ) : null}
+
         <Can I="access" this="Overtime_applications">
           <div className="mx-5">
             <Card>
-              {overtimeImmediateSupervisorLoading ? (
+              {overtimeImmediateSupervisorsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
                 <div className="flex flex-row flex-wrap">
@@ -196,13 +261,13 @@ const Index = () => {
             closeModalAction={closeAddActionModal}
           />
 
-          {/* Edit modal */}
-          {/* <EditTravelOrderModal
-        modalState={editModalIsOpen}
-        setModalState={setEditModalIsOpen}
-        closeModalAction={closeEditActionModal}
-        rowData={currentRowData}
-      /> */}
+          {/* Delete modal */}
+          <DeleteImmediateSupervisorModal
+            modalState={deleteModalIsOpen}
+            setModalState={setDeleteModalIsOpen}
+            closeModalAction={closeDeleteActionModal}
+            rowData={currentRowData}
+          />
         </Can>
       </div>
     </>

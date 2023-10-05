@@ -46,3 +46,7 @@ export type PostImmediateSupervisor = {
   orgId: string;
   employeeId: string;
 };
+
+export type DeleteImmediateSupervisor = {
+  employeeId: string;
+};
