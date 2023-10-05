@@ -6,6 +6,10 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import CancelOvertimeModal from './CancelOvertimeModal';
+import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import OvertimeSupervisorAccomplishmentModal from './OvertimeSupervisorAccomplishmentModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -14,21 +18,45 @@ type ModalProps = {
 };
 
 export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
-  const { overtimeDetails, pendingOvertimeModalIsOpen, cancelOvertimeModalIsOpen, setCancelOvertimeModalIsOpen } =
-    useOvertimeStore((state) => ({
-      overtimeDetails: state.overtimeDetails,
-      pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
-      cancelOvertimeModalIsOpen: state.cancelOvertimeModalIsOpen,
-      setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
-    }));
+  const {
+    overtimeDetails,
+    pendingOvertimeModalIsOpen,
+    cancelOvertimeModalIsOpen,
+    accomplishmentOvertimeModalIsOpen,
+    setCancelOvertimeModalIsOpen,
+    setAccomplishmentOvertimeModalIsOpen,
+    setOvertimeAccomplishmentEmployeeId,
+    setOvertimeAccomplishmentEmployeeName,
+    setOvertimeAccomplishmentApplicationId,
+  } = useOvertimeStore((state) => ({
+    overtimeDetails: state.overtimeDetails,
+    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    cancelOvertimeModalIsOpen: state.cancelOvertimeModalIsOpen,
+    accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
+    setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
+    setAccomplishmentOvertimeModalIsOpen: state.setAccomplishmentOvertimeModalIsOpen,
+    setOvertimeAccomplishmentEmployeeId: state.setOvertimeAccomplishmentEmployeeId,
+    setOvertimeAccomplishmentEmployeeName: state.setOvertimeAccomplishmentEmployeeName,
+    setOvertimeAccomplishmentApplicationId: state.setOvertimeAccomplishmentApplicationId,
+  }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
 
-  // cancel action for Leave Pending Modal
   const closeCancelOvertimeModal = async () => {
     setCancelOvertimeModalIsOpen(false);
+  };
+
+  const closeOvertimeAccomplishmentModal = async () => {
+    setAccomplishmentOvertimeModalIsOpen(false);
+  };
+
+  const handleEmployeeAccomplishment = async (employeeId: string, employeeName: string) => {
+    setOvertimeAccomplishmentEmployeeId(employeeId);
+    setOvertimeAccomplishmentEmployeeName(employeeName);
+    setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
+    setAccomplishmentOvertimeModalIsOpen(true);
   };
 
   return (
@@ -37,7 +65,12 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Ongoing Overtime Application</span>
+              <span className="text-xl md:text-2xl">
+                {overtimeDetails.status === OvertimeStatus.APPROVED ||
+                overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                  ? 'Completed Overtime Application'
+                  : 'Ongoing Overtime Application'}
+              </span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -53,6 +86,12 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             modalState={cancelOvertimeModalIsOpen}
             setModalState={setCancelOvertimeModalIsOpen}
             closeModalAction={closeCancelOvertimeModal}
+          />
+
+          <OvertimeSupervisorAccomplishmentModal
+            modalState={accomplishmentOvertimeModalIsOpen}
+            setModalState={setAccomplishmentOvertimeModalIsOpen}
+            closeModalAction={closeOvertimeAccomplishmentModal}
           />
           {!overtimeDetails ? (
             <>
@@ -70,14 +109,24 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
-                  <AlertNotification alertType="info" notifMessage="For Approval" dismissible={false} />
+                  {overtimeDetails.status === OvertimeStatus.PENDING ? (
+                    <AlertNotification alertType="info" notifMessage={'For Supervisor Approval'} dismissible={false} />
+                  ) : null}
+                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                    <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
+                  ) : null}
+                  {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
+                    <AlertNotification alertType="warning" notifMessage={'Disapproved'} dismissible={false} />
+                  ) : null}
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
 
-                      <div className="w-96 ">
-                        <label className="text-slate-500 w-full text-md ">09-23-2023</label>
+                      <div className="w-full md:w-96 ">
+                        <label className="text-slate-500 w-full text-md ">
+                          {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -86,19 +135,52 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Estimated Hours:</label>
 
-                      <div className="w-96 ">
-                        <label className="text-slate-500 w-full text-md ">4</label>
+                      <div className="w-full md:w-96 ">
+                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.estimatedHours}</label>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                    <div className="flex flex-col justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employees:</label>
 
-                      <div className="w-96 ">
-                        <label className="text-slate-500 w-full text-md ">
-                          Phyll Fragata, Allyn Joseph Cubero, Mikhail Sebua, Ricardo Vicente Narvaiza
+                      <div className="w-full ">
+                        <label className="text-slate-500 w-full text-md flex flex-col">
+                          {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                className={`${
+                                  index != 0 ? 'border-t border-slate-200' : ''
+                                } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
+                              >
+                                <img
+                                  className="rounded-full border border-stone-100 shadow w-20"
+                                  src={employee?.avatarUrl ?? ''}
+                                  alt={'photo'}
+                                ></img>
+                                <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
+                                  <label className="w-full">{employee.fullName}</label>
+                                  <label className="w-full">{employee.assignment}</label>
+
+                                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                                    <Button
+                                      variant={'primary'}
+                                      size={'sm'}
+                                      loading={false}
+                                      onClick={(e) =>
+                                        handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
+                                      }
+                                      type="submit"
+                                    >
+                                      View Accomplishment
+                                    </Button>
+                                  ) : null}
+                                </div>
+                              </div>
+                            );
+                          })}
                         </label>
                       </div>
                     </div>
@@ -112,7 +194,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       disabled
                       rows={2}
                       className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={'Mag overtime'}
+                      value={overtimeDetails.purpose}
                     ></textarea>
                   </div>
                 </div>
@@ -122,15 +204,22 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Button
-              variant={'warning'}
-              size={'md'}
-              loading={false}
-              onClick={(e) => setCancelOvertimeModalIsOpen(true)}
-              type="submit"
-            >
-              Cancel Overtime
-            </Button>
+            {overtimeDetails.status === OvertimeStatus.APPROVED ||
+            overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+                Close
+              </Button>
+            ) : (
+              <Button
+                variant={'warning'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => setCancelOvertimeModalIsOpen(true)}
+                type="submit"
+              >
+                Cancel Overtime
+              </Button>
+            )}
           </div>
         </Modal.Footer>
       </Modal>

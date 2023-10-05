@@ -9,17 +9,13 @@ import { MessageCard } from '../../../components/modular/common/cards/MessageCar
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
-import { PsbMembers, PsbMessageContent } from '../../../../src/types/inbox.type';
+import { PsbMessageContent } from '../../../../src/types/inbox.type';
 import useSWR from 'swr';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useInboxStore } from '../../../../src/store/inbox.store';
-import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
-import { SpinnerDotted } from 'spinners-react';
+import { ToastNotification } from '@gscwd-apps/oneui';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
 import { InboxPsbContent } from 'apps/portal/src/components/fixed/inbox/InboxPsbContent';
 import { ConfirmationInboxModal } from 'apps/portal/src/components/fixed/inbox/ConfirmationModal';
@@ -52,6 +48,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     emptyResponseAndError,
 
     setMessagePsb,
+    setMessageOvertime,
     setDeclineRemarks,
     selectedMessageType,
     setSelectedMessageType,
@@ -76,6 +73,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     emptyResponseAndError: state.emptyResponseAndError,
 
     setMessagePsb: state.setMessagePsb,
+    setMessageOvertime: state.setMessageOvertime,
     setDeclineRemarks: state.setDeclineRemarks,
     selectedMessageType: state.selectedMessageType,
     setSelectedMessageType: state.setSelectedMessageType,
@@ -132,17 +130,17 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     }
   }, [patchResponseApply]);
 
-  const handleMessage = (acknowledgement?: PsbMessageContent) => {
-    let sampleType = 'psb';
+  const handleMessage = (acknowledgement?: PsbMessageContent, type?: string) => {
+    let sampleType = type;
     if (sampleType == InboxMessageType.PSB) {
       setSelectedMessageType(InboxMessageType.PSB);
       setMessagePsb(acknowledgement);
     } else if (sampleType == InboxMessageType.TRAINING_NOMINATION) {
       setSelectedMessageType(InboxMessageType.TRAINING_NOMINATION);
-      setMessagePsb(acknowledgement);
+      // setMessagePsb(acknowledgement);
     } else if (sampleType == InboxMessageType.OVERTIME) {
       setSelectedMessageType(InboxMessageType.OVERTIME);
-      setMessagePsb(acknowledgement);
+      // setMessageOvertime(acknowledgement);
     }
     setDeclineRemarks('');
     setIsMessageOpen(true);
@@ -201,9 +199,8 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
                       color={`green`}
                       title={'PSB Member Acknowledgement'}
                       description={`Position: ${acknowledgement.details.positionTitle}`}
-                      // children={<></>}
                       linkType={'router'}
-                      onClick={() => handleMessage(acknowledgement)}
+                      onClick={() => handleMessage(acknowledgement, InboxMessageType.PSB)}
                     />
                   </div>
                 );
@@ -213,18 +210,26 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
                 <label className="w-full text-4xl text-center text-gray-400 ">NO MESSAGES</label>
               </div>
             )}
-            {/* <MessageCard
+            <MessageCard
               icon={<HiMail className="w-6 h-6 text-green-800" />}
               color={`green`}
               title={'Training Nomination'}
               description={`Course Title: Sample Training`}
-              // children={<></>}
               linkType={'router'}
-              onClick={() => handleMessage()}
-            /> */}
+              onClick={() => handleMessage({} as PsbMessageContent, InboxMessageType.TRAINING_NOMINATION)}
+            />
+
+            <MessageCard
+              icon={<HiMail className="w-6 h-6 text-green-800" />}
+              color={`green`}
+              title={'Overtime Assignment'}
+              description={`Estimated Hours: 4 `}
+              linkType={'router'}
+              onClick={() => handleMessage({} as PsbMessageContent, InboxMessageType.OVERTIME)}
+            />
           </div>
           {isMessageOpen ? (
-            <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
+            <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4 rounded-xl">
               {selectedMessageType == InboxMessageType.PSB ? <InboxPsbContent /> : null}
               {selectedMessageType == InboxMessageType.TRAINING_NOMINATION ? <InboxTrainingContent /> : null}
               {selectedMessageType == InboxMessageType.OVERTIME ? <InboxOvertimeContent /> : null}

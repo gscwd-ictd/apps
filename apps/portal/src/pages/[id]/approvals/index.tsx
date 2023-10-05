@@ -7,8 +7,7 @@ import { MainContainer } from '../../../components/modular/custom/containers/Mai
 import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
-// import { getUserDetails, withSession } from '../../../utils/helpers/session';
-import { getUserDetails, withCookieSession, withSession } from '../../../utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
@@ -28,6 +27,7 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
+import ApprovalsOvertimeModal from 'apps/portal/src/components/fixed/approvals/ApprovalsOvertimeModal';
 
 export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -42,14 +42,24 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen,
 
+    pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen,
+
     patchResponsePassSlip,
     patchResponseLeave,
+    patchResponseOvertime,
     loadingPassSlip,
     loadingLeave,
+    loadingOvertime,
+
     errorPassSlip,
     errorPassSlipResponse,
     errorLeave,
     errorLeaveResponse,
+    errorOvertime,
+    errorOvertimeResponse,
+    errorAccomplishment,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -61,6 +71,10 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen,
 
+    setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen,
+
     getPassSlipList,
     getPassSlipListSuccess,
     getPassSlipListFail,
@@ -68,6 +82,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     getLeaveList,
     getLeaveListSuccess,
     getLeaveListFail,
+
+    getOvertimeList,
+    getOvertimeListSuccess,
+    getOvertimeListFail,
+
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
     tab: state.tab,
@@ -81,14 +100,24 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
 
+    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
+
     patchResponsePassSlip: state.response.patchResponsePassSlip,
     patchResponseLeave: state.response.patchResponseLeave,
+    patchResponseOvertime: state.response.patchResponseOvertime,
     loadingPassSlip: state.loading.loadingPassSlips,
     loadingLeave: state.loading.loadingLeaves,
+    loadingOvertime: state.loading.loadingOvertime,
+
     errorPassSlip: state.error.errorPassSlips,
     errorPassSlipResponse: state.error.errorPassSlipResponse,
     errorLeave: state.error.errorLeaves,
     errorLeaveResponse: state.error.errorLeaveResponse,
+    errorOvertime: state.error.errorOvertime,
+    errorOvertimeResponse: state.error.errorOvertimeResponse,
+    errorAccomplishment: state.error.errorAccomplishment,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -100,6 +129,10 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
 
+    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
+    setApprovedOvertimeModalIsOpen: state.setApprovedOvertimeModalIsOpen,
+    setDisapprovedOvertimeModalIsOpen: state.setDisapprovedOvertimeModalIsOpen,
+
     getPassSlipList: state.getPassSlipList,
     getPassSlipListSuccess: state.getPassSlipListSuccess,
     getPassSlipListFail: state.getPassSlipListFail,
@@ -107,6 +140,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     getLeaveList: state.getLeaveList,
     getLeaveListSuccess: state.getLeaveListSuccess,
     getLeaveListFail: state.getLeaveListFail,
+
+    getOvertimeList: state.getOvertimeList,
+    getOvertimeListSuccess: state.getOvertimeListSuccess,
+    getOvertimeListFail: state.getOvertimeListFail,
+
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
@@ -119,6 +157,21 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
+
+  // cancel action for Pending Overtime Application Modal
+  const closePendingOvertimeModal = async () => {
+    setPendingOvertimeModalIsOpen(false);
+  };
+
+  // cancel action for Approved Overtime Application Modal
+  const closeApprovedOvertimeModal = async () => {
+    setApprovedOvertimeModalIsOpen(false);
+  };
+
+  // cancel action for Approved Overtime Application Modal
+  const closeDisapprovedOvertimeModal = async () => {
+    setDisapprovedOvertimeModalIsOpen(false);
+  };
 
   // cancel action for Pending Leave Application Modal
   const closePendingLeaveModal = async () => {
@@ -221,6 +274,36 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     }
   }, [swrLeaves, swrLeaveError]);
 
+  const overtimeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval`;
+
+  const {
+    data: swrOvertimeList,
+    isLoading: swrOvertimeListIsLoading,
+    error: swrOvertimeListError,
+    mutate: mutateOvertime,
+  } = useSWR(overtimeListUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeListIsLoading) {
+      getOvertimeList(swrOvertimeListIsLoading);
+    }
+  }, [swrOvertimeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeList)) {
+      getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
+    }
+
+    if (!isEmpty(swrOvertimeListError)) {
+      getOvertimeListFail(swrOvertimeListIsLoading, swrOvertimeListError.message);
+    }
+  }, [swrOvertimeList, swrOvertimeListError]);
+
   useEffect(() => {
     if (!isEmpty(patchResponsePassSlip)) {
       mutatePassSlips();
@@ -234,17 +317,22 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         emptyResponseAndError();
       }, 5000);
     }
-    if (!isEmpty(patchResponseLeave)) {
-      mutateLeaves();
+    if (!isEmpty(patchResponseOvertime)) {
+      mutateOvertime();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [patchResponsePassSlip, patchResponseLeave]);
+  }, [patchResponsePassSlip, patchResponseLeave, patchResponseOvertime]);
 
   return (
     <>
       <>
+        {/* Overtime Patch Success */}
+        {!isEmpty(patchResponseOvertime) ? (
+          <ToastNotification toastType="success" notifMessage={`Overtime Application action submitted.`} />
+        ) : null}
+
         {/* Pass Slip Patch Success */}
         {!isEmpty(patchResponsePassSlip) ? (
           <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
@@ -253,6 +341,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         {/* Leave Patch Success */}
         {!isEmpty(patchResponseLeave) ? (
           <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
+        ) : null}
+
+        {/* Overtime Patch Failed Error */}
+        {!isEmpty(errorOvertimeResponse) ? (
+          <ToastNotification toastType="error" notifMessage={`Overtime Application action failed.`} />
         ) : null}
 
         {/* Pass Slip Patch Failed Error */}
@@ -265,6 +358,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
           <ToastNotification toastType="error" notifMessage={`Leave Application action failed.`} />
         ) : null}
 
+        {/* Overtime List Load Failed Error */}
+        {!isEmpty(errorOvertime) ? (
+          <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtimes.`} />
+        ) : null}
+
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlip) ? (
           <ToastNotification toastType="error" notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`} />
@@ -275,12 +373,41 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
           <ToastNotification toastType="error" notifMessage={`${errorLeave}: Failed to load Leaves.`} />
         ) : null}
 
+        {/* Overtime Accomplishment Data Load Failed Error */}
+        {!isEmpty(errorAccomplishment) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment Report.`}
+          />
+        ) : null}
+
         <EmployeeProvider employeeData={employee}>
           <Head>
             <title>Approvals</title>
           </Head>
 
           <SideNav employeeDetails={employeeDetails} />
+
+          {/* Pending Overtime Approval Modal */}
+          <ApprovalsOvertimeModal
+            modalState={pendingOvertimeModalIsOpen}
+            setModalState={setPendingOvertimeModalIsOpen}
+            closeModalAction={closePendingOvertimeModal}
+          />
+
+          {/* Approved Overtime Approval Modal */}
+          <ApprovalsOvertimeModal
+            modalState={approvedOvertimeModalIsOpen}
+            setModalState={setApprovedOvertimeModalIsOpen}
+            closeModalAction={closeApprovedOvertimeModal}
+          />
+
+          {/* Disapproved Overtime Approval Modal */}
+          <ApprovalsOvertimeModal
+            modalState={disapprovedOvertimeModalIsOpen}
+            setModalState={setDisapprovedOvertimeModalIsOpen}
+            closeModalAction={closeDisapprovedOvertimeModal}
+          />
 
           {/* Pending Leave Approval Modal */}
           <ApprovalsPendingLeaveModal

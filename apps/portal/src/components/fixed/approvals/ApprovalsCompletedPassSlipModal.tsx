@@ -1,17 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { useEffect, useState } from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
-import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { patchPortal } from '../../../utils/helpers/portal-axios-helper';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
-import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -57,17 +53,36 @@ export const ApprovalsCompletedPassSlipModal = ({
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <AlertNotification
-                alertType="info"
+                alertType={
+                  passSlip.status === PassSlipStatus.APPROVED
+                    ? 'info'
+                    : passSlip.status === PassSlipStatus.CANCELLED
+                    ? 'error'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED
+                    ? 'error'
+                    : passSlip.status === PassSlipStatus.FOR_APPROVAL
+                    ? 'warning'
+                    : 'info'
+                }
                 notifMessage={`This Pass Slip is ${passSlip.status}`}
                 dismissible={false}
               />
 
-              <ConfirmationPassSlipModal
+              {/* <ConfirmationPassSlipModal
                 modalState={declineApplicationModalIsOpen}
                 setModalState={setDeclineApplicationModalIsOpen}
                 closeModalAction={closeDeclineModal}
                 action={PassSlipStatus.CANCELLED}
                 tokenId={passSlip.id}
+              /> */}
+
+              <ConfirmationApprovalModal
+                modalState={declineApplicationModalIsOpen}
+                setModalState={setDeclineApplicationModalIsOpen}
+                closeModalAction={closeDeclineModal}
+                actionPassSlip={PassSlipStatus.CANCELLED}
+                tokenId={passSlip.id}
+                otpName={ManagerOtpApproval.PASSSLIP}
               />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
@@ -84,7 +99,9 @@ export const ApprovalsCompletedPassSlipModal = ({
                 </label>
 
                 <div className="w-auto md:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.dateOfApplication}</label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">
+                    {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
+                  </label>
                 </div>
               </div>
 
@@ -161,15 +178,32 @@ export const ApprovalsCompletedPassSlipModal = ({
           <div className="flex justify-end gap-2">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED ? (
-                <Button
-                  variant={'warning'}
-                  size={'md'}
-                  loading={false}
-                  onClick={(e) => setDeclineApplicationModalIsOpen(true)}
-                  type="submit"
-                >
-                  Cancel Pass Slip
-                </Button>
+                ((passSlip.natureOfBusiness === NatureOfBusiness.HALF_DAY || NatureOfBusiness.UNDERTIME) &&
+                  !passSlip.timeOut) ||
+                ((passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ||
+                  NatureOfBusiness.PERSONAL_BUSINESS) &&
+                  !passSlip.timeOut &&
+                  !passSlip.timeIn) ? (
+                  <Button
+                    variant={'warning'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setDeclineApplicationModalIsOpen(true)}
+                    type="submit"
+                  >
+                    Cancel Pass Slip
+                  </Button>
+                ) : (
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => closeModalAction()}
+                    type="submit"
+                  >
+                    Close
+                  </Button>
+                )
               ) : (
                 <Button
                   variant={'primary'}

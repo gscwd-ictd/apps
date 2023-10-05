@@ -15,7 +15,8 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     } else if (Boolean(userDetails.employmentDetails.isHRMPSB) === false) {
       allowed = Modules.filter(
@@ -24,26 +25,22 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     }
-  } else if (
-    isEqual(userDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
-        card.destination === 'leaves'
+        card.destination === 'leaves' ||
+        card.destination === 'overtime-accomplishment'
     );
-  } else if (
-    isEqual(userDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER)
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER)) {
     if (
-      userDetails.employmentDetails.assignment.name ===
-        'Recruitment and Personnel Welfare Division' ||
-      userDetails.employmentDetails.assignment.name ===
-        'Training and Development Division'
+      userDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name === 'Training and Development Division'
     ) {
       allowed = Modules.filter(
         (card) =>
@@ -51,7 +48,8 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     } else {
       allowed = Modules.filter(
@@ -60,17 +58,14 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     }
-  } else if (
-    isEqual(userDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER)
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER)) {
     if (
-      userDetails.employmentDetails.assignment.name ===
-        'Recruitment and Personnel Welfare Division' ||
-      userDetails.employmentDetails.assignment.name ===
-        'Training and Development Division'
+      userDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name === 'Training and Development Division'
     ) {
       allowed = Modules.filter(
         (card) =>
@@ -78,7 +73,8 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     } else {
       allowed = Modules.filter(
@@ -87,56 +83,44 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     }
-  } else if (
-    isEqual(
-      userDetails.employmentDetails.userRole,
-      UserRole.ASSISTANT_GENERAL_MANAGER
-    )
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER)) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
         card.destination === 'leaves' ||
-        card.destination === 'email'
+        card.destination === 'email' ||
+        card.destination === 'overtime-accomplishment'
     );
-  } else if (
-    isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER)
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER)) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
         card.destination === 'leaves' ||
-        card.destination === 'email'
+        card.destination === 'email' ||
+        card.destination === 'overtime-accomplishment'
     );
-  } else if (
-    isEqual(userDetails.employmentDetails.userRole, UserRole.BOARD_MEMBER)
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.BOARD_MEMBER)) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
         card.destination === 'leaves' ||
-        card.destination === 'email'
+        card.destination === 'email' ||
+        card.destination === 'overtime-accomplishment'
     );
-  } else if (
-    isEqual(
-      userDetails.employmentDetails.userRole,
-      UserRole.OIC_DIVISION_MANAGER
-    )
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER)) {
     if (
-      userDetails.employmentDetails.assignment.name ===
-        'Recruitment and Personnel Welfare Division' ||
-      userDetails.employmentDetails.assignment.name ===
-        'Training and Development Division'
+      userDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name === 'Training and Development Division'
     ) {
       allowed = Modules.filter(
         (card) =>
@@ -144,7 +128,8 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     } else {
       allowed = Modules.filter(
@@ -153,20 +138,14 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     }
-  } else if (
-    isEqual(
-      userDetails.employmentDetails.userRole,
-      UserRole.OIC_DEPARTMENT_MANAGER
-    )
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER)) {
     if (
-      userDetails.employmentDetails.assignment.name ===
-        'Recruitment and Personnel Welfare Division' ||
-      userDetails.employmentDetails.assignment.name ===
-        'Training and Development Division'
+      userDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
+      userDetails.employmentDetails.assignment.name === 'Training and Development Division'
     ) {
       allowed = Modules.filter(
         (card) =>
@@ -174,7 +153,8 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     } else {
       allowed = Modules.filter(
@@ -183,36 +163,29 @@ export const setModules = async (userDetails: EmployeeDetails) => {
           card.destination === 'dtr' ||
           card.destination === 'pass-slip' ||
           card.destination === 'leaves' ||
-          card.destination === 'email'
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
       );
     }
-  } else if (
-    isEqual(
-      userDetails.employmentDetails.userRole,
-      UserRole.OIC_ASSISTANT_GENERAL_MANAGER
-    )
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER)) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
         card.destination === 'leaves' ||
-        card.destination === 'email'
+        card.destination === 'email' ||
+        card.destination === 'overtime-accomplishment'
     );
-  } else if (
-    isEqual(
-      userDetails.employmentDetails.userRole,
-      UserRole.OIC_GENERAL_MANAGER
-    )
-  ) {
+  } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) {
     allowed = Modules.filter(
       (card) =>
         card.destination === 'pds' ||
         card.destination === 'dtr' ||
         card.destination === 'pass-slip' ||
         card.destination === 'leaves' ||
-        card.destination === 'email'
+        card.destination === 'email' ||
+        card.destination === 'overtime-accomplishment'
     );
   }
 

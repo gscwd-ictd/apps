@@ -23,27 +23,15 @@ import {
   getEmployeeDetailsFromHr,
   getEmployeeProfile,
 } from '../../../../utils/helpers/http-requests/employee-requests';
-import {
-  getPrfById,
-  getPrfTrailByPrfId,
-  patchPrfRequest,
-} from '../../../../utils/helpers/prf.requests';
-import {
-  EmployeeDetailsPrf,
-  EmployeeProfile,
-  employeeDummy,
-} from '../../../../types/employee.type';
-import {
-  Position,
-  PrfDetails,
-  PrfStatus,
-  PrfTrail,
-} from '../../../../types/prf.types';
+import { getPrfById, getPrfTrailByPrfId, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
+import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
+import { Position, PrfDetails, PrfStatus, PrfTrail } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../utils/helpers/session';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { PrfOtpContents } from '../prfOtp/PrfOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -51,11 +39,7 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const ForApprovalPrfModal = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}: ModalProps) => {
+export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
 
@@ -134,14 +118,11 @@ export const ForApprovalPrfModal = ({
 
   const handleDecline = async (e) => {
     if (!isEmpty(remarks)) {
-      const { error, result } = await patchPrfRequest(
-        `/prf-trail/${selectedPrfId}`,
-        {
-          status: PrfStatus.DISAPPROVED,
-          employeeId: employeeDetail.employmentDetails.userId,
-          remarks,
-        }
-      );
+      const { error, result } = await patchPrfRequest(`/prf-trail/${selectedPrfId}`, {
+        status: PrfStatus.DISAPPROVED,
+        employeeId: employeeDetail.employmentDetails.userId,
+        remarks,
+      });
       patchPrf();
       if (error) {
         // request is done set loading to false and set the error message
@@ -174,9 +155,7 @@ export const ForApprovalPrfModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">
-                For Approval Position Request
-              </span>
+              <span className="text-xl md:text-2xl">For Approval Position Request</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -203,12 +182,7 @@ export const ForApprovalPrfModal = ({
             ) : (
               <>
                 {/* Load PRF Failed Error */}
-                {!isEmpty(swrPrfError) ? (
-                  <ToastNotification
-                    toastType="error"
-                    notifMessage={`${swrPrfError}`}
-                  />
-                ) : null}
+                {!isEmpty(swrPrfError) ? <ToastNotification toastType="error" notifMessage={`${swrPrfError}`} /> : null}
 
                 {prfDetailsForApproval ? (
                   <>
@@ -252,16 +226,12 @@ export const ForApprovalPrfModal = ({
                       </Modal.Header>
                       <Modal.Body>
                         <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
-                          {
-                            'Please indicate reason for declining this position request:'
-                          }
+                          {'Please indicate reason for declining this position request:'}
                           <textarea
                             required
                             placeholder="Reason for decline"
                             className={`w-full h-32 p-2 border resize-none`}
-                            onChange={(e) =>
-                              setRemarks(e.target.value as unknown as string)
-                            }
+                            onChange={(e) => setRemarks(e.target.value as unknown as string)}
                             value={remarks}
                           ></textarea>
                         </div>
@@ -292,12 +262,8 @@ export const ForApprovalPrfModal = ({
                     <div className="flex flex-col w-full h-auto py-10 pl-4 pr-4 overflow-hidden lg:pl-32 lg:pr-32">
                       <header className="flex items-center justify-between">
                         <section className="shrink-0">
-                          <h1 className="text-2xl font-semibold text-gray-700">
-                            Pending Request
-                          </h1>
-                          <p className="text-gray-500">
-                            {prfDetailsForApproval.prfNo}
-                          </p>
+                          <h1 className="text-2xl font-semibold text-gray-700">Pending Request</h1>
+                          <p className="text-gray-500">{prfDetailsForApproval.prfNo}</p>
                         </section>
                       </header>
 
@@ -306,9 +272,7 @@ export const ForApprovalPrfModal = ({
                           <aside className="shrink-0 w-[20rem]">
                             <section className="flex items-center gap-4">
                               <HiOutlineUser className="text-gray-700 shrink-0" />
-                              <p className="font-medium text-gray-600 truncate">
-                                {prfDetailsForApproval.from?.name}
-                              </p>
+                              <p className="font-medium text-gray-600 truncate">{prfDetailsForApproval.from?.name}</p>
                             </section>
 
                             <section className="flex items-center gap-4">
@@ -321,22 +285,16 @@ export const ForApprovalPrfModal = ({
                             <section className="flex items-center gap-4">
                               <HiOutlineCalendar className="text-gray-700 shrink-0" />
                               <p className="font-medium text-gray-600">
-                                {dayjs(prfDetailsForApproval.createdAt).format(
-                                  'MMMM DD, YYYY'
-                                )}
+                                {DateFormatter(prfDetailsForApproval.createdAt, 'MMMM DD, YYYY')}
                               </p>
                             </section>
 
                             <section className="flex items-center gap-4">
                               <HiOutlinePencil className="text-gray-700 shrink-0" />
                               {prfDetailsForApproval.withExam ? (
-                                <p className="font-medium text-indigo-500">
-                                  Examination is required
-                                </p>
+                                <p className="font-medium text-indigo-500">Examination is required</p>
                               ) : (
-                                <p className="font-medium text-orange-500">
-                                  No examination required
-                                </p>
+                                <p className="font-medium text-orange-500">No examination required</p>
                               )}
                             </section>
 
@@ -365,53 +323,40 @@ export const ForApprovalPrfModal = ({
                           <section className="w-full">
                             <main className="scale-95 h-auto w-full overflow-y-auto px-5">
                               {prfDetailsForApproval.prfPositions &&
-                                prfDetailsForApproval.prfPositions.map(
-                                  (position: Position, index: number) => {
-                                    return (
-                                      <div
-                                        key={index}
-                                        className={`${
-                                          position.remarks
-                                            ? 'hover:border-l-green-600'
-                                            : 'hover:border-l-red-500'
-                                        } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                                      >
-                                        <section className="w-full space-y-3">
-                                          <header>
-                                            <section className="flex items-center justify-between">
-                                              <h3 className="text-lg font-medium text-gray-600">
-                                                {position.positionTitle}
-                                              </h3>
-                                              <p className="text-sm text-gray-600">
-                                                {position.itemNumber}
-                                              </p>
-                                            </section>
-                                            <p className="text-sm text-gray-400">
-                                              {position.designation}
-                                            </p>
-                                          </header>
+                                prfDetailsForApproval.prfPositions.map((position: Position, index: number) => {
+                                  return (
+                                    <div
+                                      key={index}
+                                      className={`${
+                                        position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
+                                      } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
+                                    >
+                                      <section className="w-full space-y-3">
+                                        <header>
+                                          <section className="flex items-center justify-between">
+                                            <h3 className="text-lg font-medium text-gray-600">
+                                              {position.positionTitle}
+                                            </h3>
+                                            <p className="text-sm text-gray-600">{position.itemNumber}</p>
+                                          </section>
+                                          <p className="text-sm text-gray-400">{position.designation}</p>
+                                        </header>
 
-                                          <main>
-                                            {position.remarks ? (
-                                              <section className="flex items-center gap-2">
-                                                <p className="text-emerald-600">
-                                                  {position.remarks}
-                                                </p>
-                                              </section>
-                                            ) : (
-                                              <section className="flex items-center gap-2">
-                                                <p className="text-red-400">
-                                                  No remarks set for this
-                                                  position.
-                                                </p>
-                                              </section>
-                                            )}
-                                          </main>
-                                        </section>
-                                      </div>
-                                    );
-                                  }
-                                )}
+                                        <main>
+                                          {position.remarks ? (
+                                            <section className="flex items-center gap-2">
+                                              <p className="text-emerald-600">{position.remarks}</p>
+                                            </section>
+                                          ) : (
+                                            <section className="flex items-center gap-2">
+                                              <p className="text-red-400">No remarks set for this position.</p>
+                                            </section>
+                                          )}
+                                        </main>
+                                      </section>
+                                    </div>
+                                  );
+                                })}
                             </main>
                           </section>
                         </main>

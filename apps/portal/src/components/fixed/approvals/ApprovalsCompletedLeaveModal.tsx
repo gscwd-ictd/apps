@@ -6,7 +6,7 @@ import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import { ConfirmationLeaveModal } from './ApprovalOtp/ConfirmationLeaveModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -34,11 +34,6 @@ export const ApprovalsCompletedLeaveModal = ({
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
   }));
-
-  // cancel action for Decline Application Modal
-  const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
-  };
 
   const { windowWidth } = UseWindowDimensions();
   return (
@@ -76,31 +71,44 @@ export const ApprovalsCompletedLeaveModal = ({
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   {leaveIndividualDetail.status ? (
                     <AlertNotification
-                      alertType="info"
+                      alertType={
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                          ? 'warning'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'error'
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                          ? 'warning'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'error'
+                          : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
+                          ? 'error'
+                          : leaveIndividualDetail?.status === LeaveStatus.APPROVED
+                          ? 'info'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'error'
+                          : 'info'
+                      }
                       notifMessage={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Approval'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? 'Disapproved by HRDM '
+                          ? 'Disapproved by HRDM'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Approval '
+                          ? 'For Supervisor Approval'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? 'Disapproved by Supervisor '
+                          ? 'Disapproved by Supervisor'
+                          : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
+                          ? 'Cancelled'
+                          : leaveIndividualDetail?.status === LeaveStatus.APPROVED
+                          ? 'Approved'
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'Disapproved by HRMO'
                           : leaveIndividualDetail?.status.charAt(0).toUpperCase() +
                             leaveIndividualDetail?.status.slice(1)
                       }
                       dismissible={false}
                     />
                   ) : null}
-
-                  <ConfirmationLeaveModal
-                    modalState={declineApplicationModalIsOpen}
-                    setModalState={setDeclineApplicationModalIsOpen}
-                    closeModalAction={closeDeclineModal}
-                    action={LeaveStatus.CANCELLED}
-                    tokenId={leaveIndividualDetail.id}
-                    remarks={''}
-                  />
 
                   <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                     <label className="text-md font-medium text-slate-500 whitespace-nowrap">Employee Name:</label>
@@ -189,13 +197,25 @@ export const ApprovalsCompletedLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                         leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                        leaveIndividualDetail?.leaveName === LeaveName.ADOPTION
-                          ? // show first and last date (array) only if maternity or study leave
-                            `${leaveIndividualDetail?.leaveDates[0]} - ${
-                              leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates?.length - 1]
-                            }`
-                          : // show all dates if not maternity or study leave
-                            leaveIndividualDetail?.leaveDates?.join(', ')}
+                        leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
+                          // show first and last date (array) only if maternity or study leave
+                          `${DateFormatter(leaveIndividualDetail?.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                            leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates?.length - 1],
+                            'MM-DD-YYYY'
+                          )}`
+                        ) : (
+                          // show all dates if not maternity or study leave
+                          <div className="flex flex-wrap flex-row">
+                            {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
+                              return (
+                                <label key={index} className="pr-1">
+                                  {DateFormatter(dates, 'MM-DD-YYYY')}
+                                  {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        )}
                       </label>
                     </div>
                   </div>
@@ -220,17 +240,17 @@ export const ApprovalsCompletedLeaveModal = ({
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? leaveIndividualDetail?.supervisorApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? leaveIndividualDetail?.supervisorApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? leaveIndividualDetail?.hrmoApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.hrmoApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                          ? leaveIndividualDetail?.hrdmApprovalDate
+                          ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                          ? leaveIndividualDetail?.cancelDate
+                          ? DateFormatter(leaveIndividualDetail?.cancelDate, 'MM-DD-YYYY')
                           : null}
                       </label>
                     </div>

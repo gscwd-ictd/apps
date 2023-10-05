@@ -12,6 +12,7 @@ import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import CancelLeaveModal from './CancelLeaveModal';
 import dayjs from 'dayjs';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type LeaveCompletedModalProps = {
   modalState: boolean;
@@ -61,7 +62,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
       );
 
       if (!isEmpty(data)) {
-        console.log(data);
         setSelectedLeaveLedger(leaveLedger, data.leaveApplicationBasicInfo.id);
         getLeaveIndividualDetailSuccess(false, data);
       }
@@ -245,15 +245,35 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                               LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION
-                              ? // show first and last date (array) only if maternity or study leave
-                                `${leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0]} - ${
-                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
-                                    leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
-                                  ]
-                                }`
-                              : // show all dates if not maternity or study leave
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.join(', ')}
+                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
+                              // show first and last date (array) only if maternity or study leave
+                              `${DateFormatter(
+                                leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0],
+                                'MM-DD-YYYY'
+                              )} - ${DateFormatter(
+                                leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                                ],
+                                'MM-DD-YYYY'
+                              )}`
+                            ) : (
+                              // show all dates if not maternity or study leave
+                              <div className="flex flex-wrap flex-row">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.map(
+                                  (dates: string, index: number) => {
+                                    return (
+                                      <label key={index} className="pr-1">
+                                        {DateFormatter(dates, 'MM-DD-YYYY')}
+                                        {index ==
+                                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                                          ? ''
+                                          : ','}
+                                      </label>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            )}
                           </label>
                         </div>
                       </div>
@@ -352,16 +372,28 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     <div className="w-96">
                       <label className="text-slate-500 h-12 w-96  text-md ">
                         {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate
+                          ? DateFormatter(
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate,
+                              'MM-DD-YYYY'
+                            )
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                          ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate
+                          ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate, 'MM-DD-YYYY')
                           : null}
                       </label>
                     </div>

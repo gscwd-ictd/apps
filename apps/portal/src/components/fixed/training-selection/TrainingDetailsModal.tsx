@@ -10,6 +10,7 @@ import { useTrainingSelectionStore } from 'apps/portal/src/store/training-select
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import TrainingNominationModal from './TrainingNominationModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -114,8 +115,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96 text-md ">
-                    {dayjs(individualTrainingDetails.trainingStart).format('MMMM DD, YYYY')} -{' '}
-                    {dayjs(individualTrainingDetails.trainingEnd).format('MMMM DD, YYYY')}{' '}
+                    {DateFormatter(individualTrainingDetails.trainingStart, 'MM-DD-YYYY')} -{' '}
+                    {DateFormatter(individualTrainingDetails.trainingEnd, 'MM-DD-YYYY')}{' '}
                   </label>
                 </div>
               </div>

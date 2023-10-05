@@ -11,20 +11,11 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
-import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../../src/store/leave.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import { LeaveApplicationModal } from '../../../../src/components/fixed/leaves/LeaveApplicationModal';
-import { LeavePendingModal } from '../../../components/fixed/leaves/LeavePendingModal';
-import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCompletedModal';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
-import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeApplicationModal } from 'apps/portal/src/components/fixed/overtime/OvertimeApplicationModal';
 import OvertimeModal from 'apps/portal/src/components/fixed/overtime/OvertimeModal';
@@ -48,6 +39,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getEmployeeList,
     getEmployeeListSuccess,
     getEmployeeListFail,
+    getOvertimeList,
+    getOvertimeListSuccess,
+    getOvertimeListFail,
     emptyResponseAndError,
   } = useOvertimeStore((state) => ({
     tab: state.tab,
@@ -66,6 +60,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getEmployeeList: state.getEmployeeList,
     getEmployeeListSuccess: state.getEmployeeListSuccess,
     getEmployeeListFail: state.getEmployeeListFail,
+    getOvertimeList: state.getOvertimeList,
+    getOvertimeListSuccess: state.getOvertimeListSuccess,
+    getOvertimeListFail: state.getOvertimeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
@@ -104,7 +101,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     data: swrEmployeeList,
     isLoading: swrEmployeeListIsLoading,
     error: swrEmployeeListError,
-    mutate: mutateLeaves,
+    mutate: mutateEmployeeList,
   } = useSWR(employeeListUrl, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
@@ -128,9 +125,39 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [swrEmployeeList, swrEmployeeListError]);
 
+  const overtimeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.overtimeImmediateSupervisorId}`;
+
+  const {
+    data: swrOvertimeList,
+    isLoading: swrOvertimeListIsLoading,
+    error: swrOvertimeListError,
+    mutate: mutateOvertimeList,
+  } = useSWR(overtimeListUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeListIsLoading) {
+      getOvertimeList(swrOvertimeListIsLoading);
+    }
+  }, [swrOvertimeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeList)) {
+      getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
+    }
+
+    if (!isEmpty(swrOvertimeListError)) {
+      getOvertimeListFail(swrOvertimeListIsLoading, swrOvertimeListError.message);
+    }
+  }, [swrOvertimeList, swrOvertimeListError]);
+
   useEffect(() => {
     if (!isEmpty(responseApply)) {
-      mutateLeaves();
+      mutateOvertimeList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 3000);
@@ -140,7 +167,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   return (
     <>
       <>
-        {/* Leave Ledger Load Failed */}
+        {/* Employee List Load Failed */}
         {!isEmpty(swrEmployeeListError) ? (
           <>
             <ToastNotification
@@ -150,36 +177,20 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
           </>
         ) : null}
 
-        {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
-        {/* {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
+        {/* Post/Submit Overtime Application Success*/}
+        {!isEmpty(responseApply) ? (
+          <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
+        ) : null}
+
+        {/* List of Overtime Load Failed */}
+        {!isEmpty(swrOvertimeListError) ? (
           <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`}
+            />
           </>
-        ) : null} */}
-
-        {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
-        {/* {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
-          </>
-        ) : null} */}
-
-        {/* Post/Submit Leave Error*/}
-        {/* {!isEmpty(errorResponse) ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
-          </>
-        ) : null} */}
-
-        {/* Post/Submit Leave Success*/}
-        {/* {!isEmpty(responseApply) ? (
-          <ToastNotification toastType="success" notifMessage="Leave Application Successful!" />
-        ) : null} */}
-
-        {/* Patch Cancel Leave Successs*/}
-        {/* {!isEmpty(responseCancel) ? (
-          <ToastNotification toastType="success" notifMessage="Leave Cancellation Successful!" />
-        ) : null} */}
+        ) : null}
       </>
 
       <EmployeeProvider employeeData={employee}>

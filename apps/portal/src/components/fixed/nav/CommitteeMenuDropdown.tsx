@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { HiBadgeCheck, HiClock, HiOutlineBadgeCheck, HiOutlineIdentification, HiUserGroup } from 'react-icons/hi';
@@ -22,6 +23,8 @@ export const CommitteeMenuDropdown = ({
   right = false,
 }: MenuDropdownProps): JSX.Element => {
   const router = useRouter();
+
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   return (
     <>
@@ -61,36 +64,42 @@ export const CommitteeMenuDropdown = ({
             </div>
             <div>
               <>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={`${
-                        active ? 'bg-slate-100' : 'text-gray-900'
-                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                    >
-                      <HiUserGroup className="w-6 h-6 text-indigo-600" />
-                      <span className="text-sm tracking-tight text-gray-700 text-left">Personnel Selection Board</span>
-                    </a>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? 'bg-slate-100' : 'text-gray-900'
-                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() => router.push(`/${router.query.id}/overtime`)}
-                    >
-                      <div>
-                        <HiClock className="w-6 h-6 text-green-600" />
-                      </div>
-                      <span className="text-sm tracking-tight text-gray-700 text-left">Overtime</span>
-                    </button>
-                  )}
-                </Menu.Item>
+                {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a
+                        href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`${
+                          active ? 'bg-slate-100' : 'text-gray-900'
+                        } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
+                      >
+                        <HiUserGroup className="w-6 h-6 text-indigo-600" />
+                        <span className="text-sm tracking-tight text-gray-700 text-left">
+                          Personnel Selection Board
+                        </span>
+                      </a>
+                    )}
+                  </Menu.Item>
+                ) : null}
+                {employeeDetails.employmentDetails.overtimeImmediateSupervisorId !== null ? (
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? 'bg-slate-100' : 'text-gray-900'
+                        } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
+                        onClick={() => router.push(`/${router.query.id}/overtime`)}
+                      >
+                        <div>
+                          <HiClock className="w-6 h-6 text-green-600" />
+                        </div>
+                        <span className="text-sm tracking-tight text-gray-700 text-left">Overtime Application</span>
+                      </button>
+                    )}
+                  </Menu.Item>
+                ) : null}
               </>
             </div>
           </Menu.Items>

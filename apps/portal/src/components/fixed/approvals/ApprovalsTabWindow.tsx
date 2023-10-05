@@ -48,7 +48,7 @@ export const ApprovalsTabWindow = ({ employeeId }: ApprovalTabWindowProps): JSX.
           <AllApprovalsTab passslips={[]} tab={tab} leaves={forApprovalLeaves} overtime={[]} /> //show leaves for approval list
         )}
         {tab === 3 && selectedApprovalType === 1 && (
-          <AllApprovalsTab passslips={[]} tab={tab} leaves={[]} overtime={[forApprovalOvertime]} /> //show overtime for approval list
+          <AllApprovalsTab passslips={[]} tab={tab} leaves={[]} overtime={forApprovalOvertime} /> //show overtime for approval list
         )}
         {tab === 4 && selectedApprovalType === 2 && (
           <AllApprovalsTab passslips={approvedPassSlips} tab={tab} leaves={[]} overtime={[]} /> //show pass slip approved list
@@ -57,7 +57,7 @@ export const ApprovalsTabWindow = ({ employeeId }: ApprovalTabWindowProps): JSX.
           <AllApprovalsTab passslips={[]} tab={tab} leaves={approvedLeaves} overtime={[]} /> //show leaves approved list
         )}
         {tab === 6 && selectedApprovalType === 2 && (
-          <AllApprovalsTab passslips={[]} tab={tab} leaves={[]} overtime={[approvedOvertime]} /> //show overtime approved list
+          <AllApprovalsTab passslips={[]} tab={tab} leaves={[]} overtime={approvedOvertime} /> //show overtime approved list
         )}
         {tab === 7 && selectedApprovalType === 3 && (
           <AllApprovalsTab passslips={disapprovedPassSlips} tab={tab} leaves={[]} overtime={[]} /> //show pass slips disapproved list
@@ -66,7 +66,7 @@ export const ApprovalsTabWindow = ({ employeeId }: ApprovalTabWindowProps): JSX.
           <AllApprovalsTab passslips={[]} tab={tab} leaves={disapprovedLeaves} overtime={[]} /> //show leaves disapproved list
         )}
         {tab === 9 && selectedApprovalType === 3 && (
-          <AllApprovalsTab passslips={[]} tab={tab} leaves={[]} overtime={[disapprovedOvertime]} /> //show overtime disapproved list
+          <AllApprovalsTab passslips={[]} tab={tab} leaves={[]} overtime={disapprovedOvertime} /> //show overtime disapproved list
         )}
 
         {tab === 10 && selectedApprovalType === 4 && (

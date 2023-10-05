@@ -23,19 +23,13 @@ import {
   getEmployeeDetailsFromHr,
   getEmployeeProfile,
 } from '../../../../utils/helpers/http-requests/employee-requests';
-import {
-  getPrfById,
-  getPrfTrailByPrfId,
-} from '../../../../utils/helpers/prf.requests';
-import {
-  EmployeeDetailsPrf,
-  EmployeeProfile,
-  employeeDummy,
-} from '../../../../types/employee.type';
+import { getPrfById, getPrfTrailByPrfId } from '../../../../utils/helpers/prf.requests';
+import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
 import { Position, PrfDetails, PrfTrail } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../../src/utils/helpers/session';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -43,11 +37,7 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const PendingPrfModal = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}: ModalProps) => {
+export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
     patchResponse,
@@ -171,19 +161,11 @@ export const PendingPrfModal = ({
             ) : (
               <>
                 {/* Load PRF Failed Error */}
-                {!isEmpty(swrPrfError) ? (
-                  <ToastNotification
-                    toastType="error"
-                    notifMessage={`${swrPrfError}`}
-                  />
-                ) : null}
+                {!isEmpty(swrPrfError) ? <ToastNotification toastType="error" notifMessage={`${swrPrfError}`} /> : null}
 
                 {/* Load PRF Trail Failed Error */}
                 {!isEmpty(swrPrfTrailError) ? (
-                  <ToastNotification
-                    toastType="error"
-                    notifMessage={`${swrPrfTrailError}`}
-                  />
+                  <ToastNotification toastType="error" notifMessage={`${swrPrfTrailError}`} />
                 ) : null}
 
                 {prfDetails && prfTrail ? (
@@ -193,9 +175,7 @@ export const PendingPrfModal = ({
                     <div className="flex flex-col w-full h-auto py-10 overflow-hidden pl-4 pr-4 lg:pl-32 lg:pr-32">
                       <header className="flex items-center justify-between">
                         <section className="shrink-0">
-                          <h1 className="text-2xl font-semibold text-gray-700">
-                            Pending Request
-                          </h1>
+                          <h1 className="text-2xl font-semibold text-gray-700">Pending Request</h1>
                           <p className="text-gray-500">{prfDetails.prfNo}</p>
                         </section>
                       </header>
@@ -210,92 +190,69 @@ export const PendingPrfModal = ({
                             <section className="flex items-center gap-4">
                               <HiOutlineUser className="text-gray-700 shrink-0" />
                               <p className="font-medium text-gray-600 truncate">
-                                {employeeDetail.profile.firstName}{' '}
-                                {employeeDetail.profile.lastName}
+                                {employeeDetail.profile.firstName} {employeeDetail.profile.lastName}
                               </p>
                             </section>
 
                             <section className="flex items-center gap-4">
                               <HiOutlineDocumentDuplicate className="text-gray-700 shrink-0" />
                               <p className="font-medium text-gray-600 truncate">
-                                {
-                                  employeeDetail.employmentDetails.assignment
-                                    .positionTitle
-                                }
+                                {employeeDetail.employmentDetails.assignment.positionTitle}
                               </p>
                             </section>
 
                             <section className="flex items-center gap-4">
                               <HiOutlineCalendar className="text-gray-700 shrink-0" />
                               <p className="font-medium text-gray-600">
-                                {dayjs(prfDetails.createdAt).format(
-                                  'MMMM DD, YYYY'
-                                )}
+                                {DateFormatter(prfDetails.createdAt, 'MMMM DD, YYYY')}
                               </p>
                             </section>
 
                             <section className="flex items-center gap-4">
                               <HiOutlinePencil className="text-gray-700 shrink-0" />
                               {prfDetails.withExam ? (
-                                <p className="font-medium text-indigo-500">
-                                  Examination is required
-                                </p>
+                                <p className="font-medium text-indigo-500">Examination is required</p>
                               ) : (
-                                <p className="font-medium text-orange-500">
-                                  No examination required
-                                </p>
+                                <p className="font-medium text-orange-500">No examination required</p>
                               )}
                             </section>
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
                             <main className="scale-95 h-auto w-full overflow-y-auto px-5">
-                              {prfDetails.prfPositions.map(
-                                (position: Position, index: number) => {
-                                  return (
-                                    <div
-                                      key={index}
-                                      className={`${
-                                        position.remarks
-                                          ? 'hover:border-l-green-600'
-                                          : 'hover:border-l-red-500'
-                                      } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                                    >
-                                      <section className="w-full space-y-3">
-                                        <header>
-                                          <section className="flex items-center justify-between">
-                                            <h3 className="text-lg font-medium text-gray-600">
-                                              {position.positionTitle}
-                                            </h3>
-                                            <p className="text-sm text-gray-600">
-                                              {position.itemNumber}
-                                            </p>
-                                          </section>
-                                          <p className="text-sm text-gray-400">
-                                            {position.designation}
-                                          </p>
-                                        </header>
+                              {prfDetails.prfPositions.map((position: Position, index: number) => {
+                                return (
+                                  <div
+                                    key={index}
+                                    className={`${
+                                      position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
+                                    } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
+                                  >
+                                    <section className="w-full space-y-3">
+                                      <header>
+                                        <section className="flex items-center justify-between">
+                                          <h3 className="text-lg font-medium text-gray-600">
+                                            {position.positionTitle}
+                                          </h3>
+                                          <p className="text-sm text-gray-600">{position.itemNumber}</p>
+                                        </section>
+                                        <p className="text-sm text-gray-400">{position.designation}</p>
+                                      </header>
 
-                                        <main>
-                                          {position.remarks ? (
-                                            <section className="flex items-center gap-2">
-                                              <p className="text-emerald-600">
-                                                {position.remarks}
-                                              </p>
-                                            </section>
-                                          ) : (
-                                            <section className="flex items-center gap-2">
-                                              <p className="text-red-400">
-                                                No remarks set for this
-                                                position.
-                                              </p>
-                                            </section>
-                                          )}
-                                        </main>
-                                      </section>
-                                    </div>
-                                  );
-                                }
-                              )}
+                                      <main>
+                                        {position.remarks ? (
+                                          <section className="flex items-center gap-2">
+                                            <p className="text-emerald-600">{position.remarks}</p>
+                                          </section>
+                                        ) : (
+                                          <section className="flex items-center gap-2">
+                                            <p className="text-red-400">No remarks set for this position.</p>
+                                          </section>
+                                        )}
+                                      </main>
+                                    </section>
+                                  </div>
+                                );
+                              })}
                             </main>
                           </section>
                         </main>

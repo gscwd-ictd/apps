@@ -1,11 +1,11 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { AlertState } from '../types/alert.type';
-import { ErrorState, ModalState } from '../types/modal.type';
-// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ModalState } from '../types/modal.type';
 import { SupervisorLeaveDetails } from '../../../../libs/utils/src/lib/types/leave-application.type';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
+import { OvertimeAccomplishment, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 
 export type ApprovalLeaveList = {
   completed: {
@@ -63,10 +63,10 @@ export type ApprovalState = {
 
   overtime: {
     completed: {
-      approved: Array<any>;
-      disapproved: Array<any>;
+      approved: Array<OvertimeDetails>;
+      disapproved: Array<OvertimeDetails>;
     };
-    forApproval: Array<any>;
+    forApproval: Array<OvertimeDetails>;
   };
 
   response: {
@@ -84,6 +84,8 @@ export type ApprovalState = {
 
     loadingOvertime: boolean;
     loadingOvertimeResponse: boolean;
+
+    loadingAccomplishment: boolean;
   };
   error: {
     errorLeaves: string;
@@ -95,6 +97,8 @@ export type ApprovalState = {
 
     errorOvertime: string;
     errorOvertimeResponse: string;
+
+    errorAccomplishment: string;
   };
 
   declineApplicationModalIsOpen: boolean;
@@ -133,6 +137,18 @@ export type ApprovalState = {
   disapprovedOvertimeModalIsOpen: boolean;
   setDisapprovedOvertimeModalIsOpen: (disapprovedOvertimeModalIsOpen: boolean) => void;
 
+  overtimeAccomplishmentModalIsOpen: boolean;
+  setOvertimeAccomplishmentModalIsOpen: (overtimeAccomplishmentModalIsOpen: boolean) => void;
+
+  overtimeAccomplishmentEmployeeId: string;
+  setOvertimeAccomplishmentEmployeeId: (overtimeAccomplishmentEmployeeId: string) => void;
+
+  overtimeAccomplishmentEmployeeName: string;
+  setOvertimeAccomplishmentEmployeeName: (overtimeAccomplishmentEmployeeName: string) => void;
+
+  overtimeAccomplishmentApplicationId: string;
+  setOvertimeAccomplishmentApplicationId: (overtimeAccomplishmentApplicationId: string) => void;
+
   otpPassSlipModalIsOpen: boolean;
   setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => void;
 
@@ -152,18 +168,6 @@ export type ApprovalState = {
   getPassSlipListSuccess: (loading: boolean, response) => void;
   getPassSlipListFail: (loading: boolean, error: string) => void;
 
-  patchPassSlip: () => void;
-  patchPassSlipSuccess: (response) => void;
-  patchPassSlipFail: (error: string) => void;
-
-  patchLeave: () => void;
-  patchLeaveSuccess: (response) => void;
-  patchLeaveFail: (error: string) => void;
-
-  patchOvertime: () => void;
-  patchOvertimeSuccess: (response) => void;
-  patchOvertimeFail: (error: string) => void;
-
   // LEAVES
   leaveId: string;
   setLeaveId: (id: string) => void;
@@ -175,8 +179,33 @@ export type ApprovalState = {
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
 
+  // OVERTIME
+  overtimeDetails: OvertimeDetails;
+  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
+
+  getOvertimeList: (loading: boolean) => void;
+  getOvertimeListSuccess: (loading: boolean, response) => void;
+  getOvertimeListFail: (loading: boolean, error: string) => void;
+
+  accomplishmentDetails: OvertimeAccomplishment;
+  getAccomplishmentDetails: (loading: boolean) => void;
+  getAccomplishmentDetailsSuccess: (loading: boolean, response) => void;
+  getAccomplishmentDetailsFail: (loading: boolean, error: string) => void;
+
   tab: number;
   setTab: (tab: number) => void;
+
+  patchPassSlip: () => void;
+  patchPassSlipSuccess: (response) => void;
+  patchPassSlipFail: (error: string) => void;
+
+  patchLeave: () => void;
+  patchLeaveSuccess: (response) => void;
+  patchLeaveFail: (error: string) => void;
+
+  patchOvertime: () => void;
+  patchOvertimeSuccess: (response) => void;
+  patchOvertimeFail: (error: string) => void;
 
   emptyResponseAndError: () => void;
 };
@@ -230,6 +259,8 @@ export const useApprovalStore = create<ApprovalState>()(
 
       loadingOvertime: false,
       loadingOvertimeResponse: false,
+
+      loadingAccomplishment: false,
     },
     error: {
       errorLeaves: '',
@@ -241,6 +272,8 @@ export const useApprovalStore = create<ApprovalState>()(
 
       errorOvertime: '',
       errorOvertimeResponse: '',
+
+      errorAccomplishment: '',
     },
 
     otpPassSlipModalIsOpen: false,
@@ -263,6 +296,30 @@ export const useApprovalStore = create<ApprovalState>()(
     approvedOvertimeModalIsOpen: false,
     disapprovedOvertimeModalIsOpen: false,
     cancelledOvertimeModalIsOpen: false,
+
+    overtimeAccomplishmentModalIsOpen: false,
+
+    accomplishmentDetails: {} as OvertimeAccomplishment,
+
+    overtimeDetails: {} as OvertimeDetails,
+    setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
+      set((state) => ({ ...state, overtimeDetails }));
+    },
+
+    overtimeAccomplishmentEmployeeId: '',
+    setOvertimeAccomplishmentEmployeeId: (overtimeAccomplishmentEmployeeId: string) => {
+      set((state) => ({ ...state, overtimeAccomplishmentEmployeeId }));
+    },
+
+    overtimeAccomplishmentEmployeeName: '',
+    setOvertimeAccomplishmentEmployeeName: (overtimeAccomplishmentEmployeeName: string) => {
+      set((state) => ({ ...state, overtimeAccomplishmentEmployeeName }));
+    },
+
+    overtimeAccomplishmentApplicationId: '',
+    setOvertimeAccomplishmentApplicationId: (overtimeAccomplishmentApplicationId: string) => {
+      set((state) => ({ ...state, overtimeAccomplishmentApplicationId }));
+    },
 
     // PASS SLIPS
     passSlipId: '',
@@ -355,6 +412,10 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setDisapprovedOvertimeModalIsOpen: (disapprovedOvertimeModalIsOpen: boolean) => {
       set((state) => ({ ...state, disapprovedOvertimeModalIsOpen }));
+    },
+
+    setOvertimeAccomplishmentModalIsOpen: (overtimeAccomplishmentModalIsOpen: boolean) => {
+      set((state) => ({ ...state, overtimeAccomplishmentModalIsOpen }));
     },
 
     setLeaveId: (leaveId: string) => {
@@ -482,6 +543,109 @@ export const useApprovalStore = create<ApprovalState>()(
         },
       }));
     },
+
+    //GET OVERTIME ACTIONS
+    getOvertimeList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtime: {
+          ...state.overtime,
+          completed: {
+            approved: [],
+            disapproved: [],
+          },
+          forApproval: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: '',
+        },
+      }));
+    },
+
+    getOvertimeListSuccess: (loading: boolean, response: ApprovalOvertimeList) => {
+      set((state) => ({
+        ...state,
+        overtime: {
+          ...state.overtime,
+          completed: {
+            approved: response.completed.approved,
+            disapproved: response.completed.disapproved,
+          },
+          forApproval: response.forApproval,
+        },
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+      }));
+    },
+    getOvertimeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
+    },
+
+    //GET OVERTIME ACCOMPLISHMENTS ACTIONS
+    getAccomplishmentDetails: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        accomplishmentDetails: {} as OvertimeAccomplishment,
+        loading: {
+          ...state.loading,
+          loadingAccomplishment: loading,
+        },
+        error: {
+          ...state.error,
+          errorAccomplishment: '',
+        },
+      }));
+    },
+
+    getAccomplishmentDetailsSuccess: (loading: boolean, response: OvertimeAccomplishment) => {
+      set((state) => ({
+        ...state,
+        accomplishmentDetails: response,
+        loading: {
+          ...state.loading,
+          loadingAccomplishment: loading,
+        },
+      }));
+    },
+    getAccomplishmentDetailsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingAccomplishment: loading,
+        },
+        error: {
+          ...state.error,
+          errorAccomplishment: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
+    },
+
     //PATCH PASS SLIP ACTIONS
     patchPassSlip: () => {
       set((state) => ({

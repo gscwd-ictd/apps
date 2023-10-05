@@ -8,8 +8,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { ConfirmationPassSlipModal } from './ApprovalOtp/ConfirmationPassSlipModal';
-import { ApprovalOtpContentsPassSlip } from './ApprovalOtp/ApprovalOtpContentsPassSlip';
+import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -42,14 +44,13 @@ export const ApprovalsPendingPassSlipModal = ({
   }));
 
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } =
-    useForm<passSlipAction>({
-      mode: 'onChange',
-      defaultValues: {
-        passSlipId: passSlip.id,
-        status: null,
-      },
-    });
+  const { reset, register, handleSubmit, watch, setValue } = useForm<passSlipAction>({
+    mode: 'onChange',
+    defaultValues: {
+      passSlipId: passSlip.id,
+      status: null,
+    },
+  });
 
   useEffect(() => {
     setValue('passSlipId', passSlip.id);
@@ -71,7 +72,7 @@ export const ApprovalsPendingPassSlipModal = ({
   };
 
   // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const closeOtpModal = async () => {
     setOtpPassSlipModalIsOpen(false);
@@ -86,17 +87,11 @@ export const ApprovalsPendingPassSlipModal = ({
 
   return (
     <>
-      <Modal
-        size={windowWidth > 1024 ? 'lg' : 'full'}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">
-                Pass Slip for Approval
-              </span>
+              <span className="text-xl md:text-2xl">Pass Slip for Approval</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -111,21 +106,13 @@ export const ApprovalsPendingPassSlipModal = ({
             {/* OTP Modal */}
 
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              <AlertNotification
-                alertType="warning"
-                notifMessage="Awaiting Supervisor Approval"
-                dismissible={false}
-              />
+              <AlertNotification alertType="warning" notifMessage="For Supervisor Approval" dismissible={false} />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                  Employee Name:
-                </label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Employee Name:</label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">
-                    {passSlip.employeeName}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.employeeName}</label>
                 </div>
               </div>
 
@@ -136,7 +123,7 @@ export const ApprovalsPendingPassSlipModal = ({
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96  text-md ">
-                    {passSlip.dateOfApplication}
+                    {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
                   </label>
                 </div>
               </div>
@@ -147,23 +134,17 @@ export const ApprovalsPendingPassSlipModal = ({
                 </label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">
-                    {passSlip.natureOfBusiness}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.natureOfBusiness}</label>
                 </div>
               </div>
 
               {passSlip.natureOfBusiness === 'Official Business' ? (
                 <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label
-                    className={`text-slate-500 text-md whitespace-nowrap font-medium sm:w-80`}
-                  >
+                  <label className={`text-slate-500 text-md whitespace-nowrap font-medium sm:w-80`}>
                     Mode of Transportation:
                   </label>
                   <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">
-                      {passSlip.obTransportation}
-                    </label>
+                    <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.obTransportation}</label>
                   </div>
                 </div>
               ) : null}
@@ -174,9 +155,7 @@ export const ApprovalsPendingPassSlipModal = ({
                     Estimated Hours:
                   </label>
                   <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">
-                      {passSlip.estimateHours}
-                    </label>
+                    <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.estimateHours}</label>
                   </div>
                 </div>
               </div>
@@ -184,22 +163,16 @@ export const ApprovalsPendingPassSlipModal = ({
                 className={`flex flex-col gap-2
             `}
               >
-                <label className="text-slate-500 text-md font-medium">
-                  Purpose/Desination:
-                </label>
+                <label className="text-slate-500 text-md font-medium">Purpose/Desination:</label>
                 <textarea
-                  className={
-                    'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'
-                  }
+                  className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
                   value={passSlip.purposeDestination}
                   rows={2}
                   disabled={true}
                 ></textarea>
               </div>
               <div className="w-full flex gap-2 justify-start items-center pt-4">
-                <span className="text-slate-500 text-md font-medium">
-                  Action:
-                </span>
+                <span className="text-slate-500 text-md font-medium">Action:</span>
                 <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
                   <select
                     id="action"
@@ -226,32 +199,35 @@ export const ApprovalsPendingPassSlipModal = ({
             title={'PASS SLIP APPROVAL OTP'}
           >
             {/* contents */}
-            <ApprovalOtpContentsPassSlip
-              mobile={employeeDetail.profile.mobileNumber}
-              employeeId={employeeDetail.user._id}
+            {/* <ApprovalOtpContentsPassSlip
+              mobile={employeeDetails.profile.mobileNumber}
+              employeeId={employeeDetails.user._id}
               action={watch('status')}
               tokenId={passSlip.id}
               otpName={'passSlipApproval'}
+            /> */}
+            <ApprovalOtpContents
+              mobile={employeeDetails.profile.mobileNumber}
+              employeeId={employeeDetails.user._id}
+              actionPassSlip={watch('status')}
+              tokenId={passSlip.id}
+              otpName={ManagerOtpApproval.PASSSLIP}
             />
           </OtpModal>
-          <ConfirmationPassSlipModal
+          <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
             closeModalAction={closeDeclineModal}
-            action={watch('status')}
+            actionPassSlip={watch('status')}
             tokenId={passSlip.id}
+            otpName={ManagerOtpApproval.PASSSLIP}
+            employeeId={employeeDetails.user._id}
           />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="w-full flex justify-end">
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                form="PassSlipAction"
-                type="submit"
-              >
+              <Button variant={'primary'} size={'md'} loading={false} form="PassSlipAction" type="submit">
                 Submit
               </Button>
             </div>
