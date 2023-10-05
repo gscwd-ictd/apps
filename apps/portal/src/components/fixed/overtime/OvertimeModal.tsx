@@ -146,7 +146,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employees:</label>
 
                       <div className="w-full ">
-                        <label className="text-slate-500 w-full text-md flex flex-col">
+                        <div className="text-slate-500 w-full text-md flex flex-col">
                           {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
                             return (
                               <div
@@ -168,20 +168,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                     <Button
                                       variant={'primary'}
                                       size={'sm'}
-                                      loading={false}
+                                      loading={true}
                                       onClick={(e) =>
                                         handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
                                       }
-                                      type="submit"
+                                      type="button"
                                     >
-                                      View Accomplishment
+                                      Accomplishment
                                     </Button>
                                   ) : null}
                                 </div>
                               </div>
                             );
                           })}
-                        </label>
+                        </div>
                       </div>
                     </div>
                   </div>

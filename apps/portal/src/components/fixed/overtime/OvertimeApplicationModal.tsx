@@ -110,7 +110,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
-              notifMessage="Submitting request"
+              notifMessage="Submitting Request"
               dismissible={true}
             />
           ) : null}

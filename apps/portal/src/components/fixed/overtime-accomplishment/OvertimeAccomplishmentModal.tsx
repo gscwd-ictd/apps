@@ -14,6 +14,8 @@ import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 
 type ModalProps = {
   modalState: boolean;
@@ -36,31 +38,36 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
   }));
 
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+    }));
+
   // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
-
+  const [encodedHours, setEncodedHours] = useState<number>(0);
+  const [finalEncodedHours, setFinalEncodedHours] = useState<number>(
+    overtimeAccomplishmentDetails?.computedEncodedHours ?? 0
+  );
   const closeConfirmOvertimeAccomplishmentModal = async () => {
     setConfirmOvertimeAccomplishmentModalIsOpen(false);
   };
 
-  const {
-    setValue,
-    register,
-    trigger,
-    getValues,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors, isDirty, dirtyFields, isValid },
-  } = useForm<any>({
+  const { setValue, register, trigger, getValues, handleSubmit, reset, watch } = useForm<any>({
     mode: 'onChange',
     reValidateMode: 'onBlur',
     defaultValues: {
       employeeId: overtimeAccomplishmentDetails.employeeId,
       overtimeApplicationId: overtimeAccomplishmentDetails.overtimeApplicationId,
-      encodedTimeIn: '',
-      encodedTimeOut: '',
+      encodedTimeIn: overtimeAccomplishmentDetails.encodedTimeIn,
+      encodedTimeOut: overtimeAccomplishmentDetails.encodedTimeOut,
       accomplishments: overtimeAccomplishmentDetails.remarks,
     },
   });
@@ -71,16 +78,24 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   };
 
   useEffect(() => {
-    setValue('employeeId', overtimeAccomplishmentDetails.employeeId);
-    setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
-  }, [watch('accomplishments')]);
-
-  useEffect(() => {
-    reset();
+    if (!pendingOvertimeAccomplishmentModalIsOpen) {
+      reset();
+    } else {
+      setValue('employeeId', overtimeAccomplishmentDetails.employeeId);
+      setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
+      setValue('encodedTimeIn', overtimeAccomplishmentDetails.encodedTimeIn);
+      setValue('encodedTimeOut', overtimeAccomplishmentDetails.encodedTimeOut);
+      setValue('accomplishments', overtimeAccomplishmentDetails.accomplishments);
+      console.log(overtimeAccomplishmentDetails);
+    }
   }, [pendingOvertimeAccomplishmentModalIsOpen]);
 
-  const [encodedHours, setEncodedHours] = useState<number>(0);
-  const [finalEncodedHours, setFinalEncodedHours] = useState<number>(0);
+  useEffect(() => {}, [finalEncodedHours]);
+
+  useEffect(() => {
+    setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
+    console.log(schedule);
+  }, []);
 
   useEffect(() => {
     setEncodedHours(
@@ -88,18 +103,15 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     );
   }, [watch('encodedTimeIn'), watch('encodedTimeOut')]);
 
-  //compute encoded overtime duration based on encoded time IN and OUT
+  // compute encoded overtime duration based on encoded time IN and OUT
   useEffect(() => {
     if (encodedHours % 5 == 0 || encodedHours >= 5) {
       if (encodedHours % 5 == 0) {
         setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 5));
-        // console.log(Math.floor(encodedHours / 5));
       } else if (encodedHours / 5 > 0) {
         setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 5));
-        // console.log(Math.floor(encodedHours / 5), 'else');
       } else {
         setFinalEncodedHours(encodedHours);
-        // console.log(encodedHours, 'else 2');
       }
     } else {
       setFinalEncodedHours(encodedHours);
@@ -147,8 +159,17 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                 <div className="w-full h-full flex flex-col gap-2 ">
                   <div className="w-full flex flex-col gap-2 p-4 rounded">
                     {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
-                      <AlertNotification alertType="warning" notifMessage={'Awaiting Submission'} dismissible={false} />
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage={
+                          overtimeAccomplishmentDetails.accomplishments
+                            ? 'For Supervisor Approval'
+                            : 'Awaiting Submission'
+                        }
+                        dismissible={false}
+                      />
                     ) : null}
+
                     {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
                       <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
                     ) : null}
@@ -163,145 +184,162 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         <div className="md:w-1/2">
                           <label className="text-slate-500 w-full text-md ">
                             {DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')}
+                            {/* {overtimeAccomplishmentDetails.overtimeApplicationId} */}
                           </label>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                          Computed IVMS Hours:
-                        </label>
-
-                        <div className="md:w-1/2">
-                          <label className="text-slate-500 w-full text-md ">
-                            {overtimeAccomplishmentDetails?.computedIvmsHours}
+                    {/* {schedule.scheduleBase === ScheduleBases.OFFICE ? ( */}
+                    <>
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                            Computed IVMS Hours:
                           </label>
+
+                          <div className="md:w-1/2">
+                            <label className="text-slate-500 w-full text-md ">
+                              {overtimeAccomplishmentDetails?.computedIvmsHours}
+                            </label>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">IVMS In & Out:</label>
-
-                        <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
-                          <label className="text-slate-500 w-full text-md ">
-                            <LabelInput
-                              id={'ivmsTimeIn'}
-                              type="text"
-                              label={''}
-                              className="w-full  text-slate-400 font-medium"
-                              textSize="md"
-                              disabled
-                              value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeIn)}
-                            />
-                          </label>
-                          <label className="text-slate-500 w-auto text-lg">-</label>
-                          <label className="text-slate-500 w-full text-md ">
-                            <LabelInput
-                              id={'ivmsTimeOut'}
-                              type="text"
-                              label={''}
-                              className="w-full text-slate-400 font-medium"
-                              textSize="md"
-                              disabled
-                              value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeOut)}
-                            />
-                          </label>
-                          <label className="text-slate-500 w-full text-md ">
-                            <LabelInput
-                              id={'computedIvmsHours'}
-                              type="text"
-                              label={''}
-                              className="w-full text-slate-400 font-medium"
-                              textSize="md"
-                              disabled
-                              value={`${overtimeAccomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    {!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut ? (
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                            Encode Time In & Out:
-                          </label>
+                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">IVMS In & Out:</label>
 
                           <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
                             <label className="text-slate-500 w-full text-md ">
                               <LabelInput
-                                required={
-                                  overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
-                                    ? false
-                                    : true
-                                }
-                                id={'encodedTimeIn'}
-                                type="time"
+                                id={'ivmsTimeIn'}
+                                type="text"
                                 label={''}
-                                className="w-full text-slate-400 font-medium cursor-pointer"
+                                className="w-full  text-slate-400 font-medium"
                                 textSize="md"
-                                defaultValue={overtimeAccomplishmentDetails?.encodedTimeIn ?? null}
-                                controller={{
-                                  ...register('encodedTimeIn', {
-                                    onChange: (e) => {
-                                      setValue('encodedTimeIn', e.target.value, {
-                                        shouldValidate: true,
-                                      });
-                                      trigger(); // triggers all validations for inputs
-                                    },
-                                  }),
-                                }}
+                                disabled
+                                value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeIn)}
                               />
                             </label>
                             <label className="text-slate-500 w-auto text-lg">-</label>
                             <label className="text-slate-500 w-full text-md ">
                               <LabelInput
-                                required={
-                                  overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
-                                    ? false
-                                    : true
-                                }
-                                id={'encodedTimeOut'}
-                                type="time"
-                                label={''}
-                                className="w-full text-slate-400 font-medium cursor-pointer"
-                                textSize="md"
-                                defaultValue={overtimeAccomplishmentDetails?.encodedTimeOut ?? null}
-                                controller={{
-                                  ...register('encodedTimeOut', {
-                                    onChange: (e) => {
-                                      setValue('encodedTimeOut', e.target.value, {
-                                        shouldValidate: true,
-                                      });
-                                      trigger(); // triggers all validations for inputs
-                                    },
-                                  }),
-                                }}
-                              />
-                            </label>
-                            <label className="text-slate-500 w-full text-md ">
-                              <LabelInput
-                                id={'encodedHours'}
+                                id={'ivmsTimeOut'}
                                 type="text"
                                 label={''}
                                 className="w-full text-slate-400 font-medium"
                                 textSize="md"
-                                isError={finalEncodedHours <= 0 ? true : false}
                                 disabled
-                                value={`${
-                                  !finalEncodedHours || isNaN(finalEncodedHours) ? 0 : finalEncodedHours
-                                } Hours(s)`}
+                                value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeOut)}
+                              />
+                            </label>
+                            <label className="text-slate-500 w-full text-md ">
+                              <LabelInput
+                                id={'computedIvmsHours'}
+                                type="text"
+                                label={''}
+                                className="w-full text-slate-400 font-medium"
+                                textSize="md"
+                                disabled
+                                value={`${overtimeAccomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
                               />
                             </label>
                           </div>
                         </div>
                       </div>
-                    ) : null}
+                    </>
+                    {/* ) : null} */}
+
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                          Encode Time In & Out:
+                        </label>
+
+                        <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              required={
+                                overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
+                                  ? false
+                                  : true
+                              }
+                              id={'encodedTimeIn'}
+                              type={'time'}
+                              label={''}
+                              className="w-full text-slate-400 font-medium cursor-pointer"
+                              textSize="md"
+                              disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
+                              defaultValue={overtimeAccomplishmentDetails?.encodedTimeIn ?? null}
+                              controller={{
+                                ...register('encodedTimeIn', {
+                                  onChange: (e) => {
+                                    setValue('encodedTimeIn', e.target.value, {
+                                      shouldValidate: true,
+                                    });
+                                    trigger(); // triggers all validations for inputs
+                                  },
+                                }),
+                              }}
+                            />
+                          </label>
+                          <label className="text-slate-500 w-auto text-lg">-</label>
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              required={
+                                overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
+                                  ? false
+                                  : true
+                              }
+                              id={'encodedTimeOut'}
+                              type="time"
+                              label={''}
+                              className="w-full text-slate-400 font-medium cursor-pointer"
+                              textSize="md"
+                              disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
+                              defaultValue={overtimeAccomplishmentDetails?.encodedTimeOut ?? null}
+                              controller={{
+                                ...register('encodedTimeOut', {
+                                  onChange: (e) => {
+                                    setValue('encodedTimeOut', e.target.value, {
+                                      shouldValidate: true,
+                                    });
+                                    trigger(); // triggers all validations for inputs
+                                  },
+                                }),
+                              }}
+                            />
+                          </label>
+                          <label className="text-slate-500 w-full text-md ">
+                            <LabelInput
+                              id={'encodedHours'}
+                              type="text"
+                              label={''}
+                              className="w-full text-slate-400 font-medium"
+                              textSize="md"
+                              isError={
+                                overtimeAccomplishmentDetails?.computedEncodedHours
+                                  ? false
+                                  : finalEncodedHours <= 0 ||
+                                    (isNaN(finalEncodedHours) && overtimeAccomplishmentDetails.accomplishments)
+                                  ? true
+                                  : false
+                              }
+                              disabled
+                              // value={overtimeAccomplishmentDetails?.computedEncodedHours ?? finalEncodedHours}
+                              value={`${
+                                overtimeAccomplishmentDetails?.computedEncodedHours
+                                  ? overtimeAccomplishmentDetails?.computedEncodedHours
+                                  : isNaN(finalEncodedHours)
+                                  ? 0
+                                  : finalEncodedHours
+                              } Hour(s)`}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
 
                     <div className="flex flex-col justify-between items-center w-full">
                       <div className="flex flex-row justify-between items-center w-full">
@@ -320,6 +358,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       </div>
                       <textarea
                         required
+                        disabled={
+                          overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
+                          overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
+                          overtimeAccomplishmentDetails?.accomplishments
+                            ? true
+                            : false
+                        }
                         rows={3}
                         className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                         placeholder="Please enter your accomplishments"
@@ -327,6 +372,21 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         defaultValue={overtimeAccomplishmentDetails?.accomplishments ?? ''}
                       ></textarea>
                     </div>
+                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                      <div className="flex flex-col justify-between items-center w-full">
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">Remarks:</label>
+                        </div>
+                        <textarea
+                          required
+                          rows={3}
+                          className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                          placeholder="Please enter your accomplishments"
+                          {...register('accomplishments')}
+                          defaultValue={overtimeAccomplishmentDetails?.remarks ?? ''}
+                        ></textarea>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -335,16 +395,30 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Button
-              variant={'primary'}
-              size={'md'}
-              loading={false}
-              form="SubmitAccomplishmentForm"
-              // onClick={(e) => setConfirmOvertimeAccomplishmentModalIsOpen(true)}
-              type="submit"
-            >
-              Submit Accomplishment
-            </Button>
+            {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
+            overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
+            overtimeAccomplishmentDetails?.accomplishments ? (
+              <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                Close
+              </Button>
+            ) : (
+              <Button
+                disabled={
+                  (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                  (finalEncodedHours <= 0 || isNaN(finalEncodedHours))
+                    ? true
+                    : false
+                }
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                form="SubmitAccomplishmentForm"
+                // onClick={(e) => setConfirmOvertimeAccomplishmentModalIsOpen(true)}
+                type="submit"
+              >
+                {'Submit Accomplishment'}
+              </Button>
+            )}
           </div>
         </Modal.Footer>
       </Modal>
