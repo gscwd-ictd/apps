@@ -35,6 +35,7 @@ export const EMPLOYEE_DATA: EmployeeDetails = {
       positionTitle: '',
     },
     userRole: '',
+    overtimeImmediateSupervisorId: '',
   },
 };
 

@@ -37,6 +37,7 @@ export type PostImmediateSupervisor = {
 
 export type DeleteImmediateSupervisor = {
   employeeId: string;
+};
 
 //for supervisor overtime application
 export type OvertimeForm = {
@@ -95,7 +96,7 @@ export type OvertimeAccomplishment = {
   encodedTimeOut: string | null;
   accomplishments: string | null;
   remarks: string | null;
-  status: string;
+  status: OvertimeAccomplishmentStatus;
   computedIvmsHours: number;
   computedEncodedHours: number;
   didFaceScan: boolean;
