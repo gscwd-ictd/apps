@@ -66,6 +66,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     errorAccomplishment,
     errorAccomplishmentResponse,
 
+    forApprovalLeaves,
+
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen,
@@ -126,6 +128,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     errorOvertimeResponse: state.error.errorOvertimeResponse,
     errorAccomplishment: state.error.errorAccomplishment,
     errorAccomplishmentResponse: state.error.errorAccomplishmentResponse,
+
+    forApprovalLeaves: state.leaves.forApproval,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
