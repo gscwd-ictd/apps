@@ -68,21 +68,21 @@ const mockData = {
 export default function CustomApp({ Component, pageProps, userDetails }: AppProps & AppOwnProps) {
   const [userProfile, setUserProfile] = useState<UserProfile>(null);
 
-  // useEffect(() => {
-  //   setUserProfile(mockData);
-  // }, [mockData]);
-
   useEffect(() => {
-    if (!isEmpty(userDetails) && isEmpty(userProfile)) {
-      setUserProfile(userDetails);
-    }
-  }, [userDetails, userProfile]);
+    setUserProfile(mockData);
+  }, [mockData]);
+
+  // useEffect(() => {
+  //   if (!isEmpty(userDetails) && isEmpty(userProfile)) {
+  //     setUserProfile(userDetails);
+  //   }
+  // }, [userDetails, userProfile]);
 
   return (
     <>
       <AuthmiddlewareContext.Provider
-        value={{ userProfile: userDetails ?? userProfile }}
-        // value={{ userProfile: mockData }}
+        // value={{ userProfile: userDetails ?? userProfile }}
+        value={{ userProfile: mockData }}
       >
         <Authmiddleware>
           <Head>
