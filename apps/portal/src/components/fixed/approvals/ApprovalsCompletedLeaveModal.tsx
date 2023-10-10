@@ -72,7 +72,8 @@ export const ApprovalsCompletedLeaveModal = ({
                   {leaveIndividualDetail.status ? (
                     <AlertNotification
                       alertType={
-                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
                           ? 'warning'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
                           ? 'error'
@@ -91,6 +92,8 @@ export const ApprovalsCompletedLeaveModal = ({
                       notifMessage={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Approval'
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
+                          ? 'For HRMO Approval'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
                           ? 'Disapproved by HRDM'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
@@ -103,8 +106,7 @@ export const ApprovalsCompletedLeaveModal = ({
                           ? 'Approved'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
                           ? 'Disapproved by HRMO'
-                          : leaveIndividualDetail?.status.charAt(0).toUpperCase() +
-                            leaveIndividualDetail?.status.slice(1)
+                          : leaveIndividualDetail?.status
                       }
                       dismissible={false}
                     />

@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactElement } from 'react';
 import { flexRender } from '@tanstack/react-table';
 import { DataTablePortalProps, DataTableProps } from './types/data-table-props';
 import { SortableColumn } from './SortableColumn';
@@ -8,7 +8,7 @@ import { Button } from '@gscwd-apps/oneui';
 import { ColumnFilterPortal } from './ColumnFilterPortal';
 import { GlobalFilterPortal } from './GlobalFilterPortal';
 
-export const DataTablePortal: FunctionComponent<DataTablePortalProps> = ({
+export const DataTablePortal = <T extends unknown>({
   textSize = 'text-md',
   hydrating = false,
   model,
@@ -17,7 +17,7 @@ export const DataTablePortal: FunctionComponent<DataTablePortalProps> = ({
   showGlobalFilter = false,
   showColumnFilter = false,
   paginate = false,
-}) => {
+}: DataTablePortalProps<T>): ReactElement => {
   const resetFilterInputs = () => {
     model.resetColumnFilters();
   };
@@ -51,7 +51,7 @@ export const DataTablePortal: FunctionComponent<DataTablePortalProps> = ({
                 })}
 
                 <div>
-                  <Button id="resetButton" onClick={() => resetFilterInputs()} variant="info">
+                  <Button id="resetButton" onClick={() => resetFilterInputs()} variant="primary">
                     <i className="bx bx-reset"></i>
                   </Button>
                   <div className="h-1" />
@@ -108,6 +108,7 @@ export const DataTablePortal: FunctionComponent<DataTablePortalProps> = ({
                 return (
                   <tr
                     key={row.id}
+                    // onClick={onRowClick ? (row) => onRowClick(row.original) : () => null}
                     onClick={onRowClick ? () => onRowClick(row) : () => null}
                     className="cursor-pointer odd:bg-slate-50 hover:bg-slate-100"
                   >

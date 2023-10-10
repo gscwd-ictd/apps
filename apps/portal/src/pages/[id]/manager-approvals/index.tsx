@@ -517,6 +517,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                         subtitle="Show all Pass Slips requests"
                         notificationCount={99}
                         className="bg-indigo-500"
+                        onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
                       />
                       <TabHeader
                         tab={0}

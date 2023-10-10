@@ -49,6 +49,8 @@ export type ApprovalState = {
   setSelectedApprovalType: (value: number) => void;
 
   leaveApplications: Array<SupervisorLeaveDetails>; // new approval page using data tables
+  passSlipApplications: Array<PassSlip>; // new approval page using data tables
+  overtimeApplications: Array<OvertimeDetails>;
 
   leaves: {
     completed: {
@@ -181,6 +183,10 @@ export type ApprovalState = {
   getPassSlipListSuccess: (loading: boolean, response) => void;
   getPassSlipListFail: (loading: boolean, error: string) => void;
 
+  getPassSlipApplicationsList: (loading: boolean) => void;
+  getPassSlipApplicationsListSuccess: (loading: boolean, response) => void;
+  getPassSlipApplicationsListFail: (loading: boolean, error: string) => void;
+
   // LEAVES
   leaveId: string;
   setLeaveId: (id: string) => void;
@@ -203,6 +209,10 @@ export type ApprovalState = {
   getOvertimeList: (loading: boolean) => void;
   getOvertimeListSuccess: (loading: boolean, response) => void;
   getOvertimeListFail: (loading: boolean, error: string) => void;
+
+  getOvertimeApplicationList: (loading: boolean) => void;
+  getOvertimeListApplicationSuccess: (loading: boolean, response) => void;
+  getOvertimeListApplicationFail: (loading: boolean, error: string) => void;
 
   accomplishmentDetails: OvertimeAccomplishment;
   getAccomplishmentDetails: (loading: boolean) => void;
@@ -239,6 +249,7 @@ export const useApprovalStore = create<ApprovalState>()(
     selectedApprovalType: 1,
 
     leaveApplications: [],
+    passSlipApplications: [],
 
     leaves: {
       completed: {
@@ -561,7 +572,7 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, leaveIndividualDetail }));
     },
 
-    //GET PASS SLIP ACTIONS
+    //GET PASS SLIP ACTIONS OLD APPROVAL PAGE
     getPassSlipList: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -607,6 +618,49 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
     getPassSlipListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingPassSlips: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlips: error,
+        },
+      }));
+    },
+
+    //GET PASS SLIP ACTIONS NEW APPROVAL PAGE USING DATA TABLE
+    getPassSlipApplicationsList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        passSlipApplications: [],
+        response: {
+          ...state.response,
+          patchResponsePassSlip: {} as PassSlip,
+        },
+        loading: {
+          ...state.loading,
+          loadingPassSlips: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlips: '',
+        },
+      }));
+    },
+    getPassSlipApplicationsListSuccess: (loading: boolean, response: Array<PassSlip>) => {
+      set((state) => ({
+        ...state,
+        passSlipApplications: response,
+        loading: {
+          ...state.loading,
+          loadingPassSlips: loading,
+        },
+      }));
+    },
+    getPassSlipApplicationsListFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {

@@ -12,45 +12,32 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DataTablePortal, ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import React from 'react';
-import { ApprovalsTabs } from '../../../components/fixed/approvals/ApprovalsTabs';
-import { ApprovalsTabWindow } from '../../../components/fixed/approvals/ApprovalsTabWindow';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
-import { ApprovalTypeSelect } from '../../../components/fixed/approvals/ApprovalTypeSelect';
 import { employeeDummy } from '../../../types/employee.type';
 import ApprovalsPendingLeaveModal from '../../../components/fixed/approvals/ApprovalsPendingLeaveModal';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
-import ApprovalsPendingPassSlipModal from '../../../components/fixed/approvals/ApprovalsPendingPassSlipModal';
-import ApprovalsCompletedPassSlipModal from '../../../components/fixed/approvals/ApprovalsCompletedPassSlipModal';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
-import ApprovalsOvertimeModal from 'apps/portal/src/components/fixed/approvals/ApprovalsOvertimeModal';
-import { TabHeader } from 'apps/portal/src/components/fixed/tab/TabHeader';
-import { HiQuestionMarkCircle } from 'react-icons/hi';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
-import { MonitoringLeave, SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
+import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
-export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen,
-
     patchResponseLeave,
-
     loadingLeave,
-
     errorLeave,
     errorLeaveResponse,
-
     LeaveApplications,
 
     setPendingLeaveModalIsOpen,
@@ -62,6 +49,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     getLeaveApplicationsListSuccess,
     getLeaveApplicationsListFail,
 
+    setLeaveIndividualDetail,
+
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
     tab: state.tab,
@@ -69,14 +58,10 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
-
     patchResponseLeave: state.response.patchResponseLeave,
-
     loadingLeave: state.loading.loadingLeaves,
-
     errorLeave: state.error.errorLeaves,
     errorLeaveResponse: state.error.errorLeaveResponse,
-
     LeaveApplications: state.leaveApplications,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
@@ -88,6 +73,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     getLeaveApplicationsListSuccess: state.getLeaveApplicationsListSuccess,
     getLeaveApplicationsListFail: state.getLeaveApplicationsListFail,
     emptyResponseAndError: state.emptyResponseAndError,
+
+    setLeaveIndividualDetail: state.setLeaveIndividualDetail,
   }));
 
   // set state for employee store
@@ -162,7 +149,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
   // Rendering of leave dates in row
   const renderRowLeaveDates = (leaveDates: Array<string>) => {
     if (leaveDates) {
-      if (leaveDates.length > 4) {
+      if (leaveDates.length > 3) {
         return (
           <span className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center">
             {leaveDates[0]} to {leaveDates.slice(-1)}
@@ -182,18 +169,36 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
   };
 
   // Render row actions in the table component
-  const renderRowActions = (rowData: MonitoringLeave) => {
-    return (
-      <div className="text-center">
-        <button
-          type="button"
-          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
-          // onClick={() => openViewActionModal(rowData)}
-        >
-          <i className="bx bx-show"></i>
-        </button>
-      </div>
-    );
+  const renderRowActions = (rowData: SupervisorLeaveDetails) => {
+    setLeaveIndividualDetail(rowData);
+    if (
+      rowData.status == LeaveStatus.APPROVED ||
+      rowData.status == LeaveStatus.FOR_HRDM_APPROVAL ||
+      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
+    ) {
+      if (!approvedLeaveModalIsOpen) {
+        setApprovedLeaveModalIsOpen(true);
+      }
+    } else if (rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL) {
+      // PENDING APPROVAL LEAVES
+      if (!pendingLeaveModalIsOpen) {
+        setPendingLeaveModalIsOpen(true);
+      }
+    } else if (
+      rowData.status == LeaveStatus.DISAPPROVED_BY_HRDM ||
+      rowData.status == LeaveStatus.DISAPPROVED_BY_HRMO ||
+      rowData.status == LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+    ) {
+      // DISAPPROVED LEAVES
+      if (!disapprovedLeaveModalIsOpen) {
+        setDisapprovedLeaveModalIsOpen(true);
+      }
+    } else {
+      // CANCELLED LEAVES
+      if (!cancelledLeaveModalIsOpen) {
+        setCancelledLeaveModalIsOpen(true);
+      }
+    }
   };
 
   // Define table columns
@@ -226,14 +231,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      cell: (info) => UseRenderLeaveType(info.getValue()),
+      cell: (info) => UseRenderLeaveStatus(info.getValue()),
     }),
-    // columnHelper.display({
-    //   id: 'actions',
-    //   header: 'Actions',
-    //   enableColumnFilter: false,
-    //   cell: (props) => <div className="flex justify-start place-items-start">{}</div>,
-    // }),
   ];
 
   // React Table initialization
@@ -242,8 +241,6 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     data: LeaveApplications,
     columnVisibility: { id: false, employeeId: false },
   });
-
-  console.log(swrLeaves);
 
   return (
     <>
@@ -319,6 +316,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                 <ContentBody>
                   <div>
                     <DataTablePortal
+                      onRowClick={(row) => renderRowActions(row.original as SupervisorLeaveDetails)}
                       textSize={'text-lg'}
                       model={table}
                       showGlobalFilter={true}

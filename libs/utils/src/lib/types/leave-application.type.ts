@@ -137,9 +137,9 @@ export type MonitoringLeave = EmployeeLeave & {
 };
 
 export type SupervisorLeaveDetails = {
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
   id: string;
   dateOfFiling: string;
   inPhilippines: string | null;
@@ -153,7 +153,7 @@ export type SupervisorLeaveDetails = {
   forMonetization: boolean;
   isTerminalLeave: boolean | null;
   requestedCommutation: boolean | null;
-  status: string;
+  status: LeaveStatus;
   supervisorApprovalDate: string;
   supervisorDisapprovalRemarks: string;
   hrdmApprovalDate: string;
