@@ -15,7 +15,13 @@ axiosApi.interceptors.response.use(
   (error) => Promise.reject(error)
 );
 
-const fetcherHRMS = async (url: string, config: AxiosRequestConfig) =>
-  await axiosApi.get(url, config).then((res) => res);
+const fetcherHRMS = async (url: string, config: AxiosRequestConfig) => {
+  return await axiosApi
+    .get(url, config)
+    .then((res) => res)
+    .catch((error) => {
+      throw error;
+    });
+};
 
 export default fetcherHRMS;

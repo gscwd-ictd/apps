@@ -12,10 +12,13 @@ axiosApi.interceptors.response.use(
   (error) => Promise.reject(error)
 );
 
-const fetcherEMS = async (url: string, config: AxiosRequestConfig) =>
-  await axiosApi
+const fetcherEMS = async (url: string, config: AxiosRequestConfig) => {
+  return await axiosApi
     .get(url, config)
-    .then((res) => res)
-    .catch((error) => error);
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};
 
 export default fetcherEMS;

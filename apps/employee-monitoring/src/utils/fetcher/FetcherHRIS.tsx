@@ -15,11 +15,14 @@ axiosApi.interceptors.response.use(
   (error) => Promise.reject(error)
 );
 
-const fetcherHRIS = async (url: string, config: AxiosRequestConfig) =>
-  await axiosApi
+const fetcherHRIS = async (url: string, config: AxiosRequestConfig) => {
+  return await axiosApi
     .get(url, config)
     .then((res) => res)
-    .catch((error) => error);
+    .catch((error) => {
+      throw error;
+    });
+};
 // .catch((error) => error);
 // const fetcher = (url: string) => fetch(url).then((res) => res.json());
 

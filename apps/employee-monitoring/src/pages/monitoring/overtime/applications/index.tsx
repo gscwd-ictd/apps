@@ -26,7 +26,6 @@ const Index = () => {
     data: overtimeApplications,
     error: overtimeApplicationsError,
     isLoading: overtimeApplicationsLoading,
-    // mutate: mutateOvertimeApplications,
   } = useSWR('/overtime', fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,

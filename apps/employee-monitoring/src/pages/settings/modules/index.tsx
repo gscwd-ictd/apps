@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import fetcherHRIS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRIS';
 
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
 import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
@@ -27,7 +25,7 @@ const Index = () => {
     error: modulesError,
     isLoading: modulesLoading,
     mutate: mutateModules,
-  } = useSWR('/modules', fetcherHRIS, {
+  } = useSWR('/modules', fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
   });

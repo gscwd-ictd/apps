@@ -92,9 +92,9 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
           <tbody>
             {hydrating ? (
               'Loading data...'
-            ) : model?.getRowModel().rows.length === 0 ? (
+            ) : model?.getRowModel().rows.length <= 0 ? (
               <tr>
-                <td colSpan={model?.getAllColumns().length} className="py-5 text-xs text-center text-gray-500">
+                <td colSpan={model?.getAllColumns().length} className="text-center text-xs py-5 text-gray-500">
                   --- No Data ---
                 </td>
               </tr>
@@ -110,7 +110,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
                       return (
                         <td
                           key={cell.id}
-                          className="px-5 py-3 break-words text-xs align-middle border-t-0 border-l-0 border-r-0"
+                          className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
