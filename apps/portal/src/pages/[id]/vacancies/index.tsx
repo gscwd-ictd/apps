@@ -27,6 +27,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import { useRouter } from 'next/router';
 
 export default function Vacancies({
   data,
@@ -84,6 +85,8 @@ export default function Vacancies({
     setResponseApply: state.setResponseApply,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const router = useRouter();
 
   // set state for handling modal page
   const [modal, setModal] = useState({

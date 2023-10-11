@@ -198,6 +198,7 @@ export type ApprovalState = {
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
 
+  //for data table format
   getLeaveApplicationsList: (loading: boolean) => void;
   getLeaveApplicationsListSuccess: (loading: boolean, response) => void;
   getLeaveApplicationsListFail: (loading: boolean, error: string) => void;
@@ -210,6 +211,7 @@ export type ApprovalState = {
   getOvertimeListSuccess: (loading: boolean, response) => void;
   getOvertimeListFail: (loading: boolean, error: string) => void;
 
+  //for data table format
   getOvertimeApplicationsList: (loading: boolean) => void;
   getOvertimeApplicationsListSuccess: (loading: boolean, response) => void;
   getOvertimeApplicationsListFail: (loading: boolean, error: string) => void;
