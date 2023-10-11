@@ -6,8 +6,10 @@ import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { useState } from 'react';
+import { isEmpty } from 'lodash';
 
-type ConfirmationApplicationModalProps = {
+type DisputeApplicationModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
@@ -16,14 +18,14 @@ type ConfirmationApplicationModalProps = {
   title: string;
 };
 
-export const ConfirmationApplicationModal = ({
+export const DisputeApplicationModal = ({
   modalState,
   setModalState,
   closeModalAction,
   action,
   tokenId,
   title,
-}: ConfirmationApplicationModalProps) => {
+}: DisputeApplicationModalProps) => {
   const { cancelPassSlip, cancelPassSlipSuccess, cancelPassSlipFail, setPendingPassSlipModalIsOpen } = usePassSlipStore(
     (state) => ({
       cancelPassSlip: state.cancelPassSlip,
@@ -32,7 +34,7 @@ export const ConfirmationApplicationModal = ({
       setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     })
   );
-
+  const [remarks, setRemarks] = useState<string>('');
   const handleSubmit = () => {
     if (tokenId) {
       const data = {
@@ -72,18 +74,31 @@ export const ConfirmationApplicationModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
-            {`Are you sure you want to cancel this application?`}
+          <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
+            {'Please indicate reason for dispute and provide proof of claim:'}
+            <textarea
+              required
+              placeholder="Reason for dispute"
+              className={`w-full h-32 p-2 border resize-none`}
+              onChange={(e) => setRemarks(e.target.value as unknown as string)}
+              value={remarks}
+            ></textarea>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto flex gap-2">
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
-                Yes
+              <Button
+                disabled={!isEmpty(remarks) ? false : true}
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => handleSubmit()}
+              >
+                Submit
               </Button>
               <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
-                No
+                Cancel
               </Button>
             </div>
           </div>

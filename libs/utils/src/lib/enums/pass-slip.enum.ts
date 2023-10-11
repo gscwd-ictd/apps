@@ -18,4 +18,5 @@ export enum PassSlipStatus {
   APPROVED = 'approved',
   ONGOING = 'ongoing',
   USED = 'used',
+  DISPUTE = 'dispute by employee',
 }

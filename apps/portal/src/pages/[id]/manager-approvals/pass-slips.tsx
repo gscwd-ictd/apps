@@ -10,7 +10,7 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { DataTablePortal, ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
+import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
@@ -20,12 +20,13 @@ import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
-import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
+import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import ApprovalsPendingPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingPassSlipModal';
 import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedPassSlipModal';
+import { useRouter } from 'next/router';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -76,6 +77,8 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 
     setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
   }));
+
+  const router = useRouter();
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
@@ -138,6 +141,15 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }
   }, [swrPassSlips, swrPassSlipError]);
 
+  useEffect(() => {
+    if (!isEmpty(patchResponsePassSlip)) {
+      mutatePassSlips();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [patchResponsePassSlip]);
+
   // Rendering of leave dates in row
   const renderRowLeaveDates = (leaveDates: Array<string>) => {
     if (leaveDates) {
@@ -164,7 +176,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   const renderRowActions = (rowData: PassSlip) => {
     setPassSlipIndividualDetail(rowData);
     console.log(rowData);
-    if (rowData.status == PassSlipStatus.APPROVED) {
+    if (rowData.status == PassSlipStatus.APPROVED || rowData.status == PassSlipStatus.DISPUTE) {
       if (!approvedPassSlipModalIsOpen) {
         setApprovedPassSlipModalIsOpen(true);
       }
@@ -178,11 +190,12 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       if (!disapprovedPassSlipModalIsOpen) {
         setDisapprovedPassSlipModalIsOpen(true);
       }
-    } else {
+    } else if (rowData.status == PassSlipStatus.CANCELLED) {
       // CANCELLED
       if (!cancelledPassSlipModalIsOpen) {
         setCancelledPassSlipModalIsOpen(true);
       }
+    } else {
     }
   };
 
@@ -279,8 +292,9 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
           <MainContainer>
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
-                title="Employee Leave Approvals"
-                subtitle="Approve or disapprove Employee Leaves"
+                title="Employee Pass Slip Approvals"
+                subtitle="Approve or disapprove Employee Pass Slips"
+                backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 
               {loadingPassSlip ? (

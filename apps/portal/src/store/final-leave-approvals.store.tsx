@@ -45,6 +45,8 @@ export type ApprovalState = {
     errorLeaveResponse: string;
   };
 
+  leaveApplications: Array<SupervisorLeaveDetails>; // new approval page using data tables
+
   declineApplicationModalIsOpen: boolean;
   setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
 
@@ -77,6 +79,11 @@ export type ApprovalState = {
   getLeaveList: (loading: boolean) => void;
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
+
+  //for data table format
+  getLeaveApplicationsList: (loading: boolean) => void;
+  getLeaveApplicationsListSuccess: (loading: boolean, response) => void;
+  getLeaveApplicationsListFail: (loading: boolean, error: string) => void;
 
   tab: number;
   setTab: (tab: number) => void;
@@ -112,6 +119,8 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
       errorLeaves: '',
       errorLeaveResponse: '',
     },
+
+    leaveApplications: [],
 
     otpLeaveModalIsOpen: false,
 
@@ -217,6 +226,50 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
       }));
     },
     getLeaveListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaves: error,
+        },
+      }));
+    },
+
+    //GET LEAVE ACTIONS NEW APPROVAL PAGE USING DATA TABLE
+    getLeaveApplicationsList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveApplications: [],
+
+        response: {
+          ...state.response,
+          patchResponseLeave: {} as SupervisorLeaveDetails,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaves: '',
+        },
+      }));
+    },
+    getLeaveApplicationsListSuccess: (loading: boolean, response: Array<SupervisorLeaveDetails>) => {
+      set((state) => ({
+        ...state,
+        leaveApplications: response,
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+      }));
+    },
+    getLeaveApplicationsListFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {

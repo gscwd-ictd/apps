@@ -47,8 +47,8 @@ export const ColumnFilterPortal = ({
   ) : (
     <>
       <datalist id={column.id + 'list'} className="capitalize">
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
+        {sortedUniqueValues.slice(0, 5000).map((value: any, index: number) => (
+          <option value={value} key={index} />
         ))}
       </datalist>
 

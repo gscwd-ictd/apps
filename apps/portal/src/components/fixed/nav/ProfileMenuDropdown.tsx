@@ -188,7 +188,7 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/approvals`)}
+                                onClick={() => router.push(`/${router.query.id}/manager-approvals`)}
                               >
                                 <HiBadgeCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">

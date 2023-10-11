@@ -10,7 +10,8 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { DataTablePortal, ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
+import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
+import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
@@ -26,6 +27,7 @@ import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-applicati
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { useRouter } from 'next/router';
 
 export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -38,7 +40,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     loadingLeave,
     errorLeave,
     errorLeaveResponse,
-    LeaveApplications,
+    leaveApplications,
 
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
@@ -62,7 +64,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     loadingLeave: state.loading.loadingLeaves,
     errorLeave: state.error.errorLeaves,
     errorLeaveResponse: state.error.errorLeaveResponse,
-    LeaveApplications: state.leaveApplications,
+    leaveApplications: state.leaveApplications,
 
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
@@ -76,6 +78,8 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
 
     setLeaveIndividualDetail: state.setLeaveIndividualDetail,
   }));
+
+  const router = useRouter();
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
@@ -238,7 +242,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: LeaveApplications,
+    data: leaveApplications,
     columnVisibility: { id: false, employeeId: false },
   });
 
@@ -300,6 +304,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
               <ContentHeader
                 title="Employee Leave Approvals"
                 subtitle="Approve or disapprove Employee Leaves"
+                backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 
               {loadingLeave ? (

@@ -21,6 +21,7 @@ import { InboxPsbContent } from 'apps/portal/src/components/fixed/inbox/InboxPsb
 import { ConfirmationInboxModal } from 'apps/portal/src/components/fixed/inbox/ConfirmationModal';
 import { InboxTrainingContent } from 'apps/portal/src/components/fixed/inbox/InboxTrainingContent';
 import { InboxOvertimeContent } from 'apps/portal/src/components/fixed/inbox/InboxOvertimeContent';
+import { useRouter } from 'next/router';
 
 export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [messageContent, setMessageContent] = useState<PsbMessageContent>();
@@ -80,6 +81,8 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     isMessageOpen: state.isMessageOpen,
     setIsMessageOpen: state.setIsMessageOpen,
   }));
+
+  const router = useRouter();
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
     setEmployeeDetails: state.setEmployeeDetails,

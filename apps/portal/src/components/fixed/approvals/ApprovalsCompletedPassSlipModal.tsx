@@ -60,21 +60,13 @@ export const ApprovalsCompletedPassSlipModal = ({
                     ? 'error'
                     : passSlip.status === PassSlipStatus.DISAPPROVED
                     ? 'error'
-                    : passSlip.status === PassSlipStatus.FOR_APPROVAL
+                    : passSlip.status === PassSlipStatus.FOR_APPROVAL || passSlip.status === PassSlipStatus.DISPUTE
                     ? 'warning'
                     : 'info'
                 }
                 notifMessage={`This Pass Slip is ${passSlip.status}`}
                 dismissible={false}
               />
-
-              {/* <ConfirmationPassSlipModal
-                modalState={declineApplicationModalIsOpen}
-                setModalState={setDeclineApplicationModalIsOpen}
-                closeModalAction={closeDeclineModal}
-                action={PassSlipStatus.CANCELLED}
-                tokenId={passSlip.id}
-              /> */}
 
               <ConfirmationApprovalModal
                 modalState={declineApplicationModalIsOpen}

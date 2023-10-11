@@ -20,6 +20,7 @@ import { OvertimeAccomplishmentTabs } from 'apps/portal/src/components/fixed/ove
 import { OvertimeAccomplishmentTabWindow } from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentTabWindow';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import OvertimeAccomplishmentModal from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentModal';
+import { useRouter } from 'next/router';
 
 export default function OvertimeAccomplishment({
   employeeDetails,
@@ -59,6 +60,8 @@ export default function OvertimeAccomplishment({
     getOvertimeAccomplishmentListSuccess: state.getOvertimeAccomplishmentListSuccess,
     getOvertimeAccomplishmentListFail: state.getOvertimeAccomplishmentListFail,
   }));
+
+  const router = useRouter();
 
   // cancel action for Overtime Pending Modal
   const closePendingOvertimeAccomplishmentModal = async () => {
@@ -172,6 +175,7 @@ export default function OvertimeAccomplishment({
             <ContentHeader
               title="Employee Overtime Accomplishment"
               subtitle="Fill up Overtime Accomplishment Reports"
+              backUrl={`/${router.query.id}`}
             ></ContentHeader>
             {!overtimeList ? (
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">

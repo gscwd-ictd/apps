@@ -33,131 +33,8 @@ import { HiQuestionMarkCircle } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 
 export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const {
-    tab,
-    pendingLeaveModalIsOpen,
-    approvedLeaveModalIsOpen,
-    disapprovedLeaveModalIsOpen,
-    cancelledLeaveModalIsOpen,
-
-    pendingPassSlipModalIsOpen,
-    approvedPassSlipModalIsOpen,
-    disapprovedPassSlipModalIsOpen,
-    cancelledPassSlipModalIsOpen,
-
-    pendingOvertimeModalIsOpen,
-    approvedOvertimeModalIsOpen,
-    disapprovedOvertimeModalIsOpen,
-
-    patchResponsePassSlip,
-    patchResponseLeave,
-    patchResponseOvertime,
-    patchResponseAccomplishment,
-    loadingPassSlip,
-    loadingLeave,
-    loadingOvertime,
-
-    errorPassSlip,
-    errorPassSlipResponse,
-    errorLeave,
-    errorLeaveResponse,
-    errorOvertime,
-    errorOvertimeResponse,
-    errorAccomplishment,
-    errorAccomplishmentResponse,
-
-    forApprovalLeaves,
-
-    setPendingLeaveModalIsOpen,
-    setApprovedLeaveModalIsOpen,
-    setDisapprovedLeaveModalIsOpen,
-    setCancelledLeaveModalIsOpen,
-
-    setPendingPassSlipModalIsOpen,
-    setApprovedPassSlipModalIsOpen,
-    setDisapprovedPassSlipModalIsOpen,
-    setCancelledPassSlipModalIsOpen,
-
-    setPendingOvertimeModalIsOpen,
-    setApprovedOvertimeModalIsOpen,
-    setDisapprovedOvertimeModalIsOpen,
-
-    getPassSlipList,
-    getPassSlipListSuccess,
-    getPassSlipListFail,
-
-    getLeaveList,
-    getLeaveListSuccess,
-    getLeaveListFail,
-
-    getOvertimeList,
-    getOvertimeListSuccess,
-    getOvertimeListFail,
-
-    emptyResponseAndError,
-  } = useApprovalStore((state) => ({
+  const { tab } = useApprovalStore((state) => ({
     tab: state.tab,
-    pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
-    approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
-    disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
-    cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
-
-    pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
-    approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
-    disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
-    cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
-
-    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
-    approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
-    disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
-
-    patchResponsePassSlip: state.response.patchResponsePassSlip,
-    patchResponseLeave: state.response.patchResponseLeave,
-    patchResponseOvertime: state.response.patchResponseOvertime,
-    patchResponseAccomplishment: state.response.patchResponseAccomplishment,
-
-    loadingPassSlip: state.loading.loadingPassSlips,
-    loadingLeave: state.loading.loadingLeaves,
-    loadingOvertime: state.loading.loadingOvertime,
-
-    errorPassSlip: state.error.errorPassSlips,
-    errorPassSlipResponse: state.error.errorPassSlipResponse,
-    errorLeave: state.error.errorLeaves,
-    errorLeaveResponse: state.error.errorLeaveResponse,
-    errorOvertime: state.error.errorOvertime,
-    errorOvertimeResponse: state.error.errorOvertimeResponse,
-    errorAccomplishment: state.error.errorAccomplishment,
-    errorAccomplishmentResponse: state.error.errorAccomplishmentResponse,
-
-    forApprovalLeaves: state.leaves.forApproval,
-
-    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
-    setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
-    setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
-    setCancelledLeaveModalIsOpen: state.setCancelledLeaveModalIsOpen,
-
-    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
-    setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
-    setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
-    setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
-
-    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
-    setApprovedOvertimeModalIsOpen: state.setApprovedOvertimeModalIsOpen,
-    setDisapprovedOvertimeModalIsOpen: state.setDisapprovedOvertimeModalIsOpen,
-
-    getPassSlipList: state.getPassSlipList,
-    getPassSlipListSuccess: state.getPassSlipListSuccess,
-    getPassSlipListFail: state.getPassSlipListFail,
-
-    getLeaveList: state.getLeaveList,
-    getLeaveListSuccess: state.getLeaveListSuccess,
-    getLeaveListFail: state.getLeaveListFail,
-
-    getOvertimeList: state.getOvertimeList,
-    getOvertimeListSuccess: state.getOvertimeListSuccess,
-    getOvertimeListFail: state.getOvertimeListFail,
-
-    emptyResponseAndError: state.emptyResponseAndError,
   }));
   const router = useRouter();
 
@@ -171,381 +48,62 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
 
-  // cancel action for Pending Overtime Application Modal
-  const closePendingOvertimeModal = async () => {
-    setPendingOvertimeModalIsOpen(false);
-  };
-
-  // cancel action for Approved Overtime Application Modal
-  const closeApprovedOvertimeModal = async () => {
-    setApprovedOvertimeModalIsOpen(false);
-  };
-
-  // cancel action for Approved Overtime Application Modal
-  const closeDisapprovedOvertimeModal = async () => {
-    setDisapprovedOvertimeModalIsOpen(false);
-  };
-
-  // cancel action for Pending Leave Application Modal
-  const closePendingLeaveModal = async () => {
-    setPendingLeaveModalIsOpen(false);
-  };
-
-  // cancel action for Approved Leave Application Modal
-  const closeApprovedLeaveModal = async () => {
-    setApprovedLeaveModalIsOpen(false);
-  };
-
-  // cancel action for Dispproved Leave Application Modal
-  const closeDisapprovedLeaveModal = async () => {
-    setDisapprovedLeaveModalIsOpen(false);
-  };
-
-  // cancel action for Cancelled Pass Slip Application Modal
-  const closeCancelledLeaveModal = async () => {
-    setCancelledLeaveModalIsOpen(false);
-  };
-
-  // cancel action for Pending Pass Slip Application Modal
-  const closePendingPassSlipModal = async () => {
-    setPendingPassSlipModalIsOpen(false);
-  };
-
-  // cancel action for Approved Pass Slip Application Modal
-  const closeApprovedPassSlipModal = async () => {
-    setApprovedPassSlipModalIsOpen(false);
-  };
-
-  // cancel action for Dispproved Pass Slip Application Modal
-  const closeDisapprovedPassSlipModal = async () => {
-    setDisapprovedPassSlipModalIsOpen(false);
-  };
-
-  // cancel action for Cancelled Pass Slip Application Modal
-  const closeCancelledPassSlipModal = async () => {
-    setCancelledPassSlipModalIsOpen(false);
-  };
-
-  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/supervisor/${employeeDetails.employmentDetails.userId}`;
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
-
-  const {
-    data: swrPassSlips,
-    isLoading: swrPassSlipIsLoading,
-    error: swrPassSlipError,
-    mutate: mutatePassSlips,
-  } = useSWR(passSlipUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
-
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrPassSlipIsLoading) {
-      getPassSlipList(swrPassSlipIsLoading);
-    }
-  }, [swrPassSlipIsLoading]);
-
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrPassSlips)) {
-      getPassSlipListSuccess(swrPassSlipIsLoading, swrPassSlips);
-    }
-
-    if (!isEmpty(swrPassSlipError)) {
-      getPassSlipListFail(swrPassSlipIsLoading, swrPassSlipError.message);
-    }
-  }, [swrPassSlips, swrPassSlipError]);
-
-  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/supervisor/${employeeDetails.employmentDetails.userId}`;
-
-  const {
-    data: swrLeaves,
-    isLoading: swrLeaveIsLoading,
-    error: swrLeaveError,
-    mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
-
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrLeaveIsLoading) {
-      getLeaveList(swrLeaveIsLoading);
-    }
-  }, [swrLeaveIsLoading]);
-
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrLeaves)) {
-      getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
-    }
-
-    if (!isEmpty(swrLeaveError)) {
-      getLeaveListFail(swrLeaveIsLoading, swrLeaveError.message);
-    }
-  }, [swrLeaves, swrLeaveError]);
-
-  const overtimeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval`;
-
-  const {
-    data: swrOvertimeList,
-    isLoading: swrOvertimeListIsLoading,
-    error: swrOvertimeListError,
-    mutate: mutateOvertime,
-  } = useSWR(overtimeListUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
-
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrOvertimeListIsLoading) {
-      getOvertimeList(swrOvertimeListIsLoading);
-    }
-  }, [swrOvertimeListIsLoading]);
-
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrOvertimeList)) {
-      getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
-    }
-
-    if (!isEmpty(swrOvertimeListError)) {
-      getOvertimeListFail(swrOvertimeListIsLoading, swrOvertimeListError.message);
-    }
-  }, [swrOvertimeList, swrOvertimeListError]);
-
-  useEffect(() => {
-    if (!isEmpty(patchResponsePassSlip)) {
-      mutatePassSlips();
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 5000);
-    }
-    if (!isEmpty(patchResponseLeave)) {
-      mutateLeaves();
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 5000);
-    }
-    if (!isEmpty(patchResponseOvertime)) {
-      mutateOvertime();
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 5000);
-    }
-  }, [patchResponsePassSlip, patchResponseLeave, patchResponseOvertime]);
-
   return (
     <>
-      <>
-        {/* Overtime Approval Patch Success */}
-        {!isEmpty(patchResponseOvertime) ? (
-          <ToastNotification toastType="success" notifMessage={`Overtime Application action submitted.`} />
-        ) : null}
+      <EmployeeProvider employeeData={employee}>
+        <Head>
+          <title>Employee Approvals</title>
+        </Head>
 
-        {/* Pass Slip Approval Patch Success */}
-        {!isEmpty(patchResponsePassSlip) ? (
-          <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
-        ) : null}
+        <SideNav employeeDetails={employeeDetails} />
 
-        {/* Leave Approval Patch Success */}
-        {!isEmpty(patchResponseLeave) ? (
-          <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
-        ) : null}
+        <MainContainer>
+          <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
+            <ContentHeader
+              title="Employee Approvals"
+              subtitle="Approve Employee Pass Slips, Leaves and Overtimes"
+              backUrl={`/${router.query.id}`}
+            ></ContentHeader>
 
-        {/* OT Accomplishment Approval Patch Success */}
-        {!isEmpty(patchResponseAccomplishment) ? (
-          <ToastNotification toastType="success" notifMessage={`Overtime Accomplishment Report action submitted.`} />
-        ) : null}
-
-        {/* Overtime Patch Failed Error */}
-        {!isEmpty(errorOvertimeResponse) ? (
-          <ToastNotification toastType="error" notifMessage={`Overtime Application action failed.`} />
-        ) : null}
-
-        {/* Pass Slip Patch Failed Error */}
-        {!isEmpty(errorPassSlipResponse) ? (
-          <ToastNotification toastType="error" notifMessage={`Pass Slip Application action failed.`} />
-        ) : null}
-
-        {/* Leave Patch Failed Error */}
-        {!isEmpty(errorLeaveResponse) ? (
-          <ToastNotification toastType="error" notifMessage={`Leave Application action failed.`} />
-        ) : null}
-
-        {/* OT AccomplishmentReport Approval Patch Failed Error */}
-        {!isEmpty(errorAccomplishmentResponse) ? (
-          <ToastNotification toastType="error" notifMessage={`Overtime Accomplishment Report action failed.`} />
-        ) : null}
-
-        {/* Overtime List Load Failed Error */}
-        {!isEmpty(errorOvertime) ? (
-          <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtimes.`} />
-        ) : null}
-
-        {/* Pass Slip List Load Failed Error */}
-        {!isEmpty(errorPassSlip) ? (
-          <ToastNotification toastType="error" notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`} />
-        ) : null}
-
-        {/* Leave List Load Failed Error */}
-        {!isEmpty(errorLeave) ? (
-          <ToastNotification toastType="error" notifMessage={`${errorLeave}: Failed to load Leaves.`} />
-        ) : null}
-
-        {/* Overtime Accomplishment Data Load Failed Error */}
-        {!isEmpty(errorAccomplishment) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment Report.`}
-          />
-        ) : null}
-
-        <EmployeeProvider employeeData={employee}>
-          <Head>
-            <title>Approvals</title>
-          </Head>
-
-          <SideNav employeeDetails={employeeDetails} />
-
-          {/* Pending Overtime Approval Modal */}
-          <ApprovalsOvertimeModal
-            modalState={pendingOvertimeModalIsOpen}
-            setModalState={setPendingOvertimeModalIsOpen}
-            closeModalAction={closePendingOvertimeModal}
-          />
-
-          {/* Approved Overtime Approval Modal */}
-          <ApprovalsOvertimeModal
-            modalState={approvedOvertimeModalIsOpen}
-            setModalState={setApprovedOvertimeModalIsOpen}
-            closeModalAction={closeApprovedOvertimeModal}
-          />
-
-          {/* Disapproved Overtime Approval Modal */}
-          <ApprovalsOvertimeModal
-            modalState={disapprovedOvertimeModalIsOpen}
-            setModalState={setDisapprovedOvertimeModalIsOpen}
-            closeModalAction={closeDisapprovedOvertimeModal}
-          />
-
-          {/* Pending Leave Approval Modal */}
-          <ApprovalsPendingLeaveModal
-            modalState={pendingLeaveModalIsOpen}
-            setModalState={setPendingLeaveModalIsOpen}
-            closeModalAction={closePendingLeaveModal}
-          />
-
-          {/* Leave Approved/Disapproved/Cancelled ModalApproval Modal */}
-          <ApprovalsCompletedLeaveModal
-            modalState={approvedLeaveModalIsOpen}
-            setModalState={setApprovedLeaveModalIsOpen}
-            closeModalAction={closeApprovedLeaveModal}
-          />
-
-          {/* Disapproved Leaves */}
-          <ApprovalsCompletedLeaveModal
-            modalState={disapprovedLeaveModalIsOpen}
-            setModalState={setDisapprovedLeaveModalIsOpen}
-            closeModalAction={closeDisapprovedLeaveModal}
-          />
-
-          {/* Cancelled Leaves */}
-          <ApprovalsCompletedLeaveModal
-            modalState={cancelledLeaveModalIsOpen}
-            setModalState={setCancelledLeaveModalIsOpen}
-            closeModalAction={closeCancelledLeaveModal}
-          />
-
-          {/* Pending Pass Slip For Approval Modal */}
-          <ApprovalsPendingPassSlipModal
-            modalState={pendingPassSlipModalIsOpen}
-            setModalState={setPendingPassSlipModalIsOpen}
-            closeModalAction={closePendingPassSlipModal}
-          />
-
-          {/* Pass Slip Approved/Disapproved/Cancelled Modal */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={approvedPassSlipModalIsOpen}
-            setModalState={setApprovedPassSlipModalIsOpen}
-            closeModalAction={closeApprovedPassSlipModal}
-          />
-
-          {/* Disapproved Pass Slips */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={disapprovedPassSlipModalIsOpen}
-            setModalState={setDisapprovedPassSlipModalIsOpen}
-            closeModalAction={closeDisapprovedPassSlipModal}
-          />
-
-          {/* Cancelled Pass Slips */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={cancelledPassSlipModalIsOpen}
-            setModalState={setCancelledPassSlipModalIsOpen}
-            closeModalAction={closeCancelledPassSlipModal}
-          />
-
-          <MainContainer>
-            <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
-              <ContentHeader
-                title="Employee Approvals"
-                subtitle="Approve Employee Pass Slips, Leaves and Overtimes"
-              ></ContentHeader>
-
-              {loadingPassSlip && loadingLeave ? (
-                <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                  <SpinnerDotted
-                    speed={70}
-                    thickness={70}
-                    className="w-full flex h-full transition-all "
-                    color="slateblue"
-                    size={100}
+            <ContentBody>
+              <>
+                <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500 w-1/2">
+                  <TabHeader
+                    tab={0}
+                    tabIndex={1}
+                    title="Pass Slip Requests"
+                    icon={<HiQuestionMarkCircle size={26} />}
+                    subtitle="Show all Pass Slips requests"
+                    notificationCount={99}
+                    className="bg-indigo-500"
+                    onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
                   />
-                </div>
-              ) : (
-                <ContentBody>
-                  <>
-                    <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500 w-1/2">
-                      <TabHeader
-                        tab={0}
-                        tabIndex={1}
-                        title="Pass Slip Requests"
-                        icon={<HiQuestionMarkCircle size={26} />}
-                        subtitle="Show all Pass Slips requests"
-                        notificationCount={99}
-                        className="bg-indigo-500"
-                        onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
-                      />
-                      <TabHeader
-                        tab={0}
-                        tabIndex={2}
-                        title="Leave Requests"
-                        icon={<HiQuestionMarkCircle size={26} />}
-                        subtitle="Show all Leave requests"
-                        notificationCount={99}
-                        className="bg-indigo-500"
-                        onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
-                      />
-                      <TabHeader
-                        tab={0}
-                        tabIndex={3}
-                        title="Overtime Requests"
-                        icon={<HiQuestionMarkCircle size={26} />}
-                        subtitle="Show all Overtime requests"
-                        notificationCount={99}
-                        className="bg-indigo-500"
-                      />
-                    </ul>
-                  </>
-                </ContentBody>
-              )}
-            </div>
-          </MainContainer>
-        </EmployeeProvider>
-      </>
+                  <TabHeader
+                    tab={0}
+                    tabIndex={2}
+                    title="Leave Requests"
+                    icon={<HiQuestionMarkCircle size={26} />}
+                    subtitle="Show all Leave requests"
+                    notificationCount={99}
+                    className="bg-indigo-500"
+                    onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
+                  />
+                  <TabHeader
+                    tab={0}
+                    tabIndex={3}
+                    title="Overtime Requests"
+                    icon={<HiQuestionMarkCircle size={26} />}
+                    subtitle="Show all Overtime requests"
+                    notificationCount={99}
+                    className="bg-indigo-500"
+                    onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
+                  />
+                </ul>
+              </>
+            </ContentBody>
+          </div>
+        </MainContainer>
+      </EmployeeProvider>
     </>
   );
 }

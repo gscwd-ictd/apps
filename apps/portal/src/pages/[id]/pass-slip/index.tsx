@@ -27,6 +27,7 @@ import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { useRouter } from 'next/router';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -68,6 +69,8 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getPassSlipListFail: state.getPassSlipListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const router = useRouter();
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
     setEmployeeDetails: state.setEmployeeDetails,
@@ -205,7 +208,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
 
         <MainContainer>
           <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-            <ContentHeader title="Employee Pass Slips" subtitle="Apply for pass slip">
+            <ContentHeader title="Employee Pass Slips" subtitle="Apply for pass slip" backUrl={`/${router.query.id}`}>
               <Button className="hidden lg:block" size={`md`} onClick={openApplyPassSlipModal}>
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd /> Apply Pass Slip

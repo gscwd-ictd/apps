@@ -2,8 +2,6 @@ import { FunctionComponent, ReactElement } from 'react';
 import { flexRender } from '@tanstack/react-table';
 import { DataTablePortalProps, DataTableProps } from './types/data-table-props';
 import { SortableColumn } from './SortableColumn';
-import { GlobalFilter } from './GlobalFilter';
-import { ColumnFilter } from './ColumnFilter';
 import { Button } from '@gscwd-apps/oneui';
 import { ColumnFilterPortal } from './ColumnFilterPortal';
 import { GlobalFilterPortal } from './GlobalFilterPortal';

@@ -21,6 +21,7 @@ import { employeeDummy } from '../../../../src/types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { isEmpty } from 'lodash';
+import { useRouter } from 'next/router';
 
 export default function DailyTimeRecord({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const isLoadingDtr = useDtrStore((state) => state.loading.loadingDtr);
@@ -29,6 +30,8 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
+
+  const router = useRouter();
 
   // set the employee details on page load
   useEffect(() => {
@@ -70,7 +73,11 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
 
           <MainContainer>
             <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-              <ContentHeader title="Daily Time Record" subtitle="View schedules, time in and time out">
+              <ContentHeader
+                title="Daily Time Record"
+                subtitle="View schedules, time in and time out"
+                backUrl={`/${router.query.id}`}
+              >
                 <DtrDateSelect employeeDetails={employeeDetails} />
               </ContentHeader>
 

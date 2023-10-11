@@ -29,6 +29,7 @@ export type PassSlipState = {
   applyPassSlipModalIsOpen: boolean;
   pendingPassSlipModalIsOpen: boolean;
   completedPassSlipModalIsOpen: boolean;
+  disputePassSlipModalIsOpen: boolean;
   tab: number;
 
   getPassSlipList: (loading: boolean) => void;
@@ -47,6 +48,7 @@ export type PassSlipState = {
   setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => void;
   setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
   setCompletedPassSlipModalIsOpen: (completedPassSlipModalIsOpen: boolean) => void;
+  setDisputePassSlipModalIsOpen: (disputePassSlipModalIsOpen: boolean) => void;
 
   getPassSlip: (PassSlip: PassSlip) => void;
   setTab: (tab: number) => void;
@@ -80,6 +82,7 @@ export const usePassSlipStore = create<PassSlipState>()(
     applyPassSlipModalIsOpen: false,
     pendingPassSlipModalIsOpen: false,
     completedPassSlipModalIsOpen: false,
+    disputePassSlipModalIsOpen: false,
 
     cancelApplicationModalIsOpen: false,
 
@@ -103,6 +106,10 @@ export const usePassSlipStore = create<PassSlipState>()(
 
     setCompletedPassSlipModalIsOpen: (completedPassSlipModalIsOpen: boolean) => {
       set((state) => ({ ...state, completedPassSlipModalIsOpen }));
+    },
+
+    setDisputePassSlipModalIsOpen: (disputePassSlipModalIsOpen: boolean) => {
+      set((state) => ({ ...state, disputePassSlipModalIsOpen }));
     },
 
     getPassSlip: (passSlip: PassSlip) => {

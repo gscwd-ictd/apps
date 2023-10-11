@@ -210,9 +210,9 @@ export type ApprovalState = {
   getOvertimeListSuccess: (loading: boolean, response) => void;
   getOvertimeListFail: (loading: boolean, error: string) => void;
 
-  getOvertimeApplicationList: (loading: boolean) => void;
-  getOvertimeListApplicationSuccess: (loading: boolean, response) => void;
-  getOvertimeListApplicationFail: (loading: boolean, error: string) => void;
+  getOvertimeApplicationsList: (loading: boolean) => void;
+  getOvertimeApplicationsListSuccess: (loading: boolean, response) => void;
+  getOvertimeApplicationsListFail: (loading: boolean, error: string) => void;
 
   accomplishmentDetails: OvertimeAccomplishment;
   getAccomplishmentDetails: (loading: boolean) => void;
@@ -250,6 +250,7 @@ export const useApprovalStore = create<ApprovalState>()(
 
     leaveApplications: [],
     passSlipApplications: [],
+    overtimeApplications: [],
 
     leaves: {
       completed: {
@@ -674,7 +675,7 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    //GET OVERTIME ACTIONS
+    //GET OVERTIME ACTIONS OLD PAGE
     getOvertimeList: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -715,6 +716,50 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
     getOvertimeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
+    },
+
+    //GET OVERTIME ACTIONS FOR NEW DATA TABLE
+    getOvertimeApplicationsList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtimeApplications: [],
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: '',
+        },
+      }));
+    },
+
+    getOvertimeApplicationsListSuccess: (loading: boolean, response: Array<OvertimeDetails>) => {
+      set((state) => ({
+        ...state,
+        overtimeApplications: response,
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+      }));
+    },
+    getOvertimeApplicationsListFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {

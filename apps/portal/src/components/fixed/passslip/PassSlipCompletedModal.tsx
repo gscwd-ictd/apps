@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
@@ -7,6 +8,10 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { ConfirmationApplicationModal } from './ConfirmationModal';
+import { DisputeApplicationModal } from './DisputeModal';
+import dayjs from 'dayjs';
+import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -19,12 +24,25 @@ export const PassSlipCompletedModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipCompletedModalProps) => {
-  const { passSlip } = usePassSlipStore((state) => ({
+  const { passSlip, disputePassSlipModalIsOpen, setDisputePassSlipModalIsOpen } = usePassSlipStore((state) => ({
     passSlip: state.passSlip,
+    disputePassSlipModalIsOpen: state.disputePassSlipModalIsOpen,
+    setDisputePassSlipModalIsOpen: state.setDisputePassSlipModalIsOpen,
   }));
 
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions();
+
+  // for cancel pass slip button
+  const modalAction = async (e) => {
+    e.preventDefault();
+    setDisputePassSlipModalIsOpen(true);
+  };
+
+  // cancel action for Confirmation Application Modal
+  const closeConfirmationModal = async () => {
+    setDisputePassSlipModalIsOpen(false);
+  };
 
   return (
     <>
@@ -46,12 +64,35 @@ export const PassSlipCompletedModal = ({
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               {passSlip.status === PassSlipStatus.APPROVED ? (
-                <AlertNotification alertType="info" notifMessage="Approved" dismissible={false} />
+                <AlertNotification
+                  alertType="info"
+                  notifMessage={`Approved ${
+                    GetDateDifference(
+                      `${passSlip.dateOfApplication} 00:00:00`,
+                      `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
+                    ).days
+                  } days ago`}
+                  dismissible={false}
+                />
               ) : null}
 
               {passSlip.status === PassSlipStatus.DISAPPROVED ? (
                 <AlertNotification alertType="error" notifMessage="Disapproved" dismissible={false} />
               ) : null}
+
+              {passSlip.status === PassSlipStatus.DISPUTE ? (
+                <AlertNotification alertType="error" notifMessage="For Dispute Review" dismissible={false} />
+              ) : null}
+
+              {/* dispute pass slip time in */}
+              <DisputeApplicationModal
+                modalState={disputePassSlipModalIsOpen}
+                setModalState={setDisputePassSlipModalIsOpen}
+                closeModalAction={closeConfirmationModal}
+                action={PassSlipStatus.DISPUTE}
+                tokenId={passSlip.id}
+                title={'Dispute Pass Slip Time In'}
+              />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
@@ -136,6 +177,14 @@ export const PassSlipCompletedModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="w-full justify-end flex gap-2">
+              {passSlip.status === PassSlipStatus.APPROVED &&
+              passSlip.timeIn &&
+              GetDateDifference(`2023-10-10 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <= 3 ? (
+                <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
+                  File Dispute
+                </Button>
+              ) : null}
+
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                 Close
               </Button>

@@ -16,18 +16,12 @@ import { employeeDummy } from 'apps/portal/src/types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
-import {
-  getUserDetails,
-  withCookieSession,
-} from 'apps/portal/src/utils/helpers/session';
+import { getUserDetails, withCookieSession } from 'apps/portal/src/utils/helpers/session';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { isEmpty } from 'lodash';
 import Head from 'next/head';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
+import { useRouter } from 'next/router';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEffect, useState } from 'react';
 import { HiSearch } from 'react-icons/hi';
 import useSWR from 'swr';
@@ -123,12 +117,11 @@ export default function DutiesResponsibilities({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
+
+  const router = useRouter();
 
   return (
     <>
@@ -149,6 +142,7 @@ export default function DutiesResponsibilities({
           <ContentHeader
             title="Position Duties, Responsibilities, & Competencies"
             subtitle="Set or Update"
+            backUrl={`/${router.query.id}`}
           >
             <Button onClick={openModal} className="hidden lg:block" size={`md`}>
               <div className="flex items-center w-full gap-2">
@@ -193,24 +187,22 @@ export default function DutiesResponsibilities({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    // check if user role is rank_and_file or job order = kick out
-    if (
-      employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
-    ) {
-      // if true, the employee is not allowed to access this page
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/${employeeDetails.user._id}`,
-        },
-      };
-    } else {
-      return { props: { employeeDetails } };
-    }
+  // check if user role is rank_and_file or job order = kick out
+  if (
+    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
   }
-);
+});
