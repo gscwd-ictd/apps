@@ -189,9 +189,9 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     setOvertimeDetails(rowData);
 
     if (rowData.status == OvertimeStatus.APPROVED) {
-      // if (!approvedOvertimeModalIsOpen) {
-      //   setApprovedOvertimeModalIsOpen(true);
-      // }
+      if (!approvedOvertimeModalIsOpen) {
+        setApprovedOvertimeModalIsOpen(true);
+      }
     } else if (rowData.status == OvertimeStatus.PENDING) {
       // PENDING APPROVAL
       if (!pendingOvertimeModalIsOpen) {
@@ -210,7 +210,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
   // Define table columns
   const columnHelper = createColumnHelper<OvertimeDetails>();
   const columns = [
-    // leaveId
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),

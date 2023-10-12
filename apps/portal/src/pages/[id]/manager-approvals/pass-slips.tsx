@@ -35,6 +35,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen,
+    disputedPassSlipModalIsOpen,
     patchResponsePassSlip,
     loadingPassSlip,
     errorPassSlip,
@@ -45,6 +46,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen,
+    setDisputedPassSlipModalIsOpen,
 
     getPassSlipApplicationsList,
     getPassSlipApplicationsListSuccess,
@@ -59,6 +61,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
+    disputedPassSlipModalIsOpen: state.disputedPassSlipModalIsOpen,
     patchResponsePassSlip: state.response.patchResponsePassSlip,
     loadingPassSlip: state.loading.loadingPassSlips,
     errorPassSlip: state.error.errorPassSlips,
@@ -69,7 +72,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
     setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
-
+    setDisputedPassSlipModalIsOpen: state.setDisputedPassSlipModalIsOpen,
     getPassSlipApplicationsList: state.getPassSlipApplicationsList,
     getPassSlipApplicationsListSuccess: state.getPassSlipApplicationsListSuccess,
     getPassSlipApplicationsListFail: state.getPassSlipApplicationsListFail,
@@ -108,6 +111,11 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   // cancel action for Cancelled Pass Slip Application Modal
   const closeCancelledPassSlipModal = async () => {
     setCancelledPassSlipModalIsOpen(false);
+  };
+
+  // cancel action for Dispute Pass Slip Application Modal
+  const closeDisputedPassSlipModal = async () => {
+    setDisputedPassSlipModalIsOpen(false);
   };
 
   const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/supervisor/${employeeDetails.employmentDetails.userId}`;
@@ -176,7 +184,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   const renderRowActions = (rowData: PassSlip) => {
     setPassSlipIndividualDetail(rowData);
     console.log(rowData);
-    if (rowData.status == PassSlipStatus.APPROVED || rowData.status == PassSlipStatus.DISPUTE) {
+    if (rowData.status == PassSlipStatus.APPROVED) {
       if (!approvedPassSlipModalIsOpen) {
         setApprovedPassSlipModalIsOpen(true);
       }
@@ -195,6 +203,11 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       if (!cancelledPassSlipModalIsOpen) {
         setCancelledPassSlipModalIsOpen(true);
       }
+    } else if (rowData.status == PassSlipStatus.DISPUTE) {
+      // CANCELLED
+      if (!disputedPassSlipModalIsOpen) {
+        setDisputedPassSlipModalIsOpen(true);
+      }
     } else {
     }
   };
@@ -202,7 +215,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   // Define table columns
   const columnHelper = createColumnHelper<PassSlip>();
   const columns = [
-    // leaveId
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
@@ -287,6 +299,13 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
             modalState={cancelledPassSlipModalIsOpen}
             setModalState={setCancelledPassSlipModalIsOpen}
             closeModalAction={closeCancelledPassSlipModal}
+          />
+
+          {/* Disputed Pass Slip For Approval Modal */}
+          <ApprovalsPendingPassSlipModal
+            modalState={disputedPassSlipModalIsOpen}
+            setModalState={setDisputedPassSlipModalIsOpen}
+            closeModalAction={closeDisputedPassSlipModal}
           />
 
           <MainContainer>

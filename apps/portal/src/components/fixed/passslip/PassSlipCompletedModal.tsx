@@ -159,10 +159,7 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
               )}
-              <div
-                className={`flex flex-col gap-2
-            `}
-              >
+              <div className={`flex flex-col gap-2`}>
                 <label className="text-slate-500 text-md font-medium">Purpose/Desination:</label>
                 <textarea
                   className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
@@ -171,6 +168,17 @@ export const PassSlipCompletedModal = ({
                   disabled={true}
                 ></textarea>
               </div>
+              {passSlip.status === PassSlipStatus.DISPUTE ? (
+                <div className={`flex flex-col gap-2`}>
+                  <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
+                  <textarea
+                    className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                    value={'Forgot to time in back at 4PM'}
+                    rows={2}
+                    disabled={true}
+                  ></textarea>
+                </div>
+              ) : null}
             </div>
           </div>
         </Modal.Body>

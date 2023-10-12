@@ -83,15 +83,15 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
                     trainingList.map((training, index) => {
                       return (
                         <tr key={index}>
-                          <td className={`py-2 text-center border`}>{training.courseTitle}</td>
+                          <td className={`py-2 px-2 text-center border`}>{training.courseTitle}</td>
                           <td className={`border text-center py-2`}>{training.location}</td>
-                          <td className={`border text-center py-2`}>
+                          <td className={`whitespace-nowrap border text-center py-2 px-2`}>
                             {DateFormatter(training.trainingStart, 'MM-DD-YYYY')}
                           </td>
-                          <td className={`border text-center py-2`}>
+                          <td className={`whitespace-nowrap border text-center py-2 px-2`}>
                             {DateFormatter(training.trainingEnd, 'MM-DD-YYYY')}
                           </td>
-                          <td className={`border text-center py-2`}>
+                          <td className={`whitespace-nowrap border text-center py-2 px-2`}>
                             {DateFormatter(training.deadlineForSubmission, 'MM-DD-YYYY')}
                           </td>
                           <td className={`border text-center py-2 capitalize`}>{training.status}</td>

@@ -140,6 +140,9 @@ export type ApprovalState = {
   cancelledPassSlipModalIsOpen: boolean;
   setCancelledPassSlipModalIsOpen: (cancelledPassSlipModalIsOpen: boolean) => void;
 
+  disputedPassSlipModalIsOpen: boolean;
+  setDisputedPassSlipModalIsOpen: (disputedPassSlipModalIsOpen: boolean) => void;
+
   pendingOvertimeModalIsOpen: boolean;
   setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => void;
 
@@ -331,6 +334,7 @@ export const useApprovalStore = create<ApprovalState>()(
     approvedPassSlipModalIsOpen: false,
     disapprovedPassSlipModalIsOpen: false,
     cancelledPassSlipModalIsOpen: false,
+    disputedPassSlipModalIsOpen: false,
 
     pendingOvertimeModalIsOpen: false,
     approvedOvertimeModalIsOpen: false,
@@ -446,6 +450,10 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setCancelledPassSlipModalIsOpen: (cancelledPassSlipModalIsOpen: boolean) => {
       set((state) => ({ ...state, cancelledPassSlipModalIsOpen }));
+    },
+
+    setDisputedPassSlipModalIsOpen: (disputedPassSlipModalIsOpen: boolean) => {
+      set((state) => ({ ...state, disputedPassSlipModalIsOpen }));
     },
 
     setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => {

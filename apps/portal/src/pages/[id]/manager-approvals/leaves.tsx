@@ -208,7 +208,6 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
   // Define table columns
   const columnHelper = createColumnHelper<SupervisorLeaveDetails>();
   const columns = [
-    // leaveId
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
