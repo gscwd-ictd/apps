@@ -16,11 +16,11 @@ import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
 import { employeeDummy } from '../../../types/employee.type';
-import ApprovalsPendingLeaveModal from '../../../components/fixed/approvals/ApprovalsPendingLeaveModal';
+
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
-import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
+
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
@@ -28,6 +28,8 @@ import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/R
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useRouter } from 'next/router';
+import ApprovalsPendingLeaveModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingLeaveModal';
+import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedLeaveModal';
 
 export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -175,15 +177,15 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
   // Render row actions in the table component
   const renderRowActions = (rowData: SupervisorLeaveDetails) => {
     setLeaveIndividualDetail(rowData);
-    if (
-      rowData.status == LeaveStatus.APPROVED ||
-      rowData.status == LeaveStatus.FOR_HRDM_APPROVAL ||
-      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
-    ) {
+    if (rowData.status == LeaveStatus.APPROVED) {
       if (!approvedLeaveModalIsOpen) {
         setApprovedLeaveModalIsOpen(true);
       }
-    } else if (rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL) {
+    } else if (
+      rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+      rowData.status == LeaveStatus.FOR_HRDM_APPROVAL ||
+      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
+    ) {
       // PENDING APPROVAL LEAVES
       if (!pendingLeaveModalIsOpen) {
         setPendingLeaveModalIsOpen(true);
@@ -265,7 +267,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
 
         <EmployeeProvider employeeData={employee}>
           <Head>
-            <title>Approvals</title>
+            <title>Leave Approvals</title>
           </Head>
 
           <SideNav employeeDetails={employeeDetails} />

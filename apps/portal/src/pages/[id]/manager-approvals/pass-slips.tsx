@@ -183,12 +183,14 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   // Render row actions in the table component
   const renderRowActions = (rowData: PassSlip) => {
     setPassSlipIndividualDetail(rowData);
-    console.log(rowData);
     if (rowData.status == PassSlipStatus.APPROVED) {
       if (!approvedPassSlipModalIsOpen) {
         setApprovedPassSlipModalIsOpen(true);
       }
-    } else if (rowData.status == PassSlipStatus.FOR_APPROVAL) {
+      // if (!disputedPassSlipModalIsOpen) {
+      //   setDisputedPassSlipModalIsOpen(true);
+      // }
+    } else if (rowData.status == PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
       // PENDING APPROVAL
       if (!pendingPassSlipModalIsOpen) {
         setPendingPassSlipModalIsOpen(true);
@@ -203,12 +205,15 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       if (!cancelledPassSlipModalIsOpen) {
         setCancelledPassSlipModalIsOpen(true);
       }
-    } else if (rowData.status == PassSlipStatus.DISPUTE) {
-      // CANCELLED
+    } else if (rowData.status == PassSlipStatus.FOR_DISPUTE) {
+      // DISPUTE
       if (!disputedPassSlipModalIsOpen) {
         setDisputedPassSlipModalIsOpen(true);
       }
     } else {
+      if (!approvedPassSlipModalIsOpen) {
+        setApprovedPassSlipModalIsOpen(true);
+      }
     }
   };
 
@@ -268,7 +273,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 
         <EmployeeProvider employeeData={employee}>
           <Head>
-            <title>Approvals</title>
+            <title>Pass Slip Approvals</title>
           </Head>
 
           <SideNav employeeDetails={employeeDetails} />

@@ -171,13 +171,13 @@ export default function FinalLeaveApprovals({
     setLeaveIndividualDetail(rowData);
     if (
       rowData.status == LeaveStatus.APPROVED ||
-      rowData.status == LeaveStatus.FOR_HRDM_APPROVAL ||
+      rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
       rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
     ) {
       if (!approvedLeaveModalIsOpen) {
         setApprovedLeaveModalIsOpen(true);
       }
-    } else if (rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL) {
+    } else if (rowData.status == LeaveStatus.FOR_HRDM_APPROVAL) {
       // PENDING APPROVAL LEAVES
       if (!pendingLeaveModalIsOpen) {
         setPendingLeaveModalIsOpen(true);

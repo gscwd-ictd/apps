@@ -281,7 +281,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
 
       <EmployeeProvider employeeData={employee}>
         <Head>
-          <title>Approvals</title>
+          <title>Overtime Approvals</title>
         </Head>
 
         <SideNav employeeDetails={employeeDetails} />

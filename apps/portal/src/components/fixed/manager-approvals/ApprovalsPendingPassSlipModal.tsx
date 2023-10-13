@@ -12,6 +12,8 @@ import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -49,6 +51,7 @@ export const ApprovalsPendingPassSlipModal = ({
     defaultValues: {
       passSlipId: passSlip.id,
       status: null,
+      remarks: null,
     },
   });
 
@@ -106,7 +109,46 @@ export const ApprovalsPendingPassSlipModal = ({
             {/* OTP Modal */}
 
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              <AlertNotification alertType="warning" notifMessage="For Supervisor Approval" dismissible={false} />
+              <AlertNotification
+                alertType={
+                  passSlip.status === PassSlipStatus.APPROVED ||
+                  passSlip.status === PassSlipStatus.UNUSED ||
+                  passSlip.status === PassSlipStatus.USED
+                    ? 'info'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED ||
+                      passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
+                      passSlip.status === PassSlipStatus.CANCELLED
+                    ? 'error'
+                    : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
+                      passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
+                      passSlip.status === PassSlipStatus.FOR_DISPUTE
+                    ? 'warning'
+                    : 'info'
+                }
+                notifMessage={`${
+                  passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+                    ? `For Supervisor Approval`
+                    : passSlip.status === PassSlipStatus.FOR_DISPUTE
+                    ? 'For Dispute Approval'
+                    : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
+                    ? 'For HRMO Approval'
+                    : passSlip.status === PassSlipStatus.APPROVED
+                    ? 'Approved'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED
+                    ? 'Disapproved'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                    ? 'Disapproved by HRMO'
+                    : passSlip.status === PassSlipStatus.UNUSED
+                    ? 'Unused'
+                    : passSlip.status === PassSlipStatus.USED
+                    ? 'Used'
+                    : passSlip.status === PassSlipStatus.CANCELLED
+                    ? 'Cancelled'
+                    : passSlip.status
+                }`}
+                dismissible={false}
+              />
+              {/* <AlertNotification alertType="warning" notifMessage="For Supervisor Approval" dismissible={false} /> */}
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Employee Name:</label>
@@ -159,6 +201,35 @@ export const ApprovalsPendingPassSlipModal = ({
                   </div>
                 </div>
               </div>
+
+              {passSlip.status === PassSlipStatus.FOR_DISPUTE ? (
+                <>
+                  <div className={` flex flex-col gap-2`}>
+                    <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Time Out:</label>
+                      <div className="w-auto md:w-96">
+                        <label className="text-slate-500 h-12 w-96  text-md ">
+                          {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  {passSlip.natureOfBusiness == NatureOfBusiness.UNDERTIME ||
+                  passSlip.natureOfBusiness == NatureOfBusiness.HALF_DAY ? null : (
+                    <div className={` flex flex-col gap-2`}>
+                      <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Time In:</label>
+                        <div className="w-auto md:w-96">
+                          <label className="text-slate-500 h-12 w-96  text-md ">
+                            {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : null}
+
               <div
                 className={`flex flex-col gap-2
             `}
@@ -171,9 +242,20 @@ export const ApprovalsPendingPassSlipModal = ({
                   disabled={true}
                 ></textarea>
               </div>
-              <div className="w-full flex gap-2 justify-start items-center pt-4">
-                <span className="text-slate-500 text-md font-medium">Action:</span>
-                <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
+
+              <div className={`flex flex-col gap-2`}>
+                <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
+                <textarea
+                  className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                  value={`Corrected Time In is 2:00PM. Forgot to time in back at 2PM. `}
+                  rows={2}
+                  disabled={true}
+                ></textarea>
+              </div>
+              <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
+                <div className="w-full flex gap-2 justify-start items-center pt-4">
+                  <span className="text-slate-500 text-md font-medium">Action:</span>
+
                   <select
                     id="action"
                     className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
@@ -189,8 +271,17 @@ export const ApprovalsPendingPassSlipModal = ({
                       </option>
                     ))}
                   </select>
-                </form>
-              </div>
+                </div>
+                {watch('status') === PassSlipStatus.DISAPPROVED && passSlip.status === PassSlipStatus.FOR_DISPUTE ? (
+                  <textarea
+                    required={true}
+                    className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                    placeholder="Enter Reason"
+                    rows={3}
+                    {...register('remarks')}
+                  ></textarea>
+                ) : null}
+              </form>
             </div>
           </div>
           <OtpModal

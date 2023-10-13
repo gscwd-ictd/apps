@@ -74,22 +74,50 @@ export const PassSlipCompletedModal = ({
                   } days ago`}
                   dismissible={false}
                 />
-              ) : null}
-
-              {passSlip.status === PassSlipStatus.DISAPPROVED ? (
-                <AlertNotification alertType="error" notifMessage="Disapproved" dismissible={false} />
-              ) : null}
-
-              {passSlip.status === PassSlipStatus.DISPUTE ? (
-                <AlertNotification alertType="error" notifMessage="For Dispute Review" dismissible={false} />
-              ) : null}
+              ) : (
+                <AlertNotification
+                  alertType={
+                    passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
+                      ? 'info'
+                      : passSlip.status === PassSlipStatus.DISAPPROVED ||
+                        passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
+                        passSlip.status === PassSlipStatus.CANCELLED
+                      ? 'error'
+                      : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
+                        passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
+                        passSlip.status === PassSlipStatus.FOR_DISPUTE
+                      ? 'warning'
+                      : 'info'
+                  }
+                  notifMessage={`${
+                    passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+                      ? `For Supervisor Approval`
+                      : passSlip.status === PassSlipStatus.FOR_DISPUTE
+                      ? 'For Dispute Approval'
+                      : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
+                      ? 'For HRMO Approval'
+                      : passSlip.status === PassSlipStatus.DISAPPROVED
+                      ? 'Disapproved'
+                      : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                      ? 'Disapproved by HRMO'
+                      : passSlip.status === PassSlipStatus.UNUSED
+                      ? 'Unused'
+                      : passSlip.status === PassSlipStatus.USED
+                      ? 'Used'
+                      : passSlip.status === PassSlipStatus.CANCELLED
+                      ? 'Cancelled'
+                      : passSlip.status
+                  }`}
+                  dismissible={false}
+                />
+              )}
 
               {/* dispute pass slip time in */}
               <DisputeApplicationModal
                 modalState={disputePassSlipModalIsOpen}
                 setModalState={setDisputePassSlipModalIsOpen}
                 closeModalAction={closeConfirmationModal}
-                action={PassSlipStatus.DISPUTE}
+                action={PassSlipStatus.FOR_DISPUTE}
                 tokenId={passSlip.id}
                 title={'Dispute Pass Slip Time In'}
               />
@@ -168,7 +196,7 @@ export const PassSlipCompletedModal = ({
                   disabled={true}
                 ></textarea>
               </div>
-              {passSlip.status === PassSlipStatus.DISPUTE ? (
+              {passSlip.status === PassSlipStatus.FOR_DISPUTE ? (
                 <div className={`flex flex-col gap-2`}>
                   <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
                   <textarea
@@ -187,12 +215,11 @@ export const PassSlipCompletedModal = ({
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED &&
               passSlip.timeIn &&
-              GetDateDifference(`2023-10-10 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <= 3 ? (
+              GetDateDifference(`2023-10-11 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <= 3 ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   File Dispute
                 </Button>
               ) : null}
-
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                 Close
               </Button>

@@ -12,11 +12,14 @@ export enum ObTransportation {
 }
 
 export enum PassSlipStatus {
-  FOR_APPROVAL = 'for approval',
   DISAPPROVED = 'disapproved',
+  DISAPPROVED_BY_HRMO = 'disapproved by hrmo',
   CANCELLED = 'cancelled',
   APPROVED = 'approved',
   ONGOING = 'ongoing',
   USED = 'used',
-  DISPUTE = 'dispute by employee',
+  UNUSED = 'unused',
+  FOR_HRMO_APPROVAL = 'for hrmo approval',
+  FOR_SUPERVISOR_APPROVAL = 'for supervisor approval',
+  FOR_DISPUTE = 'for dispute',
 }

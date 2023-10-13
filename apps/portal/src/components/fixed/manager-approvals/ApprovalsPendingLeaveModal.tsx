@@ -135,25 +135,36 @@ export const ApprovalsPendingLeaveModal = ({
                   {leaveIndividualDetail ? (
                     <AlertNotification
                       alertType={
-                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL ||
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
                           ? 'warning'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
+                            leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
+                            leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
+                            leaveIndividualDetail?.status === LeaveStatus.CANCELLED
                           ? 'error'
-                          : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'warning'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? 'error'
+                          : leaveIndividualDetail?.status === LeaveStatus.APPROVED
+                          ? 'info'
                           : 'info'
                       }
                       notifMessage={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Approval'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? 'Disapproved by HRDM '
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
+                          ? 'For HRMO Approval '
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
                           ? 'For Supervisor Approval '
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'Disapproved by HRDM '
+                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'Disapproved by HRDO '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                           ? 'Disapproved by Supervisor '
+                          : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
+                          ? 'Cancelled'
+                          : leaveIndividualDetail?.status === LeaveStatus.APPROVED
+                          ? 'Approved'
                           : leaveIndividualDetail?.status
                       }
                       dismissible={false}
