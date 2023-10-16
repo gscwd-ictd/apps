@@ -311,7 +311,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             actionOvertime={watch('status')}
             tokenId={overtimeDetails.id}
             remarks={reason}
-            otpName={ManagerOtpApproval.OVERTIME}
+            confirmName={ManagerOtpApproval.OVERTIME}
             employeeId={employeeDetails.user._id}
           />
           <ApprovalAccomplishmentModal

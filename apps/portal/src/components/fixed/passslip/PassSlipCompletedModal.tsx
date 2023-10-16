@@ -201,8 +201,10 @@ export const PassSlipCompletedModal = ({
                   <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
                   <textarea
                     className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                    value={'Forgot to time in back at 4PM'}
-                    rows={2}
+                    value={`Disputed Time In: ${
+                      passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
+                    }.\n${passSlip.disputeRemarks}`}
+                    rows={3}
                     disabled={true}
                   ></textarea>
                 </div>
@@ -215,7 +217,7 @@ export const PassSlipCompletedModal = ({
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED &&
               passSlip.timeIn &&
-              GetDateDifference(`2023-10-11 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <= 3 ? (
+              GetDateDifference(`2023-10-11 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <= 100 ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   File Dispute
                 </Button>

@@ -368,7 +368,7 @@ export const ApprovalsPendingLeaveModal = ({
               employeeId={employeeDetails.user._id}
               action={watch('status')}
               tokenId={leaveIndividualDetail.id}
-              otpName={'supervisorLeaveApproval'}
+              confirmName={'supervisorLeaveApproval'}
             /> */}
             <ApprovalOtpContents
               mobile={employeeDetails.profile.mobileNumber}
@@ -385,7 +385,7 @@ export const ApprovalsPendingLeaveModal = ({
             actionLeave={watch('status')}
             tokenId={leaveIndividualDetail.id}
             remarks={reason}
-            otpName={ManagerOtpApproval.LEAVE}
+            confirmName={ManagerOtpApproval.LEAVE}
             employeeId={employeeDetails.user._id}
           />
         </Modal.Body>

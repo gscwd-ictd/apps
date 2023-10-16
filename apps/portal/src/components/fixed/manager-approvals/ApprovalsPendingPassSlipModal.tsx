@@ -37,12 +37,20 @@ export const ApprovalsPendingPassSlipModal = ({
     setOtpPassSlipModalIsOpen,
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
+    pendingDisputeModalIsOpen,
+    setPendingDisputeModalIsOpen,
+    declineDisputeModalIsOpen,
+    setDeclineDisputeModalIsOpen,
   } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
     otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    pendingDisputeModalIsOpen: state.pendingDisputeModalIsOpen,
+    setPendingDisputeModalIsOpen: state.setPendingDisputeModalIsOpen,
+    declineDisputeModalIsOpen: state.declineDisputeModalIsOpen,
+    setDeclineDisputeModalIsOpen: state.setDeclineDisputeModalIsOpen,
   }));
 
   // React hook form
@@ -67,10 +75,14 @@ export const ApprovalsPendingPassSlipModal = ({
 
   const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
     setValue('passSlipId', passSlip.id);
-    if (data.status === 'approved') {
+    if (data.status === 'approved' && passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
       setOtpPassSlipModalIsOpen(true);
-    } else {
+    } else if (data.status === 'disapproved' && passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
       setDeclineApplicationModalIsOpen(true);
+    } else if (data.status === 'approved' && passSlip.status === PassSlipStatus.FOR_DISPUTE) {
+      setPendingDisputeModalIsOpen(true);
+    } else if (data.status === 'disapproved' && passSlip.status === PassSlipStatus.FOR_DISPUTE) {
+      setDeclineDisputeModalIsOpen(true);
     }
   };
 
@@ -84,6 +96,8 @@ export const ApprovalsPendingPassSlipModal = ({
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
     setDeclineApplicationModalIsOpen(false);
+    setDeclineDisputeModalIsOpen(false);
+    setPendingDisputeModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -289,14 +303,6 @@ export const ApprovalsPendingPassSlipModal = ({
             setModalState={setOtpPassSlipModalIsOpen}
             title={'PASS SLIP APPROVAL OTP'}
           >
-            {/* contents */}
-            {/* <ApprovalOtpContentsPassSlip
-              mobile={employeeDetails.profile.mobileNumber}
-              employeeId={employeeDetails.user._id}
-              action={watch('status')}
-              tokenId={passSlip.id}
-              otpName={'passSlipApproval'}
-            /> */}
             <ApprovalOtpContents
               mobile={employeeDetails.profile.mobileNumber}
               employeeId={employeeDetails.user._id}
@@ -311,7 +317,16 @@ export const ApprovalsPendingPassSlipModal = ({
             closeModalAction={closeDeclineModal}
             actionPassSlip={watch('status')}
             tokenId={passSlip.id}
-            otpName={ManagerOtpApproval.PASSSLIP}
+            confirmName={ManagerOtpApproval.PASSSLIP}
+            employeeId={employeeDetails.user._id}
+          />
+          <ConfirmationApprovalModal
+            modalState={declineDisputeModalIsOpen}
+            setModalState={setDeclineDisputeModalIsOpen}
+            closeModalAction={closeDeclineModal}
+            actionPassSlip={watch('status')}
+            tokenId={passSlip.id}
+            confirmName={ManagerOtpApproval.PASSSLIP}
             employeeId={employeeDetails.user._id}
           />
         </Modal.Body>

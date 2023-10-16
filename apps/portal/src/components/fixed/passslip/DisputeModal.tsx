@@ -10,16 +10,23 @@ import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { stat } from 'fs';
 
 type DisputeApplicationModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  action: PassSlipStatus; // disapprove or cancel
+  action: PassSlipStatus; // for dispute
   tokenId: string; //like pass Slip Id, leave Id etc.
   title: string;
 };
 
+type DisputeForm = {
+  disputeRemarks: string;
+  encodedTimeIn: string;
+  status: PassSlipStatus;
+  passSlipId: string;
+};
 export const DisputeApplicationModal = ({
   modalState,
   setModalState,
@@ -28,39 +35,48 @@ export const DisputeApplicationModal = ({
   tokenId,
   title,
 }: DisputeApplicationModalProps) => {
-  const { setPendingPassSlipModalIsOpen, disputePassSlipModalIsOpen, setDisputePassSlipModalIsOpen } = usePassSlipStore(
-    (state) => ({
-      disputePassSlipModalIsOpen: state.disputePassSlipModalIsOpen,
-      setDisputePassSlipModalIsOpen: state.setDisputePassSlipModalIsOpen,
-      setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
-    })
-  );
-  // const [remarks, setRemarks] = useState<string>('');
-  // const [timeIn, setTimeIn] = useState<string>('');
+  const {
+    setCompletedPassSlipModalIsOpen,
+    disputePassSlipModalIsOpen,
+    patchPassSlip,
+    patchPassSlipSuccess,
+    patchPassSlipFail,
+  } = usePassSlipStore((state) => ({
+    disputePassSlipModalIsOpen: state.disputePassSlipModalIsOpen,
+    setCompletedPassSlipModalIsOpen: state.setCompletedPassSlipModalIsOpen,
+    patchPassSlip: state.patchPassSlip,
+    patchPassSlipSuccess: state.patchPassSlipSuccess,
+    patchPassSlipFail: state.patchPassSlipFail,
+  }));
 
   // React hook form
-  const { reset, register, handleSubmit, trigger, watch, setValue } = useForm<{ remarks: string; timeIn: any }>({
+  const { reset, register, handleSubmit, trigger, watch, setValue } = useForm<DisputeForm>({
     mode: 'onChange',
     defaultValues: {
-      remarks: '',
-      timeIn: '',
+      disputeRemarks: '',
+      encodedTimeIn: '',
+      status: PassSlipStatus.FOR_DISPUTE,
+      passSlipId: tokenId,
     },
   });
 
-  const onSubmit: SubmitHandler<{ remarks: string; timeIn: string }> = (data: { remarks: string; timeIn: any }) => {
+  const onSubmit: SubmitHandler<DisputeForm> = (data: DisputeForm) => {
     handlePatchResult(data);
-    // postPassSlipList();
+    patchPassSlip();
   };
 
-  const handlePatchResult = async (data: { remarks: string; timeIn: any }) => {
+  const handlePatchResult = async (data: DisputeForm) => {
     console.log(data);
     const { error, result } = await patchPortal('/v1/pass-slip', data);
     if (error) {
-      // cancelPassSlipFail(result);
+      patchPassSlipFail(result);
     } else {
-      console.log(data);
-      // cancelPassSlipSuccess(result);
+      console.log(result);
+      patchPassSlipSuccess(result);
       closeModalAction(); // close dispute modal
+      setTimeout(() => {
+        setCompletedPassSlipModalIsOpen(false); // close main pass slip info modal
+      }, 200);
     }
   };
 
@@ -92,22 +108,21 @@ export const DisputeApplicationModal = ({
                   <label className="text-slate-500 w-full text-md ">
                     <LabelInput
                       required
-                      id={'timeIn'}
+                      id={'encodedTimeIn'}
                       type={'time'}
                       label={''}
                       className="w-full text-slate-400 font-medium cursor-pointer"
                       textSize="md"
                       controller={{
-                        ...register('timeIn', {
+                        ...register('encodedTimeIn', {
                           onChange: (e) => {
-                            setValue('timeIn', e.target.value, {
+                            setValue('encodedTimeIn', e.target.value, {
                               shouldValidate: true,
                             });
                             trigger(); // triggers all validations for inputs
                           },
                         }),
                       }}
-                      // onChange={(e) => setTimeIn(e.target.value as unknown as string)}
                     />
                   </label>
                 </div>
@@ -121,9 +136,7 @@ export const DisputeApplicationModal = ({
                 placeholder="Reason for Dispute"
                 minLength={15}
                 className={`w-full h-32 p-2 border resize-none text-slate-500`}
-                {...register('remarks')}
-                // onChange={(e) => setRemarks(e.target.value as unknown as string)}
-                // value={watch('remarks')}
+                {...register('disputeRemarks')}
               ></textarea>
               <span className="text-slate-400 text-xs">Minimum of 15 characters required for Reason of Dispute</span>
             </div>
