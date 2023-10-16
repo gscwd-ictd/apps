@@ -252,6 +252,7 @@ export const PassSlipApplicationModal = ({
                         <span className="text-red-600">*</span>
                       </label>
                       <textarea
+                        minLength={watch('natureOfBusiness') === 'Official Business' ? 20 : 5}
                         rows={3}
                         placeholder={`Enter Purpose of Pass Slip`}
                         name="passSlip_purpose"
@@ -260,6 +261,7 @@ export const PassSlipApplicationModal = ({
                         required
                         {...register('purposeDestination')}
                       ></textarea>
+                      <span className="text-slate-400 text-xs">Minimum of 20 characters for Official Business</span>
                     </div>
                   </>
                 ) : null}

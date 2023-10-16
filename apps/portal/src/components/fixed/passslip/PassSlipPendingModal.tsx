@@ -54,12 +54,14 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <AlertNotification alertType="info" notifMessage="For Supervisor Approval" dismissible={false} />
 
+              {/* cancell pass slip application */}
               <ConfirmationApplicationModal
                 modalState={cancelApplicationModalIsOpen}
                 setModalState={setCancelApplicationModalIsOpen}
                 closeModalAction={closeConfirmationModal}
                 action={PassSlipStatus.CANCELLED}
                 tokenId={passSlip.id}
+                title={'Cancel Pass Slip'}
               />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">

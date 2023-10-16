@@ -22,6 +22,7 @@ import { TrainingTable } from 'apps/portal/src/components/fixed/training-selecti
 import { ToastNotification } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
 import TrainingNominationModal from 'apps/portal/src/components/fixed/training-selection/TrainingNominationModal';
+import { useRouter } from 'next/router';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -56,6 +57,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
   }));
+
+  const router = useRouter();
 
   const trainingUrl = `${process.env.NEXT_PUBLIC_LMS}api/lms/v1/training-details?lsp-type=individual`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
@@ -123,6 +126,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
             <ContentHeader
               title="Training Attendee Selection"
               subtitle="Select employees to attend training"
+              backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
             {loadingTrainingList ? (

@@ -48,6 +48,10 @@ export type ApprovalState = {
   selectedApprovalType: number;
   setSelectedApprovalType: (value: number) => void;
 
+  leaveApplications: Array<SupervisorLeaveDetails>; // new approval page using data tables
+  passSlipApplications: Array<PassSlip>; // new approval page using data tables
+  overtimeApplications: Array<OvertimeDetails>;
+
   leaves: {
     completed: {
       approved: Array<SupervisorLeaveDetails>;
@@ -136,6 +140,9 @@ export type ApprovalState = {
   cancelledPassSlipModalIsOpen: boolean;
   setCancelledPassSlipModalIsOpen: (cancelledPassSlipModalIsOpen: boolean) => void;
 
+  disputedPassSlipModalIsOpen: boolean;
+  setDisputedPassSlipModalIsOpen: (disputedPassSlipModalIsOpen: boolean) => void;
+
   pendingOvertimeModalIsOpen: boolean;
   setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => void;
 
@@ -179,6 +186,10 @@ export type ApprovalState = {
   getPassSlipListSuccess: (loading: boolean, response) => void;
   getPassSlipListFail: (loading: boolean, error: string) => void;
 
+  getPassSlipApplicationsList: (loading: boolean) => void;
+  getPassSlipApplicationsListSuccess: (loading: boolean, response) => void;
+  getPassSlipApplicationsListFail: (loading: boolean, error: string) => void;
+
   // LEAVES
   leaveId: string;
   setLeaveId: (id: string) => void;
@@ -190,6 +201,11 @@ export type ApprovalState = {
   getLeaveListSuccess: (loading: boolean, response) => void;
   getLeaveListFail: (loading: boolean, error: string) => void;
 
+  //for data table format
+  getLeaveApplicationsList: (loading: boolean) => void;
+  getLeaveApplicationsListSuccess: (loading: boolean, response) => void;
+  getLeaveApplicationsListFail: (loading: boolean, error: string) => void;
+
   // OVERTIME
   overtimeDetails: OvertimeDetails;
   setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
@@ -197,6 +213,11 @@ export type ApprovalState = {
   getOvertimeList: (loading: boolean) => void;
   getOvertimeListSuccess: (loading: boolean, response) => void;
   getOvertimeListFail: (loading: boolean, error: string) => void;
+
+  //for data table format
+  getOvertimeApplicationsList: (loading: boolean) => void;
+  getOvertimeApplicationsListSuccess: (loading: boolean, response) => void;
+  getOvertimeApplicationsListFail: (loading: boolean, error: string) => void;
 
   accomplishmentDetails: OvertimeAccomplishment;
   getAccomplishmentDetails: (loading: boolean) => void;
@@ -231,6 +252,10 @@ export const useApprovalStore = create<ApprovalState>()(
     modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
     action: '',
     selectedApprovalType: 1,
+
+    leaveApplications: [],
+    passSlipApplications: [],
+    overtimeApplications: [],
 
     leaves: {
       completed: {
@@ -309,6 +334,7 @@ export const useApprovalStore = create<ApprovalState>()(
     approvedPassSlipModalIsOpen: false,
     disapprovedPassSlipModalIsOpen: false,
     cancelledPassSlipModalIsOpen: false,
+    disputedPassSlipModalIsOpen: false,
 
     pendingOvertimeModalIsOpen: false,
     approvedOvertimeModalIsOpen: false,
@@ -426,6 +452,10 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, cancelledPassSlipModalIsOpen }));
     },
 
+    setDisputedPassSlipModalIsOpen: (disputedPassSlipModalIsOpen: boolean) => {
+      set((state) => ({ ...state, disputedPassSlipModalIsOpen }));
+    },
+
     setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => {
       set((state) => ({ ...state, pendingOvertimeModalIsOpen }));
     },
@@ -446,7 +476,7 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, leaveId }));
     },
 
-    //GET LEAVE ACTIONS
+    //GET LEAVE ACTIONS OLD APPROVAL PAGE
     getLeaveList: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -505,11 +535,55 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
+    //GET LEAVE ACTIONS NEW APPROVAL PAGE USING DATA TABLE
+    getLeaveApplicationsList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveApplications: [],
+
+        response: {
+          ...state.response,
+          patchResponseLeave: {} as SupervisorLeaveDetails,
+        },
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaves: '',
+        },
+      }));
+    },
+    getLeaveApplicationsListSuccess: (loading: boolean, response: Array<SupervisorLeaveDetails>) => {
+      set((state) => ({
+        ...state,
+        leaveApplications: response,
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+      }));
+    },
+    getLeaveApplicationsListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingLeaves: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaves: error,
+        },
+      }));
+    },
+
     setLeaveIndividualDetail: (leaveIndividualDetail: SupervisorLeaveDetails) => {
       set((state) => ({ ...state, leaveIndividualDetail }));
     },
 
-    //GET PASS SLIP ACTIONS
+    //GET PASS SLIP ACTIONS OLD APPROVAL PAGE
     getPassSlipList: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -568,7 +642,50 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    //GET OVERTIME ACTIONS
+    //GET PASS SLIP ACTIONS NEW APPROVAL PAGE USING DATA TABLE
+    getPassSlipApplicationsList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        passSlipApplications: [],
+        response: {
+          ...state.response,
+          patchResponsePassSlip: {} as PassSlip,
+        },
+        loading: {
+          ...state.loading,
+          loadingPassSlips: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlips: '',
+        },
+      }));
+    },
+    getPassSlipApplicationsListSuccess: (loading: boolean, response: Array<PassSlip>) => {
+      set((state) => ({
+        ...state,
+        passSlipApplications: response,
+        loading: {
+          ...state.loading,
+          loadingPassSlips: loading,
+        },
+      }));
+    },
+    getPassSlipApplicationsListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingPassSlips: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlips: error,
+        },
+      }));
+    },
+
+    //GET OVERTIME ACTIONS OLD PAGE
     getOvertimeList: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -609,6 +726,50 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
     getOvertimeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
+    },
+
+    //GET OVERTIME ACTIONS FOR NEW DATA TABLE
+    getOvertimeApplicationsList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtimeApplications: [],
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: '',
+        },
+      }));
+    },
+
+    getOvertimeApplicationsListSuccess: (loading: boolean, response: Array<OvertimeDetails>) => {
+      set((state) => ({
+        ...state,
+        overtimeApplications: response,
+        loading: {
+          ...state.loading,
+          loadingOvertime: loading,
+        },
+      }));
+    },
+    getOvertimeApplicationsListFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {

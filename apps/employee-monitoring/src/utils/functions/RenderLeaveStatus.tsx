@@ -12,23 +12,17 @@ function UseRenderLeaveStatus(status: LeaveStatus | string) {
           ? 'success'
           : status === LeaveStatus.CANCELLED || status === 'cancelled'
           ? 'error'
-          : status === LeaveStatus.FOR_HRDM_APPROVAL ||
-            status === 'for hrdm approval'
+          : status === LeaveStatus.FOR_HRDM_APPROVAL || status === 'for hrdm approval'
           ? 'warning'
-          : status === LeaveStatus.FOR_HRMO_APPROVAL ||
-            status === 'for hrmo approval'
+          : status === LeaveStatus.FOR_HRMO_APPROVAL || status === 'for hrmo approval'
           ? 'warning'
-          : status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-            status === 'for supervisor approval'
+          : status === LeaveStatus.FOR_SUPERVISOR_APPROVAL || status === 'for supervisor approval'
           ? 'warning'
-          : status === LeaveStatus.DISAPPROVED_BY_HRDM ||
-            status === 'disapproved by hrdm'
+          : status === LeaveStatus.DISAPPROVED_BY_HRDM || status === 'disapproved by hrdm'
           ? 'error'
-          : status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
-            status === 'disapproved by supervisor'
+          : status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR || status === 'disapproved by supervisor'
           ? 'error'
-          : status === LeaveStatus.DISAPPROVED_BY_HRMO ||
-            status === 'disapproved by hrmo'
+          : status === LeaveStatus.DISAPPROVED_BY_HRMO || status === 'disapproved by hrmo'
           ? 'error'
           : 'default'
       }

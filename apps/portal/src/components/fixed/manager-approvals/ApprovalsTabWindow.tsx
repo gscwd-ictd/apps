@@ -1,4 +1,4 @@
-import { useApprovalStore } from '../../../../src/store/approvals.store';
+import { useApprovalStore } from '../../../store/approvals.store';
 import { AllApprovalsTab } from './AllApprovalsTab';
 
 type ApprovalTabWindowProps = {

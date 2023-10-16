@@ -6,20 +6,18 @@ type ContentHeaderProps = {
   title: string;
   subtitle: string;
   children?: ReactNode;
+  backUrl: string;
 };
 
-export const ContentHeader: React.FC<ContentHeaderProps> = ({
-  title,
-  subtitle,
-  children,
-}): JSX.Element => {
+export const ContentHeader: React.FC<ContentHeaderProps> = ({ title, subtitle, children, backUrl }): JSX.Element => {
   const router = useRouter();
 
   return (
     <>
       <button
         className="flex items-center gap-2 mb-5 text-gray-500 transition-colors ease-in-out hover:text-gray-700"
-        onClick={() => router.push(`/${router.query.id}`)}
+        onClick={() => router.push(`${backUrl}`)}
+        // onClick={() => router.push(`/${router.query.id}`)}
       >
         <HiArrowSmLeft className="w-5 h-5" />
         <span className="font-medium">Go Back</span>

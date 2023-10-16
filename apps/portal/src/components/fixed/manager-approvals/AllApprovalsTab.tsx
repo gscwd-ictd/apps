@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
-import { useApprovalStore } from '../../../../src/store/approvals.store';
+import { useApprovalStore } from '../../../store/approvals.store';
 
 import { SupervisorLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 

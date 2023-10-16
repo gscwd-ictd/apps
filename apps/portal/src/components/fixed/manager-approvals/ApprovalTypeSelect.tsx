@@ -1,5 +1,5 @@
 import { ListDef, Select } from '@gscwd-apps/oneui';
-import { useApprovalStore } from '../../../../src/store/approvals.store';
+import { useApprovalStore } from '../../../store/approvals.store';
 
 type ApprovalType = { type: string; code: number };
 

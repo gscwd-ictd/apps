@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -10,67 +10,75 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-
-import React from 'react';
-import useSWR from 'swr';
-import { employeeDummy } from '../../../types/employee.type';
-import { fetchWithToken } from '../../../utils/hoc/fetcher';
-import { isEmpty, isEqual } from 'lodash';
-import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
-import { FinalApprovalsPendingLeaveModal } from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsPendingLeaveModal';
-import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
-import FinalApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsCompletedLeaveModal';
-import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
-import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
-import dayjs from 'dayjs';
-import { createColumnHelper } from '@tanstack/react-table';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import { useRouter } from 'next/router';
 import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import React from 'react';
+import { useApprovalStore } from '../../../store/approvals.store';
+import useSWR from 'swr';
+import { employeeDummy } from '../../../types/employee.type';
 
-export default function FinalLeaveApprovals({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+
+import dayjs from 'dayjs';
+import { createColumnHelper } from '@tanstack/react-table';
+import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
+import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
+import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { useRouter } from 'next/router';
+import ApprovalsPendingLeaveModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingLeaveModal';
+import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedLeaveModal';
+
+export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
+    tab,
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen,
-
     patchResponseLeave,
     loadingLeave,
     errorLeave,
+    errorLeaveResponse,
     leaveApplications,
+
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen,
     setCancelledLeaveModalIsOpen,
-    setLeaveIndividualDetail,
 
     getLeaveApplicationsList,
     getLeaveApplicationsListSuccess,
     getLeaveApplicationsListFail,
+
+    setLeaveIndividualDetail,
+
     emptyResponseAndError,
-  } = useFinalLeaveApprovalStore((state) => ({
+  } = useApprovalStore((state) => ({
+    tab: state.tab,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
-
     patchResponseLeave: state.response.patchResponseLeave,
     loadingLeave: state.loading.loadingLeaves,
     errorLeave: state.error.errorLeaves,
+    errorLeaveResponse: state.error.errorLeaveResponse,
     leaveApplications: state.leaveApplications,
+
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
     setCancelledLeaveModalIsOpen: state.setCancelledLeaveModalIsOpen,
-    setLeaveIndividualDetail: state.setLeaveIndividualDetail,
+
     getLeaveApplicationsList: state.getLeaveApplicationsList,
     getLeaveApplicationsListSuccess: state.getLeaveApplicationsListSuccess,
     getLeaveApplicationsListFail: state.getLeaveApplicationsListFail,
     emptyResponseAndError: state.emptyResponseAndError,
+
+    setLeaveIndividualDetail: state.setLeaveIndividualDetail,
   }));
 
   const router = useRouter();
@@ -100,12 +108,12 @@ export default function FinalLeaveApprovals({
     setDisapprovedLeaveModalIsOpen(false);
   };
 
-  // cancel action for Dispproved Leave Application Modal
+  // cancel action for Cancelled Pass Slip Application Modal
   const closeCancelledLeaveModal = async () => {
     setCancelledLeaveModalIsOpen(false);
   };
 
-  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/hrdm`;
+  const leaveUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/supervisor/v2/${employeeDetails.employmentDetails.userId}`;
 
   const {
     data: swrLeaves,
@@ -169,15 +177,15 @@ export default function FinalLeaveApprovals({
   // Render row actions in the table component
   const renderRowActions = (rowData: SupervisorLeaveDetails) => {
     setLeaveIndividualDetail(rowData);
-    if (
-      rowData.status == LeaveStatus.APPROVED ||
-      rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
-    ) {
+    if (rowData.status == LeaveStatus.APPROVED) {
       if (!approvedLeaveModalIsOpen) {
         setApprovedLeaveModalIsOpen(true);
       }
-    } else if (rowData.status == LeaveStatus.FOR_HRDM_APPROVAL) {
+    } else if (
+      rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+      rowData.status == LeaveStatus.FOR_HRDM_APPROVAL ||
+      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
+    ) {
       // PENDING APPROVAL LEAVES
       if (!pendingLeaveModalIsOpen) {
         setPendingLeaveModalIsOpen(true);
@@ -202,7 +210,6 @@ export default function FinalLeaveApprovals({
   // Define table columns
   const columnHelper = createColumnHelper<SupervisorLeaveDetails>();
   const columns = [
-    // leaveId
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
@@ -243,46 +250,51 @@ export default function FinalLeaveApprovals({
   return (
     <>
       <>
+        {/* Leave Approval Patch Success */}
+        {!isEmpty(patchResponseLeave) ? (
+          <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
+        ) : null}
+
+        {/* Leave Patch Failed Error */}
+        {!isEmpty(errorLeaveResponse) ? (
+          <ToastNotification toastType="error" notifMessage={`Leave Application action failed.`} />
+        ) : null}
+
         {/* Leave List Load Failed Error */}
         {!isEmpty(errorLeave) ? (
           <ToastNotification toastType="error" notifMessage={`${errorLeave}: Failed to load Leaves.`} />
         ) : null}
 
-        {/* Leave List Load Failed Error */}
-        {!isEmpty(patchResponseLeave) ? (
-          <ToastNotification toastType="success" notifMessage={`Leave Application action submitted.`} />
-        ) : null}
-
         <EmployeeProvider employeeData={employee}>
           <Head>
-            <title>Final Leave Approvals</title>
+            <title>Leave Approvals</title>
           </Head>
 
           <SideNav employeeDetails={employeeDetails} />
 
           {/* Pending Leave Approval Modal */}
-          <FinalApprovalsPendingLeaveModal
+          <ApprovalsPendingLeaveModal
             modalState={pendingLeaveModalIsOpen}
             setModalState={setPendingLeaveModalIsOpen}
             closeModalAction={closePendingLeaveModal}
           />
 
-          {/* Approved Leave Modal */}
-          <FinalApprovalsCompletedLeaveModal
+          {/* Leave Approved/Disapproved/Cancelled ModalApproval Modal */}
+          <ApprovalsCompletedLeaveModal
             modalState={approvedLeaveModalIsOpen}
             setModalState={setApprovedLeaveModalIsOpen}
             closeModalAction={closeApprovedLeaveModal}
           />
 
-          {/* Disapproved Leave Modal */}
-          <FinalApprovalsCompletedLeaveModal
+          {/* Disapproved Leaves */}
+          <ApprovalsCompletedLeaveModal
             modalState={disapprovedLeaveModalIsOpen}
             setModalState={setDisapprovedLeaveModalIsOpen}
             closeModalAction={closeDisapprovedLeaveModal}
           />
 
-          {/* Cancelled Leave Modal */}
-          <FinalApprovalsCompletedLeaveModal
+          {/* Cancelled Leaves */}
+          <ApprovalsCompletedLeaveModal
             modalState={cancelledLeaveModalIsOpen}
             setModalState={setCancelledLeaveModalIsOpen}
             closeModalAction={closeCancelledLeaveModal}
@@ -291,12 +303,11 @@ export default function FinalLeaveApprovals({
           <MainContainer>
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
-                title="Employee Final Leave Approvals"
-                subtitle="Approve Employee Leaves"
-                backUrl={`/${router.query.id}`}
-              >
-                {/* <ApprovalTypeSelect /> */}
-              </ContentHeader>
+                title="Employee Leave Approvals"
+                subtitle="Approve or disapprove Employee Leaves"
+                backUrl={`/${router.query.id}/manager-approvals`}
+              ></ContentHeader>
+
               {loadingLeave ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
@@ -342,32 +353,17 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
 
   // check if user role is rank_and_file or job order = kick out
   if (
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER)
+    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
   ) {
-    if (
-      employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
-      employeeDetails.employmentDetails.assignment.name === 'Training and Development Division'
-    ) {
-      return { props: { employeeDetails } };
-    } else {
-      // if false, the employee is not allowed to access this page
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/${employeeDetails.user._id}`,
-        },
-      };
-    }
-  } else {
-    // if false, the employee is not allowed to access this page
+    // if true, the employee is not allowed to access this page
     return {
       redirect: {
         permanent: false,
         destination: `/${employeeDetails.user._id}`,
       },
     };
+  } else {
+    return { props: { employeeDetails } };
   }
 });

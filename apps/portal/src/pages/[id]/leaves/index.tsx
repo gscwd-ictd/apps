@@ -25,6 +25,7 @@ import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCo
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import { useRouter } from 'next/router';
 
 export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -77,6 +78,8 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     getLeaveListFail: state.getLeaveListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const router = useRouter();
 
   const { leaveLedger, loadingLedger, errorLedger } = useLeaveLedgerStore((state) => ({
     leaveLedger: state.leaveLedger,
@@ -256,7 +259,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
 
         <MainContainer>
           <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-            <ContentHeader title="Employee Leaves" subtitle="Apply for company leave">
+            <ContentHeader title="Employee Leaves" subtitle="Apply for company leave" backUrl={`/${router.query.id}`}>
               <Button onClick={openApplyLeaveModal} className="hidden lg:block" size={`md`}>
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd /> Apply for Leave

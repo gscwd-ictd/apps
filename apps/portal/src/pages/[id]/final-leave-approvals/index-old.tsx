@@ -10,7 +10,7 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-
+import { ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
 import useSWR from 'swr';
 import { employeeDummy } from '../../../types/employee.type';
@@ -19,20 +19,16 @@ import { isEmpty, isEqual } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { FinalApprovalsPendingLeaveModal } from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsPendingLeaveModal';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
+import { FinalApprovalsTabs } from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsTabs';
+import { FinalApprovalsTabWindow } from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsTabWindow';
 import FinalApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsCompletedLeaveModal';
-import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
-import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
-import dayjs from 'dayjs';
-import { createColumnHelper } from '@tanstack/react-table';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useRouter } from 'next/router';
-import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
-import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
 
 export default function FinalLeaveApprovals({
   employeeDetails,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
+    tab,
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen,
@@ -41,18 +37,18 @@ export default function FinalLeaveApprovals({
     patchResponseLeave,
     loadingLeave,
     errorLeave,
-    leaveApplications,
+
     setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen,
     setCancelledLeaveModalIsOpen,
-    setLeaveIndividualDetail,
 
-    getLeaveApplicationsList,
-    getLeaveApplicationsListSuccess,
-    getLeaveApplicationsListFail,
+    getLeaveList,
+    getLeaveListSuccess,
+    getLeaveListFail,
     emptyResponseAndError,
   } = useFinalLeaveApprovalStore((state) => ({
+    tab: state.tab,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
@@ -61,15 +57,15 @@ export default function FinalLeaveApprovals({
     patchResponseLeave: state.response.patchResponseLeave,
     loadingLeave: state.loading.loadingLeaves,
     errorLeave: state.error.errorLeaves,
-    leaveApplications: state.leaveApplications,
+
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setApprovedLeaveModalIsOpen: state.setApprovedLeaveModalIsOpen,
     setDisapprovedLeaveModalIsOpen: state.setDisapprovedLeaveModalIsOpen,
     setCancelledLeaveModalIsOpen: state.setCancelledLeaveModalIsOpen,
-    setLeaveIndividualDetail: state.setLeaveIndividualDetail,
-    getLeaveApplicationsList: state.getLeaveApplicationsList,
-    getLeaveApplicationsListSuccess: state.getLeaveApplicationsListSuccess,
-    getLeaveApplicationsListFail: state.getLeaveApplicationsListFail,
+
+    getLeaveList: state.getLeaveList,
+    getLeaveListSuccess: state.getLeaveListSuccess,
+    getLeaveListFail: state.getLeaveListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
@@ -120,18 +116,18 @@ export default function FinalLeaveApprovals({
   // Initial zustand state update
   useEffect(() => {
     if (swrLeaveIsLoading) {
-      getLeaveApplicationsList(swrLeaveIsLoading);
+      getLeaveList(swrLeaveIsLoading);
     }
   }, [swrLeaveIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
-      getLeaveApplicationsListSuccess(swrLeaveIsLoading, swrLeaves);
+      getLeaveListSuccess(swrLeaveIsLoading, swrLeaves);
     }
 
     if (!isEmpty(swrLeaveError)) {
-      getLeaveApplicationsListFail(swrLeaveIsLoading, swrLeaveError.message);
+      getLeaveListFail(swrLeaveIsLoading, swrLeaveError.message);
     }
   }, [swrLeaves, swrLeaveError]);
 
@@ -143,102 +139,6 @@ export default function FinalLeaveApprovals({
       }, 5000);
     }
   }, [patchResponseLeave]);
-
-  // Rendering of leave dates in row
-  const renderRowLeaveDates = (leaveDates: Array<string>) => {
-    if (leaveDates) {
-      if (leaveDates.length > 3) {
-        return (
-          <span className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center">
-            {leaveDates[0]} to {leaveDates.slice(-1)}
-          </span>
-        );
-      } else {
-        return leaveDates.map((leaveDate: string, index: number) => (
-          <span
-            className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center whitespace-nowrap"
-            key={index}
-          >
-            {leaveDate}
-          </span>
-        ));
-      }
-    }
-  };
-
-  // Render row actions in the table component
-  const renderRowActions = (rowData: SupervisorLeaveDetails) => {
-    setLeaveIndividualDetail(rowData);
-    if (
-      rowData.status == LeaveStatus.APPROVED ||
-      rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
-    ) {
-      if (!approvedLeaveModalIsOpen) {
-        setApprovedLeaveModalIsOpen(true);
-      }
-    } else if (rowData.status == LeaveStatus.FOR_HRDM_APPROVAL) {
-      // PENDING APPROVAL LEAVES
-      if (!pendingLeaveModalIsOpen) {
-        setPendingLeaveModalIsOpen(true);
-      }
-    } else if (
-      rowData.status == LeaveStatus.DISAPPROVED_BY_HRDM ||
-      rowData.status == LeaveStatus.DISAPPROVED_BY_HRMO ||
-      rowData.status == LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-    ) {
-      // DISAPPROVED LEAVES
-      if (!disapprovedLeaveModalIsOpen) {
-        setDisapprovedLeaveModalIsOpen(true);
-      }
-    } else {
-      // CANCELLED LEAVES
-      if (!cancelledLeaveModalIsOpen) {
-        setCancelledLeaveModalIsOpen(true);
-      }
-    }
-  };
-
-  // Define table columns
-  const columnHelper = createColumnHelper<SupervisorLeaveDetails>();
-  const columns = [
-    // leaveId
-    columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('dateOfFiling', {
-      header: 'Date of Filing',
-      filterFn: 'equalsString',
-      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
-    }),
-    columnHelper.accessor('employee.employeeName', {
-      header: 'Employee Name',
-      filterFn: 'fuzzy',
-      sortingFn: fuzzySort,
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('leaveName', {
-      header: 'Leave Benefit',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.display({
-      id: 'leaveDates',
-      header: 'Leave Dates',
-      enableColumnFilter: false,
-      cell: (props) => renderRowLeaveDates(props.row.original.leaveDates),
-    }),
-    columnHelper.accessor('status', {
-      header: 'Status',
-      cell: (info) => UseRenderLeaveStatus(info.getValue()),
-    }),
-  ];
-
-  // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: leaveApplications,
-    columnVisibility: { id: false, employeeId: false },
-  });
 
   return (
     <>
@@ -309,16 +209,16 @@ export default function FinalLeaveApprovals({
                 </div>
               ) : (
                 <ContentBody>
-                  <div>
-                    <DataTablePortal
-                      onRowClick={(row) => renderRowActions(row.original as SupervisorLeaveDetails)}
-                      textSize={'text-lg'}
-                      model={table}
-                      showGlobalFilter={true}
-                      showColumnFilter={true}
-                      paginate={true}
-                    />
-                  </div>
+                  <>
+                    <div className={`w-full flex lg:flex-row flex-col`}>
+                      <div className={`lg:w-[58rem] w-full`}>
+                        <FinalApprovalsTabs tab={tab} />
+                      </div>
+                      <div className="w-full">
+                        <FinalApprovalsTabWindow employeeId={employeeDetails.employmentDetails.userId} />
+                      </div>
+                    </div>
+                  </>
                 </ContentBody>
               )}
             </div>

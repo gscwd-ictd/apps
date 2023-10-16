@@ -21,6 +21,7 @@ import { OvertimeApplicationModal } from 'apps/portal/src/components/fixed/overt
 import OvertimeModal from 'apps/portal/src/components/fixed/overtime/OvertimeModal';
 import { OvertimeTabs } from 'apps/portal/src/components/fixed/overtime/OvertimeTabs';
 import { OvertimeTabWindow } from 'apps/portal/src/components/fixed/overtime/OvertimeTabWindow';
+import { useRouter } from 'next/router';
 
 export default function Overtime({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -65,6 +66,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeListFail: state.getOvertimeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const router = useRouter();
 
   const openApplyOvertimeModal = () => {
     if (!applyOvertimeModalIsOpen) {
@@ -223,7 +226,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
         <MainContainer>
           <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-            <ContentHeader title="Employee Overtime" subtitle="Apply for overtime">
+            <ContentHeader title="Employee Overtime" subtitle="Apply for overtime" backUrl={`/${router.query.id}`}>
               <Button onClick={openApplyOvertimeModal} className="hidden lg:block" size={`md`}>
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd /> Apply for Overtime

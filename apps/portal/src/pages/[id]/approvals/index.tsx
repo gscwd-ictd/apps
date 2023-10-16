@@ -28,6 +28,7 @@ import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/approvals/ApprovalsCompletedLeaveModal';
 import ApprovalsOvertimeModal from 'apps/portal/src/components/fixed/approvals/ApprovalsOvertimeModal';
+import { useRouter } from 'next/router';
 
 export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -152,6 +153,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const router = useRouter();
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
@@ -482,7 +485,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
           <MainContainer>
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
-              <ContentHeader title="Employee Approvals" subtitle="Approve Employee Pass Slips & Leaves"></ContentHeader>
+              <ContentHeader
+                title="Employee Approvals"
+                subtitle="Approve Employee Pass Slips & Leaves"
+                backUrl={`/${router.query.id}`}
+              ></ContentHeader>
 
               {loadingPassSlip && loadingLeave ? (
                 <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">

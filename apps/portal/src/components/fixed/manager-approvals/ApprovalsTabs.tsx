@@ -1,4 +1,4 @@
-import { useApprovalStore } from '../../../../src/store/approvals.store';
+import { useApprovalStore } from '../../../store/approvals.store';
 import { HiOutlineCheckCircle, HiCheck, HiX, HiCheckCircle, HiXCircle, HiQuestionMarkCircle } from 'react-icons/hi';
 
 import { TabHeader } from '../tab/TabHeader';
