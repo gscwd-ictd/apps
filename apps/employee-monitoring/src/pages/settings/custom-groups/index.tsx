@@ -7,12 +7,7 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
-import {
-  DataTable,
-  LoadingSpinner,
-  ToastNotification,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -23,9 +18,7 @@ import MemberAssignmentModal from 'apps/employee-monitoring/src/components/modal
 
 const Index = () => {
   // Current row data in the table that has been clicked
-  const [currentRowData, setCurrentRowData] = useState<CustomGroup>(
-    {} as CustomGroup
-  );
+  const [currentRowData, setCurrentRowData] = useState<CustomGroup>({} as CustomGroup);
 
   // fetch data for list of custom groups
   const {
@@ -60,14 +53,12 @@ const Index = () => {
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
   // Member assignment modal function
-  const [memberAssignmentModalIsOpen, setMemberAssignmentModalIsOpen] =
-    useState<boolean>(false);
+  const [memberAssignmentModalIsOpen, setMemberAssignmentModalIsOpen] = useState<boolean>(false);
   const openMemberAssignmentActionModal = (rowData: CustomGroup) => {
     setMemberAssignmentModalIsOpen(true);
     setCurrentRowData(rowData);
   };
-  const closeMemberAssignmentActionModal = () =>
-    setMemberAssignmentModalIsOpen(false);
+  const closeMemberAssignmentActionModal = () => setMemberAssignmentModalIsOpen(false);
 
   // Render row actions in the table component
   const renderRowActions = (rowData: CustomGroup) => {
@@ -173,6 +164,11 @@ const Index = () => {
     columnVisibility: { id: false },
   });
 
+  // Reset responses on load of page
+  useEffect(() => {
+    EmptyResponse();
+  }, []);
+
   // Initial zustand state update
   useEffect(() => {
     if (swrIsLoading) {
@@ -199,83 +195,43 @@ const Index = () => {
       !isEmpty(DeleteCustomGroupResponse)
     ) {
       mutateCustomGroups();
-
-      setTimeout(() => {
-        EmptyResponse();
-      }, 3000);
     }
-  }, [
-    PostCustomGroupResponse,
-    UpdateCustomGroupResponse,
-    DeleteCustomGroupResponse,
-  ]);
+  }, [PostCustomGroupResponse, UpdateCustomGroupResponse, DeleteCustomGroupResponse]);
 
   return (
     <>
       <div className="w-full">
         <BreadCrumbs title="Custom Groups" />
         {/* Error Notifications */}
-        {!isEmpty(ErrorCustomGroups) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={ErrorCustomGroups}
-          />
-        ) : null}
+        {!isEmpty(ErrorCustomGroups) ? <ToastNotification toastType="error" notifMessage={ErrorCustomGroups} /> : null}
         {!isEmpty(ErrorAssignedMembers) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={ErrorAssignedMembers}
-          />
+          <ToastNotification toastType="error" notifMessage={ErrorAssignedMembers} />
         ) : null}
         {!isEmpty(ErrorUnassignedMembers) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={ErrorUnassignedMembers}
-          />
+          <ToastNotification toastType="error" notifMessage={ErrorUnassignedMembers} />
         ) : null}
         {!IsRowsSelected ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={'There are no selected members for removal'}
-          />
+          <ToastNotification toastType="error" notifMessage={'There are no selected members for removal'} />
         ) : null}
         {!IsOptionSelected ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={'There are no selected employees for assignment'}
-          />
+          <ToastNotification toastType="error" notifMessage={'There are no selected employees for assignment'} />
         ) : null}
 
         {/* Success Notifications */}
         {!isEmpty(PostCustomGroupResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Custom group added successfully"
-          />
+          <ToastNotification toastType="success" notifMessage="Custom group added successfully" />
         ) : null}
         {!isEmpty(UpdateCustomGroupResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Custom group details updated successfully"
-          />
+          <ToastNotification toastType="success" notifMessage="Custom group details updated successfully" />
         ) : null}
         {!isEmpty(DeleteCustomGroupResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Custom group successfully deleted"
-          />
+          <ToastNotification toastType="success" notifMessage="Custom group successfully deleted" />
         ) : null}
         {!isEmpty(AssignResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Members successfully added"
-          />
+          <ToastNotification toastType="success" notifMessage="Members successfully added" />
         ) : null}
         {!isEmpty(UnassignResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Members successfully removed"
-          />
+          <ToastNotification toastType="success" notifMessage="Members successfully removed" />
         ) : null}
 
         <Can I="access" this="Custom Groups">
@@ -291,17 +247,11 @@ const Index = () => {
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
                       onClick={openAddActionModal}
                     >
-                      <i className="bx bxs-plus-square"></i>&nbsp; Add Custom
-                      Group Order
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Custom Group Order
                     </button>
                   </div>
 
-                  <DataTable
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={false}
-                    paginate={true}
-                  />
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
               )}
             </Card>

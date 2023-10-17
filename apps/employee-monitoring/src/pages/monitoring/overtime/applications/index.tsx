@@ -17,43 +17,6 @@ import ViewOvertimeModal from 'apps/employee-monitoring/src/components/modal/mon
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
-const mockData: Array<Overtime> = [
-  {
-    id: 'e5d69068-3ed6-459f-9b86-f08463454fc6',
-    plannedDate: '2023-09-08',
-    immediateSupervisorName: 'Michael G. Gabales',
-    employees: [
-      {
-        employeeId: '05b0614c-b191-11ed-a79b-000c29f95a80',
-        companyId: '2019-016',
-        fullName: 'John Henry S. Alfeche',
-        scheduleBase: ScheduleBases.OFFICE,
-        avatarUrl: 'http://172.20.110.45:4500/ALFECHE.jpg',
-        assignment: 'Systems Development and Application Division',
-      },
-      {
-        employeeId: '62f1cd41-b26f-11ed-a79b-000c29f95a80',
-        companyId: '2015-003',
-        fullName: 'Jay M. Sabio',
-        scheduleBase: ScheduleBases.PUMPING_STATION,
-        avatarUrl: 'http://172.20.110.45:4500/SABIO.jpg',
-        assignment: 'Water Quality, Production and Electromechanical Division',
-      },
-      {
-        employeeId: 'af635f15-b26e-11ed-a79b-000c29f95a80',
-        companyId: '2020-003',
-        fullName: 'Phyll Patrick C. Fragata',
-        scheduleBase: ScheduleBases.OFFICE,
-        avatarUrl: null,
-        assignment: 'Systems Development and Application Division',
-      },
-    ],
-    estimatedHours: 3,
-    purpose: 'Repair of computers',
-    status: OvertimeStatus.APPROVED,
-  },
-];
-
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<Overtime>({} as Overtime);
@@ -63,7 +26,6 @@ const Index = () => {
     data: overtimeApplications,
     error: overtimeApplicationsError,
     isLoading: overtimeApplicationsLoading,
-    // mutate: mutateOvertimeApplications,
   } = useSWR('/overtime', fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
@@ -164,6 +126,7 @@ const Index = () => {
     }),
     columnHelper.accessor('status', {
       header: 'Status',
+      filterFn: 'equals',
       cell: (info) => UseRenderOvertimeStatus(info.getValue()),
     }),
     columnHelper.display({

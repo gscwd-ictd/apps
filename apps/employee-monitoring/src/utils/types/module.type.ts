@@ -6,6 +6,6 @@ export type Module = {
   url: string;
 };
 
-export type FormPostModule = Omit<Module, '_id'>;
+export type FormPostModule = Omit<Module, '_id'> & { app: string };
 
 export type ModuleId = Pick<Module, '_id'>;

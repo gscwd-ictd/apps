@@ -127,10 +127,10 @@ const Index = () => {
       return (
         <Image
           src={avatarUrl}
-          width={80}
-          height={80}
+          width={48}
+          height={48}
           alt={`Picture of employee ${immediateSupervisorName}`}
-          className="m-auto w-[2.5rem] h-[2.5rem] rounded-full"
+          className="m-auto rounded-full"
         />
       );
     } else {

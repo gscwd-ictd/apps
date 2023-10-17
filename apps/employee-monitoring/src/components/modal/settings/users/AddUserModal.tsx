@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -7,16 +7,14 @@ import {
   getEmpMonitoring,
   postEmpMonitoring,
 } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { getHRIS, postHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
 import { isEmpty } from 'lodash';
 
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
-import { PostRequestUserRoles, UserRole } from 'apps/employee-monitoring/src/utils/types/user.type';
+import { PostRequestUserRoles, PostUserRole, UserRole } from 'apps/employee-monitoring/src/utils/types/user.type';
 import { useUsersStore } from 'apps/employee-monitoring/src/store/user.store';
 
 import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
 import { SelectListRF } from '../../../inputs/SelectListRF';
-import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
 
 type AddModalProps = {
@@ -33,7 +31,7 @@ const yupSchema = yup
   .required();
 
 const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
-  const [userRoles, setUserRoles] = useState<Array<UserRole>>([]);
+  const [userRoles, setUserRoles] = useState<Array<PostUserRole>>([]);
   const [isDoneModuleToUserRole, setIsDoneModuleToUserRole] = useState<boolean>(false);
 
   // Zustand initialization
@@ -82,6 +80,7 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalSt
     },
     resolver: yupResolver(yupSchema),
   });
+
   const { fields } = useFieldArray({
     control,
     name: 'userRoles',
@@ -96,7 +95,7 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalSt
 
   // asynchronous request to post user and roles
   const handlePostResult = async (data: PostRequestUserRoles) => {
-    const { error, result } = await postHRIS('/modules', data); // REPLACE postHRIS to postEmpMonitoring
+    const { error, result } = await postEmpMonitoring('/user-roles', data); // REPLACE postHRIS to postEmpMonitoring
 
     if (error) {
       SetErrorUser(result);
@@ -110,8 +109,7 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalSt
 
   // asynchronous request to fetch employee that is not assigned user of EMS module
   const fetchNonEmsUsers = async () => {
-    // const { error, result } = await getEmpMonitoring('/users/assignable');
-    const { error, result } = await getHRIS('/users/assignable');
+    const { error, result } = await getEmpMonitoring('/user-roles/users/ems/assignable');
 
     if (error) {
       SetErrorNonEmsUsers(result);
@@ -122,8 +120,7 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalSt
 
   // asynchronous request to fetch EMS modules
   const fetchModules = async () => {
-    // const { error, result } = await getEmpMonitoring('/modules'); // REPLACE bottom code if route is available
-    const { error, result } = await getHRIS('/modules');
+    const { error, result } = await getEmpMonitoring('/modules');
 
     if (error) {
       SetErrorModules(result);
@@ -137,7 +134,6 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalSt
           hasAccess: false,
           module: module.module,
           slug: module.slug,
-          url: module.url,
         };
         setUserRoles((userRole) => [...userRole, newUserRole]);
       });
@@ -194,7 +190,7 @@ const AddUserModal: FunctionComponent<AddModalProps> = ({ modalState, setModalSt
                 logo={<LoadingSpinner size="xs" />}
                 alertType="info"
                 notifMessage="Submitting request"
-                dismissible={true}
+                dismissible={false}
               />
             ) : null}
 

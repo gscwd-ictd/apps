@@ -7,13 +7,7 @@ import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/e
 import { User } from 'apps/employee-monitoring/src/utils/types/user.type';
 import { useUsersStore } from 'apps/employee-monitoring/src/store/user.store';
 
-import {
-  AlertNotification,
-  LoadingSpinner,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
-import { deleteHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
+import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 
 type DeleteModalProps = {
   modalState: boolean;
@@ -43,11 +37,13 @@ const DeleteUserModal: FunctionComponent<DeleteModalProps> = ({
     EmptyResponse: state.emptyResponse,
   }));
 
+  // React hook form
   const {
     handleSubmit,
     formState: { isSubmitting: deleteFormLoading },
   } = useForm();
 
+  // form submission
   const onSubmit = () => {
     if (!isEmpty(rowData.employeeId)) {
       EmptyResponse();
@@ -57,7 +53,7 @@ const DeleteUserModal: FunctionComponent<DeleteModalProps> = ({
   };
 
   const handleDeleteResult = async (employeeId: string) => {
-    const { error, result } = await deleteHRIS(`/user-roles/${employeeId}`); // change deleteHRIS to deleteEmpMonitoring
+    const { error, result } = await deleteEmpMonitoring(`/user-roles/${employeeId}`);
 
     if (error) {
       SetErrorUser(result);
@@ -71,12 +67,7 @@ const DeleteUserModal: FunctionComponent<DeleteModalProps> = ({
   return (
     <>
       {/* Notification */}
-      {!isEmpty(DeleteUser) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="User removed successfully"
-        />
-      ) : null}
+      {!isEmpty(DeleteUser) ? <ToastNotification toastType="success" notifMessage="User removed successfully" /> : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
@@ -86,7 +77,7 @@ const DeleteUserModal: FunctionComponent<DeleteModalProps> = ({
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
               notifMessage="Submitting request"
-              dismissible={true}
+              dismissible={false}
             />
           ) : null}
 
@@ -95,9 +86,7 @@ const DeleteUserModal: FunctionComponent<DeleteModalProps> = ({
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
                   Are you sure you want remove{' '}
-                  <span className="px-2 font-bold text-center text-md">
-                    {JSON.stringify(rowData.fullName)}
-                  </span>
+                  <span className="px-2 font-bold text-center text-md">{JSON.stringify(rowData.fullName)}</span>
                   as EMS user?
                 </p>
               </div>

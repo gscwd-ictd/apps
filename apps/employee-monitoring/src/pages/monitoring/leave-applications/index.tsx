@@ -110,6 +110,7 @@ const Index = () => {
     columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderLeaveStatus(info.getValue()),
+      filterFn: 'equals',
     }),
     columnHelper.display({
       id: 'actions',

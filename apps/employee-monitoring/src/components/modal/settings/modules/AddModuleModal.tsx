@@ -8,13 +8,7 @@ import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/emp
 import { useModulesStore } from 'apps/employee-monitoring/src/store/module.store';
 import { FormPostModule } from 'apps/employee-monitoring/src/utils/types/module.type';
 
-import {
-  Modal,
-  AlertNotification,
-  LoadingSpinner,
-  Button,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../../inputs/LabelInput';
 import { isEmpty } from 'lodash';
 
@@ -33,13 +27,7 @@ const yupSchema = yup
   })
   .required();
 
-const AddModuleModal: FunctionComponent<AddModalProps> = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}) => {
-  // const [postFormError, setPostFormError] = useState<string>('');
-
+const AddModuleModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
   // Zustand initialization
   const {
     PostModuleResponse,
@@ -67,6 +55,7 @@ const AddModuleModal: FunctionComponent<AddModalProps> = ({
       module: '',
       slug: '',
       url: '',
+      app: 'ems',
     },
     resolver: yupResolver(yupSchema),
   });
@@ -102,10 +91,7 @@ const AddModuleModal: FunctionComponent<AddModalProps> = ({
     <>
       {/* Notification */}
       {!isEmpty(PostModuleResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Module added successfully"
-        />
+        <ToastNotification toastType="success" notifMessage="Module added successfully" />
       ) : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
