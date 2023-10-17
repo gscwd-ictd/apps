@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_DOMAIN;
+const API_URL = process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN;
 
 const axiosApi = axios.create({
   baseURL: API_URL,
@@ -26,8 +26,7 @@ export const getEmpMonitoring = async (url: string, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -40,8 +39,7 @@ export const postEmpMonitoring = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -54,8 +52,7 @@ export const putEmpMonitoring = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -68,8 +65,7 @@ export const patchEmpMonitoring = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -82,8 +78,7 @@ export const deleteEmpMonitoring = async (url: string, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });

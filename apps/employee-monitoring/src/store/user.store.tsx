@@ -7,6 +7,7 @@ import {
   UserId,
   PostReturnUserRoles,
   PatchReturnUserRoles,
+  UserRoleForPatch,
 } from '../utils/types/user.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { Module } from '../utils/types/module.type';
@@ -26,6 +27,9 @@ export type UsersState = {
 
   getUserRoles: Array<UserRole>;
   setGetUserRoles: (getUserRoles: Array<UserRole>) => void;
+
+  getUserRolesForPatch: Array<UserRoleForPatch>;
+  setGetUserRolesForPatch: (getUserRoles: Array<UserRoleForPatch>) => void;
 
   errorGetUserRoles: string;
   setErrorGetUserRoles: (errorGetUserRoles: string) => void;
@@ -61,6 +65,9 @@ export const useUsersStore = create<UsersState>()(
 
     getUserRoles: [],
     setGetUserRoles: (getUserRoles) => set({ getUserRoles }),
+
+    getUserRolesForPatch: [],
+    setGetUserRolesForPatch: (getUserRolesForPatch) => set({ getUserRolesForPatch }),
 
     errorGetUserRoles: '',
     setErrorGetUserRoles: (errorGetUserRoles) => set({ errorGetUserRoles }),

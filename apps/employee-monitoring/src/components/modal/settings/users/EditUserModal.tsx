@@ -2,30 +2,21 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import {
+  getEmpMonitoring,
   patchEmpMonitoring,
-  postEmpMonitoring,
 } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import {
-  getHRIS,
-  patchHRIS,
-} from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
 import { isEmpty } from 'lodash';
 
 import {
   PostRequestUserRoles,
-  UserRole,
   User,
   PatchRequestUserRoles,
+  PatchUserRole,
 } from 'apps/employee-monitoring/src/utils/types/user.type';
 import { useUsersStore } from 'apps/employee-monitoring/src/store/user.store';
 
-import {
-  Modal,
-  AlertNotification,
-  LoadingSpinner,
-  Button,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Module } from 'apps/employee-monitoring/src/utils/types/module.type';
 
 type EditModalProps = {
   modalState: boolean;
@@ -34,16 +25,14 @@ type EditModalProps = {
   rowData: User;
 };
 
-const EditUserModal: FunctionComponent<EditModalProps> = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-  rowData,
-}) => {
+const EditUserModal: FunctionComponent<EditModalProps> = ({ modalState, setModalState, closeModalAction, rowData }) => {
+  const [userRoles, setUserRoles] = useState<Array<PatchUserRole>>([]);
+  const [isDoneModuleToUserRole, setIsDoneModuleToUserRole] = useState<boolean>(false);
+
   // Zustand store initialization
   const {
-    GetUserRoles,
-    SetGetUserRoles,
+    GetUserRolesForPatch,
+    SetGetUserRolesForPatch,
     SetErrorGetUserRoles,
 
     UpdateUser,
@@ -52,8 +41,8 @@ const EditUserModal: FunctionComponent<EditModalProps> = ({
 
     EmptyResponse,
   } = useUsersStore((state) => ({
-    GetUserRoles: state.getUserRoles,
-    SetGetUserRoles: state.setGetUserRoles,
+    GetUserRolesForPatch: state.getUserRolesForPatch,
+    SetGetUserRolesForPatch: state.setGetUserRolesForPatch,
     SetErrorGetUserRoles: state.setErrorGetUserRoles,
 
     UpdateUser: state.updateUser,
@@ -74,28 +63,26 @@ const EditUserModal: FunctionComponent<EditModalProps> = ({
   } = useForm<PatchRequestUserRoles>({
     mode: 'onChange',
     defaultValues: {
+      employeeId: '',
       userRoles: [],
     },
   });
+
   const { fields } = useFieldArray({
     control,
     name: 'userRoles',
   });
 
   // form submission
-  const onSubmit: SubmitHandler<PostRequestUserRoles> = (
-    data: PostRequestUserRoles
-  ) => {
+  const onSubmit: SubmitHandler<PatchRequestUserRoles> = (data: PatchRequestUserRoles) => {
     EmptyResponse();
 
-    // handlePatchResult(data); //UNCOMMENT IF ROUTE IS AVAILABLE
-
-    console.log(data);
+    handlePatchResult(data);
   };
 
   // asynchronous request to post user and roles
-  const handlePatchResult = async (data: PostRequestUserRoles) => {
-    const { error, result } = await patchHRIS('/user-roles', data); // change patchHRIS to patchEmpMonitoring
+  const handlePatchResult = async (data: PatchRequestUserRoles) => {
+    const { error, result } = await patchEmpMonitoring('/user-roles', data); // change patchHRIS to patchEmpMonitoring
 
     if (error) {
       SetErrorUser(result);
@@ -109,12 +96,25 @@ const EditUserModal: FunctionComponent<EditModalProps> = ({
 
   // asynchronous request to fetch current user roles
   const fetchUserRoles = async (employeeId: string) => {
-    const { error, result } = await getHRIS(`/user-roles/${employeeId}`); // change getHRIS to getEmpMonitoring
+    const { error, result } = await getEmpMonitoring(`/user-roles/${employeeId}`);
 
     if (error) {
       SetErrorGetUserRoles(result);
     } else {
-      SetGetUserRoles(result);
+      SetGetUserRolesForPatch(result);
+
+      // Mutate the result. Added each module object with hasAccess
+      result.map((module: Module) => {
+        const newUserRole = {
+          _id: module._id,
+          hasAccess: false,
+          module: module.module,
+          slug: module.slug,
+        };
+        setUserRoles((userRole) => [...userRole, newUserRole]);
+      });
+
+      setIsDoneModuleToUserRole(true);
     }
   };
 
@@ -126,25 +126,23 @@ const EditUserModal: FunctionComponent<EditModalProps> = ({
         fetchUserRoles(rowData.employeeId);
       }
     } else {
+      setIsDoneModuleToUserRole(false);
       reset();
     }
   }, [modalState]);
 
   // set value in react hook form for userRoles
   useEffect(() => {
-    if (!isEmpty(GetUserRoles)) {
-      setValue('userRoles', GetUserRoles);
+    if (!isEmpty(GetUserRolesForPatch)) {
+      setValue('userRoles', GetUserRolesForPatch);
     }
-  }, [GetUserRoles]);
+  }, [GetUserRolesForPatch]);
 
   return (
     <>
       {/* Notification */}
       {!isEmpty(UpdateUser) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="User added successfully"
-        />
+        <ToastNotification toastType="success" notifMessage="User roles updated successfully" />
       ) : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="md">
@@ -170,7 +168,7 @@ const EditUserModal: FunctionComponent<EditModalProps> = ({
                 logo={<LoadingSpinner size="xs" />}
                 alertType="info"
                 notifMessage="Submitting request"
-                dismissible={true}
+                dismissible={false}
               />
             ) : null}
 
@@ -227,3 +225,9 @@ const EditUserModal: FunctionComponent<EditModalProps> = ({
 };
 
 export default EditUserModal;
+function putEMS(
+  arg0: string,
+  data: PostRequestUserRoles
+): { error: any; result: any } | PromiseLike<{ error: any; result: any }> {
+  throw new Error('Function not implemented.');
+}

@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { isEmpty } from 'lodash';
 import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { getHRMS } from 'apps/employee-monitoring/src/utils/helper/hrms-axios-helper';
 
 import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
@@ -13,7 +14,6 @@ import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.st
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
-import { getHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
 import { SelectListRF } from '../../../inputs/SelectListRF';
 
 type EditModalProps = {
@@ -108,7 +108,6 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
 
   // form submission
   const onSubmit: SubmitHandler<TravelOrder> = (data: TravelOrder) => {
-    // set loading to true
     EmptyResponse();
 
     handlePatchResult(data);
@@ -129,7 +128,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
 
   // asynchronous request to fetch employee list
   const fetchEmployeeList = async () => {
-    const { error, result } = await getHRIS(`/employees/options`);
+    const { error, result } = await getHRMS(`/employees/options`);
     setIsLoadingEmployeeOptions(true);
 
     if (error) {
@@ -200,7 +199,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                 logo={<LoadingSpinner size="xs" />}
                 alertType="info"
                 notifMessage="Submitting request"
-                dismissible={true}
+                dismissible={false}
               />
             ) : null}
 

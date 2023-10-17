@@ -72,7 +72,7 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
               notifMessage="Submitting request"
-              dismissible={true}
+              dismissible={false}
             />
           ) : null}
 

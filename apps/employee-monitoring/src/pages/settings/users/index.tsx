@@ -4,7 +4,6 @@ import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import fetcherHRIS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRIS';
 
 import { useUsersStore } from 'apps/employee-monitoring/src/store/user.store';
 import { User, UserId } from 'apps/employee-monitoring/src/utils/types/user.type';
@@ -29,7 +28,7 @@ const Index = () => {
     error: emsUsersError,
     isLoading: emsUsersLoading,
     mutate: mutateEmsUsers,
-  } = useSWR('/users', fetcherHRIS, {
+  } = useSWR('/user-roles/users/ems', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
