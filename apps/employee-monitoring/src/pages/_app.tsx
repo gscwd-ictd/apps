@@ -61,6 +61,7 @@ const mockData = {
     { I: 'access', this: 'Users' },
     { I: 'access', this: 'Officer_of_the_day' },
     { I: 'access', this: 'System_logs' },
+    { I: 'access', this: 'Custom Groups' },
   ],
   userId: '123',
 };
