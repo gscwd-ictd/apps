@@ -108,10 +108,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
-                        <td
-                          key={cell.id}
-                          className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
-                        >
+                        <td key={cell.id} className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       );

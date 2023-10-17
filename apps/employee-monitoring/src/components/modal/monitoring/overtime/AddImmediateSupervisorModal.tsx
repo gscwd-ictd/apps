@@ -5,20 +5,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import {
-  getEmpMonitoring,
-  postEmpMonitoring,
-} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { getHRMS } from 'apps/employee-monitoring/src/utils/helper/hrms-axios-helper';
 
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 import { useOrganizationStructureStore } from 'apps/employee-monitoring/src/store/organization-structure.store';
 import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
 
 import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
-import { getHRIS, postHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
 import { PostImmediateSupervisor } from 'libs/utils/src/lib/types/overtime.type';
 import { SelectListRF } from '../../../inputs/SelectListRF';
-import fetcherHRIS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRIS';
+import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 
 type AddModalProps = {
   modalState: boolean;
@@ -46,7 +43,7 @@ const AddImmediateSupervisorModal: FunctionComponent<AddModalProps> = ({
     data: organizations,
     error: organizationsError,
     isLoading: organizationsLoading,
-  } = useSWR('/organization/dropdown', fetcherHRIS, {
+  } = useSWR('/organization/dropdown', fetcherHRMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
@@ -132,7 +129,7 @@ const AddImmediateSupervisorModal: FunctionComponent<AddModalProps> = ({
 
   // asynchronous request to fetch employee list
   const fetchEmployeeList = async (orgId: string) => {
-    const { error, result } = await getHRIS(`/employees/${orgId}/list`);
+    const { error, result } = await getHRMS(`/employees/${orgId}/list`);
     setIsLoadingEmployeeOptions(true);
 
     if (error) {

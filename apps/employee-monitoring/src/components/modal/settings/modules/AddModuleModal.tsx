@@ -55,6 +55,7 @@ const AddModuleModal: FunctionComponent<AddModalProps> = ({ modalState, setModal
       module: '',
       slug: '',
       url: '',
+      app: 'ems',
     },
     resolver: yupResolver(yupSchema),
   });

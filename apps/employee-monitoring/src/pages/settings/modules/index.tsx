@@ -40,9 +40,9 @@ const Index = () => {
 
     PostModuleResponse,
     UpdateModuleResponse,
-    DeleteModuleResponse,
 
     ErrorModule,
+    EmptyResponse,
   } = useModulesStore((state) => ({
     Modules: state.getModules,
     SetGetModules: state.setGetModules,
@@ -52,9 +52,10 @@ const Index = () => {
 
     PostModuleResponse: state.postModule,
     UpdateModuleResponse: state.updateModule,
-    DeleteModuleResponse: state.deleteModule,
 
     ErrorModule: state.errorModule,
+
+    EmptyResponse: state.emptyResponse,
   }));
 
   // Add modal function
@@ -117,6 +118,11 @@ const Index = () => {
     columnVisibility: { _id: false },
   });
 
+  // Reset responses on load of page
+  useEffect(() => {
+    EmptyResponse();
+  }, []);
+
   // Initial zustand state update
   useEffect(() => {
     if (!isEmpty(modules)) {
@@ -130,10 +136,10 @@ const Index = () => {
 
   // Reset responses from all modal actions
   useEffect(() => {
-    if (!isEmpty(PostModuleResponse) || !isEmpty(UpdateModuleResponse) || !isEmpty(DeleteModuleResponse)) {
+    if (!isEmpty(PostModuleResponse) || !isEmpty(UpdateModuleResponse)) {
       mutateModules();
     }
-  }, [PostModuleResponse, UpdateModuleResponse, DeleteModuleResponse]);
+  }, [PostModuleResponse, UpdateModuleResponse]);
 
   return (
     <>

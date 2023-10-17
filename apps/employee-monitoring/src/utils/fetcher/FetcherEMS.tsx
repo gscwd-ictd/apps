@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_DOMAIN;
+const API_URL = process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN;
 
 const axiosApi = axios.create({
   baseURL: API_URL,
@@ -15,7 +15,7 @@ axiosApi.interceptors.response.use(
 const fetcherEMS = async (url: string, config: AxiosRequestConfig) => {
   return await axiosApi
     .get(url, config)
-    .then((res) => res.data)
+    .then((res) => res)
     .catch((error) => {
       throw error;
     });

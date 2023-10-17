@@ -3,17 +3,15 @@ import { FunctionComponent, useEffect, useState, Fragment } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { isEmpty } from 'lodash';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { getHRMS } from 'apps/employee-monitoring/src/utils/helper/hrms-axios-helper';
 
 import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
-import { EmployeeOption, EmployeeProfile } from 'libs/utils/src/lib/types/employee.type';
 import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 
-import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Modal, AlertNotification, LoadingSpinner, Button } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../../inputs/LabelInput';
-import { getHRIS, postHRIS } from 'apps/employee-monitoring/src/utils/helper/hris-axios-helper';
 import { SelectListRF } from '../../../inputs/SelectListRF';
 
 type AddModalProps = {
@@ -117,7 +115,7 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
 
   // asynchronous request to fetch employee list
   const fetchEmployeeList = async () => {
-    const { error, result } = await getHRIS(`/employees/options`);
+    const { error, result } = await getHRMS(`/employees/options`);
     setIsLoadingEmployeeOptions(true);
 
     if (error) {
@@ -163,7 +161,7 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
                 logo={<LoadingSpinner size="xs" />}
                 alertType="info"
                 notifMessage="Submitting request"
-                dismissible={true}
+                dismissible={false}
               />
             ) : null}
 
