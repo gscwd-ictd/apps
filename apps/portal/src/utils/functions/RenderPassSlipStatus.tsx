@@ -20,7 +20,7 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
           ? 'warning'
           : status === PassSlipStatus.CANCELLED
           ? 'default'
-          : status === PassSlipStatus.USED
+          : status === PassSlipStatus.USED || status === PassSlipStatus.UNUSED
           ? 'default'
           : null
       }
@@ -41,6 +41,8 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
           ? 'Cancelled'
           : status === PassSlipStatus.USED
           ? 'Used'
+          : status === PassSlipStatus.UNUSED
+          ? 'Unused'
           : ''
       }
     />

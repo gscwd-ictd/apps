@@ -35,7 +35,7 @@ export type PassSlip = {
   assignmentName?: string;
   status: PassSlipStatus;
   disputeRemarks?: string;
-  isDisputeApproved?: string;
+  isDisputeApproved?: boolean | null;
   encodedTimeIn?: string;
 } & PassSlipApplicationForm;
 
@@ -60,9 +60,4 @@ export type PassSlipPdf = {
     signature: string;
   };
   assignment: string;
-};
-
-export type PassSlipDisputePatch = {
-  passSlipId: string;
-  isDisputeApproved: boolean;
 };

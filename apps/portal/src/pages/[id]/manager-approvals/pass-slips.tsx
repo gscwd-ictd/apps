@@ -166,9 +166,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       if (!approvedPassSlipModalIsOpen) {
         setApprovedPassSlipModalIsOpen(true);
       }
-      // if (!disputedPassSlipModalIsOpen) {
-      //   setDisputedPassSlipModalIsOpen(true);
-      // }
     } else if (rowData.status == PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
       // PENDING APPROVAL
       if (!pendingPassSlipModalIsOpen) {

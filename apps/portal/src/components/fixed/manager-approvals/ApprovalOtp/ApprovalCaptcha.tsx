@@ -1,24 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FunctionComponent, useEffect, useState } from 'react';
-import { Notice } from '../../../modular/alerts/Notice';
-import { TextField } from '../../../modular/forms/TextField';
-import PortalSVG from '../../svg/PortalSvg';
-import { overtimeAction, passSlipAction } from '../../../../types/approvals.type';
+import { passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import { getCountDown } from '../../otp-requests/OtpCountDown';
-import { requestOtpCode } from '../../otp-requests/OtpRequest';
-import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
-import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { GenerateCaptcha } from '../../captcha/CaptchaGenerator';
 import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
-import { Button } from '@gscwd-apps/oneui';
-import { PassSlipDisputePatch } from 'libs/utils/src/lib/types/pass-slip.type';
 
 interface CaptchaProps {
   employeeId?: string;
@@ -64,7 +53,9 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const {
     captchaModalIsOpen,
     setCaptchaModalIsOpen,
+    setPendingDisputeModalIsOpen,
     setOvertimeAccomplishmentModalIsOpen,
+    setDisputedPassSlipModalIsOpen,
     patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail,
     patchOvertimeAccomplishmentSuccess,
@@ -73,8 +64,10 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchPassSlipFail,
   } = useApprovalStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
-    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
+    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen, //for overtime accomplishment captcha
+    setPendingDisputeModalIsOpen: state.setPendingDisputeModalIsOpen, // for approve/disapprove dispute captcha
     setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
+    setDisputedPassSlipModalIsOpen: state.setDisputedPassSlipModalIsOpen,
     patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail: state.patchOvertimeAccomplishmentFail,
     patchOvertimeAccomplishmentSuccess: state.patchOvertimeAccomplishmentSuccess,
@@ -99,9 +92,11 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   //CLOSE FUNCTION FOR COMPLETED OTP
   const handleClose = () => {
     setCaptchaModalIsOpen(false); //close captcha modal first
-    // setTimeout(() => {
-    //   setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
-    // }, 200);
+    setPendingDisputeModalIsOpen(false); //close captcha modal first
+    setTimeout(() => {
+      setDisputedPassSlipModalIsOpen(false);
+      // setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
+    }, 200);
   };
 
   // SUBMIT
@@ -129,6 +124,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
       else if (dataToSubmitPassSlipDispute) {
         let data;
         if (dataToSubmitPassSlipDispute.status === PassSlipStatus.APPROVED) {
+          //mutate payload for dispute purposes
           data = {
             passSlipId: dataToSubmitPassSlipDispute.passSlipId,
             isDisputeApproved: true,
@@ -138,14 +134,14 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
             passSlipId: dataToSubmitPassSlipDispute.passSlipId,
             isDisputeApproved: false,
           };
-          patchPassSlip();
-          const { error, result } = await patchPortal('/v1/pass-slip', data);
-          if (error) {
-            patchPassSlipFail(result);
-          } else {
-            patchPassSlipSuccess(result);
-            handleClose(); // close confirmation of decline modal
-          }
+        }
+        patchPassSlip();
+        const { error, result } = await patchPortal('/v1/pass-slip', data);
+        if (error) {
+          patchPassSlipFail(result);
+        } else {
+          patchPassSlipSuccess(result);
+          handleClose(); // close confirmation of decline modal
         }
       }
     }
@@ -223,7 +219,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
               <button
                 className={`
                mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={(e) => setCaptchaModalIsOpen(false)}
+                onClick={(e) => handleClose()}
               >
                 <label className="font-bold cursor-pointer">CANCEL</label>
               </button>
