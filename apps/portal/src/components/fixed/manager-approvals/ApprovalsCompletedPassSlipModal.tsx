@@ -106,7 +106,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                 closeModalAction={closeDeclineModal}
                 actionPassSlip={PassSlipStatus.CANCELLED}
                 tokenId={passSlip.id}
-                otpName={ManagerOtpApproval.PASSSLIP}
+                confirmName={ManagerOtpApproval.PASSSLIP}
               />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">

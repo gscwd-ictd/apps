@@ -4,7 +4,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { Notice } from '../../../modular/alerts/Notice';
 import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
-import { overtimeAction } from '../../../../types/approvals.type';
+import { overtimeAction, passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
@@ -18,19 +18,22 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { GenerateCaptcha } from '../../captcha/CaptchaGenerator';
 import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
 import { Button } from '@gscwd-apps/oneui';
+import { PassSlipDisputePatch } from 'libs/utils/src/lib/types/pass-slip.type';
 
 interface CaptchaProps {
   employeeId?: string;
   tokenId: string;
   captchaName: any;
-  dataToSubmit: OvertimeAccomplishmentApprovalPatch;
+  dataToSubmitOvertimeAccomplishment?: OvertimeAccomplishmentApprovalPatch;
+  dataToSubmitPassSlipDispute?: passSlipAction;
 }
 
 export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   employeeId,
   tokenId,
   captchaName,
-  dataToSubmit,
+  dataToSubmitOvertimeAccomplishment,
+  dataToSubmitPassSlipDispute,
   ...props
 }) => {
   const [wiggleEffect, setWiggleEffect] = useState(false);
@@ -65,6 +68,9 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail,
     patchOvertimeAccomplishmentSuccess,
+    patchPassSlip,
+    patchPassSlipSuccess,
+    patchPassSlipFail,
   } = useApprovalStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
@@ -72,6 +78,9 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail: state.patchOvertimeAccomplishmentFail,
     patchOvertimeAccomplishmentSuccess: state.patchOvertimeAccomplishmentSuccess,
+    patchPassSlip: state.patchPassSlip,
+    patchPassSlipSuccess: state.patchPassSlipSuccess,
+    patchPassSlipFail: state.patchPassSlipFail,
   }));
 
   // set state for controlling the displaying of error status
@@ -102,26 +111,69 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
       setWiggleEffect(true);
       setErrorCaptcha('Incorrect Captcha!');
     } else {
-      patchOvertimeAccomplishment();
-      const { error, result } = await patchPortal('/v1/overtime/accomplishments/approval', dataToSubmit);
-      if (error) {
-        patchOvertimeAccomplishmentFail(result);
-      } else {
-        patchOvertimeAccomplishmentSuccess(result);
-        handleClose(); // close confirmation of decline modal
+      //overtime accomplishment approval
+      if (dataToSubmitOvertimeAccomplishment) {
+        patchOvertimeAccomplishment();
+        const { error, result } = await patchPortal(
+          '/v1/overtime/accomplishments/approval',
+          dataToSubmitOvertimeAccomplishment
+        );
+        if (error) {
+          patchOvertimeAccomplishmentFail(result);
+        } else {
+          patchOvertimeAccomplishmentSuccess(result);
+          handleClose(); // close confirmation of decline modal
+        }
+      }
+      //pass slip dispute approval
+      else if (dataToSubmitPassSlipDispute) {
+        let data;
+        if (dataToSubmitPassSlipDispute.status === PassSlipStatus.APPROVED) {
+          data = {
+            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+            isDisputeApproved: true,
+          };
+        } else {
+          data = {
+            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+            isDisputeApproved: false,
+          };
+          patchPassSlip();
+          const { error, result } = await patchPortal('/v1/pass-slip', data);
+          if (error) {
+            patchPassSlipFail(result);
+          } else {
+            patchPassSlipSuccess(result);
+            handleClose(); // close confirmation of decline modal
+          }
+        }
       }
     }
   }
 
   return (
     <>
-      {dataToSubmit ? (
+      {dataToSubmitOvertimeAccomplishment || dataToSubmitPassSlipDispute ? (
         <>
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
             <div className="mb-2 text-center">
-              {`To ${
-                dataToSubmit.status == OvertimeAccomplishmentStatus.APPROVED ? 'approve' : 'disapprove'
-              } this Accomplishment Report, please generate and submit the correct Captcha.`}
+              {dataToSubmitOvertimeAccomplishment ? (
+                <>
+                  {`To ${
+                    dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
+                      ? 'approve'
+                      : 'disapprove'
+                  } this Accomplishment Report, please generate and submit the correct Captcha.`}
+                </>
+              ) : null}
+
+              {dataToSubmitPassSlipDispute ? (
+                <>
+                  {`To ${
+                    dataToSubmitPassSlipDispute.status == PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this Pass Slip Dispute, please generate and submit the correct Captcha.`}
+                </>
+              ) : null}
             </div>
 
             <div className="flex flex-col flex-wrap justify-center items-center gap-2 w-full">

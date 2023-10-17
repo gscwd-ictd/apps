@@ -463,7 +463,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
             {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
-              dataToSubmit={dataToSubmit}
+              dataToSubmitOvertimeAccomplishment={dataToSubmit}
               tokenId={overtimeDetails.id}
               captchaName={'Accomplishment Captcha'}
             />

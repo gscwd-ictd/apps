@@ -21,12 +21,12 @@ import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
-import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import ApprovalsPendingPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingPassSlipModal';
 import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedPassSlipModal';
 import { useRouter } from 'next/router';
+import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -141,6 +141,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
+      console.log(swrPassSlips);
       getPassSlipApplicationsListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 
@@ -157,28 +158,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       }, 5000);
     }
   }, [patchResponsePassSlip]);
-
-  // Rendering of leave dates in row
-  const renderRowLeaveDates = (leaveDates: Array<string>) => {
-    if (leaveDates) {
-      if (leaveDates.length > 3) {
-        return (
-          <span className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center">
-            {leaveDates[0]} to {leaveDates.slice(-1)}
-          </span>
-        );
-      } else {
-        return leaveDates.map((leaveDate: string, index: number) => (
-          <span
-            className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center whitespace-nowrap"
-            key={index}
-          >
-            {leaveDate}
-          </span>
-        ));
-      }
-    }
-  };
 
   // Render row actions in the table component
   const renderRowActions = (rowData: PassSlip) => {

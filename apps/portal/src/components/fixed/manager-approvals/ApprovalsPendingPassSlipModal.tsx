@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,6 +14,8 @@ import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalMod
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
+import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
+import { PassSlipDisputePatch } from 'libs/utils/src/lib/types/pass-slip.type';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -53,13 +55,15 @@ export const ApprovalsPendingPassSlipModal = ({
     setDeclineDisputeModalIsOpen: state.setDeclineDisputeModalIsOpen,
   }));
 
+  const [dataToSubmitForCaptcha, setDataToSubmitForCaptcha] = useState<passSlipAction>();
+
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<passSlipAction>({
     mode: 'onChange',
     defaultValues: {
       passSlipId: passSlip.id,
       status: null,
-      remarks: null,
+      // remarks: null,
     },
   });
 
@@ -80,8 +84,10 @@ export const ApprovalsPendingPassSlipModal = ({
     } else if (data.status === 'disapproved' && passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
       setDeclineApplicationModalIsOpen(true);
     } else if (data.status === 'approved' && passSlip.status === PassSlipStatus.FOR_DISPUTE) {
+      setDataToSubmitForCaptcha(data);
       setPendingDisputeModalIsOpen(true);
     } else if (data.status === 'disapproved' && passSlip.status === PassSlipStatus.FOR_DISPUTE) {
+      setDataToSubmitForCaptcha(data);
       setDeclineDisputeModalIsOpen(true);
     }
   };
@@ -261,8 +267,10 @@ export const ApprovalsPendingPassSlipModal = ({
                 <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
                 <textarea
                   className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                  value={`Corrected Time In is 2:00PM. Forgot to time in back at 2PM. `}
-                  rows={2}
+                  value={`Disputed Time In: ${
+                    passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
+                  }.\n${passSlip.disputeRemarks}`}
+                  rows={3}
                   disabled={true}
                 ></textarea>
               </div>
@@ -286,7 +294,7 @@ export const ApprovalsPendingPassSlipModal = ({
                     ))}
                   </select>
                 </div>
-                {watch('status') === PassSlipStatus.DISAPPROVED && passSlip.status === PassSlipStatus.FOR_DISPUTE ? (
+                {/* {watch('status') === PassSlipStatus.DISAPPROVED && passSlip.status === PassSlipStatus.FOR_DISPUTE ? (
                   <textarea
                     required={true}
                     className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
@@ -294,7 +302,7 @@ export const ApprovalsPendingPassSlipModal = ({
                     rows={3}
                     {...register('remarks')}
                   ></textarea>
-                ) : null}
+                ) : null} */}
               </form>
             </div>
           </div>
@@ -329,6 +337,28 @@ export const ApprovalsPendingPassSlipModal = ({
             confirmName={ManagerOtpApproval.PASSSLIP}
             employeeId={employeeDetails.user._id}
           />
+          {/* <ConfirmationApprovalModal
+            modalState={pendingDisputeModalIsOpen}
+            setModalState={setPendingDisputeModalIsOpen}
+            closeModalAction={closeDeclineModal}
+            actionPassSlip={watch('status')}
+            tokenId={passSlip.id}
+            confirmName={ManagerOtpApproval.PASSSLIP}
+            employeeId={employeeDetails.user._id}
+          /> */}
+          <CaptchaModal
+            modalState={pendingDisputeModalIsOpen}
+            setModalState={setPendingDisputeModalIsOpen}
+            title={'PASS SLIP DISPUTE CAPTCHA'}
+          >
+            {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetails.user._id}
+              dataToSubmitPassSlipDispute={dataToSubmitForCaptcha}
+              tokenId={passSlip.id}
+              captchaName={'Dispute Captcha'}
+            />
+          </CaptchaModal>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
