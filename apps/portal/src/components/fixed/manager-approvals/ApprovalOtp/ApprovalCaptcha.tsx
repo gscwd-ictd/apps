@@ -53,7 +53,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const {
     captchaModalIsOpen,
     setCaptchaModalIsOpen,
-    setPendingDisputeModalIsOpen,
     setOvertimeAccomplishmentModalIsOpen,
     setDisputedPassSlipModalIsOpen,
     patchOvertimeAccomplishment,
@@ -65,7 +64,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   } = useApprovalStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen, //for overtime accomplishment captcha
-    setPendingDisputeModalIsOpen: state.setPendingDisputeModalIsOpen, // for approve/disapprove dispute captcha
     setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
     setDisputedPassSlipModalIsOpen: state.setDisputedPassSlipModalIsOpen,
     patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
@@ -76,23 +74,15 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchPassSlipFail: state.patchPassSlipFail,
   }));
 
-  // set state for controlling the displaying of error status
-  const [isError, setIsError] = useState({
-    status: false,
-    message: '',
-    animate: false,
-  });
-
   useEffect(() => {
     setIsCaptchaError(false);
     setPassword('');
     setPwdArray([]);
   }, [captchaModalIsOpen]);
 
-  //CLOSE FUNCTION FOR COMPLETED OTP
+  //CLOSE FUNCTION FOR COMPLETED CAPTCHA
   const handleClose = () => {
     setCaptchaModalIsOpen(false); //close captcha modal first
-    setPendingDisputeModalIsOpen(false); //close captcha modal first
     setTimeout(() => {
       setDisputedPassSlipModalIsOpen(false);
       // setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
@@ -219,7 +209,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
               <button
                 className={`
                mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={(e) => handleClose()}
+                onClick={(e) => setCaptchaModalIsOpen(false)}
               >
                 <label className="font-bold cursor-pointer">CANCEL</label>
               </button>

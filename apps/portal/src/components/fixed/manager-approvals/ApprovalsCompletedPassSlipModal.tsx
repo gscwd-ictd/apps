@@ -222,15 +222,26 @@ export const ApprovalsCompletedPassSlipModal = ({
                   NatureOfBusiness.PERSONAL_BUSINESS) &&
                   !passSlip.timeOut &&
                   !passSlip.timeIn) ? (
-                  <Button
-                    variant={'warning'}
-                    size={'md'}
-                    loading={false}
-                    onClick={(e) => setDeclineApplicationModalIsOpen(true)}
-                    type="submit"
-                  >
-                    Cancel Pass Slip
-                  </Button>
+                  <>
+                    <Button
+                      variant={'warning'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => setDeclineApplicationModalIsOpen(true)}
+                      type="submit"
+                    >
+                      Cancel Pass Slip
+                    </Button>
+                    <Button
+                      variant={'primary'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => closeModalAction()}
+                      type="submit"
+                    >
+                      Close
+                    </Button>
+                  </>
                 ) : (
                   <Button
                     variant={'primary'}

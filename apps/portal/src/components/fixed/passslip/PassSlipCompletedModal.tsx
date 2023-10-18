@@ -229,9 +229,12 @@ export const PassSlipCompletedModal = ({
           <div className="flex justify-end gap-2">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED &&
+              passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
+              passSlip.natureOfBusiness != NatureOfBusiness.UNDERTIME &&
               !passSlip.disputeRemarks &&
               passSlip.timeIn &&
-              GetDateDifference(`2023-10-11 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <= 100 ? (
+              GetDateDifference(`${passSlip.dateOfApplication} 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `)
+                .days <= 100 ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   File Dispute
                 </Button>

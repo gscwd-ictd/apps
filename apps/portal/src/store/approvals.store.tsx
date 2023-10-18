@@ -93,6 +93,7 @@ export type ApprovalState = {
     loadingIndividualPassSlip: boolean;
 
     loadingOvertime: boolean;
+    loadingOvertimeDetails: boolean;
     loadingOvertimeResponse: boolean;
 
     loadingAccomplishment: boolean;
@@ -107,17 +108,12 @@ export type ApprovalState = {
     errorIndividualPassSlip: string;
 
     errorOvertime: string;
+    errorOvertimeDetails: string;
     errorOvertimeResponse: string;
 
     errorAccomplishment: string;
     errorAccomplishmentResponse: string;
   };
-
-  pendingDisputeModalIsOpen: boolean;
-  setPendingDisputeModalIsOpen: (pendingDisputeModalIsOpen: boolean) => void;
-
-  declineDisputeModalIsOpen: boolean;
-  setDeclineDisputeModalIsOpen: (declineDisputeModalIsOpen: boolean) => void;
 
   declineApplicationModalIsOpen: boolean;
   setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
@@ -214,8 +210,9 @@ export type ApprovalState = {
 
   // OVERTIME
   overtimeDetails: OvertimeDetails;
-  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
 
+  selectedOvertimeId: string;
+  setSelectedOvertimeId: (selectedOvertimeId: string) => void;
   // getOvertimeList: (loading: boolean) => void;
   // getOvertimeListSuccess: (loading: boolean, response) => void;
   // getOvertimeListFail: (loading: boolean, error: string) => void;
@@ -224,6 +221,10 @@ export type ApprovalState = {
   getOvertimeApplicationsList: (loading: boolean) => void;
   getOvertimeApplicationsListSuccess: (loading: boolean, response) => void;
   getOvertimeApplicationsListFail: (loading: boolean, error: string) => void;
+
+  getOvertimeDetails: (loading: boolean) => void;
+  getOvertimeDetailsSuccess: (loading: boolean, response) => void;
+  getOvertimeDetailsFail: (loading: boolean, error: string) => void;
 
   accomplishmentDetails: OvertimeAccomplishment;
   getAccomplishmentDetails: (loading: boolean) => void;
@@ -305,6 +306,7 @@ export const useApprovalStore = create<ApprovalState>()(
       loadingIndividualPassSlip: false,
 
       loadingOvertime: false,
+      loadingOvertimeDetails: false,
       loadingOvertimeResponse: false,
 
       loadingAccomplishment: false,
@@ -319,6 +321,7 @@ export const useApprovalStore = create<ApprovalState>()(
       errorIndividualPassSlip: '',
 
       errorOvertime: '',
+      errorOvertimeDetails: '',
       errorOvertimeResponse: '',
 
       errorAccomplishment: '',
@@ -329,8 +332,6 @@ export const useApprovalStore = create<ApprovalState>()(
     otpLeaveModalIsOpen: false,
     otpOvertimeModalIsOpen: false,
 
-    pendingDisputeModalIsOpen: false,
-    declineDisputeModalIsOpen: false,
     declineApplicationModalIsOpen: false,
 
     pendingLeaveModalIsOpen: false,
@@ -356,8 +357,10 @@ export const useApprovalStore = create<ApprovalState>()(
     accomplishmentDetails: {} as OvertimeAccomplishment,
 
     overtimeDetails: {} as OvertimeDetails,
-    setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
-      set((state) => ({ ...state, overtimeDetails }));
+
+    selectedOvertimeId: '',
+    setSelectedOvertimeId: (selectedOvertimeId: string) => {
+      set((state) => ({ ...state, selectedOvertimeId }));
     },
 
     overtimeAccomplishmentEmployeeId: '',
@@ -410,14 +413,6 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => {
       set((state) => ({ ...state, captchaModalIsOpen }));
-    },
-
-    setPendingDisputeModalIsOpen: (pendingDisputeModalIsOpen: boolean) => {
-      set((state) => ({ ...state, pendingDisputeModalIsOpen }));
-    },
-
-    setDeclineDisputeModalIsOpen: (declineDisputeModalIsOpen: boolean) => {
-      set((state) => ({ ...state, declineDisputeModalIsOpen }));
     },
 
     setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
@@ -701,63 +696,49 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    //GET OVERTIME ACTIONS OLD PAGE
-    // getOvertimeList: (loading: boolean) => {
-    //   set((state) => ({
-    //     ...state,
-    //     overtime: {
-    //       ...state.overtime,
-    //       completed: {
-    //         approved: [],
-    //         disapproved: [],
-    //       },
-    //       forApproval: [],
-    //     },
-    //     loading: {
-    //       ...state.loading,
-    //       loadingOvertime: loading,
-    //     },
-    //     error: {
-    //       ...state.error,
-    //       errorOvertime: '',
-    //     },
-    //   }));
-    // },
+    //GET OVERTIME INDIVIDUAL DETAILS
+    getOvertimeDetails: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtimeDetails: {} as OvertimeDetails,
+        loading: {
+          ...state.loading,
+          loadingOvertimeDetails: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: '',
+        },
+      }));
+    },
 
-    // getOvertimeListSuccess: (loading: boolean, response: ApprovalOvertimeList) => {
-    //   set((state) => ({
-    //     ...state,
-    //     overtime: {
-    //       ...state.overtime,
-    //       completed: {
-    //         approved: response.completed.approved,
-    //         disapproved: response.completed.disapproved,
-    //       },
-    //       forApproval: response.forApproval,
-    //     },
-    //     loading: {
-    //       ...state.loading,
-    //       loadingOvertime: loading,
-    //     },
-    //   }));
-    // },
-    // getOvertimeListFail: (loading: boolean, error: string) => {
-    //   set((state) => ({
-    //     ...state,
-    //     loading: {
-    //       ...state.loading,
-    //       loadingOvertime: loading,
-    //     },
-    //     error: {
-    //       ...state.error,
-    //       errorOvertime: error,
-    //     },
-    //     response: {
-    //       ...state.response,
-    //       postResponseApply: null,
-    //     },
-    //   }));
-    // },
+    getOvertimeDetailsSuccess: (loading: boolean, response: OvertimeDetails) => {
+      set((state) => ({
+        ...state,
+        overtimeDetails: response,
+        loading: {
+          ...state.loading,
+          loadingOvertimeDetails: loading,
+        },
+      }));
+    },
+    getOvertimeDetailsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertimeDetails: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeDetails: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
+    },
 
     //GET OVERTIME ACTIONS FOR NEW DATA TABLE
     getOvertimeApplicationsList: (loading: boolean) => {

@@ -38,22 +38,18 @@ export const ApprovalsPendingPassSlipModal = ({
     setOtpPassSlipModalIsOpen,
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
-    pendingDisputeModalIsOpen,
-    setPendingDisputeModalIsOpen,
-    declineDisputeModalIsOpen,
-    setDeclineDisputeModalIsOpen,
     loadingResponse,
+    captchaModalIsOpen,
+    setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
     otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
-    pendingDisputeModalIsOpen: state.pendingDisputeModalIsOpen,
-    setPendingDisputeModalIsOpen: state.setPendingDisputeModalIsOpen,
-    declineDisputeModalIsOpen: state.declineDisputeModalIsOpen,
-    setDeclineDisputeModalIsOpen: state.setDeclineDisputeModalIsOpen,
     loadingResponse: state.loading.loadingPassSlipResponse,
+    captchaModalIsOpen: state.captchaModalIsOpen,
+    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
   }));
 
   const [dataToSubmitForCaptcha, setDataToSubmitForCaptcha] = useState<passSlipAction>();
@@ -86,7 +82,7 @@ export const ApprovalsPendingPassSlipModal = ({
       setDeclineApplicationModalIsOpen(true);
     } else if (passSlip.status === PassSlipStatus.FOR_DISPUTE) {
       setDataToSubmitForCaptcha(data);
-      setPendingDisputeModalIsOpen(true);
+      setCaptchaModalIsOpen(true);
     }
   };
 
@@ -100,8 +96,7 @@ export const ApprovalsPendingPassSlipModal = ({
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
     setDeclineApplicationModalIsOpen(false);
-    setDeclineDisputeModalIsOpen(false);
-    setPendingDisputeModalIsOpen(false);
+    setCaptchaModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -353,8 +348,8 @@ export const ApprovalsPendingPassSlipModal = ({
           />
 
           <CaptchaModal
-            modalState={pendingDisputeModalIsOpen}
-            setModalState={setPendingDisputeModalIsOpen}
+            modalState={captchaModalIsOpen}
+            setModalState={setCaptchaModalIsOpen}
             title={'PASS SLIP DISPUTE CAPTCHA'}
           >
             {/* contents */}

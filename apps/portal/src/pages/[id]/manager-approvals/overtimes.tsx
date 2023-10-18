@@ -56,7 +56,8 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     getOvertimeApplicationsListSuccess,
     getOvertimeApplicationsListFail,
 
-    setOvertimeDetails,
+    selectedOvertimeId,
+    setSelectedOvertimeId,
 
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
@@ -83,7 +84,8 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     getOvertimeApplicationsListFail: state.getOvertimeApplicationsListFail,
     emptyResponseAndError: state.emptyResponseAndError,
 
-    setOvertimeDetails: state.setOvertimeDetails,
+    selectedOvertimeId: state.selectedOvertimeId,
+    setSelectedOvertimeId: state.setSelectedOvertimeId,
   }));
 
   const router = useRouter();
@@ -186,7 +188,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
 
   // Render row actions in the table component
   const renderRowActions = (rowData: OvertimeDetails) => {
-    setOvertimeDetails(rowData);
+    setSelectedOvertimeId(rowData.id);
 
     if (rowData.status == OvertimeStatus.APPROVED) {
       if (!approvedOvertimeModalIsOpen) {

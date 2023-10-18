@@ -16,6 +16,11 @@ import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import ApprovalAccomplishmentModal from './ApprovalAccomplishmentModal';
+import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimeAccomplishmentStatus';
+import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/RenderAccomplishmentSubmitted';
+import useSWR from 'swr';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
 
 type ModalProps = {
   modalState: boolean;
@@ -43,6 +48,12 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     overtimeAccomplishmentApplicationId,
     setOvertimeAccomplishmentApplicationId,
     setOvertimeAccomplishmentEmployeeName,
+    selectedOvertimeId,
+    getOvertimeDetails,
+    getOvertimeDetailsSuccess,
+    getOvertimeDetailsFail,
+    emptyResponseAndError,
+    patchResponseAccomplishment,
   } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
@@ -57,9 +68,54 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
     setOvertimeAccomplishmentApplicationId: state.setOvertimeAccomplishmentApplicationId,
     setOvertimeAccomplishmentEmployeeName: state.setOvertimeAccomplishmentEmployeeName,
+    selectedOvertimeId: state.selectedOvertimeId,
+    getOvertimeDetails: state.getOvertimeDetails,
+    getOvertimeDetailsSuccess: state.getOvertimeDetailsSuccess,
+    getOvertimeDetailsFail: state.getOvertimeDetailsFail,
+    emptyResponseAndError: state.emptyResponseAndError,
+    patchResponseAccomplishment: state.response.patchResponseAccomplishment,
   }));
-
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [reason, setReason] = useState<string>('');
+
+  const overtimeDetailsUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval/${selectedOvertimeId}`;
+
+  const {
+    data: swrOvertimeDetails,
+    isLoading: swrOvertimeDetailsIsLoading,
+    error: swrOvertimeDetailsError,
+    mutate: mutateOvertimeDetailsUrl,
+  } = useSWR(overtimeDetailsUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeDetailsIsLoading) {
+      getOvertimeDetails(swrOvertimeDetailsIsLoading);
+    }
+  }, [swrOvertimeDetailsIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeDetails)) {
+      getOvertimeDetailsSuccess(swrOvertimeDetailsIsLoading, swrOvertimeDetails);
+    }
+
+    if (!isEmpty(swrOvertimeDetailsError)) {
+      getOvertimeDetailsFail(swrOvertimeDetailsIsLoading, swrOvertimeDetailsError.message);
+    }
+  }, [swrOvertimeDetails, swrOvertimeDetailsError]);
+
+  useEffect(() => {
+    if (!isEmpty(patchResponseAccomplishment)) {
+      mutateOvertimeDetailsUrl();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [patchResponseAccomplishment]);
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<overtimeAction>({
@@ -93,8 +149,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     }
   };
 
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-
   useEffect(() => {
     reset();
   }, [pendingOvertimeModalIsOpen]);
@@ -125,7 +179,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             closeModalAction={closeCancelOvertimeModal}
           /> */}
 
-          {!overtimeDetails ? (
+          {!swrOvertimeDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -207,9 +261,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 <label className="w-full">{employee.fullName}</label>
                                 <label className="w-full">{employee.positionTitle}</label>
                                 <label className="w-full">{employee.assignment}</label>
+                                {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                                  <>
+                                    <label className="w-full whitespace-nowrap">
+                                      {UseRenderAccomplishmentSubmitted(employee.isAccomplishmentSubmitted)}
+                                    </label>
+                                    <label className="w-auto">
+                                      {RenderOvertimeAccomplishmentStatus(employee.accomplishmentStatus)}
+                                    </label>
+                                  </>
+                                ) : null}
 
                                 {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                   <Button
+                                    disabled={employee.isAccomplishmentSubmitted == true ? false : true}
                                     variant={'primary'}
                                     size={'sm'}
                                     loading={false}
@@ -217,7 +282,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                       handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
                                     }
                                   >
-                                    View Accomplishment
+                                    Accomplishment
                                   </Button>
                                 ) : null}
                               </div>
