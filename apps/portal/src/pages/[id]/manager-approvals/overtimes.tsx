@@ -21,16 +21,12 @@ import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
-import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
-import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
-import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import ApprovalsPendingPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingPassSlipModal';
-import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedPassSlipModal';
 import { EmployeeOvertimeDetail, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 import ApprovalsOvertimeModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsOvertimeModal';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { useRouter } from 'next/router';
+import UseRenderOvertimeStatus from 'apps/portal/src/utils/functions/RenderOvertimeStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function OvertimeApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -240,7 +236,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     // }),
     columnHelper.accessor('status', {
       header: 'Status',
-      cell: (info) => UseRenderOvertimeStatus(info.getValue()),
+      cell: (info) => UseRenderOvertimeStatus(info.getValue(), TextSize.TEXT_SM),
     }),
   ];
 

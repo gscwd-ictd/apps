@@ -1,3 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { FunctionComponent } from 'react';
 
 type Variant = 'primary' | 'default' | 'success' | 'error' | 'warning';
@@ -13,11 +15,12 @@ const background = {
 type BadgePillProps = {
   label: string | null;
   variant: Variant;
+  textSize: TextSize;
 };
 
-const BadgePill: FunctionComponent<BadgePillProps> = ({ label, variant }) => {
+const BadgePill: FunctionComponent<BadgePillProps> = ({ label, variant, textSize = TextSize.TEXT_XS }) => {
   return (
-    <div className="w-full text-xs">
+    <div className={`w-full ${textSize}`}>
       <span className={`px-2 py-[0.2rem] rounded ${background[variant]} font-mono text-center`}>{label}</span>
     </div>
   );

@@ -12,12 +12,11 @@ import { GenerateCaptcha } from '../../../components/fixed/captcha/CaptchaGenera
 import {
   getJobOpeningDetails,
   checkIfApplied,
-  applyJobPost,
   getWorkExp,
 } from '../../../utils/helpers/http-requests/applicants-requests';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { isEmpty } from 'lodash';
-import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsPanel';
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
@@ -28,6 +27,7 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { useRouter } from 'next/router';
+import { ApprovalCaptcha } from 'apps/portal/src/components/fixed/vacancies/ApprovalCaptcha';
 
 export default function Vacancies({
   data,
@@ -36,15 +36,9 @@ export default function Vacancies({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [messageContent, setMessageContent] = useState<VacancyDetails>();
   const [mailMessage, setMailMessage] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [captchaPassword, setCaptchaPassword] = useState<string>('');
-  const [pwdArray, setPwdArray] = useState<string[]>();
   const [isMessageOpen, setIsMessageOpen] = useState<boolean>(false);
   const [isApplied, setIsApplied] = useState<boolean>(false);
-  const [isCaptchaError, setIsCaptchaError] = useState<boolean>(false);
   const [jobDetails, setJobDetails] = useState<JobOpeningDetails>();
-  const [hasApplied, setHasApplied] = useState<boolean>();
-  const [wiggleEffect, setWiggleEffect] = useState(false);
   const [workExperience, setWorkExperience] = useState<WorkExperiencePds>();
 
   // const workExperienceArray = useWorkExpStore((state) => state.workExperience);
@@ -60,14 +54,16 @@ export default function Vacancies({
     errorCaptcha,
     errorMessage,
     responseApply,
-
+    captchaModalIsOpen,
+    hasApplied,
+    setCaptchaModalIsOpen,
     setErrorJobOpening,
     setErrorWorkExperience,
     setErrorApplyJob,
     setErrorCaptcha,
     setErrorMessage,
-    setResponseApply,
     emptyResponseAndError,
+    setHasApplied,
   } = useWorkExpStore((state) => ({
     errorJobOpening: state.error.errorJobOpening,
     errorIfApplied: state.error.errorIfApplied,
@@ -76,14 +72,16 @@ export default function Vacancies({
     errorCaptcha: state.error.errorCaptcha,
     errorMessage: state.error.errorMessage,
     responseApply: state.response.responseApplyJob,
-
+    captchaModalIsOpen: state.captchaModalIsOpen,
+    hasApplied: state.hasApplied,
+    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
     setErrorJobOpening: state.setErrorJobOpening,
     setErrorWorkExperience: state.setErrorWorkExperience,
     setErrorApplyJob: state.setErrorApplyJob,
     setErrorCaptcha: state.setErrorCaptcha,
     setErrorMessage: state.setErrorMessage,
-    setResponseApply: state.setResponseApply,
     emptyResponseAndError: state.emptyResponseAndError,
+    setHasApplied: state.setHasApplied,
   }));
 
   const router = useRouter();
@@ -100,7 +98,6 @@ export default function Vacancies({
     setIsApplied(false); //initial values when opening job basic info
     setHasApplied(false); //initial values when opening job basic info
     setMessageContent(vacancies);
-    setPassword('');
     setMailMessage('A job vacancy is available for application.');
     setIsMessageOpen(true);
 
@@ -126,7 +123,6 @@ export default function Vacancies({
     if (data) {
       if (data.error) {
         setErrorWorkExperience(data.error + ' Error');
-        // toast.error(data.error + ' Error');
       } else {
         setWorkExperience(data);
       }
@@ -136,45 +132,38 @@ export default function Vacancies({
   const openModal = () => {
     // open the prf modal
     setModal({ ...modal, page: 1, isOpen: true });
-    setPwdArray([]);
     resetExperience();
   };
 
   const changeModalPage = (e: number) => {
     //move to specific page of the modal
     setModal({ ...modal, page: e, isOpen: true });
-    setIsCaptchaError(false);
     if (e == 1) {
       resetExperience();
     }
     if (e == 2) {
-      setResponseApply(null);
       setErrorJobOpening(null);
       setErrorWorkExperience(null);
       setErrorApplyJob(null);
       setErrorCaptcha(null);
       setErrorMessage(null);
-      setPassword('');
       handleWorkExperience(employeeId);
-      setPwdArray([]);
     }
   };
 
   // cancel action for modal
   const modalCancel = async () => {
     setModal({ ...modal, isOpen: false });
-    setResponseApply(null);
+
     setErrorJobOpening(null);
     setErrorWorkExperience(null);
     setErrorApplyJob(null);
     setErrorCaptcha(null);
     setErrorMessage(null);
-    setPassword('');
   };
 
   // set modal main modal action (confirm)
   const modalAction = async () => {
-    setResponseApply(null);
     setErrorJobOpening(null);
     setErrorWorkExperience(null);
     setErrorApplyJob(null);
@@ -182,66 +171,20 @@ export default function Vacancies({
     setErrorMessage(null);
     setTimeout(() => {
       if (!messageContent) {
-        setIsCaptchaError(true);
-        setWiggleEffect(true);
         setErrorMessage('Failed to load message contents!');
-      } else if (password != captchaPassword || password == '' || captchaPassword == '') {
-        setIsCaptchaError(true);
-        setWiggleEffect(true);
-        setErrorCaptcha('Incorrect Captcha!');
       } else {
-        completeApplication();
+        setCaptchaModalIsOpen(true);
       }
     }, 100);
   };
 
-  // complete appilcation
-  const completeApplication = async () => {
-    const data = await applyJobPost(messageContent.vppId, employeeId, withRelevantExperience, workExperienceArray);
-    if (data && data.internalApplicant?.applicantStatus == 'For review') {
-      setIsApplied(true);
-      setIsCaptchaError(false);
-      setResponseApply('Application Successful!');
-      changeModalPage(1);
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 3000);
-    } else {
-      setErrorApplyJob(data.error.response.data.message);
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 5000);
-    }
-  };
-
-  // generate captcha
-  const getCaptcha = () => {
-    setPassword('');
-    const data = GenerateCaptcha();
-    if (data) {
-      setCaptchaPassword(data.pwd);
-      setPwdArray([
-        `${data.captcha[0]}`,
-        `${data.captcha[1]}`,
-        `${data.captcha[2]}`,
-        `${data.captcha[3]}`,
-        `${data.captcha[4]}`,
-        `${data.captcha[5]}`,
-      ]);
-    }
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      emptyResponseAndError();
+    }, 3000);
+  }, [responseApply]);
 
   const { windowWidth } = UseWindowDimensions();
-
-  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
-
-  useEffect(() => {
-    setNavDetails({
-      profile: employeeDetails.user.email,
-      fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
-    });
-  }, []);
 
   return (
     <>
@@ -262,7 +205,9 @@ export default function Vacancies({
 
       {!isEmpty(errorMessage) ? <ToastNotification toastType="error" notifMessage={`${errorMessage}`} /> : null}
 
-      {!isEmpty(responseApply) ? <ToastNotification toastType="success" notifMessage={`${responseApply}`} /> : null}
+      {!isEmpty(responseApply) ? (
+        <ToastNotification toastType="success" notifMessage={`Job Application Submitted`} />
+      ) : null}
 
       {data && (
         <div>
@@ -294,7 +239,7 @@ export default function Vacancies({
             </Modal.Header>
 
             <Modal.Body>
-              {isApplied || hasApplied ? (
+              {hasApplied ? (
                 <AlertNotification
                   alertType="info"
                   notifMessage="You have already applied for this position."
@@ -303,6 +248,20 @@ export default function Vacancies({
               ) : null}
 
               <VacancyModalController page={modal.page} dataJobOpening={jobDetails} workExperience={workExperience} />
+
+              <CaptchaModal
+                modalState={captchaModalIsOpen}
+                setModalState={setCaptchaModalIsOpen}
+                title={'JOB APPLICATION CAPTCHA'}
+              >
+                {/* contents */}
+                <ApprovalCaptcha
+                  vppId={messageContent?.vppId}
+                  employeeId={employeeId}
+                  withRelevantExperience={withRelevantExperience}
+                  workExperienceArray={workExperienceArray}
+                />
+              </CaptchaModal>
             </Modal.Body>
 
             <Modal.Footer className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}>
@@ -337,44 +296,6 @@ export default function Vacancies({
                         Warning: Going back or closing the window will reset your entries.
                       </div>
 
-                      <div className="flex flex-col justify-end gap-2 w-36 md:w-auto md:flex-row">
-                        <Button variant="danger" onClick={getCaptcha} size={`${windowWidth > 768 ? 'md' : 'sm'}`}>
-                          Generate Captcha
-                        </Button>
-                        {/* captcha */}
-                        <div
-                          className={`${
-                            pwdArray ? '' : 'animate-pulse'
-                          } select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex lex-rowf justify-center items-center gap-1`}
-                        >
-                          <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">
-                            {pwdArray && pwdArray[0]}
-                          </div>
-                          <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">{pwdArray && pwdArray[1]}</div>
-                          <div className="w-4 font-light text-red-800 scale-105 rotate-45">
-                            {pwdArray && pwdArray[2]}
-                          </div>
-                          <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
-                            {pwdArray && pwdArray[3]}
-                          </div>
-                          <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">
-                            {pwdArray && pwdArray[4]}
-                          </div>
-                          <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">
-                            {pwdArray && pwdArray[5]}
-                          </div>
-                        </div>
-                        <input
-                          type="text"
-                          value={password}
-                          placeholder="Enter Captcha"
-                          className={`${wiggleEffect && 'animate-shake border-red-600'} ${
-                            isCaptchaError ? 'border-red-600' : 'border-stone-200'
-                          }  md:w-28 border text-xs`}
-                          onAnimationEnd={() => setWiggleEffect(false)}
-                          onChange={(e) => setPassword(e.target.value as unknown as string)}
-                        />
-                      </div>
                       <Button onClick={modalAction}>Apply</Button>
                     </div>
                   </div>

@@ -2,15 +2,17 @@
 /* This function is used for rendering pass slip statuses */
 
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import BadgePill from '../../components/modular/badges/BadgePill';
 
-function UseRenderPassSlipStatus(status: PassSlipStatus) {
+function UseRenderPassSlipStatus(status: PassSlipStatus, textSize: TextSize) {
   return (
     <BadgePill
+      textSize={textSize}
       variant={
         status === PassSlipStatus.APPROVED
           ? 'success'
-          : status === PassSlipStatus.DISAPPROVED
+          : status === PassSlipStatus.DISAPPROVED || status === PassSlipStatus.DISAPPROVED_BY_HRMO
           ? 'error'
           : status === PassSlipStatus.ONGOING
           ? 'warning'
@@ -29,6 +31,8 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
           ? 'Approved'
           : status === PassSlipStatus.DISAPPROVED
           ? 'Disapproved'
+          : status === PassSlipStatus.DISAPPROVED_BY_HRMO
+          ? 'Disapproved by HRMO'
           : status === PassSlipStatus.ONGOING
           ? 'Ongoing'
           : status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL

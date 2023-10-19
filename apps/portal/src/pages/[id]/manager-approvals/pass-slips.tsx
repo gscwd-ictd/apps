@@ -27,6 +27,7 @@ import ApprovalsPendingPassSlipModal from 'apps/portal/src/components/fixed/mana
 import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedPassSlipModal';
 import { useRouter } from 'next/router';
 import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -141,7 +142,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
-      console.log(swrPassSlips);
       getPassSlipApplicationsListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 
@@ -220,7 +220,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      cell: (info) => UseRenderPassSlipStatus(info.getValue()),
+      cell: (info) => UseRenderPassSlipStatus(info.getValue(), TextSize.TEXT_SM),
     }),
   ];
 

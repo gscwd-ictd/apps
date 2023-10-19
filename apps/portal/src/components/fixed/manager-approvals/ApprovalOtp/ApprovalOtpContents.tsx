@@ -5,7 +5,6 @@ import { Notice } from '../../../modular/alerts/Notice';
 import { Button } from '../../../modular/forms/buttons/Button';
 import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
-import { overtimeAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
@@ -15,7 +14,7 @@ import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import AuthCode from 'react-auth-code-input';
 
 interface OtpProps {
   mobile: string;
@@ -129,6 +128,10 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     }
   }, [isSendOtpLoading]);
 
+  useEffect(() => {
+    console.log(otpCode);
+  }, [otpCode]);
+
   //COMPUTATION OF TIME REMAINING FOR OTP - GET FROM COMPONENT
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -201,11 +204,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
       setPendingPassSlipModalIsOpen(false); //then close Pass Slip modal
       setPendingLeaveModalIsOpen(false); //then close Pass Slip modal
     }, 200);
-  };
-
-  //UPDATE OTP VALUE FIELD
-  const handleOtpInput = (e: string) => {
-    setOtpCode(e);
   };
 
   const handlePatchResultOtp = async (data) => {
@@ -328,7 +326,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                 <label className={``}>Sending Code</label>
               </div>
             ) : null}
-
             {isOtpSending || isSendOtpLoading ? null : (
               // <Button
               //   btnLabel={`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}
@@ -346,7 +343,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                 <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE' : 'SEND CODE'}`}</label>
               </button>
             )}
-
             {isSendOtpLoading ? (
               <div className="flex flex-col justify-center items-center">
                 <PortalSVG.AnimationBlueLoading width={120} height={120} className={`-mt-1 my-2`} />
@@ -358,24 +354,23 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
 
             {isOtpSending || isSendOtpLoading ? (
               <>
-                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1">
+                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1 items-center w-full">
                   {otpFieldError && (
-                    <section className="mb-3" onAnimationEnd={() => setIsError({ ...isError, animate: false })}>
+                    <section className="mb-3 w-56" onAnimationEnd={() => setIsError({ ...isError, animate: false })}>
                       <Notice type="error" message={errorMessage} animate={otpFieldError} />
                     </section>
                   )}
                   <section className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}>
-                    <TextField
-                      autoFocus
-                      value={otpCode}
-                      type="text"
-                      placeholder="Enter Code"
-                      isError={otpFieldError ? true : false}
-                      errorMessage={''}
-                      maxLength={6}
-                      onChange={(e) => handleOtpInput(e.target.value as unknown as string)}
+                    <AuthCode
+                      allowedCharacters="numeric"
+                      onChange={setOtpCode}
+                      containerClassName="flex gap-3 flex-row justify-between items-center"
+                      inputClassName={`w-7 rounded border-indigo-500 font-bold text-lg ${
+                        otpFieldError ? 'border-red-500' : ''
+                      } px-0 text-center`}
                     />
                   </section>
+
                   <button
                     disabled={isSubmitLoading == true ? true : false}
                     className={`${wiggleEffect && 'animate-shake'}  ${

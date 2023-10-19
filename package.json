@@ -65,6 +65,7 @@
     "ordinal-number-suffix": "^0.1.2",
     "qr-scanner": "^1.4.2",
     "react": "18.2.0",
+    "react-auth-code-input": "^3.2.1",
     "react-chartjs-2": "^5.2.0",
     "react-data-table-component": "^7.5.4",
     "react-dom": "18.2.0",

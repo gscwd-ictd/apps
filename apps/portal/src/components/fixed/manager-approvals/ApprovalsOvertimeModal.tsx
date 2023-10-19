@@ -21,6 +21,7 @@ import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/Re
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 type ModalProps = {
   modalState: boolean;
@@ -264,10 +265,16 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                   <>
                                     <label className="w-full whitespace-nowrap">
-                                      {UseRenderAccomplishmentSubmitted(employee.isAccomplishmentSubmitted)}
+                                      {UseRenderAccomplishmentSubmitted(
+                                        employee.isAccomplishmentSubmitted,
+                                        TextSize.TEXT_SM
+                                      )}
                                     </label>
                                     <label className="w-auto">
-                                      {RenderOvertimeAccomplishmentStatus(employee.accomplishmentStatus)}
+                                      {RenderOvertimeAccomplishmentStatus(
+                                        employee.accomplishmentStatus,
+                                        TextSize.TEXT_LG
+                                      )}
                                     </label>
                                   </>
                                 ) : null}
