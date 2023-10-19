@@ -4,7 +4,7 @@
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import BadgePill from '../../components/badges/BadgePill';
 
-function UseRenderLeaveStatus(status: LeaveStatus | string) {
+function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: string) {
   return (
     <BadgePill
       variant={
@@ -45,6 +45,7 @@ function UseRenderLeaveStatus(status: LeaveStatus | string) {
           ? 'Cancelled'
           : null
       }
+      textSize={textSize}
     />
   );
 }

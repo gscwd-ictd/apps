@@ -4,7 +4,7 @@
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import BadgePill from '../../components/badges/BadgePill';
 
-function UseRenderPassSlipStatus(status: PassSlipStatus) {
+function UseRenderPassSlipStatus(status: PassSlipStatus, textSize?: string) {
   return (
     <BadgePill
       variant={
@@ -12,13 +12,21 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
           ? 'success'
           : status === PassSlipStatus.DISAPPROVED
           ? 'error'
+          : status === PassSlipStatus.DISAPPROVED_BY_HRMO
+          ? 'error'
           : status === PassSlipStatus.ONGOING
           ? 'warning'
-          : status === PassSlipStatus.FOR_APPROVAL
+          : status === PassSlipStatus.FOR_HRMO_APPROVAL
+          ? 'warning'
+          : status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+          ? 'warning'
+          : status === PassSlipStatus.FOR_DISPUTE
           ? 'warning'
           : status === PassSlipStatus.CANCELLED
           ? 'default'
           : status === PassSlipStatus.USED
+          ? 'default'
+          : status === PassSlipStatus.UNUSED
           ? 'default'
           : null
       }
@@ -27,16 +35,25 @@ function UseRenderPassSlipStatus(status: PassSlipStatus) {
           ? 'Approved'
           : status === PassSlipStatus.DISAPPROVED
           ? 'Disapproved'
+          : status === PassSlipStatus.DISAPPROVED_BY_HRMO
+          ? 'Disapproved by HRMO'
           : status === PassSlipStatus.ONGOING
           ? 'Ongoing'
-          : status === PassSlipStatus.FOR_APPROVAL
-          ? 'For Approval'
+          : status === PassSlipStatus.FOR_HRMO_APPROVAL
+          ? 'For HRMO Approval'
+          : status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+          ? 'For Supervisor Approval'
+          : status === PassSlipStatus.FOR_DISPUTE
+          ? 'For Dispute'
           : status === PassSlipStatus.CANCELLED
           ? 'Cancelled'
           : status === PassSlipStatus.USED
           ? 'Used'
+          : status === PassSlipStatus.UNUSED
+          ? 'Unused'
           : ''
       }
+      textSize={textSize}
     />
   );
 }

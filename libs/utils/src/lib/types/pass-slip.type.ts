@@ -28,6 +28,7 @@ export type PassSlip = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
+  avatarUrl?: string;
   id: string;
   employeeName: string;
   supervisorName: string;
@@ -57,4 +58,11 @@ export type PassSlipPdf = {
     signature: string;
   };
   assignment: string;
+};
+
+// EMS HRMO action to pass slip application
+export type HrmoApprovalPassSlip = {
+  passSlipId: string;
+  status: string;
+  hrmoDisapprovalRemarks?: string;
 };

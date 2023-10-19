@@ -13,11 +13,12 @@ const background = {
 type BadgePillProps = {
   label: string | null;
   variant: Variant;
+  textSize?: string;
 };
 
-const BadgePill: FunctionComponent<BadgePillProps> = ({ label, variant }) => {
+const BadgePill: FunctionComponent<BadgePillProps> = ({ label, variant, textSize }) => {
   return (
-    <div className="w-full text-xs">
+    <div className={`w-full ${textSize ?? 'text-xs'}`}>
       <span className={`px-2 py-[0.2rem] rounded ${background[variant]} font-mono text-center`}>{label}</span>
     </div>
   );

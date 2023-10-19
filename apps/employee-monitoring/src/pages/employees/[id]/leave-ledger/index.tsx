@@ -14,7 +14,6 @@ import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/Pri
 import DailyTimeRecordPdfModal from 'apps/employee-monitoring/src/components/modal/employees/DailyTimeRecordPdfModal';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-import { EmployeeDtrTable } from 'apps/employee-monitoring/src/components/tables/EmployeeDtrTable';
 import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables/LeaveLedgerTable';
 import LeaveLedgerAdjModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerAdjModal';
 
@@ -144,7 +143,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees/${context.query.id}`);
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/employees/${context.query.id}`);
 
     return { props: { employeeData: data } };
   } catch (error) {
