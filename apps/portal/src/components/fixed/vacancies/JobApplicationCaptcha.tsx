@@ -19,7 +19,7 @@ interface CaptchaProps {
   workExperienceArray: Array<WorkExperience>;
 }
 
-export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
+export const JobApplicationCaptcha: FunctionComponent<CaptchaProps> = ({
   vppId,
   employeeId,
   withRelevantExperience,
@@ -57,6 +57,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     postJobApplicationSuccess,
     postJobApplicationFail,
     setHasApplied,
+    setModal,
   } = useWorkExpStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
@@ -64,6 +65,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     postJobApplicationSuccess: state.postJobApplicationSuccess,
     postJobApplicationFail: state.postJobApplicationFail,
     setHasApplied: state.setHasApplied,
+    setModal: state.setModal,
   }));
 
   useEffect(() => {
@@ -76,8 +78,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const handleClose = () => {
     setCaptchaModalIsOpen(false); //close captcha modal first
     setTimeout(() => {
-      // setDisputedPassSlipModalIsOpen(false);
-      // setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
+      setModal({ page: 1, isOpen: true });
     }, 200);
   };
 

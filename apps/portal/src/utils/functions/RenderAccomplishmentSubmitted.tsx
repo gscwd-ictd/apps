@@ -9,7 +9,7 @@ function UseRenderAccomplishmentSubmitted(status: boolean, textSize: TextSize) {
     <BadgePill
       textSize={textSize}
       variant={status == true ? 'success' : status == false ? 'warning' : 'default'}
-      label={status == true ? 'Submitted' : status == false ? 'Not Submitted' : 'N/A'}
+      label={status == true ? 'Has Submitted' : status == false ? 'Not Submitted' : 'N/A'}
     />
   );
 }

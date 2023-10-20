@@ -6,7 +6,6 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { Button, Modal, TextField, ToastNotification } from '@gscwd-apps/oneui';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
 import { HiPencil, HiPlus, HiTrash, HiX } from 'react-icons/hi';
-import { isEmpty } from 'lodash';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.Element => {
@@ -37,8 +36,8 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
     inputOffice(e.target.value.trimStart(), expId);
   };
 
-  const [errorAccomplishment, setErrorAccomplishment] = useState<string>('');
-  const [errorDuty, setErrorDuty] = useState<string>('');
+  // const [errorAccomplishment, setErrorAccomplishment] = useState<string>('');
+  // const [errorDuty, setErrorDuty] = useState<string>('');
 
   const handleAccomplishmentInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setAccomplishmentInput(e.target.value.trim());
@@ -49,11 +48,11 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
   };
 
   const handleAddAccomplishment = (expId: string, accomplishment: string) => {
-    setErrorAccomplishment(null);
+    // setErrorAccomplishment(null);
 
     setTimeout(() => {
       if (accomplishment == '' || accomplishment.trim().length == 0) {
-        setErrorAccomplishment('Please fill out accomplishment field!');
+        // setErrorAccomplishment('Please fill out accomplishment field!');
       } else {
         addAccomplishment(expId, accomplishment);
         modalCancel();
@@ -62,11 +61,11 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
   };
 
   const handleAddDuty = (duty: string, expId: string) => {
-    setErrorDuty(null);
+    // setErrorDuty(null);
 
     setTimeout(() => {
       if (duty == '' || duty.trim().length == 0) {
-        setErrorDuty('Please fill out duty field!');
+        // setErrorDuty('Please fill out duty field!');
       } else {
         addDuty(duty, expId);
         modalCancel();
@@ -83,10 +82,10 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
   };
 
   const handleEditAccomplishment = (expId: string, indexForEdit: number) => {
-    setErrorAccomplishment(null);
+    // setErrorAccomplishment(null);
     setTimeout(() => {
       if (accomplishmentInput === '' || accomplishmentInput.trim().length == 0) {
-        setErrorAccomplishment('Please fill out accomplishment field!');
+        // setErrorAccomplishment('Please fill out accomplishment field!');
       } else {
         editAccomplishment(expId, indexForEdit, accomplishmentInput);
         modalCancel();
@@ -95,10 +94,10 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
   };
 
   const handleEditDuty = (expId: string, indexForEdit: number) => {
-    setErrorDuty(null);
+    // setErrorDuty(null);
     setTimeout(() => {
       if (dutyInput == '' || dutyInput.trim().length == 0) {
-        setErrorDuty('Please fill out duty field!');
+        // setErrorDuty('Please fill out duty field!');
       } else {
         editDuty(expId, indexForEdit, dutyInput);
         modalCancel();
@@ -179,12 +178,6 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      {!isEmpty(errorAccomplishment) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorAccomplishment}`} />
-      ) : null}
-
-      {!isEmpty(errorDuty) ? <ToastNotification toastType="error" notifMessage={`${errorDuty}`} /> : null}
-
       <Modal size={`${windowWidth > 768 ? 'lg' : 'full'}`} open={modal.isOpen} setOpen={() => setModal({ ...modal })}>
         <Modal.Header>
           <div className="flex justify-between items-start">
@@ -220,15 +213,27 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
         <Modal.Footer>
           <div className="w-full flex items-center justify-end">
             {modal.title === 'Accomplishments' ? (
-              <Button onClick={(e) => handleAddAccomplishment(modal.id, accomplishmentInput)}>
+              <Button
+                onClick={(e) => handleAddAccomplishment(modal.id, accomplishmentInput)}
+                disabled={accomplishmentInput ? false : true}
+              >
                 Add Accomplishment
               </Button>
             ) : modal.title === 'Edit Accomplishments' ? (
-              <Button onClick={(e) => handleEditAccomplishment(modal.id, indexForEdit)}>Edit Accomplishment</Button>
+              <Button
+                onClick={(e) => handleEditAccomplishment(modal.id, indexForEdit)}
+                disabled={accomplishmentInput ? false : true}
+              >
+                Edit Accomplishment
+              </Button>
             ) : modal.title === 'Duties' ? (
-              <Button onClick={(e) => handleAddDuty(dutyInput, modal.id)}>Add Duty</Button>
+              <Button onClick={(e) => handleAddDuty(dutyInput, modal.id)} disabled={dutyInput ? false : true}>
+                Add Duty
+              </Button>
             ) : (
-              <Button onClick={(e) => handleEditDuty(modal.id, indexForEdit)}>Edit Duty</Button>
+              <Button onClick={(e) => handleEditDuty(modal.id, indexForEdit)} disabled={dutyInput ? false : true}>
+                Edit Duty
+              </Button>
             )}
           </div>
         </Modal.Footer>

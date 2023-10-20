@@ -92,7 +92,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ? (
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
-                employeeDetails.employmentDetails.assignment.name === 'Training and Development Division' ? (
+                employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
                     <HRMenuDropdown right />
                   </li>
@@ -103,7 +103,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
-                employeeDetails.employmentDetails.assignment.name === 'Training and Development Division' ? (
+                employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
                     <HRMenuDropdown right />
                   </li>

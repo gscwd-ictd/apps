@@ -3,6 +3,11 @@ import { WorkExperience } from '../types/workexp.type';
 import { devtools } from 'zustand/middleware';
 import { JobApplicationDetailsResponse } from '../types/vacancies.type';
 
+export type WorkExpModal = {
+  isOpen: boolean;
+  page: number;
+};
+
 export type WorkExpState = {
   loading: {
     loadingJobOpening: boolean;
@@ -21,6 +26,9 @@ export type WorkExpState = {
   response: {
     responseApplyJob: JobApplicationDetailsResponse;
   };
+
+  modal: WorkExpModal;
+  setModal: (modal: WorkExpModal) => void;
 
   captchaModalIsOpen: boolean;
   setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
@@ -80,6 +88,15 @@ export const useWorkExpStore = create<WorkExpState>()(
     },
     response: {
       responseApplyJob: {} as JobApplicationDetailsResponse,
+    },
+
+    modal: {
+      isOpen: false,
+      page: 1,
+    },
+
+    setModal: (modal: WorkExpModal) => {
+      set((state) => ({ ...state, modal }));
     },
 
     hasApplied: false,

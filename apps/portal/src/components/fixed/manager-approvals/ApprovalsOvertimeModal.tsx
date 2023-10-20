@@ -270,10 +270,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                         TextSize.TEXT_SM
                                       )}
                                     </label>
-                                    <label className="w-auto">
+                                    <label className="w-full">
                                       {RenderOvertimeAccomplishmentStatus(
                                         employee.accomplishmentStatus,
-                                        TextSize.TEXT_LG
+                                        TextSize.TEXT_SM
                                       )}
                                     </label>
                                   </>

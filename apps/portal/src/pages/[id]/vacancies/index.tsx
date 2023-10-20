@@ -27,7 +27,7 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { useRouter } from 'next/router';
-import { ApprovalCaptcha } from 'apps/portal/src/components/fixed/vacancies/ApprovalCaptcha';
+import { JobApplicationCaptcha } from 'apps/portal/src/components/fixed/vacancies/JobApplicationCaptcha';
 
 export default function Vacancies({
   data,
@@ -37,7 +37,6 @@ export default function Vacancies({
   const [messageContent, setMessageContent] = useState<VacancyDetails>();
   const [mailMessage, setMailMessage] = useState<string>('');
   const [isMessageOpen, setIsMessageOpen] = useState<boolean>(false);
-  const [isApplied, setIsApplied] = useState<boolean>(false);
   const [jobDetails, setJobDetails] = useState<JobOpeningDetails>();
   const [workExperience, setWorkExperience] = useState<WorkExperiencePds>();
 
@@ -56,6 +55,8 @@ export default function Vacancies({
     responseApply,
     captchaModalIsOpen,
     hasApplied,
+    modal,
+    setModal,
     setCaptchaModalIsOpen,
     setErrorJobOpening,
     setErrorWorkExperience,
@@ -74,6 +75,8 @@ export default function Vacancies({
     responseApply: state.response.responseApplyJob,
     captchaModalIsOpen: state.captchaModalIsOpen,
     hasApplied: state.hasApplied,
+    modal: state.modal,
+    setModal: state.setModal,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
     setErrorJobOpening: state.setErrorJobOpening,
     setErrorWorkExperience: state.setErrorWorkExperience,
@@ -86,16 +89,7 @@ export default function Vacancies({
 
   const router = useRouter();
 
-  // set state for handling modal page
-  const [modal, setModal] = useState({
-    isOpen: false,
-    page: 1,
-    title: '',
-    subtitle: '',
-  });
-
   const handleMessage = async (vacancies: VacancyDetails) => {
-    setIsApplied(false); //initial values when opening job basic info
     setHasApplied(false); //initial values when opening job basic info
     setMessageContent(vacancies);
     setMailMessage('A job vacancy is available for application.');
@@ -107,7 +101,6 @@ export default function Vacancies({
       setJobDetails(jobOpeningDesc);
       if (jobOpeningDesc.error) {
         setErrorJobOpening(jobOpeningDesc.error + '');
-        // toast.error(jobOpeningDesc.error + '');
       }
     }
 
@@ -131,22 +124,27 @@ export default function Vacancies({
 
   const openModal = () => {
     // open the prf modal
-    setModal({ ...modal, page: 1, isOpen: true });
+    setModal({ page: 1, isOpen: true });
     resetExperience();
   };
 
   const changeModalPage = (e: number) => {
     //move to specific page of the modal
-    setModal({ ...modal, page: e, isOpen: true });
+    setModal({ page: e, isOpen: true });
     if (e == 1) {
       resetExperience();
-    }
-    if (e == 2) {
       setErrorJobOpening(null);
       setErrorWorkExperience(null);
-      setErrorApplyJob(null);
+      // setErrorApplyJob(null);
       setErrorCaptcha(null);
       setErrorMessage(null);
+    }
+    if (e == 2) {
+      // setErrorJobOpening(null);
+      // setErrorWorkExperience(null);
+      // setErrorApplyJob(null);
+      // setErrorCaptcha(null);
+      // setErrorMessage(null);
       handleWorkExperience(employeeId);
     }
   };
@@ -157,18 +155,18 @@ export default function Vacancies({
 
     setErrorJobOpening(null);
     setErrorWorkExperience(null);
-    setErrorApplyJob(null);
+    // setErrorApplyJob(null);
     setErrorCaptcha(null);
     setErrorMessage(null);
   };
 
   // set modal main modal action (confirm)
   const modalAction = async () => {
-    setErrorJobOpening(null);
-    setErrorWorkExperience(null);
-    setErrorApplyJob(null);
-    setErrorCaptcha(null);
-    setErrorMessage(null);
+    // setErrorJobOpening(null);
+    // setErrorWorkExperience(null);
+    // setErrorApplyJob(null);
+    // setErrorCaptcha(null);
+    // setErrorMessage(null);
     setTimeout(() => {
       if (!messageContent) {
         setErrorMessage('Failed to load message contents!');
@@ -177,12 +175,6 @@ export default function Vacancies({
       }
     }, 100);
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      emptyResponseAndError();
-    }, 3000);
-  }, [responseApply]);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -201,7 +193,7 @@ export default function Vacancies({
 
       {!isEmpty(errorJobOpening) ? <ToastNotification toastType="error" notifMessage={`${errorJobOpening}`} /> : null}
 
-      {!isEmpty(errorCaptcha) ? <ToastNotification toastType="error" notifMessage={`${errorCaptcha}`} /> : null}
+      {!isEmpty(errorCaptcha) ? <ToastNotification toastType="error" notifMessage={`${errorCaptcha} test`} /> : null}
 
       {!isEmpty(errorMessage) ? <ToastNotification toastType="error" notifMessage={`${errorMessage}`} /> : null}
 
@@ -219,6 +211,7 @@ export default function Vacancies({
             size={`${windowWidth > 768 ? 'xl' : 'full'}`}
             open={modal.isOpen}
             setOpen={() => setModal({ ...modal })}
+            steady
           >
             <Modal.Header>
               <div className="flex items-start justify-between px-2">
@@ -240,11 +233,13 @@ export default function Vacancies({
 
             <Modal.Body>
               {hasApplied ? (
-                <AlertNotification
-                  alertType="info"
-                  notifMessage="You have already applied for this position."
-                  dismissible={false}
-                />
+                <div className="px-2">
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage="You have already applied for this position."
+                    dismissible={false}
+                  />
+                </div>
               ) : null}
 
               <VacancyModalController page={modal.page} dataJobOpening={jobDetails} workExperience={workExperience} />
@@ -255,7 +250,7 @@ export default function Vacancies({
                 title={'JOB APPLICATION CAPTCHA'}
               >
                 {/* contents */}
-                <ApprovalCaptcha
+                <JobApplicationCaptcha
                   vppId={messageContent?.vppId}
                   employeeId={employeeId}
                   withRelevantExperience={withRelevantExperience}
@@ -268,10 +263,7 @@ export default function Vacancies({
               <div className="flex flex-col justify-center w-full h-full">
                 {modal.page === 1 ? (
                   <div className="flex flex-col items-end w-full">
-                    <Button
-                      className={`${isApplied || hasApplied ? 'hidden' : 'h-10'}`}
-                      onClick={(e) => changeModalPage(2)}
-                    >
+                    <Button className={`${hasApplied ? 'hidden' : 'h-10'}`} onClick={(e) => changeModalPage(2)}>
                       Next
                     </Button>
                   </div>
@@ -279,18 +271,14 @@ export default function Vacancies({
                   <div className="flex items-center justify-between w-full h-10">
                     <div
                       className={`${
-                        isApplied || hasApplied
-                          ? 'hidden'
-                          : 'w-full h-10 flex flex-row gap-3 justify-between items-center'
+                        hasApplied ? 'hidden' : 'w-full h-10 flex flex-row gap-3 justify-between items-center'
                       }`}
                     >
                       <Button onClick={(e) => changeModalPage(1)}>Back</Button>
 
                       <div
                         className={`${
-                          isApplied || hasApplied
-                            ? 'hidden'
-                            : 'hidden lg:flex justify-start items-center text-xs text-red-600'
+                          hasApplied ? 'hidden' : 'hidden lg:flex justify-start items-center text-xs text-red-600'
                         }`}
                       >
                         Warning: Going back or closing the window will reset your entries.
