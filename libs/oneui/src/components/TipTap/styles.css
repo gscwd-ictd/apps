@@ -1,0 +1,12 @@
+.tiptap {
+  > * + * {
+    list-style-type: square;
+    margin-top: 1em;
+  }
+
+  ul,
+  ol {
+    padding: 0 1rem;
+    color: red;
+  }
+}

@@ -7,7 +7,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import CancelOvertimeModal from './CancelOvertimeModal';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeSupervisorAccomplishmentModal from './OvertimeSupervisorAccomplishmentModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/RenderAccomplishmentSubmitted';
@@ -191,6 +191,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                     <Button
                                       variant={'primary'}
+                                      disabled={employee.isAccomplishmentSubmitted == true ? false : true}
                                       size={'sm'}
                                       loading={true}
                                       onClick={(e) =>

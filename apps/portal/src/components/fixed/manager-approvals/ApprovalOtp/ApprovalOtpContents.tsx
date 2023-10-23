@@ -3,7 +3,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Notice } from '../../../modular/alerts/Notice';
 import { Button } from '../../../modular/forms/buttons/Button';
-import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
@@ -127,10 +126,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
       //nothing to do
     }
   }, [isSendOtpLoading]);
-
-  useEffect(() => {
-    console.log(otpCode);
-  }, [otpCode]);
 
   //COMPUTATION OF TIME REMAINING FOR OTP - GET FROM COMPONENT
   useEffect(() => {
@@ -327,12 +322,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
               </div>
             ) : null}
             {isOtpSending || isSendOtpLoading ? null : (
-              // <Button
-              //   btnLabel={`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}
-              //   variant="primary"
-              //   className="font-bold mb-2"
-
-              // />
               <button
                 disabled={isSubmitLoading == true ? true : false}
                 className={`${

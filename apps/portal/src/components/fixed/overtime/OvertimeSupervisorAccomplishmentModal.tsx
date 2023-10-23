@@ -14,6 +14,7 @@ import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import OvertimeAccomplishmentReportModal from './OvertimeAccomplishmentReportModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -31,6 +32,8 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
     getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail,
+    setPdfAccomplishmentReportModalIsOpen,
+    pdfAccomplishmentReportModalIsOpen,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
@@ -40,6 +43,8 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
     getAccomplishmentDetails: state.getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess: state.getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail: state.getAccomplishmentDetailsFail,
+    setPdfAccomplishmentReportModalIsOpen: state.setPdfAccomplishmentReportModalIsOpen,
+    pdfAccomplishmentReportModalIsOpen: state.pdfAccomplishmentReportModalIsOpen,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -75,6 +80,10 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
       getAccomplishmentDetailsFail(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishmentError.message);
     }
   }, [swrOvertimeAccomplishment, swrOvertimeAccomplishmentError]);
+
+  const closeOvertimeAccomplishmentModal = async () => {
+    setPdfAccomplishmentReportModalIsOpen(false);
+  };
 
   return (
     <>
@@ -252,9 +261,23 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               </div>
             </div>
           )}
+          <OvertimeAccomplishmentReportModal
+            modalState={pdfAccomplishmentReportModalIsOpen}
+            setModalState={setPdfAccomplishmentReportModalIsOpen}
+            closeModalAction={closeOvertimeAccomplishmentModal}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
+            <Button
+              variant={'primary'}
+              size={'md'}
+              loading={false}
+              onClick={(e) => setPdfAccomplishmentReportModalIsOpen(true)}
+              type="submit"
+            >
+              PDF
+            </Button>
             <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
               Close
             </Button>

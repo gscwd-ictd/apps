@@ -51,6 +51,7 @@ export type OvertimeState = {
   pendingOvertimeModalIsOpen: boolean;
   completedOvertimeModalIsOpen: boolean;
   accomplishmentOvertimeModalIsOpen: boolean;
+  pdfAccomplishmentReportModalIsOpen: boolean;
   tab: number;
 
   accomplishmentDetails: OvertimeAccomplishment;
@@ -75,6 +76,7 @@ export type OvertimeState = {
   setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => void;
   setCompletedOvertimeModalIsOpen: (completedOvertimeModalIsOpen: boolean) => void;
   setAccomplishmentOvertimeModalIsOpen: (accomplishmentOvertimeModalIsOpen: boolean) => void;
+  setPdfAccomplishmentReportModalIsOpen: (pdfAccomplishmentReportModalIsOpen: boolean) => void;
 
   setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
   setTab: (tab: number) => void;
@@ -115,10 +117,15 @@ export const useOvertimeStore = create<OvertimeState>()(
     completedOvertimeModalIsOpen: false,
     cancelOvertimeModalIsOpen: false,
     accomplishmentOvertimeModalIsOpen: false,
+    pdfAccomplishmentReportModalIsOpen: false,
     tab: 1,
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
+    },
+
+    setPdfAccomplishmentReportModalIsOpen: (pdfAccomplishmentReportModalIsOpen: boolean) => {
+      set((state) => ({ ...state, pdfAccomplishmentReportModalIsOpen }));
     },
 
     setAccomplishmentOvertimeModalIsOpen: (accomplishmentOvertimeModalIsOpen: boolean) => {

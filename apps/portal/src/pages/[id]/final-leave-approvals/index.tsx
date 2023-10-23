@@ -349,7 +349,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   ) {
     if (
       employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
-      employeeDetails.employmentDetails.assignment.name === 'Training and Development Division'
+      employeeDetails.employmentDetails.assignment.name === 'Human Resource Department'
     ) {
       return { props: { employeeDetails } };
     } else {

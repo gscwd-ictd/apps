@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal, Tiptap } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -371,6 +371,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         {...register('accomplishments')}
                         defaultValue={overtimeAccomplishmentDetails?.accomplishments ?? ''}
                       ></textarea>
+                      {/* <Tiptap /> */}
                     </div>
                     {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
                       <div className="flex flex-col justify-between items-center w-full">
