@@ -4,18 +4,15 @@
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { useEffect, useState } from 'react';
-import { DtrDateSelect } from 'apps/employee-monitoring/src/components/calendar/DtrDateSelect';
-import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
-import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
 import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/PrintButton';
 import DailyTimeRecordPdfModal from 'apps/employee-monitoring/src/components/modal/employees/DailyTimeRecordPdfModal';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { ToastNotification } from '@gscwd-apps/oneui';
 import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables/LeaveLedgerTable';
 import LeaveLedgerAdjModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerAdjModal';
+import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 
 export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
@@ -36,19 +33,10 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
     setAdjustmentModalIsOpen(false);
   };
 
-  // scheduling store
-  const { postResponse, deleteResponse, emptyResponseAndErrors } = useScheduleSheetStore((state) => ({
-    postResponse: state.employeeSchedule.postResponse,
-    deleteResponse: state.employeeSchedule.deleteResponse,
-    emptyResponseAndErrors: state.emptyResponseAndErrors,
+  // leave benefits store
+  const { ErrorLeaveBenefits } = useLeaveBenefitStore((state) => ({
+    ErrorLeaveBenefits: state.error.errorLeaveBenefits,
   }));
-
-  // clear errors
-  useEffect(() => {
-    if (!isEmpty(postResponse)) {
-      //
-    }
-  }, [postResponse]);
 
   return (
     <>
@@ -65,9 +53,9 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           ]}
         />
 
-        {/* Successfully added */}
-        {!isEmpty(postResponse) ? (
-          <ToastNotification notifMessage="Successfully added a schedule!" toastType="success" />
+        {/* Error Notifications */}
+        {!isEmpty(ErrorLeaveBenefits) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorLeaveBenefits} />
         ) : null}
 
         <LeaveLedgerAdjModal

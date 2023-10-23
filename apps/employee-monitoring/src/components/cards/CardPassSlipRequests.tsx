@@ -9,7 +9,7 @@ import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 export const CardPassSlipRequests: FunctionComponent = () => {
   // pass slip count
-  const [count, setCount] = useState<string>('--');
+  const [countHrmoApproval, setCountHrmoApproval] = useState<string>('--');
 
   // use swr pass slips
   const {
@@ -21,19 +21,15 @@ export const CardPassSlipRequests: FunctionComponent = () => {
     revalidateOnFocus: false,
   });
 
-  const {
-    passSlips,
-    errorPassSlips,
-    getPassSlips,
-    getPassSlipsFail,
-    getPassSlipsSuccess,
-  } = usePassSlipStore((state) => ({
-    passSlips: state.passSlips,
-    getPassSlips: state.getPassSlips,
-    getPassSlipsSuccess: state.getPassSlipsSuccess,
-    getPassSlipsFail: state.getPassSlipsFail,
-    errorPassSlips: state.error.errorPassSlips,
-  }));
+  const { passSlips, errorPassSlips, getPassSlips, getPassSlipsFail, getPassSlipsSuccess } = usePassSlipStore(
+    (state) => ({
+      passSlips: state.passSlips,
+      getPassSlips: state.getPassSlips,
+      getPassSlipsSuccess: state.getPassSlipsSuccess,
+      getPassSlipsFail: state.getPassSlipsFail,
+      errorPassSlips: state.error.errorPassSlips,
+    })
+  );
 
   // initialize loading
   useEffect(() => {
@@ -52,9 +48,9 @@ export const CardPassSlipRequests: FunctionComponent = () => {
   useEffect(() => {
     if (!isEmpty(passSlips)) {
       const forApprovalPassSlipsCount = passSlips.filter(
-        (passSlip) => passSlip.status === PassSlipStatus.FOR_APPROVAL
+        (passSlip) => passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
       );
-      setCount(forApprovalPassSlipsCount.length.toString());
+      setCountHrmoApproval(forApprovalPassSlipsCount.length.toString());
     }
   }, [passSlips]);
 
@@ -76,8 +72,8 @@ export const CardPassSlipRequests: FunctionComponent = () => {
             <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z" />
           </svg>
         }
-        title="Pending Pass Slip Requests"
-        value={!isEmpty(passSlips) ? count : 0}
+        title="Pending HRMO Pass Slip Request Approval"
+        value={!isEmpty(passSlips) ? countHrmoApproval : 0}
       />
     </>
   );

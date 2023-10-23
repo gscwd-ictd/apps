@@ -1,4 +1,5 @@
 import { ActionType } from '../enums/leave-ledger.type';
+import { LeaveAdjustmentType } from 'apps/employee-monitoring/src/utils/enum/leave-adjustment-types.enum';
 
 export type LeaveLedgerEntry = {
   employeeId: string;
@@ -18,4 +19,12 @@ export type LeaveLedgerEntry = {
   leaveDates: Array<string>;
   remarks: string;
   leaveApplicationId?: string;
+};
+
+export type LeaveAdjustmentForm = {
+  category: LeaveAdjustmentType | '';
+  leaveBenefitsId: string;
+  value: number;
+  employeeId: string;
+  remarks: string | null;
 };
