@@ -322,37 +322,42 @@ export const ApprovalsPendingLeaveModal = ({
                     </>
                   ) : null}
 
-                  <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="w-full flex gap-2 justify-start items-center pt-4">
-                      <span className="text-slate-500 text-md font-medium">Action:</span>
+                  {leaveIndividualDetail?.status != LeaveStatus.FOR_HRDM_APPROVAL &&
+                  leaveIndividualDetail?.status != LeaveStatus.FOR_HRMO_APPROVAL ? (
+                    <>
+                      <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="w-full flex gap-2 justify-start items-center pt-4">
+                          <span className="text-slate-500 text-md font-medium">Action:</span>
 
-                      <select
-                        id="action"
-                        className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
-                        required
-                        {...register('status')}
-                      >
-                        <option value="" disabled>
-                          Select Action
-                        </option>
-                        {approvalAction.map((item: SelectOption, idx: number) => (
-                          <option value={item.value} key={idx}>
-                            {item.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                          <select
+                            id="action"
+                            className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
+                            required
+                            {...register('status')}
+                          >
+                            <option value="" disabled>
+                              Select Action
+                            </option>
+                            {approvalAction.map((item: SelectOption, idx: number) => (
+                              <option value={item.value} key={idx}>
+                                {item.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
 
-                    {watch('status') === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ? (
-                      <textarea
-                        required={true}
-                        className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                        placeholder="Enter Reason"
-                        rows={3}
-                        onChange={(e) => setReason(e.target.value as unknown as string)}
-                      ></textarea>
-                    ) : null}
-                  </form>
+                        {watch('status') === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ? (
+                          <textarea
+                            required={true}
+                            className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                            placeholder="Enter Reason"
+                            rows={3}
+                            onChange={(e) => setReason(e.target.value as unknown as string)}
+                          ></textarea>
+                        ) : null}
+                      </form>
+                    </>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -368,7 +373,7 @@ export const ApprovalsPendingLeaveModal = ({
               employeeId={employeeDetails.user._id}
               action={watch('status')}
               tokenId={leaveIndividualDetail.id}
-              otpName={'supervisorLeaveApproval'}
+              confirmName={'supervisorLeaveApproval'}
             /> */}
             <ApprovalOtpContents
               mobile={employeeDetails.profile.mobileNumber}
@@ -385,16 +390,29 @@ export const ApprovalsPendingLeaveModal = ({
             actionLeave={watch('status')}
             tokenId={leaveIndividualDetail.id}
             remarks={reason}
-            otpName={ManagerOtpApproval.LEAVE}
+            confirmName={ManagerOtpApproval.LEAVE}
             employeeId={employeeDetails.user._id}
           />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="w-full flex justify-end">
-              <Button form={`LeaveAction`} variant={'primary'} size={'md'} loading={false} type="submit">
-                Submit
-              </Button>
+              {leaveIndividualDetail?.status != LeaveStatus.FOR_HRDM_APPROVAL &&
+              leaveIndividualDetail?.status != LeaveStatus.FOR_HRMO_APPROVAL ? (
+                <Button form={`LeaveAction`} variant={'primary'} size={'md'} loading={false} type="submit">
+                  Submit
+                </Button>
+              ) : (
+                <Button
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => closeModalAction()}
+                  type="submit"
+                >
+                  Close
+                </Button>
+              )}
             </div>
           </div>
         </Modal.Footer>

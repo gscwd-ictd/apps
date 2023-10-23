@@ -9,6 +9,7 @@ export * from './enums/pass-slip.enum';
 export * from './enums/schedule.enum';
 export * from './enums/training.enum';
 export * from './enums/inbox.enum';
+export * from './enums/text-size.enum';
 export * from './types/employee.type';
 export * from './types/event.type';
 export * from './types/leave-application.type';

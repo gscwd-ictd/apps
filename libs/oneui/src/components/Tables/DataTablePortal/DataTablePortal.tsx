@@ -95,7 +95,7 @@ export const DataTablePortal = <T extends unknown>({
           <tbody>
             {hydrating ? (
               'Loading data...'
-            ) : model?.getRowModel().rows.length === 0 ? (
+            ) : model?.getRowModel().rows.length <= 0 ? (
               <tr>
                 <td colSpan={model?.getAllColumns().length} className="py-5 text-md text-center text-gray-500">
                   --- No Data ---

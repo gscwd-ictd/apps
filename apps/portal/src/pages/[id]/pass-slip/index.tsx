@@ -38,7 +38,8 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     loading,
     errorPassSlips,
     errorResponse,
-    responseApply,
+    responsePatch,
+    responsePost,
     responseCancel,
 
     setApplyPassSlipModalIsOpen,
@@ -57,7 +58,8 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     loading: state.loading.loadingPassSlips,
     errorPassSlips: state.error.errorPassSlips,
     errorResponse: state.error.errorResponse,
-    responseApply: state.response.postResponseApply,
+    responsePatch: state.response.patchResponse,
+    responsePost: state.response.postResponse,
     responseCancel: state.response.cancelResponse,
 
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
@@ -126,6 +128,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
+      console.log(swrPassSlips);
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
     }
 
@@ -135,13 +138,13 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   }, [swrPassSlips, swrError]);
 
   useEffect(() => {
-    if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
+    if (!isEmpty(responsePost) || !isEmpty(responseCancel) || !isEmpty(responsePatch)) {
       mutatePassSlips();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [responseApply, responseCancel]);
+  }, [responsePatch, responsePost, responseCancel]);
 
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
@@ -167,8 +170,13 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
         ) : null}
 
         {/* Post/Submit Pass Slip Success */}
-        {!isEmpty(responseApply) ? (
+        {!isEmpty(responsePost) ? (
           <ToastNotification toastType="success" notifMessage="Pass Slip Application Successful!" />
+        ) : null}
+
+        {/* Post/Submit Pass Slip Success */}
+        {!isEmpty(responsePatch) ? (
+          <ToastNotification toastType="success" notifMessage="Pass Slip Dispute Application Successful!" />
         ) : null}
 
         {/* Cancel Pass Slip Success */}

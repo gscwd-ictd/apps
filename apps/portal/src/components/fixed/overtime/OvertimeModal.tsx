@@ -10,6 +10,9 @@ import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeSupervisorAccomplishmentModal from './OvertimeSupervisorAccomplishmentModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/RenderAccomplishmentSubmitted';
+import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimeAccomplishmentStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 type ModalProps = {
   modalState: boolean;
@@ -58,6 +61,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
     setAccomplishmentOvertimeModalIsOpen(true);
   };
+
+  console.log(overtimeDetails);
 
   return (
     <>
@@ -112,9 +117,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                   {overtimeDetails.status === OvertimeStatus.PENDING ? (
                     <AlertNotification alertType="info" notifMessage={'For Supervisor Approval'} dismissible={false} />
                   ) : null}
+
                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                     <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
                   ) : null}
+
                   {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
                     <AlertNotification alertType="warning" notifMessage={'Disapproved'} dismissible={false} />
                   ) : null}
@@ -163,6 +170,23 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
                                   <label className="w-full">{employee.fullName}</label>
                                   <label className="w-full">{employee.assignment}</label>
+                                  {/* <label className="w-full">{employee.positionTitle}</label> */}
+                                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                                    <>
+                                      <label className="w-full whitespace-nowrap">
+                                        {UseRenderAccomplishmentSubmitted(
+                                          employee.isAccomplishmentSubmitted,
+                                          TextSize.TEXT_SM
+                                        )}
+                                      </label>
+                                      <label className="w-full">
+                                        {RenderOvertimeAccomplishmentStatus(
+                                          employee.accomplishmentStatus,
+                                          TextSize.TEXT_SM
+                                        )}
+                                      </label>
+                                    </>
+                                  ) : null}
 
                                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                     <Button

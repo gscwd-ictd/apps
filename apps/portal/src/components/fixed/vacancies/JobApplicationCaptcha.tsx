@@ -1,28 +1,29 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FunctionComponent, useEffect, useState } from 'react';
-import { passSlipAction } from '../../../../types/approvals.type';
-import { useApprovalStore } from '../../../../store/approvals.store';
-import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
+
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { GenerateCaptcha } from '../../captcha/CaptchaGenerator';
+
 import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
+import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
+import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { WorkExperience } from 'apps/portal/src/types/workexp.type';
+import { useWorkExpStore } from 'apps/portal/src/store/workexperience.store';
+import { checkIfApplied } from 'apps/portal/src/utils/helpers/http-requests/applicants-requests';
 
 interface CaptchaProps {
-  employeeId?: string;
-  tokenId: string;
-  captchaName: any;
-  dataToSubmitOvertimeAccomplishment?: OvertimeAccomplishmentApprovalPatch;
-  dataToSubmitPassSlipDispute?: passSlipAction;
+  vppId: string;
+  employeeId: string;
+  withRelevantExperience: boolean;
+  workExperienceArray: Array<WorkExperience>;
 }
 
-export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
+export const JobApplicationCaptcha: FunctionComponent<CaptchaProps> = ({
+  vppId,
   employeeId,
-  tokenId,
-  captchaName,
-  dataToSubmitOvertimeAccomplishment,
-  dataToSubmitPassSlipDispute,
+  withRelevantExperience,
+  workExperienceArray,
   ...props
 }) => {
   const [wiggleEffect, setWiggleEffect] = useState(false);
@@ -31,7 +32,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const [password, setPassword] = useState<string>('');
   const [captchaPassword, setCaptchaPassword] = useState<string>('');
   const [isCaptchaError, setIsCaptchaError] = useState<boolean>(false);
-  const [errorCaptcha, setErrorCaptcha] = useState<string>('');
 
   // generate captcha
   const getCaptcha = () => {
@@ -53,25 +53,19 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const {
     captchaModalIsOpen,
     setCaptchaModalIsOpen,
-    setOvertimeAccomplishmentModalIsOpen,
-    setDisputedPassSlipModalIsOpen,
-    patchOvertimeAccomplishment,
-    patchOvertimeAccomplishmentFail,
-    patchOvertimeAccomplishmentSuccess,
-    patchPassSlip,
-    patchPassSlipSuccess,
-    patchPassSlipFail,
-  } = useApprovalStore((state) => ({
+    postJobApplication,
+    postJobApplicationSuccess,
+    postJobApplicationFail,
+    setHasApplied,
+    setModal,
+  } = useWorkExpStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
-    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen, //for overtime accomplishment captcha
-    setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
-    setDisputedPassSlipModalIsOpen: state.setDisputedPassSlipModalIsOpen,
-    patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
-    patchOvertimeAccomplishmentFail: state.patchOvertimeAccomplishmentFail,
-    patchOvertimeAccomplishmentSuccess: state.patchOvertimeAccomplishmentSuccess,
-    patchPassSlip: state.patchPassSlip,
-    patchPassSlipSuccess: state.patchPassSlipSuccess,
-    patchPassSlipFail: state.patchPassSlipFail,
+    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
+    postJobApplication: state.postJobApplication,
+    postJobApplicationSuccess: state.postJobApplicationSuccess,
+    postJobApplicationFail: state.postJobApplicationFail,
+    setHasApplied: state.setHasApplied,
+    setModal: state.setModal,
   }));
 
   useEffect(() => {
@@ -84,8 +78,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const handleClose = () => {
     setCaptchaModalIsOpen(false); //close captcha modal first
     setTimeout(() => {
-      setDisputedPassSlipModalIsOpen(false);
-      // setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
+      setModal({ page: 1, isOpen: true });
     }, 200);
   };
 
@@ -94,72 +87,37 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     if (password != captchaPassword || password == '' || captchaPassword == '') {
       setIsCaptchaError(true);
       setWiggleEffect(true);
-      setErrorCaptcha('Incorrect Captcha!');
     } else {
-      //overtime accomplishment approval
-      if (dataToSubmitOvertimeAccomplishment) {
-        patchOvertimeAccomplishment();
-        const { error, result } = await patchPortal(
-          '/v1/overtime/accomplishments/approval',
-          dataToSubmitOvertimeAccomplishment
-        );
-        if (error) {
-          patchOvertimeAccomplishmentFail(result);
-        } else {
-          patchOvertimeAccomplishmentSuccess(result);
-          handleClose(); // close confirmation of decline modal
+      postJobApplication();
+      let data = {
+        withRelevantExperience: withRelevantExperience,
+        workExperienceSheet: workExperienceArray,
+      };
+      const { error, result } = await postPortal(
+        `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant/${vppId}/internal/${employeeId}`,
+        data
+      );
+
+      if (error) {
+        postJobApplicationFail(result);
+      } else {
+        postJobApplicationSuccess(result);
+        const applicantApplication = await checkIfApplied(vppId, employeeId);
+        if (applicantApplication.hasApplied) {
+          setHasApplied(applicantApplication.hasApplied);
         }
-      }
-      //pass slip dispute approval
-      else if (dataToSubmitPassSlipDispute) {
-        let data;
-        if (dataToSubmitPassSlipDispute.status === PassSlipStatus.APPROVED) {
-          //mutate payload for dispute purposes
-          data = {
-            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
-            isDisputeApproved: true,
-          };
-        } else {
-          data = {
-            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
-            isDisputeApproved: false,
-          };
-        }
-        patchPassSlip();
-        const { error, result } = await patchPortal('/v1/pass-slip', data);
-        if (error) {
-          patchPassSlipFail(result);
-        } else {
-          patchPassSlipSuccess(result);
-          handleClose(); // close confirmation of decline modal
-        }
+        handleClose();
       }
     }
   }
 
   return (
     <>
-      {dataToSubmitOvertimeAccomplishment || dataToSubmitPassSlipDispute ? (
+      {vppId && employeeId ? (
         <>
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
             <div className="mb-2 text-center">
-              {dataToSubmitOvertimeAccomplishment ? (
-                <>
-                  {`To ${
-                    dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
-                      ? 'approve'
-                      : 'disapprove'
-                  } this Accomplishment Report, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
-
-              {dataToSubmitPassSlipDispute ? (
-                <>
-                  {`To ${
-                    dataToSubmitPassSlipDispute.status == PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
-                  } this Pass Slip Dispute, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+              {`To apply for this job position, please generate and submit the correct Captcha.`}
             </div>
 
             <div className="flex flex-col flex-wrap justify-center items-center gap-2 w-full">

@@ -12,31 +12,31 @@ import {
   OvertimeDetails,
 } from 'libs/utils/src/lib/types/overtime.type';
 
-export type ApprovalLeaveList = {
-  completed: {
-    approved: Array<SupervisorLeaveDetails>;
-    disapproved: Array<SupervisorLeaveDetails>;
-    cancelled: Array<SupervisorLeaveDetails>;
-  };
-  forApproval: Array<SupervisorLeaveDetails>;
-};
+// export type ApprovalLeaveList = {
+//   completed: {
+//     approved: Array<SupervisorLeaveDetails>;
+//     disapproved: Array<SupervisorLeaveDetails>;
+//     cancelled: Array<SupervisorLeaveDetails>;
+//   };
+//   forApproval: Array<SupervisorLeaveDetails>;
+// };
 
-export type ApprovalPassSlipList = {
-  completed: {
-    approved: Array<PassSlip>;
-    disapproved: Array<PassSlip>;
-    cancelled: Array<PassSlip>;
-  };
-  forApproval: Array<PassSlip>;
-};
+// export type ApprovalPassSlipList = {
+//   completed: {
+//     approved: Array<PassSlip>;
+//     disapproved: Array<PassSlip>;
+//     cancelled: Array<PassSlip>;
+//   };
+//   forApproval: Array<PassSlip>;
+// };
 
-export type ApprovalOvertimeList = {
-  completed: {
-    approved: Array<OvertimeDetails>;
-    disapproved: Array<OvertimeDetails>;
-  };
-  forApproval: Array<OvertimeDetails>;
-};
+// export type ApprovalOvertimeList = {
+//   completed: {
+//     approved: Array<OvertimeDetails>;
+//     disapproved: Array<OvertimeDetails>;
+//   };
+//   forApproval: Array<OvertimeDetails>;
+// };
 
 export type ApprovalState = {
   alert: AlertState;
@@ -52,31 +52,31 @@ export type ApprovalState = {
   passSlipApplications: Array<PassSlip>; // new approval page using data tables
   overtimeApplications: Array<OvertimeDetails>;
 
-  leaves: {
-    completed: {
-      approved: Array<SupervisorLeaveDetails>;
-      disapproved: Array<SupervisorLeaveDetails>;
-      cancelled: Array<SupervisorLeaveDetails>;
-    };
-    forApproval: Array<SupervisorLeaveDetails>;
-  };
+  // leaves: {
+  //   completed: {
+  //     approved: Array<SupervisorLeaveDetails>;
+  //     disapproved: Array<SupervisorLeaveDetails>;
+  //     cancelled: Array<SupervisorLeaveDetails>;
+  //   };
+  //   forApproval: Array<SupervisorLeaveDetails>;
+  // };
 
-  passSlips: {
-    completed: {
-      approved: Array<PassSlip>;
-      disapproved: Array<PassSlip>;
-      cancelled: Array<PassSlip>;
-    };
-    forApproval: Array<PassSlip>;
-  };
+  // passSlips: {
+  //   completed: {
+  //     approved: Array<PassSlip>;
+  //     disapproved: Array<PassSlip>;
+  //     cancelled: Array<PassSlip>;
+  //   };
+  //   forApproval: Array<PassSlip>;
+  // };
 
-  overtime: {
-    completed: {
-      approved: Array<OvertimeDetails>;
-      disapproved: Array<OvertimeDetails>;
-    };
-    forApproval: Array<OvertimeDetails>;
-  };
+  // overtime: {
+  //   completed: {
+  //     approved: Array<OvertimeDetails>;
+  //     disapproved: Array<OvertimeDetails>;
+  //   };
+  //   forApproval: Array<OvertimeDetails>;
+  // };
 
   response: {
     patchResponsePassSlip: PassSlip;
@@ -93,6 +93,7 @@ export type ApprovalState = {
     loadingIndividualPassSlip: boolean;
 
     loadingOvertime: boolean;
+    loadingOvertimeDetails: boolean;
     loadingOvertimeResponse: boolean;
 
     loadingAccomplishment: boolean;
@@ -107,6 +108,7 @@ export type ApprovalState = {
     errorIndividualPassSlip: string;
 
     errorOvertime: string;
+    errorOvertimeDetails: string;
     errorOvertimeResponse: string;
 
     errorAccomplishment: string;
@@ -182,9 +184,9 @@ export type ApprovalState = {
   passSlipIndividualDetail: PassSlip;
   setPassSlipIndividualDetail: (PassSlip: PassSlip) => void;
 
-  getPassSlipList: (loading: boolean) => void;
-  getPassSlipListSuccess: (loading: boolean, response) => void;
-  getPassSlipListFail: (loading: boolean, error: string) => void;
+  // getPassSlipList: (loading: boolean) => void;
+  // getPassSlipListSuccess: (loading: boolean, response) => void;
+  // getPassSlipListFail: (loading: boolean, error: string) => void;
 
   getPassSlipApplicationsList: (loading: boolean) => void;
   getPassSlipApplicationsListSuccess: (loading: boolean, response) => void;
@@ -197,9 +199,9 @@ export type ApprovalState = {
   leaveIndividualDetail: SupervisorLeaveDetails;
   setLeaveIndividualDetail: (leaveIndividualDetail: SupervisorLeaveDetails) => void;
 
-  getLeaveList: (loading: boolean) => void;
-  getLeaveListSuccess: (loading: boolean, response) => void;
-  getLeaveListFail: (loading: boolean, error: string) => void;
+  // getLeaveList: (loading: boolean) => void;
+  // getLeaveListSuccess: (loading: boolean, response) => void;
+  // getLeaveListFail: (loading: boolean, error: string) => void;
 
   //for data table format
   getLeaveApplicationsList: (loading: boolean) => void;
@@ -208,16 +210,21 @@ export type ApprovalState = {
 
   // OVERTIME
   overtimeDetails: OvertimeDetails;
-  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
 
-  getOvertimeList: (loading: boolean) => void;
-  getOvertimeListSuccess: (loading: boolean, response) => void;
-  getOvertimeListFail: (loading: boolean, error: string) => void;
+  selectedOvertimeId: string;
+  setSelectedOvertimeId: (selectedOvertimeId: string) => void;
+  // getOvertimeList: (loading: boolean) => void;
+  // getOvertimeListSuccess: (loading: boolean, response) => void;
+  // getOvertimeListFail: (loading: boolean, error: string) => void;
 
   //for data table format
   getOvertimeApplicationsList: (loading: boolean) => void;
   getOvertimeApplicationsListSuccess: (loading: boolean, response) => void;
   getOvertimeApplicationsListFail: (loading: boolean, error: string) => void;
+
+  getOvertimeDetails: (loading: boolean) => void;
+  getOvertimeDetailsSuccess: (loading: boolean, response) => void;
+  getOvertimeDetailsFail: (loading: boolean, error: string) => void;
 
   accomplishmentDetails: OvertimeAccomplishment;
   getAccomplishmentDetails: (loading: boolean) => void;
@@ -257,31 +264,31 @@ export const useApprovalStore = create<ApprovalState>()(
     passSlipApplications: [],
     overtimeApplications: [],
 
-    leaves: {
-      completed: {
-        approved: [],
-        disapproved: [],
-        cancelled: [],
-      },
-      forApproval: [],
-    },
+    // leaves: {
+    //   completed: {
+    //     approved: [],
+    //     disapproved: [],
+    //     cancelled: [],
+    //   },
+    //   forApproval: [],
+    // },
 
-    passSlips: {
-      completed: {
-        approved: [],
-        disapproved: [],
-        cancelled: [],
-      },
-      forApproval: [],
-    },
+    // passSlips: {
+    //   completed: {
+    //     approved: [],
+    //     disapproved: [],
+    //     cancelled: [],
+    //   },
+    //   forApproval: [],
+    // },
 
-    overtime: {
-      completed: {
-        approved: [],
-        disapproved: [],
-      },
-      forApproval: [],
-    },
+    // overtime: {
+    //   completed: {
+    //     approved: [],
+    //     disapproved: [],
+    //   },
+    //   forApproval: [],
+    // },
 
     response: {
       patchResponsePassSlip: {} as PassSlip,
@@ -299,6 +306,7 @@ export const useApprovalStore = create<ApprovalState>()(
       loadingIndividualPassSlip: false,
 
       loadingOvertime: false,
+      loadingOvertimeDetails: false,
       loadingOvertimeResponse: false,
 
       loadingAccomplishment: false,
@@ -313,6 +321,7 @@ export const useApprovalStore = create<ApprovalState>()(
       errorIndividualPassSlip: '',
 
       errorOvertime: '',
+      errorOvertimeDetails: '',
       errorOvertimeResponse: '',
 
       errorAccomplishment: '',
@@ -348,8 +357,10 @@ export const useApprovalStore = create<ApprovalState>()(
     accomplishmentDetails: {} as OvertimeAccomplishment,
 
     overtimeDetails: {} as OvertimeDetails,
-    setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
-      set((state) => ({ ...state, overtimeDetails }));
+
+    selectedOvertimeId: '',
+    setSelectedOvertimeId: (selectedOvertimeId: string) => {
+      set((state) => ({ ...state, selectedOvertimeId }));
     },
 
     overtimeAccomplishmentEmployeeId: '',
@@ -477,63 +488,63 @@ export const useApprovalStore = create<ApprovalState>()(
     },
 
     //GET LEAVE ACTIONS OLD APPROVAL PAGE
-    getLeaveList: (loading: boolean) => {
-      set((state) => ({
-        ...state,
-        leaves: {
-          ...state.leaves,
-          completed: {
-            approved: [],
-            disapproved: [],
-            cancelled: [],
-          },
-          forApproval: [],
-        },
-        response: {
-          ...state.response,
-          patchResponseLeave: {} as SupervisorLeaveDetails,
-        },
-        loading: {
-          ...state.loading,
-          loadingLeaves: loading,
-        },
-        error: {
-          ...state.error,
-          errorLeaves: '',
-        },
-      }));
-    },
-    getLeaveListSuccess: (loading: boolean, response: ApprovalLeaveList) => {
-      set((state) => ({
-        ...state,
-        leaves: {
-          ...state.leaves,
-          completed: {
-            approved: response.completed.approved,
-            disapproved: response.completed.disapproved,
-            cancelled: response.completed.cancelled,
-          },
-          forApproval: response.forApproval,
-        },
-        loading: {
-          ...state.loading,
-          loadingLeaves: loading,
-        },
-      }));
-    },
-    getLeaveListFail: (loading: boolean, error: string) => {
-      set((state) => ({
-        ...state,
-        loading: {
-          ...state.loading,
-          loadingLeaves: loading,
-        },
-        error: {
-          ...state.error,
-          errorLeaves: error,
-        },
-      }));
-    },
+    // getLeaveList: (loading: boolean) => {
+    //   set((state) => ({
+    //     ...state,
+    //     leaves: {
+    //       ...state.leaves,
+    //       completed: {
+    //         approved: [],
+    //         disapproved: [],
+    //         cancelled: [],
+    //       },
+    //       forApproval: [],
+    //     },
+    //     response: {
+    //       ...state.response,
+    //       patchResponseLeave: {} as SupervisorLeaveDetails,
+    //     },
+    //     loading: {
+    //       ...state.loading,
+    //       loadingLeaves: loading,
+    //     },
+    //     error: {
+    //       ...state.error,
+    //       errorLeaves: '',
+    //     },
+    //   }));
+    // },
+    // getLeaveListSuccess: (loading: boolean, response: ApprovalLeaveList) => {
+    //   set((state) => ({
+    //     ...state,
+    //     leaves: {
+    //       ...state.leaves,
+    //       completed: {
+    //         approved: response.completed.approved,
+    //         disapproved: response.completed.disapproved,
+    //         cancelled: response.completed.cancelled,
+    //       },
+    //       forApproval: response.forApproval,
+    //     },
+    //     loading: {
+    //       ...state.loading,
+    //       loadingLeaves: loading,
+    //     },
+    //   }));
+    // },
+    // getLeaveListFail: (loading: boolean, error: string) => {
+    //   set((state) => ({
+    //     ...state,
+    //     loading: {
+    //       ...state.loading,
+    //       loadingLeaves: loading,
+    //     },
+    //     error: {
+    //       ...state.error,
+    //       errorLeaves: error,
+    //     },
+    //   }));
+    // },
 
     //GET LEAVE ACTIONS NEW APPROVAL PAGE USING DATA TABLE
     getLeaveApplicationsList: (loading: boolean) => {
@@ -584,63 +595,63 @@ export const useApprovalStore = create<ApprovalState>()(
     },
 
     //GET PASS SLIP ACTIONS OLD APPROVAL PAGE
-    getPassSlipList: (loading: boolean) => {
-      set((state) => ({
-        ...state,
-        passSlips: {
-          ...state.passSlips,
-          completed: {
-            approved: [],
-            disapproved: [],
-            cancelled: [],
-          },
-          forApproval: [],
-        },
-        response: {
-          ...state.response,
-          patchResponsePassSlip: {} as PassSlip,
-        },
-        loading: {
-          ...state.loading,
-          loadingPassSlips: loading,
-        },
-        error: {
-          ...state.error,
-          errorPassSlips: '',
-        },
-      }));
-    },
-    getPassSlipListSuccess: (loading: boolean, response: ApprovalPassSlipList) => {
-      set((state) => ({
-        ...state,
-        passSlips: {
-          ...state.passSlips,
-          completed: {
-            approved: response.completed.approved,
-            disapproved: response.completed.disapproved,
-            cancelled: response.completed.cancelled,
-          },
-          forApproval: response.forApproval,
-        },
-        loading: {
-          ...state.loading,
-          loadingPassSlips: loading,
-        },
-      }));
-    },
-    getPassSlipListFail: (loading: boolean, error: string) => {
-      set((state) => ({
-        ...state,
-        loading: {
-          ...state.loading,
-          loadingPassSlips: loading,
-        },
-        error: {
-          ...state.error,
-          errorPassSlips: error,
-        },
-      }));
-    },
+    // getPassSlipList: (loading: boolean) => {
+    //   set((state) => ({
+    //     ...state,
+    //     passSlips: {
+    //       ...state.passSlips,
+    //       completed: {
+    //         approved: [],
+    //         disapproved: [],
+    //         cancelled: [],
+    //       },
+    //       forApproval: [],
+    //     },
+    //     response: {
+    //       ...state.response,
+    //       patchResponsePassSlip: {} as PassSlip,
+    //     },
+    //     loading: {
+    //       ...state.loading,
+    //       loadingPassSlips: loading,
+    //     },
+    //     error: {
+    //       ...state.error,
+    //       errorPassSlips: '',
+    //     },
+    //   }));
+    // },
+    // getPassSlipListSuccess: (loading: boolean, response: ApprovalPassSlipList) => {
+    //   set((state) => ({
+    //     ...state,
+    //     passSlips: {
+    //       ...state.passSlips,
+    //       completed: {
+    //         approved: response.completed.approved,
+    //         disapproved: response.completed.disapproved,
+    //         cancelled: response.completed.cancelled,
+    //       },
+    //       forApproval: response.forApproval,
+    //     },
+    //     loading: {
+    //       ...state.loading,
+    //       loadingPassSlips: loading,
+    //     },
+    //   }));
+    // },
+    // getPassSlipListFail: (loading: boolean, error: string) => {
+    //   set((state) => ({
+    //     ...state,
+    //     loading: {
+    //       ...state.loading,
+    //       loadingPassSlips: loading,
+    //     },
+    //     error: {
+    //       ...state.error,
+    //       errorPassSlips: error,
+    //     },
+    //   }));
+    // },
 
     //GET PASS SLIP ACTIONS NEW APPROVAL PAGE USING DATA TABLE
     getPassSlipApplicationsList: (loading: boolean) => {
@@ -685,21 +696,14 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    //GET OVERTIME ACTIONS OLD PAGE
-    getOvertimeList: (loading: boolean) => {
+    //GET OVERTIME INDIVIDUAL DETAILS
+    getOvertimeDetails: (loading: boolean) => {
       set((state) => ({
         ...state,
-        overtime: {
-          ...state.overtime,
-          completed: {
-            approved: [],
-            disapproved: [],
-          },
-          forApproval: [],
-        },
+        overtimeDetails: {} as OvertimeDetails,
         loading: {
           ...state.loading,
-          loadingOvertime: loading,
+          loadingOvertimeDetails: loading,
         },
         error: {
           ...state.error,
@@ -708,33 +712,26 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    getOvertimeListSuccess: (loading: boolean, response: ApprovalOvertimeList) => {
+    getOvertimeDetailsSuccess: (loading: boolean, response: OvertimeDetails) => {
       set((state) => ({
         ...state,
-        overtime: {
-          ...state.overtime,
-          completed: {
-            approved: response.completed.approved,
-            disapproved: response.completed.disapproved,
-          },
-          forApproval: response.forApproval,
-        },
+        overtimeDetails: response,
         loading: {
           ...state.loading,
-          loadingOvertime: loading,
+          loadingOvertimeDetails: loading,
         },
       }));
     },
-    getOvertimeListFail: (loading: boolean, error: string) => {
+    getOvertimeDetailsFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {
           ...state.loading,
-          loadingOvertime: loading,
+          loadingOvertimeDetails: loading,
         },
         error: {
           ...state.error,
-          errorOvertime: error,
+          errorOvertimeDetails: error,
         },
         response: {
           ...state.response,

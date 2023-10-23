@@ -34,6 +34,9 @@ export type PassSlip = {
   supervisorId: string;
   assignmentName?: string;
   status: PassSlipStatus;
+  disputeRemarks?: string;
+  isDisputeApproved?: boolean | null;
+  encodedTimeIn?: string;
 } & PassSlipApplicationForm;
 
 // Individual pass slip id
