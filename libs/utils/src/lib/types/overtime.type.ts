@@ -96,7 +96,7 @@ export type OvertimeAccomplishment = {
   ivmsTimeOut: string;
   encodedTimeIn: string | null;
   encodedTimeOut: string | null;
-  accomplishments: string | null;
+  accomplishments: Array<string> | null;
   remarks: string | null;
   status: OvertimeAccomplishmentStatus;
   computedIvmsHours: number;

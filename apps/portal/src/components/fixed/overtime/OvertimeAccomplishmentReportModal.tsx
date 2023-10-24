@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal, PdfHeader } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -15,6 +15,7 @@ import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 const styles = StyleSheet.create({
   page: {
@@ -39,50 +40,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: 8,
   },
-  hrd: {
+  controlNumber: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     padding: 5,
     fontSize: 8,
   },
-  flexRowJustifyBetween: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 2,
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    fontSize: 9,
-    padding: 10,
-    marginTop: 10,
-  },
-  flexColumnJustifyBetween: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 2,
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    width: 'auto',
-  },
-  checkbox: {
-    width: 15,
-    height: 10,
-    border: '1px solid #000',
-    textAlign: 'center',
-  },
-  checkboxFlex: {
-    display: 'flex',
-    flexDirection: 'column',
-    fontSize: 9,
-    padding: 10,
-    gap: 1,
-  },
-  checkboxLabelFlex: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    gap: 2,
-  },
+
   pdfTitle: {
     fontSize: 18,
     fontWeight: 'heavy',
@@ -104,53 +69,15 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
     overtimeAccomplishmentApplicationId,
     overtimeAccomplishmentEmployeeName,
     accomplishmentDetails,
-    getAccomplishmentDetails,
-    getAccomplishmentDetailsSuccess,
-    getAccomplishmentDetailsFail,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
     overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
     overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
     accomplishmentDetails: state.accomplishmentDetails,
-    getAccomplishmentDetails: state.getAccomplishmentDetails,
-    getAccomplishmentDetailsSuccess: state.getAccomplishmentDetailsSuccess,
-    getAccomplishmentDetailsFail: state.getAccomplishmentDetailsFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-
-  // const { windowWidth } = UseWindowDimensions();
-
-  // const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
-
-  // const {
-  //   data: swrOvertimeAccomplishment,
-  //   isLoading: swrOvertimeAccomplishmentIsLoading,
-  //   error: swrOvertimeAccomplishmentError,
-  //   mutate: mutateOvertimeAccomplishments,
-  // } = useSWR(overtimeAccomplishmentUrl, fetchWithToken, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
-
-  // // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrOvertimeAccomplishmentIsLoading) {
-  //     getAccomplishmentDetails(swrOvertimeAccomplishmentIsLoading);
-  //   }
-  // }, [swrOvertimeAccomplishmentIsLoading]);
-
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrOvertimeAccomplishment)) {
-  //     getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
-  //   }
-
-  //   if (!isEmpty(swrOvertimeAccomplishmentError)) {
-  //     getAccomplishmentDetailsFail(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishmentError.message);
-  //   }
-  // }, [swrOvertimeAccomplishment, swrOvertimeAccomplishmentError]);
 
   return (
     <>
@@ -186,19 +113,10 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
               <Document title="Overtime Accomplishment Report">
                 <Page size={[612.0, 396.0]}>
                   <View style={styles.page}>
-                    <View style={styles.hrd}>
-                      <Text>HRD-010-2</Text>
+                    <View style={styles.controlNumber}>
+                      <Text>NO. 1</Text>
                     </View>
-                    <View style={styles.headerMain}>
-                      <Image style={{ width: 50 }} src={'/gwdlogo.png'} />
-                      <View style={styles.header}>
-                        <Text>Republic of the Philippines</Text>
-                        <Text>GENERAL SANTOS WATER DISTRICT</Text>
-                        <Text>E. Ferdnandez St., Lagao General Santos City</Text>
-                        <Text>Telephone No.: 552-3824; Telefax No.: 553-4960</Text>
-                        <Text>Email Address: gscwaterdistrict@yahoo.com</Text>
-                      </View>
-                    </View>
+                    <PdfHeader />
                     <Text style={styles.pdfTitle}>ACCOMPLISHMENT REPORT ON OVERTIME AUTHORIZATION</Text>
                     <View
                       style={{
@@ -232,6 +150,149 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
                         }}
                       >
                         {employeeDetails.employmentDetails.assignment.name}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        fontSize: 9,
+                        paddingTop: 10,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                      }}
+                    >
+                      <Text>Date: _____________</Text>
+                      <Text
+                        style={{
+                          position: 'absolute',
+
+                          marginTop: 10,
+                          width: 90,
+                        }}
+                      >
+                        {DateFormatter(accomplishmentDetails.plannedDate, 'MM-DD-YYYY')}
+                      </Text>
+                    </View>
+                    {/* MAIN TABLE CONTAINER */}
+                    <View
+                      style={{
+                        display: 'flex',
+                        borderBottom: '1px solid #000',
+                        borderRight: '1px solid #000',
+                        borderTop: '1px solid #000',
+                        borderLeft: '1px solid #000',
+                        flexDirection: 'column',
+                        marginLeft: 31,
+                        marginRight: 31,
+                        marginTop: 10,
+                        fontSize: 9,
+                      }}
+                    >
+                      {/* DATE AND WORK ACTIVITY ROW */}
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                        }}
+                      >
+                        <View
+                          style={{
+                            display: 'flex',
+                            borderBottom: '1px solid #000',
+                            flexDirection: 'column',
+                            fontSize: 9,
+                            padding: 6,
+                            width: '100%',
+                            textAlign: 'center',
+                          }}
+                        >
+                          <Text style={{}}>WORK ACTIVITY</Text>
+                        </View>
+                      </View>
+                      {/* ACCOMPLISHMENTS */}
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                        }}
+                      >
+                        <View
+                          style={{
+                            display: 'flex',
+
+                            flexDirection: 'column',
+                            fontSize: 9,
+                            padding: 6,
+                            width: '100%',
+                            height: 120,
+                            textAlign: 'justify',
+                          }}
+                        >
+                          <Text style={{}}>{accomplishmentDetails.accomplishments}</Text>
+                        </View>
+                      </View>
+                    </View>
+                    {/* SIGNATORIES */}
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        fontSize: 9,
+                        paddingTop: 20,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                      }}
+                    >
+                      <Text>Submitted by:</Text>
+                      <Text
+                        style={{
+                          marginRight: 155,
+                        }}
+                      >
+                        Noted by:
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        fontSize: 9,
+                        paddingTop: 10,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                      }}
+                    >
+                      <Text>_______________________________________</Text>
+                      <Text>_______________________________________</Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        fontSize: 8,
+                        paddingTop: 2,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          marginLeft: 45,
+                        }}
+                      >
+                        Signature over Printed Name
+                      </Text>
+                      <Text
+                        style={{
+                          marginRight: 45,
+                        }}
+                      >
+                        Department Manager A
                       </Text>
                     </View>
                   </View>

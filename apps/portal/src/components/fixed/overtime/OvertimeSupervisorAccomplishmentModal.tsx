@@ -73,6 +73,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishment)) {
+      console.log(swrOvertimeAccomplishment);
       getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
     }
 

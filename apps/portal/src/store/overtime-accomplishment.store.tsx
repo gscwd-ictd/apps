@@ -11,6 +11,7 @@ import {
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { WorkExperience } from '../types/workexp.type';
 
 export type OvertimeAccomplishmentList = {
   forApproval: Array<OvertimeAccomplishment>;
@@ -59,6 +60,10 @@ export type OvertimeState = {
   setOvertimeAccomplishmentPatchDetails: (overtimeAccomplishmentPatchDetails: OvertimeAccomplishmentPatch) => void;
   setTab: (tab: number) => void;
 
+  // accomplishments: Array<string>;
+  // addAccomplishments: (accomplishments: string) => void;
+  // removeAccomplishments: (index: number) => void;
+
   emptyResponseAndError: () => void;
 };
 
@@ -89,6 +94,18 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
     confirmOvertimeAccomplishmentModalIsOpen: false,
 
     tab: 1,
+
+    // accomplishments: [] as Array<string>,
+    // addAccomplishments: (newAccomplishment: string) => {
+    //   set((state) => ({
+    //     accomplishments: [...state.accomplishments, newAccomplishment],
+    //   }));
+    // },
+    // removeAccomplishments: (index: number) => {
+    //   set((state) => ({
+    //     accomplishments: state.accomplishments.splice(index, 1),
+    //   }));
+    // },
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));

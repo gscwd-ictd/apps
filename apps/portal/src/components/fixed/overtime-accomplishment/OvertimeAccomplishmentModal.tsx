@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal, Tiptap } from '@gscwd-apps/oneui';
-import { HiX } from 'react-icons/hi';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { HiPlus, HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationOvertimeAccomplishmentModal } from './ConfirmationOvertimeAccomplishmentModal';
@@ -94,7 +94,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   useEffect(() => {
     setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
-    console.log(schedule);
   }, []);
 
   useEffect(() => {
@@ -356,6 +355,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="text-slate-500 text-md font-medium whitespace-nowrap">Accomplishment:</label>
                       </div>
+
                       <textarea
                         required
                         disabled={
@@ -371,7 +371,25 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         {...register('accomplishments')}
                         defaultValue={overtimeAccomplishmentDetails?.accomplishments ?? ''}
                       ></textarea>
-                      {/* <Tiptap /> */}
+                      <div>
+                        <div className="flex gap-2 items-center py-1">
+                          <button
+                            className="h-6 w-auto flex justify-center items-center bg-green-500 hover:bg-greenindigo-600 rounded text-white"
+                            // onClick={(e) =>
+                            //   openModal(
+                            //     'Accomplishments',
+                            //     'Enter an accomplishment you attained for this position',
+                            //     exp._id,
+                            //     '',
+                            //     0,
+                            //     1
+                            //   )
+                            // }
+                          >
+                            Add Accomplishment
+                          </button>
+                        </div>
+                      </div>
                     </div>
                     {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
                       <div className="flex flex-col justify-between items-center w-full">
