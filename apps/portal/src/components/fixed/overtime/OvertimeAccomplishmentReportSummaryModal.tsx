@@ -45,7 +45,11 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const OvertimeAccomplishmentReportSummaryModal = ({
+  modalState,
+  setModalState,
+  closeModalAction,
+}: ModalProps) => {
   const {
     overtimeDetails,
     overtimeAccomplishmentEmployeeId,
@@ -326,4 +330,4 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
   );
 };
 
-export default OvertimeAccomplishmentReportModal;
+export default OvertimeAccomplishmentReportSummaryModal;

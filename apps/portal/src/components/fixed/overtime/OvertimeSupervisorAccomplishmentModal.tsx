@@ -224,7 +224,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                               className="w-full text-slate-400 font-medium"
                               textSize="md"
                               disabled
-                              value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
+                              value={`${accomplishmentDetails.computedEncodedHours ?? 0} Hour(s)`}
                             />
                           </label>
                         </div>

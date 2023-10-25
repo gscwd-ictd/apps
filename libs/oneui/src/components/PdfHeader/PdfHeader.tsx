@@ -1,20 +1,13 @@
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
-  page: {
-    // border: '1px solid #000',
-    margin: 10,
-    display: 'flex',
-    flexDirection: 'column',
-  },
   headerMain: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     gap: 10,
-    paddingLeft: 160,
   },
   header: {
     display: 'flex',

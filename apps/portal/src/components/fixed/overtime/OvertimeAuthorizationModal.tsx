@@ -120,11 +120,77 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     <PdfHeader />
                     <Text style={styles.pdfTitle}>OVERTIME AUTHORIZATION</Text>
 
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        fontSize: 9,
+                        paddingTop: 10,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                      }}
+                    >
+                      <Text>Purpose: ________________________________________________________________________</Text>
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          marginTop: 10,
+                          marginLeft: 60,
+                          width: 350,
+                        }}
+                      >
+                        {overtimeDetails.purpose}
+                      </Text>
+                      <Text>Date Covered: _____________</Text>
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          marginTop: 10,
+                          marginLeft: 515,
+                          width: 90,
+                        }}
+                      >
+                        {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        fontSize: 9,
+                        paddingTop: 0,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          marginLeft: 38,
+                        }}
+                      >
+                        ________________________________________________________________________
+                      </Text>
+
+                      <Text>Estimated Hours: _______</Text>
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          marginTop: 0,
+                          marginLeft: 550,
+                          width: 90,
+                        }}
+                      >
+                        {overtimeDetails.estimatedHours}
+                      </Text>
+                    </View>
+
                     {/* MAIN TABLE CONTAINER */}
                     <View
                       style={{
                         display: 'flex',
-                        borderBottom: '1px solid #000',
+                        // borderBottom: '1px solid #000',
                         borderRight: '1px solid #000',
                         borderTop: '1px solid #000',
                         borderLeft: '1px solid #000',
@@ -150,7 +216,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                             flexDirection: 'column',
                             fontSize: 9,
                             padding: 4,
-                            width: 800,
+                            width: '35%',
                             textAlign: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -166,121 +232,28 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                             flexDirection: 'column',
                             fontSize: 9,
                             padding: 2,
-                            width: 400,
+                            width: '15%',
                             textAlign: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
                           }}
                         >
-                          <Text>EMPLOYEE</Text>
-                          <Text>NO.</Text>
+                          <Text>EMPLOYEE NO.</Text>
                         </View>
                         <View
                           style={{
                             display: 'flex',
-                            borderRight: '1px solid #000',
                             borderBottom: '1px solid #000',
                             flexDirection: 'column',
                             fontSize: 9,
                             padding: 2,
-                            width: '100%',
+                            width: '50%',
                             textAlign: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
                           }}
                         >
-                          <Text>DIVISION</Text>
-                        </View>
-                        <View
-                          style={{
-                            display: 'flex',
-                            borderRight: '1px solid #000',
-                            borderBottom: '1px solid #000',
-                            flexDirection: 'column',
-                            fontSize: 9,
-                            padding: 2,
-                            width: 400,
-                            textAlign: 'center',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <Text>DATE</Text>
-                          <Text>COVERED</Text>
-                        </View>
-                        <View
-                          style={{
-                            display: 'flex',
-                            borderRight: '1px solid #000',
-                            flexDirection: 'column',
-                            fontSize: 9,
-                            padding: 0,
-                            width: 800,
-                            textAlign: 'center',
-                          }}
-                        >
-                          <View
-                            style={{
-                              display: 'flex',
-                              borderBottom: '1px solid #000',
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              padding: 2,
-                              width: '100%',
-                              textAlign: 'center',
-                            }}
-                          >
-                            <Text>NO. OF HOURS</Text>
-                          </View>
-                          <View
-                            style={{
-                              display: 'flex',
-                              borderBottom: '1px solid #000',
-                              flexDirection: 'row',
-                              fontSize: 9,
-                              padding: 0,
-                              width: '100%',
-                              textAlign: 'center',
-                            }}
-                          >
-                            <View
-                              style={{
-                                fontSize: 9,
-                                padding: 2,
-                                width: '100%',
-                                textAlign: 'center',
-                                borderRight: '1px solid #000',
-                              }}
-                            >
-                              <Text>REQ.</Text>
-                            </View>
-
-                            <View
-                              style={{
-                                fontSize: 9,
-                                padding: 2,
-                                width: 120,
-                                textAlign: 'center',
-                              }}
-                            >
-                              <Text>APPROVED</Text>
-                            </View>
-                          </View>
-                        </View>
-                        <View
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            borderBottom: '1px solid #000',
-                            fontSize: 9,
-                            padding: 2,
-                            width: '100%',
-                            textAlign: 'center',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <Text>PURPOSE</Text>
+                          <Text>OFFICE/DEPARTMENT/DIVISION</Text>
                         </View>
                       </View>
                     </View>
@@ -290,7 +263,6 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           display: 'flex',
                           borderBottom: '1px solid #000',
                           borderRight: '1px solid #000',
-                          borderTop: '1px solid #000',
                           borderLeft: '1px solid #000',
                           flexDirection: 'column',
                           marginLeft: 20,
@@ -310,141 +282,46 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                             style={{
                               display: 'flex',
                               borderRight: '1px solid #000',
-                              borderBottom: '1px solid #000',
                               flexDirection: 'column',
                               fontSize: 9,
                               padding: 4,
-                              width: 800,
+                              width: '35%',
                               textAlign: 'center',
                               justifyContent: 'center',
-                              alignItems: 'center',
+                              alignItems: 'flex-start',
                             }}
                           >
-                            <Text>EMPLOYEE'S NAME</Text>
+                            <Text>{employee.fullName}</Text>
                           </View>
                           <View
                             style={{
                               display: 'flex',
                               borderRight: '1px solid #000',
-                              borderBottom: '1px solid #000',
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              padding: 2,
-                              width: 400,
-                              textAlign: 'center',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <Text>EMPLOYEE</Text>
-                            <Text>NO.</Text>
-                          </View>
-                          <View
-                            style={{
-                              display: 'flex',
-                              borderRight: '1px solid #000',
-                              borderBottom: '1px solid #000',
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              padding: 2,
-                              width: '100%',
-                              textAlign: 'center',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <Text>DIVISION</Text>
-                          </View>
-                          <View
-                            style={{
-                              display: 'flex',
-                              borderRight: '1px solid #000',
-                              borderBottom: '1px solid #000',
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              padding: 2,
-                              width: 400,
-                              textAlign: 'center',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <Text>DATE</Text>
-                            <Text>COVERED</Text>
-                          </View>
-                          <View
-                            style={{
-                              display: 'flex',
-                              borderRight: '1px solid #000',
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              padding: 0,
-                              width: 800,
-                              textAlign: 'center',
-                            }}
-                          >
-                            <View
-                              style={{
-                                display: 'flex',
-                                borderBottom: '1px solid #000',
-                                flexDirection: 'column',
-                                fontSize: 9,
-                                padding: 2,
-                                width: '100%',
-                                textAlign: 'center',
-                              }}
-                            >
-                              <Text>NO. OF HOURS</Text>
-                            </View>
-                            <View
-                              style={{
-                                display: 'flex',
-                                borderBottom: '1px solid #000',
-                                flexDirection: 'row',
-                                fontSize: 9,
-                                padding: 0,
-                                width: '100%',
-                                textAlign: 'center',
-                              }}
-                            >
-                              <View
-                                style={{
-                                  fontSize: 9,
-                                  padding: 2,
-                                  width: '100%',
-                                  textAlign: 'center',
-                                  borderRight: '1px solid #000',
-                                }}
-                              >
-                                <Text>REQ.</Text>
-                              </View>
 
-                              <View
-                                style={{
-                                  fontSize: 9,
-                                  padding: 2,
-                                  width: 120,
-                                  textAlign: 'center',
-                                }}
-                              >
-                                <Text>APPROVED</Text>
-                              </View>
-                            </View>
-                          </View>
-                          <View
-                            style={{
-                              display: 'flex',
                               flexDirection: 'column',
-                              borderBottom: '1px solid #000',
                               fontSize: 9,
                               padding: 2,
-                              width: '100%',
+                              width: '15%',
                               textAlign: 'center',
                               justifyContent: 'center',
                               alignItems: 'center',
                             }}
                           >
-                            <Text>PURPOSE</Text>
+                            <Text>{employee.companyId}</Text>
+                          </View>
+                          <View
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              fontSize: 9,
+                              width: '50%',
+                              textAlign: 'center',
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              padding: 4,
+                            }}
+                          >
+                            <Text>{employee.assignment}</Text>
                           </View>
                         </View>
                       </View>
@@ -461,13 +338,13 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         paddingRight: 35,
                       }}
                     >
-                      <Text>Submitted by:</Text>
+                      <Text>Prepared and Requested by:</Text>
                       <Text
                         style={{
-                          marginRight: 155,
+                          marginRight: 205,
                         }}
                       >
-                        Noted by:
+                        Approved by:
                       </Text>
                     </View>
                     <View
@@ -476,19 +353,21 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         fontSize: 9,
-                        paddingTop: 10,
+                        paddingTop: 20,
                         paddingLeft: 35,
                         paddingRight: 35,
                       }}
                     >
-                      <Text>_______________________________________</Text>
-                      <Text>_______________________________________</Text>
+                      <Text>_______________________________</Text>
+                      <Text>_____________</Text>
+                      <Text>__________________________________</Text>
+                      <Text>_____________</Text>
                     </View>
                     <View
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        justifyContent: 'flex-start',
                         fontSize: 8,
                         paddingTop: 2,
                         paddingLeft: 35,
@@ -497,17 +376,67 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     >
                       <Text
                         style={{
-                          marginLeft: 45,
+                          marginLeft: 60,
                         }}
                       >
-                        Signature over Printed Name
+                        Supervisor
                       </Text>
                       <Text
                         style={{
-                          marginRight: 45,
+                          marginLeft: 105,
                         }}
                       >
-                        Department Manager A
+                        Date
+                      </Text>
+                      <Text
+                        style={{
+                          marginLeft: 80,
+                        }}
+                      >
+                        Division/Department Manager
+                      </Text>
+                      <Text
+                        style={{
+                          marginLeft: 78,
+                        }}
+                      >
+                        Date
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        fontSize: 9,
+                        paddingTop: 2,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          marginLeft: 30,
+                          marginTop: -22,
+                          width: 165,
+
+                          textAlign: 'center',
+                        }}
+                      >
+                        {overtimeDetails.immediateSupervisorName}
+                      </Text>
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          marginLeft: 300,
+                          marginTop: -22,
+                          width: 170,
+
+                          textAlign: 'center',
+                        }}
+                      >
+                        {'test'}
                       </Text>
                     </View>
                   </View>
