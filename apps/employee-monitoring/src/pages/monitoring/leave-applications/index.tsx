@@ -47,14 +47,14 @@ const Index = () => {
     if (leaveDates) {
       if (leaveDates.length > 4) {
         return (
-          <span className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center">
+          <span className="bg-gray-300 text-gray-700 text-xs font-mono px-1 py-0.5 ml-1 rounded text-center">
             {leaveDates[0]} to {leaveDates.slice(-1)}
           </span>
         );
       } else {
         return leaveDates.map((leaveDate: string, index: number) => (
           <span
-            className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center"
+            className="bg-gray-300 text-gray-700 text-xs font-mono px-1 py-0.5 ml-1 rounded text-center"
             key={index}
           >
             {leaveDate}

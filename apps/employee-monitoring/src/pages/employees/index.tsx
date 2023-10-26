@@ -1,10 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  DataTable,
-  LoadingSpinner,
-  ToastNotification,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
@@ -13,15 +8,13 @@ import useSWR from 'swr';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeRowData } from 'apps/employee-monitoring/src/utils/types/table-row-types/monitoring/employee.type';
 import { isEmpty } from 'lodash';
-import {
-  EmployeeSchedule,
-  useDtrStore,
-} from 'apps/employee-monitoring/src/store/dtr.store';
+import { EmployeeSchedule, useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 import { UseCapitalizer } from '../../utils/functions/Capitalizer';
 import UseRenderBadgePill from '../../utils/functions/RenderBadgePill';
 import { EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
 import { ActionDropdownEmployee } from '../../components/dropdown/ActionDropdownEmployee';
+import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 
 export default function Index() {
   const {
@@ -54,9 +47,7 @@ export default function Index() {
     setEmployeeDtr: state.setEmployeeDtr,
   }));
 
-  const [currentRowData, setCurrentRowData] = useState<EmployeeRowData>(
-    {} as EmployeeRowData
-  );
+  const [currentRowData, setCurrentRowData] = useState<EmployeeRowData>({} as EmployeeRowData);
 
   const {
     data: swrEmployees,
@@ -151,19 +142,17 @@ export default function Index() {
   // useSWR data
   useEffect(() => {
     if (!isEmpty(swrEmployees)) {
-      const employeesDetails: Array<EmployeeRowData> = swrEmployees.data.map(
-        (employeeDetails: EmployeeProfile) => {
-          const { employmentDetails, personalDetails } = employeeDetails;
-          return {
-            id: employmentDetails.employeeId,
-            fullName: personalDetails.fullName,
-            assignment: employmentDetails.assignment,
-            positionTitle: employmentDetails.positionTitle,
-            companyId: employeeDetails.employmentDetails.companyId,
-            natureOfAppointment: employmentDetails.natureOfAppointment,
-          };
-        }
-      );
+      const employeesDetails: Array<EmployeeRowData> = swrEmployees.data.map((employeeDetails: EmployeeProfile) => {
+        const { employmentDetails, personalDetails } = employeeDetails;
+        return {
+          id: employmentDetails.employeeId,
+          fullName: personalDetails.fullName,
+          assignment: employmentDetails.assignment,
+          positionTitle: employmentDetails.positionTitle,
+          companyId: employeeDetails.employmentDetails.companyId,
+          natureOfAppointment: employmentDetails.natureOfAppointment,
+        };
+      });
       getDtrEmployeesSuccess(employeesDetails);
     }
 
@@ -183,10 +172,7 @@ export default function Index() {
 
   // mutate from swr
   useEffect(() => {
-    if (
-      !isEmpty(errorEmployeeWithSchedule) ||
-      !isEmpty(errorEmployeeAsOption)
-    ) {
+    if (!isEmpty(errorEmployeeWithSchedule) || !isEmpty(errorEmployeeAsOption)) {
       setTimeout(() => {
         emptyErrorsAndResponse();
       }, 3000);
@@ -220,45 +206,32 @@ export default function Index() {
 
         {/* Fetch employees error */}
         {!isEmpty(errorEmployeeAsOption) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={errorEmployeeAsOption}
-          />
+          <ToastNotification toastType="error" notifMessage={errorEmployeeAsOption} />
         ) : null}
 
         {/* Notification error */}
         {!isEmpty(errorEmployeeWithSchedule) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={errorEmployeeWithSchedule}
-          />
+          <ToastNotification toastType="error" notifMessage={errorEmployeeWithSchedule} />
         ) : null}
 
         {/* Notification Success */}
-        {!isEmpty(postResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Successfully Added!"
-          />
-        ) : null}
+        {!isEmpty(postResponse) ? <ToastNotification toastType="success" notifMessage="Successfully Added!" /> : null}
 
-        <div className="sm:px-2 md:px-2 lg:px-5">
-          <Card>
-            {swrIsLoading ? (
-              <LoadingSpinner size="lg" />
-            ) : (
-              <div className="flex flex-col flex-wrap overflow-hidden">
-                {/** Top Card */}
+        <Can I="access" this="Employees">
+          <div className="sm:px-2 md:px-2 lg:px-5">
+            <Card>
+              {swrIsLoading ? (
+                <LoadingSpinner size="lg" />
+              ) : (
+                <div className="flex flex-col flex-wrap overflow-hidden">
+                  {/** Top Card */}
 
-                <DataTable
-                  model={table}
-                  showColumnFilter={true}
-                  paginate={true}
-                />
-              </div>
-            )}
-          </Card>
-        </div>
+                  <DataTable model={table} showColumnFilter={true} paginate={true} />
+                </div>
+              )}
+            </Card>
+          </div>
+        </Can>
       </div>
     </>
   );

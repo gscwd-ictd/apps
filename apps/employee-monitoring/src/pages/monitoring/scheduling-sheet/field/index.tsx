@@ -1,18 +1,10 @@
-import {
-  DataTable,
-  LoadingSpinner,
-  ToastNotification,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import AddFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/AddFieldSsModal';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
-import {
-  ScheduleSheet,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
@@ -119,9 +111,7 @@ export default function Index() {
     } as ScheduleSheet);
     setDeleteModalIsOpen(false);
   };
-  const [currentRowData, setCurrentRowData] = useState<ScheduleSheet>(
-    {} as ScheduleSheet
-  );
+  const [currentRowData, setCurrentRowData] = useState<ScheduleSheet>({} as ScheduleSheet);
 
   // transform date
   const transformDate = (date: string | Date | null) => {
@@ -171,39 +161,25 @@ export default function Index() {
     }),
     columnHelper.group({
       id: 'effectivityDate',
-      header: () => (
-        <span className="w-full text-center underline">Effectivity Date</span>
-      ),
+      header: () => <span className="w-full text-center underline">Effectivity Date</span>,
 
       columns: [
         columnHelper.accessor('dateFrom', {
           enableSorting: true,
           header: () => <span className="w-full text-center ">Date From</span>,
-          cell: (info) => (
-            <div className="w-full text-center">
-              {transformDate(info.getValue())}
-            </div>
-          ),
+          cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
         }),
         columnHelper.accessor('dateTo', {
           enableSorting: true,
           header: () => <span className="w-full text-center ">Date To</span>,
-          cell: (info) => (
-            <div className="w-full text-center">
-              {transformDate(info.getValue())}
-            </div>
-          ),
+          cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
         }),
       ],
     }),
     columnHelper.display({
       id: 'actions',
       header: () => <span className="w-full text-center ">Actions</span>,
-      cell: (props) => (
-        <div className="w-full text-center">
-          {renderRowActions(props.row.original)}
-        </div>
-      ),
+      cell: (props) => <div className="w-full text-center">{renderRowActions(props.row.original)}</div>,
     }),
   ];
 
@@ -266,32 +242,18 @@ export default function Index() {
           title="Field Scheduling Sheet"
         />
 
-        {!isEmpty(swrGsError) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={swrGsError.message}
-          />
-        ) : null}
+        {!isEmpty(swrGsError) ? <ToastNotification toastType="error" notifMessage={swrGsError.message} /> : null}
 
         {!isEmpty(postResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Successfully Added a Scheduling Sheet!"
-          />
+          <ToastNotification toastType="success" notifMessage="Successfully Added a Scheduling Sheet!" />
         ) : null}
 
         {!isEmpty(updateResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Successfully Updated the Scheduling Sheet!"
-          />
+          <ToastNotification toastType="success" notifMessage="Successfully Updated the Scheduling Sheet!" />
         ) : null}
 
         {!isEmpty(deleteResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Successfully deleted the Scheduling Sheet!"
-          />
+          <ToastNotification toastType="success" notifMessage="Successfully deleted the Scheduling Sheet!" />
         ) : null}
 
         <AddFieldSsModal
@@ -327,8 +289,7 @@ export default function Index() {
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
                       onClick={openAddActionModal}
                     >
-                      <i className="bx bxs-plus-square"></i>&nbsp; Add
-                      Scheduling Sheet
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Scheduling Sheet
                     </button>
                   </div>
 
