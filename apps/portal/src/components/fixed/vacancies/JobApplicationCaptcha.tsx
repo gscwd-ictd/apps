@@ -27,7 +27,6 @@ export const JobApplicationCaptcha: FunctionComponent<CaptchaProps> = ({
   ...props
 }) => {
   const [wiggleEffect, setWiggleEffect] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [pwdArray, setPwdArray] = useState<string[]>();
   const [password, setPassword] = useState<string>('');
   const [captchaPassword, setCaptchaPassword] = useState<string>('');

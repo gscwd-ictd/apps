@@ -1,19 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal, PdfHeader } from '@gscwd-apps/oneui';
+import { Button, Modal, PdfHeader } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
-import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
-import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
-import useSWR from 'swr';
-import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
-import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
-import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
@@ -68,7 +58,7 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Overtime Accomplishment Report PDF</span>
+              <span className="text-xl md:text-2xl">Overtime Accomplishment Report</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -162,10 +152,7 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
                     <View
                       style={{
                         display: 'flex',
-                        borderBottom: '1px solid #000',
-                        borderRight: '1px solid #000',
-                        borderTop: '1px solid #000',
-                        borderLeft: '1px solid #000',
+                        border: '1px solid #000',
                         flexDirection: 'column',
                         marginLeft: 31,
                         marginRight: 31,
@@ -213,7 +200,7 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
                             textAlign: 'justify',
                           }}
                         >
-                          <Text style={{}}>{accomplishmentDetails.accomplishments}</Text>
+                          <Text>{accomplishmentDetails.accomplishments}</Text>
                         </View>
                       </View>
                     </View>

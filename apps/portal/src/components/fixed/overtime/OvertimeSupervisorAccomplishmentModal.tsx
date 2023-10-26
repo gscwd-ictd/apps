@@ -73,7 +73,6 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishment)) {
-      console.log(swrOvertimeAccomplishment);
       getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
     }
 
@@ -277,7 +276,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               onClick={(e) => setPdfAccomplishmentReportModalIsOpen(true)}
               type="submit"
             >
-              PDF
+              Accomplishment
             </Button>
             <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
               Close

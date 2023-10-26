@@ -24,12 +24,14 @@ export type OvertimeState = {
     loadingResponse: boolean;
     loadingEmployeeList: boolean;
     loadingAccomplishment: boolean;
+    loadingOvertimeSummary: boolean;
   };
   error: {
     errorOvertime: string;
     errorResponse: string;
     errorEmployeeList: string;
     errorAccomplishment: string;
+    errorOvertimeSummary: string;
   };
 
   overtimeAccomplishmentEmployeeId: string;
@@ -53,12 +55,18 @@ export type OvertimeState = {
   accomplishmentOvertimeModalIsOpen: boolean;
   pdfAccomplishmentReportModalIsOpen: boolean;
   pdfOvertimeAuthorizationModalIsOpen: boolean;
+  pdfOvertimeSummaryModalIsOpen: boolean;
   tab: number;
 
   accomplishmentDetails: OvertimeAccomplishment;
   getAccomplishmentDetails: (loading: boolean) => void;
   getAccomplishmentDetailsSuccess: (loading: boolean, response) => void;
   getAccomplishmentDetailsFail: (loading: boolean, error: string) => void;
+
+  overtimeSummary: Array<OvertimeAccomplishment>;
+  getOvertimeSummary: (loading: boolean) => void;
+  getOvertimeSummarySuccess: (loading: boolean, response) => void;
+  getOvertimeSummaryFail: (loading: boolean, error: string) => void;
 
   getOvertimeList: (loading: boolean) => void;
   getOvertimeListSuccess: (loading: boolean, response) => void;
@@ -79,6 +87,7 @@ export type OvertimeState = {
   setAccomplishmentOvertimeModalIsOpen: (accomplishmentOvertimeModalIsOpen: boolean) => void;
   setPdfAccomplishmentReportModalIsOpen: (pdfAccomplishmentReportModalIsOpen: boolean) => void;
   setPdfOvertimeAuthorizationModalIsOpen: (pdfOvertimeAuthorizationModalIsOpen: boolean) => void;
+  setPdfOvertimeSummaryModalIsOpen: (pdfOvertimeSummaryModalIsOpen: boolean) => void;
 
   setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
   setTab: (tab: number) => void;
@@ -103,16 +112,19 @@ export const useOvertimeStore = create<OvertimeState>()(
       loadingResponse: false,
       loadingEmployeeList: false,
       loadingAccomplishment: false,
+      loadingOvertimeSummary: false,
     },
     error: {
       errorOvertime: '',
       errorResponse: '',
       errorEmployeeList: '',
       errorAccomplishment: '',
+      errorOvertimeSummary: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
     accomplishmentDetails: {} as OvertimeAccomplishment,
+    overtimeSummary: {} as Array<OvertimeAccomplishment>,
 
     applyOvertimeModalIsOpen: false,
     pendingOvertimeModalIsOpen: false,
@@ -121,6 +133,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     accomplishmentOvertimeModalIsOpen: false,
     pdfAccomplishmentReportModalIsOpen: false,
     pdfOvertimeAuthorizationModalIsOpen: false,
+    pdfOvertimeSummaryModalIsOpen: false,
     tab: 1,
 
     setTab: (tab: number) => {
@@ -133,6 +146,10 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     setPdfOvertimeAuthorizationModalIsOpen: (pdfOvertimeAuthorizationModalIsOpen: boolean) => {
       set((state) => ({ ...state, pdfOvertimeAuthorizationModalIsOpen }));
+    },
+
+    setPdfOvertimeSummaryModalIsOpen: (pdfOvertimeSummaryModalIsOpen: boolean) => {
+      set((state) => ({ ...state, pdfOvertimeSummaryModalIsOpen }));
     },
 
     setAccomplishmentOvertimeModalIsOpen: (accomplishmentOvertimeModalIsOpen: boolean) => {
@@ -210,6 +227,50 @@ export const useOvertimeStore = create<OvertimeState>()(
         error: {
           ...state.error,
           errorAccomplishment: error,
+        },
+        response: {
+          ...state.response,
+          postResponseApply: null,
+        },
+      }));
+    },
+
+    //GET OVERTIME SUMMARY - COMPILED OT ACCOMPLISHMENTS
+    getOvertimeSummary: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtimeSummary: {} as Array<OvertimeAccomplishment>,
+        loading: {
+          ...state.loading,
+          loadingOvertimeSummary: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeSummary: '',
+        },
+      }));
+    },
+
+    getOvertimeSummarySuccess: (loading: boolean, response: Array<OvertimeAccomplishment>) => {
+      set((state) => ({
+        ...state,
+        overtimeSummary: response,
+        loading: {
+          ...state.loading,
+          loadingOvertimeSummary: loading,
+        },
+      }));
+    },
+    getOvertimeSummaryFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertimeSummary: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeSummary: error,
         },
         response: {
           ...state.response,
@@ -409,6 +470,9 @@ export const useOvertimeStore = create<OvertimeState>()(
         error: {
           ...state.error,
           errorResponse: '',
+          errorAccomplishment: '',
+          errorEmployeeList: '',
+          errorOvertimeSummary: '',
           errorOvertime: '',
         },
       }));

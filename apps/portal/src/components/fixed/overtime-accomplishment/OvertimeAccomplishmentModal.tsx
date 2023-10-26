@@ -86,7 +86,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       setValue('encodedTimeIn', overtimeAccomplishmentDetails.encodedTimeIn);
       setValue('encodedTimeOut', overtimeAccomplishmentDetails.encodedTimeOut);
       setValue('accomplishments', overtimeAccomplishmentDetails.accomplishments);
-      console.log(overtimeAccomplishmentDetails);
     }
   }, [pendingOvertimeAccomplishmentModalIsOpen]);
 

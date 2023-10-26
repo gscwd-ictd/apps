@@ -8,7 +8,6 @@ import SideNav from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { JobOpeningDetails, VacancyDetails } from '../../../types/vacancies.type';
-import { GenerateCaptcha } from '../../../components/fixed/captcha/CaptchaGenerator';
 import {
   getJobOpeningDetails,
   checkIfApplied,
@@ -23,8 +22,6 @@ import { WorkExperiencePds } from '../../../types/workexp.type';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { useRouter } from 'next/router';
 import { JobApplicationCaptcha } from 'apps/portal/src/components/fixed/vacancies/JobApplicationCaptcha';
@@ -40,11 +37,6 @@ export default function Vacancies({
   const [jobDetails, setJobDetails] = useState<JobOpeningDetails>();
   const [workExperience, setWorkExperience] = useState<WorkExperiencePds>();
 
-  // const workExperienceArray = useWorkExpStore((state) => state.workExperience);
-  const resetExperience = useWorkExpStore((state) => state.resetWorkExperience);
-  const workExperienceArray = useWorkExpStore((state) => state.workExperience);
-  const withRelevantExperience = useWorkExpStore((state) => state.withRelevantExperience);
-
   const {
     errorJobOpening,
     errorIfApplied,
@@ -56,6 +48,9 @@ export default function Vacancies({
     captchaModalIsOpen,
     hasApplied,
     modal,
+    withRelevantExperience,
+    workExperienceArray,
+    resetExperience,
     setModal,
     setCaptchaModalIsOpen,
     setErrorJobOpening,
@@ -76,6 +71,9 @@ export default function Vacancies({
     captchaModalIsOpen: state.captchaModalIsOpen,
     hasApplied: state.hasApplied,
     modal: state.modal,
+    withRelevantExperience: state.withRelevantExperience,
+    workExperienceArray: state.workExperience,
+    resetExperience: state.resetWorkExperience,
     setModal: state.setModal,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
     setErrorJobOpening: state.setErrorJobOpening,
