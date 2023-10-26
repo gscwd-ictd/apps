@@ -11,10 +11,7 @@ import { SelectListRF } from '../../../inputs/SelectListRF';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import {
-  LeaveConfirmAction,
-  useLeaveApplicationStore,
-} from 'apps/employee-monitoring/src/store/leave-application.store';
+import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
 import { isEmpty } from 'lodash';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -75,7 +72,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     }
   );
 
-  // leave applicaiton store
+  // leave application store
   const {
     leaveApplicationDetails,
     leaveConfirmAction,
@@ -204,13 +201,6 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     }
   }, [swrLeaveDetails, swrError]);
 
-  //! temporary
-  useEffect(() => {
-    if (!isEmpty(leaveApplicationDetails)) {
-      console.log(leaveApplicationDetails);
-    }
-  }, [leaveApplicationDetails]);
-
   useEffect(() => {
     if (leaveConfirmAction === 'yes') {
       onSubmit();
@@ -302,7 +292,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                       label="Status"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={rowData.status ? UseRenderLeaveStatus(rowData.status) : ''}
+                      value={rowData.status ? UseRenderLeaveStatus(rowData.status, 'text-sm') : ''}
                     />
                   </div>
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
@@ -323,16 +313,16 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                       textSize="md"
                       value={
                         rowData.leaveDates && rowData.leaveDates.length >= 2 ? (
-                          <div className="flex items-center gap-2 text-sm font-light">
-                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).start)}
+                          <div className="flex items-center gap-2 text-sm font-semibold">
+                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).start, 'text-md')}
                             <div>to</div>
-                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).end)}
+                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).end, 'text-md')}
                           </div>
                         ) : rowData.leaveDates && rowData.leaveDates.length === 1 ? (
                           rowData.leaveDates.map((date, idx) => {
                             return (
-                              <div className="flex items-center gap-2 text-sm font-light" key={idx}>
-                                {UseRenderBadgePill(date)}
+                              <div className="flex items-center gap-2 text-sm font-semibold" key={idx}>
+                                {UseRenderBadgePill(date, 'text-md')}
                               </div>
                             );
                           })
