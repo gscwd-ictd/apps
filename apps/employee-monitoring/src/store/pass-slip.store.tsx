@@ -1,7 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
+import { PassSlip, HrmoApprovalPassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
+
+type ResponsePassSlip = {
+  getPassSlip: PassSlip;
+  hrmoApprovalPassSlip: HrmoApprovalPassSlip;
+  cancelPassSlip: PassSlip;
+};
 
 type LoadingPassSlip = {
   loadingPassSlip: boolean;
@@ -15,7 +21,7 @@ type ErrorPassSlip = {
 
 type PassSlipState = {
   passSlips: Array<PassSlip>;
-  passSlip: PassSlip;
+  response: ResponsePassSlip;
   loading: LoadingPassSlip;
   error: ErrorPassSlip;
 
@@ -27,22 +33,25 @@ type PassSlipState = {
   cancelPassSlipSuccess: (response: PassSlip) => void;
   cancelPassSlipFail: (error: string) => void;
 
+  updateHrmoApprovalPassSlip: () => void;
+  updateHrmoApprovalPassSlipSuccess: (response: HrmoApprovalPassSlip) => void;
+  updateHrmoApprovalPassSlipFail: (error: string) => void;
+
   emptyErrorsAndResponse: () => void;
 };
 
 export const usePassSlipStore = create<PassSlipState>()(
-  devtools((set, get) => ({
-    passSlip: {} as PassSlip,
+  devtools((set) => ({
     passSlips: [],
+    response: {
+      getPassSlip: {} as PassSlip,
+      hrmoApprovalPassSlip: {} as HrmoApprovalPassSlip,
+      cancelPassSlip: {} as PassSlip,
+    },
     loading: { loadingPassSlip: false, loadingPassSlips: false },
     error: { errorPassSlip: '', errorPassSlips: '' },
 
-    emptyErrorsAndResponse: () =>
-      set((state) => ({
-        ...state,
-        error: { errorPassSlip: '', errorPassSlips: '' },
-        passSlip: {} as PassSlip,
-      })),
+    leaveConfirmAction: null,
 
     getPassSlips: () =>
       set((state) => ({
@@ -51,14 +60,12 @@ export const usePassSlipStore = create<PassSlipState>()(
         loading: { ...state.loading, loadingPassSlips: true },
         error: { ...state.error, errorPassSlips: '' },
       })),
-
     getPassSlipsSuccess: (response: Array<PassSlip>) =>
       set((state) => ({
         ...state,
         passSlips: response,
         loading: { ...state.loading, loadingPassSlips: false },
       })),
-
     getPassSlipsFail: (error: string) =>
       set((state) => ({
         ...state,
@@ -66,26 +73,71 @@ export const usePassSlipStore = create<PassSlipState>()(
         loading: { ...state.loading, loadingPassSlips: false },
       })),
 
-    cancelPassSlip: () =>
+    updateHrmoApprovalPassSlip: () =>
       set((state) => ({
         ...state,
-        passSlip: {} as PassSlip,
+        response: {
+          ...state.response,
+          hrmoApprovalPassSlip: {} as HrmoApprovalPassSlip,
+        },
         loading: { ...state.loading, loadingPassSlip: true },
         error: { ...state.error, errorPassSlip: '' },
       })),
+    updateHrmoApprovalPassSlipSuccess: (response: HrmoApprovalPassSlip) =>
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          hrmoApprovalPassSlip: response,
+        },
+        loading: { ...state.loading, loadingPassSlip: false },
+      })),
+    updateHrmoApprovalPassSlipFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPassSlip: false },
+        error: { ...state.error, errorPassSlip: error },
+      })),
 
+    cancelPassSlip: () =>
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          cancelPassSlip: {} as PassSlip,
+        },
+        loading: { ...state.loading, loadingPassSlip: true },
+        error: { ...state.error, errorPassSlip: '' },
+      })),
     cancelPassSlipSuccess: (response: PassSlip) =>
       set((state) => ({
         ...state,
-        passSlip: response,
+        response: {
+          ...state.response,
+          cancelPassSlip: response,
+        },
         loading: { ...state.loading, loadingPassSlip: false },
       })),
-
     cancelPassSlipFail: (error: string) =>
       set((state) => ({
         ...state,
         error: { ...state.error, errorPassSlip: error },
         loading: { ...state.loading, loadingPassSlip: false },
+      })),
+
+    emptyErrorsAndResponse: () =>
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          hrmoApprovalPassSlip: {} as HrmoApprovalPassSlip,
+          cancelPassSlip: {} as PassSlip,
+        },
+        error: {
+          ...state.error,
+          errorPassSlip: '',
+          errorPassSlips: '',
+        },
       })),
   }))
 );

@@ -1,48 +1,24 @@
 import { Button, Modal } from '@gscwd-apps/oneui';
-import {
-  LeaveBenefit,
-  LeaveType,
-} from 'libs/utils/src/lib/types/leave-benefits.type';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { LeaveBenefit, LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LabelInput } from '../../../inputs/LabelInput';
 import { SelectListRF } from '../../../inputs/SelectListRF';
 import { adjustmentEntryType } from 'libs/utils/src/lib/constants/leave-ledger-adjustment.const';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import { MutatedLeaveBenefit, useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 import {
-  MutatedLeaveBenefit,
-  useLeaveLedgerStore,
-} from 'apps/employee-monitoring/src/store/leave-ledger.store';
-
-enum ActionType {
-  CREDIT = 'credit',
-  DEBIT = 'debit',
-}
+  getEmpMonitoring,
+  postEmpMonitoring,
+} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { LeaveAdjustmentForm } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
 type LeaveLedgerAdjModalProps = {
   employeeId: string;
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
-};
-
-type LeaveLedgerForm = {
-  employeeId: string;
-  actionType: ActionType;
-  particulars?: string;
-  leaveBenefitId: string;
-  leaveBenefitType: LeaveType;
-  leaveBenefitName: string;
-  value: number;
-  maximumCredits: number;
-  remarks: string | null;
 };
 
 type MutatedLeaveBenefitOption = {
@@ -58,48 +34,70 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
   setModalState,
   closeModalAction,
 }) => {
+  // loading state for fetching leave benefits
+  const [isLoadingLeaveBenefits, setIsLoadingLeaveBenefits] = useState<boolean>(false);
+  // swr
+  // const { data: swrLeaveBenefits, isLoading: swrIsLoading, error: swrError } = useSWR('/leave-benefits', fetcherEMS);
+
+  // zustand store initialization
+  const { LeaveBenefits, GetLeaveBenefits, GetLeaveBenefitsFail, GetLeaveBenefitsSuccess } = useLeaveLedgerStore(
+    (state) => ({
+      LeaveBenefits: state.leaveBenefits,
+
+      GetLeaveBenefits: state.getLeaveBenefits,
+      GetLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
+      GetLeaveBenefitsFail: state.getLeaveBenefitsFail,
+    })
+  );
+
+  // react hook form initialization
   const {
     register,
     reset,
     setValue,
     handleSubmit,
     formState: { errors, isValid, defaultValues },
-  } = useForm<LeaveLedgerForm>({
+  } = useForm<LeaveAdjustmentForm>({
     defaultValues: {
+      category: '',
+      leaveBenefitsId: '',
+      value: 0,
       employeeId: employeeId,
-      leaveBenefitId: null,
-      leaveBenefitName: null,
-      actionType: null,
       remarks: null,
     },
   });
 
-  // store
-  const { getLeaveBenefits, getLeaveBenefitsFail, getLeaveBenefitsSuccess } =
-    useLeaveLedgerStore((state) => ({
-      getLeaveBenefits: state.getLeaveBenefits,
-      getLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
-      getLeaveBenefitsFail: state.getLeaveBenefitsFail,
-    }));
-
-  const onSubmit = (data: LeaveLedgerForm) => {
+  // form submission
+  const onSubmit = (data: LeaveAdjustmentForm) => {
     console.log(data);
-    //
+
+    // handlePostResult()
+  };
+
+  // asynchronous request to post user and roles
+  const handlePostResult = async (data: LeaveAdjustmentForm) => {
+    const { error, result } = await postEmpMonitoring('/user-roles', data); // REPLACE postHRIS to postEmpMonitoring
+
+    if (error) {
+      // SetErrorUser(result);
+    } else {
+      // SetPostUser(result);
+
+      reset();
+      closeModalAction();
+    }
   };
 
   // state transformed leave benefits
-  const [transformedLeaves, setTransformedLeaves] = useState<
-    Array<MutatedLeaveBenefitOption>
-  >([]);
+  const [transformedLeaves, setTransformedLeaves] = useState<Array<MutatedLeaveBenefitOption>>([]);
 
   // selected leave benefit
-  const [selectedLeaveBenefit, setSelectedLeaveBenefit] =
-    useState<MutatedLeaveBenefit>({
-      id: null,
-      leaveName: null,
-      leaveType: null,
-      maximumCredits: null,
-    } as MutatedLeaveBenefit);
+  const [selectedLeaveBenefit, setSelectedLeaveBenefit] = useState<MutatedLeaveBenefit>({
+    id: null,
+    leaveName: null,
+    leaveType: null,
+    maximumCredits: null,
+  } as MutatedLeaveBenefit);
 
   // show remarks
   const [showRemarks, setShowRemarks] = useState<boolean>(false);
@@ -143,53 +141,56 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     setValue('remarks', null);
   };
 
-  // swr
-  const {
-    data: swrLeaveBenefits,
-    isLoading: swrIsLoading,
-    error: swrError,
-  } = useSWR('/leave-benefits', fetcherEMS);
+  // asynchronous request to fetch employee list
+  const fetchLeaveBenefits = async () => {
+    const { error, result } = await getEmpMonitoring(`/leave-benefits`);
+    setIsLoadingLeaveBenefits(true);
+    GetLeaveBenefits();
 
-  // loading
-  useEffect(() => {
-    if (swrIsLoading) {
-      getLeaveBenefits();
+    if (error) {
+      GetLeaveBenefitsFail(result);
+      setIsLoadingLeaveBenefits(false);
+    } else {
+      GetLeaveBenefitsSuccess(result);
+      setIsLoadingLeaveBenefits(false);
     }
-  }, [swrIsLoading]);
+  };
 
-  // set
-  useEffect(() => {
-    // success
-    if (swrLeaveBenefits) {
-      getLeaveBenefitsSuccess(swrLeaveBenefits.data);
-
-      // transform
-      transformLeaveBenefits(swrLeaveBenefits.data);
-    }
-
-    // fail
-    if (swrError) {
-      getLeaveBenefitsFail(swrError.message);
-    }
-  }, [swrLeaveBenefits, swrError]);
-
-  // on open
+  // If modal is open, set action to fetch for leave benefits
   useEffect(() => {
     if (modalState) {
-      register('leaveBenefitName');
-      register('leaveBenefitType');
-      register('maximumCredits');
-    } else if (!modalState) closeModal();
+      fetchLeaveBenefits();
+    } else {
+      reset();
+    }
   }, [modalState]);
+
+  useEffect(() => {
+    console.log(LeaveBenefits);
+  }, [LeaveBenefits]);
+
+  // set
+  // useEffect(() => {
+  //   // success
+  //   if (swrLeaveBenefits) {
+  //     getLeaveBenefitsSuccess(swrLeaveBenefits.data);
+
+  //     // transform
+  //     transformLeaveBenefits(swrLeaveBenefits.data);
+  //   }
+
+  //   // fail
+  //   if (swrError) {
+  //     getLeaveBenefitsFail(swrError.message);
+  //   }
+  // }, [swrLeaveBenefits, swrError]);
 
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} size="sm" steady>
         <Modal.Header>
           <div className="flex justify-end">
-            <div className="px-2 text-2xl font-medium text-gray-700">
-              Leave Adjustment
-            </div>
+            <div className="px-2 text-2xl font-medium text-gray-700">Leave Adjustment</div>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -205,29 +206,29 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
             <div className="flex flex-col gap-5">
               {/** action type */}
               <SelectListRF
-                id="actionType"
+                id="category"
                 selectList={adjustmentEntryType}
                 controller={{
-                  ...register('actionType'),
+                  ...register('category'),
                 }}
                 label="Category"
-                isError={errors.actionType ? true : false}
-                errorMessage={errors.actionType?.message}
+                isError={errors.category ? true : false}
+                errorMessage={errors.category?.message}
               />
 
               <SelectListRF
-                id="leaveBenefitId"
+                id="leaveBenefitsId"
                 selectList={transformedLeaves}
                 controller={{
-                  ...register('leaveBenefitId', {
+                  ...register('leaveBenefitsId', {
                     onChange: (e) => {
                       getLeaveBenefitById(e.target.value);
                     },
                   }),
                 }}
                 label="Leave Benefit"
-                isError={errors.leaveBenefitId ? true : false}
-                errorMessage={errors.leaveBenefitId?.message}
+                isError={errors.leaveBenefitsId ? true : false}
+                errorMessage={errors.leaveBenefitsId?.message}
               />
 
               <LabelInput
@@ -243,35 +244,24 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
                     </span>
                   ) : null
                 }
-                max={
-                  selectedLeaveBenefit.leaveType === LeaveType.SPECIAL
-                    ? selectedLeaveBenefit.maximumCredits
-                    : null
-                }
-                min={1}
+                max={selectedLeaveBenefit.leaveType === LeaveType.SPECIAL ? selectedLeaveBenefit.maximumCredits : null}
+                min={0}
                 type="number"
+                step="0.001"
               />
 
               <div className="flex flex-col gap-2">
                 <div>
                   <button type="button" onClick={handleRemarks}>
                     {!showRemarks ? (
-                      <span className="items-center text-xs font-medium text-blue-700">
-                        +Add Remarks
-                      </span>
+                      <span className="items-center text-xs font-medium text-blue-700">+Add Remarks</span>
                     ) : (
-                      <span className="items-center text-xs font-medium text-red-700">
-                        -Remove Remarks
-                      </span>
+                      <span className="items-center text-xs font-medium text-red-700">-Remove Remarks</span>
                     )}
                   </button>
                 </div>
                 {showRemarks ? (
-                  <LabelInput
-                    id="remarks"
-                    label="Remarks"
-                    controller={{ ...register('remarks') }}
-                  />
+                  <LabelInput id="remarks" label="Remarks" controller={{ ...register('remarks') }} />
                 ) : null}
               </div>
             </div>
@@ -284,7 +274,7 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
               type="submit"
               form="adjModal"
               className="disabled:cursor-not-allowed"
-              disabled={swrIsLoading ? true : !isValid ? true : false}
+              disabled={isLoadingLeaveBenefits ? true : !isValid ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>
