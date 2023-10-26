@@ -20,6 +20,7 @@ import AddImmediateSupervisorModal from 'apps/employee-monitoring/src/components
 import { useOrganizationStructureStore } from 'apps/employee-monitoring/src/store/organization-structure.store';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 import DeleteImmediateSupervisorModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/DeleteImmediateSupervisorModal';
+import UseRenderAvatarInTable from 'apps/employee-monitoring/src/utils/functions/RenderAvatarInTable';
 
 // const mockDataModules: Array<OvertimeImmediateSupervisors> = [
 //   {
@@ -122,22 +123,6 @@ const Index = () => {
     );
   };
 
-  const renderAvatar = (avatarUrl: string, immediateSupervisorName: string) => {
-    if (!isEmpty(avatarUrl)) {
-      return (
-        <Image
-          src={avatarUrl}
-          width={48}
-          height={48}
-          alt={`Picture of employee ${immediateSupervisorName}`}
-          className="m-auto rounded-full"
-        />
-      );
-    } else {
-      return <> {UseRenderNameIcon(immediateSupervisorName)}</>;
-    }
-  };
-
   const columnHelper = createColumnHelper<OvertimeImmediateSupervisor>();
   const columns = [
     columnHelper.accessor('id', {
@@ -147,7 +132,7 @@ const Index = () => {
       id: 'avatarUrl',
       header: '',
       enableColumnFilter: false,
-      cell: (props) => renderAvatar(props.row.original.avatarUrl, props.row.original.immediateSupervisorName),
+      cell: (props) => UseRenderAvatarInTable(props.row.original.avatarUrl, props.row.original.immediateSupervisorName),
     }),
     columnHelper.accessor('immediateSupervisorName', {
       header: 'Name',

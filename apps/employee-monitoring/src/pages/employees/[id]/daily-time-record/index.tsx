@@ -6,11 +6,7 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import { useEffect, useState } from 'react';
 import { DtrDateSelect } from 'apps/employee-monitoring/src/components/calendar/DtrDateSelect';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
@@ -21,9 +17,7 @@ import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedu
 import { EmployeeDtrTable } from 'apps/employee-monitoring/src/components/tables/EmployeeDtrTable';
 import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
 
-export default function Index({
-  employeeData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
   const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
 
@@ -38,12 +32,11 @@ export default function Index({
   }));
 
   // scheduling store
-  const { postResponse, deleteResponse, emptyResponseAndErrors } =
-    useScheduleSheetStore((state) => ({
-      postResponse: state.employeeSchedule.postResponse,
-      deleteResponse: state.employeeSchedule.deleteResponse,
-      emptyResponseAndErrors: state.emptyResponseAndErrors,
-    }));
+  const { postResponse, deleteResponse, emptyResponseAndErrors } = useScheduleSheetStore((state) => ({
+    postResponse: state.employeeSchedule.postResponse,
+    deleteResponse: state.employeeSchedule.deleteResponse,
+    emptyResponseAndErrors: state.emptyResponseAndErrors,
+  }));
 
   // clear errors
   useEffect(() => {
@@ -75,17 +68,10 @@ export default function Index({
 
         {/* Successfully added */}
         {!isEmpty(postResponse) ? (
-          <ToastNotification
-            notifMessage="Successfully added a schedule!"
-            toastType="success"
-          />
+          <ToastNotification notifMessage="Successfully added a schedule!" toastType="success" />
         ) : null}
 
-        <DailyTimeRecordPdfModal
-          printModalIsOpen={printModalIsOpen}
-          toggle={toggle}
-          employeeData={employeeData}
-        />
+        <DailyTimeRecordPdfModal printModalIsOpen={printModalIsOpen} toggle={toggle} employeeData={employeeData} />
 
         <div className="flex flex-col w-full gap-6 px-5">
           {/* DTR CARD */}
@@ -112,9 +98,7 @@ export default function Index({
                     {employeeData ? employeeData.fullName : null}
                   </div>
                   <div className="text-xl text-gray-500">
-                    {employeeData
-                      ? employeeData.assignment.positionTitle
-                      : null}
+                    {employeeData ? employeeData.assignment.positionTitle : null}
                   </div>
                 </div>
               </section>
@@ -123,21 +107,15 @@ export default function Index({
                   <span className="text-sm font-medium">Legend</span>
                   <div className="grid grid-rows-2">
                     <div className="grid items-center grid-cols-2 gap-1">
-                      <span className="text-xs font-light">
-                        Regular Holiday -
-                      </span>
+                      <span className="text-xs font-light">Regular Holiday -</span>
                       <i className="text-2xl text-red-400 bx bxs-checkbox"></i>
                     </div>
                     <div className="grid items-center grid-cols-2 gap-1">
-                      <span className="text-xs font-light">
-                        Special Holiday -
-                      </span>
+                      <span className="text-xs font-light">Special Holiday -</span>
                       <i className="text-2xl text-blue-400 bx bxs-checkbox"></i>
                     </div>
                     <div className="grid items-center grid-cols-2 gap-1">
-                      <span className="text-xs font-light">
-                        Late/Undertime -
-                      </span>
+                      <span className="text-xs font-light">Late/Undertime -</span>
                       <div className="">
                         <span className="max-w-[5rem] px-2 py-0.5  text-xs font-light text-center text-black rounded bg-yellow-400">
                           Time Log
@@ -165,13 +143,9 @@ export default function Index({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/employees/${context.query.id}`
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/employees/${context.query.id}`);
 
     return { props: { employeeData: data } };
   } catch (error) {
