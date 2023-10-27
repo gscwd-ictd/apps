@@ -11,6 +11,7 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { format } from 'date-fns';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -24,10 +25,10 @@ type Item = {
 };
 
 const natureOfBusiness: Array<SelectOption> = [
-  { label: 'Personal Business', value: 'Personal Business' },
-  { label: 'Half Day', value: 'Half Day' },
-  { label: 'Undertime', value: 'Undertime' },
-  { label: 'Official Business', value: 'Official Business' },
+  { label: NatureOfBusiness.PERSONAL_BUSINESS, value: NatureOfBusiness.PERSONAL_BUSINESS },
+  { label: NatureOfBusiness.HALF_DAY, value: NatureOfBusiness.HALF_DAY },
+  { label: NatureOfBusiness.UNDERTIME, value: NatureOfBusiness.UNDERTIME },
+  { label: NatureOfBusiness.OFFICIAL_BUSINESS, value: NatureOfBusiness.OFFICIAL_BUSINESS },
 ];
 
 const obTransportation: Array<SelectOption> = [
@@ -82,11 +83,14 @@ export const PassSlipApplicationModal = ({
   });
 
   useEffect(() => {
-    if (watch('natureOfBusiness') === 'Half Day' || watch('natureOfBusiness') === 'Undertime') {
+    if (
+      watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
+      watch('natureOfBusiness') === NatureOfBusiness.UNDERTIME
+    ) {
       setValue('estimateHours', 0);
     }
 
-    if (watch('natureOfBusiness') !== 'Official Business') {
+    if (watch('natureOfBusiness') !== NatureOfBusiness.OFFICIAL_BUSINESS) {
       setValue('obTransportation', null);
     }
     setValue('employeeId', employeeDetails.employmentDetails.userId);
@@ -99,7 +103,7 @@ export const PassSlipApplicationModal = ({
 
   const handlePostResult = async (data: PassSlipApplicationForm) => {
     const { error, result } = await postPortal('/v1/pass-slip', data);
-
+    console.log(data);
     if (error) {
       postPassSlipListFail(result);
     } else {
@@ -179,7 +183,7 @@ export const PassSlipApplicationModal = ({
                   </div>
                 </div>
 
-                {watch('natureOfBusiness') === 'Official Business' ? (
+                {watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? (
                   <>
                     <div
                       className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
@@ -209,8 +213,8 @@ export const PassSlipApplicationModal = ({
                   </>
                 ) : null}
 
-                {watch('natureOfBusiness') !== 'Half Day' &&
-                watch('natureOfBusiness') !== 'Undertime' &&
+                {watch('natureOfBusiness') !== NatureOfBusiness.HALF_DAY &&
+                watch('natureOfBusiness') !== NatureOfBusiness.UNDERTIME &&
                 watch('natureOfBusiness') ? (
                   <>
                     <div className="flex flex-col gap-2">
@@ -230,11 +234,12 @@ export const PassSlipApplicationModal = ({
                             placeholder="Enter number of hours "
                             required
                             defaultValue={0}
-                            max="8"
+                            max={8}
                             min={
-                              watch('natureOfBusiness') != 'Half Day' && watch('natureOfBusiness') != 'Undertime'
-                                ? '1'
-                                : '0'
+                              watch('natureOfBusiness') != NatureOfBusiness.HALF_DAY &&
+                              watch('natureOfBusiness') != NatureOfBusiness.UNDERTIME
+                                ? 1
+                                : 0
                             }
                             {...register('estimateHours')}
                           />
@@ -252,7 +257,7 @@ export const PassSlipApplicationModal = ({
                         <span className="text-red-600">*</span>
                       </label>
                       <textarea
-                        minLength={watch('natureOfBusiness') === 'Official Business' ? 20 : 5}
+                        minLength={watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? 20 : 10}
                         rows={3}
                         placeholder={`Enter Purpose of Pass Slip`}
                         name="passSlip_purpose"
@@ -261,7 +266,9 @@ export const PassSlipApplicationModal = ({
                         required
                         {...register('purposeDestination')}
                       ></textarea>
-                      <span className="text-slate-400 text-xs">Minimum of 20 characters for Official Business</span>
+                      <span className="text-slate-400 text-xs">{`Minimum of ${
+                        watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? '20' : '10'
+                      } characters required`}</span>
                     </div>
                   </>
                 ) : null}

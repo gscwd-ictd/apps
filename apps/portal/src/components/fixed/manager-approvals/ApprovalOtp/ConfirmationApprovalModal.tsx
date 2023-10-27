@@ -18,7 +18,7 @@ type ConfirmationModalProps = {
   actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
   actionLeave?: LeaveStatus; // approve or disapprove for leave
   actionPassSlip?: PassSlipStatus; // approve or disapprove pass slip
-  otpName: ManagerOtpApproval;
+  confirmName: ManagerOtpApproval;
   employeeId?: string;
 };
 
@@ -31,7 +31,7 @@ export const ConfirmationApprovalModal = ({
   actionPassSlip,
   tokenId,
   remarks,
-  otpName,
+  confirmName,
   employeeId,
 }: ConfirmationModalProps) => {
   const {
@@ -80,20 +80,20 @@ export const ConfirmationApprovalModal = ({
 
   const handleSubmit = () => {
     let data;
-    if (otpName === ManagerOtpApproval.LEAVE) {
+    if (confirmName === ManagerOtpApproval.LEAVE) {
       data = {
         id: tokenId,
         status: actionLeave,
         supervisorDisapprovalRemarks: remarks,
       };
       patchLeave();
-    } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+    } else if (confirmName === ManagerOtpApproval.PASSSLIP) {
       data = {
         passSlipId: tokenId,
         status: actionPassSlip,
       };
       patchPassSlip();
-    } else if (otpName === ManagerOtpApproval.OVERTIME) {
+    } else if (confirmName === ManagerOtpApproval.OVERTIME) {
       data = {
         managerId: employeeId,
         remarks: remarks,
@@ -108,39 +108,39 @@ export const ConfirmationApprovalModal = ({
   const handlePatchResult = async (data: leaveAction) => {
     let otpPatchUrl;
 
-    if (otpName === ManagerOtpApproval.LEAVE) {
+    if (confirmName === ManagerOtpApproval.LEAVE) {
       otpPatchUrl = '/v1/leave/supervisor';
-    } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+    } else if (confirmName === ManagerOtpApproval.PASSSLIP) {
       otpPatchUrl = '/v1/pass-slip';
-    } else if (otpName === ManagerOtpApproval.OVERTIME) {
+    } else if (confirmName === ManagerOtpApproval.OVERTIME) {
       otpPatchUrl = '/v1/overtime/approval';
     }
 
     const { error, result } = await patchPortal(otpPatchUrl, data);
     if (error) {
-      if (otpName === ManagerOtpApproval.LEAVE) {
+      if (confirmName === ManagerOtpApproval.LEAVE) {
         patchLeaveFail(result);
-      } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+      } else if (confirmName === ManagerOtpApproval.PASSSLIP) {
         patchPassSlipFail(result);
-      } else if (otpName === ManagerOtpApproval.OVERTIME) {
+      } else if (confirmName === ManagerOtpApproval.OVERTIME) {
         patchOvertimeFail(result);
       }
     } else {
-      if (otpName === ManagerOtpApproval.LEAVE) {
+      if (confirmName === ManagerOtpApproval.LEAVE) {
         patchLeaveSuccess(result);
         closeModalAction(); // close confirmation of decline modal
         setTimeout(() => {
           setPendingLeaveModalIsOpen(false); // close leave pending modal
           setApprovedLeaveModalIsOpen(false);
         }, 200);
-      } else if (otpName === ManagerOtpApproval.PASSSLIP) {
+      } else if (confirmName === ManagerOtpApproval.PASSSLIP) {
         patchPassSlipSuccess(result);
         closeModalAction(); // close confirmation of decline modal
         setTimeout(() => {
           setPendingPassSlipModalIsOpen(false); // close leave pending modal
           setApprovedPassSlipModalIsOpen(false);
         }, 200);
-      } else if (otpName === ManagerOtpApproval.OVERTIME) {
+      } else if (confirmName === ManagerOtpApproval.OVERTIME) {
         patchOvertimeSuccess(result);
         closeModalAction(); // close confirmation of decline modal
         setTimeout(() => {
@@ -160,11 +160,11 @@ export const ConfirmationApprovalModal = ({
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
               <span>
-                {otpName === ManagerOtpApproval.LEAVE
+                {confirmName === ManagerOtpApproval.LEAVE
                   ? 'Leave Application'
-                  : otpName === ManagerOtpApproval.OVERTIME
+                  : confirmName === ManagerOtpApproval.OVERTIME
                   ? 'Overtime Application'
-                  : otpName === ManagerOtpApproval.PASSSLIP
+                  : confirmName === ManagerOtpApproval.PASSSLIP
                   ? 'Pass Slip Application'
                   : 'Application'}
               </span>
@@ -184,9 +184,9 @@ export const ConfirmationApprovalModal = ({
             {`Are you sure you want to 
           
           ${
-            otpName === ManagerOtpApproval.PASSSLIP && actionPassSlip === PassSlipStatus.CANCELLED
+            confirmName === ManagerOtpApproval.PASSSLIP && actionPassSlip === PassSlipStatus.CANCELLED
               ? 'cancel'
-              : otpName === ManagerOtpApproval.PASSSLIP && actionPassSlip === PassSlipStatus.DISAPPROVED
+              : confirmName === ManagerOtpApproval.PASSSLIP && actionPassSlip === PassSlipStatus.DISAPPROVED
               ? 'disapprove'
               : 'disapprove'
           }

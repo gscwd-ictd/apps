@@ -74,6 +74,8 @@ export type EmployeeOvertimeDetail = {
   positionTitle?: string;
   avatarUrl: string;
   assignment: string;
+  isAccomplishmentSubmitted: boolean;
+  accomplishmentStatus: OvertimeAccomplishmentStatus;
 };
 
 // export type OvertimeAccomplishment = {

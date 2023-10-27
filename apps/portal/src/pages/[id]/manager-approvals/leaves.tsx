@@ -24,12 +24,12 @@ import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
-import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
-import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useRouter } from 'next/router';
 import ApprovalsPendingLeaveModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingLeaveModal';
 import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedLeaveModal';
+import UseRenderLeaveStatus from 'apps/portal/src/utils/functions/RenderLeaveStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -236,7 +236,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      cell: (info) => UseRenderLeaveStatus(info.getValue()),
+      cell: (info) => UseRenderLeaveStatus(info.getValue(), TextSize.TEXT_SM),
     }),
   ];
 

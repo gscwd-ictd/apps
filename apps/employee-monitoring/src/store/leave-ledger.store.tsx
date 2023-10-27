@@ -15,18 +15,15 @@ type ResponseLeaveLedger = {
 type LoadingLeaveLedger = {
   loadingLedger: boolean;
   loadingEntry: boolean;
-  loadingLeaveBenefits: boolean;
 };
 
 type ErrorLeaveLedger = {
   errorLedger: string;
   errorEntry: string;
-  errorLeaveBenefits: string;
 };
 
 type LeaveLedgerState = {
   leaveLedger: Array<LeaveLedgerEntry>;
-  leaveBenefits: Array<LeaveBenefit>;
   selectedLeaveBenefit: MutatedLeaveBenefit;
   response: ResponseLeaveLedger;
 
@@ -37,10 +34,6 @@ type LeaveLedgerState = {
   getLeaveLedgerSuccess: (response: Array<LeaveLedgerEntry>) => void;
   getLeaveLedgerFail: (error: string) => void;
 
-  getLeaveBenefits: () => void;
-  getLeaveBenefitsSuccess: (response: Array<LeaveBenefit>) => void;
-  getLeaveBenefitsFail: (error: string) => void;
-
   setSelectedLeaveBenefit: (selectedLeaveBenefit: MutatedLeaveBenefit) => void;
 
   emptyResponse: () => void;
@@ -49,16 +42,14 @@ type LeaveLedgerState = {
 export const useLeaveLedgerStore = create<LeaveLedgerState>()(
   devtools((set) => ({
     leaveLedger: [],
-    leaveBenefits: [],
     selectedLeaveBenefit: {} as MutatedLeaveBenefit,
     response: { postResponse: {} as LeaveLedgerEntry },
 
     loading: {
       loadingEntry: false,
       loadingLedger: false,
-      loadingLeaveBenefits: false,
     },
-    error: { errorEntry: '', errorLedger: '', errorLeaveBenefits: '' },
+    error: { errorEntry: '', errorLedger: '' },
 
     getLeaveLedger: () =>
       set((state) => ({
@@ -80,25 +71,6 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
         error: { ...state.error, errorLedger: error },
       })),
 
-    getLeaveBenefits: () =>
-      set((state) => ({
-        ...state,
-        loading: { ...state.loading, loadingLeaveBenefits: true },
-        leaveBenefits: [],
-      })),
-    getLeaveBenefitsSuccess: (response: Array<LeaveBenefit>) =>
-      set((state) => ({
-        ...state,
-        loading: { ...state.loading, loadingLeaveBenefits: false },
-        leaveBenefits: response,
-      })),
-    getLeaveBenefitsFail: (error: string) =>
-      set((state) => ({
-        ...state,
-        loading: { ...state.loading, loadingLeaveBenefits: false },
-        error: { ...state.error, errorLeaveBenefits: error },
-      })),
-
     setSelectedLeaveBenefit: (selectedLeaveBenefit: MutatedLeaveBenefit) =>
       set((state) => ({ ...state, selectedLeaveBenefit })),
 
@@ -110,7 +82,7 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
 
     emptyResponse: () =>
       set({
-        error: { errorEntry: '', errorLedger: '', errorLeaveBenefits: '' },
+        error: { errorEntry: '', errorLedger: '' },
       }),
   }))
 );

@@ -408,6 +408,21 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       value={accomplishmentDetails.accomplishments ?? 'Not yet filled out'}
                     ></textarea>
                   </div>
+
+                  {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                    <div className="flex flex-col justify-between items-center w-full">
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Remarks:</label>
+                      </div>
+                      <textarea
+                        disabled
+                        rows={3}
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                        value={accomplishmentDetails.remarks ?? 'Not yet filled out'}
+                      ></textarea>
+                    </div>
+                  ) : null}
+
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
                     <form id="OvertimeAccomplishmentAction" onSubmit={handleSubmit(onSubmit)}>
                       <div className="w-full flex gap-2 justify-start items-center pt-4">
@@ -463,7 +478,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
             {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
-              dataToSubmit={dataToSubmit}
+              dataToSubmitOvertimeAccomplishment={dataToSubmit}
               tokenId={overtimeDetails.id}
               captchaName={'Accomplishment Captcha'}
             />

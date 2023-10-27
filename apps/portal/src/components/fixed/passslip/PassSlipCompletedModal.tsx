@@ -12,6 +12,7 @@ import { ConfirmationApplicationModal } from './ConfirmationModal';
 import { DisputeApplicationModal } from './DisputeModal';
 import dayjs from 'dayjs';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
+import { isEmpty } from 'lodash';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -63,54 +64,66 @@ export const PassSlipCompletedModal = ({
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {passSlip.status === PassSlipStatus.APPROVED ? (
-                <AlertNotification
-                  alertType="info"
-                  notifMessage={`Approved ${
-                    GetDateDifference(
-                      `${passSlip.dateOfApplication} 00:00:00`,
-                      `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
-                    ).days
-                  } days ago`}
-                  dismissible={false}
-                />
-              ) : (
-                <AlertNotification
-                  alertType={
-                    passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
-                      ? 'info'
-                      : passSlip.status === PassSlipStatus.DISAPPROVED ||
-                        passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
-                        passSlip.status === PassSlipStatus.CANCELLED
-                      ? 'error'
-                      : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
-                        passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
-                        passSlip.status === PassSlipStatus.FOR_DISPUTE
-                      ? 'warning'
-                      : 'info'
-                  }
-                  notifMessage={`${
-                    passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-                      ? `For Supervisor Approval`
-                      : passSlip.status === PassSlipStatus.FOR_DISPUTE
-                      ? 'For Dispute Approval'
-                      : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
-                      ? 'For HRMO Approval'
-                      : passSlip.status === PassSlipStatus.DISAPPROVED
-                      ? 'Disapproved'
-                      : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
-                      ? 'Disapproved by HRMO'
-                      : passSlip.status === PassSlipStatus.UNUSED
-                      ? 'Unused'
-                      : passSlip.status === PassSlipStatus.USED
-                      ? 'Used'
-                      : passSlip.status === PassSlipStatus.CANCELLED
-                      ? 'Cancelled'
-                      : passSlip.status
-                  }`}
-                  dismissible={false}
-                />
-              )}
+              <div className="w-full flex flex-col gap-0">
+                {passSlip.status === PassSlipStatus.APPROVED ? (
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage={`Approved ${
+                      GetDateDifference(
+                        `${passSlip.dateOfApplication} 00:00:00`,
+                        `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
+                      ).days
+                    } days ago`}
+                    dismissible={false}
+                  />
+                ) : (
+                  <AlertNotification
+                    alertType={
+                      passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
+                        ? 'info'
+                        : passSlip.status === PassSlipStatus.DISAPPROVED ||
+                          passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
+                          passSlip.status === PassSlipStatus.CANCELLED
+                        ? 'error'
+                        : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
+                          passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
+                          passSlip.status === PassSlipStatus.FOR_DISPUTE
+                        ? 'warning'
+                        : 'info'
+                    }
+                    notifMessage={`${
+                      passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+                        ? `For Supervisor Approval`
+                        : passSlip.status === PassSlipStatus.FOR_DISPUTE
+                        ? 'For Dispute Approval'
+                        : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
+                        ? 'For HRMO Approval'
+                        : passSlip.status === PassSlipStatus.DISAPPROVED
+                        ? 'Disapproved'
+                        : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                        ? 'Disapproved by HRMO'
+                        : passSlip.status === PassSlipStatus.UNUSED
+                        ? 'Unused'
+                        : passSlip.status === PassSlipStatus.USED
+                        ? 'Used'
+                        : passSlip.status === PassSlipStatus.CANCELLED
+                        ? 'Cancelled'
+                        : passSlip.status
+                    }`}
+                    dismissible={false}
+                  />
+                )}
+
+                {passSlip.disputeRemarks && passSlip.isDisputeApproved != null ? (
+                  <AlertNotification
+                    alertType={`${passSlip.isDisputeApproved ? 'success' : 'error'}`}
+                    notifMessage={`${
+                      passSlip.isDisputeApproved ? 'Dispute filed is Approved' : 'Dispute filed is Disapproved'
+                    }`}
+                    dismissible={false}
+                  />
+                ) : null}
+              </div>
 
               {/* dispute pass slip time in */}
               <DisputeApplicationModal
@@ -196,13 +209,15 @@ export const PassSlipCompletedModal = ({
                   disabled={true}
                 ></textarea>
               </div>
-              {passSlip.status === PassSlipStatus.FOR_DISPUTE ? (
+              {passSlip.status === PassSlipStatus.FOR_DISPUTE || passSlip.disputeRemarks ? (
                 <div className={`flex flex-col gap-2`}>
                   <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
                   <textarea
                     className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                    value={'Forgot to time in back at 4PM'}
-                    rows={2}
+                    value={`Disputed Time In: ${
+                      passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
+                    }.\n${passSlip.disputeRemarks}`}
+                    rows={3}
                     disabled={true}
                   ></textarea>
                 </div>
@@ -214,8 +229,12 @@ export const PassSlipCompletedModal = ({
           <div className="flex justify-end gap-2">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED &&
+              passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
+              passSlip.natureOfBusiness != NatureOfBusiness.UNDERTIME &&
+              !passSlip.disputeRemarks &&
               passSlip.timeIn &&
-              GetDateDifference(`2023-10-11 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <= 3 ? (
+              GetDateDifference(`${passSlip.dateOfApplication} 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `)
+                .days <= 100 ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   File Dispute
                 </Button>

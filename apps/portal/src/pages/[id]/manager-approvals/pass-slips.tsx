@@ -21,12 +21,13 @@ import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
-import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import ApprovalsPendingPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingPassSlipModal';
 import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedPassSlipModal';
 import { useRouter } from 'next/router';
+import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -158,28 +159,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }
   }, [patchResponsePassSlip]);
 
-  // Rendering of leave dates in row
-  const renderRowLeaveDates = (leaveDates: Array<string>) => {
-    if (leaveDates) {
-      if (leaveDates.length > 3) {
-        return (
-          <span className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center">
-            {leaveDates[0]} to {leaveDates.slice(-1)}
-          </span>
-        );
-      } else {
-        return leaveDates.map((leaveDate: string, index: number) => (
-          <span
-            className="bg-gray-300 text-gray-700 text-sm font-mono px-1 py-0.5 ml-1 rounded text-center whitespace-nowrap"
-            key={index}
-          >
-            {leaveDate}
-          </span>
-        ));
-      }
-    }
-  };
-
   // Render row actions in the table component
   const renderRowActions = (rowData: PassSlip) => {
     setPassSlipIndividualDetail(rowData);
@@ -187,9 +166,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       if (!approvedPassSlipModalIsOpen) {
         setApprovedPassSlipModalIsOpen(true);
       }
-      // if (!disputedPassSlipModalIsOpen) {
-      //   setDisputedPassSlipModalIsOpen(true);
-      // }
     } else if (rowData.status == PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
       // PENDING APPROVAL
       if (!pendingPassSlipModalIsOpen) {
@@ -244,7 +220,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      cell: (info) => UseRenderPassSlipStatus(info.getValue()),
+      cell: (info) => UseRenderPassSlipStatus(info.getValue(), TextSize.TEXT_SM),
     }),
   ];
 

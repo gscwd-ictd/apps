@@ -52,7 +52,41 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              <AlertNotification alertType="info" notifMessage="For Supervisor Approval" dismissible={false} />
+              <AlertNotification
+                alertType={
+                  passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
+                    ? 'info'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED ||
+                      passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
+                      passSlip.status === PassSlipStatus.CANCELLED
+                    ? 'error'
+                    : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
+                      passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
+                      passSlip.status === PassSlipStatus.FOR_DISPUTE
+                    ? 'warning'
+                    : 'info'
+                }
+                notifMessage={`${
+                  passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+                    ? `For Supervisor Approval`
+                    : passSlip.status === PassSlipStatus.FOR_DISPUTE
+                    ? 'For Dispute Approval'
+                    : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
+                    ? 'For HRMO Approval'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED
+                    ? 'Disapproved'
+                    : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                    ? 'Disapproved by HRMO'
+                    : passSlip.status === PassSlipStatus.UNUSED
+                    ? 'Unused'
+                    : passSlip.status === PassSlipStatus.USED
+                    ? 'Used'
+                    : passSlip.status === PassSlipStatus.CANCELLED
+                    ? 'Cancelled'
+                    : passSlip.status
+                }`}
+                dismissible={false}
+              />
 
               {/* cancell pass slip application */}
               <ConfirmationApplicationModal
