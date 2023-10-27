@@ -57,6 +57,7 @@ export const JobApplicationCaptcha: FunctionComponent<CaptchaProps> = ({
     postJobApplicationFail,
     setHasApplied,
     setModal,
+    emptyResponseAndError,
   } = useWorkExpStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
@@ -65,6 +66,7 @@ export const JobApplicationCaptcha: FunctionComponent<CaptchaProps> = ({
     postJobApplicationFail: state.postJobApplicationFail,
     setHasApplied: state.setHasApplied,
     setModal: state.setModal,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   useEffect(() => {
@@ -104,6 +106,9 @@ export const JobApplicationCaptcha: FunctionComponent<CaptchaProps> = ({
         const applicantApplication = await checkIfApplied(vppId, employeeId);
         if (applicantApplication.hasApplied) {
           setHasApplied(applicantApplication.hasApplied);
+          setTimeout(() => {
+            emptyResponseAndError();
+          }, 5000);
         }
         handleClose();
       }

@@ -66,7 +66,7 @@ export const OvertimeAccomplishmentReportSummaryModal = ({
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const overtimeSummaryUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
+  const overtimeSummaryUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details/asdasd`;
 
   const {
     data: swrOvertimeSummary,

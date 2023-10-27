@@ -259,6 +259,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     </View>
                     {overtimeDetails.employees.map((employee: EmployeeOvertimeDetail, idx: number) => (
                       <View
+                        key={idx}
                         style={{
                           display: 'flex',
                           borderBottom: '1px solid #000',
