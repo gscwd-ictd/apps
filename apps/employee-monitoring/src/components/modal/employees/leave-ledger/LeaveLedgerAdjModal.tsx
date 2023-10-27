@@ -1,4 +1,4 @@
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { LeaveBenefit, LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -7,11 +7,9 @@ import { SelectListRF } from '../../../inputs/SelectListRF';
 import { adjustmentEntryType } from 'libs/utils/src/lib/constants/leave-ledger-adjustment.const';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import { MutatedLeaveBenefit, useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
-import {
-  getEmpMonitoring,
-  postEmpMonitoring,
-} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
+import { MutatedLeaveBenefit } from 'apps/employee-monitoring/src/store/leave-ledger.store';
+import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { LeaveAdjustmentForm } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
 type LeaveLedgerAdjModalProps = {
@@ -34,21 +32,18 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
   setModalState,
   closeModalAction,
 }) => {
-  // loading state for fetching leave benefits
-  const [isLoadingLeaveBenefits, setIsLoadingLeaveBenefits] = useState<boolean>(false);
-  // swr
-  // const { data: swrLeaveBenefits, isLoading: swrIsLoading, error: swrError } = useSWR('/leave-benefits', fetcherEMS);
+  // SWR fetch list of leave benefits
+  const {
+    data: swrLeaveBenefits,
+    isLoading: isLoadingLeaveBenefits,
+    error: errorLeaveBenefits,
+  } = useSWR(modalState ? '/leave-benefits' : null, fetcherEMS);
 
   // zustand store initialization
-  const { LeaveBenefits, GetLeaveBenefits, GetLeaveBenefitsFail, GetLeaveBenefitsSuccess } = useLeaveLedgerStore(
-    (state) => ({
-      LeaveBenefits: state.leaveBenefits,
-
-      GetLeaveBenefits: state.getLeaveBenefits,
-      GetLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
-      GetLeaveBenefitsFail: state.getLeaveBenefitsFail,
-    })
-  );
+  const { GetLeaveBenefitsSuccess, GetLeaveBenefitsFail } = useLeaveBenefitStore((state) => ({
+    GetLeaveBenefitsSuccess: state.getLeaveBenefitsSuccess,
+    GetLeaveBenefitsFail: state.getLeaveBenefitsFail,
+  }));
 
   // react hook form initialization
   const {
@@ -141,49 +136,28 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     setValue('remarks', null);
   };
 
-  // asynchronous request to fetch employee list
-  const fetchLeaveBenefits = async () => {
-    const { error, result } = await getEmpMonitoring(`/leave-benefits`);
-    setIsLoadingLeaveBenefits(true);
-    GetLeaveBenefits();
-
-    if (error) {
-      GetLeaveBenefitsFail(result);
-      setIsLoadingLeaveBenefits(false);
-    } else {
-      GetLeaveBenefitsSuccess(result);
-      setIsLoadingLeaveBenefits(false);
-    }
-  };
-
   // If modal is open, set action to fetch for leave benefits
   useEffect(() => {
-    if (modalState) {
-      fetchLeaveBenefits();
-    } else {
+    if (!modalState) {
       reset();
     }
   }, [modalState]);
 
+  // set to zustand
   useEffect(() => {
-    console.log(LeaveBenefits);
-  }, [LeaveBenefits]);
+    // success
+    if (swrLeaveBenefits) {
+      GetLeaveBenefitsSuccess(swrLeaveBenefits.data);
 
-  // set
-  // useEffect(() => {
-  //   // success
-  //   if (swrLeaveBenefits) {
-  //     getLeaveBenefitsSuccess(swrLeaveBenefits.data);
+      // transform
+      transformLeaveBenefits(swrLeaveBenefits.data);
+    }
 
-  //     // transform
-  //     transformLeaveBenefits(swrLeaveBenefits.data);
-  //   }
-
-  //   // fail
-  //   if (swrError) {
-  //     getLeaveBenefitsFail(swrError.message);
-  //   }
-  // }, [swrLeaveBenefits, swrError]);
+    // fail
+    if (errorLeaveBenefits) {
+      GetLeaveBenefitsFail(errorLeaveBenefits.message);
+    }
+  }, [swrLeaveBenefits, errorLeaveBenefits]);
 
   return (
     <>
@@ -202,6 +176,11 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
           </div>
         </Modal.Header>
         <Modal.Body>
+          {/* Notifications */}
+          {errorLeaveBenefits ? (
+            <AlertNotification alertType="info" notifMessage={errorLeaveBenefits} dismissible={true} />
+          ) : null}
+
           <form onSubmit={handleSubmit(onSubmit)} id="adjModal">
             <div className="flex flex-col gap-5">
               {/** action type */}
@@ -229,6 +208,7 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
                 label="Leave Benefit"
                 isError={errors.leaveBenefitsId ? true : false}
                 errorMessage={errors.leaveBenefitsId?.message}
+                isLoading={isLoadingLeaveBenefits}
               />
 
               <LabelInput
