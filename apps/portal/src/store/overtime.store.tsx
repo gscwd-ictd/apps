@@ -72,7 +72,7 @@ export type OvertimeState = {
   getOvertimeListSuccess: (loading: boolean, response) => void;
   getOvertimeListFail: (loading: boolean, error: string) => void;
 
-  cancelOvertime: (loading: boolean) => void;
+  cancelOvertime: () => void;
   cancelOvertimeSuccess: (response) => void;
   cancelOvertimeFail: (error: string) => void;
 

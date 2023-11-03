@@ -158,11 +158,6 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
     }, 200);
   };
 
-  //UPDATE OTP VALUE FIELD
-  const handleOtpInput = (e: string) => {
-    setOtpCode(e);
-  };
-
   const handlePatchResult = async (data: leaveAction) => {
     const { error, result } = await patchPortal('/v1/leave/hrdm', data);
     if (error) {

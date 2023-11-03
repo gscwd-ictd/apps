@@ -35,7 +35,7 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     overtimeDetails,
     overtimeAccomplishmentEmployeeId,
@@ -52,6 +52,7 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
+  console.log(accomplishmentDetails);
   return (
     <>
       <Modal size={`full`} open={modalState} setOpen={setModalState}>
@@ -313,4 +314,4 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
   );
 };
 
-export default OvertimeAccomplishmentReportModal;
+export default OvertimeAccomplishmentReportPdfModal;

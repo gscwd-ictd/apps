@@ -430,6 +430,18 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                       <Text
                         style={{
                           position: 'absolute',
+                          marginLeft: 163,
+                          marginTop: -22,
+                          width: 165,
+
+                          textAlign: 'center',
+                        }}
+                      >
+                        {'9-10-2023 test date'}
+                      </Text>
+                      <Text
+                        style={{
+                          position: 'absolute',
                           marginLeft: 300,
                           marginTop: -22,
                           width: 170,
@@ -438,6 +450,18 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         }}
                       >
                         {'test'}
+                      </Text>
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          marginLeft: 445,
+                          marginTop: -22,
+                          width: 165,
+
+                          textAlign: 'center',
+                        }}
+                      >
+                        {'9-10-2023 test date'}
                       </Text>
                     </View>
                   </View>

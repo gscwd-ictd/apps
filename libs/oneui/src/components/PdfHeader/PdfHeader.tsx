@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 10,
+    paddingBottom: 5,
   },
   header: {
     display: 'flex',

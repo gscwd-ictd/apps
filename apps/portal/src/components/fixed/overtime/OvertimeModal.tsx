@@ -14,7 +14,7 @@ import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/Re
 import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimeAccomplishmentStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import OvertimeAuthorizationModal from './OvertimeAuthorizationModal';
-import OvertimeAccomplishmentReportSummaryModal from './OvertimeAccomplishmentReportSummaryModal';
+import OvertimeReportSummaryModal from './OvertimeReportSummaryModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -247,7 +247,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setPdfOvertimeAuthorizationModalIsOpen}
             closeModalAction={closePdfOvertimeAuthorizationModal}
           />
-          <OvertimeAccomplishmentReportSummaryModal
+          <OvertimeReportSummaryModal
             modalState={pdfOvertimeSummaryModalIsOpen}
             setModalState={setPdfOvertimeSummaryModalIsOpen}
             closeModalAction={closePdfOvertimeSummaryModal}
