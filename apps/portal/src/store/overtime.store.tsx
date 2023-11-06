@@ -2,6 +2,7 @@
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import {
   OvertimeAccomplishment,
+  OvertimeAuthorization,
   OvertimeDetails,
   OvertimeForm,
   OvertimeList,
@@ -24,14 +25,18 @@ export type OvertimeState = {
     loadingResponse: boolean;
     loadingEmployeeList: boolean;
     loadingAccomplishment: boolean;
-    loadingOvertimeSummary: boolean;
+    loadingAuthorizationReport: boolean;
+    loadingAccomplishmentReport: boolean;
+    loadingOvertimeSummaryReport: boolean;
   };
   error: {
     errorOvertime: string;
     errorResponse: string;
     errorEmployeeList: string;
     errorAccomplishment: string;
-    errorOvertimeSummary: string;
+    errorAuthorizationReport: string;
+    errorAccomplishmentReport: string;
+    errorOvertimeSummaryReport: string;
   };
 
   overtimeAccomplishmentEmployeeId: string;
@@ -58,16 +63,31 @@ export type OvertimeState = {
   pdfOvertimeSummaryModalIsOpen: boolean;
   tab: number;
 
+  //for getting employee's accomplishment report inside MODAL
   accomplishmentDetails: OvertimeAccomplishment;
   getAccomplishmentDetails: (loading: boolean) => void;
   getAccomplishmentDetailsSuccess: (loading: boolean, response) => void;
   getAccomplishmentDetailsFail: (loading: boolean, error: string) => void;
 
-  overtimeSummary: Array<OvertimeAccomplishment>;
-  getOvertimeSummary: (loading: boolean) => void;
-  getOvertimeSummarySuccess: (loading: boolean, response) => void;
-  getOvertimeSummaryFail: (loading: boolean, error: string) => void;
+  //for getting overtime summary report in PDF
+  overtimeSummaryReport: Array<OvertimeAccomplishment>;
+  getOvertimeSummaryReport: (loading: boolean) => void;
+  getOvertimeSummaryReportSuccess: (loading: boolean, response) => void;
+  getOvertimeSummaryReportFail: (loading: boolean, error: string) => void;
 
+  //for getting employee's accomplishment report in PDF
+  overtimeAccomplishmentReport: OvertimeAccomplishment;
+  getOvertimeAccomplishmentReport: (loading: boolean) => void;
+  getOvertimeAccomplishmentReportSuccess: (loading: boolean, response) => void;
+  getOvertimeAccomplishmentReportFail: (loading: boolean, error: string) => void;
+
+  //for getting overtime authorization report in PDF
+  overtimeAuthorizationReport: OvertimeAuthorization;
+  getOvertimeAuthorizationReport: (loading: boolean) => void;
+  getOvertimeAuthorizationReportSuccess: (loading: boolean, response) => void;
+  getOvertimeAuthorizationReportFail: (loading: boolean, error: string) => void;
+
+  //get list of overtime (for approval/completed)
   getOvertimeList: (loading: boolean) => void;
   getOvertimeListSuccess: (loading: boolean, response) => void;
   getOvertimeListFail: (loading: boolean, error: string) => void;
@@ -85,10 +105,12 @@ export type OvertimeState = {
   setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => void;
   setCompletedOvertimeModalIsOpen: (completedOvertimeModalIsOpen: boolean) => void;
   setAccomplishmentOvertimeModalIsOpen: (accomplishmentOvertimeModalIsOpen: boolean) => void;
+
   setPdfAccomplishmentReportModalIsOpen: (pdfAccomplishmentReportModalIsOpen: boolean) => void;
   setPdfOvertimeAuthorizationModalIsOpen: (pdfOvertimeAuthorizationModalIsOpen: boolean) => void;
   setPdfOvertimeSummaryModalIsOpen: (pdfOvertimeSummaryModalIsOpen: boolean) => void;
 
+  //getting overtime details inside MODAL
   setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
   setTab: (tab: number) => void;
 
@@ -112,19 +134,26 @@ export const useOvertimeStore = create<OvertimeState>()(
       loadingResponse: false,
       loadingEmployeeList: false,
       loadingAccomplishment: false,
-      loadingOvertimeSummary: false,
+      loadingAuthorizationReport: false,
+      loadingAccomplishmentReport: false,
+      loadingOvertimeSummaryReport: false,
     },
     error: {
       errorOvertime: '',
       errorResponse: '',
       errorEmployeeList: '',
       errorAccomplishment: '',
-      errorOvertimeSummary: '',
+      errorAuthorizationReport: '',
+      errorAccomplishmentReport: '',
+      errorOvertimeSummaryReport: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
     accomplishmentDetails: {} as OvertimeAccomplishment,
-    overtimeSummary: {} as Array<OvertimeAccomplishment>,
+    overtimeSummaryReport: {} as Array<OvertimeAccomplishment>,
+
+    overtimeAuthorizationReport: {} as OvertimeAuthorization,
+    overtimeAccomplishmentReport: {} as OvertimeAccomplishment,
 
     applyOvertimeModalIsOpen: false,
     pendingOvertimeModalIsOpen: false,
@@ -235,46 +264,122 @@ export const useOvertimeStore = create<OvertimeState>()(
       }));
     },
 
-    //GET OVERTIME SUMMARY - COMPILED OT ACCOMPLISHMENTS
-    getOvertimeSummary: (loading: boolean) => {
+    //GET OVERTIME AUTHORIZATION REPORT FOR PDF
+    getOvertimeAuthorizationReport: (loading: boolean) => {
       set((state) => ({
         ...state,
-        overtimeSummary: {} as Array<OvertimeAccomplishment>,
+        overtimeAuthorizationReport: {} as OvertimeAuthorization,
         loading: {
           ...state.loading,
-          loadingOvertimeSummary: loading,
+          loadingAuthorizationReport: loading,
         },
         error: {
           ...state.error,
-          errorOvertimeSummary: '',
+          errorAuthorizationReport: '',
         },
       }));
     },
 
-    getOvertimeSummarySuccess: (loading: boolean, response: Array<OvertimeAccomplishment>) => {
+    getOvertimeAuthorizationReportSuccess: (loading: boolean, response: OvertimeAuthorization) => {
       set((state) => ({
         ...state,
-        overtimeSummary: response,
+        overtimeAuthorizationReport: response,
         loading: {
           ...state.loading,
-          loadingOvertimeSummary: loading,
+          loadingAuthorizationReport: loading,
         },
       }));
     },
-    getOvertimeSummaryFail: (loading: boolean, error: string) => {
+    getOvertimeAuthorizationReportFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {
           ...state.loading,
-          loadingOvertimeSummary: loading,
+          loadingAuthorizationReport: loading,
         },
         error: {
           ...state.error,
-          errorOvertimeSummary: error,
+          errorAuthorizationReport: error,
         },
-        response: {
-          ...state.response,
-          postResponseApply: null,
+      }));
+    },
+
+    //GET OVERTIME ACCOMPLISHMENT REPORT FOR PDF
+    getOvertimeAccomplishmentReport: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtimeAccomplishmentReport: {} as OvertimeAccomplishment,
+        loading: {
+          ...state.loading,
+          loadingAccomplishmentReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorAccomplishmentReport: '',
+        },
+      }));
+    },
+
+    getOvertimeAccomplishmentReportSuccess: (loading: boolean, response: OvertimeAccomplishment) => {
+      set((state) => ({
+        ...state,
+        overtimeAccomplishmentReport: response,
+        loading: {
+          ...state.loading,
+          loadingAccomplishmentReport: loading,
+        },
+      }));
+    },
+    getOvertimeAccomplishmentReportFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingAccomplishmentReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorAccomplishmentReport: error,
+        },
+      }));
+    },
+
+    //GET OVERTIME SUMMARY - COMPILED OT ACCOMPLISHMENTS
+    getOvertimeSummaryReport: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtimeSummaryReport: {} as Array<OvertimeAccomplishment>,
+        loading: {
+          ...state.loading,
+          loadingOvertimeSummaryReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeSummaryReport: '',
+        },
+      }));
+    },
+
+    getOvertimeSummaryReportSuccess: (loading: boolean, response: Array<OvertimeAccomplishment>) => {
+      set((state) => ({
+        ...state,
+        overtimeSummaryReport: response,
+        loading: {
+          ...state.loading,
+          loadingOvertimeSummaryReport: loading,
+        },
+      }));
+    },
+    getOvertimeSummaryReportFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertimeSummaryReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeSummaryReport: error,
         },
       }));
     },
@@ -361,10 +466,6 @@ export const useOvertimeStore = create<OvertimeState>()(
         error: {
           ...state.error,
           errorOvertime: error,
-        },
-        response: {
-          ...state.response,
-          postResponseApply: null,
         },
       }));
     },

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
-    padding: 2,
+    padding: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
   tableCell: {
     margin: 'auto',
     textAlign: 'center',
-    fontSize: 8,
+    fontSize: 7,
+    width: 'auto',
   },
 
   tableCol2: {
@@ -93,6 +94,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
     borderTopWidth: 0,
+    padding: 1,
   },
   tableCol_dates_main: {
     width: 'auto',
@@ -107,8 +109,7 @@ const styles = StyleSheet.create({
     margin: 'auto',
     textAlign: 'center',
     fontSize: 8,
-    width: 14,
-    height: 14,
+    width: 10,
     padding: 1,
   },
 });
@@ -127,9 +128,9 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
     overtimeAccomplishmentEmployeeName,
     accomplishmentDetails,
     pdfOvertimeSummaryModalIsOpen,
-    getOvertimeSummary,
-    getOvertimeSummarySuccess,
-    getOvertimeSummaryFail,
+    getOvertimeSummaryReport,
+    getOvertimeSummaryReportSuccess,
+    getOvertimeSummaryReportFail,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
@@ -137,9 +138,9 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
     overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
     accomplishmentDetails: state.accomplishmentDetails,
     pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
-    getOvertimeSummary: state.getOvertimeSummary,
-    getOvertimeSummarySuccess: state.getOvertimeSummarySuccess,
-    getOvertimeSummaryFail: state.getOvertimeSummaryFail,
+    getOvertimeSummaryReport: state.getOvertimeSummaryReport,
+    getOvertimeSummaryReportSuccess: state.getOvertimeSummaryReportSuccess,
+    getOvertimeSummaryReportFail: state.getOvertimeSummaryReportFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -159,18 +160,18 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
   // Initial zustand state update
   useEffect(() => {
     if (swrOvertimeSummaryIsLoading) {
-      getOvertimeSummary(swrOvertimeSummaryIsLoading);
+      getOvertimeSummaryReport(swrOvertimeSummaryIsLoading);
     }
   }, [swrOvertimeSummaryIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeSummary)) {
-      getOvertimeSummarySuccess(swrOvertimeSummaryIsLoading, swrOvertimeSummary);
+      getOvertimeSummaryReportSuccess(swrOvertimeSummaryIsLoading, swrOvertimeSummary);
     }
 
     if (!isEmpty(swrOvertimeSummaryError)) {
-      getOvertimeSummaryFail(swrOvertimeSummaryIsLoading, swrOvertimeSummaryError.message);
+      getOvertimeSummaryReportFail(swrOvertimeSummaryIsLoading, swrOvertimeSummaryError.message);
     }
   }, [swrOvertimeSummary, swrOvertimeSummaryError]);
 
@@ -182,7 +183,7 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Overtime Accomplishment Report Summary</span>
+              <span className="text-xl md:text-2xl">Overtime Accomplishment Summary Report</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -216,149 +217,147 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
                     <PdfHeader />
                     <Text style={styles.pdfTitle}>SYSTEMS DEVELOPMENT AND APPLICATION DIVISION</Text>
                     <Text style={styles.pdfTitle}>OVERTIME SUMMARY FOR REGULAR EMPLOYEES</Text>
-                    <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>PERIOD COVERED: September 16-30, 2023</Text>
+                    <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
+                      PERIOD COVERED:{' '}
+                      <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
+                        September 16-30, 2023
+                      </Text>
+                    </Text>
                     <View style={styles.table}>
                       <View style={styles.tableRow}>
                         <View style={[styles.tableCol, { width: 20 }]}>
                           <Text style={styles.tableCell}>NO.</Text>
                         </View>
                         <View style={styles.tableCol}>
-                          <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 160 }}>NAME</Text>
+                          <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 134 }}>NAME</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
+                        <View style={[styles.tableCol, { width: 52 }]}>
                           <Text style={styles.tableCell}>MONTHLY BASIC SALARY</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
+                        <View style={[styles.tableCol, { width: 40 }]}>
                           <Text style={styles.tableCell}>RATE PER HOUR (A)</Text>
                         </View>
 
                         <View style={styles.tableCol_dates_main}>
-                          <View style={styles.tableCol_dates}>
-                            <Text style={[styles.tableCell, { paddingTop: 2, paddingBottom: 2 }]}>SEPTEMBER</Text>
+                          <View style={[styles.tableCol_dates, { height: 30 }]}>
+                            <Text style={[styles.tableCell, { paddingTop: 2, paddingBottom: 2, fontSize: 14 }]}>
+                              SEPTEMBER
+                            </Text>
                           </View>
                           <View style={styles.tableRow}>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>1</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>2</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>3</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>4</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>5</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>6</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>7</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>8</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>9</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>10</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>11</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>12</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>13</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>14</Text>
                             </View>
-                            <View style={styles.tableCol}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>15</Text>
                             </View>
-                            <View style={styles.tableCol_dates}>
-                              <Text style={styles.tableCell_dates}></Text>
-                            </View>
-                          </View>
-                          {/* 16-30 */}
-                          <View style={styles.tableRow}>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>16</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>17</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>18</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>19</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>20</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>21</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>22</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>23</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>24</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>25</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>26</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>27</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>28</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>29</Text>
-                            </View>
-                            <View style={styles.tableCol2}>
-                              <Text style={styles.tableCell_dates}>30</Text>
-                            </View>
-                            <View style={styles.tableCol2_last}>
+                            <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}>31</Text>
                             </View>
                           </View>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 40 }]}>
+                        <View style={[styles.tableCol, { width: 35 }]}>
                           <Text style={styles.tableCell}>TOTAL NO. OT HOURS</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
+                        <View style={[styles.tableCol, { width: 40 }]}>
                           <Text style={styles.tableCell}>TOTAL REGULAR HOURS OT (B)</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
+                        <View style={[styles.tableCol, { width: 40 }]}>
                           <Text style={styles.tableCell}>AMOUNT (A X B X 1.25)</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 60 }]}>
+                        <View style={[styles.tableCol, { width: 50 }]}>
                           <Text style={styles.tableCell}>TOTAL HOLIDAY / DAY-OFF OT HOURS (C)</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
+                        <View style={[styles.tableCol, { width: 40 }]}>
                           <Text style={styles.tableCell}>AMOUNT (A X C X 1.5)</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 45 }]}>
+                          <Text style={styles.tableCell}>SUBSTITUTE DUTY OT HOURS (D)</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 45 }]}>
+                          <Text style={styles.tableCell}>SUBSTITUTE AMOUNT (A X D X 1.25)</Text>
+                        </View>
+
+                        <View style={styles.tableCol_dates_main}>
+                          <View style={styles.tableCol_dates}>
+                            <Text style={[styles.tableCell, { paddingTop: 2, paddingBottom: 2, width: '80' }]}>
+                              NIGHT DIFFERENTIAL
+                            </Text>
+                          </View>
+                          <View style={styles.tableRow}>
+                            <View
+                              style={[
+                                styles.tableCol,
+                                {
+                                  borderBottomWidth: 0,
+                                  width: 40,
+                                  height: 35,
+                                  textAlign: 'center',
+                                },
+                              ]}
+                            >
+                              <Text style={[styles.tableCell, { padding: 1 }]}>NO. OF HOURS</Text>
+                            </View>
+                            <View
+                              style={[
+                                styles.tableCol,
+                                {
+                                  borderBottomWidth: 0,
+                                  borderRightWidth: 0,
+                                  height: 35,
+                                  width: 40,
+                                },
+                              ]}
+                            >
+                              <Text style={[styles.tableCell, { padding: 1 }]}>AMOUNT</Text>
+                            </View>
+                          </View>
                         </View>
 
                         <View style={[styles.tableCol, { width: 60 }]}>
@@ -372,94 +371,107 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
                           <Text style={styles.tableCell}>1</Text>
                         </View>
                         <View style={styles.tableCol}>
-                          <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 160 }}>
+                          <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 134 }}>
                             JAY RAYMOND NOSOTROS
                           </Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
+                        <View style={[styles.tableCol, { width: 52 }]}>
                           <Text style={styles.tableCell}>29,165.00</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
+                        <View style={[styles.tableCol, { width: 40 }]}>
                           <Text style={styles.tableCell}>165.71</Text>
                         </View>
 
                         <View style={styles.tableCol_dates_main}>
                           <View style={styles.tableRow}>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2}>
+                            <View
+                              style={[styles.tableCol, { height: 20, borderBottomWidth: 0, backgroundColor: 'cyan' }]}
+                            >
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
-                            <View style={styles.tableCol2_last}>
+                            <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
                               <Text style={styles.tableCell_dates}></Text>
                             </View>
                           </View>
                         </View>
 
+                        <View style={[styles.tableCol, { width: 35 }]}>
+                          <Text style={styles.tableCell}>99</Text>
+                        </View>
+
                         <View style={[styles.tableCol, { width: 40 }]}>
-                          <Text style={styles.tableCell}>5.44</Text>
+                          <Text style={styles.tableCell}>100</Text>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 40 }]}>
+                          <Text style={styles.tableCell}>5,898.00</Text>
                         </View>
 
                         <View style={[styles.tableCol, { width: 50 }]}>
-                          <Text style={styles.tableCell}></Text>
+                          <Text style={styles.tableCell}>4</Text>
                         </View>
 
-                        <View style={[styles.tableCol, { width: 50 }]}>
-                          <Text style={styles.tableCell}></Text>
+                        <View style={[styles.tableCol, { width: 40 }]}>
+                          <Text style={styles.tableCell}>9,999.00</Text>
                         </View>
-
+                        <View style={[styles.tableCol, { width: 45 }]}>
+                          <Text style={styles.tableCell}>6</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 45 }]}>
+                          <Text style={styles.tableCell}>7</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 41 }]}>
+                          <Text style={styles.tableCell}>8</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 42 }]}>
+                          <Text style={[styles.tableCell, { padding: 1 }]}>10,000.00</Text>
+                        </View>
                         <View style={[styles.tableCol, { width: 60 }]}>
-                          <Text style={styles.tableCell}>5.44</Text>
-                        </View>
-
-                        <View style={[styles.tableCol, { width: 50 }]}>
-                          <Text style={styles.tableCell}>1,352.20</Text>
-                        </View>
-
-                        <View style={[styles.tableCol, { width: 60 }]}>
-                          <Text style={styles.tableCell}>1,352.20</Text>
+                          <Text style={styles.tableCell}>10,889.00</Text>
                         </View>
                       </View>
                     </View>

@@ -123,3 +123,28 @@ export type OvertimeAccomplishmentApprovalPatch = {
   status: OvertimeAccomplishmentStatus;
   followEstimatedHrs: boolean;
 };
+
+export type OvertimeAuthorization = {
+  requestedDate: string;
+  purpose: string;
+  plannedDate: string;
+  estimatedHours: number;
+  status: OvertimeStatus;
+  managerApprovalDate: string;
+  employees: Array<OvertimAuthorizationEmployee>;
+  signatories: {
+    employeeName: string;
+    employeeSignature: string;
+    supervisorName: string;
+    supervisorSignature: string;
+  };
+};
+
+export type OvertimAuthorizationEmployee = {
+  overtimeEmployeeId: string;
+  companyId: string;
+  employeeId: string;
+  name: string;
+  assignment: string;
+  position: string;
+};

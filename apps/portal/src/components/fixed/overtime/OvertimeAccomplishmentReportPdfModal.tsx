@@ -6,6 +6,10 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import useSWR from 'swr';
+import { useEffect } from 'react';
+import { isEmpty } from 'lodash';
 
 const styles = StyleSheet.create({
   page: {
@@ -42,17 +46,59 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
     overtimeAccomplishmentApplicationId,
     overtimeAccomplishmentEmployeeName,
     accomplishmentDetails,
+    pdfAccomplishmentReportModalIsOpen,
+    overtimeAccomplishmentReport,
+    getOvertimeAccomplishmentReport,
+    getOvertimeAccomplishmentReportSuccess,
+    getOvertimeAccomplishmentReportFail,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
     overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
     overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
     accomplishmentDetails: state.accomplishmentDetails,
+    pdfAccomplishmentReportModalIsOpen: state.pdfAccomplishmentReportModalIsOpen,
+    overtimeAccomplishmentReport: state.overtimeAccomplishmentReport,
+    getOvertimeAccomplishmentReport: state.getOvertimeAccomplishmentReport,
+    getOvertimeAccomplishmentReportSuccess: state.getOvertimeAccomplishmentReportSuccess,
+    getOvertimeAccomplishmentReportFail: state.getOvertimeAccomplishmentReportFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  console.log(accomplishmentDetails);
+  const overtimeAccomplishmentReportUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
+
+  const {
+    data: swrOvertimeAccomplishmentReport,
+    isLoading: swrOvertimeAccomplishmentReportIsLoading,
+    error: swrOvertimeAccomplishmentReportError,
+    mutate: mutateOvertimeAccomplishmentReport,
+  } = useSWR(pdfAccomplishmentReportModalIsOpen ? overtimeAccomplishmentReportUrl : null, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeAccomplishmentReportIsLoading) {
+      getOvertimeAccomplishmentReport(swrOvertimeAccomplishmentReportIsLoading);
+    }
+  }, [swrOvertimeAccomplishmentReportIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeAccomplishmentReport)) {
+      getOvertimeAccomplishmentReportSuccess(swrOvertimeAccomplishmentReportIsLoading, swrOvertimeAccomplishmentReport);
+    }
+
+    if (!isEmpty(swrOvertimeAccomplishmentReportError)) {
+      getOvertimeAccomplishmentReportFail(
+        swrOvertimeAccomplishmentReportIsLoading,
+        swrOvertimeAccomplishmentReportError.message
+      );
+    }
+  }, [swrOvertimeAccomplishmentReport, swrOvertimeAccomplishmentReportError]);
+
   return (
     <>
       <Modal size={`full`} open={modalState} setOpen={setModalState}>
@@ -70,7 +116,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!accomplishmentDetails ? (
+          {!overtimeAccomplishmentReport ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
