@@ -8,6 +8,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 type ModalProps = {
   modalState: boolean;
@@ -22,13 +23,24 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
 
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
-    setOvertimeDetails,
+    overtimeDetails,
+    cancelOvertime,
+    cancelOvertimeSuccess,
+    cancelOvertimeFail,
+    emptyResponseAndError,
+    setCancelOvertimeModalIsOpen,
   } = useOvertimeStore((state) => ({
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     completedOvertimeModalIsOpen: state.completedOvertimeModalIsOpen,
+    overtimeDetails: state.overtimeDetails,
     setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
+    cancelOvertime: state.cancelOvertime,
+    cancelOvertimeSuccess: state.cancelOvertimeSuccess,
+    cancelOvertimeFail: state.cancelOvertimeFail,
+    emptyResponseAndError: state.emptyResponseAndError,
+    setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -38,25 +50,26 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
     setPendingOvertimeModalIsOpen(false);
     setCompletedOvertimeModalIsOpen(false);
 
-    // const data = {
-    //   id: leaveIndividualDetail.leaveApplicationBasicInfo.id,
-    //   cancelReason: remarks,
-    // };
-    // patchLeave();
-    // const { error, result } = await patchPortal('/v1/leave/employee', data);
-    // if (error) {
-    //   patchLeaveFail(result);
-    // } else {
-    //   patchLeaveSuccess(result);
-    //   closeModalAction();
-    //   setTimeout(() => {
-    //     setPendingLeaveModalIsOpen(false); //then close LEAVE modal
-    //     setCompletedLeaveModalIsOpen(false); //then close LEAVE modal
-    //   }, 200);
-    //   setTimeout(() => {
-    //     emptyResponseAndError();
-    //   }, 3000);
-    // }
+    const data = {
+      overtimeApplicationId: overtimeDetails.id,
+      remarks: remarks,
+      status: OvertimeStatus.CANCELLED,
+    };
+    cancelOvertime();
+    const { error, result } = await patchPortal('/v1/leave/employee', data);
+    if (error) {
+      cancelOvertimeFail(result);
+    } else {
+      cancelOvertimeSuccess(result);
+      closeModalAction();
+      setTimeout(() => {
+        // setCancelOvertimeModalIsOpen(false);
+        setPendingOvertimeModalIsOpen(false);
+      }, 200);
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
+    }
   };
 
   const { windowWidth } = UseWindowDimensions();

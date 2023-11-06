@@ -7,12 +7,14 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import CancelOvertimeModal from './CancelOvertimeModal';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeSupervisorAccomplishmentModal from './OvertimeSupervisorAccomplishmentModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/RenderAccomplishmentSubmitted';
 import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimeAccomplishmentStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import OvertimeAuthorizationModal from './OvertimeAuthorizationModal';
+import OvertimeReportSummaryModal from './OvertimeReportSummaryModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -26,21 +28,29 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     pendingOvertimeModalIsOpen,
     cancelOvertimeModalIsOpen,
     accomplishmentOvertimeModalIsOpen,
+    pdfOvertimeAuthorizationModalIsOpen,
+    pdfOvertimeSummaryModalIsOpen,
     setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId,
     setOvertimeAccomplishmentEmployeeName,
     setOvertimeAccomplishmentApplicationId,
+    setPdfOvertimeAuthorizationModalIsOpen,
+    setPdfOvertimeSummaryModalIsOpen,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     cancelOvertimeModalIsOpen: state.cancelOvertimeModalIsOpen,
     accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
+    pdfOvertimeAuthorizationModalIsOpen: state.pdfOvertimeAuthorizationModalIsOpen,
+    pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
     setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen: state.setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId: state.setOvertimeAccomplishmentEmployeeId,
     setOvertimeAccomplishmentEmployeeName: state.setOvertimeAccomplishmentEmployeeName,
     setOvertimeAccomplishmentApplicationId: state.setOvertimeAccomplishmentApplicationId,
+    setPdfOvertimeAuthorizationModalIsOpen: state.setPdfOvertimeAuthorizationModalIsOpen,
+    setPdfOvertimeSummaryModalIsOpen: state.setPdfOvertimeSummaryModalIsOpen,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -55,14 +65,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setAccomplishmentOvertimeModalIsOpen(false);
   };
 
+  const closePdfOvertimeAuthorizationModal = async () => {
+    setPdfOvertimeAuthorizationModalIsOpen(false);
+  };
+
+  const closePdfOvertimeSummaryModal = async () => {
+    setPdfOvertimeSummaryModalIsOpen(false);
+  };
+
   const handleEmployeeAccomplishment = async (employeeId: string, employeeName: string) => {
     setOvertimeAccomplishmentEmployeeId(employeeId);
     setOvertimeAccomplishmentEmployeeName(employeeName);
     setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
     setAccomplishmentOvertimeModalIsOpen(true);
   };
-
-  console.log(overtimeDetails);
 
   return (
     <>
@@ -191,6 +207,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                     <Button
                                       variant={'primary'}
+                                      disabled={employee.isAccomplishmentSubmitted == true ? false : true}
                                       size={'sm'}
                                       loading={true}
                                       onClick={(e) =>
@@ -225,14 +242,54 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               </div>
             </div>
           )}
+          <OvertimeAuthorizationModal
+            modalState={pdfOvertimeAuthorizationModalIsOpen}
+            setModalState={setPdfOvertimeAuthorizationModalIsOpen}
+            closeModalAction={closePdfOvertimeAuthorizationModal}
+          />
+          <OvertimeReportSummaryModal
+            modalState={pdfOvertimeSummaryModalIsOpen}
+            setModalState={setPdfOvertimeSummaryModalIsOpen}
+            closeModalAction={closePdfOvertimeSummaryModal}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             {overtimeDetails.status === OvertimeStatus.APPROVED ||
             overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
-                Close
-              </Button>
+              <>
+                {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                  <>
+                    <Button
+                      variant={'primary'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => setPdfOvertimeSummaryModalIsOpen(true)}
+                      type="submit"
+                    >
+                      Summary
+                    </Button>
+                    <Button
+                      variant={'primary'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => setPdfOvertimeAuthorizationModalIsOpen(true)}
+                      type="submit"
+                    >
+                      Authorization
+                    </Button>
+                  </>
+                ) : null}
+                <Button
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => closeModalAction()}
+                  type="submit"
+                >
+                  Close
+                </Button>
+              </>
             ) : (
               <Button
                 variant={'warning'}

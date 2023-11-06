@@ -32,7 +32,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     overtimeList,
     employeeList,
     responseApply,
-
+    cancelResponse,
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
     setApplyOvertimeModalIsOpen,
@@ -52,7 +52,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     overtimeList: state.overtime,
     employeeList: state.employeeList,
     responseApply: state.response.postResponseApply,
-
+    cancelResponse: state.response.cancelResponse,
     setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
@@ -184,6 +184,11 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
         {/* Post/Submit Overtime Application Success*/}
         {!isEmpty(responseApply) ? (
           <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
+        ) : null}
+
+        {/* Cancel Overtime Application Success*/}
+        {!isEmpty(cancelResponse) ? (
+          <ToastNotification toastType="success" notifMessage="Overtime Application Cancellation Successful!" />
         ) : null}
 
         {/* List of Overtime Load Failed */}

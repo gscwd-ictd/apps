@@ -14,6 +14,7 @@ export type PassSlipApplicationForm = {
   timeIn: string | null;
   timeOut: string | null;
   isCancelled: boolean;
+  forMedicalPurpose?: boolean;
 };
 
 // List of pass slips per employee

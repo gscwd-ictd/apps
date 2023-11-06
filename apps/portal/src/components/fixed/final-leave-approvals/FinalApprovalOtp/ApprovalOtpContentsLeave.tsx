@@ -12,6 +12,7 @@ import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
+import AuthCode from 'react-auth-code-input';
 
 interface OtpProps {
   mobile: string;
@@ -157,11 +158,6 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
     }, 200);
   };
 
-  //UPDATE OTP VALUE FIELD
-  const handleOtpInput = (e: string) => {
-    setOtpCode(e);
-  };
-
   const handlePatchResult = async (data: leaveAction) => {
     const { error, result } = await patchPortal('/v1/leave/hrdm', data);
     if (error) {
@@ -262,7 +258,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                       <Notice type="error" message={errorMessage} animate={otpFieldError} />
                     </section>
                   )}
-                  <section className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}>
+                  {/* <section className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}>
                     <TextField
                       autoFocus
                       value={otpCode}
@@ -273,7 +269,19 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
                       maxLength={6}
                       onChange={(e) => handleOtpInput(e.target.value as unknown as string)}
                     />
+                  </section> */}
+
+                  <section className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}>
+                    <AuthCode
+                      allowedCharacters="numeric"
+                      onChange={setOtpCode}
+                      containerClassName="flex gap-3 flex-row justify-between items-center"
+                      inputClassName={`w-7 rounded border-indigo-500 font-bold text-lg ${
+                        otpFieldError ? 'border-red-500' : ''
+                      } px-0 text-center`}
+                    />
                   </section>
+
                   <button
                     disabled={isSubmitLoading == true ? true : false}
                     className={`${wiggleEffect && 'animate-shake'}  ${

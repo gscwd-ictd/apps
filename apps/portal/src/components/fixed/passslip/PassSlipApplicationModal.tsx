@@ -79,6 +79,7 @@ export const PassSlipApplicationModal = ({
       purposeDestination: '',
       isCancelled: false,
       obTransportation: null,
+      forMedicalPurpose: null,
     },
   });
 
@@ -103,7 +104,6 @@ export const PassSlipApplicationModal = ({
 
   const handlePostResult = async (data: PassSlipApplicationForm) => {
     const { error, result } = await postPortal('/v1/pass-slip', data);
-    console.log(data);
     if (error) {
       postPassSlipListFail(result);
     } else {
@@ -247,6 +247,32 @@ export const PassSlipApplicationModal = ({
                       </div>
                     </div>
                   </>
+                ) : null}
+
+                {watch('natureOfBusiness') == NatureOfBusiness.PERSONAL_BUSINESS ? (
+                  <div
+                    className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between `}
+                  >
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                      For Medical Purpose:
+                      <span className="text-red-600">*</span>
+                    </label>
+
+                    <div className="w-full md:w-80">
+                      <select
+                        id="forMedicalPurpose"
+                        className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
+                        required
+                        {...register('forMedicalPurpose')}
+                      >
+                        <option value="" disabled>
+                          Select Purpose
+                        </option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    </div>
+                  </div>
                 ) : null}
 
                 {watch('natureOfBusiness') ? (
