@@ -78,25 +78,13 @@ export type EmployeeOvertimeDetail = {
   accomplishmentStatus: OvertimeAccomplishmentStatus;
 };
 
-// export type OvertimeAccomplishment = {
-//   id: string;
-//   ivmsTimeIn: string;
-//   ivmsTimeOut: string;
-//   encodedTimeIn: string;
-//   encodedTimeOut: string;
-//   accomplishments: string;
-//   followEstimatedHrs: boolean;
-//   remarks: string;
-//   status: OvertimeAccomplishmentStatus;
-// };
-
 export type OvertimeAccomplishment = {
   id: string;
   ivmsTimeIn: string;
   ivmsTimeOut: string;
   encodedTimeIn: string | null;
   encodedTimeOut: string | null;
-  accomplishments: string | null;
+  accomplishments: Array<string> | null;
   remarks: string | null;
   status: OvertimeAccomplishmentStatus;
   computedIvmsHours: number;
@@ -107,6 +95,7 @@ export type OvertimeAccomplishment = {
   employeeId: string;
   purpose: string;
   followEstimatedHrs: boolean;
+  employeeSignature: string;
 };
 
 //approving/disapproving of overtime application by manager

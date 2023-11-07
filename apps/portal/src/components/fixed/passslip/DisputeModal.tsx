@@ -66,12 +66,10 @@ export const DisputeApplicationModal = ({
   };
 
   const handlePatchResult = async (data: DisputeForm) => {
-    console.log(data);
     const { error, result } = await patchPortal('/v1/pass-slip', data);
     if (error) {
       patchPassSlipFail(result);
     } else {
-      console.log(result);
       patchPassSlipSuccess(result);
       closeModalAction(); // close dispute modal
       setTimeout(() => {

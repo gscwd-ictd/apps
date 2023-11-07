@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import { HiX } from 'react-icons/hi';
+import { HiPlus, HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationOvertimeAccomplishmentModal } from './ConfirmationOvertimeAccomplishmentModal';
@@ -86,7 +86,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       setValue('encodedTimeIn', overtimeAccomplishmentDetails.encodedTimeIn);
       setValue('encodedTimeOut', overtimeAccomplishmentDetails.encodedTimeOut);
       setValue('accomplishments', overtimeAccomplishmentDetails.accomplishments);
-      console.log(overtimeAccomplishmentDetails);
     }
   }, [pendingOvertimeAccomplishmentModalIsOpen]);
 
@@ -94,7 +93,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   useEffect(() => {
     setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
-    console.log(schedule);
   }, []);
 
   useEffect(() => {
@@ -356,6 +354,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="text-slate-500 text-md font-medium whitespace-nowrap">Accomplishment:</label>
                       </div>
+
                       <textarea
                         required
                         disabled={

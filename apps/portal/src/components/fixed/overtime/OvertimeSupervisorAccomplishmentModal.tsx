@@ -14,6 +14,7 @@ import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import OvertimeAccomplishmentReportPdfModal from './OvertimeAccomplishmentReportPdfModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -31,6 +32,9 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
     getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail,
+    setPdfAccomplishmentReportModalIsOpen,
+    pdfAccomplishmentReportModalIsOpen,
+    accomplishmentOvertimeModalIsOpen,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
@@ -40,6 +44,9 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
     getAccomplishmentDetails: state.getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess: state.getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail: state.getAccomplishmentDetailsFail,
+    setPdfAccomplishmentReportModalIsOpen: state.setPdfAccomplishmentReportModalIsOpen,
+    pdfAccomplishmentReportModalIsOpen: state.pdfAccomplishmentReportModalIsOpen,
+    accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -53,7 +60,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
     isLoading: swrOvertimeAccomplishmentIsLoading,
     error: swrOvertimeAccomplishmentError,
     mutate: mutateOvertimeAccomplishments,
-  } = useSWR(overtimeAccomplishmentUrl, fetchWithToken, {
+  } = useSWR(accomplishmentOvertimeModalIsOpen ? overtimeAccomplishmentUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -75,6 +82,10 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
       getAccomplishmentDetailsFail(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishmentError.message);
     }
   }, [swrOvertimeAccomplishment, swrOvertimeAccomplishmentError]);
+
+  const closeOvertimeAccomplishmentModal = async () => {
+    setPdfAccomplishmentReportModalIsOpen(false);
+  };
 
   return (
     <>
@@ -214,7 +225,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                               className="w-full text-slate-400 font-medium"
                               textSize="md"
                               disabled
-                              value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
+                              value={`${accomplishmentDetails.computedEncodedHours ?? 0} Hour(s)`}
                             />
                           </label>
                         </div>
@@ -252,9 +263,26 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               </div>
             </div>
           )}
+          <OvertimeAccomplishmentReportPdfModal
+            modalState={pdfAccomplishmentReportModalIsOpen}
+            setModalState={setPdfAccomplishmentReportModalIsOpen}
+            closeModalAction={closeOvertimeAccomplishmentModal}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
+            {accomplishmentDetails.status == OvertimeAccomplishmentStatus.APPROVED ? (
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => setPdfAccomplishmentReportModalIsOpen(true)}
+                type="submit"
+              >
+                Accomplishment
+              </Button>
+            ) : null}
+
             <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
               Close
             </Button>
