@@ -120,23 +120,19 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    overtimeDetails,
-    overtimeAccomplishmentEmployeeId,
-    overtimeAccomplishmentApplicationId,
-    overtimeAccomplishmentEmployeeName,
-    accomplishmentDetails,
+    selectedMonth,
+    selectedYear,
+    selectedPeriod,
     pdfOvertimeSummaryModalIsOpen,
     getOvertimeSummaryReport,
     getOvertimeSummaryReportSuccess,
     getOvertimeSummaryReportFail,
   } = useOvertimeStore((state) => ({
-    overtimeDetails: state.overtimeDetails,
-    overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
-    overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
-    overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
-    accomplishmentDetails: state.accomplishmentDetails,
+    selectedMonth: state.selectedMonth,
+    selectedYear: state.selectedYear,
+    selectedPeriod: state.selectedPeriod,
     pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
     getOvertimeSummaryReport: state.getOvertimeSummaryReport,
     getOvertimeSummaryReportSuccess: state.getOvertimeSummaryReportSuccess,
@@ -145,7 +141,7 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const overtimeSummaryUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
+  const overtimeSummaryUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${employeeDetails.user._id}/${selectedYear}/${selectedMonth}?half=${selectedPeriod}`;
 
   const {
     data: swrOvertimeSummary,
@@ -175,15 +171,13 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
     }
   }, [swrOvertimeSummary, swrOvertimeSummaryError]);
 
-  const sampleCount = [{ number: 1 }, { number: 2 }, { number: 3 }];
-
   return (
     <>
       <Modal size={`full`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Overtime Accomplishment Summary Report</span>
+              <span className="text-xl md:text-2xl">Overtime Summary Report</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -194,7 +188,7 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {swrOvertimeSummary ? (
+          {!swrOvertimeSummary ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -602,4 +596,4 @@ export const OvertimeReportSummaryModal = ({ modalState, setModalState, closeMod
   );
 };
 
-export default OvertimeReportSummaryModal;
+export default OvertimeSummaryReportPdfModal;

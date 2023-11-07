@@ -9,6 +9,7 @@ import {
 } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { number } from 'yup';
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;
@@ -53,6 +54,7 @@ export type OvertimeState = {
   getEmployeeListFail: (loading: boolean, error: string) => void;
 
   overtimeDetails: OvertimeDetails;
+  overtimeSummaryModalIsOpen: boolean;
   cancelOvertimeModalIsOpen: boolean;
   applyOvertimeModalIsOpen: boolean;
   pendingOvertimeModalIsOpen: boolean;
@@ -62,6 +64,14 @@ export type OvertimeState = {
   pdfOvertimeAuthorizationModalIsOpen: boolean;
   pdfOvertimeSummaryModalIsOpen: boolean;
   tab: number;
+
+  //for selecting month, year and Period for OT summary PDF generation
+  selectedMonth: number;
+  selectedYear: number;
+  selectedPeriod: string;
+  setSelectedMonth: (selectedMonth: number) => void;
+  setSelectedYear: (selectedYear: number) => void;
+  setSelectedPeriod: (selectedPeriod: string) => void;
 
   //for getting employee's accomplishment report inside MODAL
   accomplishmentDetails: OvertimeAccomplishment;
@@ -100,6 +110,7 @@ export type OvertimeState = {
   postOvertimeSuccess: (response: OvertimeForm) => void;
   postOvertimeFail: (error: string) => void;
 
+  setOvertimeSummaryModalIsOpen: (overtimeSummaryModalIsOpen: boolean) => void;
   setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => void;
   setApplyOvertimeModalIsOpen: (applyOvertimeModalIsOpen: boolean) => void;
   setPendingOvertimeModalIsOpen: (pendingOvertimeModalIsOpen: boolean) => void;
@@ -155,6 +166,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     overtimeAuthorizationReport: {} as OvertimeAuthorization,
     overtimeAccomplishmentReport: {} as OvertimeAccomplishment,
 
+    overtimeSummaryModalIsOpen: false,
     applyOvertimeModalIsOpen: false,
     pendingOvertimeModalIsOpen: false,
     completedOvertimeModalIsOpen: false,
@@ -165,8 +177,26 @@ export const useOvertimeStore = create<OvertimeState>()(
     pdfOvertimeSummaryModalIsOpen: false,
     tab: 1,
 
+    selectedMonth: 1,
+    selectedYear: 2023,
+    selectedPeriod: 'first',
+
+    setSelectedMonth: (selectedMonth: number) => {
+      set((state) => ({ ...state, selectedMonth }));
+    },
+    setSelectedYear: (selectedYear: number) => {
+      set((state) => ({ ...state, selectedYear }));
+    },
+    setSelectedPeriod: (selectedPeriod: string) => {
+      set((state) => ({ ...state, selectedPeriod }));
+    },
+
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
+    },
+
+    setOvertimeSummaryModalIsOpen: (overtimeSummaryModalIsOpen: boolean) => {
+      set((state) => ({ ...state, overtimeSummaryModalIsOpen }));
     },
 
     setPdfAccomplishmentReportModalIsOpen: (pdfAccomplishmentReportModalIsOpen: boolean) => {

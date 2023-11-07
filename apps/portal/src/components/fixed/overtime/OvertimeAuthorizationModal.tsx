@@ -394,6 +394,28 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         Approved by:
                       </Text>
                     </View>
+                    {/* SIGNATURES */}
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        fontSize: 9,
+                        paddingTop: 2,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                        width: '100%',
+                      }}
+                    >
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 90, marginTop: 0 }}
+                        src={overtimeAuthorizationReport?.signatories?.employeeSignature ?? ''}
+                      />
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 360, marginTop: 0 }}
+                        src={overtimeAuthorizationReport?.signatories?.supervisorSignature ?? ''}
+                      />
+                    </View>
                     <View
                       style={{
                         display: 'flex',
@@ -450,28 +472,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         Date
                       </Text>
                     </View>
-                    {/* SIGNATURES */}
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        fontSize: 9,
-                        paddingTop: 2,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 30, marginTop: -22 }}
-                        src={overtimeAuthorizationReport?.signatories?.employeeSignature ?? ''}
-                      />
 
-                      <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 200, marginTop: 0 }}
-                        src={overtimeAuthorizationReport?.signatories?.supervisorSignature ?? ''}
-                      />
-                    </View>
                     <View
                       style={{
                         display: 'flex',
@@ -487,7 +488,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         style={{
                           position: 'absolute',
                           marginLeft: 30,
-                          marginTop: -22,
+                          marginTop: -20,
                           width: 165,
 
                           textAlign: 'center',
@@ -499,7 +500,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         style={{
                           position: 'absolute',
                           marginLeft: 163,
-                          marginTop: -22,
+                          marginTop: -20,
                           width: 165,
 
                           textAlign: 'center',
@@ -511,7 +512,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         style={{
                           position: 'absolute',
                           marginLeft: 300,
-                          marginTop: -22,
+                          marginTop: -20,
                           width: 170,
 
                           textAlign: 'center',
@@ -523,7 +524,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         style={{
                           position: 'absolute',
                           marginLeft: 445,
-                          marginTop: -22,
+                          marginTop: -20,
                           width: 165,
 
                           textAlign: 'center',
