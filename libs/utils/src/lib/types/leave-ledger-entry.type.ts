@@ -28,3 +28,15 @@ export type LeaveAdjustmentForm = {
   employeeId: string;
   remarks: string | null;
 };
+
+export type LeaveAdjustmentResponse = {
+  leaveCreditEarningId: {
+    creditDate: string;
+    creditValue: number;
+    leaveBenefitsId: string;
+    employeeId: string;
+    remarks: string;
+    id: string;
+  };
+  id: string;
+};

@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { LeaveLedgerEntry, LeaveAdjustmentResponse } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
 import { devtools } from 'zustand/middleware';
 
@@ -35,6 +35,12 @@ type LeaveLedgerState = {
   getLeaveLedgerFail: (error: string) => void;
 
   setSelectedLeaveBenefit: (selectedLeaveBenefit: MutatedLeaveBenefit) => void;
+
+  postLeaveAdjustment: LeaveAdjustmentResponse;
+  setPostLeaveAdjustment: (postLeaveAdjustment: LeaveAdjustmentResponse) => void;
+
+  errorLeaveAdjustment: string;
+  setErrorLeaveAdjustment: (errorLeaveAdjustment: string) => void;
 
   emptyResponse: () => void;
 };
@@ -74,15 +80,16 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
     setSelectedLeaveBenefit: (selectedLeaveBenefit: MutatedLeaveBenefit) =>
       set((state) => ({ ...state, selectedLeaveBenefit })),
 
-    // postCreditLeaveAdjustment: {} as PostReturnUserRoles,
-    // setPostUser: (postUser) => set({ postCreditLeaveAdjustment }),
+    postLeaveAdjustment: {} as LeaveAdjustmentResponse,
+    setPostLeaveAdjustment: (postLeaveAdjustment) => set({ postLeaveAdjustment }),
 
-    // errorLeaveAdjustment: '',
-    // setErrorUser: (errorUser) => set({ errorUser }),
+    errorLeaveAdjustment: '',
+    setErrorLeaveAdjustment: (errorLeaveAdjustment) => set({ errorLeaveAdjustment }),
 
     emptyResponse: () =>
       set({
         error: { errorEntry: '', errorLedger: '' },
+        errorLeaveAdjustment: '',
       }),
   }))
 );

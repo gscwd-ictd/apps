@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 import { Fragment, FunctionComponent, useEffect, useState } from 'react';
@@ -28,15 +29,12 @@ type RemarksAndLeaveDates = {
   remarks: string;
 };
 
-export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
-  employeeData,
-}) => {
-  const { getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger } =
-    useLeaveLedgerStore((state) => ({
-      leaveLedger: state.leaveLedger,
-      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-      getLeaveLedgerFail: state.getLeaveLedgerFail,
-    }));
+export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ employeeData }) => {
+  const { getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger } = useLeaveLedgerStore((state) => ({
+    leaveLedger: state.leaveLedger,
+    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+    getLeaveLedgerFail: state.getLeaveLedgerFail,
+  }));
 
   // forced leave balance
   const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
@@ -48,28 +46,31 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
   const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
 
   // special privilege leave balance
-  const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] =
-    useState<number>(0);
+  const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
 
   // remarks and leave dates
-  const [remarksAndLeaveDates, setRemarksAndLeaveDates] =
-    useState<RemarksAndLeaveDates>({ leaveDates: [], remarks: '' });
+  const [remarksAndLeaveDates, setRemarksAndLeaveDates] = useState<RemarksAndLeaveDates>({
+    leaveDates: [],
+    remarks: '',
+  });
 
   // leave dates and remarks modal
   const [modalRemarksIsOpen, setModalRemarksIsOpen] = useState<boolean>(false);
+
+  // zustand store initialization
+  const { PostLeaveAdjustment } = useLeaveLedgerStore((state) => ({
+    PostLeaveAdjustment: state.postLeaveAdjustment,
+  }));
 
   const {
     data: swrLeaveLedger,
     isLoading: swrIsLoading,
     error: swrError,
-  } = useSWR(
-    `leave/ledger/${employeeData.userId}/${employeeData.companyId}`,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+    mutate: mutateLeaveLedger,
+  } = useSWR(`leave/ledger/${employeeData.userId}/${employeeData.companyId}`, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // open modal action
   const openModalAction = (leaveDates: Array<string>, remarks: string) => {
@@ -89,18 +90,14 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
     setForcedLeaveBalance(lastIndexValue.forcedLeaveBalance);
     setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
-    setSpecialPrivilegeLeaveBalance(
-      lastIndexValue.specialPrivilegeLeaveBalance ?? 0
-    );
+    setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
   };
 
   // value color
   const valueColorizer = (value: number, actionType: ActionType) => {
     if (parseFloat(value.toString()) === 0) return null;
-    else if (actionType === ActionType.CREDIT && value != 0)
-      return <span className="text-green-600">{value}</span>;
-    else if (actionType === ActionType.DEBIT && value != 0)
-      return <span className="text-red-600">{value}</span>;
+    else if (actionType === ActionType.CREDIT && value != 0) return <span className="text-green-600">{value}</span>;
+    else if (actionType === ActionType.DEBIT && value != 0) return <span className="text-red-600">{value}</span>;
   };
 
   // if a result is returned
@@ -111,9 +108,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
       if (!isEmpty(swrLeaveLedger.data)) {
         // mutate leave dates from string to array of string
         const tempLeaveLedger = swrLeaveLedger.data.map((leaveLedger) => {
-          const newLeaveDates = !isEmpty(leaveLedger.leaveDates)
-            ? leaveLedger.leaveDates.toString().split(', ')
-            : null;
+          const newLeaveDates = !isEmpty(leaveLedger.leaveDates) ? leaveLedger.leaveDates.toString().split(', ') : null;
           leaveLedger.leaveDates = newLeaveDates;
           return leaveLedger;
         });
@@ -126,6 +121,13 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
     // error
     if (!isEmpty(swrError)) getLeaveLedgerFail(swrError.message);
   }, [swrLeaveLedger, swrError]);
+
+  // Reset responses from all modal actions
+  useEffect(() => {
+    if (!isEmpty(PostLeaveAdjustment)) {
+      mutateLeaveLedger();
+    }
+  }, [PostLeaveAdjustment]);
 
   if (swrIsLoading)
     return (
@@ -199,7 +201,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
         </div>
       </div>
 
-      {/* <LeaveDatesAndRemarksModal 
+      {/* <LeaveDatesAndRemarksModal
       closeModalAction={()=>{}}
 
       /> */}
@@ -208,45 +210,19 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
         <table className="w-full border table-fixed bg-slate-50">
           <thead className="sticky top-0 bg-slate-50">
             <tr className="text-xs divide-x divide-y border-y">
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                Period
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">
-                Particulars
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                FL
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                FL Bal.
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                VL
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                VL Bal.
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                SL
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                SL Bal.
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                SLB
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                SLB Bal.
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                SPL
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                SPL Bal.
-              </th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">
-                View More
-              </th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">Period</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">Particulars</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">FL</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">FL Bal.</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">VL</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">VL Bal.</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SL</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SL Bal.</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SLB</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SLB Bal.</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SPL</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SPL Bal.</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">View More</th>
             </tr>
           </thead>
           <tbody className="text-sm max-h-[28rem]">
@@ -257,39 +233,22 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
                     <td className="items-center p-2 break-words border-b text-start">
                       {dayjs(entry.period).format('MM/DD/YYYY')}
                     </td>
+                    <td className="items-center p-2 break-words text-start">{entry.particulars}</td>
                     <td className="items-center p-2 break-words text-start">
-                      {entry.particulars}
+                      {!isEmpty(entry.forcedLeave) ? valueColorizer(entry.forcedLeave, entry.actionType) : null}
                     </td>
+                    <td className="items-center p-2 break-words text-start">{entry.forcedLeaveBalance ?? '0.000'}</td>
                     <td className="items-center p-2 break-words text-start">
-                      {!isEmpty(entry.forcedLeave)
-                        ? valueColorizer(entry.forcedLeave, entry.actionType)
-                        : null}
+                      {!isEmpty(entry.vacationLeave) ? valueColorizer(entry.vacationLeave, entry.actionType) : null}
                     </td>
+                    <td className="items-center p-2 break-words text-start">{entry.vacationLeaveBalance ?? '0.000'}</td>
                     <td className="items-center p-2 break-words text-start">
-                      {entry.forcedLeaveBalance ?? '0.000'}
+                      {!isEmpty(entry.sickLeave) ? valueColorizer(entry.sickLeave, entry.actionType) : null}
                     </td>
-                    <td className="items-center p-2 break-words text-start">
-                      {!isEmpty(entry.vacationLeave)
-                        ? valueColorizer(entry.vacationLeave, entry.actionType)
-                        : null}
-                    </td>
-                    <td className="items-center p-2 break-words text-start">
-                      {entry.vacationLeaveBalance ?? '0.000'}
-                    </td>
-                    <td className="items-center p-2 break-words text-start">
-                      {!isEmpty(entry.sickLeave)
-                        ? valueColorizer(entry.sickLeave, entry.actionType)
-                        : null}
-                    </td>
-                    <td className="items-center p-2 break-words text-start">
-                      {entry.sickLeaveBalance ?? '0.000'}
-                    </td>
+                    <td className="items-center p-2 break-words text-start">{entry.sickLeaveBalance ?? '0.000'}</td>
                     <td className="items-center p-2 break-words text-start">
                       {!isEmpty(entry.specialLeaveBenefit)
-                        ? valueColorizer(
-                            entry.specialLeaveBenefit,
-                            entry.actionType
-                          )
+                        ? valueColorizer(entry.specialLeaveBenefit, entry.actionType)
                         : null}
                     </td>
                     <td className="items-center p-2 break-words text-start">
@@ -297,10 +256,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
                     </td>
                     <td className="items-center p-2 break-words text-start">
                       {!isEmpty(entry.specialPrivilegeLeave)
-                        ? valueColorizer(
-                            entry.specialPrivilegeLeave,
-                            entry.actionType
-                          )
+                        ? valueColorizer(entry.specialPrivilegeLeave, entry.actionType)
                         : null}
                     </td>
                     <td className="items-center p-2 break-words text-start">
@@ -324,9 +280,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({
               <>
                 <tr className="text-sm border-b divide-x divide-y">
                   <td colSpan={14} className="w-full">
-                    <div className="flex justify-center w-full justify-items-center">
-                      NO DATA FOUND
-                    </div>
+                    <div className="flex justify-center w-full justify-items-center">NO DATA FOUND</div>
                   </td>
                 </tr>
               </>
