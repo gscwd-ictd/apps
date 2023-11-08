@@ -10,6 +10,8 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { useEffect } from 'react';
 import { isEmpty } from 'lodash';
+import { OvertimeSummary } from 'libs/utils/src/lib/types/overtime.type';
+import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({
   page: {
@@ -125,7 +127,9 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
     selectedMonth,
     selectedYear,
     selectedPeriod,
+    selectedEmployeeType,
     pdfOvertimeSummaryModalIsOpen,
+    overtimeSummaryReport,
     getOvertimeSummaryReport,
     getOvertimeSummaryReportSuccess,
     getOvertimeSummaryReportFail,
@@ -133,14 +137,16 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
     selectedMonth: state.selectedMonth,
     selectedYear: state.selectedYear,
     selectedPeriod: state.selectedPeriod,
+    selectedEmployeeType: state.selectedEmployeeType,
     pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
+    overtimeSummaryReport: state.overtimeSummaryReport,
     getOvertimeSummaryReport: state.getOvertimeSummaryReport,
     getOvertimeSummaryReportSuccess: state.getOvertimeSummaryReportSuccess,
     getOvertimeSummaryReportFail: state.getOvertimeSummaryReportFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-
+  const numberOfDays = dayjs(`${selectedYear}-${selectedMonth}-1`).daysInMonth();
   const overtimeSummaryUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${employeeDetails.user._id}/${selectedYear}/${selectedMonth}?half=${selectedPeriod}`;
 
   const {
@@ -156,6 +162,9 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
   // Initial zustand state update
   useEffect(() => {
     if (swrOvertimeSummaryIsLoading) {
+      console.log(
+        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${employeeDetails.user._id}/${selectedYear}/${selectedMonth}?half=${selectedPeriod}`
+      );
       getOvertimeSummaryReport(swrOvertimeSummaryIsLoading);
     }
   }, [swrOvertimeSummaryIsLoading]);
@@ -188,7 +197,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!swrOvertimeSummary ? (
+          {!overtimeSummaryReport ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -214,7 +223,11 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                     <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
                       PERIOD COVERED:{' '}
                       <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
-                        September 16-30, 2023
+                        {dayjs(selectedMonth).format('MMMM')}{' '}
+                        {selectedPeriod === 'first'
+                          ? '1-15'
+                          : `16-${dayjs(`${selectedYear}-${selectedMonth}-1`).daysInMonth()}`}
+                        , {selectedYear}
                       </Text>
                     </Text>
                     <View style={styles.table}>
@@ -237,57 +250,57 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         <View style={styles.tableCol_dates_main}>
                           <View style={[styles.tableCol_dates, { height: 30 }]}>
                             <Text style={[styles.tableCell, { paddingTop: 2, paddingBottom: 2, fontSize: 14 }]}>
-                              SEPTEMBER
+                              {dayjs(selectedMonth).format('MMMM')}
                             </Text>
                           </View>
                           <View style={styles.tableRow}>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>1</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '1' : '16'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>2</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '2' : '17'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>3</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '3' : '18'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>4</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '4' : '19'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>5</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '5' : '20'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>6</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '6' : '21'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>7</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '7' : '22'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>8</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '8' : '23'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>9</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '9' : '24'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>10</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '10' : '25'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>11</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '11' : '26'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>12</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '12' : '27'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>13</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '13' : '28'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>14</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '14' : '29'}</Text>
                             </View>
                             <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>15</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '15' : '30'}</Text>
                             </View>
                             <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}>31</Text>
+                              <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '' : '31'}</Text>
                             </View>
                           </View>
                         </View>
@@ -359,115 +372,120 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         </View>
                       </View>
                       {/* EMPLOYEE DETAILS */}
+                      {overtimeSummaryReport.length > 0 &&
+                        overtimeSummaryReport?.map((overtime: OvertimeSummary, idx: number) => (
+                          <View style={styles.tableRow} key={idx}>
+                            <View style={[styles.tableCol, { width: 20 }]}>
+                              <Text style={styles.tableCell}>1</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                              <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 134 }}>
+                                {overtime.employeeFullName}
+                              </Text>
+                            </View>
 
-                      <View style={styles.tableRow}>
-                        <View style={[styles.tableCol, { width: 20 }]}>
-                          <Text style={styles.tableCell}>1</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                          <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 134 }}>
-                            JAY RAYMOND NOSOTROS
-                          </Text>
-                        </View>
+                            <View style={[styles.tableCol, { width: 52 }]}>
+                              <Text style={styles.tableCell}>{overtime.monthlyRate.toFixed(2).toLocaleString()}</Text>
+                            </View>
 
-                        <View style={[styles.tableCol, { width: 52 }]}>
-                          <Text style={styles.tableCell}>29,165.00</Text>
-                        </View>
+                            <View style={[styles.tableCol, { width: 40 }]}>
+                              <Text style={styles.tableCell}>{overtime.hourlyRate.toFixed(2).toLocaleString()}</Text>
+                            </View>
 
-                        <View style={[styles.tableCol, { width: 40 }]}>
-                          <Text style={styles.tableCell}>165.71</Text>
-                        </View>
+                            <View style={styles.tableCol_dates_main}>
+                              <View style={styles.tableRow}>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    { height: 20, borderBottomWidth: 0, backgroundColor: 'cyan' },
+                                  ]}
+                                >
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                                <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}></Text>
+                                </View>
+                              </View>
+                            </View>
 
-                        <View style={styles.tableCol_dates_main}>
-                          <View style={styles.tableRow}>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+                            <View style={[styles.tableCol, { width: 35 }]}>
+                              <Text style={styles.tableCell}>99</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+
+                            <View style={[styles.tableCol, { width: 40 }]}>
+                              <Text style={styles.tableCell}>100</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+
+                            <View style={[styles.tableCol, { width: 40 }]}>
+                              <Text style={styles.tableCell}>5,898.00</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+
+                            <View style={[styles.tableCol, { width: 50 }]}>
+                              <Text style={styles.tableCell}>4</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+
+                            <View style={[styles.tableCol, { width: 40 }]}>
+                              <Text style={styles.tableCell}>9,999.00</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+                            <View style={[styles.tableCol, { width: 45 }]}>
+                              <Text style={styles.tableCell}>6</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+                            <View style={[styles.tableCol, { width: 45 }]}>
+                              <Text style={styles.tableCell}>7</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+                            <View style={[styles.tableCol, { width: 41 }]}>
+                              <Text style={styles.tableCell}>8</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+                            <View style={[styles.tableCol, { width: 42 }]}>
+                              <Text style={[styles.tableCell, { padding: 1 }]}>10,000.00</Text>
                             </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
-                            </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
-                            </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
-                            </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
-                            </View>
-                            <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
-                            </View>
-                            <View
-                              style={[styles.tableCol, { height: 20, borderBottomWidth: 0, backgroundColor: 'cyan' }]}
-                            >
-                              <Text style={styles.tableCell_dates}></Text>
-                            </View>
-                            <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
-                              <Text style={styles.tableCell_dates}></Text>
+                            <View style={[styles.tableCol, { width: 60 }]}>
+                              <Text style={styles.tableCell}>10,889.00</Text>
                             </View>
                           </View>
-                        </View>
-
-                        <View style={[styles.tableCol, { width: 35 }]}>
-                          <Text style={styles.tableCell}>99</Text>
-                        </View>
-
-                        <View style={[styles.tableCol, { width: 40 }]}>
-                          <Text style={styles.tableCell}>100</Text>
-                        </View>
-
-                        <View style={[styles.tableCol, { width: 40 }]}>
-                          <Text style={styles.tableCell}>5,898.00</Text>
-                        </View>
-
-                        <View style={[styles.tableCol, { width: 50 }]}>
-                          <Text style={styles.tableCell}>4</Text>
-                        </View>
-
-                        <View style={[styles.tableCol, { width: 40 }]}>
-                          <Text style={styles.tableCell}>9,999.00</Text>
-                        </View>
-                        <View style={[styles.tableCol, { width: 45 }]}>
-                          <Text style={styles.tableCell}>6</Text>
-                        </View>
-                        <View style={[styles.tableCol, { width: 45 }]}>
-                          <Text style={styles.tableCell}>7</Text>
-                        </View>
-                        <View style={[styles.tableCol, { width: 41 }]}>
-                          <Text style={styles.tableCell}>8</Text>
-                        </View>
-                        <View style={[styles.tableCol, { width: 42 }]}>
-                          <Text style={[styles.tableCell, { padding: 1 }]}>10,000.00</Text>
-                        </View>
-                        <View style={[styles.tableCol, { width: 60 }]}>
-                          <Text style={styles.tableCell}>10,889.00</Text>
-                        </View>
-                      </View>
+                        ))}
                     </View>
 
                     {/* SIGNATORIES */}

@@ -6,10 +6,12 @@ import {
   OvertimeDetails,
   OvertimeForm,
   OvertimeList,
+  OvertimeSummary,
 } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { number } from 'yup';
+import { format } from 'date-fns';
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;
@@ -69,9 +71,11 @@ export type OvertimeState = {
   selectedMonth: number;
   selectedYear: number;
   selectedPeriod: string;
+  selectedEmployeeType: string;
   setSelectedMonth: (selectedMonth: number) => void;
   setSelectedYear: (selectedYear: number) => void;
   setSelectedPeriod: (selectedPeriod: string) => void;
+  setSelectedEmployeeType: (selectedEmployeeType: string) => void;
 
   //for getting employee's accomplishment report inside MODAL
   accomplishmentDetails: OvertimeAccomplishment;
@@ -80,7 +84,7 @@ export type OvertimeState = {
   getAccomplishmentDetailsFail: (loading: boolean, error: string) => void;
 
   //for getting overtime summary report in PDF
-  overtimeSummaryReport: Array<OvertimeAccomplishment>;
+  overtimeSummaryReport: Array<OvertimeSummary>;
   getOvertimeSummaryReport: (loading: boolean) => void;
   getOvertimeSummaryReportSuccess: (loading: boolean, response) => void;
   getOvertimeSummaryReportFail: (loading: boolean, error: string) => void;
@@ -161,7 +165,7 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     overtimeDetails: {} as OvertimeDetails,
     accomplishmentDetails: {} as OvertimeAccomplishment,
-    overtimeSummaryReport: {} as Array<OvertimeAccomplishment>,
+    overtimeSummaryReport: {} as Array<OvertimeSummary>,
 
     overtimeAuthorizationReport: {} as OvertimeAuthorization,
     overtimeAccomplishmentReport: {} as OvertimeAccomplishment,
@@ -180,6 +184,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     selectedMonth: 1,
     selectedYear: 2023,
     selectedPeriod: 'first',
+    selectedEmployeeType: 'Regular',
 
     setSelectedMonth: (selectedMonth: number) => {
       set((state) => ({ ...state, selectedMonth }));
@@ -189,6 +194,9 @@ export const useOvertimeStore = create<OvertimeState>()(
     },
     setSelectedPeriod: (selectedPeriod: string) => {
       set((state) => ({ ...state, selectedPeriod }));
+    },
+    setSelectedEmployeeType: (selectedEmployeeType: string) => {
+      set((state) => ({ ...state, selectedEmployeeType }));
     },
 
     setTab: (tab: number) => {
@@ -378,7 +386,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     getOvertimeSummaryReport: (loading: boolean) => {
       set((state) => ({
         ...state,
-        overtimeSummaryReport: {} as Array<OvertimeAccomplishment>,
+        overtimeSummaryReport: {} as Array<OvertimeSummary>,
         loading: {
           ...state.loading,
           loadingOvertimeSummaryReport: loading,
@@ -390,7 +398,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       }));
     },
 
-    getOvertimeSummaryReportSuccess: (loading: boolean, response: Array<OvertimeAccomplishment>) => {
+    getOvertimeSummaryReportSuccess: (loading: boolean, response: Array<OvertimeSummary>) => {
       set((state) => ({
         ...state,
         overtimeSummaryReport: response,

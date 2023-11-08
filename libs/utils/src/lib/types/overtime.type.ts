@@ -148,3 +148,27 @@ export type OvertimAuthorizationEmployee = {
   assignment: string;
   position: string;
 };
+
+export type OvertimeSummary = {
+  employeeFullName: string;
+  userId: string;
+  positionId: string;
+  overtimes: Array<OvertimeDayDetails>;
+  monthlyRate: number;
+  hourlyRate: number;
+  totalHoursRendered: number;
+};
+
+export type OvertimeDayDetails = {
+  day: number;
+  overtime: {
+    ivmsTimeIn: string | null;
+    ivmsTimeOut: string | null;
+    encodedTimeIn: string | null;
+    encodedTimeOut: string | null;
+    followEstimatedHrs: boolean;
+    computedIvmsHours?: number;
+    estimatedHours?: number;
+    computedEncodedHours?: number;
+  };
+};

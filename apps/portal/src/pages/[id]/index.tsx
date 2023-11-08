@@ -54,8 +54,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     hydration();
   }, []);
 
-  console.log(userDetails);
-
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
 
   const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =

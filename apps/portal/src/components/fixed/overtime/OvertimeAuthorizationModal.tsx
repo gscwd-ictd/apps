@@ -112,7 +112,6 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAuthorizationReport)) {
-      console.log(overtimeAuthorizationReport);
       getOvertimeAuthorizationReportSuccess(swrOvertimeAuthorizationReportIsLoading, swrOvertimeAuthorizationReport);
     }
 

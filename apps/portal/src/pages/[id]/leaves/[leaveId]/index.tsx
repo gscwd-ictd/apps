@@ -39,26 +39,6 @@ export default function LeavePdfPage({ employeeDetails }: InferGetServerSideProp
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   // getLeaveDetail();
-
-  //   console.log(employeeDetails, 'test');
-  // }, [employeeDetails]);
-
-  // const getLeaveDetail = async () => {
-  //   try {
-  //     const { data } = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`
-  //     );
-
-  //     if (!isEmpty(data)) {
-  //       getLeaveIndividualDetailSuccess(false, data);
-  //     }
-  //   } catch (error) {
-  //     getLeaveIndividualDetailFail(false, error.message);
-  //   }
-  // };
-
   const leaveDetailPdf = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`;
   const {
     data: swrLeaveDetailsPdf,
