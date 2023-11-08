@@ -15,6 +15,7 @@ import UseRenderBadgePill from '../../utils/functions/RenderBadgePill';
 import { EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
 import { ActionDropdownEmployee } from '../../components/dropdown/ActionDropdownEmployee';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import UseRenderAvatarInTable from '../../utils/functions/RenderAvatarInTable';
 
 export default function Index() {
   const {
@@ -98,6 +99,12 @@ export default function Index() {
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
+    columnHelper.display({
+      id: 'avatarUrl',
+      header: '',
+      enableColumnFilter: false,
+      cell: (props) => UseRenderAvatarInTable(props.row.original.avatarUrl, props.row.original.fullName),
+    }),
     columnHelper.accessor('fullName', {
       enableSorting: false,
       header: 'Full Name',
@@ -151,6 +158,7 @@ export default function Index() {
           positionTitle: employmentDetails.positionTitle,
           companyId: employeeDetails.employmentDetails.companyId,
           natureOfAppointment: employmentDetails.natureOfAppointment,
+          avatarUrl: employmentDetails.avatarUrl,
         };
       });
       getDtrEmployeesSuccess(employeesDetails);

@@ -131,6 +131,10 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
     if (!isEmpty(swrDtrError)) getEmployeeDtrFail(swrDtrError.message);
   }, [swrDtr, swrDtrError]);
 
+  useEffect(() => {
+    console.log(employeeData);
+  }, []);
+
   if (swrDtrIsLoading)
     return (
       <>

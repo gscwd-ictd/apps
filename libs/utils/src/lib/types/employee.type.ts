@@ -12,6 +12,7 @@ export type EmploymentDetails = {
   positionTitle: string;
   assignment: Assignment;
   natureOfAppointment: string;
+  avatarUrl: string;
 };
 
 export type EmployeeWithDetails = {
