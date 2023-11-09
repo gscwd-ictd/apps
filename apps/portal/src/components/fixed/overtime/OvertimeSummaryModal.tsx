@@ -155,7 +155,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                     required
                     onChange={(e) => onChangeMonth(e.target.value as unknown as number)}
-                    defaultValue={Number(monthNow) - 1}
+                    // defaultValue={Number(monthNow) - 1}
                   >
                     <option value="" disabled>
                       Select Month

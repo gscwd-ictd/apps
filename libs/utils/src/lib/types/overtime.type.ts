@@ -150,25 +150,40 @@ export type OvertimAuthorizationEmployee = {
 };
 
 export type OvertimeSummary = {
+  periodCovered: string;
+  summary: Array<OvertimeSummaryEmployee>;
+  signatories: {
+    preparedBy: Signatory;
+    notedBy: Signatory;
+    approvedBy: Signatory;
+  };
+};
+
+export type Signatory = {
+  name: string;
+  signature: string;
+};
+
+export type OvertimeSummaryEmployee = {
   employeeFullName: string;
   userId: string;
   positionId: string;
   overtimes: Array<OvertimeDayDetails>;
   monthlyRate: number;
   hourlyRate: number;
-  totalHoursRendered: number;
+  totalRegularOTHoursRendered: number; // B
+  totalOffOTHoursRendered: number; //total holiday/day off ot hours (c)
+  regularOTAmount: number; //amount a x b x 1.25
+  offOTAmount: number; //amount A x C x 1.5
+  substituteDutyOTHours: number;
+  substituteAmount: number;
+  nightDifferentialHrs: number;
+  nightDifferentialAmount: number;
+  totalOvertimeAmount: number; //total overtime amount
+  totalOTHoursRendered: number; //total no. ot hours
 };
 
 export type OvertimeDayDetails = {
   day: number;
-  overtime: {
-    ivmsTimeIn: string | null;
-    ivmsTimeOut: string | null;
-    encodedTimeIn: string | null;
-    encodedTimeOut: string | null;
-    followEstimatedHrs: boolean;
-    computedIvmsHours?: number;
-    estimatedHours?: number;
-    computedEncodedHours?: number;
-  };
+  hoursRendered: number | null;
 };

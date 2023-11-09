@@ -84,7 +84,7 @@ export type OvertimeState = {
   getAccomplishmentDetailsFail: (loading: boolean, error: string) => void;
 
   //for getting overtime summary report in PDF
-  overtimeSummaryReport: Array<OvertimeSummary>;
+  overtimeSummaryReport: OvertimeSummary;
   getOvertimeSummaryReport: (loading: boolean) => void;
   getOvertimeSummaryReportSuccess: (loading: boolean, response) => void;
   getOvertimeSummaryReportFail: (loading: boolean, error: string) => void;
@@ -165,7 +165,7 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     overtimeDetails: {} as OvertimeDetails,
     accomplishmentDetails: {} as OvertimeAccomplishment,
-    overtimeSummaryReport: {} as Array<OvertimeSummary>,
+    overtimeSummaryReport: {} as OvertimeSummary,
 
     overtimeAuthorizationReport: {} as OvertimeAuthorization,
     overtimeAccomplishmentReport: {} as OvertimeAccomplishment,
@@ -386,7 +386,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     getOvertimeSummaryReport: (loading: boolean) => {
       set((state) => ({
         ...state,
-        overtimeSummaryReport: {} as Array<OvertimeSummary>,
+        overtimeSummaryReport: {} as OvertimeSummary,
         loading: {
           ...state.loading,
           loadingOvertimeSummaryReport: loading,
@@ -398,7 +398,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       }));
     },
 
-    getOvertimeSummaryReportSuccess: (loading: boolean, response: Array<OvertimeSummary>) => {
+    getOvertimeSummaryReportSuccess: (loading: boolean, response: OvertimeSummary) => {
       set((state) => ({
         ...state,
         overtimeSummaryReport: response,

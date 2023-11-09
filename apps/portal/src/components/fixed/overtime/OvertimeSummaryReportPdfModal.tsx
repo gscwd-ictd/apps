@@ -10,7 +10,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { useEffect } from 'react';
 import { isEmpty } from 'lodash';
-import { OvertimeSummary } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeSummary, OvertimeSummaryEmployee } from 'libs/utils/src/lib/types/overtime.type';
 import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({
@@ -162,9 +162,6 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
   // Initial zustand state update
   useEffect(() => {
     if (swrOvertimeSummaryIsLoading) {
-      console.log(
-        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${employeeDetails.user._id}/${selectedYear}/${selectedMonth}?half=${selectedPeriod}`
-      );
       getOvertimeSummaryReport(swrOvertimeSummaryIsLoading);
     }
   }, [swrOvertimeSummaryIsLoading]);
@@ -223,11 +220,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                     <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
                       PERIOD COVERED:{' '}
                       <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
-                        {dayjs(selectedMonth).format('MMMM')}{' '}
-                        {selectedPeriod === 'first'
-                          ? '1-15'
-                          : `16-${dayjs(`${selectedYear}-${selectedMonth}-1`).daysInMonth()}`}
-                        , {selectedYear}
+                        {overtimeSummaryReport.periodCovered}
                       </Text>
                     </Text>
                     <View style={styles.table}>
@@ -372,8 +365,8 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         </View>
                       </View>
                       {/* EMPLOYEE DETAILS */}
-                      {overtimeSummaryReport.length > 0 &&
-                        overtimeSummaryReport?.map((overtime: OvertimeSummary, idx: number) => (
+                      {overtimeSummaryReport?.summary?.length > 0 &&
+                        overtimeSummaryReport?.summary?.map((overtime: OvertimeSummaryEmployee, idx: number) => (
                           <View style={styles.tableRow} key={idx}>
                             <View style={[styles.tableCol, { width: 20 }]}>
                               <Text style={styles.tableCell}>1</Text>
@@ -385,104 +378,144 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                             </View>
 
                             <View style={[styles.tableCol, { width: 52 }]}>
-                              <Text style={styles.tableCell}>{overtime.monthlyRate.toFixed(2).toLocaleString()}</Text>
+                              <Text style={styles.tableCell}>{overtime.monthlyRate.toLocaleString()}</Text>
                             </View>
 
                             <View style={[styles.tableCol, { width: 40 }]}>
-                              <Text style={styles.tableCell}>{overtime.hourlyRate.toFixed(2).toLocaleString()}</Text>
+                              <Text style={styles.tableCell}>{overtime.hourlyRate.toLocaleString()}</Text>
                             </View>
 
                             <View style={styles.tableCol_dates_main}>
                               <View style={styles.tableRow}>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {overtime.overtimes[0].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {overtime.overtimes[1].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {overtime.overtimes[2].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {overtime.overtimes[3].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {overtime.overtimes[4].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[5].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[6].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[7].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[8].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[9].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[10].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[11].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[12].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[13].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
-                                <View
-                                  style={[
-                                    styles.tableCol,
-                                    { height: 20, borderBottomWidth: 0, backgroundColor: 'cyan' },
-                                  ]}
-                                >
-                                  <Text style={styles.tableCell_dates}></Text>
+                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[14].hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                                 <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
-                                  <Text style={styles.tableCell_dates}></Text>
+                                  <Text style={styles.tableCell_dates}>
+                                    {' '}
+                                    {overtime.overtimes[15]?.hoursRendered > 0 ? 'X' : ''}
+                                  </Text>
                                 </View>
                               </View>
                             </View>
 
                             <View style={[styles.tableCol, { width: 35 }]}>
-                              <Text style={styles.tableCell}>99</Text>
+                              <Text style={styles.tableCell}>{overtime.totalOTHoursRendered}</Text>
                             </View>
 
                             <View style={[styles.tableCol, { width: 40 }]}>
-                              <Text style={styles.tableCell}>100</Text>
+                              <Text style={styles.tableCell}>{overtime.totalRegularOTHoursRendered}</Text>
                             </View>
 
                             <View style={[styles.tableCol, { width: 40 }]}>
-                              <Text style={styles.tableCell}>5,898.00</Text>
+                              <Text style={styles.tableCell}>{overtime.regularOTAmount.toLocaleString()}</Text>
                             </View>
 
                             <View style={[styles.tableCol, { width: 50 }]}>
-                              <Text style={styles.tableCell}>4</Text>
+                              <Text style={styles.tableCell}>{overtime.totalOffOTHoursRendered}</Text>
                             </View>
 
                             <View style={[styles.tableCol, { width: 40 }]}>
-                              <Text style={styles.tableCell}>9,999.00</Text>
+                              <Text style={styles.tableCell}>{overtime.offOTAmount.toLocaleString()}</Text>
                             </View>
                             <View style={[styles.tableCol, { width: 45 }]}>
-                              <Text style={styles.tableCell}>6</Text>
+                              <Text style={styles.tableCell}>{overtime.substituteDutyOTHours}</Text>
                             </View>
                             <View style={[styles.tableCol, { width: 45 }]}>
-                              <Text style={styles.tableCell}>7</Text>
+                              <Text style={styles.tableCell}>{overtime.substituteAmount.toLocaleString()}</Text>
                             </View>
                             <View style={[styles.tableCol, { width: 41 }]}>
-                              <Text style={styles.tableCell}>8</Text>
+                              <Text style={styles.tableCell}>{overtime.nightDifferentialHrs}</Text>
                             </View>
                             <View style={[styles.tableCol, { width: 42 }]}>
-                              <Text style={[styles.tableCell, { padding: 1 }]}>10,000.00</Text>
+                              <Text style={[styles.tableCell, { padding: 1 }]}>
+                                {overtime.nightDifferentialAmount.toLocaleString()}
+                              </Text>
                             </View>
                             <View style={[styles.tableCol, { width: 60 }]}>
-                              <Text style={styles.tableCell}>10,889.00</Text>
+                              <Text style={styles.tableCell}>{overtime.totalOvertimeAmount.toLocaleString()}</Text>
                             </View>
                           </View>
                         ))}
@@ -495,7 +528,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         fontSize: 9,
-                        paddingTop: 20,
+                        paddingTop: 40,
                         paddingLeft: 35,
                         paddingRight: 35,
                       }}
@@ -523,7 +556,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         fontSize: 9,
-                        paddingTop: 10,
+                        paddingTop: 30,
                         paddingLeft: 35,
                         paddingRight: 35,
                       }}
@@ -552,7 +585,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       </Text>
                       <Text
                         style={{
-                          marginLeft: 20,
+                          marginLeft: 0,
                         }}
                       >
                         Acting Department Manager A
@@ -585,16 +618,56 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                           position: 'absolute',
                         }}
                       >
-                        {employeeDetails.profile.firstName} {employeeDetails.profile.middleName}{' '}
-                        {employeeDetails.profile.lastName}
+                        {overtimeSummaryReport?.signatories?.preparedBy?.name}
                       </Text>
-                      {/* <Text
+                      <Text
                         style={{
-                          marginRight: 45,
+                          marginLeft: 350,
+                          marginTop: -20,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
                         }}
                       >
-                        Department Manager A
-                      </Text> */}
+                        {overtimeSummaryReport?.signatories?.notedBy?.name}
+                      </Text>
+                      <Text
+                        style={{
+                          marginLeft: 665,
+                          marginTop: -20,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
+                        }}
+                      >
+                        {overtimeSummaryReport?.signatories?.approvedBy?.name}
+                      </Text>
+                    </View>
+                    {/* SIGNATURES */}
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        fontSize: 9,
+                        paddingTop: 2,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                        width: '100%',
+                      }}
+                    >
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 110, marginTop: -55 }}
+                        src={overtimeSummaryReport?.signatories?.preparedBy?.signature}
+                      />
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 415, marginTop: -55 }}
+                        src={overtimeSummaryReport?.signatories?.notedBy?.signature}
+                      />
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 735, marginTop: -55 }}
+                        src={overtimeSummaryReport?.signatories?.approvedBy?.signature}
+                      />
                     </View>
                   </View>
                 </Page>
