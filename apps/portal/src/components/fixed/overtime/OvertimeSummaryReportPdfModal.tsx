@@ -211,9 +211,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
               <Document title="Overtime Accomplishment Report Summary">
                 <Page size={'FOLIO'} orientation="landscape">
                   <View style={styles.page}>
-                    <View style={styles.controlNumber}>
-                      <Text>NO. 1</Text>
-                    </View>
+                    <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
                     <PdfHeader />
                     <Text style={styles.pdfTitle}>SYSTEMS DEVELOPMENT AND APPLICATION DIVISION</Text>
                     <Text style={styles.pdfTitle}>OVERTIME SUMMARY FOR REGULAR EMPLOYEES</Text>
@@ -369,7 +367,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         overtimeSummaryReport?.summary?.map((overtime: OvertimeSummaryEmployee, idx: number) => (
                           <View style={styles.tableRow} key={idx}>
                             <View style={[styles.tableCol, { width: 20 }]}>
-                              <Text style={styles.tableCell}>1</Text>
+                              <Text style={styles.tableCell}>{idx + 1}</Text>
                             </View>
                             <View style={styles.tableCol}>
                               <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 134 }}>
@@ -387,95 +385,239 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
 
                             <View style={styles.tableCol_dates_main}>
                               <View style={styles.tableRow}>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[0].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
-                                    {overtime.overtimes[0].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[0].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[1].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
-                                    {overtime.overtimes[1].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[1].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[2].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
-                                    {overtime.overtimes[2].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[2].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[3].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
-                                    {overtime.overtimes[3].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[3].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[4].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
-                                    {overtime.overtimes[4].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[4].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[5].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[5].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[5].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[6].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[6].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[6].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[7].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[7].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[7].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[8].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[8].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[8].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[9].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[9].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[9].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[10].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[10].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[10].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[11].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[11].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[11].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[12].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[12].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[12].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[13].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[13].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[13].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[14].hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[14].hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[14].hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
-                                <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
+                                <View
+                                  style={[
+                                    styles.tableCol_dates,
+                                    {
+                                      height: 20,
+                                      borderBottomWidth: 0,
+                                      backgroundColor: `${overtime.overtimes[15]?.hoursRendered > 0 ? 'cyan' : ''}`,
+                                    },
+                                  ]}
+                                >
                                   <Text style={styles.tableCell_dates}>
                                     {' '}
-                                    {overtime.overtimes[15]?.hoursRendered > 0 ? 'X' : ''}
+                                    {overtime.overtimes[15]?.hoursRendered > 0 ? '' : ''}
                                   </Text>
                                 </View>
                               </View>
@@ -519,6 +661,83 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                             </View>
                           </View>
                         ))}
+                      {/* TOTALS */}
+                      <View style={styles.tableRow}>
+                        {/* <View style={[styles.tableCol, { width: 20 }]}>
+                          <Text style={styles.tableCell}>1</Text>
+                        </View> */}
+                        <View style={styles.tableCol}>
+                          <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 154, paddingLeft: 5 }}>
+                            TOTAL
+                          </Text>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 52 }]}>
+                          <Text style={styles.tableCell}></Text>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 40 }]}>
+                          <Text style={styles.tableCell}></Text>
+                        </View>
+
+                        <View style={styles.tableCol_dates_main}>
+                          <View style={styles.tableRow}>
+                            <View
+                              style={[
+                                styles.tableCol,
+                                { height: 20, borderBottomWidth: 0, borderRightWidth: 0, width: 207 },
+                              ]}
+                            >
+                              <Text style={styles.tableCell_dates}></Text>
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 35 }]}>
+                          <Text style={styles.tableCell}></Text>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 40 }]}>
+                          <Text style={styles.tableCell}></Text>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 40 }]}>
+                          <Text style={styles.tableCell}>
+                            {overtimeSummaryReport?.overallTotalOTAmount?.toLocaleString()}
+                          </Text>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 50 }]}>
+                          <Text style={styles.tableCell}></Text>
+                        </View>
+
+                        <View style={[styles.tableCol, { width: 40 }]}>
+                          <Text style={styles.tableCell}>
+                            {overtimeSummaryReport?.overallTotalOffOTAmount?.toLocaleString()}
+                          </Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 45 }]}>
+                          <Text style={styles.tableCell}></Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 45 }]}>
+                          <Text style={styles.tableCell}>
+                            {overtimeSummaryReport?.overallSubstituteDutyOTAmount?.toLocaleString()}
+                          </Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 41 }]}>
+                          <Text style={styles.tableCell}></Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 42 }]}>
+                          <Text style={[styles.tableCell, { padding: 1 }]}>
+                            {overtimeSummaryReport?.overallNightDifferentialAmount?.toLocaleString()}
+                          </Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: 60 }]}>
+                          <Text style={styles.tableCell}>
+                            {overtimeSummaryReport?.overallTotalOTAmount?.toLocaleString()}
+                          </Text>
+                        </View>
+                      </View>
                     </View>
 
                     {/* SIGNATORIES */}

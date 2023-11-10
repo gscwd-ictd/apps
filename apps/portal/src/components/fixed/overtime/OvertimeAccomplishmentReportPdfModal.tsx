@@ -66,7 +66,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const overtimeAccomplishmentReportUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
+  const overtimeAccomplishmentReportUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/accomplishment/individual/${overtimeAccomplishmentApplicationId}/${overtimeAccomplishmentEmployeeId}/`;
 
   const {
     data: swrOvertimeAccomplishmentReport,
@@ -133,9 +133,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
               <Document title="Overtime Accomplishment Report">
                 <Page size={[612.0, 396.0]}>
                   <View style={styles.page}>
-                    <View style={styles.controlNumber}>
-                      <Text>NO. 1</Text>
-                    </View>
+                    <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
                     <PdfHeader />
                     <Text style={styles.pdfTitle}>ACCOMPLISHMENT REPORT ON OVERTIME AUTHORIZATION</Text>
                     <View
@@ -158,7 +156,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                           width: 175,
                         }}
                       >
-                        {overtimeAccomplishmentEmployeeName}
+                        {overtimeAccomplishmentReport.employeeName}
                       </Text>
                       <Text>Office/Department/Division: ______________________________________</Text>
                       <Text
@@ -169,7 +167,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                           width: 200,
                         }}
                       >
-                        {employeeDetails.employmentDetails.assignment.name}
+                        {overtimeAccomplishmentReport.assignment}
                       </Text>
                     </View>
                     <View
@@ -192,7 +190,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                           width: 90,
                         }}
                       >
-                        {DateFormatter(accomplishmentDetails.plannedDate, 'MM-DD-YYYY')}
+                        {DateFormatter(overtimeAccomplishmentReport.date, 'MM-DD-YYYY')}
                       </Text>
                     </View>
                     {/* MAIN TABLE CONTAINER */}
@@ -243,11 +241,11 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                             fontSize: 9,
                             padding: 6,
                             width: '100%',
-                            height: 120,
+                            height: 100,
                             textAlign: 'justify',
                           }}
                         >
-                          <Text>{accomplishmentDetails.accomplishments}</Text>
+                          <Text>{overtimeAccomplishmentReport.accomplishments}</Text>
                         </View>
                       </View>
                     </View>
@@ -272,6 +270,28 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                         Noted by:
                       </Text>
                     </View>
+                    {/* SIGNATURES */}
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        fontSize: 9,
+                        paddingTop: 10,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                        width: '100%',
+                      }}
+                    >
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 112, marginTop: -13 }}
+                        src={overtimeAccomplishmentReport?.employeeSignature ?? ''}
+                      />
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
+                        src={overtimeAccomplishmentReport?.supervisorSignature ?? ''}
+                      />
+                    </View>
                     <View
                       style={{
                         display: 'flex',
@@ -286,6 +306,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                       <Text>_______________________________________</Text>
                       <Text>_______________________________________</Text>
                     </View>
+
                     <View
                       style={{
                         display: 'flex',
@@ -299,17 +320,25 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                     >
                       <Text
                         style={{
-                          marginLeft: 45,
+                          marginTop: 1,
+                          marginLeft: 35,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
                         }}
                       >
-                        Signature over Printed Name
+                        Signature Over Printed Name
                       </Text>
                       <Text
                         style={{
-                          marginRight: 45,
+                          marginTop: 1,
+                          marginLeft: 362,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
                         }}
                       >
-                        Department Manager A
+                        {overtimeAccomplishmentReport.supervisorPosition}
                       </Text>
                     </View>
                     <View
@@ -326,21 +355,25 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                       <Text
                         style={{
                           marginLeft: 35,
-                          marginTop: -20,
+                          marginTop: -12,
                           width: 195,
                           textAlign: 'center',
                           position: 'absolute',
                         }}
                       >
-                        {overtimeAccomplishmentEmployeeName}
+                        {overtimeAccomplishmentReport.employeeName}
                       </Text>
-                      {/* <Text
+                      <Text
                         style={{
-                          marginRight: 45,
+                          marginLeft: 362,
+                          marginTop: -12,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
                         }}
                       >
-                        Department Manager A
-                      </Text> */}
+                        {overtimeAccomplishmentReport.supervisorName}
+                      </Text>
                     </View>
                   </View>
                 </Page>

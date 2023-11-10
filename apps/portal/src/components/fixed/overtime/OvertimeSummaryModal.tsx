@@ -64,6 +64,8 @@ const employeeTypeList: Array<SelectOption> = [
 export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   //zustand initialization to access Leave store
   const {
+    selectedMonth,
+    selectedPeriod,
     setSelectedMonth,
     setSelectedYear,
     setSelectedPeriod,
@@ -71,6 +73,8 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     pdfOvertimeSummaryModalIsOpen,
     setPdfOvertimeSummaryModalIsOpen,
   } = useOvertimeStore((state) => ({
+    selectedMonth: state.selectedMonth,
+    selectedPeriod: state.selectedPeriod,
     setSelectedMonth: state.setSelectedMonth,
     setSelectedYear: state.setSelectedYear,
     setSelectedPeriod: state.setSelectedPeriod,
@@ -98,10 +102,10 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setSelectedEmployeeType(type);
   };
 
-  // useEffect(() => {
-  //   setSelectedYear(yearNow as unknown as number);
-  //   setSelectedMonth(monthNow as unknown as number);
-  // }, []);
+  useEffect(() => {
+    // setSelectedYear(yearNow as unknown as number);
+    setSelectedMonth(Number(monthNow) - 1);
+  }, []);
 
   const closePdfOvertimeSummaryModal = async () => {
     setPdfOvertimeSummaryModalIsOpen(false);
@@ -155,7 +159,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                     required
                     onChange={(e) => onChangeMonth(e.target.value as unknown as number)}
-                    // defaultValue={Number(monthNow) - 1}
+                    defaultValue={selectedMonth}
                   >
                     <option value="" disabled>
                       Select Month
@@ -196,6 +200,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                     required
                     onChange={(e) => onChangePeriod(e.target.value)}
+                    defaultValue={selectedPeriod}
                   >
                     <option value="" disabled>
                       Period

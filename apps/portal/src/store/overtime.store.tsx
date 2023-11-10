@@ -2,6 +2,7 @@
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import {
   OvertimeAccomplishment,
+  OvertimeAccomplishmentReport,
   OvertimeAuthorization,
   OvertimeDetails,
   OvertimeForm,
@@ -90,7 +91,7 @@ export type OvertimeState = {
   getOvertimeSummaryReportFail: (loading: boolean, error: string) => void;
 
   //for getting employee's accomplishment report in PDF
-  overtimeAccomplishmentReport: OvertimeAccomplishment;
+  overtimeAccomplishmentReport: OvertimeAccomplishmentReport;
   getOvertimeAccomplishmentReport: (loading: boolean) => void;
   getOvertimeAccomplishmentReportSuccess: (loading: boolean, response) => void;
   getOvertimeAccomplishmentReportFail: (loading: boolean, error: string) => void;
@@ -168,7 +169,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     overtimeSummaryReport: {} as OvertimeSummary,
 
     overtimeAuthorizationReport: {} as OvertimeAuthorization,
-    overtimeAccomplishmentReport: {} as OvertimeAccomplishment,
+    overtimeAccomplishmentReport: {} as OvertimeAccomplishmentReport,
 
     overtimeSummaryModalIsOpen: false,
     applyOvertimeModalIsOpen: false,
@@ -346,7 +347,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     getOvertimeAccomplishmentReport: (loading: boolean) => {
       set((state) => ({
         ...state,
-        overtimeAccomplishmentReport: {} as OvertimeAccomplishment,
+        overtimeAccomplishmentReport: {} as OvertimeAccomplishmentReport,
         loading: {
           ...state.loading,
           loadingAccomplishmentReport: loading,
@@ -358,7 +359,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       }));
     },
 
-    getOvertimeAccomplishmentReportSuccess: (loading: boolean, response: OvertimeAccomplishment) => {
+    getOvertimeAccomplishmentReportSuccess: (loading: boolean, response: OvertimeAccomplishmentReport) => {
       set((state) => ({
         ...state,
         overtimeAccomplishmentReport: response,

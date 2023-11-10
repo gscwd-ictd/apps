@@ -98,6 +98,18 @@ export type OvertimeAccomplishment = {
   employeeSignature: string;
 };
 
+//for pdf
+export type OvertimeAccomplishmentReport = {
+  date: string;
+  accomplishments: string;
+  employeeName: string;
+  assignment: string;
+  employeeSignature: string;
+  supervisorName: string;
+  supervisorSignature: string;
+  supervisorPosition: string;
+};
+
 //approving/disapproving of overtime application by manager
 export type OvertimeApprovalPatch = {
   managerId: string;
@@ -124,6 +136,7 @@ export type OvertimeAccomplishmentApprovalPatch = {
   followEstimatedHrs: boolean;
 };
 
+//for pdf
 export type OvertimeAuthorization = {
   requestedDate: string;
   purpose: string;
@@ -149,6 +162,7 @@ export type OvertimAuthorizationEmployee = {
   position: string;
 };
 
+//for pdf
 export type OvertimeSummary = {
   periodCovered: string;
   summary: Array<OvertimeSummaryEmployee>;
@@ -157,11 +171,17 @@ export type OvertimeSummary = {
     notedBy: Signatory;
     approvedBy: Signatory;
   };
+  overallTotalRegularOTAmount: number;
+  overallTotalOffOTAmount: number;
+  overallSubstituteDutyOTAmount: number;
+  overallNightDifferentialAmount: number;
+  overallTotalOTAmount: number;
 };
 
 export type Signatory = {
   name: string;
   signature: string;
+  position: string;
 };
 
 export type OvertimeSummaryEmployee = {
