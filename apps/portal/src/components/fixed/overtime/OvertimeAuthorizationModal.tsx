@@ -522,7 +522,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                       <Text
                         style={{
                           position: 'absolute',
-                          marginLeft: 445,
+                          marginLeft: 442,
                           marginTop: -20,
                           width: 165,
 

@@ -703,7 +703,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
 
                         <View style={[styles.tableCol, { width: 40 }]}>
                           <Text style={styles.tableCell}>
-                            {overtimeSummaryReport?.overallTotalOTAmount?.toLocaleString()}
+                            {overtimeSummaryReport?.overallTotalRegularOTAmount?.toLocaleString()}
                           </Text>
                         </View>
 
