@@ -6,5 +6,5 @@ export enum TrainingTypes {
 }
 
 export enum TrainingStatus {
-  ONGOING = 'on going nomination',
+  ONGOING = 'On Going Nomination',
 }

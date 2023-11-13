@@ -55,7 +55,7 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
               <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0 z-0">
                 <thead className="border-0">
                   <tr>
-                    <th className="px-2 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
+                    <th className="w-1/6 px-2 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
                       Course Title
                     </th>
                     <th className="px-2 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
@@ -68,7 +68,7 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
                       End
                     </th>
                     <th className="px-2 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
-                      Deadline
+                      Slots
                     </th>
                     <th className="px-2 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Status
@@ -91,10 +91,8 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
                           <td className={`whitespace-nowrap border text-center py-2 px-2`}>
                             {DateFormatter(training.trainingEnd, 'MM-DD-YYYY')}
                           </td>
-                          <td className={`whitespace-nowrap border text-center py-2 px-2`}>
-                            {DateFormatter(training.deadlineForSubmission, 'MM-DD-YYYY')}
-                          </td>
-                          <td className={`border text-center py-2 capitalize`}>{training.status}</td>
+                          <td className={`whitespace-nowrap border text-center py-2 px-2`}>{training.numberOfSlots}</td>
+                          <td className={`border text-center py-2 capitalize`}>{training.preparationStatus}</td>
 
                           <td className={`py-2 text-center border`}>
                             <Button
