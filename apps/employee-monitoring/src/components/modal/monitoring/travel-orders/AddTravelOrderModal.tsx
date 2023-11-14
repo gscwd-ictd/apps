@@ -3,15 +3,18 @@ import { FunctionComponent, useEffect, useState, Fragment } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import useSWR from 'swr';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { getHRMS } from 'apps/employee-monitoring/src/utils/helper/hrms-axios-helper';
 
-import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
+import { FormTravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 
-import { Modal, AlertNotification, LoadingSpinner, Button } from '@gscwd-apps/oneui';
+import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../../inputs/LabelInput';
+import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
+import { isEmpty } from 'lodash';
 import { SelectListRF } from '../../../inputs/SelectListRF';
 
 type AddModalProps = {
@@ -36,7 +39,15 @@ const yupSchema = yup
   .required();
 
 const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
-  const [isLoadingEmployeeOptions, setIsLoadingEmployeeOptions] = useState<boolean>(false);
+  // fetch data for list of employees
+  const {
+    data: employees,
+    error: employeesError,
+    isLoading: employeesLoading,
+  } = useSWR(modalState ? '/employees/options1' : null, fetcherHRMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // zustand store initialization for travel order
   const {
@@ -54,18 +65,9 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
   }));
 
   // zustand initialization for employees
-  const {
-    EmployeeOptions,
-    SetEmployeeOptions,
-
-    ErrorEmployeeOptions,
-    SetErrorEmployeeOptions,
-  } = useEmployeeStore((state) => ({
+  const { EmployeeOptions, SetEmployeeOptions } = useEmployeeStore((state) => ({
     EmployeeOptions: state.employeeOptions,
     SetEmployeeOptions: state.setEmployeeOptions,
-
-    ErrorEmployeeOptions: state.errorEmployeeOptions,
-    SetErrorEmployeeOptions: state.setErrorEmployeeOptions,
   }));
 
   // React hook form
@@ -75,7 +77,7 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
     control,
     handleSubmit,
     formState: { errors, isSubmitting: postFormLoading },
-  } = useForm<TravelOrder>({
+  } = useForm<FormTravelOrder>({
     mode: 'onChange',
     defaultValues: {
       travelOrderNo: '',
@@ -93,14 +95,14 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
   });
 
   // form submission
-  const onSubmit: SubmitHandler<TravelOrder> = (data: TravelOrder) => {
+  const onSubmit: SubmitHandler<FormTravelOrder> = (data: FormTravelOrder) => {
     // set loading to true
     EmptyResponse();
 
     handlePostResult(data);
   };
 
-  const handlePostResult = async (data: TravelOrder) => {
+  const handlePostResult = async (data: FormTravelOrder) => {
     const { error, result } = await postEmpMonitoring('/travel-order', data);
 
     if (error) {
@@ -113,25 +115,16 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
     }
   };
 
-  // asynchronous request to fetch employee list
-  const fetchEmployeeList = async () => {
-    const { error, result } = await getHRMS(`/employees/options`);
-    setIsLoadingEmployeeOptions(true);
-
-    if (error) {
-      SetErrorEmployeeOptions(result);
-      setIsLoadingEmployeeOptions(false);
-    } else {
-      SetEmployeeOptions(result);
-      setIsLoadingEmployeeOptions(false);
+  // Upon success of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(employees)) {
+      SetEmployeeOptions(employees.data);
     }
-  };
+  }, [employees]);
 
   // If modal is open, set action to fetch for employee list
   useEffect(() => {
-    if (modalState) {
-      fetchEmployeeList();
-    } else {
+    if (!modalState) {
       reset();
     }
   }, [modalState]);
@@ -156,6 +149,8 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
         <Modal.Body>
           <div>
             {/* Notifications */}
+            {!isEmpty(employeesError) ? <ToastNotification toastType="error" notifMessage={employeesError} /> : null}
+
             {postFormLoading ? (
               <AlertNotification
                 logo={<LoadingSpinner size="xs" />}
@@ -163,10 +158,6 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
                 notifMessage="Submitting request"
                 dismissible={false}
               />
-            ) : null}
-
-            {ErrorEmployeeOptions ? (
-              <AlertNotification alertType="info" notifMessage={ErrorEmployeeOptions} dismissible={true} />
             ) : null}
 
             <form onSubmit={handleSubmit(onSubmit)} id="addTravelForm">
@@ -207,8 +198,8 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
                     label="Employee"
                     isError={errors.employeeId ? true : false}
                     errorMessage={errors.employeeId?.message}
-                    disabled={isLoadingEmployeeOptions}
-                    isLoading={isLoadingEmployeeOptions}
+                    disabled={employeesLoading}
+                    isLoading={employeesLoading}
                   />
                 </div>
 

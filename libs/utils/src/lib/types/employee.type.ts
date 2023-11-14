@@ -12,6 +12,7 @@ export type EmploymentDetails = {
   positionTitle: string;
   assignment: Assignment;
   natureOfAppointment: string;
+  avatarUrl: string;
 };
 
 export type EmployeeWithDetails = {
@@ -20,11 +21,15 @@ export type EmployeeWithDetails = {
   companyId: string;
   fullName: string;
   isHRMPSB: number;
+  scheduleBase: string;
   assignment: {
     id: string;
     name: string;
     positionId: string;
     positionTitle: string;
+    officeName: string;
+    departmentName: string;
+    divisionName: string;
   };
   userRole: UserRole;
 };

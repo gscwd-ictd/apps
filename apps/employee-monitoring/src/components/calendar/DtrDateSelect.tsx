@@ -7,19 +7,15 @@ type Month = { month: string; code: string };
 type Year = { year: string };
 
 export const DtrDateSelect = () => {
-  const {
-    selectedMonth,
-    selectedYear,
-    setSelectedMonth,
-    setSelectedYear,
-    setIsDateSearched,
-  } = useDtrStore((state) => ({
-    selectedMonth: state.selectedMonth,
-    selectedYear: state.selectedYear,
-    setSelectedMonth: state.setSelectedMonth,
-    setSelectedYear: state.setSelectedYear,
-    setIsDateSearched: state.setIsDateSearched,
-  }));
+  const { selectedMonth, selectedYear, setSelectedMonth, setSelectedYear, setIsDateSearched } = useDtrStore(
+    (state) => ({
+      selectedMonth: state.selectedMonth,
+      selectedYear: state.selectedYear,
+      setSelectedMonth: state.setSelectedMonth,
+      setSelectedYear: state.setSelectedYear,
+      setIsDateSearched: state.setIsDateSearched,
+    })
+  );
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
@@ -40,21 +36,13 @@ export const DtrDateSelect = () => {
     { month: 'December', code: '12' },
   ] as Month[];
 
-  const years = [
-    { year: '--' },
-    { year: `${yearNow}` },
-    { year: `${Number(yearNow) - 1}` },
-  ] as Year[];
+  const years = [{ year: '--' }, { year: `${yearNow}` }, { year: `${Number(yearNow) - 1}` }] as Year[];
 
   //month select
   const list: ListDef<Month> = {
     key: 'month',
     render: (info, state) => (
-      <div
-        className={`${
-          state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''
-        } pl-2 cursor-pointer`}
-      >
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''} pl-2 cursor-pointer`}>
         {info.month}
       </div>
     ),
@@ -64,11 +52,7 @@ export const DtrDateSelect = () => {
   const yearList: ListDef<Year> = {
     key: 'year',
     render: (info, state) => (
-      <div
-        className={`${
-          state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''
-        } pl-4 cursor-pointer`}
-      >
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
         {info.year}
       </div>
     ),
@@ -109,9 +93,7 @@ export const DtrDateSelect = () => {
         loading={false}
         onClick={() => setIsDateSearched(true)}
         type="button"
-        disabled={
-          selectedMonth === '--' || selectedYear === '--' ? true : false
-        }
+        disabled={selectedMonth === '--' || selectedYear === '--' ? true : false}
       >
         <HiOutlineSearch className="w-4 h-4" />
       </Button>

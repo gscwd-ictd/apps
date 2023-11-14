@@ -13,6 +13,7 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables/LeaveLedgerTable';
 import LeaveLedgerAdjModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerAdjModal';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
+import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 
 export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
@@ -20,6 +21,15 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
 
   // adjustment modal function
   const [adjustmentModalIsOpen, setAdjustmentModalIsOpen] = useState<boolean>(false);
+
+  // zustand store init
+  const { ErrorLeaveBenefits } = useLeaveBenefitStore((state) => ({
+    ErrorLeaveBenefits: state.error.errorLeaveBenefits,
+  }));
+
+  const { ErrorLeaveAdjustment } = useLeaveLedgerStore((state) => ({
+    ErrorLeaveAdjustment: state.errorLeaveAdjustment,
+  }));
 
   const toggle = () => setPrintModalIsOpen(!printModalIsOpen);
 
@@ -32,11 +42,6 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
   const closeAdjustmentModalAction = () => {
     setAdjustmentModalIsOpen(false);
   };
-
-  // leave benefits store
-  const { ErrorLeaveBenefits } = useLeaveBenefitStore((state) => ({
-    ErrorLeaveBenefits: state.error.errorLeaveBenefits,
-  }));
 
   return (
     <>
@@ -58,6 +63,10 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           <ToastNotification toastType="error" notifMessage={ErrorLeaveBenefits} />
         ) : null}
 
+        {!isEmpty(ErrorLeaveAdjustment) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorLeaveAdjustment} />
+        ) : null}
+
         <LeaveLedgerAdjModal
           modalState={adjustmentModalIsOpen}
           setModalState={setAdjustmentModalIsOpen}
@@ -71,7 +80,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           <Card>
             <div className="flex flex-col gap-2">
               {/* HEADER */}
-              <div className="flex gap-2 xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+              <div className="flex gap-2 xs:pb-2 sm:mb-5 md:mb-5 lg:mb-5 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
                 <section className="flex items-center gap-4 px-2">
                   {employeeData.photoUrl ? (
                     <div className="flex flex-wrap justify-center">
@@ -113,9 +122,9 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                 </section>
               </div>
 
-              <div className="flex justify-end gap-2">
+              {/* <div className="flex justify-end gap-2">
                 <PrintButton onClick={toggle} />
-              </div>
+              </div> */}
 
               {/* LEAVE LEDGER TABLE */}
               <LeaveLedgerTable employeeData={employeeData} />

@@ -1,16 +1,7 @@
 import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import {
-  ScheduleSheet,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
@@ -103,40 +94,31 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
   }));
 
   // custom group store
-  const { setSelectedCustomGroupWithMembers } = useCustomGroupStore(
-    (state) => ({
-      setSelectedCustomGroupWithMembers:
-        state.setSelectedCustomGroupWithMembers,
-    })
-  );
+  const { setSelectedCustomGroupWithMembers } = useCustomGroupStore((state) => ({
+    setSelectedCustomGroupWithMembers: state.setSelectedCustomGroupWithMembers,
+  }));
 
-  // use SWR
+  // useSWR for schedule details
   const {
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
     error: swrScheduleError,
-  } = useSWR(
-    !isEmpty(selectedScheduleId) ? `/schedules/${selectedScheduleId}` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+  } = useSWR(!isEmpty(selectedScheduleId) ? `/schedules/${selectedScheduleId}` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
-  // fetch
+  // useSWR for members of scheduling sheet
+  // rowData.dateFrom
+  // rowData.dateTo
   const {
     data: swrGroupDetails,
     isLoading: swrGroupDetailsIsLoading,
     error: swrGroupDetailsError,
-  } = useSWR(
-    !isEmpty(selectedGroupId) ? `/custom-groups/${selectedGroupId}` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnMount: false,
-    }
-  );
+  } = useSWR(!isEmpty(selectedGroupId) ? `/custom-groups/${selectedGroupId}` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnMount: false,
+  });
 
   // set default values
   const setDefaultValues = (rowData: ScheduleSheet) => {
@@ -170,8 +152,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     if (!isEmpty(swrSchedule)) getScheduleByIdSuccess(swrSchedule.data);
 
     // fail
-    if (!isEmpty(swrScheduleError))
-      getScheduleByIdFail(swrScheduleError.message);
+    if (!isEmpty(swrScheduleError)) getScheduleByIdFail(swrScheduleError.message);
   }, [swrSchedule, swrScheduleError]);
 
   // swr is loading
@@ -233,9 +214,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="px-5 text-xl font-medium">
-            View Field Scheduling Sheet
-          </h1>
+          <h1 className="px-5 text-xl font-medium">View Field Scheduling Sheet</h1>
         </Modal.Header>
         <Modal.Body>
           {isLoading ? (
@@ -246,9 +225,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                 {/* Effectivity */}
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
                   <div className="flex flex-col justify-start w-full pb-2">
-                    <p className="flex items-center justify-start w-full font-light">
-                      Effectivity Date
-                    </p>
+                    <p className="flex items-center justify-start w-full font-light">Effectivity Date</p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
                       <LabelInput
@@ -297,11 +274,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                         name="groupName"
                         type="text"
                         label="Group Name"
-                        value={
-                          !isEmpty(group.customGroupDetails)
-                            ? group.customGroupDetails.name
-                            : '--'
-                        }
+                        value={!isEmpty(group.customGroupDetails) ? group.customGroupDetails.name : '--'}
                         isError={errors.dateFrom ? true : false}
                         errorMessage={errors.dateFrom?.message}
                         disabled
@@ -313,9 +286,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                 {/* Schedule */}
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
                   <div className="flex flex-col justify-start w-full h-full">
-                    <p className="flex items-center justify-start w-full font-light">
-                      Field Schedule
-                    </p>
+                    <p className="flex items-center justify-start w-full font-light">Field Schedule</p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="flex flex-col w-full gap-4">
                       {swrScheduleIsLoading ? (
@@ -335,11 +306,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                               <LabelInput
                                 id="scheduleTimeIn"
                                 label="Time in"
-                                value={
-                                  schedule.timeIn
-                                    ? formatTime(schedule.timeIn)
-                                    : '-- : --'
-                                }
+                                value={schedule.timeIn ? formatTime(schedule.timeIn) : '-- : --'}
                                 isError={errors.scheduleId ? true : false}
                                 errorMessage={errors.scheduleId?.message}
                                 disabled
@@ -350,11 +317,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                               <LabelInput
                                 id="scheduleTimeOut"
                                 label="Time out"
-                                value={
-                                  schedule.timeOut
-                                    ? formatTime(schedule.timeOut)
-                                    : '-- : --'
-                                }
+                                value={schedule.timeOut ? formatTime(schedule.timeOut) : '-- : --'}
                                 isError={errors.scheduleId ? true : false}
                                 errorMessage={errors.scheduleId?.message}
                                 disabled

@@ -22,12 +22,7 @@ const DeleteFieldSchedModal: FunctionComponent<DeleteModalProps> = ({
 }) => {
   const { handleSubmit } = useForm<Schedule>();
 
-  const {
-    IsLoading,
-    DeleteSchedule,
-    DeleteScheduleFail,
-    DeleteScheduleSuccess,
-  } = useScheduleStore((state) => ({
+  const { IsLoading, DeleteSchedule, DeleteScheduleFail, DeleteScheduleSuccess } = useScheduleStore((state) => ({
     IsLoading: state.loading.loadingSchedule,
     DeleteResponse: state.schedule.deleteResponse,
     DeleteSchedule: state.deleteSchedule,
@@ -69,12 +64,8 @@ const DeleteFieldSchedModal: FunctionComponent<DeleteModalProps> = ({
           <form onSubmit={handleSubmit(onSubmit)} id="deletefieldschedmodal">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
-                <span className="px-2 mt-5 text-xl font-medium text-center text-gray-600">
-                  Delete schedule
-                </span>
-                <span className="px-2 text-lg text-center text-gray-400">
-                  "{rowData.name}"
-                </span>
+                <span className="px-2 mt-5 text-xl font-medium text-center text-gray-600">Delete schedule</span>
+                <span className="px-2 text-lg text-center text-gray-400">"{rowData.name}"</span>
               </div>
             </div>
           </form>

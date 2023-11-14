@@ -4,17 +4,18 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { isEmpty } from 'lodash';
+import useSWR from 'swr';
 import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { getHRMS } from 'apps/employee-monitoring/src/utils/helper/hrms-axios-helper';
 
-import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
+import { FormTravelOrder, TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-order.store';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 
-import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
 import { SelectListRF } from '../../../inputs/SelectListRF';
+import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
 
 type EditModalProps = {
   modalState: boolean;
@@ -25,7 +26,7 @@ type EditModalProps = {
 
 enum TravelOrderKeys {
   TRAVEL_NO = 'travelOrderNo',
-  EMPLOYEE_ID = 'employee.employeeId',
+  EMPLOYEE = 'employee',
   PURPOSE_OF_TRAVEL = 'purposeOfTravel',
   DATE_FROM = 'dateFrom',
   DATE_TO = 'dateTo',
@@ -54,36 +55,27 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  const [isLoadingEmployeeOptions, setIsLoadingEmployeeOptions] = useState<boolean>(false);
+  // fetch data for list of employees
+  const {
+    data: employees,
+    error: employeesError,
+    isLoading: employeesLoading,
+  } = useSWR(modalState ? '/employees/options' : null, fetcherHRMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // zustand store initialization for travel order
-  const {
-    SetUpdateTravelOrder,
-
-    SetErrorTravelOrder,
-
-    EmptyResponse,
-  } = useTravelOrderStore((state) => ({
+  const { SetUpdateTravelOrder, SetErrorTravelOrder, EmptyResponse } = useTravelOrderStore((state) => ({
     SetUpdateTravelOrder: state.setUpdateTravelOrder,
-
     SetErrorTravelOrder: state.setErrorTravelOrder,
-
     EmptyResponse: state.emptyResponse,
   }));
 
   // zustand initialization for employees
-  const {
-    EmployeeOptions,
-    SetEmployeeOptions,
-
-    ErrorEmployeeOptions,
-    SetErrorEmployeeOptions,
-  } = useEmployeeStore((state) => ({
+  const { EmployeeOptions, SetEmployeeOptions } = useEmployeeStore((state) => ({
     EmployeeOptions: state.employeeOptions,
     SetEmployeeOptions: state.setEmployeeOptions,
-
-    ErrorEmployeeOptions: state.errorEmployeeOptions,
-    SetErrorEmployeeOptions: state.setErrorEmployeeOptions,
   }));
 
   // React hook form
@@ -93,9 +85,8 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     control,
     setValue,
     handleSubmit,
-    clearErrors,
     formState: { errors, isSubmitting: patchFormLoading },
-  } = useForm<TravelOrder>({
+  } = useForm<FormTravelOrder>({
     mode: 'onChange',
     resolver: yupResolver(yupSchema),
   });
@@ -107,13 +98,13 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
   });
 
   // form submission
-  const onSubmit: SubmitHandler<TravelOrder> = (data: TravelOrder) => {
+  const onSubmit: SubmitHandler<FormTravelOrder> = (data: FormTravelOrder) => {
     EmptyResponse();
 
     handlePatchResult(data);
   };
 
-  const handlePatchResult = async (data: TravelOrder) => {
+  const handlePatchResult = async (data: FormTravelOrder) => {
     const { error, result } = await putEmpMonitoring('/travel-order', data);
 
     if (error) {
@@ -126,39 +117,32 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     }
   };
 
-  // asynchronous request to fetch employee list
-  const fetchEmployeeList = async () => {
-    const { error, result } = await getHRMS(`/employees/options`);
-    setIsLoadingEmployeeOptions(true);
-
-    if (error) {
-      SetErrorEmployeeOptions(result);
-      setIsLoadingEmployeeOptions(false);
-    } else {
-      SetEmployeeOptions(result);
-      setIsLoadingEmployeeOptions(false);
-    }
-  };
-
   // If modal is open, set action to fetch for employee list
   useEffect(() => {
-    if (modalState) {
-      fetchEmployeeList();
-    } else {
+    if (!modalState) {
       reset();
     }
   }, [modalState]);
 
+  // Upon success of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(employees)) {
+      SetEmployeeOptions(employees.data);
+    }
+  }, [employees]);
+
   // Set default values in the form
   useEffect(() => {
-    if (modalState === true && !isEmpty(rowData)) {
+    if (modalState === true && !isEmpty(rowData) && !isEmpty(EmployeeOptions)) {
       const keys = Object.keys(rowData);
-      console.log(rowData);
+
       // traverse to each object and setValue
       keys.forEach((key: TravelOrderKeys) => {
-        if (key === 'employee.employeeId') {
-          setValue('employeeId', rowData[key], { shouldValidate: true });
-          // setValue('employeeId',  {label: rowData[key] , value: rowData[key]})
+        if (key === 'employee') {
+          setValue('employeeId', rowData[key].employeeId, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
         } else if (key === 'dateFrom') {
           setValue('dateFrom', ConvertFullMonthNameToDigit(rowData[key]));
         } else if (key === 'dateTo') {
@@ -173,7 +157,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
         }
       });
     }
-  }, [rowData, modalState]);
+  }, [EmployeeOptions]);
 
   return (
     <>
@@ -203,6 +187,10 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
               />
             ) : null}
 
+            {employeesError ? (
+              <AlertNotification alertType="info" notifMessage={employeesError} dismissible={true} />
+            ) : null}
+
             <form onSubmit={handleSubmit(onSubmit)} id="editTravelOrderForm">
               <div className="grid md:grid-cols-2 md:gap-6">
                 {/* Travel order no input */}
@@ -230,7 +218,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
               </div>
 
               <div className="grid md:grid-cols-2 md:gap-6">
-                {/** Employee */}
+                {/* Employee */}
                 <div className="z-20 mb-6">
                   <SelectListRF
                     id="employeeId"
@@ -241,8 +229,8 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
                     label="Employee"
                     isError={errors.employeeId ? true : false}
                     errorMessage={errors.employeeId?.message}
-                    disabled={isLoadingEmployeeOptions}
-                    isLoading={isLoadingEmployeeOptions}
+                    disabled={employeesLoading}
+                    isLoading={employeesLoading}
                   />
                 </div>
 

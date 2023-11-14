@@ -13,9 +13,7 @@ type ActionDropdownProps = {
 
 const actionItems = ['View Daily Time Record', 'View Leave Ledger'];
 
-export const ActionDropdownEmployee: FunctionComponent<ActionDropdownProps> = ({
-  employee,
-}) => {
+export const ActionDropdownEmployee: FunctionComponent<ActionDropdownProps> = ({ employee }) => {
   const router = useRouter();
 
   const { setDropdownAction, setSelectedEmployee } = useDtrStore((state) => ({
@@ -23,13 +21,11 @@ export const ActionDropdownEmployee: FunctionComponent<ActionDropdownProps> = ({
     setSelectedEmployee: state.setSelectedEmployee,
   }));
 
-  const { setEmployeeDtr, setSelectedMonth, setSelectedYear } = useDtrStore(
-    (state) => ({
-      setEmployeeDtr: state.setEmployeeDtr,
-      setSelectedMonth: state.setSelectedMonth,
-      setSelectedYear: state.setSelectedYear,
-    })
-  );
+  const { setEmployeeDtr, setSelectedMonth, setSelectedYear } = useDtrStore((state) => ({
+    setEmployeeDtr: state.setEmployeeDtr,
+    setSelectedMonth: state.setSelectedMonth,
+    setSelectedYear: state.setSelectedYear,
+  }));
 
   const handleSelectAction = (item: string) => {
     setDropdownAction(item);
@@ -62,10 +58,7 @@ export const ActionDropdownEmployee: FunctionComponent<ActionDropdownProps> = ({
         >
           {actionItems.map((item: string, idx: number) => {
             return (
-              <div
-                key={idx}
-                className="z-50 flex w-full bg-white outline-none ring-0"
-              >
+              <div key={idx} className="z-50 flex w-full bg-white outline-none ring-0">
                 <a
                   rel="noreferrer"
                   // onClick={() => handleSelectAction(item)}
