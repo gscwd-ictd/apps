@@ -98,6 +98,18 @@ export type OvertimeAccomplishment = {
   employeeSignature: string;
 };
 
+//for pdf
+export type OvertimeAccomplishmentReport = {
+  date: string;
+  accomplishments: string;
+  employeeName: string;
+  assignment: string;
+  employeeSignature: string;
+  supervisorName: string;
+  supervisorSignature: string;
+  supervisorPosition: string;
+};
+
 //approving/disapproving of overtime application by manager
 export type OvertimeApprovalPatch = {
   managerId: string;
@@ -122,4 +134,76 @@ export type OvertimeAccomplishmentApprovalPatch = {
   remarks: string;
   status: OvertimeAccomplishmentStatus;
   followEstimatedHrs: boolean;
+};
+
+//for pdf
+export type OvertimeAuthorization = {
+  requestedDate: string;
+  purpose: string;
+  plannedDate: string;
+  estimatedHours: number;
+  status: OvertimeStatus;
+  managerApprovalDate: string;
+  employees: Array<OvertimAuthorizationEmployee>;
+  signatories: {
+    employeeName: string;
+    employeeSignature: string;
+    supervisorName: string;
+    supervisorSignature: string;
+  };
+};
+
+export type OvertimAuthorizationEmployee = {
+  overtimeEmployeeId: string;
+  companyId: string;
+  employeeId: string;
+  name: string;
+  assignment: string;
+  position: string;
+};
+
+//for pdf
+export type OvertimeSummary = {
+  periodCovered: string;
+  summary: Array<OvertimeSummaryEmployee>;
+  signatories: {
+    preparedBy: Signatory;
+    notedBy: Signatory;
+    approvedBy: Signatory;
+  };
+  overallTotalRegularOTAmount: number;
+  overallTotalOffOTAmount: number;
+  overallSubstituteDutyOTAmount: number;
+  overallNightDifferentialAmount: number;
+  overallTotalOTAmount: number;
+};
+
+export type Signatory = {
+  name: string;
+  signature: string;
+  position: string;
+};
+
+export type OvertimeSummaryEmployee = {
+  employeeFullName: string;
+  userId: string;
+  positionId: string;
+  overtimes: Array<OvertimeDayDetails>;
+  monthlyRate: number;
+  hourlyRate: number;
+  totalRegularOTHoursRendered: number; // B
+  totalOffOTHoursRendered: number; //total holiday/day off ot hours (c)
+  regularOTAmount: number; //amount a x b x 1.25
+  offOTAmount: number; //amount A x C x 1.5
+  substituteDutyOTHours: number;
+  substituteAmount: number;
+  nightDifferentialHrs: number;
+  nightDifferentialAmount: number;
+  totalOvertimeAmount: number; //total overtime amount
+  totalOTHoursRendered: number; //total no. ot hours
+};
+
+export type OvertimeDayDetails = {
+  day: number;
+  hoursRendered: number | null;
 };

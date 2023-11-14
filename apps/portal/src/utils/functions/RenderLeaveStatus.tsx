@@ -5,7 +5,7 @@ import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import BadgePill from '../../components/modular/badges/BadgePill';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
-function UseRenderLeaveStatus(status: LeaveStatus | string, textSize: TextSize) {
+function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: TextSize) {
   return (
     <BadgePill
       textSize={textSize}

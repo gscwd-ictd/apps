@@ -26,7 +26,6 @@ export const AllOvertimeListTab = ({ overtime, tab }: TabProps) => {
 
   const OnSelect = (overtime: OvertimeDetails) => {
     setOvertimeDetails(overtime);
-    console.log(overtime);
     if (tab === 1) {
       if (!pendingOvertimeModalIsOpen) {
         setPendingOvertimeModalIsOpen(true);

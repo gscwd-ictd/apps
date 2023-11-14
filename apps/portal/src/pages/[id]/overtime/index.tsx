@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiDocumentAdd } from 'react-icons/hi';
+import { HiCalendar, HiDocumentAdd, HiNewspaper } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -22,6 +22,7 @@ import OvertimeModal from 'apps/portal/src/components/fixed/overtime/OvertimeMod
 import { OvertimeTabs } from 'apps/portal/src/components/fixed/overtime/OvertimeTabs';
 import { OvertimeTabWindow } from 'apps/portal/src/components/fixed/overtime/OvertimeTabWindow';
 import { useRouter } from 'next/router';
+import { OvertimeSummaryModal } from 'apps/portal/src/components/fixed/overtime/OvertimeSummaryModal';
 
 export default function Overtime({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -33,6 +34,12 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     employeeList,
     responseApply,
     cancelResponse,
+    overtimeSummaryModalIsOpen,
+    errorAccomplishment,
+    errorAuthorizationReport,
+    errorAccomplishmentReport,
+    errorOvertimeSummaryReport,
+    setOvertimeSummaryModalIsOpen,
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
     setApplyOvertimeModalIsOpen,
@@ -53,6 +60,12 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     employeeList: state.employeeList,
     responseApply: state.response.postResponseApply,
     cancelResponse: state.response.cancelResponse,
+    overtimeSummaryModalIsOpen: state.overtimeSummaryModalIsOpen,
+    errorAccomplishment: state.error.errorAccomplishment,
+    errorAuthorizationReport: state.error.errorAuthorizationReport,
+    errorAccomplishmentReport: state.error.errorAccomplishmentReport,
+    errorOvertimeSummaryReport: state.error.errorOvertimeSummaryReport,
+    setOvertimeSummaryModalIsOpen: state.setOvertimeSummaryModalIsOpen,
     setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
@@ -73,6 +86,17 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     if (!applyOvertimeModalIsOpen) {
       setApplyOvertimeModalIsOpen(true);
     }
+  };
+
+  const openOvertimeSummaryModal = () => {
+    if (!overtimeSummaryModalIsOpen) {
+      setOvertimeSummaryModalIsOpen(true);
+    }
+  };
+
+  // cancel action for Overtime Application Modal
+  const closeOvertimeSummaryModal = async () => {
+    setOvertimeSummaryModalIsOpen(false);
   };
 
   // cancel action for Overtime Application Modal
@@ -150,7 +174,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeList)) {
-      console.log(swrOvertimeList);
       getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
     }
 
@@ -191,6 +214,38 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
           <ToastNotification toastType="success" notifMessage="Overtime Application Cancellation Successful!" />
         ) : null}
 
+        {/* Employee Individual Accomplishment Error*/}
+        {!isEmpty(errorAccomplishment) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment.`}
+          />
+        ) : null}
+
+        {/* Employee Individual Accomplishment PDF Report Error*/}
+        {!isEmpty(errorAccomplishmentReport) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorAccomplishmentReport}: Failed to load Overtime Accomplishment Report.`}
+          />
+        ) : null}
+
+        {/* Employee OT Authorization PDF Report Error*/}
+        {!isEmpty(errorAuthorizationReport) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorAuthorizationReport}: Failed to load Overtime Authorization Report.`}
+          />
+        ) : null}
+
+        {/* Employee OT Summary PDF Report Error*/}
+        {!isEmpty(errorOvertimeSummaryReport) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorOvertimeSummaryReport}: Failed to load Overtime Summary Report.`}
+          />
+        ) : null}
+
         {/* List of Overtime Load Failed */}
         {!isEmpty(swrOvertimeListError) ? (
           <>
@@ -216,6 +271,13 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
           closeModalAction={closeApplyOvertimeModal}
         />
 
+        {/* Overtime Summary Modal */}
+        <OvertimeSummaryModal
+          modalState={overtimeSummaryModalIsOpen}
+          setModalState={setOvertimeSummaryModalIsOpen}
+          closeModalAction={closeOvertimeSummaryModal}
+        />
+
         {/* Overtime Pending Modal */}
         <OvertimeModal
           modalState={pendingOvertimeModalIsOpen}
@@ -233,17 +295,25 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
         <MainContainer>
           <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader title="Employee Overtime" subtitle="Apply for overtime" backUrl={`/${router.query.id}`}>
-              <Button onClick={openApplyOvertimeModal} className="hidden lg:block" size={`md`}>
-                <div className="flex items-center w-full gap-2">
-                  <HiDocumentAdd /> Apply for Overtime
-                </div>
-              </Button>
+              <div className="flex flex-row gap-2">
+                <Button onClick={openOvertimeSummaryModal} className="hidden lg:block" size={`md`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiNewspaper /> Summary
+                  </div>
+                </Button>
 
-              <Button onClick={openApplyOvertimeModal} className="block lg:hidden" size={`lg`}>
-                <div className="flex items-center w-full gap-2">
-                  <HiDocumentAdd />
-                </div>
-              </Button>
+                <Button onClick={openApplyOvertimeModal} className="hidden lg:block" size={`md`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiDocumentAdd /> Apply for Overtime
+                  </div>
+                </Button>
+
+                <Button onClick={openApplyOvertimeModal} className="block lg:hidden" size={`lg`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiDocumentAdd />
+                  </div>
+                </Button>
+              </div>
             </ContentHeader>
             {!overtimeList ? (
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -287,5 +357,16 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  return { props: { employeeDetails } };
+  // check if user role is rank_and_file or job order = kick out
+  if (employeeDetails.employmentDetails.overtimeImmediateSupervisorId == null) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
+  }
 });

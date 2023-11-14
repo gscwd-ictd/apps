@@ -68,16 +68,35 @@ export const TrainingNominationModal = ({
 
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
+  const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
+
+  const CheckForDuplicate = () => {
+    console.log(selectedEmployees);
+    console.log(selectedAuxiliaryEmployees);
+    for (let i = 0; i < selectedEmployees.length; i++) {
+      for (let j = 0; j < selectedAuxiliaryEmployees.length; j++) {
+        if (selectedEmployees[i].value === selectedAuxiliaryEmployees[j].value) {
+          setIsDuplicatedNominee(true);
+        } else {
+          setIsDuplicatedNominee(false);
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     setNominatedEmployees(selectedEmployees);
-  }, [selectedEmployees]);
-
-  useEffect(() => {
     setAuxiliaryEmployees(selectedAuxiliaryEmployees);
-  }, [selectedAuxiliaryEmployees]);
+    CheckForDuplicate();
+  }, [selectedEmployees, selectedAuxiliaryEmployees]);
+
+  // useEffect(() => {
+
+  //   CheckForDuplicate();
+  // }, [selectedAuxiliaryEmployees]);
 
   const { windowWidth } = UseWindowDimensions();
+
   return (
     <div>
       <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState} steady>
@@ -103,8 +122,16 @@ export const TrainingNominationModal = ({
             />
           ) : null}
 
-          {nominatedEmployees.length > individualTrainingDetails.numberOfParticipants ? (
+          {nominatedEmployees.length > individualTrainingDetails.numberOfSlots ? (
             <AlertNotification alertType="warning" notifMessage="Selected Participants exceeded" dismissible={false} />
+          ) : null}
+
+          {isDuplicatedNominee ? (
+            <AlertNotification
+              alertType="warning"
+              notifMessage="There are duplicate employee nominations"
+              dismissible={false}
+            />
           ) : null}
 
           <div className="w-full h-full flex flex-col gap-2">
@@ -115,7 +142,9 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <div className="w-auto sm:w-96 flex flex-wrap text-slate-500 text-md font-medium">
-                  <label>Phyll Fragata, Jay Jonah Jameson, Jay Nosotros</label>
+                  {individualTrainingDetails.recommended.map((employee, index) => {
+                    return <label key={index}>{index == 0 ? employee.name : `, ${employee.name}`}</label>;
+                  })}
                 </div>
               </div>
 
@@ -144,8 +173,8 @@ export const TrainingNominationModal = ({
                   label=""
                   multiple
                   options={listOfEmployees}
-                  onChange={(o) => setAuxiliaryEmployees(o)}
-                  value={auxiliaryEmployees}
+                  onChange={(o) => setSelectedAuxiliaryEmployees(o)}
+                  value={selectedAuxiliaryEmployees}
                 />
               </div>
             </div>
@@ -161,7 +190,11 @@ export const TrainingNominationModal = ({
                 loading={false}
                 form="ApplyOvertimeForm"
                 type="submit"
-                disabled={auxiliaryEmployees.length > 2 ? true : false}
+                disabled={
+                  auxiliaryEmployees.length > 2 || selectedEmployees.length > individualTrainingDetails.numberOfSlots
+                    ? true
+                    : false
+                }
               >
                 Submit
               </Button>

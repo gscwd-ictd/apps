@@ -14,7 +14,7 @@ import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/Re
 import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimeAccomplishmentStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import OvertimeAuthorizationModal from './OvertimeAuthorizationModal';
-import OvertimeReportSummaryModal from './OvertimeReportSummaryModal';
+import OvertimeSummaryReportPdfModal from './OvertimeSummaryReportPdfModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -25,32 +25,26 @@ type ModalProps = {
 export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     overtimeDetails,
-    pendingOvertimeModalIsOpen,
     cancelOvertimeModalIsOpen,
     accomplishmentOvertimeModalIsOpen,
     pdfOvertimeAuthorizationModalIsOpen,
-    pdfOvertimeSummaryModalIsOpen,
     setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId,
     setOvertimeAccomplishmentEmployeeName,
     setOvertimeAccomplishmentApplicationId,
     setPdfOvertimeAuthorizationModalIsOpen,
-    setPdfOvertimeSummaryModalIsOpen,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
-    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     cancelOvertimeModalIsOpen: state.cancelOvertimeModalIsOpen,
     accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
     pdfOvertimeAuthorizationModalIsOpen: state.pdfOvertimeAuthorizationModalIsOpen,
-    pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
     setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen: state.setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId: state.setOvertimeAccomplishmentEmployeeId,
     setOvertimeAccomplishmentEmployeeName: state.setOvertimeAccomplishmentEmployeeName,
     setOvertimeAccomplishmentApplicationId: state.setOvertimeAccomplishmentApplicationId,
     setPdfOvertimeAuthorizationModalIsOpen: state.setPdfOvertimeAuthorizationModalIsOpen,
-    setPdfOvertimeSummaryModalIsOpen: state.setPdfOvertimeSummaryModalIsOpen,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -67,10 +61,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   const closePdfOvertimeAuthorizationModal = async () => {
     setPdfOvertimeAuthorizationModalIsOpen(false);
-  };
-
-  const closePdfOvertimeSummaryModal = async () => {
-    setPdfOvertimeSummaryModalIsOpen(false);
   };
 
   const handleEmployeeAccomplishment = async (employeeId: string, employeeName: string) => {
@@ -247,11 +237,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setPdfOvertimeAuthorizationModalIsOpen}
             closeModalAction={closePdfOvertimeAuthorizationModal}
           />
-          <OvertimeReportSummaryModal
-            modalState={pdfOvertimeSummaryModalIsOpen}
-            setModalState={setPdfOvertimeSummaryModalIsOpen}
-            closeModalAction={closePdfOvertimeSummaryModal}
-          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
@@ -260,15 +245,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               <>
                 {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                   <>
-                    <Button
-                      variant={'primary'}
-                      size={'md'}
-                      loading={false}
-                      onClick={(e) => setPdfOvertimeSummaryModalIsOpen(true)}
-                      type="submit"
-                    >
-                      Summary
-                    </Button>
                     <Button
                       variant={'primary'}
                       size={'md'}
