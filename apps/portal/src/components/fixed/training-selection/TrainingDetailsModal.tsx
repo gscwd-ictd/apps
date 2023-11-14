@@ -50,16 +50,16 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   const [courseContentsArray, setCourseContentsArray] = useState([{ title: 'N/A' }]);
   const [postTrainingRequirementArray, setPostTrainingRequirementArray] = useState([{ document: 'N/A' }]);
 
-  useEffect(() => {
-    if (individualTrainingDetails.courseContent) {
-      setCourseContentsArray(JSON.parse(individualTrainingDetails.courseContent as unknown as string));
-    }
-    if (individualTrainingDetails.postTrainingRequirements) {
-      setPostTrainingRequirementArray(
-        JSON.parse(individualTrainingDetails.postTrainingRequirements as unknown as string)
-      );
-    }
-  }, [individualTrainingDetails]);
+  // useEffect(() => {
+  //   if (individualTrainingDetails.courseContent) {
+  //     setCourseContentsArray(JSON.parse(individualTrainingDetails.courseContent as unknown as string));
+  //   }
+  //   if (individualTrainingDetails.postTrainingRequirements) {
+  //     setPostTrainingRequirementArray(
+  //       JSON.parse(individualTrainingDetails.postTrainingRequirements as unknown as string)
+  //     );
+  //   }
+  // }, [individualTrainingDetails]);
 
   // cancel action for Leave Application Modal
   const closeTrainingNominationModal = async () => {
@@ -92,7 +92,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             />
 
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {individualTrainingDetails.status === TrainingStatus.ONGOING ? (
+              {individualTrainingDetails.preparationStatus === TrainingStatus.ONGOING ? (
                 <AlertNotification alertType="info" notifMessage="On Going Nomination" dismissible={false} />
               ) : null}
 
@@ -120,7 +120,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   </label>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Invitation URL:</label>
 
                 <div className="w-auto sm:w-96">
@@ -130,26 +130,22 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     </a>
                   </label>
                 </div>
-              </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              </div> */}
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Hours:</label>
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.numberOfHours}</label>
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                  No. of Participants:
-                </label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Slots</label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">
-                    {individualTrainingDetails.numberOfParticipants}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.numberOfSlots}</label>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-start">
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-start">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Course Content:</label>
 
                 <div className="w-auto sm:w-96 ">
@@ -159,8 +155,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     })}
                   </label>
                 </div>
-              </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-start">
+              </div> */}
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-start">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
                   Post Training Requirements:
                 </label>
@@ -172,7 +168,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     })}
                   </label>
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-row md:gap-2 justify-between items-start md:items-start">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Participants:</label>
 
@@ -195,12 +191,12 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         <th className="px-10 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
                           Nominated Employee(s)
                         </th>
-                        <th className="px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                        {/* <th className="px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                           Status
                         </th>
                         <th className="w-28 py-2 text-sm text-center border md:text-md font-medium text-gray-700">
                           Edit
-                        </th>
+                        </th> */}
                       </tr>
                     </thead>
                     <tbody className="text-sm text-center ">
@@ -209,7 +205,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                           return (
                             <tr key={index}>
                               <td className={`px-2 text-start border`}>{employees.label}</td>
-                              <td className={`text-center border`}>PENDING</td>
+                              {/* <td className={`text-center border`}>PENDING</td>
                               <td className={`py-2 text-center border`}>
                                 <Button
                                   variant={'primary'}
@@ -220,7 +216,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                                 >
                                   <div className="flex justify-center">Swap</div>
                                 </Button>
-                              </td>
+                              </td> */}
                             </tr>
                           );
                         })

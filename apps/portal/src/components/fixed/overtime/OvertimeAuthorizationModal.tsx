@@ -16,7 +16,7 @@ import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourForm
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
+import { EmployeeOvertimeDetail, OvertimAuthorizationEmployee } from 'libs/utils/src/lib/types/overtime.type';
 
 const styles = StyleSheet.create({
   page: {
@@ -70,15 +70,58 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
     overtimeAccomplishmentApplicationId,
     overtimeAccomplishmentEmployeeName,
     accomplishmentDetails,
+    pdfOvertimeAuthorizationModalIsOpen,
+    overtimeAuthorizationReport,
+    getOvertimeAuthorizationReport,
+    getOvertimeAuthorizationReportSuccess,
+    getOvertimeAuthorizationReportFail,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
     overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
     overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
     accomplishmentDetails: state.accomplishmentDetails,
+    pdfOvertimeAuthorizationModalIsOpen: state.pdfOvertimeAuthorizationModalIsOpen,
+    overtimeAuthorizationReport: state.overtimeAuthorizationReport,
+    getOvertimeAuthorizationReport: state.getOvertimeAuthorizationReport,
+    getOvertimeAuthorizationReportSuccess: state.getOvertimeAuthorizationReportSuccess,
+    getOvertimeAuthorizationReportFail: state.getOvertimeAuthorizationReportFail,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+
+  const overtimeAuthorizationReportUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${overtimeDetails.id}/${employeeDetails.user._id}`;
+
+  const {
+    data: swrOvertimeAuthorizationReport,
+    isLoading: swrOvertimeAuthorizationReportIsLoading,
+    error: swrOvertimeAuthorizationReportError,
+    mutate: mutateOvertimeAuthorizationReport,
+  } = useSWR(pdfOvertimeAuthorizationModalIsOpen ? overtimeAuthorizationReportUrl : null, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrOvertimeAuthorizationReportIsLoading) {
+      getOvertimeAuthorizationReport(swrOvertimeAuthorizationReportIsLoading);
+    }
+  }, [swrOvertimeAuthorizationReportIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeAuthorizationReport)) {
+      getOvertimeAuthorizationReportSuccess(swrOvertimeAuthorizationReportIsLoading, swrOvertimeAuthorizationReport);
+    }
+
+    if (!isEmpty(swrOvertimeAuthorizationReportError)) {
+      getOvertimeAuthorizationReportFail(
+        swrOvertimeAuthorizationReportIsLoading,
+        swrOvertimeAuthorizationReportError.message
+      );
+    }
+  }, [swrOvertimeAuthorizationReport, swrOvertimeAuthorizationReportError]);
 
   return (
     <>
@@ -86,7 +129,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Overtime Accomplishment Report PDF</span>
+              <span className="text-xl md:text-2xl">Overtime Authorization Report</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -97,7 +140,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!accomplishmentDetails ? (
+          {!overtimeAuthorizationReport ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -111,11 +154,11 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
             </>
           ) : (
             <PDFViewer width={'100%'} height={1000} showToolbar>
-              <Document title="Overtime Accomplishment Report">
+              <Document title="Overtime Authorization Report">
                 <Page size={[612.0, 396.0]}>
                   <View style={styles.page}>
                     <View style={styles.controlNumber}>
-                      <Text>NO. 1</Text>
+                      <Text>{/* NO. 1 */}</Text>
                     </View>
                     <PdfHeader />
                     <Text style={styles.pdfTitle}>OVERTIME AUTHORIZATION</Text>
@@ -140,7 +183,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           width: 350,
                         }}
                       >
-                        {overtimeDetails.purpose}
+                        {overtimeAuthorizationReport.purpose}
                       </Text>
                       <Text>Date Covered: _____________</Text>
                       <Text
@@ -151,7 +194,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           width: 90,
                         }}
                       >
-                        {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
+                        {DateFormatter(overtimeAuthorizationReport.plannedDate, 'MM-DD-YYYY')}
                       </Text>
                     </View>
                     <View
@@ -182,7 +225,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           width: 90,
                         }}
                       >
-                        {overtimeDetails.estimatedHours}
+                        {overtimeAuthorizationReport.estimatedHours}
                       </Text>
                     </View>
 
@@ -257,76 +300,78 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         </View>
                       </View>
                     </View>
-                    {overtimeDetails.employees.map((employee: EmployeeOvertimeDetail, idx: number) => (
-                      <View
-                        key={idx}
-                        style={{
-                          display: 'flex',
-                          borderBottom: '1px solid #000',
-                          borderRight: '1px solid #000',
-                          borderLeft: '1px solid #000',
-                          flexDirection: 'column',
-                          marginLeft: 20,
-                          marginRight: 20,
-                          marginTop: 0,
-                          fontSize: 9,
-                        }}
-                      >
-                        {/* HEADERS */}
+                    {overtimeAuthorizationReport?.employees?.map(
+                      (employee: OvertimAuthorizationEmployee, idx: number) => (
                         <View
+                          key={idx}
                           style={{
                             display: 'flex',
-                            flexDirection: 'row',
+                            borderBottom: '1px solid #000',
+                            borderRight: '1px solid #000',
+                            borderLeft: '1px solid #000',
+                            flexDirection: 'column',
+                            marginLeft: 20,
+                            marginRight: 20,
+                            marginTop: 0,
+                            fontSize: 9,
                           }}
                         >
+                          {/* HEADERS */}
                           <View
                             style={{
                               display: 'flex',
-                              borderRight: '1px solid #000',
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              padding: 4,
-                              width: '35%',
-                              textAlign: 'center',
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
+                              flexDirection: 'row',
                             }}
                           >
-                            <Text>{employee.fullName}</Text>
-                          </View>
-                          <View
-                            style={{
-                              display: 'flex',
-                              borderRight: '1px solid #000',
+                            <View
+                              style={{
+                                display: 'flex',
+                                borderRight: '1px solid #000',
+                                flexDirection: 'column',
+                                fontSize: 9,
+                                padding: 4,
+                                width: '35%',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                              }}
+                            >
+                              <Text>{employee.name}</Text>
+                            </View>
+                            <View
+                              style={{
+                                display: 'flex',
+                                borderRight: '1px solid #000',
 
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              padding: 2,
-                              width: '15%',
-                              textAlign: 'center',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <Text>{employee.companyId}</Text>
-                          </View>
-                          <View
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              fontSize: 9,
-                              width: '50%',
-                              textAlign: 'center',
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              padding: 4,
-                            }}
-                          >
-                            <Text>{employee.assignment}</Text>
+                                flexDirection: 'column',
+                                fontSize: 9,
+                                padding: 2,
+                                width: '15%',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Text>{employee.companyId}</Text>
+                            </View>
+                            <View
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                fontSize: 9,
+                                width: '50%',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                                padding: 4,
+                              }}
+                            >
+                              <Text>{employee.assignment}</Text>
+                            </View>
                           </View>
                         </View>
-                      </View>
-                    ))}
+                      )
+                    )}
                     {/* SIGNATORIES */}
                     <View
                       style={{
@@ -348,13 +393,35 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         Approved by:
                       </Text>
                     </View>
+                    {/* SIGNATURES */}
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        fontSize: 9,
+                        paddingTop: 2,
+                        paddingLeft: 35,
+                        paddingRight: 35,
+                        width: '100%',
+                      }}
+                    >
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 90, marginTop: 0 }}
+                        src={overtimeAuthorizationReport?.signatories?.employeeSignature ?? ''}
+                      />
+                      <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 360, marginTop: 0 }}
+                        src={overtimeAuthorizationReport?.signatories?.supervisorSignature ?? ''}
+                      />
+                    </View>
                     <View
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         fontSize: 9,
-                        paddingTop: 20,
+                        paddingTop: 30,
                         paddingLeft: 35,
                         paddingRight: 35,
                       }}
@@ -370,7 +437,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
                         fontSize: 8,
-                        paddingTop: 2,
+                        paddingTop: 0,
                         paddingLeft: 35,
                         paddingRight: 35,
                       }}
@@ -404,6 +471,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         Date
                       </Text>
                     </View>
+
                     <View
                       style={{
                         display: 'flex',
@@ -419,49 +487,49 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         style={{
                           position: 'absolute',
                           marginLeft: 30,
-                          marginTop: -22,
+                          marginTop: -20,
                           width: 165,
 
                           textAlign: 'center',
                         }}
                       >
-                        {overtimeDetails.immediateSupervisorName}
+                        {overtimeAuthorizationReport?.signatories?.employeeName}
                       </Text>
                       <Text
                         style={{
                           position: 'absolute',
                           marginLeft: 163,
-                          marginTop: -22,
+                          marginTop: -20,
                           width: 165,
 
                           textAlign: 'center',
                         }}
                       >
-                        {'9-10-2023 test date'}
+                        {overtimeAuthorizationReport?.requestedDate}
                       </Text>
                       <Text
                         style={{
                           position: 'absolute',
                           marginLeft: 300,
-                          marginTop: -22,
+                          marginTop: -20,
                           width: 170,
 
                           textAlign: 'center',
                         }}
                       >
-                        {'test'}
+                        {overtimeAuthorizationReport?.signatories?.supervisorName}
                       </Text>
                       <Text
                         style={{
                           position: 'absolute',
-                          marginLeft: 445,
-                          marginTop: -22,
+                          marginLeft: 442,
+                          marginTop: -20,
                           width: 165,
 
                           textAlign: 'center',
                         }}
                       >
-                        {'9-10-2023 test date'}
+                        {overtimeAuthorizationReport?.managerApprovalDate}
                       </Text>
                     </View>
                   </View>

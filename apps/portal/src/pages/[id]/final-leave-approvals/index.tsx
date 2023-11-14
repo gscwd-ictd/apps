@@ -21,13 +21,13 @@ import { FinalApprovalsPendingLeaveModal } from 'apps/portal/src/components/fixe
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 import FinalApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/final-leave-approvals/FinalApprovalsCompletedLeaveModal';
 import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
-import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useRouter } from 'next/router';
 import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import UseRenderLeaveStatus from 'apps/portal/src/utils/functions/RenderLeaveStatus';
 
 export default function FinalLeaveApprovals({
   employeeDetails,

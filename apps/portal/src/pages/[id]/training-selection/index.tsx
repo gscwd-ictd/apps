@@ -60,8 +60,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   const router = useRouter();
 
-  const trainingUrl = `${process.env.NEXT_PUBLIC_LMS}api/lms/v1/training-details?lsp-type=individual`;
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
+  const trainingUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/supervisors/${employeeDetails.employmentDetails.userId}`;
+  // const trainingUrl = `${process.env.NEXT_PUBLIC_LMS}api/lms/v1/training-details?lsp-type=individual`;
 
   const {
     data: swrTrainingList,
@@ -83,7 +83,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingList)) {
-      getTrainingSelectionListSuccess(swrTrainingListIsLoading, swrTrainingList.items);
+      getTrainingSelectionListSuccess(swrTrainingListIsLoading, swrTrainingList);
     }
 
     if (!isEmpty(swrTrainingListError)) {
