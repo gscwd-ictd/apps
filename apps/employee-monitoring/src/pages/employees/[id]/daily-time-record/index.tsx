@@ -22,9 +22,6 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
   const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
 
   const toggle = () => setPrintModalIsOpen(!printModalIsOpen);
-  // const openPrintActionModal = () => {
-  //   setPrintModalIsOpen(true)
-  // }
 
   // use dtr store
   const { employeeDtr, setEmployeeDtr } = useDtrStore((state) => ({

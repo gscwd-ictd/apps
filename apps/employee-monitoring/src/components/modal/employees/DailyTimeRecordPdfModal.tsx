@@ -1,29 +1,30 @@
 import { Modal } from '@gscwd-apps/oneui';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import DtrPdf from '../../pdf/DtrPdf';
+import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
 
-type EmployeeAssignment = {
-  id: string;
-  name: string;
-  positionId: string;
-  positionTitle: string;
-};
+// type EmployeeAssignment = {
+//   id: string;
+//   name: string;
+//   positionId: string;
+//   positionTitle: string;
+// };
 
-type EmployeeData = {
-  assignment: EmployeeAssignment;
-  companyId: string;
-  fullName: string;
-  isHRMPSB: number;
-  photoUrl: string;
-  userId: string;
-  userRole: string;
-};
+// type EmployeeData = {
+//   assignment: EmployeeAssignment;
+//   companyId: string;
+//   fullName: string;
+//   isHRMPSB: number;
+//   photoUrl: string;
+//   userId: string;
+//   userRole: string;
+// };
 
 type DailyTimeRecordPdfModalProps = {
   printModalIsOpen: boolean;
   toggle: () => void;
-  employeeData: EmployeeData;
+  employeeData: EmployeeWithDetails;
 };
 
 const DailyTimeRecordPdfModal: FunctionComponent<DailyTimeRecordPdfModalProps> = ({
@@ -34,6 +35,10 @@ const DailyTimeRecordPdfModal: FunctionComponent<DailyTimeRecordPdfModalProps> =
   const { employeeDtr } = useDtrStore((state) => ({
     employeeDtr: state.employeeDtr,
   }));
+
+  // useEffect(() => {
+  //   console.log(employeeData);
+  // }, [employeeData]);
 
   return (
     <>

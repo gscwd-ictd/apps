@@ -7,27 +7,29 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
+import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
 
-type EmployeeAssignment = {
-  id: string;
-  name: string;
-  positionId: string;
-  positionTitle: string;
-};
+// type EmployeeAssignment = {
+//   id: string;
+//   name: string;
+//   positionId: string;
+//   positionTitle: string;
+// };
 
-type EmployeeData = {
-  assignment: EmployeeAssignment;
-  companyId: string;
-  fullName: string;
-  isHRMPSB: number;
-  photoUrl: string;
-  userId: string;
-  userRole: string;
-};
+// type EmployeeData = {
+//   assignment: EmployeeAssignment;
+//   companyId: string;
+//   fullName: string;
+//   isHRMPSB: number;
+//   photoUrl: string;
+//   userId: string;
+//   userRole: string;
+//   scheduleBase: string;
+// };
 
 type DtrPdfProps = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
-  employeeData: EmployeeData;
+  employeeData: EmployeeWithDetails;
 };
 
 const styles = StyleSheet.create({
@@ -285,19 +287,19 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     {/* OFFICE */}
                     <View style={[styles.rowContainer, { paddingTop: 4 }]}>
                       <Text style={[styles.w20]}>OFFICE</Text>
-                      <Text style={[styles.w80]}>office_name</Text>
+                      <Text style={[styles.w80]}>{employeeData.assignment.officeName}</Text>
                     </View>
 
                     {/* DEPARTMENT */}
                     <View style={[styles.rowContainer]}>
                       <Text style={[styles.w20]}>DEPARTMENT</Text>
-                      <Text style={[styles.w80]}>department_name</Text>
+                      <Text style={[styles.w80]}>{employeeData.assignment.departmentName}</Text>
                     </View>
 
                     {/* DIVISION */}
                     <View style={[styles.rowContainer]}>
                       <Text style={[styles.w20]}>DIVISION</Text>
-                      <Text style={[styles.w80]}>division_name</Text>
+                      <Text style={[styles.w80]}>{employeeData.assignment.divisionName}</Text>
                     </View>
                   </View>
                 </View>

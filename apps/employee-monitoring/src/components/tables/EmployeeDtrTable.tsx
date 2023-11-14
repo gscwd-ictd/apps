@@ -13,6 +13,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
 import { LoadingSpinner } from '@gscwd-apps/oneui';
+import { ScheduleBase } from '../../utils/enum/schedule-bases.enum';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -23,9 +24,6 @@ type EmployeeDtrTableProps = {
 };
 
 export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ employeeData }) => {
-  // temporary, will be used if office schedules will be captured
-  const [workLocationOffice, setWorkLocationOffice] = useState<boolean>(true);
-
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
 
@@ -131,10 +129,6 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
     if (!isEmpty(swrDtrError)) getEmployeeDtrFail(swrDtrError.message);
   }, [swrDtr, swrDtrError]);
 
-  useEffect(() => {
-    console.log(employeeData);
-  }, [employeeData]);
-
   if (swrDtrIsLoading)
     return (
       <>
@@ -152,7 +146,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
       />
 
       {/* OFFICE EMPLOYEE DTR TABLE */}
-      {workLocationOffice ? (
+      {employeeData.scheduleBase === ScheduleBase.OFFICE ? (
         <div className="flex w-full mt-2 overflow-x-auto ">
           <table className="w-full border table-auto border-spacing-0 bg-slate-50">
             <thead className="">
@@ -279,7 +273,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
       ) : null}
 
       {/* MAINTENANCE or STATION EMPLOYEE DTR TABLE */}
-      {!workLocationOffice ? (
+      {employeeData.scheduleBase === ScheduleBase.FIELD ||
+      employeeData.scheduleBase === ScheduleBase.PUMPING_STATION ? (
         <>
           <section className="grid grid-cols-11 grid-rows-2 text-xs font-semibold border rounded-tl rounded-tr border-slate-300 bg-gray-50 mt-2">
             <div className="col-span-2 row-span-2 border rounded-tl ">
