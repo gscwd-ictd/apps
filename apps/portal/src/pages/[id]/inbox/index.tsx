@@ -1,44 +1,43 @@
-import axios from 'axios';
-import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+/* eslint-disable @nx/enforce-module-boundaries */
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiMail } from 'react-icons/hi';
-import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import SideNav from '../../../components/fixed/nav/SideNav';
-import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
+import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
+import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
+import { EmployeeProvider } from '../../../context/EmployeeContext';
+import { employee } from '../../../utils/constants/data';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { employeeDummy } from '../../../../src/types/employee.type';
-import { PsbMessageContent } from '../../../../src/types/inbox.type';
 import useSWR from 'swr';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
-import { useInboxStore } from '../../../../src/store/inbox.store';
+import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
-import { InboxPsbContent } from 'apps/portal/src/components/fixed/inbox/InboxPsbContent';
-import { ConfirmationInboxModal } from 'apps/portal/src/components/fixed/inbox/ConfirmationModal';
-import { InboxTrainingContent } from 'apps/portal/src/components/fixed/inbox/InboxTrainingContent';
-import { InboxOvertimeContent } from 'apps/portal/src/components/fixed/inbox/InboxOvertimeContent';
+import React from 'react';
+import { employeeDummy } from '../../../../src/types/employee.type';
+import 'react-toastify/dist/ReactToastify.css';
+import { isEmpty } from 'lodash';
+import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
+import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
+import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useRouter } from 'next/router';
+import { useInboxStore } from '../../../store/inbox.store';
+import { InboxTabs } from 'apps/portal/src/components/fixed/inbox/InboxTabs';
+import { InboxTabWindow } from 'apps/portal/src/components/fixed/inbox/InboxTabWindow';
+import InboxPsbModal from 'apps/portal/src/components/fixed/inbox/InboxPsbModal';
 
-export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [messageContent, setMessageContent] = useState<PsbMessageContent>();
-  const [mailMessage, setMailMessage] = useState<string>('');
-  const [isAccepted, setIsAccepted] = useState<boolean>(false);
-  const [selectedVppId, setSelectedVppId] = useState<string>(''); // store selected PSB VPP Id for POST
-  const [remarks, setRemarks] = useState<string>(''); // store remarks for declining assignment for POST
-
+export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
+    tab,
     loadingResponse,
+    loadingPsbMessages,
     errorMessage,
     errorResponse,
     patchResponseApply,
 
-    getMessageList,
-    getMessageListSuccess,
-    getMessageListFail,
+    getPsbMessageList,
+    getPsbMessageListSuccess,
+    getPsbMessageListFail,
 
     patchInboxReponse,
     patchInboxReponseSuccess,
@@ -55,15 +54,25 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     setSelectedMessageType,
     isMessageOpen,
     setIsMessageOpen,
+
+    psbMessageModalIsOpen,
+    overtimeMessageModalIsOpen,
+    trainingMessageModalIsOpen,
+
+    setPsbMessageModalIsOpen,
+    setOvertimeMessageModalIsOpen,
+    setTrainingMessageModalIsOpen,
   } = useInboxStore((state) => ({
+    tab: state.tab,
     loadingResponse: state.loading.loadingResponse,
-    errorMessage: state.error.errorMessages,
+    loadingPsbMessages: state.loading.loadingPsbMessages,
+    errorMessage: state.error.errorPsbMessages,
     errorResponse: state.error.errorResponse,
     patchResponseApply: state.response.patchResponseApply,
 
-    getMessageList: state.getMessageList,
-    getMessageListSuccess: state.getMessageListSuccess,
-    getMessageListFail: state.getMessageListFail,
+    getPsbMessageList: state.getPsbMessageList,
+    getPsbMessageListSuccess: state.getPsbMessageListSuccess,
+    getPsbMessageListFail: state.getPsbMessageListFail,
 
     patchInboxReponse: state.patchInboxReponse,
     patchInboxReponseSuccess: state.patchInboxReponseSuccess,
@@ -80,6 +89,14 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     setSelectedMessageType: state.setSelectedMessageType,
     isMessageOpen: state.isMessageOpen,
     setIsMessageOpen: state.setIsMessageOpen,
+
+    psbMessageModalIsOpen: state.psbMessageModalIsOpen,
+    overtimeMessageModalIsOpen: state.overtimeMessageModalIsOpen,
+    trainingMessageModalIsOpen: state.trainingMessageModalIsOpen,
+
+    setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
+    setOvertimeMessageModalIsOpen: state.setOvertimeMessageModalIsOpen,
+    setTrainingMessageModalIsOpen: state.setTrainingMessageModalIsOpen,
   }));
 
   const router = useRouter();
@@ -97,9 +114,9 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
-    data: swrMessages,
-    isLoading: swrIsLoadingMessages,
-    error: swrError,
+    data: swrPsbMessages,
+    isLoading: swrIsLoadingPsbMessages,
+    error: swrPsbMessageError,
     mutate: mutateMessages,
   } = useSWR(unacknowledgedPsbUrl, fetchWithToken, {
     shouldRetryOnError: false,
@@ -108,21 +125,21 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
 
   // Initial zustand state update
   useEffect(() => {
-    if (swrIsLoadingMessages) {
-      getMessageList(swrIsLoadingMessages);
+    if (swrIsLoadingPsbMessages) {
+      getPsbMessageList(swrIsLoadingPsbMessages);
     }
-  }, [swrIsLoadingMessages]);
+  }, [swrIsLoadingPsbMessages]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (!isEmpty(swrMessages)) {
-      getMessageListSuccess(swrIsLoadingMessages, swrMessages);
+    if (!isEmpty(swrPsbMessages)) {
+      getPsbMessageListSuccess(swrIsLoadingPsbMessages, swrPsbMessages);
     }
 
-    if (!isEmpty(swrError)) {
-      getMessageListFail(swrIsLoadingMessages, swrError.message);
+    if (!isEmpty(swrPsbMessageError)) {
+      getPsbMessageListFail(swrIsLoadingPsbMessages, swrPsbMessageError.message);
     }
-  }, [swrMessages, swrError]);
+  }, [swrPsbMessages, swrPsbMessageError]);
 
   useEffect(() => {
     if (!isEmpty(patchResponseApply)) {
@@ -133,117 +150,62 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
     }
   }, [patchResponseApply]);
 
-  const handleMessage = (acknowledgement?: PsbMessageContent, type?: string) => {
-    let sampleType = type;
-    if (sampleType == InboxMessageType.PSB) {
-      setSelectedMessageType(InboxMessageType.PSB);
-      setMessagePsb(acknowledgement);
-    } else if (sampleType == InboxMessageType.TRAINING_NOMINATION) {
-      setSelectedMessageType(InboxMessageType.TRAINING_NOMINATION);
-      // setMessagePsb(acknowledgement);
-    } else if (sampleType == InboxMessageType.OVERTIME) {
-      setSelectedMessageType(InboxMessageType.OVERTIME);
-      // setMessageOvertime(acknowledgement);
-    }
-    setDeclineRemarks('');
-    setIsMessageOpen(true);
-  };
-
-  const closeConfirmModalAction = async () => {
-    setConfirmModalIsOpen(false);
+  // cancel action for Pass Slip Completed Modal
+  const closePsbMessageModal = async () => {
+    setPsbMessageModalIsOpen(false);
   };
 
   return (
     <>
-      {/* Messages Load Failed Error */}
-      {!isEmpty(errorMessage) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorMessage}: Failed to load messages.`} />
-      ) : null}
+      <EmployeeProvider employeeData={employee}>
+        <Head>
+          <title>Inbox</title>
+        </Head>
 
-      {/* PSB Member Acknowledgement Failed Error */}
-      {!isEmpty(errorResponse) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to submit response.`} />
-      ) : null}
+        <SideNav employeeDetails={employeeDetails} />
 
-      {/* PSB Member Acknowledgement Success */}
-      {!isEmpty(patchResponseApply) ? (
-        <ToastNotification toastType="success" notifMessage={`Response submitted.`} />
-      ) : null}
+        {/* Pass Slip Pending Modal */}
+        <InboxPsbModal
+          modalState={psbMessageModalIsOpen}
+          setModalState={setPsbMessageModalIsOpen}
+          closeModalAction={closePsbMessageModal}
+        />
 
-      <Head>
-        <title>Inbox</title>
-      </Head>
+        <MainContainer>
+          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+            <ContentHeader
+              title="Employee Inbox"
+              subtitle="View messages and notifications"
+              backUrl={`/${router.query.id}`}
+            ></ContentHeader>
 
-      <SideNav employeeDetails={employeeDetails} />
-
-      <ConfirmationInboxModal
-        modalState={confirmModalIsOpen}
-        setModalState={setConfirmModalIsOpen}
-        closeModalAction={closeConfirmModalAction}
-      />
-
-      <MainContainer>
-        <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
-          <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">
-            <label className="pb-4">Inbox</label>
-            {swrMessages && swrMessages.length > 0 ? (
-              swrMessages.map((acknowledgement: PsbMessageContent, messageIdx: number) => {
-                return (
-                  <div
-                    key={messageIdx}
-                    className={`${
-                      acknowledgement.details.acknowledgedSchedule || acknowledgement.details.declinedSchedule
-                        ? 'opacity-50'
-                        : ''
-                    }`}
-                  >
-                    <MessageCard
-                      icon={<HiMail className="w-6 h-6 text-green-800" />}
-                      color={`green`}
-                      title={'PSB Member Acknowledgement'}
-                      description={`Position: ${acknowledgement.details.positionTitle}`}
-                      linkType={'router'}
-                      onClick={() => handleMessage(acknowledgement, InboxMessageType.PSB)}
-                    />
-                  </div>
-                );
-              })
-            ) : (
-              <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                <label className="w-full text-4xl text-center text-gray-400 ">NO MESSAGES</label>
+            {loadingPsbMessages ? (
+              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+                <SpinnerDotted
+                  speed={70}
+                  thickness={70}
+                  className="flex w-full h-full transition-all "
+                  color="slateblue"
+                  size={100}
+                />
               </div>
+            ) : (
+              <ContentBody>
+                <>
+                  <div className={`w-full flex lg:flex-row flex-col`}>
+                    <div className={`lg:w-[58rem] w-full`}>
+                      <InboxTabs tab={tab} />
+                    </div>
+                    <div className="w-full">
+                      <InboxTabWindow />
+                    </div>
+                  </div>
+                </>
+              </ContentBody>
             )}
-            <MessageCard
-              icon={<HiMail className="w-6 h-6 text-green-800" />}
-              color={`green`}
-              title={'Training Nomination'}
-              description={`Course Title: Sample Training`}
-              linkType={'router'}
-              onClick={() => handleMessage({} as PsbMessageContent, InboxMessageType.TRAINING_NOMINATION)}
-            />
-
-            <MessageCard
-              icon={<HiMail className="w-6 h-6 text-green-800" />}
-              color={`green`}
-              title={'Overtime Assignment'}
-              description={`Estimated Hours: 4 `}
-              linkType={'router'}
-              onClick={() => handleMessage({} as PsbMessageContent, InboxMessageType.OVERTIME)}
-            />
           </div>
-          {isMessageOpen ? (
-            <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4 rounded-xl">
-              {selectedMessageType == InboxMessageType.PSB ? <InboxPsbContent /> : null}
-              {selectedMessageType == InboxMessageType.TRAINING_NOMINATION ? <InboxTrainingContent /> : null}
-              {selectedMessageType == InboxMessageType.OVERTIME ? <InboxOvertimeContent /> : null}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center w-full pt-1 text-4xl text-center text-gray-400 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
-              NO MESSAGE SELECTED
-            </div>
-          )}
-        </div>
-      </MainContainer>
+        </MainContainer>
+      </EmployeeProvider>
     </>
   );
 }

@@ -8,7 +8,7 @@ import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 export type InboxState = {
   message: {
-    messages: Array<PsbMessageContent>;
+    psbMessages: Array<PsbMessageContent>;
     psb: PsbMessageContent;
     overtime: OvertimeDetails;
     training: any;
@@ -17,13 +17,24 @@ export type InboxState = {
     patchResponseApply: any;
   };
   loading: {
-    loadingMessages: boolean;
+    loadingPsbMessages: boolean;
     loadingResponse: boolean;
   };
   error: {
-    errorMessages: string;
+    errorPsbMessages: string;
     errorResponse: string;
   };
+
+  tab: number;
+  setTab: (tab: number) => void;
+
+  psbMessageModalIsOpen: boolean;
+  overtimeMessageModalIsOpen: boolean;
+  trainingMessageModalIsOpen: boolean;
+
+  setPsbMessageModalIsOpen: (psbMessageModalIsOpen: boolean) => void;
+  setOvertimeMessageModalIsOpen: (overtimeMessageModalIsOpen: boolean) => void;
+  setTrainingMessageModalIsOpen: (trainingMessageModalIsOpen: boolean) => void;
 
   setMessagePsb: (psb: PsbMessageContent) => void;
 
@@ -59,9 +70,9 @@ export type InboxState = {
   isMessageOpen: boolean;
   setIsMessageOpen: (isMessageOpen: boolean) => void;
 
-  getMessageList: (loading: boolean) => void;
-  getMessageListSuccess: (loading: boolean, response) => void;
-  getMessageListFail: (loading: boolean, error: string) => void;
+  getPsbMessageList: (loading: boolean) => void;
+  getPsbMessageListSuccess: (loading: boolean, response) => void;
+  getPsbMessageListFail: (loading: boolean, error: string) => void;
 
   patchInboxReponse: () => void;
   patchInboxReponseSuccess: (response: any) => void;
@@ -73,46 +84,43 @@ export type InboxState = {
 export const useInboxStore = create<InboxState>()(
   devtools((set) => ({
     message: {
-      messages: [],
+      psbMessages: [],
       psb: {} as PsbMessageContent,
-      overtime: {
-        estimatedHours: '8',
-        id: '208bbd7a-0ec7-4b60-8dba-2ebe38795e95',
-        immediateSupervisorName: 'Eric C. Sison',
-        plannedDate: '2023-09-15T16:00:00.000Z',
-        purpose: 'Repair Main Pipeline in National Highway',
-        status: OvertimeStatus.APPROVED,
-        employees: [
-          {
-            assignment: 'Geographical Information System Division',
-            avatarUrl: 'http://172.20.110.45:4500/REYES.jpg',
-            companyId: '2021-019',
-            employeeId: '6e0ef093-0e63-11ee-8b82-005056b680ac',
-            fullName: 'Cara Jade C. Reyes',
-            positionTitle: 'Engineering Assistant',
-          },
-          {
-            assignment: 'Geographical Information System Division',
-            avatarUrl: 'http://172.20.110.45:4500/BAUGBOG.jpg',
-            companyId: '2021-019',
-            employeeId: '6e0ef093-0e63-11ee-8b82-005056b680ac',
-            fullName: 'Rizza R. Baugbog, CE',
-            positionTitle: 'Supervising Data Encoder-Controller',
-          },
-        ],
-      },
+      overtime: {} as any,
       training: {} as any,
     },
     response: {
       patchResponseApply: {},
     },
     loading: {
-      loadingMessages: false,
+      loadingPsbMessages: false,
       loadingResponse: false,
     },
     error: {
-      errorMessages: '',
+      errorPsbMessages: '',
       errorResponse: '',
+    },
+
+    psbMessageModalIsOpen: false,
+    overtimeMessageModalIsOpen: false,
+    trainingMessageModalIsOpen: false,
+
+    setPsbMessageModalIsOpen: (psbMessageModalIsOpen: boolean) => {
+      set((state) => ({ ...state, psbMessageModalIsOpen }));
+    },
+
+    setOvertimeMessageModalIsOpen: (overtimeMessageModalIsOpen: boolean) => {
+      set((state) => ({ ...state, overtimeMessageModalIsOpen }));
+    },
+
+    setTrainingMessageModalIsOpen: (trainingMessageModalIsOpen: boolean) => {
+      set((state) => ({ ...state, trainingMessageModalIsOpen }));
+    },
+
+    tab: 1,
+
+    setTab: (tab: number) => {
+      set((state) => ({ ...state, tab }));
     },
 
     confirmModalIsOpen: false,
@@ -188,47 +196,51 @@ export const useInboxStore = create<InboxState>()(
     },
 
     //GET INBOX MESSAGES
-    getMessageList: (loading: boolean) => {
+    getPsbMessageList: (loading: boolean) => {
       set((state) => ({
         ...state,
         message: {
           ...state.message,
-          messages: [],
+          psbMessages: [],
         },
         loading: {
           ...state.loading,
-          loadingMessages: loading,
+          loadingPsbMessages: loading,
         },
         error: {
           ...state.error,
-          errorMessages: '',
+          errorPsbMessages: '',
         },
       }));
     },
-    getMessageListSuccess: (loading: boolean, response: Array<PsbMessageContent>) => {
+    getPsbMessageListSuccess: (loading: boolean, response: Array<PsbMessageContent>) => {
       set((state) => ({
         ...state,
         message: {
           ...state.message,
-          messages: response,
+          psbMessages: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingPsbMessages: loading,
         },
 
         error: {
           ...state.error,
-          errorMessages: '',
+          errorPsbMessages: '',
         },
       }));
     },
-    getMessageListFail: (loading: boolean, error: string) => {
+    getPsbMessageListFail: (loading: boolean, error: string) => {
       set((state) => ({
         ...state,
         loading: {
           ...state.loading,
-          loadingMessages: loading,
+          loadingPsbMessages: loading,
         },
         error: {
           ...state.error,
-          errorMessages: error,
+          errorPsbMessages: error,
         },
       }));
     },
