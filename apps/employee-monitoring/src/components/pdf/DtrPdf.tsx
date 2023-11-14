@@ -228,10 +228,14 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     </Text>
 
                     {/* DATE PERIOD */}
-                    <Text style={{ fontSize: 9, paddingTop: 10 }}>
-                      As of <Text>{dayjs(employeeDtr.dtrDays[0].day).format('MM/DD/YYYY')}</Text> to{' '}
-                      <Text>{dayjs(employeeDtr.dtrDays[employeeDtr.dtrDays.length - 1].day).format('MM/DD/YYYY')}</Text>
-                    </Text>
+                    {employeeDtr.dtrDays?.length > 0 ? (
+                      <Text style={{ fontSize: 9, paddingTop: 10 }}>
+                        As of <Text>{dayjs(employeeDtr.dtrDays[0]?.day).format('MM/DD/YYYY')}</Text> to{' '}
+                        <Text>
+                          {dayjs(employeeDtr.dtrDays[employeeDtr.dtrDays?.length - 1]?.day).format('MM/DD/YYYY')}
+                        </Text>
+                      </Text>
+                    ) : null}
 
                     {/* <Text style={{ fontSize: 9, paddingTop: 10 }}>
                       For the month of{' '}
@@ -379,7 +383,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   <View>
                     {/* For Office Schedule */}
                     {isOfficeSchedule
-                      ? employeeDtr.dtrDays.map((log, index) => {
+                      ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';
@@ -511,7 +515,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
 
                     {/* For Field/Pumping Station Schedule | WAITING FOR UPDATES*/}
                     {isFieldStationSchedule
-                      ? employeeDtr.dtrDays.map((log, index) => {
+                      ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';

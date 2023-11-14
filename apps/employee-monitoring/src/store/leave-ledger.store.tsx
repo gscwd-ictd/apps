@@ -88,6 +88,7 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
 
     emptyResponse: () =>
       set({
+        postLeaveAdjustment: {} as LeaveAdjustmentResponse,
         error: { errorEntry: '', errorLedger: '' },
         errorLeaveAdjustment: '',
       }),

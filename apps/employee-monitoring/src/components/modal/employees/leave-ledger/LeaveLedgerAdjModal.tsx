@@ -57,11 +57,14 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     GetLeaveBenefitsFail: state.getLeaveBenefitsFail,
   }));
 
-  const { PostLeaveAdjustment, SetPostLeaveAdjustment, SetErrorLeaveAdjustment } = useLeaveLedgerStore((state) => ({
-    PostLeaveAdjustment: state.postLeaveAdjustment,
-    SetPostLeaveAdjustment: state.setPostLeaveAdjustment,
-    SetErrorLeaveAdjustment: state.setErrorLeaveAdjustment,
-  }));
+  const { PostLeaveAdjustment, SetPostLeaveAdjustment, SetErrorLeaveAdjustment, EmptyResponse } = useLeaveLedgerStore(
+    (state) => ({
+      PostLeaveAdjustment: state.postLeaveAdjustment,
+      SetPostLeaveAdjustment: state.setPostLeaveAdjustment,
+      SetErrorLeaveAdjustment: state.setErrorLeaveAdjustment,
+      EmptyResponse: state.emptyResponse,
+    })
+  );
 
   // react hook form initialization
   const {
@@ -83,6 +86,8 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
 
   // form submission
   const onSubmit = (data: LeaveAdjustmentForm) => {
+    EmptyResponse();
+
     handlePostResult(data);
   };
 
@@ -131,7 +136,6 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
   // select leave benefits by id
   const getLeaveBenefitById = (id: string) => {
     const tempLeave = transformedLeaves.find((leave) => leave.value === id);
-    // console.log(tempLeave);
 
     setSelectedLeaveBenefit({
       id: tempLeave.value,

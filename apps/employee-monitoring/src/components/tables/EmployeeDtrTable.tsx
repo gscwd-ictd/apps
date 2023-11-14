@@ -24,7 +24,7 @@ type EmployeeDtrTableProps = {
 
 export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ employeeData }) => {
   // temporary, will be used if office schedules will be captured
-  const [isOfficeSchedule, setIsOfficeSchedule] = useState<boolean>(true);
+  const [workLocationOffice, setWorkLocationOffice] = useState<boolean>(true);
 
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
@@ -133,7 +133,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
   useEffect(() => {
     console.log(employeeData);
-  }, []);
+  }, [employeeData]);
 
   if (swrDtrIsLoading)
     return (
@@ -152,7 +152,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
       />
 
       {/* OFFICE EMPLOYEE DTR TABLE */}
-      {isOfficeSchedule ? (
+      {workLocationOffice ? (
         <div className="flex w-full mt-2 overflow-x-auto ">
           <table className="w-full border table-auto border-spacing-0 bg-slate-50">
             <thead className="">
@@ -279,9 +279,9 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
       ) : null}
 
       {/* MAINTENANCE or STATION EMPLOYEE DTR TABLE */}
-      {!isOfficeSchedule ? (
+      {!workLocationOffice ? (
         <>
-          <section className="grid grid-cols-11 grid-rows-2 text-xs font-semibold border rounded-tl rounded-tr border-slate-300 bg-gray-50">
+          <section className="grid grid-cols-11 grid-rows-2 text-xs font-semibold border rounded-tl rounded-tr border-slate-300 bg-gray-50 mt-2">
             <div className="col-span-2 row-span-2 border rounded-tl ">
               <span className="flex items-center justify-center w-full h-full">Remarks</span>
             </div>
@@ -310,6 +310,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
               </div>
             </div>
           </section>
+
           {/* Table contents */}
           {!getIsLoading && selectedMonth !== '--' && selectedYear !== '--' && !isEmpty(employeeDtr)
             ? employeeDtr.dtrDays.map((logs, index) => {

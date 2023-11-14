@@ -201,11 +201,6 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
         </div>
       </div>
 
-      {/* <LeaveDatesAndRemarksModal
-      closeModalAction={()=>{}}
-
-      /> */}
-
       <div className="w-full overflow-auto  max-h-[28rem]">
         <table className="w-full border table-fixed bg-slate-50">
           <thead className="sticky top-0 bg-slate-50">
