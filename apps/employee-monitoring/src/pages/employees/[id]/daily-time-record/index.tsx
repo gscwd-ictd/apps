@@ -22,12 +22,10 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
   const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
 
   const toggle = () => setPrintModalIsOpen(!printModalIsOpen);
-  // const openPrintActionModal = () => {
-  //   setPrintModalIsOpen(true)
-  // }
 
   // use dtr store
-  const { setEmployeeDtr } = useDtrStore((state) => ({
+  const { employeeDtr, setEmployeeDtr } = useDtrStore((state) => ({
+    employeeDtr: state.employeeDtr,
     setEmployeeDtr: state.setEmployeeDtr,
   }));
 
@@ -71,7 +69,10 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           <ToastNotification notifMessage="Successfully added a schedule!" toastType="success" />
         ) : null}
 
-        <DailyTimeRecordPdfModal printModalIsOpen={printModalIsOpen} toggle={toggle} employeeData={employeeData} />
+        {/* Modal is available if DTR is pulled */}
+        {!isEmpty(employeeDtr) ? (
+          <DailyTimeRecordPdfModal printModalIsOpen={printModalIsOpen} toggle={toggle} employeeData={employeeData} />
+        ) : null}
 
         <div className="flex flex-col w-full gap-6 px-5">
           {/* DTR CARD */}
@@ -97,6 +98,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                   <div className="text-2xl font-semibold text-gray-600">
                     {employeeData ? employeeData.fullName : null}
                   </div>
+                  <div className="text-xl text-gray-500">{employeeData ? employeeData.companyId : null}</div>
                   <div className="text-xl text-gray-500">
                     {employeeData ? employeeData.assignment.positionTitle : null}
                   </div>
@@ -131,6 +133,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
               <DtrDateSelect />
               <PrintButton onClick={toggle} />
             </div>
+
             {/* EMPLOYEE DTR TABLE */}
             <EmployeeDtrTable employeeData={employeeData} />
           </Card>

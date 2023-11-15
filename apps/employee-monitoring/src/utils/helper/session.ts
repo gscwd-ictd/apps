@@ -51,13 +51,10 @@ export async function getCookieFromServer(cookie) {
 
   // get the hrms ssid length else redirect to /login
   if (hrmsSsid && hrmsSsid.length > 0) {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/users/details`,
-      {
-        withCredentials: true,
-        headers: { Cookie: `${hrmsSsid}` },
-      }
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/users/details`, {
+      withCredentials: true,
+      headers: { Cookie: `${hrmsSsid}` },
+    });
 
     setUserLoginDetails(data);
     return data;
@@ -81,13 +78,10 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
 
       // get the hrms ssid length else redirect to /login
       if (hrmsSsid.length > 0) {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/users/details`,
-          {
-            withCredentials: true,
-            headers: { Cookie: `${hrmsSsid}` },
-          }
-        );
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/users/details`, {
+          withCredentials: true,
+          headers: { Cookie: `${hrmsSsid}` },
+        });
 
         // setUserDetails(data);
         setUserLoginDetails(data);
@@ -129,8 +123,5 @@ export function getHrmsSsid(cookiesArray: Array<string> | null) {
 }
 
 export function invalidateSession(response: ServerResponse) {
-  response.setHeader(
-    'Set-Cookie',
-    'ssid_portal=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-  );
+  response.setHeader('Set-Cookie', 'ssid_portal=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT');
 }

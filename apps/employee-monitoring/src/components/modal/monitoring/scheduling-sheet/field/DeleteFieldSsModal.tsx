@@ -5,10 +5,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import {
-  ScheduleSheet,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 
 type DeleteModalProps = {
   modalState: boolean;
@@ -49,9 +46,7 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
   };
 
   const handleDeleteResult = async () => {
-    const { error, result } = await deleteEmpMonitoring(
-      `/travel-order/${rowData.id}`
-    );
+    const { error, result } = await deleteEmpMonitoring(`/travel-order/${rowData.id}`);
 
     if (error) {
       deleteScheduleSheetFail(result);
@@ -82,7 +77,8 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
                 <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
                   Are you sure you want to delete entry
                   <span className="px-2 font-bold text-center text-md">
-                    {JSON.stringify(rowData.customGroupId)}
+                    {JSON.stringify(rowData.customGroupName)}
+                    {/* {JSON.stringify(rowData)} */}
                   </span>
                   ?
                 </p>
