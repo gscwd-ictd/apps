@@ -68,8 +68,10 @@ export const AllPassSlipListTab = ({ passslips, tab }: AllPassSlipListTabProps) 
                       ? 'DISAPPROVED'
                       : item.status === PassSlipStatus.CANCELLED
                       ? 'CANCELLED'
-                      : item.status === PassSlipStatus.FOR_APPROVAL
-                      ? 'FOR APPROVAL'
+                      : item.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+                      ? 'FOR SUPERVISOR APPROVAL'
+                      : item.status === PassSlipStatus.FOR_HRMO_APPROVAL
+                      ? 'FOR HRMO APPROVAL'
                       : item.status.toUpperCase()}
                   </p>
                 </div>

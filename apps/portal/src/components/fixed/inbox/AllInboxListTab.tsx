@@ -4,7 +4,7 @@ import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.t
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useInboxStore } from '../../../../src/store/inbox.store';
-import { PsbMessageContent } from 'apps/portal/src/types/inbox.type';
+import { OvertimeMessageContent, PsbMessageContent } from 'apps/portal/src/types/inbox.type';
 
 type TabProps = {
   overtimeNotification?: Array<any> | null;
@@ -14,12 +14,14 @@ type TabProps = {
 };
 
 export const AllInboxListTab = ({ overtimeNotification, psbNotification, trainingNotification, tab }: TabProps) => {
-  const { psbMessages, psbMessageModalIsOpen, setPsbMessageModalIsOpen, setMessagePsb } = useInboxStore((state) => ({
-    psbMessages: state.message.psbMessages,
-    psbMessageModalIsOpen: state.psbMessageModalIsOpen,
-    setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
-    setMessagePsb: state.setMessagePsb,
-  }));
+  const { overtimeMessages, psbMessages, psbMessageModalIsOpen, setPsbMessageModalIsOpen, setMessagePsb } =
+    useInboxStore((state) => ({
+      overtimeMessages: state.message.overtimeMessages,
+      psbMessages: state.message.psbMessages,
+      psbMessageModalIsOpen: state.psbMessageModalIsOpen,
+      setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
+      setMessagePsb: state.setMessagePsb,
+    }));
 
   const onSelect = (messageDetails) => {
     //PSB
@@ -37,6 +39,34 @@ export const AllInboxListTab = ({ overtimeNotification, psbNotification, trainin
 
   return (
     <>
+      {tab === 1 && overtimeMessages && overtimeMessages.length > 0 ? (
+        <ul className={'mt-4 lg:mt-0'}>
+          {overtimeMessages.map((item: OvertimeMessageContent, index: number) => {
+            return (
+              <li
+                key={index}
+                onClick={() => onSelect(item)}
+                className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
+              >
+                <div className={`w-full px-1 py-2`}>
+                  <h1 className={`text-lg font-medium text-gray-600 `}>
+                    {DateFormatter(item?.plannedDate, 'MMMM DD, YYYY')}
+                  </h1>
+
+                  <p className={`text-sm text-gray-500 `}>Estimated Hours: {item.estimatedHours}</p>
+                  <p className={`text-sm text-gray-500 `}>Purpose: {item.purpose}</p>
+                  <p className={`text-sm w-96 text-indigo-500 `}>Status: {item.status}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <div className="flex justify-center pt-20">
+          <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
+        </div>
+      )}
+
       {tab === 3 && psbMessages && psbMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
           {psbMessages.map((item: PsbMessageContent, index: number) => {

@@ -1,13 +1,14 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { PsbMessageContent } from '../types/inbox.type';
+import { OvertimeMessageContent, PsbMessageContent } from '../types/inbox.type';
 import { InboxMessageResponse, InboxMessageType } from '../../../../libs/utils/src/lib/enums/inbox.enum';
 import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 export type InboxState = {
   message: {
+    overtimeMessages: Array<OvertimeMessageContent>;
     psbMessages: Array<PsbMessageContent>;
     psb: PsbMessageContent;
     overtime: OvertimeDetails;
@@ -17,10 +18,12 @@ export type InboxState = {
     patchResponseApply: any;
   };
   loading: {
+    loadingOvertimeMessages: boolean;
     loadingPsbMessages: boolean;
     loadingResponse: boolean;
   };
   error: {
+    errorOvertimeMessages: string;
     errorPsbMessages: string;
     errorResponse: string;
   };
@@ -74,6 +77,10 @@ export type InboxState = {
   getPsbMessageListSuccess: (loading: boolean, response) => void;
   getPsbMessageListFail: (loading: boolean, error: string) => void;
 
+  getOvertimeMessageList: (loading: boolean) => void;
+  getOvertimeMessageListSuccess: (loading: boolean, response) => void;
+  getOvertimeMessageListFail: (loading: boolean, error: string) => void;
+
   patchInboxReponse: () => void;
   patchInboxReponseSuccess: (response: any) => void;
   patchInboxReponseFail: (error: string) => void;
@@ -84,6 +91,7 @@ export type InboxState = {
 export const useInboxStore = create<InboxState>()(
   devtools((set) => ({
     message: {
+      overtimeMessages: [],
       psbMessages: [],
       psb: {} as PsbMessageContent,
       overtime: {} as any,
@@ -93,10 +101,12 @@ export const useInboxStore = create<InboxState>()(
       patchResponseApply: {},
     },
     loading: {
+      loadingOvertimeMessages: false,
       loadingPsbMessages: false,
       loadingResponse: false,
     },
     error: {
+      errorOvertimeMessages: '',
       errorPsbMessages: '',
       errorResponse: '',
     },
@@ -195,7 +205,7 @@ export const useInboxStore = create<InboxState>()(
       }));
     },
 
-    //GET INBOX MESSAGES
+    //GET PSB MESSAGES
     getPsbMessageList: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -241,6 +251,56 @@ export const useInboxStore = create<InboxState>()(
         error: {
           ...state.error,
           errorPsbMessages: error,
+        },
+      }));
+    },
+
+    //GET OVERTIME MESSAGES
+    getOvertimeMessageList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          overtimeMessagesMessages: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingOvertimeMessages: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeMessages: '',
+        },
+      }));
+    },
+    getOvertimeMessageListSuccess: (loading: boolean, response: Array<OvertimeMessageContent>) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          overtimeMessages: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingOvertimeMessages: loading,
+        },
+
+        error: {
+          ...state.error,
+          errorOvertimeMessages: '',
+        },
+      }));
+    },
+    getOvertimeMessageListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertimeMessages: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeMessages: error,
         },
       }));
     },

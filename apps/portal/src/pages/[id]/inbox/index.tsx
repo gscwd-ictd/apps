@@ -39,6 +39,10 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getPsbMessageListSuccess,
     getPsbMessageListFail,
 
+    getOvertimeMessageList,
+    getOvertimeMessageListSuccess,
+    getOvertimeMessageListFail,
+
     patchInboxReponse,
     patchInboxReponseSuccess,
     patchInboxReponseFail,
@@ -73,6 +77,10 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getPsbMessageList: state.getPsbMessageList,
     getPsbMessageListSuccess: state.getPsbMessageListSuccess,
     getPsbMessageListFail: state.getPsbMessageListFail,
+
+    getOvertimeMessageList: state.getOvertimeMessageList,
+    getOvertimeMessageListSuccess: state.getOvertimeMessageListSuccess,
+    getOvertimeMessageListFail: state.getOvertimeMessageListFail,
 
     patchInboxReponse: state.patchInboxReponse,
     patchInboxReponseSuccess: state.patchInboxReponseSuccess,
@@ -118,10 +126,14 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoadingPsbMessages,
     error: swrPsbMessageError,
     mutate: mutateMessages,
-  } = useSWR(unacknowledgedPsbUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(
+    Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? unacknowledgedPsbUrl : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: true,
+    }
+  );
 
   // Initial zustand state update
   useEffect(() => {
@@ -140,6 +152,37 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
       getPsbMessageListFail(swrIsLoadingPsbMessages, swrPsbMessageError.message);
     }
   }, [swrPsbMessages, swrPsbMessageError]);
+
+  const overtimeMessagesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/employees/${employeeDetails.employmentDetails.userId}/notifications`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrOvertimeMessages,
+    isLoading: swrIsLoadingOvertimeMessages,
+    error: swrOvertimeMessageError,
+    mutate: mutateOvertimeMessages,
+  } = useSWR(overtimeMessagesUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoadingOvertimeMessages) {
+      getPsbMessageList(swrIsLoadingOvertimeMessages);
+    }
+  }, [swrIsLoadingOvertimeMessages]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrOvertimeMessages)) {
+      getPsbMessageListSuccess(swrIsLoadingOvertimeMessages, swrOvertimeMessages);
+    }
+
+    if (!isEmpty(swrOvertimeMessageError)) {
+      getPsbMessageListFail(swrIsLoadingOvertimeMessages, swrOvertimeMessageError.message);
+    }
+  }, [swrOvertimeMessages, swrOvertimeMessageError]);
 
   useEffect(() => {
     if (!isEmpty(patchResponseApply)) {

@@ -1,6 +1,7 @@
 import { HiMail } from 'react-icons/hi';
 import { TabHeader } from '../tab/TabHeader';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 type TabsProps = {
@@ -8,10 +9,13 @@ type TabsProps = {
 };
 
 export const InboxTabs = ({ tab }: TabsProps) => {
-  const { setTab, psbMessages } = useInboxStore((state) => ({
+  const { setTab, psbMessages, overtimeMessages } = useInboxStore((state) => ({
     setTab: state.setTab,
     psbMessages: state.message.psbMessages,
+    overtimeMessages: state.message.overtimeMessages,
   }));
+
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   return (
     <>
@@ -26,7 +30,7 @@ export const InboxTabs = ({ tab }: TabsProps) => {
             title="Overtime"
             icon={<HiMail size={26} />}
             subtitle="Notifications"
-            notificationCount={psbMessages ? psbMessages.length : 0}
+            notificationCount={overtimeMessages ? overtimeMessages.length : 0}
             className="bg-indigo-500"
           />
           <TabHeader
@@ -41,18 +45,20 @@ export const InboxTabs = ({ tab }: TabsProps) => {
             notificationCount={psbMessages ? psbMessages.length : 0}
             className="bg-indigo-500"
           />
-          <TabHeader
-            tab={tab}
-            tabIndex={3}
-            onClick={() => {
-              setTab(3);
-            }}
-            title="Personnel Selection Board"
-            icon={<HiMail size={26} />}
-            subtitle="Notifications"
-            notificationCount={psbMessages ? psbMessages.length : 0}
-            className="bg-indigo-500"
-          />
+          {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
+            <TabHeader
+              tab={tab}
+              tabIndex={3}
+              onClick={() => {
+                setTab(3);
+              }}
+              title="Personnel Selection Board"
+              icon={<HiMail size={26} />}
+              subtitle="Notifications"
+              notificationCount={psbMessages ? psbMessages.length : 0}
+              className="bg-indigo-500"
+            />
+          ) : null}
         </ul>
       </div>
     </>
