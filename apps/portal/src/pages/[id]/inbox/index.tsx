@@ -44,12 +44,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeMessageListSuccess,
     getOvertimeMessageListFail,
 
-    patchInboxReponse,
-    patchInboxReponseSuccess,
-    patchInboxReponseFail,
-
-    confirmModalIsOpen,
-    setConfirmModalIsOpen,
     emptyResponseAndError,
 
     psbMessageModalIsOpen,
@@ -77,12 +71,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeMessageListSuccess: state.getOvertimeMessageListSuccess,
     getOvertimeMessageListFail: state.getOvertimeMessageListFail,
 
-    patchInboxReponse: state.patchInboxReponse,
-    patchInboxReponseSuccess: state.patchInboxReponseSuccess,
-    patchInboxReponseFail: state.patchInboxReponseFail,
-
-    confirmModalIsOpen: state.confirmModalIsOpen,
-    setConfirmModalIsOpen: state.setConfirmModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
 
     psbMessageModalIsOpen: state.psbMessageModalIsOpen,

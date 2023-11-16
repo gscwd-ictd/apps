@@ -19,16 +19,20 @@ import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { TabHeader } from 'apps/portal/src/components/fixed/tab/TabHeader';
 import { HiQuestionMarkCircle } from 'react-icons/hi';
 import { useRouter } from 'next/router';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
 
 export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
+    errorPendingApprovalsCount,
     pendingApprovalsCount,
     getPendingApprovalsCount,
     getPendingApprovalsCountSuccess,
     getPendingApprovalsCountFail,
   } = useApprovalStore((state) => ({
     tab: state.tab,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
     pendingApprovalsCount: state.pendingApprovalsCount,
     getPendingApprovalsCount: state.getPendingApprovalsCount,
     getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
@@ -46,6 +50,37 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
 
+  const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPendingApprovalsCount,
+    isLoading: swrPendingApprovalsCountIsLoading,
+    error: swrPendingApprovalsCountError,
+    mutate: mutatePassSlips,
+  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPendingApprovalsCountIsLoading) {
+      getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
+    }
+  }, [swrPendingApprovalsCountIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPendingApprovalsCount)) {
+      getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
+    }
+
+    if (!isEmpty(swrPendingApprovalsCountError)) {
+      getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
+    }
+  }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
+
   return (
     <>
       <EmployeeProvider employeeData={employee}>
@@ -54,6 +89,14 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         </Head>
 
         <SideNav employeeDetails={employeeDetails} />
+
+        {/* Leave List Load Failed Error */}
+        {!isEmpty(errorPendingApprovalsCount) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorPendingApprovalsCount}: Failed to load Pending Approval Count.`}
+          />
+        ) : null}
 
         <MainContainer>
           <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
@@ -72,7 +115,9 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     title="Pass Slip Requests"
                     icon={<HiQuestionMarkCircle size={26} />}
                     subtitle="Show all Pass Slips requests"
-                    notificationCount={99}
+                    notificationCount={
+                      pendingApprovalsCount.pendingPassSlipsCount != 0 ? pendingApprovalsCount.pendingPassSlipsCount : 0
+                    }
                     className="bg-indigo-500"
                     onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
                   />
@@ -82,7 +127,9 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     title="Leave Requests"
                     icon={<HiQuestionMarkCircle size={26} />}
                     subtitle="Show all Leave requests"
-                    notificationCount={99}
+                    notificationCount={
+                      pendingApprovalsCount.pendingLeavesCount != 0 ? pendingApprovalsCount.pendingLeavesCount : 0
+                    }
                     className="bg-indigo-500"
                     onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
                   />
@@ -92,7 +139,9 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     title="Overtime Requests"
                     icon={<HiQuestionMarkCircle size={26} />}
                     subtitle="Show all Overtime requests"
-                    notificationCount={99}
+                    notificationCount={
+                      pendingApprovalsCount.pendingOvertimesCount != 0 ? pendingApprovalsCount.pendingOvertimesCount : 0
+                    }
                     className="bg-indigo-500"
                     onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
                   />

@@ -2,6 +2,8 @@ import { HiMail } from 'react-icons/hi';
 import { TabHeader } from '../tab/TabHeader';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { PsbMessageContent } from 'apps/portal/src/types/inbox.type';
+import { useEffect } from 'react';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 type TabsProps = {
@@ -9,13 +11,24 @@ type TabsProps = {
 };
 
 export const InboxTabs = ({ tab }: TabsProps) => {
-  const { setTab, psbMessages, overtimeMessages } = useInboxStore((state) => ({
+  const { setTab, psbMessages, overtimeMessages, patchResponseApply } = useInboxStore((state) => ({
     setTab: state.setTab,
     psbMessages: state.message.psbMessages,
     overtimeMessages: state.message.overtimeMessages,
+    patchResponseApply: state.response.patchResponseApply,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+
+  let currentPendingPsbCount = 0;
+  //count any pending psb inbox action
+  useEffect(() => {
+    psbMessages.map((item: PsbMessageContent, index: number) => {
+      if (!item?.details?.acknowledgedSchedule && !item?.details?.declinedSchedule) {
+        currentPendingPsbCount++;
+      }
+    });
+  }, [patchResponseApply]);
 
   return (
     <>
@@ -55,7 +68,7 @@ export const InboxTabs = ({ tab }: TabsProps) => {
               title="Personnel Selection Board"
               icon={<HiMail size={26} />}
               subtitle="Notifications"
-              notificationCount={psbMessages ? psbMessages.length : 0}
+              notificationCount={currentPendingPsbCount}
               className="bg-indigo-500"
             />
           ) : null}

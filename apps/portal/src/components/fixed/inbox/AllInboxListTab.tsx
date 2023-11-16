@@ -8,13 +8,10 @@ import { OvertimeMessageContent, PsbMessageContent } from 'apps/portal/src/types
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 type TabProps = {
-  overtimeNotification?: Array<any> | null;
-  psbNotification?: Array<any> | null;
-  trainingNotification?: Array<any> | null;
   tab: number;
 };
 
-export const AllInboxListTab = ({ overtimeNotification, psbNotification, trainingNotification, tab }: TabProps) => {
+export const AllInboxListTab = ({ tab }: TabProps) => {
   const {
     overtimeMessages,
     psbMessages,

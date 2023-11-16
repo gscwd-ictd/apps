@@ -8,7 +8,7 @@ export const InboxTabWindow = (): JSX.Element => {
 
   return (
     <>
-      <div className={`w-full bg-inherit rounded px-5 h-screen overflow-y-auto`}>
+      <div className={`w-full bg-inherit rounded px-5 h-96 overflow-y-auto`}>
         <AllInboxListTab tab={tab} />
       </div>
     </>
