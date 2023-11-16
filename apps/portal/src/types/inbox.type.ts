@@ -38,4 +38,6 @@ export type OvertimeMembers = {
   employeeId: string;
   employeeFullName: string;
   avatarUrl: string;
+  position: string;
+  assignment: string;
 };

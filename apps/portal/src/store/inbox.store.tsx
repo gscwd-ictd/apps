@@ -11,7 +11,7 @@ export type InboxState = {
     overtimeMessages: Array<OvertimeMessageContent>;
     psbMessages: Array<PsbMessageContent>;
     psb: PsbMessageContent;
-    overtime: OvertimeDetails;
+    overtime: OvertimeMessageContent;
     training: any;
   };
   response: {
@@ -41,7 +41,7 @@ export type InboxState = {
 
   setMessagePsb: (psb: PsbMessageContent) => void;
 
-  setMessageOvertime: (overtime: OvertimeDetails) => void;
+  setMessageOvertime: (overtime: OvertimeMessageContent) => void;
 
   confirmModalIsOpen: boolean;
   setConfirmModalIsOpen: (submitModalIsOpen: boolean) => void;
@@ -94,7 +94,7 @@ export const useInboxStore = create<InboxState>()(
       overtimeMessages: [],
       psbMessages: [],
       psb: {} as PsbMessageContent,
-      overtime: {} as any,
+      overtime: {} as OvertimeMessageContent,
       training: {} as any,
     },
     response: {
@@ -195,7 +195,7 @@ export const useInboxStore = create<InboxState>()(
     },
 
     //SET OVERTIME MESSAGE CONTENT
-    setMessageOvertime: (overtime: OvertimeDetails) => {
+    setMessageOvertime: (overtime: OvertimeMessageContent) => {
       set((state) => ({
         ...state,
         message: {

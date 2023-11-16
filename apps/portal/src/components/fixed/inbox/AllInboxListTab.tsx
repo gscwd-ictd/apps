@@ -5,6 +5,7 @@ import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useInboxStore } from '../../../../src/store/inbox.store';
 import { OvertimeMessageContent, PsbMessageContent } from 'apps/portal/src/types/inbox.type';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 type TabProps = {
   overtimeNotification?: Array<any> | null;
@@ -14,14 +15,25 @@ type TabProps = {
 };
 
 export const AllInboxListTab = ({ overtimeNotification, psbNotification, trainingNotification, tab }: TabProps) => {
-  const { overtimeMessages, psbMessages, psbMessageModalIsOpen, setPsbMessageModalIsOpen, setMessagePsb } =
-    useInboxStore((state) => ({
-      overtimeMessages: state.message.overtimeMessages,
-      psbMessages: state.message.psbMessages,
-      psbMessageModalIsOpen: state.psbMessageModalIsOpen,
-      setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
-      setMessagePsb: state.setMessagePsb,
-    }));
+  const {
+    overtimeMessages,
+    psbMessages,
+    psbMessageModalIsOpen,
+    overtimeMessageModalIsOpen,
+    setOvertimeMessageModalIsOpen,
+    setPsbMessageModalIsOpen,
+    setMessagePsb,
+    setMessageOvertime,
+  } = useInboxStore((state) => ({
+    overtimeMessages: state.message.overtimeMessages,
+    psbMessages: state.message.psbMessages,
+    psbMessageModalIsOpen: state.psbMessageModalIsOpen,
+    overtimeMessageModalIsOpen: state.overtimeMessageModalIsOpen,
+    setOvertimeMessageModalIsOpen: state.setOvertimeMessageModalIsOpen,
+    setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
+    setMessagePsb: state.setMessagePsb,
+    setMessageOvertime: state.setMessageOvertime,
+  }));
 
   const onSelect = (messageDetails) => {
     //PSB
@@ -30,10 +42,13 @@ export const AllInboxListTab = ({ overtimeNotification, psbNotification, trainin
       if (!psbMessageModalIsOpen) {
         setPsbMessageModalIsOpen(true);
       }
-    } else if (tab === 2) {
-      // if (!completedPassSlipModalIsOpen) {
-      //   setCompletedPassSlipModalIsOpen(true);
-      // }
+    }
+    //Overtime
+    else if (tab === 1) {
+      setMessageOvertime(messageDetails);
+      if (!overtimeMessageModalIsOpen) {
+        setOvertimeMessageModalIsOpen(true);
+      }
     }
   };
 
@@ -55,17 +70,34 @@ export const AllInboxListTab = ({ overtimeNotification, psbNotification, trainin
 
                   <p className={`text-sm text-gray-500 `}>Estimated Hours: {item.estimatedHours}</p>
                   <p className={`text-sm text-gray-500 `}>Purpose: {item.purpose}</p>
-                  <p className={`text-sm w-96 text-indigo-500 `}>Status: {item.status}</p>
+                  <p className={`text-sm w-96 text-indigo-500 `}>
+                    Status:{' '}
+                    {item.status == OvertimeStatus.APPROVED
+                      ? 'Approved'
+                      : item.status == OvertimeStatus.DISAPPROVED
+                      ? 'Disapproved'
+                      : item.status == OvertimeStatus.CANCELLED
+                      ? 'Cancelled'
+                      : item.status == OvertimeStatus.PENDING
+                      ? 'Pending'
+                      : item.status}
+                  </p>
                 </div>
               </li>
             );
           })}
         </ul>
-      ) : (
+      ) : tab === 1 && overtimeMessages && overtimeMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>
-      )}
+      ) : null}
+
+      {tab === 2 ? (
+        <div className="flex justify-center pt-20">
+          <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
+        </div>
+      ) : null}
 
       {tab === 3 && psbMessages && psbMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
@@ -134,11 +166,11 @@ export const AllInboxListTab = ({ overtimeNotification, psbNotification, trainin
             );
           })}
         </ul>
-      ) : (
+      ) : tab === 3 && psbMessages && psbMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>
-      )}
+      ) : null}
     </>
   );
 };

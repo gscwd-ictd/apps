@@ -42,7 +42,7 @@ export const InboxTabs = ({ tab }: TabsProps) => {
             title="Training"
             icon={<HiMail size={26} />}
             subtitle="Notifications"
-            notificationCount={psbMessages ? psbMessages.length : 0}
+            notificationCount={0}
             className="bg-indigo-500"
           />
           {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (

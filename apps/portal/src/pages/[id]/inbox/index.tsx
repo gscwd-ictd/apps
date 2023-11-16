@@ -18,20 +18,21 @@ import 'react-toastify/dist/ReactToastify.css';
 import { isEmpty } from 'lodash';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
-import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
-import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useRouter } from 'next/router';
 import { useInboxStore } from '../../../store/inbox.store';
 import { InboxTabs } from 'apps/portal/src/components/fixed/inbox/InboxTabs';
 import { InboxTabWindow } from 'apps/portal/src/components/fixed/inbox/InboxTabWindow';
 import InboxPsbModal from 'apps/portal/src/components/fixed/inbox/InboxPsbModal';
+import InboxOvertimeModal from 'apps/portal/src/components/fixed/inbox/InboxOvertimeModal';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
     loadingResponse,
     loadingPsbMessages,
-    errorMessage,
+    loadingOvertimeMessages,
+    errorOvertimeMessage,
+    errorPsbMessage,
     errorResponse,
     patchResponseApply,
 
@@ -51,14 +52,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     setConfirmModalIsOpen,
     emptyResponseAndError,
 
-    setMessagePsb,
-    setMessageOvertime,
-    setDeclineRemarks,
-    selectedMessageType,
-    setSelectedMessageType,
-    isMessageOpen,
-    setIsMessageOpen,
-
     psbMessageModalIsOpen,
     overtimeMessageModalIsOpen,
     trainingMessageModalIsOpen,
@@ -70,7 +63,9 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     tab: state.tab,
     loadingResponse: state.loading.loadingResponse,
     loadingPsbMessages: state.loading.loadingPsbMessages,
-    errorMessage: state.error.errorPsbMessages,
+    loadingOvertimeMessages: state.loading.loadingOvertimeMessages,
+    errorPsbMessage: state.error.errorPsbMessages,
+    errorOvertimeMessage: state.error.errorOvertimeMessages,
     errorResponse: state.error.errorResponse,
     patchResponseApply: state.response.patchResponseApply,
 
@@ -89,14 +84,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     confirmModalIsOpen: state.confirmModalIsOpen,
     setConfirmModalIsOpen: state.setConfirmModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
-
-    setMessagePsb: state.setMessagePsb,
-    setMessageOvertime: state.setMessageOvertime,
-    setDeclineRemarks: state.setDeclineRemarks,
-    selectedMessageType: state.selectedMessageType,
-    setSelectedMessageType: state.setSelectedMessageType,
-    isMessageOpen: state.isMessageOpen,
-    setIsMessageOpen: state.setIsMessageOpen,
 
     psbMessageModalIsOpen: state.psbMessageModalIsOpen,
     overtimeMessageModalIsOpen: state.overtimeMessageModalIsOpen,
@@ -169,18 +156,18 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   // Initial zustand state update
   useEffect(() => {
     if (swrIsLoadingOvertimeMessages) {
-      getPsbMessageList(swrIsLoadingOvertimeMessages);
+      getOvertimeMessageList(swrIsLoadingOvertimeMessages);
     }
   }, [swrIsLoadingOvertimeMessages]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeMessages)) {
-      getPsbMessageListSuccess(swrIsLoadingOvertimeMessages, swrOvertimeMessages);
+      getOvertimeMessageListSuccess(swrIsLoadingOvertimeMessages, swrOvertimeMessages);
     }
 
     if (!isEmpty(swrOvertimeMessageError)) {
-      getPsbMessageListFail(swrIsLoadingOvertimeMessages, swrOvertimeMessageError.message);
+      getOvertimeMessageListFail(swrIsLoadingOvertimeMessages, swrOvertimeMessageError.message);
     }
   }, [swrOvertimeMessages, swrOvertimeMessageError]);
 
@@ -193,25 +180,51 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [patchResponseApply]);
 
-  // cancel action for Pass Slip Completed Modal
   const closePsbMessageModal = async () => {
     setPsbMessageModalIsOpen(false);
   };
 
+  const closeOvertimeMessageModal = async () => {
+    setOvertimeMessageModalIsOpen(false);
+  };
+
   return (
     <>
+      {!isEmpty(patchResponseApply) ? (
+        <ToastNotification toastType="success" notifMessage={`Response to PSB Assignment Submitted.`} />
+      ) : null}
+
+      {!isEmpty(errorResponse) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
+      ) : null}
+
+      {!isEmpty(errorOvertimeMessage) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorOvertimeMessage}: Failed to Overtime Inbox.`} />
+      ) : null}
+
+      {!isEmpty(errorPsbMessage) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorPsbMessage}: Failed to PSB Inbox.`} />
+      ) : null}
+
       <EmployeeProvider employeeData={employee}>
         <Head>
-          <title>Inbox</title>
+          <title>Employee Inbox</title>
         </Head>
 
         <SideNav employeeDetails={employeeDetails} />
 
-        {/* Pass Slip Pending Modal */}
+        {/* Psb Message Modal */}
         <InboxPsbModal
           modalState={psbMessageModalIsOpen}
           setModalState={setPsbMessageModalIsOpen}
           closeModalAction={closePsbMessageModal}
+        />
+
+        {/* Overtime Message Modal */}
+        <InboxOvertimeModal
+          modalState={overtimeMessageModalIsOpen}
+          setModalState={setOvertimeMessageModalIsOpen}
+          closeModalAction={closeOvertimeMessageModal}
         />
 
         <MainContainer>
@@ -222,7 +235,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {loadingPsbMessages ? (
+            {loadingPsbMessages && loadingOvertimeMessages ? (
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

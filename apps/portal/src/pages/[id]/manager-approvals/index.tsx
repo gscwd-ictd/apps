@@ -21,8 +21,18 @@ import { HiQuestionMarkCircle } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 
 export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { tab } = useApprovalStore((state) => ({
+  const {
+    tab,
+    pendingApprovalsCount,
+    getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail,
+  } = useApprovalStore((state) => ({
     tab: state.tab,
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    getPendingApprovalsCount: state.getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
   }));
   const router = useRouter();
 
