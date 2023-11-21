@@ -3,7 +3,7 @@ import { TabHeader } from '../tab/TabHeader';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { PsbMessageContent } from 'apps/portal/src/types/inbox.type';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 type TabsProps = {
@@ -19,16 +19,16 @@ export const InboxTabs = ({ tab }: TabsProps) => {
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const [currentPendingPsbCount, setcurrentPendingPsbCount] = useState<number>(0);
 
-  let currentPendingPsbCount = 0;
   //count any pending psb inbox action
   useEffect(() => {
     psbMessages.map((item: PsbMessageContent, index: number) => {
       if (!item?.details?.acknowledgedSchedule && !item?.details?.declinedSchedule) {
-        currentPendingPsbCount++;
+        setcurrentPendingPsbCount(currentPendingPsbCount + 1);
       }
     });
-  }, [patchResponseApply]);
+  }, [patchResponseApply, psbMessages]);
 
   return (
     <>
