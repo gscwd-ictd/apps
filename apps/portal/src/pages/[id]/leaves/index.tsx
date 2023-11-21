@@ -258,7 +258,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
         />
 
         <MainContainer>
-          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+          <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader title="Employee Leaves" subtitle="Apply for company leave" backUrl={`/${router.query.id}`}>
               <Button onClick={openApplyLeaveModal} className="hidden lg:block" size={`md`}>
                 <div className="flex items-center w-full gap-2">
@@ -273,7 +273,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
               </Button>
             </ContentHeader>
             {loading ? (
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
                   thickness={70}

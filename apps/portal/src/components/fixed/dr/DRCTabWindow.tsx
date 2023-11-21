@@ -1,9 +1,5 @@
 import { fetchWithSession } from '../../../../src/utils/hoc/fetcher';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 // import { getUserDetails, withSession } from "../../../../utils/helpers/session";
@@ -25,10 +21,7 @@ export const DrcTabWindow = ({ positionId }: DrcTabWindowProps) => {
 
   const { data: pendingPositionList } = useSWR(pendingUrl, fetchWithSession);
 
-  const { data: fulfilledPositionList } = useSWR(
-    fulfilledUrl,
-    fetchWithSession
-  );
+  const { data: fulfilledPositionList } = useSWR(fulfilledUrl, fetchWithSession);
 
   const pendingPositions = useDrStore((state) => state.pendingPositions);
 
@@ -36,29 +29,17 @@ export const DrcTabWindow = ({ positionId }: DrcTabWindowProps) => {
 
   const setPendingPositions = useDrStore((state) => state.setPendingPositions);
 
-  const setFulfilledPositions = useDrStore(
-    (state) => state.setFulfilledPositions
-  );
+  const setFulfilledPositions = useDrStore((state) => state.setFulfilledPositions);
 
   const tab = useDrStore((state) => state.tab);
 
-  useEffect(
-    () => setPendingPositions(pendingPositionList),
-    [pendingPositionList]
-  );
-  useEffect(
-    () => setFulfilledPositions(fulfilledPositionList),
-    [fulfilledPositionList]
-  );
+  useEffect(() => setPendingPositions(pendingPositionList), [pendingPositionList]);
+  useEffect(() => setFulfilledPositions(fulfilledPositionList), [fulfilledPositionList]);
   return (
     <>
-      <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
-        {tab === 1 && (
-          <AllDrcPositionsListTab positions={pendingPositions} tab={tab} />
-        )}
-        {tab === 2 && (
-          <AllDrcPositionsListTab positions={fulfilledPositions} tab={tab} />
-        )}
+      <div className="w-full bg-inherit rounded px-5 h-[30rem] overflow-y-auto">
+        {tab === 1 && <AllDrcPositionsListTab positions={pendingPositions} tab={tab} />}
+        {tab === 2 && <AllDrcPositionsListTab positions={fulfilledPositions} tab={tab} />}
       </div>
     </>
   );

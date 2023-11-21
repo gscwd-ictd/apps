@@ -200,6 +200,18 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
               )}
+              {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS ? (
+                <div className={` flex flex-col gap-2`}>
+                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
+                      For Medical Purpose:
+                    </label>
+                    <div className="w-auto md:w-96">
+                      <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.isMedical ? 'Yes' : 'No'}</label>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
               <div className={`flex flex-col gap-2`}>
                 <label className="text-slate-500 text-md font-medium">Purpose/Desination:</label>
                 <textarea

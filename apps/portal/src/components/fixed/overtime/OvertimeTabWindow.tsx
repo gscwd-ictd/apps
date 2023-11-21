@@ -11,7 +11,7 @@ export const OvertimeTabWindow = (): JSX.Element => {
 
   return (
     <>
-      <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
+      <div className="w-full bg-inherit rounded px-5 h-[30rem] overflow-y-auto">
         {tab === 1 && <AllOvertimeListTab overtime={overtimeForApproval} tab={tab} />}
         {tab === 2 && <AllOvertimeListTab overtime={overtimeCompleted} tab={tab} />}
       </div>

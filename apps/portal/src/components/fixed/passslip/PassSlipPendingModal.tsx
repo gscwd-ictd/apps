@@ -4,7 +4,7 @@ import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationApplicationModal } from './ConfirmationModal';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type PassSlipPendingModalProps = {
@@ -120,7 +120,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                 </div>
               </div>
 
-              {passSlip.natureOfBusiness === 'Official Business' ? (
+              {passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ? (
                 <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label className={`text-slate-500 txt-md whitespace-nowrap font-medium sm:w-80`}>
                     Mode of Transportation:
@@ -141,10 +141,19 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                   </div>
                 </div>
               </div>
-              <div
-                className={`flex flex-col gap-2
-            `}
-              >
+              {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS ? (
+                <div className={` flex flex-col gap-2`}>
+                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
+                      For Medical Purpose:
+                    </label>
+                    <div className="w-auto md:w-96">
+                      <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.isMedical ? 'Yes' : 'No'}</label>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              <div className={`flex flex-col gap-2`}>
                 <label className="text-slate-500 txt-md font-medium">Purpose/Desination:</label>
                 <textarea
                   className={'resize-none w-full p-2 rounded text-slate-500 txt-md border-slate-300'}

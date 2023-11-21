@@ -528,7 +528,7 @@ export const useOvertimeStore = create<OvertimeState>()(
         },
       }));
     },
-    postOvertimeSuccess: (response) => {
+    postOvertimeSuccess: (response: any) => {
       set((state) => ({
         ...state,
         response: {

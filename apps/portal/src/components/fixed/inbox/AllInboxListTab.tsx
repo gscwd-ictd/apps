@@ -70,13 +70,13 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
                   <p className={`text-sm w-96 text-indigo-500 `}>
                     Status:{' '}
                     {item.status == OvertimeStatus.APPROVED
-                      ? 'Approved'
+                      ? 'APPROVED'
                       : item.status == OvertimeStatus.DISAPPROVED
-                      ? 'Disapproved'
+                      ? 'DISAPPROVED'
                       : item.status == OvertimeStatus.CANCELLED
-                      ? 'Cancelled'
+                      ? 'CANCELLED'
                       : item.status == OvertimeStatus.PENDING
-                      ? 'Pending'
+                      ? 'PENDING'
                       : item.status}
                   </p>
                 </div>
@@ -151,11 +151,11 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
                   >
                     Status:{' '}
                     {!item?.details?.acknowledgedSchedule && !item?.details?.declinedSchedule
-                      ? 'Pending'
+                      ? 'PENDING'
                       : item?.details?.acknowledgedSchedule
-                      ? 'Accepted'
+                      ? 'ACCEPTED'
                       : item?.details?.declinedSchedule
-                      ? 'Declined'
+                      ? 'DECLINED'
                       : ''}
                   </p>
                 </div>
