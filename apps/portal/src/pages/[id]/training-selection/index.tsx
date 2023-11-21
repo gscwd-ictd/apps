@@ -122,7 +122,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
         />
 
         <MainContainer>
-          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+          <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader
               title="Training Attendee Selection"
               subtitle="Select employees to attend training"
@@ -130,7 +130,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
             ></ContentHeader>
 
             {loadingTrainingList ? (
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
                   thickness={70}

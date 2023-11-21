@@ -79,7 +79,7 @@ export const PassSlipApplicationModal = ({
       purposeDestination: '',
       isCancelled: false,
       obTransportation: null,
-      forMedicalPurpose: null,
+      isMedical: null,
     },
   });
 
@@ -260,16 +260,16 @@ export const PassSlipApplicationModal = ({
 
                     <div className="w-full md:w-80">
                       <select
-                        id="forMedicalPurpose"
+                        id="isMedical"
                         className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                         required
-                        {...register('forMedicalPurpose')}
+                        {...register('isMedical')}
                       >
                         <option value="" disabled>
                           Select Purpose
                         </option>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
+                        <option value={'1'}>Yes</option>
+                        <option value={'0'}>No</option>
                       </select>
                     </div>
                   </div>

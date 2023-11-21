@@ -83,7 +83,7 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
 
               <ContentBody>
                 {isLoadingDtr ? (
-                  <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+                  <div className="w-full h-96  static flex flex-col justify-items-center items-center place-items-center">
                     <SpinnerDotted
                       speed={70}
                       thickness={70}

@@ -14,7 +14,7 @@ export type PassSlipApplicationForm = {
   timeIn: string | null;
   timeOut: string | null;
   isCancelled: boolean;
-  forMedicalPurpose?: boolean;
+  isMedical?: boolean;
 };
 
 // List of pass slips per employee
@@ -39,6 +39,7 @@ export type PassSlip = {
   disputeRemarks?: string;
   isDisputeApproved?: boolean | null;
   encodedTimeIn?: string;
+  isMedical?: boolean;
 } & PassSlipApplicationForm;
 
 // Individual pass slip id

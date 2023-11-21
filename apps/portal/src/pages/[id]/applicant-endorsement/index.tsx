@@ -153,7 +153,7 @@ export default function ApplicantEndorsement({
           <AppEndAlert />
 
           <MainContainer>
-            <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
+            <div className="w-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Applicant Endorsement"
                 subtitle="Select a list of endorsed applicants"

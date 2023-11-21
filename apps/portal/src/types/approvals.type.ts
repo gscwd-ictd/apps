@@ -20,3 +20,9 @@ export type overtimeAction = {
   status: OvertimeStatus;
   remarks?: string;
 };
+
+export type PendingApprovalsCount = {
+  pendingPassSlipsCount: number;
+  pendingLeavesCount: number;
+  pendingOvertimesCount: number;
+};
