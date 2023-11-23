@@ -41,7 +41,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function hydration() {
-    const modules = await setModules(userDetails);
+    const modules = await setModules(userDetails, schedule);
 
     setAllowedModules(modules);
 
