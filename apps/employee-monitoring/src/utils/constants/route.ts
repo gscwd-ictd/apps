@@ -32,6 +32,7 @@ export const Paths = [
   '/settings/users', // 25
   '/settings/officer-of-the-day', // 26
   '/settings/system-logs', // 27
+  '/reports', // 28
 ];
 
 export const UpdatedPaths: Array<Path> = [

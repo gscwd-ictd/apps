@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
@@ -56,6 +56,10 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
       closeModalAction();
     }
   };
+
+  useEffect(() => {
+    console.log(rowData);
+  }, []);
 
   return (
     <>

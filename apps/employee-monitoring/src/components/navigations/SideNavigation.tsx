@@ -59,7 +59,7 @@ export const SideNavigation = () => {
           {/**Employees */}
           <Can I="access" this="Employees">
             <Sidebar.Item
-              display=" Employees"
+              display="Employees"
               className="text-sm"
               selected={pathname === Paths[1] ? true : false}
               icon={
@@ -68,6 +68,21 @@ export const SideNavigation = () => {
                 </>
               }
               path={Paths[1]}
+            />
+          </Can>
+
+          {/**Reports */}
+          <Can I="access" this="Reports">
+            <Sidebar.Item
+              display="Reports"
+              className="text-sm"
+              selected={pathname === Paths[28] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-report"></i>
+                </>
+              }
+              path={Paths[28]}
             />
           </Can>
 

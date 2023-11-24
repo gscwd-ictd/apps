@@ -37,6 +37,8 @@ export default defineAbility((can) => {
     { I: 'access', this: 'Users' },
     { I: 'access', this: 'Officer_of_the_day' },
     { I: 'access', this: 'System_logs' },
+    { I: 'access', this: 'Custom_groups' },
+    { I: 'access', this: 'Reports' },
   ];
 
   // cookies.get('isSuperUser')
