@@ -38,21 +38,13 @@ export type NavDetails = {
 export default function Dashboard({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const setAllowedModules = useAllowedModulesStore((state) => state.setAllowedModules);
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function hydration() {
-    const modules = await setModules(userDetails, schedule);
-
-    setAllowedModules(modules);
-
-    return setIsLoading(false);
+    if (schedule) {
+      const modules = await setModules(userDetails, schedule);
+      setAllowedModules(modules);
+    }
   }
-
-  useEffect(() => {
-    setEmployee(userDetails);
-    setIsLoading(true);
-    hydration();
-  }, []);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
 
@@ -153,6 +145,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
+      console.log(swrFaceScan);
       getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
     }
 
@@ -193,6 +186,11 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
       getEmployeeDtrFail(swrDtrIsLoading, swrDtrError.message);
     }
   }, [swrDtr, swrDtrError]);
+
+  useEffect(() => {
+    setEmployee(userDetails);
+    hydration();
+  }, []);
 
   const { windowHeight } = UseWindowDimensions();
 
