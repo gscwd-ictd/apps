@@ -28,10 +28,7 @@ import { MainContainer } from '../../../../src/components/modular/custom/contain
 import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
 import { SpinnerDotted } from 'spinners-react';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../../src/utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
@@ -71,30 +68,16 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
   const disapprovedPrfs = usePrfStore((state) => state.disapprovedPrfs);
 
-  const pendingPrfModalIsOpen = usePrfStore(
-    (state) => state.pendingPrfModalIsOpen
-  );
-  const forApprovalPrfModalIsOpen = usePrfStore(
-    (state) => state.forApprovalPrfModalIsOpen
-  );
-  const disapprovedPrfModalIsOpen = usePrfStore(
-    (state) => state.disapprovedPrfModalIsOpen
-  );
-  const setPendingPrfModalIsOpen = usePrfStore(
-    (state) => state.setPendingPrfModalIsOpen
-  );
-  const setForApprovalPrfModalIsOpen = usePrfStore(
-    (state) => state.setForApprovalPrfModalIsOpen
-  );
-  const setDisapprovedPrfModalIsOpen = usePrfStore(
-    (state) => state.setDisapprovedPrfModalIsOpen
-  );
+  const pendingPrfModalIsOpen = usePrfStore((state) => state.pendingPrfModalIsOpen);
+  const forApprovalPrfModalIsOpen = usePrfStore((state) => state.forApprovalPrfModalIsOpen);
+  const disapprovedPrfModalIsOpen = usePrfStore((state) => state.disapprovedPrfModalIsOpen);
+  const setPendingPrfModalIsOpen = usePrfStore((state) => state.setPendingPrfModalIsOpen);
+  const setForApprovalPrfModalIsOpen = usePrfStore((state) => state.setForApprovalPrfModalIsOpen);
+  const setDisapprovedPrfModalIsOpen = usePrfStore((state) => state.setDisapprovedPrfModalIsOpen);
 
   const activeItem = usePrfStore((state) => state.activeItem);
 
-  const setSelectedPositions = usePrfStore(
-    (state) => state.setSelectedPositions
-  );
+  const setSelectedPositions = usePrfStore((state) => state.setSelectedPositions);
 
   const setPendingPrfs = usePrfStore((state) => state.setPendingPrfs);
 
@@ -144,8 +127,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     patchResponse: state.response.patchResponse,
     patchError: state.errors.errorResponse,
     getPrfDetailsForApprovalList: state.getPrfDetailsForApprovalList,
-    getPrfDetailsForApprovalListSuccess:
-      state.getPrfDetailsForApprovalListSuccess,
+    getPrfDetailsForApprovalListSuccess: state.getPrfDetailsForApprovalListSuccess,
     getPrfDetailsForApprovalListFail: state.getPrfDetailsForApprovalListFail,
 
     getPrfDetailsPendingList: state.getPrfDetailsPendingList,
@@ -153,8 +135,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     getPrfDetailsPendingListFail: state.getPrfDetailsPendingListFail,
 
     getPrfDetailsDisapprovedList: state.getPrfDetailsDisapprovedList,
-    getPrfDetailsDisapprovedListSuccess:
-      state.getPrfDetailsDisapprovedListSuccess,
+    getPrfDetailsDisapprovedListSuccess: state.getPrfDetailsDisapprovedListSuccess,
     getPrfDetailsDisapprovedListFail: state.getPrfDetailsDisapprovedListFail,
 
     emptyResponseAndError: state.emptyResponseAndError,
@@ -169,14 +150,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrPendingPrfListIsLoading,
     error: swrPendingPrfListError,
     mutate: mutatePendingPrfDetails,
-  } = useSWR(
-    `${prfUrl}/prf/${employee.user._id}?status=pending`,
-    fetchWithToken,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: true,
-    }
-  );
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -188,17 +165,11 @@ export default function Prf({ user, employee }: PrfPageProps) {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPendingPrfDetailsList)) {
-      getPrfDetailsPendingListSuccess(
-        swrPendingPrfListIsLoading,
-        swrPendingPrfDetailsList
-      );
+      getPrfDetailsPendingListSuccess(swrPendingPrfListIsLoading, swrPendingPrfDetailsList);
     }
 
     if (!isEmpty(swrPendingPrfListError)) {
-      getPrfDetailsPendingListFail(
-        swrPendingPrfListIsLoading,
-        swrPendingPrfListError.message
-      );
+      getPrfDetailsPendingListFail(swrPendingPrfListIsLoading, swrPendingPrfListError.message);
     }
   }, [swrPendingPrfDetailsList, swrPendingPrfListError]);
 
@@ -208,14 +179,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrDisapprovedPrfListIsLoading,
     error: swrDisapprovedPrfListError,
     mutate: mutateDisapprovedPrfDetails,
-  } = useSWR(
-    `${prfUrl}/prf/${employee.user._id}?status=disapproved`,
-    fetchWithToken,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: true,
-    }
-  );
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -227,17 +194,11 @@ export default function Prf({ user, employee }: PrfPageProps) {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrDisapprovedPrfDetailsList)) {
-      getPrfDetailsDisapprovedListSuccess(
-        swrDisapprovedPrfListIsLoading,
-        swrDisapprovedPrfDetailsList
-      );
+      getPrfDetailsDisapprovedListSuccess(swrDisapprovedPrfListIsLoading, swrDisapprovedPrfDetailsList);
     }
 
     if (!isEmpty(swrDisapprovedPrfListError)) {
-      getPrfDetailsDisapprovedListFail(
-        swrDisapprovedPrfListIsLoading,
-        swrDisapprovedPrfListError.message
-      );
+      getPrfDetailsDisapprovedListFail(swrDisapprovedPrfListIsLoading, swrDisapprovedPrfListError.message);
     }
   }, [swrDisapprovedPrfDetailsList, swrDisapprovedPrfListError]);
 
@@ -247,14 +208,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrForApprovalPrfListIsLoading,
     error: swrForApprovalPrfListError,
     mutate: mutateForApprovalPrfDetails,
-  } = useSWR(
-    `${prfUrl}/prf-trail/employee/${employee.user._id}`,
-    fetchWithToken,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: true,
-    }
-  );
+  } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -266,17 +223,11 @@ export default function Prf({ user, employee }: PrfPageProps) {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrForApprovalPrfDetailsList)) {
-      getPrfDetailsForApprovalListSuccess(
-        swrForApprovalPrfListIsLoading,
-        swrForApprovalPrfDetailsList
-      );
+      getPrfDetailsForApprovalListSuccess(swrForApprovalPrfListIsLoading, swrForApprovalPrfDetailsList);
     }
 
     if (!isEmpty(swrForApprovalPrfListError)) {
-      getPrfDetailsForApprovalListFail(
-        swrForApprovalPrfListIsLoading,
-        swrForApprovalPrfListError.message
-      );
+      getPrfDetailsForApprovalListFail(swrForApprovalPrfListIsLoading, swrForApprovalPrfListError.message);
     }
   }, [swrForApprovalPrfDetailsList, swrForApprovalPrfListError]);
 
@@ -321,11 +272,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     // check if current modal page is greater than 1
     if (modalPage > 1) {
       // create a prf object
-      const prf = createPrf(
-        selectedPositions,
-        withExam,
-        employee.employmentDetails.userId
-      );
+      const prf = createPrf(selectedPositions, withExam, employee.employmentDetails.userId);
 
       // save the newly created prf object in the database
       const { error, result } = await savePrf(prf);
@@ -365,10 +312,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     setNavDetails({
       profile: user.email,
       fullName: `${employee.profile.firstName} ${employee.profile.lastName}`,
-      initials: UseNameInitials(
-        employee.profile.firstName,
-        employee.profile.lastName
-      ),
+      initials: UseNameInitials(employee.profile.firstName, employee.profile.lastName),
     });
   }, []);
 
@@ -386,16 +330,11 @@ export default function Prf({ user, employee }: PrfPageProps) {
     <>
       {/* Patch PRF Success */}
       {!isEmpty(patchResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage={`PRF Action Submitted.`}
-        />
+        <ToastNotification toastType="success" notifMessage={`PRF Action Submitted.`} />
       ) : null}
 
       {/* Disapprove PRF Failed Error */}
-      {!isEmpty(patchError) ? (
-        <ToastNotification toastType="error" notifMessage={`${patchError}`} />
-      ) : null}
+      {!isEmpty(patchError) ? <ToastNotification toastType="error" notifMessage={`${patchError}`} /> : null}
 
       {/* Pending PRF Modal */}
       <PendingPrfModal
@@ -437,35 +376,22 @@ export default function Prf({ user, employee }: PrfPageProps) {
       <SideNav employeeDetails={employee} />
 
       <MainContainer>
-        <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-          <ContentHeader
-            title="Position Request"
-            subtitle="Request for new personnel"
-          >
-            <Button
-              className="hidden lg:block"
-              size={`md`}
-              onClick={handleOpen}
-            >
+        <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+          <ContentHeader title="Position Request" subtitle="Request for new personnel" backUrl={''}>
+            <Button className="hidden lg:block" size={`md`} onClick={handleOpen}>
               <div className="flex items-center w-full gap-2">
                 <HiDocumentAdd /> Create Request
               </div>
             </Button>
 
-            <Button
-              className="block lg:hidden"
-              size={`lg`}
-              onClick={handleOpen}
-            >
+            <Button className="block lg:hidden" size={`lg`} onClick={handleOpen}>
               <div className="flex items-center w-full gap-2">
                 <HiDocumentAdd />
               </div>
             </Button>
           </ContentHeader>
-          {swrForApprovalPrfListIsLoading &&
-          swrDisapprovedPrfListIsLoading &&
-          swrPendingPrfListIsLoading ? (
-            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+          {swrForApprovalPrfListIsLoading && swrDisapprovedPrfListIsLoading && swrPendingPrfListIsLoading ? (
+            <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
               <SpinnerDotted
                 speed={70}
                 thickness={70}
@@ -498,30 +424,28 @@ export default function Prf({ user, employee }: PrfPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async () => {
-    const employee = getUserDetails();
-    // const employee = employeeDummy;
+export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
+  const employee = getUserDetails();
+  // const employee = employeeDummy;
 
-    // check if user role is rank_and_file
-    if (
-      employee.employmentDetails.userRole === Roles.RANK_AND_FILE ||
-      employee.employmentDetails.userRole === Roles.JOB_ORDER
-    ) {
-      // if true, the employee is not allowed to access this page
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/${employee.user._id}`,
-        },
-      };
-    }
-
+  // check if user role is rank_and_file
+  if (
+    employee.employmentDetails.userRole === Roles.RANK_AND_FILE ||
+    employee.employmentDetails.userRole === Roles.JOB_ORDER
+  ) {
+    // if true, the employee is not allowed to access this page
     return {
-      props: {
-        user: employee.user,
-        employee: employee,
+      redirect: {
+        permanent: false,
+        destination: `/${employee.user._id}`,
       },
     };
   }
-);
+
+  return {
+    props: {
+      user: employee.user,
+      employee: employee,
+    },
+  };
+});

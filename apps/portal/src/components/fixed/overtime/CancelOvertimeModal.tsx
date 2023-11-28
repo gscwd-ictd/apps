@@ -56,26 +56,25 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
       status: OvertimeStatus.CANCELLED,
     };
     cancelOvertime();
-    const { error, result } = await patchPortal('/v1/leave/employee', data);
+    const { error, result } = await patchPortal(
+      `/v1/overtime/immediate-supervisor/${data.overtimeApplicationId}/cancel`,
+      null
+    );
     if (error) {
       cancelOvertimeFail(result);
     } else {
       cancelOvertimeSuccess(result);
       closeModalAction();
       setTimeout(() => {
-        // setCancelOvertimeModalIsOpen(false);
         setPendingOvertimeModalIsOpen(false);
       }, 200);
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 3000);
     }
   };
 
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal size={`${windowWidth > 1024 ? 'sm' : 'xl'}`} open={modalState} setOpen={setModalState}>
+      <Modal size={`${windowWidth > 768 ? 'sm' : 'xl'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="text-xl font-semibold text-gray-700">
             <div className="flex justify-between px-2">
@@ -90,22 +89,18 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
-            {'Please indicate reason for cancelling application:'}
-            <textarea
-              required
-              placeholder="Reason for cancellation"
-              className={`w-full h-32 p-2 border resize-none`}
-              onChange={(e) => setRemarks(e.target.value as unknown as string)}
-              value={remarks}
-            ></textarea>
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
+            {`Are you sure you want to cancel this application?`}
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end">
-            <div className="max-w-auto flex">
-              <Button variant={'primary'} disabled={!isEmpty(remarks) ? false : true} onClick={(e) => handleCancel()}>
-                Submit
+          <div className="flex justify-end gap-2">
+            <div className="min-w-[6rem] max-w-auto flex gap-2">
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleCancel()}>
+                Yes
+              </Button>
+              <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
+                No
               </Button>
             </div>
           </div>

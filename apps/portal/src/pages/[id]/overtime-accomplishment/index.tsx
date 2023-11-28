@@ -170,14 +170,14 @@ export default function OvertimeAccomplishment({
         />
 
         <MainContainer>
-          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+          <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader
               title="Employee Overtime Accomplishment"
               subtitle="Fill up Overtime Accomplishment Reports"
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
             {!overtimeList ? (
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
                   thickness={70}

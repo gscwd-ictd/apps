@@ -5,12 +5,7 @@ import { AllDrcPositionsListTab } from './AllDrcPositionsListTab';
 
 export const DrcTabWindow = () => {
   // use position store
-  const {
-    filledPositions,
-    unfilledPositions,
-    filledIsLoading,
-    unfilledIsLoading,
-  } = usePositionStore((state) => ({
+  const { filledPositions, unfilledPositions, filledIsLoading, unfilledIsLoading } = usePositionStore((state) => ({
     unfilledPositions: state.unfilledPositions,
     filledPositions: state.filledPositions,
     unfilledIsLoading: state.loading.loadingUnfilledPositions,
@@ -28,7 +23,7 @@ export const DrcTabWindow = () => {
 
   return (
     <>
-      <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
+      <div className="w-full bg-inherit rounded px-5 h-[30rem] overflow-y-auto">
         {tab === 1 &&
           (unfilledIsLoading ? (
             <LoadingSpinner size="lg" />

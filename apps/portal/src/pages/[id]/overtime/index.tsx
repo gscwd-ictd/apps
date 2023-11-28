@@ -183,13 +183,13 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   }, [swrOvertimeList, swrOvertimeListError]);
 
   useEffect(() => {
-    if (!isEmpty(responseApply)) {
+    if (!isEmpty(responseApply) || !isEmpty(cancelResponse)) {
       mutateOvertimeList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 3000);
     }
-  }, [responseApply]);
+  }, [responseApply, cancelResponse]);
 
   return (
     <>
@@ -293,7 +293,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
         />
 
         <MainContainer>
-          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+          <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader title="Employee Overtime" subtitle="Apply for overtime" backUrl={`/${router.query.id}`}>
               <div className="flex flex-row gap-2">
                 <Button onClick={openOvertimeSummaryModal} className="hidden lg:block" size={`md`}>
@@ -316,7 +316,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
               </div>
             </ContentHeader>
             {!overtimeList ? (
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
                   thickness={70}

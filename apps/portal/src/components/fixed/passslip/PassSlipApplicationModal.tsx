@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -51,6 +52,17 @@ export const PassSlipApplicationModal = ({
     employeeDetails: state.employeeDetails,
   }));
 
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+    }));
+
   //zustand initialization to access pass slip store
   const {
     loadingResponse,
@@ -79,10 +91,11 @@ export const PassSlipApplicationModal = ({
       purposeDestination: '',
       isCancelled: false,
       obTransportation: null,
-      forMedicalPurpose: null,
+      isMedical: null,
     },
   });
 
+  console.log(dtr);
   useEffect(() => {
     if (
       watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
@@ -148,6 +161,11 @@ export const PassSlipApplicationModal = ({
               dismissible={false}
             />
           ) : null}
+
+          {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
+            <AlertNotification alertType="warning" notifMessage="No Face Scan Time-In Found" dismissible={false} />
+          ) : null}
+
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-3 p-4 rounded">
@@ -260,16 +278,16 @@ export const PassSlipApplicationModal = ({
 
                     <div className="w-full md:w-80">
                       <select
-                        id="forMedicalPurpose"
+                        id="isMedical"
                         className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                         required
-                        {...register('forMedicalPurpose')}
+                        {...register('isMedical')}
                       >
                         <option value="" disabled>
                           Select Purpose
                         </option>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
+                        <option value={'1'}>Yes</option>
+                        <option value={'0'}>No</option>
                       </select>
                     </div>
                   </div>
@@ -311,7 +329,13 @@ export const PassSlipApplicationModal = ({
                 loading={false}
                 form="ApplyPassSlipForm"
                 type="submit"
-                disabled={!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? true : false}
+                disabled={
+                  !allowedToApplyForNew ||
+                  passSlipsForApproval.length >= 1 ||
+                  (dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null)
+                    ? true
+                    : false
+                }
               >
                 Apply Pass Slip
               </Button>

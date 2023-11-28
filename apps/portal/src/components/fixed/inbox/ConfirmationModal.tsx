@@ -22,12 +22,11 @@ export const ConfirmationInboxModal = ({
     selectedVppId,
     confirmationResponse,
     confirmationModalTitle,
-    selectedMessageType,
     declineRemarks,
     patchInboxReponse,
     patchInboxReponseFail,
     patchInboxReponseSuccess,
-    setIsMessageOpen,
+    setPsbMessageModalIsOpen,
   } = useInboxStore((state) => ({
     selectedVppId: state.selectedVppId,
     confirmationResponse: state.confirmationResponse,
@@ -37,7 +36,7 @@ export const ConfirmationInboxModal = ({
     patchInboxReponse: state.patchInboxReponse,
     patchInboxReponseFail: state.patchInboxReponseSuccess,
     patchInboxReponseSuccess: state.patchInboxReponseSuccess,
-    setIsMessageOpen: state.setIsMessageOpen,
+    setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
   }));
 
   const { employeeDetails } = useEmployeeStore((state) => ({
@@ -45,9 +44,7 @@ export const ConfirmationInboxModal = ({
   }));
 
   async function handleResponse() {
-    if (selectedMessageType == InboxMessageType.PSB) {
-      handlePsbPatch(declineRemarks);
-    }
+    handlePsbPatch(declineRemarks);
   }
 
   const handlePsbPatch = async (declineRemarks: string) => {
@@ -62,8 +59,10 @@ export const ConfirmationInboxModal = ({
         patchInboxReponseFail(result);
       } else {
         patchInboxReponseSuccess(result);
-        closeModalAction(); // close confirmation of decline modal
-        setIsMessageOpen(false);
+        closeModalAction(); // close confirmation modal
+        setTimeout(() => {
+          setPsbMessageModalIsOpen(false);
+        }, 200);
       }
     } else {
       const { error, result } = await patchPortal(
@@ -74,8 +73,10 @@ export const ConfirmationInboxModal = ({
         patchInboxReponseFail(result);
       } else {
         patchInboxReponseSuccess(result);
-        closeModalAction(); // close confirmation of decline modal
-        setIsMessageOpen(false);
+        closeModalAction(); // close confirmation modal
+        setTimeout(() => {
+          setPsbMessageModalIsOpen(false);
+        }, 200);
       }
     }
   };

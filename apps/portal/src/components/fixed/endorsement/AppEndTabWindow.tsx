@@ -4,13 +4,9 @@ import { useAppEndStore } from '../../../store/endorsement.store';
 import { AllPublicationListTab } from './AllPublicationListTab';
 
 export const AppEndTabWindow: FunctionComponent = () => {
-  const pendingPublicationList = useAppEndStore(
-    (state) => state.pendingPublicationList
-  );
+  const pendingPublicationList = useAppEndStore((state) => state.pendingPublicationList);
 
-  const fulfilledPublicationList = useAppEndStore(
-    (state) => state.fulfilledPublicationList
-  );
+  const fulfilledPublicationList = useAppEndStore((state) => state.fulfilledPublicationList);
 
   const tab = useAppEndStore((state) => state.tab);
 
@@ -21,23 +17,13 @@ export const AppEndTabWindow: FunctionComponent = () => {
 
   return (
     <>
-      <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
+      <div className="w-full bg-inherit rounded px-5 h-[30rem] overflow-y-auto">
         {pendingIsLoading
           ? null
-          : tab === 1 && (
-              <AllPublicationListTab
-                publications={pendingPublicationList}
-                tab={tab}
-              />
-            )}
+          : tab === 1 && <AllPublicationListTab publications={pendingPublicationList} tab={tab} />}
         {fulfilledIsLoading
           ? null
-          : tab === 2 && (
-              <AllPublicationListTab
-                publications={fulfilledPublicationList}
-                tab={tab}
-              />
-            )}
+          : tab === 2 && <AllPublicationListTab publications={fulfilledPublicationList} tab={tab} />}
       </div>
     </>
   );
