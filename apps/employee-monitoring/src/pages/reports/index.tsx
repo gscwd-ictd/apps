@@ -10,6 +10,7 @@ import { Button } from '@gscwd-apps/oneui';
 import { SelectListRF } from '../../components/inputs/SelectListRF';
 import { LabelInput } from '../../components/inputs/LabelInput';
 import { getEmpMonitoring } from '../../utils/helper/employee-monitoring-axios-helper';
+import ConvertFullMonthNameToDigit from '../../utils/functions/ConvertFullMonthNameToDigit';
 
 // yup error handling initialization
 const yupSchema = yup
@@ -39,27 +40,15 @@ export default function Index() {
 
   // form submission
   const onSubmit: SubmitHandler<Report> = (data: Report) => {
-    // set loading to true
-    // PostCustomGroup();
-
-    // handlePostResult(data);
-
-    console.log(data);
+    const url = `${window.location}/${replaceSpaceToDash(data.reportName)}?reportName=${
+      data.reportName
+    }&date_from=${ConvertFullMonthNameToDigit(data.dateFrom)}&date_to=${ConvertFullMonthNameToDigit(data.dateTo)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const handlePostResult = async (data: Report) => {
-    const { error, result } = await getEmpMonitoring(
-      `/report/reportname?=${data.reportName}&datefrom=${data.dateFrom}&dateTo=${data.dateTo}`
-    );
-
-    if (error) {
-      // request is done so set loading to false
-      // PostCustomGroupFail(result);
-    } else {
-      // request is done so set loading to false
-      // PostCustomGroupSuccess(result);
-      // reset();
-      // closeModalAction();
+  const replaceSpaceToDash = (reportName: string) => {
+    if (reportName != null && reportName.length > 0) {
+      return reportName.replace(/ /g, '-');
     }
   };
 

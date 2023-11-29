@@ -1,0 +1,76 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @nx/enforce-module-boundaries */
+import { Text, StyleSheet, View, Image } from '@react-pdf/renderer';
+import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
+import IsoAccreditorLogo from 'apps/employee-monitoring/public/socotec-logo.jpg';
+import React, { FunctionComponent } from 'react';
+
+type HeaderProps = {
+  isoCode?: string;
+  withIsoCode: boolean;
+  withIsoLogo: boolean;
+  isFixed?: boolean;
+};
+
+const styles = StyleSheet.create({
+  gscwdLogo: {
+    width: 60,
+    height: 60,
+    margin: 'auto',
+  },
+  isoLogo: {
+    width: 71,
+    height: 46,
+    margin: 'auto',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+  },
+  borderTop: {
+    borderTop: '1px solid #000000',
+  },
+
+  horizontalCenter: { textAlign: 'center' },
+
+  // Width Styles
+  w40: { width: '40%' },
+  w30: { width: '30%' },
+});
+
+export const Header: FunctionComponent<HeaderProps> = ({ isoCode, withIsoCode, withIsoLogo, isFixed }) => {
+  return (
+    <>
+      {/* HEADER */}
+      <View style={[styles.rowContainer, { paddingBottom: 5 }]} fixed={isFixed}>
+        {/* LEFT */}
+        <View style={[styles.w30, { padding: '0 0 0 15' }]}>
+          <Image src={GscwdLogo.src} style={[styles.gscwdLogo]} />
+        </View>
+
+        {/* CENTER */}
+        <View style={[styles.w40, styles.horizontalCenter]}>
+          <Text style={{ fontSize: 10, fontFamily: 'Helvetica-Bold' }}>GENERAL SANTOS WATER DISTRICT</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>E. Fernandez St., Brgy. Lagao, General Santos City</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>Telephone No.: 552-3824; Telefax No.: 553-4960</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>Email Address: gscwaterdistrict@yahoo.com</Text>
+        </View>
+
+        {/* RIGHT */}
+        <View style={[styles.w30, { padding: '0 15 0 0' }]}>
+          {/* ISO CODE */}
+          {withIsoCode ? (
+            <View style={[{ position: 'absolute', right: 0 }]}>
+              <Text style={{ fontSize: 8, fontFamily: 'Helvetica' }}>{isoCode}</Text>
+            </View>
+          ) : null}
+
+          {/* ISO LOGO */}
+          {withIsoLogo ? <Image src={IsoAccreditorLogo.src} style={[styles.isoLogo]} /> : null}
+        </View>
+      </View>
+    </>
+  );
+};
+
+export default Header;

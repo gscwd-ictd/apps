@@ -1,22 +1,18 @@
 export const Reports = [
   {
     label: 'Report on Attendance',
-    value: 'Report on Attendance',
+    value: 'report on attendance',
   },
   {
     label: 'Report on Personal Business Pass Slip',
-    value: 'Report on Personal Business Pass Slip',
+    value: 'report on personal business pass slip',
   },
   {
     label: 'Report on Official Business Pass Slip',
-    value: 'Report on Official Business Pass Slip',
+    value: 'report on official business pass slip',
   },
   {
     label: 'Detailed Report on Personal Business Pass Slip',
-    value: 'Detailed Report on Personal Business Pass Slip',
+    value: 'detailed report on personal business pass slip',
   },
-  // ATTENDANCE_REPORT = 'Report on Attendance',
-  // PB_PASS_SLIP_REPORT = 'Report on Personal Business Pass Slip',
-  // OB_PASS_SLIP_REPORT = 'Report on Official Business Pass Slip',
-  // PB_DETAILED_PASS_SLIP_REPORT = 'Detailed Report on Personal Business Pass Slip',
 ];
