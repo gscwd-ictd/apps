@@ -234,7 +234,7 @@ const Index = () => {
           <ToastNotification toastType="success" notifMessage="Members successfully removed" />
         ) : null}
 
-        <Can I="access" this="Custom Groups">
+        <Can I="access" this="Custom_groups">
           <div className="mx-5">
             <Card>
               {IsLoading ? (

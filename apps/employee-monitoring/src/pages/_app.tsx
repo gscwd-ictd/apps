@@ -11,7 +11,6 @@ import Authmiddleware from '../components/pages/authmiddleware';
 import { getCookieFromServer, UserProfile } from '../utils/helper/session';
 import { createContext, useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
-// import { Navigate } from '../components/router/navigate';
 
 type AppOwnProps = {
   userDetails: UserProfile;
@@ -61,7 +60,7 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 //     { I: 'access', this: 'Users' },
 //     { I: 'access', this: 'Officer_of_the_day' },
 //     { I: 'access', this: 'System_logs' },
-//     { I: 'access', this: 'Custom Groups' },
+//     { I: 'access', this: 'Reports' },
 //   ],
 //   userId: '123',
 // };
