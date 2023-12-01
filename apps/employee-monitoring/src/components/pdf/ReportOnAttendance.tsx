@@ -179,7 +179,11 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                   {!isEmpty(reportOnAttendanceData.report)
                     ? reportOnAttendanceData.report?.map((attendanceData, index) => {
                         return (
-                          <View style={[styles.rowContainer, styles.rowBorder]} key={index} wrap={false}>
+                          <View
+                            style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}
+                            key={index}
+                            wrap={false}
+                          >
                             <View style={[styles.tableData, styles.w3]}>
                               <Text style={[styles.tableDataText]}>{index + 1}</Text>
                             </View>
@@ -228,14 +232,16 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                     <Text
                       style={[
                         {
-                          borderBottom: '1px solid #000',
                           width: '80%',
+                          fontFamily: 'Helvetica-Bold',
                         },
                       ]}
                     >
-                      EMPLOYEE NAME
+                      {reportOnAttendanceData.signatory?.preparedBy.name}
                     </Text>
-                    <Text style={[{ padding: '2 0 0 2' }]}>EMPLOYEE POSITION</Text>
+                    <Text style={[{ paddingTop: 2 }]}>
+                      {reportOnAttendanceData.signatory?.preparedBy.positionTitle}
+                    </Text>
                   </View>
 
                   {/* CENTER */}
@@ -244,14 +250,16 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                     <Text
                       style={[
                         {
-                          borderBottom: '1px solid #000',
                           width: '80%',
+                          fontFamily: 'Helvetica-Bold',
                         },
                       ]}
                     >
-                      EMPLOYEE NAME
+                      {reportOnAttendanceData.signatory?.reviewedBy.name}
                     </Text>
-                    <Text style={[{ padding: '2 0 0 2' }]}>EMPLOYEE POSITION</Text>
+                    <Text style={[{ paddingTop: 2 }]}>
+                      {reportOnAttendanceData.signatory?.reviewedBy.positionTitle}
+                    </Text>
                   </View>
 
                   {/* RIGHT */}
@@ -260,14 +268,16 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                     <Text
                       style={[
                         {
-                          borderBottom: '1px solid #000',
                           width: '80%',
+                          fontFamily: 'Helvetica-Bold',
                         },
                       ]}
                     >
-                      EMPLOYEE NAME
+                      {reportOnAttendanceData.signatory?.approvedBy.name}
                     </Text>
-                    <Text style={[{ padding: '2 0 0 2' }]}>EMPLOYEE POSITION</Text>
+                    <Text style={[{ paddingTop: 2 }]}>
+                      {reportOnAttendanceData.signatory?.approvedBy.positionTitle}
+                    </Text>
                   </View>
                 </View>
               </View>

@@ -42,7 +42,7 @@ export const Header: FunctionComponent<HeaderProps> = ({ isoCode, withIsoCode, w
   return (
     <>
       {/* HEADER */}
-      <View style={[styles.rowContainer, { paddingBottom: 5 }]} fixed={isFixed}>
+      <View style={[styles.rowContainer, { paddingBottom: 10 }]} fixed={isFixed}>
         {/* LEFT */}
         <View style={[styles.w30, { padding: '0 0 0 15' }]}>
           <Image src={GscwdLogo.src} style={[styles.gscwdLogo]} />

@@ -1,16 +1,54 @@
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { Report } from 'apps/employee-monitoring/src/utils/types/report.type';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { isEmpty } from 'lodash';
+import useSWR from 'swr';
+import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
+import { useRouter } from 'next/router';
+
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { Button } from '@gscwd-apps/oneui';
-import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import ReportOnAttendancePdf from 'apps/employee-monitoring/src/components/pdf/ReportOnAttendance';
+import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store';
+import { LoadingSpinner } from '@gscwd-apps/oneui';
 
-export default function Index({ reportOnAttendanceData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const Index = () => {
+  const router = useRouter();
+
+  // fetch data for Report On Attendance Document
+  const {
+    data: swrReportOnAttendanceDocument,
+    error: swrError,
+    isLoading: swrIsLoading,
+  } = useSWR(
+    `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${router.query.date_from}&date_to=${router.query.date_to}`,
+    fetcherEMS,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
+
+  // Zustand initialization
+  const { ReportOnAttendanceDoc, SetReportOnAttendanceDoc, ErrorReportOnAttendanceDoc, SetErrorReportOnAttendanceDoc } =
+    useReportsStore((state) => ({
+      ReportOnAttendanceDoc: state.reportOnAttendanceDoc,
+      SetReportOnAttendanceDoc: state.setReportOnAttendanceDoc,
+
+      ErrorReportOnAttendanceDoc: state.errorReportOnAttendanceDoc,
+      SetErrorReportOnAttendanceDoc: state.setErrorReportOnAttendanceDoc,
+    }));
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrReportOnAttendanceDocument)) {
+      SetReportOnAttendanceDoc(swrReportOnAttendanceDocument.data);
+    }
+
+    if (!isEmpty(swrError)) {
+      SetErrorReportOnAttendanceDoc(swrError.message);
+    }
+  }, [swrReportOnAttendanceDocument, swrError]);
+
   return (
     <>
       <div className="w-full">
@@ -28,25 +66,16 @@ export default function Index({ reportOnAttendanceData }: InferGetServerSideProp
 
         <div className="flex flex-col w-full gap-6 px-5">
           <Card>
-            <ReportOnAttendancePdf reportOnAttendanceData={reportOnAttendanceData} />
+            {swrIsLoading ? (
+              <LoadingSpinner size="lg" />
+            ) : (
+              <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
+            )}
           </Card>
         </div>
       </div>
     </>
   );
-}
-
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-  try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${context.query.reportName}&date_from=${context.query.date_from}&date_to=${context.query.date_to}`
-    );
-
-    return { props: { reportOnAttendanceData: data } };
-  } catch (error) {
-    return {
-      props: { reportOnAttendanceData: [] },
-      redirect: { destination: '/404', permanent: false },
-    };
-  }
 };
+
+export default Index;
