@@ -9,8 +9,8 @@ import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
 import { Button } from '@gscwd-apps/oneui';
 import { SelectListRF } from '../../components/inputs/SelectListRF';
 import { LabelInput } from '../../components/inputs/LabelInput';
-import { getEmpMonitoring } from '../../utils/helper/employee-monitoring-axios-helper';
 import ConvertFullMonthNameToDigit from '../../utils/functions/ConvertFullMonthNameToDigit';
+import { Navigate } from '../../components/router/navigate';
 
 // yup error handling initialization
 const yupSchema = yup
@@ -54,19 +54,19 @@ export default function Index() {
 
   return (
     <>
-      <div className="">
-        <BreadCrumbs
-          title="Reports"
-          crumbs={[
-            {
-              layerNo: 1,
-              layerText: 'Reports',
-              path: '',
-            },
-          ]}
-        />
+      <Can I="access" this="Reports">
+        <div className="">
+          <BreadCrumbs
+            title="Reports"
+            crumbs={[
+              {
+                layerNo: 1,
+                layerText: 'Reports',
+                path: '',
+              },
+            ]}
+          />
 
-        <Can I="access" this="Reports">
           <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
               <form onSubmit={handleSubmit(onSubmit)} id="addUserForm">
@@ -128,8 +128,12 @@ export default function Index() {
               </form>
             </Card>
           </div>
-        </Can>
-      </div>
+        </div>
+      </Can>
+
+      <Can not I="access" this="Reports">
+        <Navigate to="/page-404" />
+      </Can>
     </>
   );
 }

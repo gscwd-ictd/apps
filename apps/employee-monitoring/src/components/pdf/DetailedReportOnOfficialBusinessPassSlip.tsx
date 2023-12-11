@@ -4,12 +4,12 @@ import { Page, Text, Document, StyleSheet, PDFViewer, View } from '@react-pdf/re
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
-import { ReportOnAttendance } from '../../utils/types/report.type';
+import { DetailedReportOnObPassSlip } from '../../utils/types/report.type';
 import Header from './Header';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
-type ReportOnAttendancePdfProps = {
-  reportOnAttendanceData: ReportOnAttendance;
+type DetailedReportOnOfficialBusinessPassSlipProps = {
+  detailedReportOnObPassSlipDoc: DetailedReportOnObPassSlip;
 };
 
 const styles = StyleSheet.create({
@@ -90,15 +90,20 @@ const styles = StyleSheet.create({
   // Width Styles
   w100: { width: '100%' },
   w33_33: { width: '33.33%' },
-  w25: { width: '25%' },
-  w14: { width: '14%' },
+  w30: { width: '30%' },
+  w23: { width: '23%' },
+  w17: { width: '17%' },
+  w16_25: { width: '16.25%' },
+  w15: { width: '15%' },
   w13: { width: '13%' },
   w10: { width: '10%' },
   w7: { width: '7%' },
-  w3: { width: '3%' },
+  w5: { width: '5%' },
 });
 
-export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps> = ({ reportOnAttendanceData }) => {
+export const DetailedReportOnOfficialBusinessPassSlipPdf: FunctionComponent<
+  DetailedReportOnOfficialBusinessPassSlipProps
+> = ({ detailedReportOnObPassSlipDoc }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const router = useRouter();
@@ -120,8 +125,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
 
                 {/* DOCUMENT TITLE */}
                 <View style={[styles.w100, styles.horizontalCenter]}>
-                  <Text style={[styles.documentTitle]}>REPORT ON ATTENDANCE</Text>
-                  <Text style={[styles.documentTitle]}>(Tardiness, Undertime and Half-day)</Text>
+                  <Text style={[styles.documentTitle]}>DETAILED REPORT ON OFFICIAL BUSINESS PASS SLIP</Text>
                   <Text style={[styles.documentTitle]}>
                     FOR THE PERIOD OF {DateFormatter(`${router.query.date_from}`, 'MMMM DD, YYYY')} -{' '}
                     {DateFormatter(`${router.query.date_to}`, 'MMMM DD, YYYY')}
@@ -133,78 +137,53 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                   {/* COLUMN HEADERS  */}
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
                     {/* NUMBER */}
-                    <View style={[styles.tableHeader, styles.w3]}></View>
-                    <View style={[styles.tableHeader, styles.w25, { fontSize: 7 }]}>
+                    <View style={[styles.tableHeader, styles.w5]}></View>
+                    <View style={[styles.tableHeader, styles.w30, { fontSize: 7 }]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times Late</Text>
+                    <View style={[styles.tableHeader, styles.w16_25]}>
+                      <Text style={[styles.tableHeaderText]}>Date</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times Undertime</Text>
+                    <View style={[styles.tableHeader, styles.w16_25]}>
+                      <Text style={[styles.tableHeaderText]}>No. Of Minutes Consumed</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>Total Minutes Late</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w10]}>
+                    <View style={[styles.tableHeader, styles.w16_25]}>
                       <Text style={[styles.tableHeaderText]}>Conversion (mins / 60) x .125</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times Half day</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w13]}>
-                      <Text style={[styles.tableHeaderText]}>Date/s (Half day)</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w14]}>
-                      <Text style={[styles.tableHeaderText]}>Date/s (Late & Undertime)</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w7, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>No. Attendance</Text>
+                    <View style={[styles.tableHeader, styles.w16_25, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText]}>Time Out & Time In</Text>
                     </View>
                   </View>
 
                   {/* DATA */}
-                  {!isEmpty(reportOnAttendanceData.report)
-                    ? reportOnAttendanceData.report?.map((attendanceData, index) => {
+                  {!isEmpty(detailedReportOnObPassSlipDoc.report)
+                    ? detailedReportOnObPassSlipDoc.report?.map((pbPassSlipData, index) => {
                         return (
                           <View
                             style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}
                             key={index}
                             wrap={false}
                           >
-                            <View style={[styles.tableData, styles.w3]}>
+                            <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{index + 1}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w25, { alignItems: 'flex-start' }]}>
+                            <View style={[styles.tableData, styles.w30, { alignItems: 'flex-start' }]}>
                               <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
-                                {attendanceData.name || '-'}
+                                {pbPassSlipData.name || '-'}
                               </Text>
                             </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesLate || ''}</Text>
+
+                            <View style={[styles.tableData, styles.w16_25]}>
+                              <Text style={[styles.tableDataText]}>{pbPassSlipData.psDate || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesUndertime || ''}</Text>
+                            <View style={[styles.tableData, styles.w16_25]}>
+                              <Text style={[styles.tableDataText]}>{pbPassSlipData.noOfMinConsumed || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>
-                                {attendanceData.totalMinutesLateUndertime || ''}
-                              </Text>
+                            <View style={[styles.tableData, styles.w16_25]}>
+                              <Text style={[styles.tableDataText]}>{pbPassSlipData.conversion || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w10]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.conversion || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesHalfDay || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w13]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.daysHalfDay || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w14]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.datesLate || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w7, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.noOfAttendance || ''}</Text>
+                            <View style={[styles.tableData, styles.w16_25, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableDataText]}>{pbPassSlipData.timeInTimeOut || ''}</Text>
                             </View>
                           </View>
                         );
@@ -225,10 +204,10 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                         },
                       ]}
                     >
-                      {reportOnAttendanceData.signatory?.preparedBy.name}
+                      {detailedReportOnObPassSlipDoc.signatory?.preparedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnAttendanceData.signatory?.preparedBy.positionTitle}
+                      {detailedReportOnObPassSlipDoc.signatory?.preparedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -243,10 +222,10 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                         },
                       ]}
                     >
-                      {reportOnAttendanceData.signatory?.reviewedBy.name}
+                      {detailedReportOnObPassSlipDoc.signatory?.reviewedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnAttendanceData.signatory?.reviewedBy.positionTitle}
+                      {detailedReportOnObPassSlipDoc.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -261,10 +240,10 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                         },
                       ]}
                     >
-                      {reportOnAttendanceData.signatory?.approvedBy.name}
+                      {detailedReportOnObPassSlipDoc.signatory?.approvedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnAttendanceData.signatory?.approvedBy.positionTitle}
+                      {detailedReportOnObPassSlipDoc.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
                 </View>
@@ -277,4 +256,4 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
   );
 };
 
-export default ReportOnAttendancePdf;
+export default DetailedReportOnOfficialBusinessPassSlipPdf;
