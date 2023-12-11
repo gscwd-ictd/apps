@@ -15,4 +15,8 @@ export const Reports = [
     label: 'Detailed Report on Personal Business Pass Slip',
     value: 'detailed report on personal business pass slip',
   },
+  {
+    label: 'Detailed Report on Official Business Pass Slip',
+    value: 'detailed report on official business pass slip',
+  },
 ];

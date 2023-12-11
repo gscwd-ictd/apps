@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: 8,
+    marginLeft: 10,
+    marginRight: 10,
   },
 });
 
