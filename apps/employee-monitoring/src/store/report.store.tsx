@@ -81,12 +81,14 @@ export type ReportsState = {
 
 export const useReportsStore = create<ReportsState>()(
   devtools((set) => ({
+    // Report on Attendance
     reportOnAttendanceDoc: {} as ReportOnAttendance,
     setReportOnAttendanceDoc: (reportOnAttendanceDoc) => set({ reportOnAttendanceDoc }),
 
     errorReportOnAttendanceDoc: '',
     setErrorReportOnAttendanceDoc: (errorReportOnAttendanceDoc) => set({ errorReportOnAttendanceDoc }),
 
+    // Report on Personal Business Pass Slip
     reportOnPersonalBusinessPassSlipDoc: {} as ReportOnPersonalBusinessPassSlip,
     setReportOnPersonalBusinessPassSlipDoc: (reportOnPersonalBusinessPassSlipDoc) =>
       set({ reportOnPersonalBusinessPassSlipDoc }),
@@ -95,6 +97,7 @@ export const useReportsStore = create<ReportsState>()(
     setErrorReportOnPersonalBusinessPassSlipDoc: (errorReportOnPersonalBusinessPassSlipDoc) =>
       set({ errorReportOnPersonalBusinessPassSlipDoc }),
 
+    // Detailed Report on Personal Business Pass Slip
     detailedReportOnPbPassSlipDoc: {} as DetailedReportOnPbPassSlip,
     setDetailedReportOnPbPassSlipDoc: (detailedReportOnPbPassSlipDoc) => set({ detailedReportOnPbPassSlipDoc }),
 
@@ -102,6 +105,7 @@ export const useReportsStore = create<ReportsState>()(
     setErrorDetailedReportOnPbPassSlipDoc: (errorDetailedReportOnPbPassSlipDoc) =>
       set({ errorDetailedReportOnPbPassSlipDoc }),
 
+    // Report on Official Business Pass Slip
     reportOnOfficialBusinessPassSlipDoc: {} as ReportOnOfficialBusinessPassSlip,
     setReportOnOfficialBusinessPassSlipDoc: (reportOnOfficialBusinessPassSlipDoc) =>
       set({ reportOnOfficialBusinessPassSlipDoc }),
@@ -110,6 +114,7 @@ export const useReportsStore = create<ReportsState>()(
     setErrorReportOnOfficialBusinessPassSlipDoc: (errorReportOnOfficialBusinessPassSlipDoc) =>
       set({ errorReportOnOfficialBusinessPassSlipDoc }),
 
+    // Detailed Report on Official Business Pass Slip
     detailedReportOnObPassSlipDoc: {} as DetailedReportOnObPassSlip,
     setDetailedReportOnObPassSlipDoc: (detailedReportOnObPassSlipDoc) => set({ detailedReportOnObPassSlipDoc }),
 
@@ -117,6 +122,7 @@ export const useReportsStore = create<ReportsState>()(
     setErrorDetailedReportOnObPassSlipDoc: (errorDetailedReportOnObPassSlipDoc) =>
       set({ errorDetailedReportOnObPassSlipDoc }),
 
+    // Report on Employee Forced Leave Credits
     reportOnEmpForcedLeaveCreditsDoc: {} as ReportOnEmpForcedLeaveCredits,
     setReportOnEmpForcedLeaveCreditsDoc: (reportOnEmpForcedLeaveCreditsDoc) =>
       set({ reportOnEmpForcedLeaveCreditsDoc }),
@@ -125,6 +131,7 @@ export const useReportsStore = create<ReportsState>()(
     setErrorReportOnEmpForcedLeaveCreditsDoc: (errorReportOnEmpForcedLeaveCreditsDoc) =>
       set({ errorReportOnEmpForcedLeaveCreditsDoc }),
 
+    // Report on Employee Leave Credit Balance
     reportOnEmpLeaveCreditsBalanceDoc: {} as ReportOnEmpLeaveCreditBalance,
     setReportOnEmpLeaveCreditsBalanceDoc: (reportOnEmpLeaveCreditsBalanceDoc) =>
       set({ reportOnEmpLeaveCreditsBalanceDoc }),
@@ -133,6 +140,7 @@ export const useReportsStore = create<ReportsState>()(
     setErrorReportOnEmpLeaveCreditsBalanceDoc: (errorReportOnEmpLeaveCreditsBalanceDoc) =>
       set({ errorReportOnEmpLeaveCreditsBalanceDoc }),
 
+    // Report on Employee Leave Credit Balance with Money
     reportOnEmpLeaveCreditsBalanceWMoneyDoc: {} as ReportOnEmpLeaveCreditBalanceWMoney,
     setReportOnEmpLeaveCreditsBalanceWMoneyDoc: (reportOnEmpLeaveCreditsBalanceWMoneyDoc) =>
       set({ reportOnEmpLeaveCreditsBalanceWMoneyDoc }),
@@ -141,6 +149,7 @@ export const useReportsStore = create<ReportsState>()(
     setErrorReportOnEmpLeaveCreditsBalanceWMoneyDoc: (errorReportOnEmpLeaveCreditsBalanceWMoneyDoc) =>
       set({ errorReportOnEmpLeaveCreditsBalanceWMoneyDoc }),
 
+    // Report on Summary of Leave Without Pay
     reportOnSummaryLeaveWithoutPayDoc: {} as ReportOnSummaryLeaveWithoutPay,
     setReportOnSummaryLeaveWithoutPayDoc: (reportOnSummaryLeaveWithoutPayDoc) =>
       set({ reportOnSummaryLeaveWithoutPayDoc }),
