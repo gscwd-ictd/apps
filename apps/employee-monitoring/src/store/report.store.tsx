@@ -7,6 +7,7 @@ import {
   DetailedReportOnPbPassSlip,
   ReportOnOfficialBusinessPassSlip,
   DetailedReportOnObPassSlip,
+  ReportOnEmpForcedLeaveCredits,
 } from '../utils/types/report.type';
 
 export type ReportsState = {
@@ -43,6 +44,12 @@ export type ReportsState = {
 
   errorDetailedReportOnObPassSlipDoc: string;
   setErrorDetailedReportOnObPassSlipDoc: (errorDetailedReportOnObPassSlipDoc: string) => void;
+
+  reportOnEmpForcedLeaveCreditsDoc: ReportOnEmpForcedLeaveCredits;
+  setReportOnEmpForcedLeaveCreditsDoc: (reportOnEmpForcedLeaveCreditsDoc: ReportOnEmpForcedLeaveCredits) => void;
+
+  errorReportOnEmpForcedLeaveCreditsDoc: string;
+  setErrorReportOnEmpForcedLeaveCreditsDoc: (errorReportOnEmpForcedLeaveCreditsDoc: string) => void;
 
   emptyResponse: () => void;
 };
@@ -85,6 +92,14 @@ export const useReportsStore = create<ReportsState>()(
     setErrorDetailedReportOnObPassSlipDoc: (errorDetailedReportOnObPassSlipDoc) =>
       set({ errorDetailedReportOnObPassSlipDoc }),
 
+    reportOnEmpForcedLeaveCreditsDoc: {} as ReportOnEmpForcedLeaveCredits,
+    setReportOnEmpForcedLeaveCreditsDoc: (reportOnEmpForcedLeaveCreditsDoc) =>
+      set({ reportOnEmpForcedLeaveCreditsDoc }),
+
+    errorReportOnEmpForcedLeaveCreditsDoc: '',
+    setErrorReportOnEmpForcedLeaveCreditsDoc: (errorReportOnEmpForcedLeaveCreditsDoc) =>
+      set({ errorReportOnEmpForcedLeaveCreditsDoc }),
+
     emptyResponse: () =>
       set({
         errorReportOnAttendanceDoc: '',
@@ -92,6 +107,7 @@ export const useReportsStore = create<ReportsState>()(
         errorDetailedReportOnPbPassSlipDoc: '',
         errorReportOnOfficialBusinessPassSlipDoc: '',
         errorDetailedReportOnObPassSlipDoc: '',
+        errorReportOnEmpForcedLeaveCreditsDoc: '',
       }),
   }))
 );

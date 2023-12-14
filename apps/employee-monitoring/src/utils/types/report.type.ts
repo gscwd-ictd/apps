@@ -1,8 +1,11 @@
+import { number, string } from 'yup';
+
 /* eslint-disable @nx/enforce-module-boundaries */
 export type Report = {
   reportName: string;
-  dateFrom: string;
-  dateTo: string;
+  dateFrom?: string;
+  dateTo?: string;
+  monthYear?: string;
 };
 
 export type EmployeeSignatory = {
@@ -86,5 +89,17 @@ export type EmployeeDroObPs = {
 };
 export type DetailedReportOnObPassSlip = {
   report: Array<EmployeeDroObPs>;
+  signatory: ReportSignatories;
+};
+
+// Report on Employee Forced Leave Credits = RoEFlc
+export type EmployeeRoEFlc = {
+  companyId: string;
+  name: string;
+  forcedLeaveBalance: number;
+  vacationLeaveBalance: number;
+};
+export type ReportOnEmpForcedLeaveCredits = {
+  report: Array<EmployeeRoEFlc>;
   signatory: ReportSignatories;
 };
