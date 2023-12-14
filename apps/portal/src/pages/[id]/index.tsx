@@ -43,6 +43,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     if (schedule) {
       const modules = await setModules(userDetails, schedule);
       setAllowedModules(modules);
+      console.log(userDetails);
     }
   }
 

@@ -113,7 +113,7 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
     <>
       {isClient && (
         <PDFViewer width={'100%'} height={1400}>
-          <Document title="Report On Attendance">
+          <Document title="Report On Employee Forced Leave Credits">
             {/* FOLIO */}
             <Page size={[612.0, 936.0]} style={styles.page}>
               <View>
@@ -132,8 +132,6 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
-                    {/* NUMBER */}
-
                     <View style={[styles.tableHeader, styles.w14]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Emp No.</Text>
                     </View>

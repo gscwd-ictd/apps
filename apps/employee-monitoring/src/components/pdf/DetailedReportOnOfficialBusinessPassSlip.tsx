@@ -116,7 +116,7 @@ export const DetailedReportOnOfficialBusinessPassSlipPdf: FunctionComponent<
     <>
       {isClient && (
         <PDFViewer width={'100%'} height={1400}>
-          <Document title="Report On Attendance">
+          <Document title="Detailed Report on Official Business Pass Slip">
             {/* FOLIO */}
             <Page size={[612.0, 936.0]} style={styles.page}>
               <View>

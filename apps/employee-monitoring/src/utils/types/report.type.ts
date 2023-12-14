@@ -103,3 +103,46 @@ export type ReportOnEmpForcedLeaveCredits = {
   report: Array<EmployeeRoEFlc>;
   signatory: ReportSignatories;
 };
+
+// Report on Employee Leave Credit Balance
+export type EmployeeLcb = {
+  companyId: string;
+  name: string;
+  sickLeaveBalance: number;
+  vacationLeaveBalance: number;
+  totalLeaveBalance: number;
+};
+export type ReportOnEmpLeaveCreditBalance = {
+  report: Array<EmployeeLcb>;
+  signatory: ReportSignatories;
+};
+
+// Report on Employee Leave Credit Balance with Money
+export type EmployeeLcbWithMoney = {
+  companyId: string;
+  name: string;
+  sickLeaveBalance: number;
+  vacationLeaveBalance: number;
+  totalLeaveBalance: number;
+  monthlyRate: string;
+  conversion: string;
+};
+export type ReportOnEmpLeaveCreditBalanceWMoney = {
+  report: Array<EmployeeLcbWithMoney>;
+  signatory: ReportSignatories;
+};
+
+// Report on Summary of Leave Without Pay
+export type EmployeeLwp = {
+  employeeId: string;
+  employeeName: string;
+  companyId: string;
+  leaveDescription: string;
+  noOfDays: number;
+  dateFrom: string;
+  dateTo: string;
+};
+export type ReportOnSummaryLeaveWithoutPay = {
+  report: Array<EmployeeLwp>;
+  signatory: ReportSignatories;
+};

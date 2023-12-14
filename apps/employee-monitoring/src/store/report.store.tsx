@@ -8,6 +8,9 @@ import {
   ReportOnOfficialBusinessPassSlip,
   DetailedReportOnObPassSlip,
   ReportOnEmpForcedLeaveCredits,
+  ReportOnEmpLeaveCreditBalance,
+  ReportOnEmpLeaveCreditBalanceWMoney,
+  ReportOnSummaryLeaveWithoutPay,
 } from '../utils/types/report.type';
 
 export type ReportsState = {
@@ -50,6 +53,28 @@ export type ReportsState = {
 
   errorReportOnEmpForcedLeaveCreditsDoc: string;
   setErrorReportOnEmpForcedLeaveCreditsDoc: (errorReportOnEmpForcedLeaveCreditsDoc: string) => void;
+
+  reportOnEmpLeaveCreditsBalanceDoc: ReportOnEmpLeaveCreditBalance;
+  setReportOnEmpLeaveCreditsBalanceDoc: (reportOnEmpLeaveCreditsBalanceDoc: ReportOnEmpLeaveCreditBalance) => void;
+
+  errorReportOnEmpLeaveCreditsBalanceDoc: string;
+  setErrorReportOnEmpLeaveCreditsBalanceDoc: (errorReportOnEmpForcedLeaveCreditsDoc: string) => void;
+
+  reportOnEmpLeaveCreditsBalanceWMoneyDoc: ReportOnEmpLeaveCreditBalanceWMoney;
+  setReportOnEmpLeaveCreditsBalanceWMoneyDoc: (
+    reportOnEmpLeaveCreditsBalanceWMoneyDoc: ReportOnEmpLeaveCreditBalanceWMoney
+  ) => void;
+
+  errorReportOnEmpLeaveCreditsBalanceWMoneyDoc: string;
+  setErrorReportOnEmpLeaveCreditsBalanceWMoneyDoc: (errorReportOnEmpLeaveCreditsBalanceWMoneyDoc: string) => void;
+
+  reportOnSummaryLeaveWithoutPayDoc: ReportOnSummaryLeaveWithoutPay;
+  setReportOnSummaryLeaveWithoutPayDoc: (
+    reportOnEmpLeaveCreditsBalanceWMoneyDoc: ReportOnSummaryLeaveWithoutPay
+  ) => void;
+
+  errorReportOnSummaryLeaveWithoutPayDoc: string;
+  setErrorReportOnSummaryLeaveWithoutPayDoc: (errorReportOnSummaryLeaveWithoutPayDoc: string) => void;
 
   emptyResponse: () => void;
 };
@@ -100,6 +125,30 @@ export const useReportsStore = create<ReportsState>()(
     setErrorReportOnEmpForcedLeaveCreditsDoc: (errorReportOnEmpForcedLeaveCreditsDoc) =>
       set({ errorReportOnEmpForcedLeaveCreditsDoc }),
 
+    reportOnEmpLeaveCreditsBalanceDoc: {} as ReportOnEmpLeaveCreditBalance,
+    setReportOnEmpLeaveCreditsBalanceDoc: (reportOnEmpLeaveCreditsBalanceDoc) =>
+      set({ reportOnEmpLeaveCreditsBalanceDoc }),
+
+    errorReportOnEmpLeaveCreditsBalanceDoc: '',
+    setErrorReportOnEmpLeaveCreditsBalanceDoc: (errorReportOnEmpLeaveCreditsBalanceDoc) =>
+      set({ errorReportOnEmpLeaveCreditsBalanceDoc }),
+
+    reportOnEmpLeaveCreditsBalanceWMoneyDoc: {} as ReportOnEmpLeaveCreditBalanceWMoney,
+    setReportOnEmpLeaveCreditsBalanceWMoneyDoc: (reportOnEmpLeaveCreditsBalanceWMoneyDoc) =>
+      set({ reportOnEmpLeaveCreditsBalanceWMoneyDoc }),
+
+    errorReportOnEmpLeaveCreditsBalanceWMoneyDoc: '',
+    setErrorReportOnEmpLeaveCreditsBalanceWMoneyDoc: (errorReportOnEmpLeaveCreditsBalanceWMoneyDoc) =>
+      set({ errorReportOnEmpLeaveCreditsBalanceWMoneyDoc }),
+
+    reportOnSummaryLeaveWithoutPayDoc: {} as ReportOnSummaryLeaveWithoutPay,
+    setReportOnSummaryLeaveWithoutPayDoc: (reportOnSummaryLeaveWithoutPayDoc) =>
+      set({ reportOnSummaryLeaveWithoutPayDoc }),
+
+    errorReportOnSummaryLeaveWithoutPayDoc: '',
+    setErrorReportOnSummaryLeaveWithoutPayDoc: (errorReportOnSummaryLeaveWithoutPayDoc) =>
+      set({ errorReportOnSummaryLeaveWithoutPayDoc }),
+
     emptyResponse: () =>
       set({
         errorReportOnAttendanceDoc: '',
@@ -108,6 +157,9 @@ export const useReportsStore = create<ReportsState>()(
         errorReportOnOfficialBusinessPassSlipDoc: '',
         errorDetailedReportOnObPassSlipDoc: '',
         errorReportOnEmpForcedLeaveCreditsDoc: '',
+        errorReportOnEmpLeaveCreditsBalanceDoc: '',
+        errorReportOnEmpLeaveCreditsBalanceWMoneyDoc: '',
+        errorReportOnSummaryLeaveWithoutPayDoc: '',
       }),
   }))
 );
