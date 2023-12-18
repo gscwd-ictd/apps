@@ -43,10 +43,11 @@ export default function Index() {
     isLoading: swrGsIsLoading,
     error: swrGsError,
     mutate: swrMutate,
-  } = useSWR(`/custom-groups/schedule-sheets`, fetcherEMS, {
+  } = useSWR(`/custom-groups/schedule-sheets?schedule_base=field`, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
+
   // add
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);

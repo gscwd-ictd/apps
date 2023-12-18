@@ -2,42 +2,19 @@ import { useEffect, useState } from 'react';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import Image from 'next/image';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
-
-import { EmployeeOvertimeDetails } from 'libs/utils/src/lib/types/employee.type';
-import { Overtime, OvertimeImmediateSupervisor } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeImmediateSupervisor } from 'libs/utils/src/lib/types/overtime.type';
 import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
 
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import ViewOvertimeModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/ViewOvertimeModal';
-import UseRenderNameIcon from 'apps/employee-monitoring/src/utils/functions/RenderNameIcon';
 import AddImmediateSupervisorModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/AddImmediateSupervisorModal';
 import { useOrganizationStructureStore } from 'apps/employee-monitoring/src/store/organization-structure.store';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 import DeleteImmediateSupervisorModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/DeleteImmediateSupervisorModal';
 import UseRenderAvatarInTable from 'apps/employee-monitoring/src/utils/functions/RenderAvatarInTable';
-
-// const mockDataModules: Array<OvertimeImmediateSupervisors> = [
-//   {
-//     id: '001',
-//     immediateSupervisorName: 'Eric Sison',
-//     positionTitle: 'Management Information System Researcher',
-//     assignment: 'Systems Development and Application Division',
-//     avatarUrl: 'http://172.20.110.45:4500/SISON.jpg',
-//   },
-//   {
-//     id: '002',
-//     immediateSupervisorName: 'Rizza Baugbog',
-//     positionTitle: 'Supervising Data Encoder-Controller',
-//     assignment: 'Geographic Information System Division',
-//     avatarUrl: 'http://172.20.110.45:4500/BAUGBOG.jpg',
-//   },
-// ];
 
 const Index = () => {
   // Current row data in the table that has been clicked

@@ -23,7 +23,7 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
             card.destination === 'email' ||
             card.destination === 'overtime-accomplishment'
         );
-      } else if (schedule && schedule.scheduleBase == ScheduleBases.PUMPING_STATION) {
+      } else if (schedule.id && schedule.scheduleBase == ScheduleBases.PUMPING_STATION) {
         allowed = Modules.filter(
           (card) =>
             card.destination === 'pds' ||

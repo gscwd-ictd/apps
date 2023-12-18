@@ -11,13 +11,7 @@ import {
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
-import {
-  AlertNotification,
-  DataTable,
-  LoadingSpinner,
-  Modal,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, DataTable, LoadingSpinner, Modal, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { EmployeeAsOptionWithPosition } from 'libs/utils/src/lib/types/employee.type';
 import { Card } from '../../../cards/Card';
@@ -122,14 +116,10 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
     isLoading: swrAssignedEmployeesIsLoading,
     error: swrAssignedEmployeesError,
     mutate: mutateAssignedMembers,
-  } = useSWR(
-    modalState ? `/custom-groups/${rowData.id}/assigned` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+  } = useSWR(modalState ? `/custom-groups/${rowData.id}/assigned` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // useSWR for unassigned employees
   const {
@@ -137,14 +127,10 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
     isLoading: swrUnassignedEmployeesIsLoading,
     error: swrUnassignedEmployeesError,
     mutate: mutateUnassignedMembers,
-  } = useSWR(
-    modalState ? `/custom-groups/${rowData.id}/unassigned/dropdown` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+  } = useSWR(modalState ? `/custom-groups/${rowData.id}/unassigned/dropdown` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Render checkbox in the table component
   const renderCheckBox = (row: any) => {
@@ -215,7 +201,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
 
   // Initial zustand state update
   useEffect(() => {
-    if (swrAssignedEmployeesIsLoading) {
+    if (swrUnassignedEmployeesIsLoading) {
       GetUnassignedMembers();
     }
   }, [swrUnassignedEmployeesIsLoading]);
@@ -271,18 +257,13 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
   };
 
   // Async request to unassign members in the group
-  const handleAssignMembersResult = async (
-    ToAssignedMembers: Array<string>
-  ) => {
+  const handleAssignMembersResult = async (ToAssignedMembers: Array<string>) => {
     const bodyRequest = {
       customGroupId: rowData.id,
       employeeIds: ToAssignedMembers,
     };
 
-    const { error, result } = await postEmpMonitoring(
-      `custom-groups/members`,
-      bodyRequest
-    );
+    const { error, result } = await postEmpMonitoring(`custom-groups/members`, bodyRequest);
 
     if (error) {
       PostMembersFail(result);
@@ -323,9 +304,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
   }, [ToUnassignedMembers]);
 
   // Async request to unassign members in the group
-  const handleUnassignMembersResult = async (
-    ToUnassignedMembers: Array<string>
-  ) => {
+  const handleUnassignMembersResult = async (ToUnassignedMembers: Array<string>) => {
     const bodyRequest = {
       data: {
         customGroupId: rowData.id,
@@ -333,10 +312,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
       },
     };
 
-    const { error, result } = await deleteEmpMonitoring(
-      `custom-groups/members`,
-      bodyRequest
-    );
+    const { error, result } = await deleteEmpMonitoring(`custom-groups/members`, bodyRequest);
 
     if (error) {
       DeleteMembersFail(result);
@@ -426,12 +402,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
                       </button>
                     </div>
 
-                    <DataTable
-                      model={table}
-                      showGlobalFilter={true}
-                      showColumnFilter={false}
-                      paginate={false}
-                    />
+                    <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={false} />
 
                     <div className="flex justify-start order-last mt-4">
                       <button
