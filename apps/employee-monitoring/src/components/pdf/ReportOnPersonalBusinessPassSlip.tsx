@@ -5,8 +5,8 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
 import { ReportOnPersonalBusinessPassSlip } from '../../utils/types/report.type';
-import Header from './Header';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { PdfHeader } from '@gscwd-apps/oneui';
 
 type ReportOnPersonalBusinessPassSlipProps = {
   reportOnPersonalBusinessPassSlipData: ReportOnPersonalBusinessPassSlip;
@@ -115,12 +115,12 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
     <>
       {isClient && (
         <PDFViewer width={'100%'} height={1400}>
-          <Document title="Report On Attendance">
+          <Document title="Report on Personal Business Pass Slip">
             {/* FOLIO */}
             <Page size={[612.0, 936.0]} style={styles.page}>
               <View>
                 {/* HEADER */}
-                <Header withIsoCode={false} withIsoLogo={false} isFixed={true} />
+                <PdfHeader isFixed={true} />
 
                 {/* DOCUMENT TITLE */}
                 <View style={[styles.w100, styles.horizontalCenter]}>

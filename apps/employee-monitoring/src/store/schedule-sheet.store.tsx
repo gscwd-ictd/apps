@@ -91,9 +91,7 @@ export type ScheduleSheetState = {
   getScheduleSheetsFail: (error: string) => void;
 
   setCurrentScheduleSheet: (currentScheduleSheet: ScheduleSheet) => void;
-  setCurrentEmployeeSchedule: (
-    currentEmployeeSchedule: EmployeeWithSchedule
-  ) => void;
+  setCurrentEmployeeSchedule: (currentEmployeeSchedule: EmployeeWithSchedule) => void;
 
   postScheduleSheet: () => void;
   postScheduleSheetSuccess: (response: ScheduleSheet) => void;
@@ -119,6 +117,10 @@ export type ScheduleSheetState = {
   loading: LoadingScheduleSheet;
   error: ErrorScheduleSheet;
 
+  // updateSchedulingSheetEmployees: (data: Array<EmployeeAsOptionWithRestDays>) => void;
+  toAssignEmployees: Array<EmployeeAsOptionWithRestDays>;
+  setToAssignEmployees: (data: Array<EmployeeAsOptionWithRestDays>) => void;
+
   emptyResponse: () => void;
   emptyErrors: () => void;
   emptyResponseAndErrors: () => void;
@@ -135,6 +137,7 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
       customGroupId: '',
       scheduleName: '',
       scheduleSheetGroupName: '',
+      employees: [],
     } as ScheduleSheet,
     schedule: {} as Schedule,
     group: {} as CustomGroupWithMembers,
@@ -246,9 +249,8 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         error: { ...state.error, errorEmployeeSchedule: error },
       })),
 
-    setCurrentEmployeeSchedule: (
-      currentEmployeeSchedule: EmployeeWithSchedule
-    ) => set((state) => ({ ...state, currentEmployeeSchedule })),
+    setCurrentEmployeeSchedule: (currentEmployeeSchedule: EmployeeWithSchedule) =>
+      set((state) => ({ ...state, currentEmployeeSchedule })),
 
     deleteScheduleSheet: () =>
       set((state) => ({
@@ -325,11 +327,9 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
     setCurrentScheduleSheet: (currentScheduleSheet: ScheduleSheet) =>
       set((state) => ({ ...state, currentScheduleSheet })),
 
-    setSelectedScheduleId: (selectedScheduleId: string) =>
-      set((state) => ({ ...state, selectedScheduleId })),
+    setSelectedScheduleId: (selectedScheduleId: string) => set((state) => ({ ...state, selectedScheduleId })),
 
-    setSelectedGroupId: (selectedGroupId: string) =>
-      set((state) => ({ ...state, selectedGroupId })),
+    setSelectedGroupId: (selectedGroupId: string) => set((state) => ({ ...state, selectedGroupId })),
 
     getGroupById: () =>
       set((state) => ({
@@ -388,6 +388,22 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
           errorScheduleSheet: '',
           errorScheduleSheets: '',
         },
+      })),
+
+    // updateSchedulingSheetEmployees: (data: Array<EmployeeAsOptionWithRestDays>) =>
+    //   set((state) => ({
+    //     ...state,
+    //     currentScheduleSheet: {
+    //       ...state.currentEmployeeSchedule,
+    //       employees: [...state.currentEmployeeSchedule.employees, data]
+    //     }
+    //   })),
+
+    toAssignEmployees: [] as Array<EmployeeAsOptionWithRestDays>,
+    setToAssignEmployees: (data: Array<EmployeeAsOptionWithRestDays>) =>
+      set((state) => ({
+        ...state,
+        toAssignEmployees: data,
       })),
 
     emptyResponse: () =>

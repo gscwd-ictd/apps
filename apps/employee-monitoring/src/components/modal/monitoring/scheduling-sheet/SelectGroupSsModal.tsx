@@ -1,31 +1,17 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  DataTable,
-  LoadingSpinner,
-  Modal,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, Modal, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import {
-  CustomGroup,
-  CustomGroupWithMembers,
-} from 'apps/employee-monitoring/src/utils/types/custom-group.type';
+import { CustomGroup, CustomGroupWithMembers } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import dayjs from 'dayjs';
 import { EmployeeAsOptionWithPosition } from 'libs/utils/src/lib/types/employee.type';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import Select from 'react-select';
 import useSWR from 'swr';
 
@@ -41,17 +27,14 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
   setModalState,
 }) => {
   // use schedule sheet store
-  const {
-    selectedGroupId,
-    currentScheduleSheet,
-    setSelectedGroupId,
-    setCurrentScheduleSheet,
-  } = useScheduleSheetStore((state) => ({
-    currentScheduleSheet: state.currentScheduleSheet,
-    selectedGroupId: state.selectedGroupId,
-    setSelectedGroupId: state.setSelectedGroupId,
-    setCurrentScheduleSheet: state.setCurrentScheduleSheet,
-  }));
+  const { selectedGroupId, currentScheduleSheet, setSelectedGroupId, setCurrentScheduleSheet } = useScheduleSheetStore(
+    (state) => ({
+      currentScheduleSheet: state.currentScheduleSheet,
+      selectedGroupId: state.selectedGroupId,
+      setSelectedGroupId: state.setSelectedGroupId,
+      setCurrentScheduleSheet: state.setCurrentScheduleSheet,
+    })
+  );
 
   // use custom groups store
   const {
@@ -90,13 +73,10 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
   const [shouldFetch, setShouldFetch] = useState<boolean>(false);
 
   // local state for the selected group id
-  const [localSelectedGroupId, setLocalSelectedGroupId] =
-    useState<string>(selectedGroupId);
+  const [localSelectedGroupId, setLocalSelectedGroupId] = useState<string>(selectedGroupId);
 
   // transformed groups
-  const [transformedGroups, setTransformedGroups] = useState<
-    Array<SelectOption>
-  >([]);
+  const [transformedGroups, setTransformedGroups] = useState<Array<SelectOption>>([]);
 
   // use SWR for all groups
   const {
@@ -113,14 +93,10 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
     data: swrGroupDetails,
     isLoading: swrGroupDetailsIsLoading,
     error: swrGroupDetailsError,
-  } = useSWR(
-    shouldFetch ? `/custom-groups/${localSelectedGroupId}` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+  } = useSWR(shouldFetch ? `/custom-groups/${localSelectedGroupId}` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // transform
   const transformGroups = (groups: Array<CustomGroup>) => {
@@ -237,8 +213,7 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
         getCustomGroupWithMembersSuccess(swrGroupDetails.data);
       }
 
-      if (!isEmpty(swrGroupDetailsError))
-        getCustomGroupWithMembersFail(swrGroupDetailsError.message);
+      if (!isEmpty(swrGroupDetailsError)) getCustomGroupWithMembersFail(swrGroupDetailsError.message);
     }
   }, [swrGroupDetails, localSelectedGroupId, swrGroupDetailsError]);
 
@@ -289,15 +264,10 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
                     value={groupWithMembers.customGroupDetails.description}
                   />
                 </div>
-                <DataTable
-                  model={table}
-                  paginate={!isEmpty(groupWithMembers.members) ? true : false}
-                />
+                <DataTable model={table} paginate={!isEmpty(groupWithMembers.members) ? true : false} />
               </div>
             ) : (
-              <div className="flex justify-center w-full mt-2 text-gray-400">
-                --No selected group--
-              </div>
+              <div className="flex justify-center w-full mt-2 text-gray-400">--No selected group--</div>
             )}
           </>
         </Modal.Body>

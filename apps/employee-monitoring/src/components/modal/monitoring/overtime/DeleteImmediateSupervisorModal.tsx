@@ -50,7 +50,7 @@ const DeleteImmediateSupervisorModal: FunctionComponent<DeleteModalProps> = ({
   };
 
   const handleDeleteResult = async (immediateSupervisorId: string) => {
-    const { error, result } = await deleteEmpMonitoring(`/overtime/immediate-supervisors/${immediateSupervisorId}`); // change deleteHRIS to deleteEmpMonitoring
+    const { error, result } = await deleteEmpMonitoring(`/overtime/immediate-supervisors/${immediateSupervisorId}`);
 
     if (error) {
       SetErrorUnassignImmediateSupervisor(result);

@@ -92,7 +92,9 @@ const ViewOvertimeModal: FunctionComponent<ViewOvertimeModalProps> = ({
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>{}</Modal.Footer>
+        <Modal.Footer>
+          <></>
+        </Modal.Footer>
       </Modal>
     </>
   );

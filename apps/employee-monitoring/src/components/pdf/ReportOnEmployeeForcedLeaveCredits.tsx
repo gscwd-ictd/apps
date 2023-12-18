@@ -4,12 +4,13 @@ import { Page, Text, Document, StyleSheet, PDFViewer, View } from '@react-pdf/re
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
-import { DetailedReportOnPbPassSlip } from '../../utils/types/report.type';
+import { ReportOnEmpForcedLeaveCredits } from '../../utils/types/report.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PdfHeader } from '@gscwd-apps/oneui';
+import dayjs from 'dayjs';
 
-type DetailedReportOnPersonalBusinessPassSlipProps = {
-  detailedReportOnPbPassSlipDoc: DetailedReportOnPbPassSlip;
+type ReportOnEmployeeForcedLeaveCreditsProps = {
+  reportOnEmployeeForcedLeaveCreditsData: ReportOnEmpForcedLeaveCredits;
 };
 
 const styles = StyleSheet.create({
@@ -89,21 +90,17 @@ const styles = StyleSheet.create({
 
   // Width Styles
   w100: { width: '100%' },
+  w60: { width: '60%' },
   w33_33: { width: '33.33%' },
-  w30: { width: '30%' },
-  w23: { width: '23%' },
-  w17: { width: '17%' },
-  w16_25: { width: '16.25%' },
-  w15: { width: '15%' },
+  w14: { width: '14%' },
   w13: { width: '13%' },
   w10: { width: '10%' },
   w7: { width: '7%' },
-  w5: { width: '5%' },
 });
 
-export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
-  DetailedReportOnPersonalBusinessPassSlipProps
-> = ({ detailedReportOnPbPassSlipDoc }) => {
+export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEmployeeForcedLeaveCreditsProps> = ({
+  reportOnEmployeeForcedLeaveCreditsData,
+}) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const router = useRouter();
@@ -116,7 +113,7 @@ export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
     <>
       {isClient && (
         <PDFViewer width={'100%'} height={1400}>
-          <Document title="Detailed Report on Personal Business Pass Slip">
+          <Document title="Report On Employee Forced Leave Credits">
             {/* FOLIO */}
             <Page size={[612.0, 936.0]} style={styles.page}>
               <View>
@@ -125,10 +122,9 @@ export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
 
                 {/* DOCUMENT TITLE */}
                 <View style={[styles.w100, styles.horizontalCenter]}>
-                  <Text style={[styles.documentTitle]}>DETAILED REPORT ON PERSONAL BUSINESS PASS SLIP</Text>
-                  <Text style={[styles.documentTitle]}>
-                    FOR THE PERIOD OF {DateFormatter(`${router.query.date_from}`, 'MMMM DD, YYYY')} -{' '}
-                    {DateFormatter(`${router.query.date_to}`, 'MMMM DD, YYYY')}
+                  <Text style={[styles.documentTitle]}>REPORT ON EMPLOYEE FORCED LEAVE CREDITS</Text>
+                  <Text style={[styles.documentTitle, styles.upperText]}>
+                    AS OF {`${dayjs(router.query.month_year + '').format('MMMM YYYY')}`}
                   </Text>
                 </View>
 
@@ -136,54 +132,45 @@ export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
-                    {/* NUMBER */}
-                    <View style={[styles.tableHeader, styles.w5]}></View>
-                    <View style={[styles.tableHeader, styles.w30, { fontSize: 7 }]}>
-                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
+                    <View style={[styles.tableHeader, styles.w14]}>
+                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Emp No.</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
-                      <Text style={[styles.tableHeaderText]}>Date</Text>
+                    <View style={[styles.tableHeader, styles.w60]}>
+                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Name</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
-                      <Text style={[styles.tableHeaderText]}>No. Of Minutes Consumed</Text>
+                    <View style={[styles.tableHeader, styles.w13]}>
+                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>VL Bal</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
-                      <Text style={[styles.tableHeaderText]}>Conversion (mins / 60) x .125</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w16_25, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>Time Out & Time In</Text>
+
+                    <View style={[styles.tableHeader, styles.w13, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Force Leave Bal</Text>
                     </View>
                   </View>
 
                   {/* DATA */}
-                  {!isEmpty(detailedReportOnPbPassSlipDoc.report)
-                    ? detailedReportOnPbPassSlipDoc.report?.map((pbPassSlipData, index) => {
+                  {!isEmpty(reportOnEmployeeForcedLeaveCreditsData.report)
+                    ? reportOnEmployeeForcedLeaveCreditsData.report?.map((empLeaveBalDetails, index) => {
                         return (
                           <View
                             style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}
                             key={index}
                             wrap={false}
                           >
-                            <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{index + 1}</Text>
+                            <View style={[styles.tableData, styles.w14]}>
+                              <Text style={[styles.tableDataText]}>{empLeaveBalDetails.companyId || '-'}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w30, { alignItems: 'flex-start' }]}>
-                              <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
-                                {pbPassSlipData.name || '-'}
+
+                            <View style={[styles.tableData, styles.w60, { alignItems: 'flex-start' }]}>
+                              <Text style={[styles.tableDataText]}>{empLeaveBalDetails.name || ''}</Text>
+                            </View>
+                            <View style={[styles.tableData, styles.w13]}>
+                              <Text style={[styles.tableDataText]}>
+                                {empLeaveBalDetails.vacationLeaveBalance || ''}
                               </Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w16_25]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.psDate || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w16_25]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.noOfMinConsumed || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w16_25]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.conversion || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w16_25, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.timeInTimeOut || ''}</Text>
+                            <View style={[styles.tableData, styles.w13, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableDataText]}>{empLeaveBalDetails.forcedLeaveBalance || ''}</Text>
                             </View>
                           </View>
                         );
@@ -204,10 +191,10 @@ export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
                         },
                       ]}
                     >
-                      {detailedReportOnPbPassSlipDoc.signatory?.preparedBy.name}
+                      {reportOnEmployeeForcedLeaveCreditsData.signatory?.preparedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {detailedReportOnPbPassSlipDoc.signatory?.preparedBy.positionTitle}
+                      {reportOnEmployeeForcedLeaveCreditsData.signatory?.preparedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -222,10 +209,10 @@ export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
                         },
                       ]}
                     >
-                      {detailedReportOnPbPassSlipDoc.signatory?.reviewedBy.name}
+                      {reportOnEmployeeForcedLeaveCreditsData.signatory?.reviewedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {detailedReportOnPbPassSlipDoc.signatory?.reviewedBy.positionTitle}
+                      {reportOnEmployeeForcedLeaveCreditsData.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -240,10 +227,10 @@ export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
                         },
                       ]}
                     >
-                      {detailedReportOnPbPassSlipDoc.signatory?.approvedBy.name}
+                      {reportOnEmployeeForcedLeaveCreditsData.signatory?.approvedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {detailedReportOnPbPassSlipDoc.signatory?.approvedBy.positionTitle}
+                      {reportOnEmployeeForcedLeaveCreditsData.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
                 </View>
@@ -256,4 +243,4 @@ export const DetailedReportOnPersonalBusinessPassSlipPdf: FunctionComponent<
   );
 };
 
-export default DetailedReportOnPersonalBusinessPassSlipPdf;
+export default ReportOnEmployeeForcedLeaveCreditsPdf;
