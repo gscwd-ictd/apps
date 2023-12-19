@@ -57,10 +57,6 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log(rowData);
-  }, []);
-
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
