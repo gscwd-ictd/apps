@@ -10,6 +10,7 @@ import {
 } from '../icons/MyLucideIcons';
 import { Paths } from '../../utils/constants/route';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import Link from 'next/link';
 
 export const SideNavigation = () => {
   const {
@@ -21,18 +22,20 @@ export const SideNavigation = () => {
   return (
     <Sidebar className="relative w-full transition-all" background="bg-slate-900">
       <Sidebar.Header>
-        <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
-          <section className="">
-            <div className="text-cyan-800">
-              <i className="text-5xl bx bxs-analyse"></i>
-            </div>
-          </section>
+        <Link href={`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/module-dashboard`}>
+          <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
+            <section className="">
+              <div className="text-cyan-800">
+                <i className="text-5xl bx bxs-analyse"></i>
+              </div>
+            </section>
 
-          <section className={`${isCollapsed ? 'hidden' : ''} flex flex-col text-center items-center select-none`}>
-            <span className="font-sans text-5xl font-medium text-cyan-400">HRMS</span>
-            <span className="text-xs font-medium text-cyan-400">Employee Monitoring</span>
-          </section>
-        </div>
+            <section className={`${isCollapsed ? 'hidden' : ''} flex flex-col text-center items-center select-none`}>
+              <span className="font-sans text-5xl font-medium text-cyan-400">HRMS</span>
+              <span className="text-xs font-medium text-cyan-400">Employee Monitoring</span>
+            </section>
+          </div>
+        </Link>
       </Sidebar.Header>
 
       <Sidebar.Content>

@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import ReportOnAttendancePdf from 'apps/employee-monitoring/src/components/pdf/ReportOnAttendance';
+import ReportOnEmployeeForcedLeaveCreditsPdf from 'apps/employee-monitoring/src/components/pdf/ReportOnEmployeeForcedLeaveCredits';
 import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
@@ -15,13 +15,13 @@ import { Navigate } from 'apps/employee-monitoring/src/components/router/navigat
 const Index = () => {
   const router = useRouter();
 
-  // fetch data for Report On Attendance Document
+  // fetch data for Report On Employee Forced Leave Credits Document
   const {
-    data: swrReportOnAttendanceDocument,
+    data: swrReportOnForcedLeaveCreditsDocument,
     error: swrError,
     isLoading: swrIsLoading,
   } = useSWR(
-    `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${router.query.date_from}&date_to=${router.query.date_to}`,
+    `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&month_year=${router.query.month_year}`,
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -30,47 +30,51 @@ const Index = () => {
   );
 
   // Zustand initialization
-  const { ReportOnAttendanceDoc, SetReportOnAttendanceDoc, ErrorReportOnAttendanceDoc, SetErrorReportOnAttendanceDoc } =
-    useReportsStore((state) => ({
-      ReportOnAttendanceDoc: state.reportOnAttendanceDoc,
-      SetReportOnAttendanceDoc: state.setReportOnAttendanceDoc,
+  const {
+    ReportOnEmpForcedLeaveCreditsDoc,
+    SetReportOnEmpForcedLeaveCreditsDoc,
+    ErrorReportOnEmpForcedLeaveCreditsDoc,
+    SetErrorReportOnEmpForcedLeaveCreditsDoc,
+  } = useReportsStore((state) => ({
+    ReportOnEmpForcedLeaveCreditsDoc: state.reportOnEmpForcedLeaveCreditsDoc,
+    SetReportOnEmpForcedLeaveCreditsDoc: state.setReportOnEmpForcedLeaveCreditsDoc,
 
-      ErrorReportOnAttendanceDoc: state.errorReportOnAttendanceDoc,
-      SetErrorReportOnAttendanceDoc: state.setErrorReportOnAttendanceDoc,
-    }));
+    ErrorReportOnEmpForcedLeaveCreditsDoc: state.errorReportOnEmpForcedLeaveCreditsDoc,
+    SetErrorReportOnEmpForcedLeaveCreditsDoc: state.setErrorReportOnEmpForcedLeaveCreditsDoc,
+  }));
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (!isEmpty(swrReportOnAttendanceDocument)) {
-      SetReportOnAttendanceDoc(swrReportOnAttendanceDocument.data);
+    if (!isEmpty(swrReportOnForcedLeaveCreditsDocument)) {
+      SetReportOnEmpForcedLeaveCreditsDoc(swrReportOnForcedLeaveCreditsDocument.data);
     }
 
     if (!isEmpty(swrError)) {
-      SetErrorReportOnAttendanceDoc(swrError.message);
+      SetErrorReportOnEmpForcedLeaveCreditsDoc(swrError.message);
     }
-  }, [swrReportOnAttendanceDocument, swrError]);
+  }, [swrReportOnForcedLeaveCreditsDocument, swrError]);
 
   return (
     <>
       <Can I="access" this="Reports">
         <div className="w-full">
           <BreadCrumbs
-            title="Report on Attendance"
+            title="Report on Employee Forced Leave Credits"
             crumbs={[
               {
                 layerNo: 1,
                 layerText: 'Reports',
                 path: '/reports',
               },
-              { layerNo: 2, layerText: 'Report on Attendance', path: '' },
+              { layerNo: 2, layerText: 'Report on Employee Forced Leave Credits', path: '' },
             ]}
           />
 
           {/* Error Notifications */}
-          {!isEmpty(ErrorReportOnAttendanceDoc) ? (
+          {!isEmpty(ErrorReportOnEmpForcedLeaveCreditsDoc) ? (
             <ToastNotification
               toastType="error"
-              notifMessage={'Network Error: Failed to retrieve Report on Attendance Document'}
+              notifMessage={'Network Error: Failed to retrieve Report on Employee Forced Leave Credits Document'}
             />
           ) : null}
 
@@ -79,7 +83,9 @@ const Index = () => {
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
+                <ReportOnEmployeeForcedLeaveCreditsPdf
+                  reportOnEmployeeForcedLeaveCreditsData={ReportOnEmpForcedLeaveCreditsDoc}
+                />
               )}
             </Card>
           </div>

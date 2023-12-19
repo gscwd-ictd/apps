@@ -164,6 +164,7 @@ export type OvertimAuthorizationEmployee = {
 
 //for pdf
 export type OvertimeSummary = {
+  assignedTo: string;
   periodCovered: string;
   summary: Array<OvertimeSummaryEmployee>;
   signatories: {

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
 
   pdfTitle: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'heavy',
     textAlign: 'center',
     paddingTop: 1,
@@ -213,7 +213,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                   <View style={styles.page}>
                     <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
                     <PdfHeader />
-                    <Text style={styles.pdfTitle}>SYSTEMS DEVELOPMENT AND APPLICATION DIVISION</Text>
+                    <Text style={styles.pdfTitle}>{overtimeSummaryReport.assignedTo.toUpperCase()}</Text>
                     <Text style={styles.pdfTitle}>OVERTIME SUMMARY FOR REGULAR EMPLOYEES</Text>
                     <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
                       PERIOD COVERED:{' '}
@@ -797,24 +797,36 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                     >
                       <Text
                         style={{
-                          marginLeft: 20,
+                          marginLeft: 35,
+                          marginTop: 2,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
                         }}
                       >
-                        Management Information Systems Researcher
+                        {overtimeSummaryReport?.signatories?.preparedBy?.position}
                       </Text>
                       <Text
                         style={{
-                          marginLeft: 0,
+                          marginLeft: 350,
+                          marginTop: 2,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
                         }}
                       >
-                        Acting Department Manager A
+                        {overtimeSummaryReport?.signatories?.notedBy?.position}
                       </Text>
                       <Text
                         style={{
-                          marginRight: 15,
+                          marginLeft: 665,
+                          marginTop: 2,
+                          width: 195,
+                          textAlign: 'center',
+                          position: 'absolute',
                         }}
                       >
-                        Assistant General Manager for Administration
+                        {overtimeSummaryReport?.signatories?.approvedBy?.position}
                       </Text>
                     </View>
                     <View
@@ -831,7 +843,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       <Text
                         style={{
                           marginLeft: 35,
-                          marginTop: -20,
+                          marginTop: -15,
                           width: 195,
                           textAlign: 'center',
                           position: 'absolute',
@@ -842,7 +854,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       <Text
                         style={{
                           marginLeft: 350,
-                          marginTop: -20,
+                          marginTop: -15,
                           width: 195,
                           textAlign: 'center',
                           position: 'absolute',
@@ -853,7 +865,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       <Text
                         style={{
                           marginLeft: 665,
-                          marginTop: -20,
+                          marginTop: -15,
                           width: 195,
                           textAlign: 'center',
                           position: 'absolute',
@@ -876,15 +888,15 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       }}
                     >
                       <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 110, marginTop: -55 }}
+                        style={{ width: 50, position: 'absolute', marginLeft: 110, marginTop: -50 }}
                         src={overtimeSummaryReport?.signatories?.preparedBy?.signature}
                       />
                       <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 415, marginTop: -55 }}
+                        style={{ width: 50, position: 'absolute', marginLeft: 415, marginTop: -50 }}
                         src={overtimeSummaryReport?.signatories?.notedBy?.signature}
                       />
                       <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 735, marginTop: -55 }}
+                        style={{ width: 50, position: 'absolute', marginLeft: 735, marginTop: -50 }}
                         src={overtimeSummaryReport?.signatories?.approvedBy?.signature}
                       />
                     </View>

@@ -128,7 +128,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
     postScheduleSheetFail: state.postScheduleSheetFail,
   }));
 
-  // use SWR
+  // fetch all schedules for pumping station
   const {
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
@@ -138,7 +138,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
     revalidateOnFocus: false,
   });
 
-  // fetch
+  // fetch all custom groups
   const {
     data: swrGroupDetails,
     isLoading: swrGroupDetailsIsLoading,

@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import ReportOnAttendancePdf from 'apps/employee-monitoring/src/components/pdf/ReportOnAttendance';
+import DetailedReportOnPersonalBusinessPassSlipPdf from 'apps/employee-monitoring/src/components/pdf/DetailedReportOnPersonalBusinessPassSlip';
 import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
@@ -15,9 +15,9 @@ import { Navigate } from 'apps/employee-monitoring/src/components/router/navigat
 const Index = () => {
   const router = useRouter();
 
-  // fetch data for Report On Attendance Document
+  // fetch data for Detailed Report On Personal Business Pass Slip Document
   const {
-    data: swrReportOnAttendanceDocument,
+    data: swrDetailedReportOnPersonalBusinessPassSlipDocument,
     error: swrError,
     isLoading: swrIsLoading,
   } = useSWR(
@@ -30,47 +30,51 @@ const Index = () => {
   );
 
   // Zustand initialization
-  const { ReportOnAttendanceDoc, SetReportOnAttendanceDoc, ErrorReportOnAttendanceDoc, SetErrorReportOnAttendanceDoc } =
-    useReportsStore((state) => ({
-      ReportOnAttendanceDoc: state.reportOnAttendanceDoc,
-      SetReportOnAttendanceDoc: state.setReportOnAttendanceDoc,
+  const {
+    DetailedReportOnPbPassSlipDoc,
+    SetDetailedReportOnPbPassSlipDoc,
+    ErrorDetailedReportOnPbPassSlipDoc,
+    SetErrorDetailedReportOnPbPassSlipDoc,
+  } = useReportsStore((state) => ({
+    DetailedReportOnPbPassSlipDoc: state.detailedReportOnPbPassSlipDoc,
+    SetDetailedReportOnPbPassSlipDoc: state.setDetailedReportOnPbPassSlipDoc,
 
-      ErrorReportOnAttendanceDoc: state.errorReportOnAttendanceDoc,
-      SetErrorReportOnAttendanceDoc: state.setErrorReportOnAttendanceDoc,
-    }));
+    ErrorDetailedReportOnPbPassSlipDoc: state.errorDetailedReportOnPbPassSlipDoc,
+    SetErrorDetailedReportOnPbPassSlipDoc: state.setErrorDetailedReportOnPbPassSlipDoc,
+  }));
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (!isEmpty(swrReportOnAttendanceDocument)) {
-      SetReportOnAttendanceDoc(swrReportOnAttendanceDocument.data);
+    if (!isEmpty(swrDetailedReportOnPersonalBusinessPassSlipDocument)) {
+      SetDetailedReportOnPbPassSlipDoc(swrDetailedReportOnPersonalBusinessPassSlipDocument.data);
     }
 
     if (!isEmpty(swrError)) {
-      SetErrorReportOnAttendanceDoc(swrError.message);
+      SetErrorDetailedReportOnPbPassSlipDoc(swrError.message);
     }
-  }, [swrReportOnAttendanceDocument, swrError]);
+  }, [swrDetailedReportOnPersonalBusinessPassSlipDocument, swrError]);
 
   return (
     <>
       <Can I="access" this="Reports">
         <div className="w-full">
           <BreadCrumbs
-            title="Report on Attendance"
+            title="Detailed Report on Personal Business Pass Slip"
             crumbs={[
               {
                 layerNo: 1,
                 layerText: 'Reports',
                 path: '/reports',
               },
-              { layerNo: 2, layerText: 'Report on Attendance', path: '' },
+              { layerNo: 2, layerText: 'Detailed Report on Personal Business Pass Slip', path: '' },
             ]}
           />
 
           {/* Error Notifications */}
-          {!isEmpty(ErrorReportOnAttendanceDoc) ? (
+          {!isEmpty(ErrorDetailedReportOnPbPassSlipDoc) ? (
             <ToastNotification
               toastType="error"
-              notifMessage={'Network Error: Failed to retrieve Report on Attendance Document'}
+              notifMessage={'Network Error: Failed to retrieve Detailed Report on Personal Business Pass Slip Document'}
             />
           ) : null}
 
@@ -79,7 +83,9 @@ const Index = () => {
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
+                <DetailedReportOnPersonalBusinessPassSlipPdf
+                  detailedReportOnPbPassSlipDoc={DetailedReportOnPbPassSlipDoc}
+                />
               )}
             </Card>
           </div>

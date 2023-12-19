@@ -4,12 +4,13 @@ import { Page, Text, Document, StyleSheet, PDFViewer, View } from '@react-pdf/re
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
-import { ReportOnAttendance } from '../../utils/types/report.type';
+import { ReportOnEmpLeaveCreditBalance } from '../../utils/types/report.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PdfHeader } from '@gscwd-apps/oneui';
+import dayjs from 'dayjs';
 
-type ReportOnAttendancePdfProps = {
-  reportOnAttendanceData: ReportOnAttendance;
+type ReportOnEmployeeLeaveCreditBalanceProps = {
+  reportOnEmployeeLeaveCreditBalanceData: ReportOnEmpLeaveCreditBalance;
 };
 
 const styles = StyleSheet.create({
@@ -71,6 +72,9 @@ const styles = StyleSheet.create({
   borderTop: {
     borderTop: '1px solid #000000',
   },
+  borderBottom: {
+    borderBottom: '1px solid #000000',
+  },
   rowBorder: {
     borderLeft: '1px solid #000000',
     borderRight: '1px solid #000000',
@@ -89,16 +93,18 @@ const styles = StyleSheet.create({
 
   // Width Styles
   w100: { width: '100%' },
+  w50: { width: '50%' },
   w33_33: { width: '33.33%' },
-  w25: { width: '25%' },
-  w14: { width: '14%' },
-  w13: { width: '13%' },
+  w24: { width: '24%' },
+  w12: { width: '12%' },
+  w11: { width: '11%' },
   w10: { width: '10%' },
-  w7: { width: '7%' },
-  w3: { width: '3%' },
+  w5: { width: '5%' },
 });
 
-export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps> = ({ reportOnAttendanceData }) => {
+export const ReportOnEmployeeLeaveCreditBalancePdf: FunctionComponent<ReportOnEmployeeLeaveCreditBalanceProps> = ({
+  reportOnEmployeeLeaveCreditBalanceData,
+}) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const router = useRouter();
@@ -111,7 +117,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
     <>
       {isClient && (
         <PDFViewer width={'100%'} height={1400}>
-          <Document title="Report On Attendance">
+          <Document title="Report on Employee Leave Credit Balance">
             {/* FOLIO */}
             <Page size={[612.0, 936.0]} style={styles.page}>
               <View>
@@ -120,11 +126,9 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
 
                 {/* DOCUMENT TITLE */}
                 <View style={[styles.w100, styles.horizontalCenter]}>
-                  <Text style={[styles.documentTitle]}>REPORT ON ATTENDANCE</Text>
-                  <Text style={[styles.documentTitle]}>(Tardiness, Undertime and Half-day)</Text>
-                  <Text style={[styles.documentTitle]}>
-                    FOR THE PERIOD OF {DateFormatter(`${router.query.date_from}`, 'MMMM DD, YYYY')} -{' '}
-                    {DateFormatter(`${router.query.date_to}`, 'MMMM DD, YYYY')}
+                  <Text style={[styles.documentTitle]}>REPORT ON EMPLOYEE LEAVE CREDIT BALANCE</Text>
+                  <Text style={[styles.documentTitle, styles.upperText]}>
+                    AS OF {`${dayjs(router.query.month_year + '').format('MMMM YYYY')}`}
                   </Text>
                 </View>
 
@@ -133,78 +137,70 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                   {/* COLUMN HEADERS  */}
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
                     {/* NUMBER */}
-                    <View style={[styles.tableHeader, styles.w3]}></View>
-                    <View style={[styles.tableHeader, styles.w25, { fontSize: 7 }]}>
+                    <View style={[styles.tableHeader, styles.w5]}></View>
+
+                    <View style={[styles.tableHeader, styles.w10]}>
+                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Employee No.</Text>
+                    </View>
+
+                    <View style={[styles.tableHeader, styles.w50]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times Late</Text>
+
+                    <View style={[styles.tableHeader, styles.w24]}>
+                      <View style={[styles.borderBottom, styles.w100]}>
+                        <Text style={[styles.upperText, styles.boldText, { paddingVertical: 4 }]}>Balance</Text>
+                      </View>
+
+                      <View style={[styles.rowContainer]}>
+                        <View style={[styles.tableHeader, styles.w50]}>
+                          <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>VL</Text>
+                        </View>
+
+                        <View style={[styles.tableHeader, styles.w50, { borderRight: 'none' }]}>
+                          <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>SL</Text>
+                        </View>
+                      </View>
                     </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times Undertime</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>Total Minutes Late</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w10]}>
-                      <Text style={[styles.tableHeaderText]}>Conversion (mins / 60) x .125</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times Half day</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w13]}>
-                      <Text style={[styles.tableHeaderText]}>Date/s (Half day)</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w14]}>
-                      <Text style={[styles.tableHeaderText]}>Date/s (Late & Undertime)</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w7, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>No. Attendance</Text>
+
+                    <View style={[styles.tableHeader, styles.w11, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Total</Text>
                     </View>
                   </View>
 
                   {/* DATA */}
-                  {!isEmpty(reportOnAttendanceData.report)
-                    ? reportOnAttendanceData.report?.map((attendanceData, index) => {
+                  {!isEmpty(reportOnEmployeeLeaveCreditBalanceData.report)
+                    ? reportOnEmployeeLeaveCreditBalanceData.report?.map((empLeaveBalDetails, index) => {
                         return (
                           <View
                             style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}
                             key={index}
                             wrap={false}
                           >
-                            <View style={[styles.tableData, styles.w3]}>
+                            <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{index + 1}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w25, { alignItems: 'flex-start' }]}>
-                              <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
-                                {attendanceData.name || '-'}
-                              </Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesLate || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesUndertime || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>
-                                {attendanceData.totalMinutesLateUndertime || ''}
-                              </Text>
-                            </View>
+
                             <View style={[styles.tableData, styles.w10]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.conversion || ''}</Text>
+                              <Text style={[styles.tableDataText]}>{empLeaveBalDetails.companyId || '-'}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w7]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesHalfDay || ''}</Text>
+
+                            <View style={[styles.tableData, styles.w50, { alignItems: 'flex-start' }]}>
+                              <Text style={[styles.tableDataText]}>{empLeaveBalDetails.name || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w13]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.daysHalfDay || ''}</Text>
+
+                            <View style={[styles.tableData, styles.w12]}>
+                              <Text style={[styles.tableDataText]}>
+                                {empLeaveBalDetails.vacationLeaveBalance || ''}
+                              </Text>
                             </View>
-                            <View style={[styles.tableData, styles.w14]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.datesLate || ''}</Text>
+
+                            <View style={[styles.tableData, styles.w12]}>
+                              <Text style={[styles.tableDataText]}>{empLeaveBalDetails.sickLeaveBalance || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w7, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.noOfAttendance || ''}</Text>
+
+                            <View style={[styles.tableData, styles.w11, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableDataText]}>{empLeaveBalDetails.totalLeaveBalance || ''}</Text>
                             </View>
                           </View>
                         );
@@ -225,10 +221,10 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                         },
                       ]}
                     >
-                      {reportOnAttendanceData.signatory?.preparedBy.name}
+                      {reportOnEmployeeLeaveCreditBalanceData.signatory?.preparedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnAttendanceData.signatory?.preparedBy.positionTitle}
+                      {reportOnEmployeeLeaveCreditBalanceData.signatory?.preparedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -243,10 +239,10 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                         },
                       ]}
                     >
-                      {reportOnAttendanceData.signatory?.reviewedBy.name}
+                      {reportOnEmployeeLeaveCreditBalanceData.signatory?.reviewedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnAttendanceData.signatory?.reviewedBy.positionTitle}
+                      {reportOnEmployeeLeaveCreditBalanceData.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -261,10 +257,10 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                         },
                       ]}
                     >
-                      {reportOnAttendanceData.signatory?.approvedBy.name}
+                      {reportOnEmployeeLeaveCreditBalanceData.signatory?.approvedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnAttendanceData.signatory?.approvedBy.positionTitle}
+                      {reportOnEmployeeLeaveCreditBalanceData.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
                 </View>
@@ -277,4 +273,4 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
   );
 };
 
-export default ReportOnAttendancePdf;
+export default ReportOnEmployeeLeaveCreditBalancePdf;

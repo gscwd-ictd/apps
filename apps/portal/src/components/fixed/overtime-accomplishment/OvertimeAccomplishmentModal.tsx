@@ -317,7 +317,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               className="w-full text-slate-400 font-medium"
                               textSize="md"
                               isError={
-                                overtimeAccomplishmentDetails?.computedEncodedHours
+                                overtimeAccomplishmentDetails?.accomplishments
+                                  ? false
+                                  : overtimeAccomplishmentDetails?.computedEncodedHours
                                   ? false
                                   : finalEncodedHours <= 0 ||
                                     (isNaN(finalEncodedHours) && overtimeAccomplishmentDetails.accomplishments)

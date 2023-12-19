@@ -6,12 +6,23 @@ import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/e
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+<<<<<<< HEAD
+=======
+import dayjs from 'dayjs';
+>>>>>>> 264c68ef0ccaf607ac41e7a4e8a87a85bacd9dc7
 
 type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   rowData: ScheduleSheet;
+};
+
+type DeleteFormProps = {
+  customGroupId: string;
+  scheduleId: string;
+  dateFrom: string;
+  dateTo: string;
 };
 
 const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
@@ -38,15 +49,33 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
   const { handleSubmit } = useForm<ScheduleSheet>();
 
   const onSubmit: SubmitHandler<ScheduleSheet> = () => {
-    if (!isEmpty(rowData.id)) {
+    if (!isEmpty(rowData.customGroupId)) {
+      // extract the unnecessary items for posting
+      const { customGroupName, scheduleName, ...rest } = rowData;
+
       deleteScheduleSheet();
 
-      handleDeleteResult();
+      handleDeleteResult(rest);
     }
   };
 
+<<<<<<< HEAD
   const handleDeleteResult = async () => {
     const { error, result } = await deleteEmpMonitoring(`/travel-order/${rowData.id}`);
+=======
+  const handleDeleteResult = async (data: DeleteFormProps) => {
+    // format data
+    const config = {
+      data: {
+        customGroupId: data.customGroupId,
+        scheduleId: data.scheduleId,
+        dateFrom: dayjs(data.dateFrom).format('YYYY-MM-DD'),
+        dateTo: dayjs(data.dateTo).format('YYYY-MM-DD'),
+      },
+    };
+
+    const { error, result } = await deleteEmpMonitoring(`/schedules/`, config);
+>>>>>>> 264c68ef0ccaf607ac41e7a4e8a87a85bacd9dc7
 
     if (error) {
       deleteScheduleSheetFail(result);

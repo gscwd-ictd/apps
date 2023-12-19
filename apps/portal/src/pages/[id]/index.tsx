@@ -40,7 +40,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
 
   async function hydration() {
-    if (schedule) {
+    if (schedule && userDetails) {
       const modules = await setModules(userDetails, schedule);
       setAllowedModules(modules);
     }
@@ -145,7 +145,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
-      console.log(swrFaceScan);
       getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
     }
 
@@ -187,10 +186,13 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   }, [swrDtr, swrDtrError]);
 
+  //store server side props (userDetails) to store
+  //run hydration function which displays allowed modules of employee
+  //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
     setEmployee(userDetails);
     hydration();
-  }, []);
+  }, [userDetails, schedule]);
 
   const { windowHeight } = UseWindowDimensions();
 

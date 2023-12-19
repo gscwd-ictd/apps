@@ -196,7 +196,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                         <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
                           <label className="text-slate-500 w-full text-md ">
                             <LabelInput
-                              id={'ivmsTimeOut'}
+                              id={'encodedTimeOut'}
                               type="text"
                               label={''}
                               className="w-full  text-slate-400 font-medium"
@@ -208,7 +208,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                           <label className="text-slate-500 w-auto text-lg">-</label>
                           <label className="text-slate-500 w-full text-md ">
                             <LabelInput
-                              id={'ivmsTimeOut'}
+                              id={'encodedTimeOut'}
                               type="text"
                               label={''}
                               className="w-full  text-slate-400 font-medium"
@@ -219,7 +219,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                           </label>
                           <label className="text-slate-500 w-full text-md ">
                             <LabelInput
-                              id={'estimate'}
+                              id={'encodedEstimate'}
                               type="text"
                               label={''}
                               className="w-full text-slate-400 font-medium"

@@ -1,36 +1,73 @@
-import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
+/* eslint-disable @nx/enforce-module-boundaries */
+import { Text, StyleSheet, View, Image } from '@react-pdf/renderer';
+import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
+import IsoAccreditorLogo from 'apps/employee-monitoring/public/socotec-logo.jpg';
+import { isEmpty } from 'lodash';
+import React, { FunctionComponent } from 'react';
+
+type HeaderProps = {
+  isoCode?: string;
+  withIsoLogo?: boolean;
+  isFixed?: boolean;
+};
 
 const styles = StyleSheet.create({
-  headerMain: {
-    display: 'flex',
+  gscwdLogo: {
+    width: 60,
+    height: 60,
+    margin: 'auto',
+  },
+  isoLogo: {
+    width: 71,
+    height: 46,
+    margin: 'auto',
+  },
+  rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    gap: 10,
-    paddingBottom: 5,
+    alignItems: 'stretch',
   },
-  header: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 8,
+  borderTop: {
+    borderTop: '1px solid #000000',
   },
+
+  horizontalCenter: { textAlign: 'center' },
+
+  // Width Styles
+  w40: { width: '40%' },
+  w30: { width: '30%' },
 });
 
-export const PdfHeader = () => {
+export const PdfHeader: FunctionComponent<HeaderProps> = ({ isoCode, withIsoLogo = false, isFixed = false }) => {
   return (
-    <View style={styles.headerMain}>
-      <Image style={{ width: 50 }} src={'/gwdlogo.png'} />
-      <View style={styles.header}>
-        <Text>Republic of the Philippines</Text>
-        <Text>GENERAL SANTOS WATER DISTRICT</Text>
-        <Text>E. Ferdnandez St., Lagao General Santos City</Text>
-        <Text>Telephone No.: 552-3824; Telefax No.: 553-4960</Text>
-        <Text>Email Address: gscwaterdistrict@yahoo.com</Text>
+    <>
+      {/* HEADER */}
+      <View style={[styles.rowContainer, { paddingBottom: 10 }]} fixed={isFixed}>
+        {/* LEFT */}
+        <View style={[styles.w30, { padding: '0 0 0 15' }]}>
+          <Image src={GscwdLogo.src} style={[styles.gscwdLogo]} />
+        </View>
+
+        {/* CENTER */}
+        <View style={[styles.w40, styles.horizontalCenter]}>
+          <Text style={{ fontSize: 10, fontFamily: 'Helvetica-Bold' }}>GENERAL SANTOS WATER DISTRICT</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>E. Fernandez St., Brgy. Lagao, General Santos City</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>Telephone No.: 552-3824; Telefax No.: 553-4960</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>Email Address: gscwaterdistrict@yahoo.com</Text>
+        </View>
+
+        {/* RIGHT */}
+        <View style={[styles.w30, { padding: '0 15 0 0' }]}>
+          {/* ISO CODE */}
+          {!isEmpty(isoCode) ? (
+            <View style={[{ position: 'absolute', right: 0 }]}>
+              <Text style={{ fontSize: 8, fontFamily: 'Helvetica' }}>{isoCode}</Text>
+            </View>
+          ) : null}
+
+          {/* ISO LOGO */}
+          {withIsoLogo ? <Image src={IsoAccreditorLogo.src} style={[styles.isoLogo]} /> : null}
+        </View>
       </View>
-      <Image style={{ width: 50 }} src={'/socotec-pab.jpg'} />
-    </View>
+    </>
   );
 };
