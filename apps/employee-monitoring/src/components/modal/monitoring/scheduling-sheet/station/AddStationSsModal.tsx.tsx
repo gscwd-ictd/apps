@@ -162,6 +162,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
 
   // function for posting the schedule sheet
   const handlePostScheduling = async (data: any) => {
+    console.log(data);
     const { error, result } = await postEmpMonitoring('/employee-schedule/group', data);
 
     if (!error) {

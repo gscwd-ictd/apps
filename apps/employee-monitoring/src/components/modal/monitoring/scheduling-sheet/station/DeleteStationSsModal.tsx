@@ -6,10 +6,7 @@ import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/e
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-<<<<<<< HEAD
-=======
 import dayjs from 'dayjs';
->>>>>>> 264c68ef0ccaf607ac41e7a4e8a87a85bacd9dc7
 
 type DeleteModalProps = {
   modalState: boolean;
@@ -59,10 +56,6 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
     }
   };
 
-<<<<<<< HEAD
-  const handleDeleteResult = async () => {
-    const { error, result } = await deleteEmpMonitoring(`/travel-order/${rowData.id}`);
-=======
   const handleDeleteResult = async (data: DeleteFormProps) => {
     // format data
     const config = {
@@ -75,7 +68,6 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
     };
 
     const { error, result } = await deleteEmpMonitoring(`/schedules/`, config);
->>>>>>> 264c68ef0ccaf607ac41e7a4e8a87a85bacd9dc7
 
     if (error) {
       deleteScheduleSheetFail(result);
