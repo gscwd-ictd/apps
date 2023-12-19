@@ -26,6 +26,8 @@ export const EMPLOYEE_DATA: EmployeeDetails = {
     photoUrl: '',
   },
   employmentDetails: {
+    salaryGrade: '',
+    salaryGradeAmount: 0,
     userId: '',
     companyId: null,
     assignment: {
