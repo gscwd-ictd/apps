@@ -394,6 +394,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         other: data.other,
         commutation: data.commutation ? data.commutation : null,
       };
+    } else if (data.typeOfLeaveDetails.leaveName === LeaveName.MONETIZATION) {
+      dataToSend = {
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        leaveApplicationDates: data.leaveApplicationDates,
+        other: data.other,
+        commutation: data.commutation ? data.commutation : null,
+      };
     } else {
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
@@ -507,7 +515,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') !== LeaveName.STUDY &&
                   watch('typeOfLeaveDetails.leaveName') !== LeaveName.REHABILITATION &&
                   watch('typeOfLeaveDetails.leaveName') !== LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN &&
-                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.ADOPTION ? (
+                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.ADOPTION &&
+                  watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Please select date of leave"
@@ -646,7 +655,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           ? `The special emergency leave can be applied for a maximum of five (5) straight working days or staggered basis within thirty (30) days from the actual occurence of the natural calamity/disaster. Said privilege shall be enjoyed once a year, not in every instance of calamity or disaster. The head of office shall take full responsibility for teh grant of special emergency leave and verification of teh employee's eligibility to be granted thereof. Said verification shall include: validation of place of residence based on latest available records of the affected employee; verification that the place of residence is covered in the declaration of calamity area by the proper government agency, and such other proofs as may be necessary.`
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION
                           ? `Application for adoption leave shall be filed with an authenticated copy of the Pre-Adoptive Placement Authority issued by the Department of Social Welfare and Development (DSWD).`
-                          : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS
+                          : watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY
+                          ? `Unpaid Leaves.`
+                          : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                           ? `For Monetization of Leave Credits, application for monetization of fifthy percent (50%) or more of the accumulated leave credits shall be accompanied by letter request to the head of the agency stating the valid and justifiable reasons. For Terminal Leave, proof of employee's resignation or retirement or separation from the service.`
                           : ``}
                       </span>
@@ -839,7 +850,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   </>
                 ) : null}
 
-                {watch('typeOfLeaveDetails.leaveName') ? (
+                {watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION ? (
                   <>
                     <label className="text-slate-500 text-md font-medium">
                       Select Leave Dates:<span className="text-red-600">*</span>
@@ -859,101 +870,107 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   </>
                 ) : null}
 
-                <div className="w-full pb-4 pt-2">
-                  <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
-                  <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md table-fixed">
-                    <tbody>
-                      <tr className="border border-slate-400">
-                        <td className="border border-slate-400"></td>
-                        <td className="border border-slate-400 text-center text-sm p-1">Vacation</td>
-                        <td className="border border-slate-400 text-center text-sm p-1">Forced</td>
-                        <td className="border border-slate-400 text-center text-sm p-1">Sick</td>
-                        <td className="border border-slate-400 text-center text-sm p-1">
-                          <label className="hidden sm:block">Special Privilege</label>
-                          <label className="block sm:hidden">SPL</label>
-                        </td>
-                      </tr>
-                      <tr className="border border-slate-400">
-                        <td className="border border-slate-400 text-sm p-1">Total Earned</td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">{vacationLeaveBalance}</td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">{forcedLeaveBalance}</td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">{sickLeaveBalance}</td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          {specialPrivilegeLeaveBalance}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-400 text-sm p-1">
-                          <label className="hidden sm:block">Less this application</label>
-                          <label className="block sm:hidden">Less</label>
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? leaveDates.length : 0}
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? leaveDates.length : 0}
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? leaveDates.length : 0}
-                        </td>
-                        <td className="border border-slate-400 p-1 text-center text-sm">
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                            ? leaveDates.length
-                            : 0}
-                        </td>
-                      </tr>
-                      <tr className="border border-slate-400 bg-green-100">
-                        <td className="border border-slate-400 text-sm p-1">Balance</td>
-                        <td
-                          className={`${
-                            finalVacationLeaveBalance < 0 &&
-                            watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
-                              ? 'bg-red-300'
-                              : ''
-                          } border border-slate-400 p-1 text-center text-sm`}
-                        >
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
-                            ? finalVacationLeaveBalance.toFixed(3)
-                            : vacationLeaveBalance}
-                        </td>
-                        <td
-                          className={`${
-                            finalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
-                              ? 'bg-red-300'
-                              : ''
-                          } border border-slate-400 p-1 text-center text-sm`}
-                        >
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
-                            ? finalForcedLeaveBalance.toFixed(3)
-                            : forcedLeaveBalance}
-                        </td>
-                        <td
-                          className={`${
-                            finalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
-                              ? 'bg-red-300'
-                              : ''
-                          } border border-slate-400 p-1 text-center text-sm`}
-                        >
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
-                            ? finalSickLeaveBalance.toFixed(3)
-                            : sickLeaveBalance}
-                        </td>
-                        <td
-                          className={`${
-                            finalSpecialPrivilegekBalance < 0 &&
-                            watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                              ? 'bg-red-300'
-                              : ''
-                          } border border-slate-400 p-1 text-center text-sm`}
-                        >
-                          {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                            ? finalSpecialPrivilegekBalance.toFixed(3)
-                            : specialPrivilegeLeaveBalance}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+                watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
+                watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
+                  <div className="w-full pb-4 pt-2">
+                    <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
+                    <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md table-fixed">
+                      <tbody>
+                        <tr className="border border-slate-400">
+                          <td className="border border-slate-400"></td>
+                          <td className="border border-slate-400 text-center text-sm p-1">Vacation</td>
+                          <td className="border border-slate-400 text-center text-sm p-1">Forced</td>
+                          <td className="border border-slate-400 text-center text-sm p-1">Sick</td>
+                          <td className="border border-slate-400 text-center text-sm p-1">
+                            <label className="hidden sm:block">Special Privilege</label>
+                            <label className="block sm:hidden">SPL</label>
+                          </td>
+                        </tr>
+                        <tr className="border border-slate-400">
+                          <td className="border border-slate-400 text-sm p-1">Total Earned</td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">{vacationLeaveBalance}</td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">{forcedLeaveBalance}</td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">{sickLeaveBalance}</td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">
+                            {specialPrivilegeLeaveBalance}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border border-slate-400 text-sm p-1">
+                            <label className="hidden sm:block">Less this application</label>
+                            <label className="block sm:hidden">Less</label>
+                          </td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? leaveDates.length : 0}
+                          </td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? leaveDates.length : 0}
+                          </td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? leaveDates.length : 0}
+                          </td>
+                          <td className="border border-slate-400 p-1 text-center text-sm">
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                              ? leaveDates.length
+                              : 0}
+                          </td>
+                        </tr>
+                        <tr className="border border-slate-400 bg-green-100">
+                          <td className="border border-slate-400 text-sm p-1">Balance</td>
+                          <td
+                            className={`${
+                              finalVacationLeaveBalance < 0 &&
+                              watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
+                                ? 'bg-red-300'
+                                : ''
+                            } border border-slate-400 p-1 text-center text-sm`}
+                          >
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
+                              ? finalVacationLeaveBalance.toFixed(3)
+                              : vacationLeaveBalance}
+                          </td>
+                          <td
+                            className={`${
+                              finalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+                                ? 'bg-red-300'
+                                : ''
+                            } border border-slate-400 p-1 text-center text-sm`}
+                          >
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+                              ? finalForcedLeaveBalance.toFixed(3)
+                              : forcedLeaveBalance}
+                          </td>
+                          <td
+                            className={`${
+                              finalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
+                                ? 'bg-red-300'
+                                : ''
+                            } border border-slate-400 p-1 text-center text-sm`}
+                          >
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
+                              ? finalSickLeaveBalance.toFixed(3)
+                              : sickLeaveBalance}
+                          </td>
+                          <td
+                            className={`${
+                              finalSpecialPrivilegekBalance < 0 &&
+                              watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                                ? 'bg-red-300'
+                                : ''
+                            } border border-slate-400 p-1 text-center text-sm`}
+                          >
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                              ? finalSpecialPrivilegekBalance.toFixed(3)
+                              : specialPrivilegeLeaveBalance}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ) : null}
+
                 <div className={`flex flex-col gap-2 w-full bg-slate-100 text-sm p-2 mt-1`}>
                   <span>{leaveReminder}</span>
                 </div>

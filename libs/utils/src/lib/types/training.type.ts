@@ -6,17 +6,20 @@ export type RecommendedEmployee = {
 };
 
 export type Training = {
-  id: string;
-  location: string;
+  distributionId: string;
+  numberOfSlots: number;
+  trainingId: string;
   courseTitle: string;
+  location: string;
   trainingStart: string;
   trainingEnd: string;
-  preparationStatus: string;
-  numberOfSlots: number;
-  recommended: Array<RecommendedEmployee>;
+  source: string;
+  type: string;
+  trainingPreparationStatus: string;
+  status: string;
 };
 
 // edit/viewing type
 export type TrainingWithTrainingId = Omit<Training, 'seminarTrainingType'> & TrainingTypeId;
 
-export type TrainingId = Pick<Training, 'id'>;
+export type TrainingId = Pick<Training, 'trainingId'>;

@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { Training } from '../../../../libs/utils/src/lib/types/training.type';
+import { RecommendedEmployee, Training } from '../../../../libs/utils/src/lib/types/training.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 type NominatedEmployees = {
@@ -9,9 +9,11 @@ type NominatedEmployees = {
   id: string;
   acknowledgment: string;
 };
+
 export type TrainingSelectionState = {
   trainingList: Array<Training>;
   individualTrainingDetails: Training;
+  recommendedEmployees: Array<RecommendedEmployee>;
   response: {
     postResponseApply: any;
     cancelResponse: any;
@@ -19,15 +21,21 @@ export type TrainingSelectionState = {
 
   loading: {
     loadingTrainingList: boolean;
+    loadingRecommendedEmployee: boolean;
     loadingResponse: boolean;
   };
   error: {
     errorTrainingList: string;
+    errorRecommendedEmployee: string;
     errorResponse: string;
   };
 
   nominatedEmployees: Array<SelectOption>;
   setNominatedEmployees: (nominatedEmployees: Array<SelectOption>) => void;
+
+  getRecommendedEmployees: (loading: boolean) => void;
+  getRecommendedEmployeesSuccess: (loading: boolean, response) => void;
+  getRecommendedEmployeesFail: (loading: boolean, error: string) => void;
 
   auxiliaryEmployees: Array<SelectOption>;
   setAuxiliaryEmployees: (auxiliaryEmployees: Array<SelectOption>) => void;
@@ -61,10 +69,12 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
 
     loading: {
       loadingTrainingList: false,
+      loadingRecommendedEmployee: false,
       loadingResponse: false,
     },
     error: {
       errorTrainingList: '',
+      errorRecommendedEmployee: '',
       errorResponse: '',
     },
 
@@ -75,6 +85,8 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
     setNominatedEmployees: (nominatedEmployees: Array<SelectOption>) => {
       set((state) => ({ ...state, nominatedEmployees }));
     },
+
+    recommendedEmployees: [],
 
     auxiliaryEmployees: [],
     setAuxiliaryEmployees: (auxiliaryEmployees: Array<SelectOption>) => {
@@ -127,6 +139,44 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
         error: {
           ...state.error,
           errorTrainingList: error,
+        },
+      }));
+    },
+
+    getRecommendedEmployees: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        recommendedEmployees: [],
+        loading: {
+          ...state.loading,
+          loadingRecommendedEmployee: loading,
+        },
+        error: {
+          ...state.error,
+          errorRecommendedEmployee: '',
+        },
+      }));
+    },
+    getRecommendedEmployeesSuccess: (loading: boolean, response: Array<RecommendedEmployee>) => {
+      set((state) => ({
+        ...state,
+        recommendedEmployees: response,
+        loading: {
+          ...state.loading,
+          loadingRecommendedEmployee: loading,
+        },
+      }));
+    },
+    getRecommendedEmployeesFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingRecommendedEmployee: loading,
+        },
+        error: {
+          ...state.error,
+          errorRecommendedEmployee: error,
         },
       }));
     },

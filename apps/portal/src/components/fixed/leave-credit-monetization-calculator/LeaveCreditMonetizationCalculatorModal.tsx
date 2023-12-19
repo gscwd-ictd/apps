@@ -3,7 +3,8 @@ import { Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLeaveMonetizationCalculatorStore } from 'apps/portal/src/store/leave-monetization-calculator.store';
 
 type ModalProps = {
   modalState: boolean;
@@ -27,29 +28,50 @@ export const LeaveCreditMonetizationCalculatorModal = ({
   sgIncrement,
 }: ModalProps) => {
   const { windowWidth } = UseWindowDimensions();
+
+  const { leaveCalculatorModalIsOpen } = useLeaveMonetizationCalculatorStore((state) => ({
+    leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
+  }));
+
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(
     Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)
   );
-  const [leaveCreditsToCompute, setLeaveCreditsToCompute] = useState<number>(
-    Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)
-  );
+  const [leaveCreditsToCompute, setLeaveCreditsToCompute] = useState<number>(null);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
+  const [salaryGrade, setSalaryGrade] = useState<number>(0);
 
   const computeEstimateAmount = (credits: number) => {
     if (credits) {
-      setLeaveCreditsToCompute(credits);
+      if (credits <= leaveCredits) {
+        setLeaveCreditsToCompute(credits);
+        setEstimatedAmount(salaryGrade * credits * leaveCreditMultiplier);
+      } else {
+        setLeaveCreditsToCompute(leaveCredits);
+        setEstimatedAmount(salaryGrade * leaveCredits * leaveCreditMultiplier);
+      }
     } else {
-      setLeaveCreditsToCompute(0);
+      setLeaveCreditsToCompute(null);
+      setEstimatedAmount(salaryGrade * 0 * leaveCreditMultiplier);
     }
-    setEstimatedAmount(sgAmount * leaveCreditsToCompute * leaveCreditMultiplier);
   };
 
   const resetComputation = () => {
     setLeaveCredits(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
     setLeaveCreditsToCompute(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
-    setEstimatedAmount(sgAmount * leaveCredits * leaveCreditMultiplier);
+    setSalaryGrade(sgAmount);
+    setEstimatedAmount(salaryGrade * leaveCredits * leaveCreditMultiplier);
   };
+
+  useEffect(() => {
+    setLeaveCredits(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
+    setLeaveCreditsToCompute(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
+    setSalaryGrade(sgAmount);
+  }, [leaveCalculatorModalIsOpen]);
+
+  useEffect(() => {
+    setEstimatedAmount(salaryGrade * leaveCredits * leaveCreditMultiplier);
+  }, [salaryGrade]);
 
   return (
     <>
@@ -86,7 +108,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Salargy Grade:</label>
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Salary Grade:</label>
 
                       <div className="w-full md:w-80">
                         <input
@@ -105,9 +127,6 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                         Vacation & Forced Leave Credits:
                       </label>
 
-                      {/* <div className="md:w-1/2">
-                        <label className="text-slate-500 w-full text-md ">{vacationLeave + forcedLeave}</label>
-                      </div> */}
                       <div className="w-full md:w-80">
                         <input
                           type="number"
@@ -167,9 +186,6 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           type="number"
                           className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="Enter Leave Credit"
-                          defaultValue={Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)}
-                          min={1}
-                          max={Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)}
                           onChange={(e: any) => computeEstimateAmount(e.target.value)}
                           value={leaveCreditsToCompute}
                         />

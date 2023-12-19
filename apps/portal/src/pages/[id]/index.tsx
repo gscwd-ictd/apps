@@ -221,7 +221,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   useEffect(() => {
     const totalValue = sgAmount * leaveCredits * leaveCreditMultiplier;
     setEstimatedAmount(totalValue);
-    console.log(sgAmount);
   }, [leaveCredits]);
 
   const closeLeaveCalculator = async () => {
@@ -229,7 +228,9 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   };
 
   const openLeaveCalculator = async () => {
-    setLeaveCalculatorModalIsOpen(true);
+    if (vacationLeaveBalance && forcedLeaveBalance && sickLeaveBalance && sgAmount && sgIncrement) {
+      setLeaveCalculatorModalIsOpen(true);
+    }
   };
 
   return (
@@ -261,8 +262,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
         vacationLeave={vacationLeaveBalance}
         forcedLeave={forcedLeaveBalance}
         sickLeave={sickLeaveBalance}
-        sgAmount={sgAmount}
-        sgIncrement={sgIncrement}
+        sgAmount={employee.employmentDetails.salaryGradeAmount}
+        sgIncrement={employee.employmentDetails.salaryGrade}
       />
 
       <MainContainer>

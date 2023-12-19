@@ -43,9 +43,7 @@ export const TrainingNominationModal = ({
   closeModalAction,
 }: TrainingNominationModalProps) => {
   const {
-    trainingList,
-    loadingTrainingList,
-    errorTrainingList,
+    recommendedEmployees,
     individualTrainingDetails,
     trainingModalIsOpen,
     setIndividualTrainingDetails,
@@ -54,9 +52,7 @@ export const TrainingNominationModal = ({
     auxiliaryEmployees,
     setAuxiliaryEmployees,
   } = useTrainingSelectionStore((state) => ({
-    trainingList: state.trainingList,
-    loadingTrainingList: state.loading.loadingTrainingList,
-    errorTrainingList: state.error.errorTrainingList,
+    recommendedEmployees: state.recommendedEmployees,
     individualTrainingDetails: state.individualTrainingDetails,
     trainingModalIsOpen: state.setTrainingModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
@@ -142,7 +138,7 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <div className="w-auto sm:w-96 flex flex-wrap text-slate-500 text-md font-medium">
-                  {individualTrainingDetails.recommended.map((employee, index) => {
+                  {recommendedEmployees.map((employee, index) => {
                     return <label key={index}>{index == 0 ? employee.name : `, ${employee.name}`}</label>;
                   })}
                 </div>
