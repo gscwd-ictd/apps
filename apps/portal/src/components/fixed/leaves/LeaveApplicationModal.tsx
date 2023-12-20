@@ -872,7 +872,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             </div>
                           </div>
                         </div>
-
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
                             <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
@@ -895,7 +894,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             </div>
                           </div>
                         </div>
-
+                        \\
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
                             <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Monetization Amount:</label>
