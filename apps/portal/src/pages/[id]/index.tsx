@@ -264,6 +264,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
         sickLeave={sickLeaveBalance}
         sgAmount={employee.employmentDetails.salaryGradeAmount}
         sgIncrement={employee.employmentDetails.salaryGrade}
+        estimatedMaxAmount={estimatedAmount}
       />
 
       <MainContainer>

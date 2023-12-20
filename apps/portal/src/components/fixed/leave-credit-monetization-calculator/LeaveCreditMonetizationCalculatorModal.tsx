@@ -15,6 +15,7 @@ type ModalProps = {
   sickLeave: number;
   sgAmount: number;
   sgIncrement: string;
+  estimatedMaxAmount: number;
 };
 
 export const LeaveCreditMonetizationCalculatorModal = ({
@@ -26,6 +27,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
   sickLeave,
   sgAmount,
   sgIncrement,
+  estimatedMaxAmount,
 }: ModalProps) => {
   const { windowWidth } = UseWindowDimensions();
 
@@ -38,7 +40,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
     Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)
   );
   const [leaveCreditsToCompute, setLeaveCreditsToCompute] = useState<number>(null);
-  const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
+  const [estimatedAmount, setEstimatedAmount] = useState<number>(estimatedMaxAmount);
   const [salaryGrade, setSalaryGrade] = useState<number>(0);
 
   const computeEstimateAmount = (credits: number) => {
@@ -70,8 +72,8 @@ export const LeaveCreditMonetizationCalculatorModal = ({
   }, [leaveCalculatorModalIsOpen]);
 
   useEffect(() => {
-    setEstimatedAmount(salaryGrade * leaveCredits * leaveCreditMultiplier);
-  }, [salaryGrade]);
+    setEstimatedAmount(estimatedMaxAmount);
+  }, [estimatedMaxAmount, leaveCalculatorModalIsOpen]);
 
   return (
     <>
@@ -116,7 +118,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           type="text"
                           className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="SG"
-                          defaultValue={`SG ${sgIncrement} : P${sgAmount.toLocaleString()}`}
+                          defaultValue={`SG ${sgIncrement} : P${sgAmount ? sgAmount.toLocaleString() : 0}`}
                         />
                       </div>
                     </div>

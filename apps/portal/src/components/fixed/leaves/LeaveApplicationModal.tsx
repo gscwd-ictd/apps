@@ -667,9 +667,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                 {watch('typeOfLeaveDetails.leaveName') ? (
                   <>
-                    {/* <label className="-mb-2 text-slate-500 text-xl font-medium w-full">
-                      Details of Leave:
-                    </label> */}
                     <div className="flex flex-col md:flex-row justify-between items-center w-full">
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="pt-2 text-slate-500 text-md font-medium">
@@ -783,7 +780,77 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       </div>
                     </div>
 
-                    {watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS &&
+                    {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
+                      <>
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                              Vacation Leave to Convert:
+                            </label>
+                          </div>
+
+                          <div className="flex gap-2 w-full items-center">
+                            <div className="w-full">
+                              <input
+                                type="number"
+                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
+                                placeholder="Vacation Leave Credits"
+                                value={0}
+                                min={0}
+                                max={vacationLeaveBalance}
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                              Forced Leave to Convert:
+                            </label>
+                          </div>
+
+                          <div className="flex gap-2 w-full items-center">
+                            <div className="w-full">
+                              <input
+                                type="number"
+                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
+                                placeholder="Forced Leave Credits"
+                                value={0}
+                                min={0}
+                                max={forcedLeaveBalance}
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                              Sick Leave to Convert:
+                            </label>
+                          </div>
+
+                          <div className="flex gap-2 w-full items-center">
+                            <div className="w-full">
+                              <input
+                                type="number"
+                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
+                                placeholder="Forced Leave Credits"
+                                value={0}
+                                min={0}
+                                max={sickLeaveBalance}
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
+
+                    {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
                     watch('other') === 'Monetization of Leave Credits' ? (
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-row justify-between items-center w-full">
@@ -850,7 +917,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   </>
                 ) : null}
 
-                {watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION ? (
+                {watch('typeOfLeaveDetails.leaveName') &&
+                watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION ? (
                   <>
                     <label className="text-slate-500 text-md font-medium">
                       Select Leave Dates:<span className="text-red-600">*</span>
@@ -873,7 +941,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
-                watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
+                watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                   <div className="w-full pb-4 pt-2">
                     <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
                     <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md table-fixed">
@@ -1031,7 +1100,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : false
                 }
               >
-                Apply Leave
+                {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                  ? 'Apply Monetization'
+                  : 'Apply Leave'}
               </Button>
             </div>
           </div>
