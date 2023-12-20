@@ -148,8 +148,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
   // on submit
   const onSubmit = async () => {
     // extract the unnecessary items for posting
-    const { scheduleName, customGroupName, id, customGroupId, ...rest } = currentScheduleSheet;
-    console.log(rest);
+    const { scheduleName, customGroupName, id, ...rest } = currentScheduleSheet;
 
     // call the function to start loading
     postScheduleSheet();
