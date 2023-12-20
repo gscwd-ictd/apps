@@ -1,15 +1,16 @@
-import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
-import { useForm } from 'react-hook-form';
-import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
-import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
+import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
+import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
+
+import { useForm } from 'react-hook-form';
+import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import ViewEmployeesSsTable from '../ViewEmployeesSsTable';
 
 type ViewFieldSsModalProps = {
@@ -109,16 +110,20 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
   });
 
   // useSWR for members of scheduling sheet
-  // rowData.dateFrom
-  // rowData.dateTo
   const {
     data: swrGroupDetails,
     isLoading: swrGroupDetailsIsLoading,
     error: swrGroupDetailsError,
-  } = useSWR(!isEmpty(selectedGroupId) ? `/custom-groups/${selectedGroupId}` : null, fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnMount: false,
-  });
+  } = useSWR(
+    !isEmpty(selectedGroupId)
+      ? `/custom-groups/${selectedGroupId}/?dateFrom=${rowData.dateFrom}&dateTo=${rowData.dateTo}&scheduleId=${rowData.scheduleId}&`
+      : null,
+    fetcherEMS,
+    {
+      shouldRetryOnError: false,
+      revalidateOnMount: false,
+    }
+  );
 
   // set default values
   const setDefaultValues = (rowData: ScheduleSheet) => {
