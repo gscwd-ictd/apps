@@ -29,21 +29,18 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
   rowData,
 }) => {
   // zustand store initialization
+  const { deleteScheduleSheet, deleteScheduleSheetFail, deleteScheduleSheetSuccess } = useScheduleSheetStore(
+    (state) => ({
+      deleteScheduleSheet: state.deleteScheduleSheet,
+      deleteScheduleSheetSuccess: state.deleteScheduleSheetSuccess,
+      deleteScheduleSheetFail: state.deleteScheduleSheetFail,
+    })
+  );
+
   const {
-    IsLoading,
-
-    deleteScheduleSheet,
-    deleteScheduleSheetFail,
-    deleteScheduleSheetSuccess,
-  } = useScheduleSheetStore((state) => ({
-    IsLoading: state.loading.loadingScheduleSheet,
-
-    deleteScheduleSheet: state.deleteScheduleSheet,
-    deleteScheduleSheetSuccess: state.deleteScheduleSheetSuccess,
-    deleteScheduleSheetFail: state.deleteScheduleSheetFail,
-  }));
-
-  const { handleSubmit } = useForm<ScheduleSheet>();
+    handleSubmit,
+    formState: { isSubmitting: deleteFormLoading },
+  } = useForm<ScheduleSheet>();
 
   const onSubmit: SubmitHandler<ScheduleSheet> = () => {
     if (!isEmpty(rowData.customGroupId)) {
@@ -83,7 +80,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
           {/* Notifications */}
-          {IsLoading ? (
+          {deleteFormLoading ? (
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
@@ -109,7 +106,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
               type="submit"
               form="deleteStationSs"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
-              disabled={IsLoading ? true : false}
+              disabled={deleteFormLoading ? true : false}
             >
               <span className="text-sm font-normal">Confirm</span>
             </button>
