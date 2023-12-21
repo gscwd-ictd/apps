@@ -448,7 +448,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   };
 
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
-  const [leaveCredits, setLeaveCredits] = useState<number>(0);
+  const [maxMonetizationAmount, setMaxMonetizationAmount] = useState<number>(0);
   const [vacationLeaveInput, setVacationLeaveInput] = useState<number>(0);
   const [sickLeaveInput, setSickLeaveInput] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
@@ -457,7 +457,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     const totalVacationLeave = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
     if (credits <= 0) {
       setVacationLeaveInput(0);
-    } else if (credits > totalVacationLeave) {
+    } else if (credits > totalVacationLeave && totalVacationLeave <= 0) {
+      setVacationLeaveInput(0);
+    } else if (credits > totalVacationLeave && totalVacationLeave > 0) {
       setVacationLeaveInput(totalVacationLeave);
     } else {
       setVacationLeaveInput(credits);
@@ -467,7 +469,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const getSickLeaveInput = (credits: number) => {
     if (credits <= 0) {
       setSickLeaveInput(0);
-    } else if (credits > sickLeaveBalance) {
+    } else if (credits > Number(sickLeaveBalance) && Number(sickLeaveBalance) <= 0) {
+      setSickLeaveInput(0);
+    } else if (credits > Number(sickLeaveBalance) && Number(sickLeaveBalance) > 0) {
       setSickLeaveInput(sickLeaveBalance);
     } else {
       setSickLeaveInput(credits);
@@ -476,12 +480,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   useEffect(() => {
     computeEstimateAmount();
-  }, [vacationLeaveInput, sickLeaveInput]);
+  }, [vacationLeaveInput, sickLeaveInput, watch('typeOfLeaveDetails.leaveName')]);
 
   const computeEstimateAmount = () => {
     const totalVacationLeave = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
     setFinalVacationAndForcedLeaveBalance(totalVacationLeave - vacationLeaveInput);
     setFinalSickLeaveBalance(sickLeaveBalance - sickLeaveInput);
+    setMaxMonetizationAmount(
+      employeeDetails.employmentDetails.salaryGradeAmount *
+        (Number(totalVacationLeave) + Number(sickLeaveBalance)) *
+        leaveCreditMultiplier
+    );
 
     setEstimatedAmount(
       employeeDetails.employmentDetails.salaryGradeAmount *
@@ -625,20 +634,33 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
 
+                  {/* Monetization Notif for insufficient VL/FL even with 0 input */}
                   {finalVacationAndForcedLeaveBalance < 10 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Insufficient Vacation Leave Credits For Monetization"
+                      notifMessage="Minimum of 10 Vacation Leave Credit Balance must be retained"
                       dismissible={false}
                       className="mb-1"
                     />
                   ) : null}
 
+                  {/* Monetization Notif for insufficient Sick Leave even with 0 input*/}
                   {finalSickLeaveBalance < 10 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Insufficient Sick Leave Credits For Monetization"
+                      notifMessage="Minimum of 10 Sick Leave Credit Balance must be retained"
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Monetization Notif for more than 50% amount */}
+                  {estimatedAmount > Number(maxMonetizationAmount) / 2 &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage={`Leaves to monetize should not be more than 50% of max amount of ${maxMonetizationAmount.toLocaleString()}`}
                       dismissible={false}
                       className="mb-1"
                     />
@@ -868,6 +890,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 max={Number(vacationLeaveBalance) + Number(forcedLeaveBalance)}
                                 onChange={(e: any) => getVacationLeaveInput(e.target.value)}
                                 required
+                                value={vacationLeaveInput}
                               />
                             </div>
                           </div>
@@ -894,7 +917,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             </div>
                           </div>
                         </div>
-                        \\
+
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
                             <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Monetization Amount:</label>
@@ -903,12 +926,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           <div className="flex gap-2 w-full items-center">
                             <div className="w-full">
                               <input
-                                type="number"
+                                type="text"
                                 className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
                                 placeholder="Amount"
                                 disabled
                                 required
-                                value={estimatedAmount}
+                                value={Number(estimatedAmount).toLocaleString()}
                               />
                             </div>
                           </div>
@@ -1021,10 +1044,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           ) : null}
 
                           <td className="border border-slate-400 text-center text-sm p-1">Sick</td>
-                          <td className="border border-slate-400 text-center text-sm p-1">
-                            <label className="hidden sm:block">Special Privilege</label>
-                            <label className="block sm:hidden">SPL</label>
-                          </td>
+
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
+                            <td className="border border-slate-400 text-center text-sm p-1">
+                              <label className="hidden sm:block">Special Privilege</label>
+                              <label className="block sm:hidden">SPL</label>
+                            </td>
+                          ) : null}
                         </tr>
                         <tr className="border border-slate-400">
                           <td className="border border-slate-400 text-sm p-1">Total Earned</td>
@@ -1038,9 +1064,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           ) : null}
 
                           <td className="border border-slate-400 p-1 text-center text-sm">{sickLeaveBalance}</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            {specialPrivilegeLeaveBalance}
-                          </td>
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
+                            <td className="border border-slate-400 p-1 text-center text-sm">
+                              {specialPrivilegeLeaveBalance}
+                            </td>
+                          ) : null}
                         </tr>
                         <tr>
                           <td className="border border-slate-400 text-sm p-1">
@@ -1051,7 +1079,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                               ? leaveDates.length
                               : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                              ? vacationLeaveInput
+                              ? Number(vacationLeaveInput).toFixed(3)
                               : 0}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
@@ -1067,11 +1095,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               ? sickLeaveInput
                               : 0}
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
-                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                              ? leaveDates.length
-                              : 0}
-                          </td>
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
+                            <td className="border border-slate-400 p-1 text-center text-sm">
+                              {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                                ? leaveDates.length
+                                : 0}
+                            </td>
+                          ) : null}
                         </tr>
                         <tr className="border border-slate-400 bg-green-100">
                           <td className="border border-slate-400 text-sm p-1">Balance</td>
@@ -1122,18 +1152,21 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               ? finalSickLeaveBalance.toFixed(3)
                               : sickLeaveBalance}
                           </td>
-                          <td
-                            className={`${
-                              finalSpecialPrivilegekBalance < 0 &&
-                              watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                                ? 'bg-red-300'
-                                : ''
-                            } border border-slate-400 p-1 text-center text-sm`}
-                          >
-                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                              ? finalSpecialPrivilegekBalance.toFixed(3)
-                              : specialPrivilegeLeaveBalance}
-                          </td>
+
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
+                            <td
+                              className={`${
+                                finalSpecialPrivilegekBalance < 0 &&
+                                watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                                  ? 'bg-red-300'
+                                  : ''
+                              } border border-slate-400 p-1 text-center text-sm`}
+                            >
+                              {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                                ? finalSpecialPrivilegekBalance.toFixed(3)
+                                : specialPrivilegeLeaveBalance}
+                            </td>
+                          ) : null}
                         </tr>
                       </tbody>
                     </table>
@@ -1178,7 +1211,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') !== LeaveName.STUDY &&
                       watch('typeOfLeaveDetails.leaveName') !== LeaveName.REHABILITATION &&
                       watch('typeOfLeaveDetails.leaveName') !== LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN &&
-                      watch('typeOfLeaveDetails.leaveName') !== LeaveName.ADOPTION
+                      watch('typeOfLeaveDetails.leaveName') !== LeaveName.ADOPTION &&
+                      watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION
                     ? true
                     : leaveDateTo < leaveDateFrom &&
                       (watch('typeOfLeaveDetails.leaveName') == LeaveName.MATERNITY ||
@@ -1197,6 +1231,20 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : employeeDetails.profile.sex === 'Female' &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY
                     ? true
+                    : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
+                      estimatedAmount > Number(maxMonetizationAmount) / 2
+                    ? true
+                    : Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance) < 10 &&
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    ? true
+                    : finalVacationAndForcedLeaveBalance < 10 &&
+                      finalSickLeaveBalance >= 10 &&
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    ? false
+                    : finalVacationAndForcedLeaveBalance >= 10 &&
+                      finalSickLeaveBalance < 10 &&
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    ? false
                     : false
                 }
               >
