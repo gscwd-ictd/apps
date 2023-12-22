@@ -1,16 +1,7 @@
 import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import {
-  ScheduleSheet,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
@@ -103,26 +94,19 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
   }));
 
   // custom group store
-  const { setSelectedCustomGroupWithMembers } = useCustomGroupStore(
-    (state) => ({
-      setSelectedCustomGroupWithMembers:
-        state.setSelectedCustomGroupWithMembers,
-    })
-  );
+  const { setSelectedCustomGroupWithMembers } = useCustomGroupStore((state) => ({
+    setSelectedCustomGroupWithMembers: state.setSelectedCustomGroupWithMembers,
+  }));
 
   // use SWR
   const {
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
     error: swrScheduleError,
-  } = useSWR(
-    !isEmpty(selectedScheduleId) ? `/schedules/${selectedScheduleId}` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+  } = useSWR(!isEmpty(selectedScheduleId) ? `/schedules/${selectedScheduleId}` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // fetch
   const {
@@ -130,7 +114,9 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
     isLoading: swrGroupDetailsIsLoading,
     error: swrGroupDetailsError,
   } = useSWR(
-    !isEmpty(selectedGroupId) ? `/custom-groups/${selectedGroupId}` : null,
+    !isEmpty(selectedGroupId)
+      ? `/custom-groups/${selectedGroupId}/?dateFrom=${rowData.dateFrom}&dateTo=${rowData.dateTo}&scheduleId=${rowData.scheduleId}&`
+      : null,
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -170,8 +156,7 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
     if (!isEmpty(swrSchedule)) getScheduleByIdSuccess(swrSchedule.data);
 
     // fail
-    if (!isEmpty(swrScheduleError))
-      getScheduleByIdFail(swrScheduleError.message);
+    if (!isEmpty(swrScheduleError)) getScheduleByIdFail(swrScheduleError.message);
   }, [swrSchedule, swrScheduleError]);
 
   // swr is loading
@@ -233,9 +218,7 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="px-5 text-xl font-medium">
-            View Station Scheduling Sheet
-          </h1>
+          <h1 className="px-5 text-xl font-medium">View Station Scheduling Sheet</h1>
         </Modal.Header>
         <Modal.Body>
           {isLoading ? (
@@ -246,9 +229,7 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
                 {/* Effectivity */}
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
                   <div className="flex flex-col justify-start w-full pb-2">
-                    <p className="flex items-center justify-start w-full font-light">
-                      Effectivity Date
-                    </p>
+                    <p className="flex items-center justify-start w-full font-light">Effectivity Date</p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
                       <LabelInput
@@ -297,11 +278,7 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
                         name="groupName"
                         type="text"
                         label="Group Name"
-                        value={
-                          !isEmpty(group.customGroupDetails)
-                            ? group.customGroupDetails.name
-                            : '--'
-                        }
+                        value={!isEmpty(group.customGroupDetails) ? group.customGroupDetails.name : '--'}
                         isError={errors.dateFrom ? true : false}
                         errorMessage={errors.dateFrom?.message}
                         disabled
@@ -313,9 +290,7 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
                 {/* Schedule */}
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
                   <div className="flex flex-col justify-start w-full h-full">
-                    <p className="flex items-center justify-start w-full font-light">
-                      Station Schedule
-                    </p>
+                    <p className="flex items-center justify-start w-full font-light">Station Schedule</p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="flex flex-col w-full gap-4">
                       {swrScheduleIsLoading ? (
@@ -335,11 +310,7 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
                               <LabelInput
                                 id="scheduleTimeIn"
                                 label="Time in"
-                                value={
-                                  schedule.timeIn
-                                    ? formatTime(schedule.timeIn)
-                                    : '-- : --'
-                                }
+                                value={schedule.timeIn ? formatTime(schedule.timeIn) : '-- : --'}
                                 isError={errors.scheduleId ? true : false}
                                 errorMessage={errors.scheduleId?.message}
                                 disabled
@@ -350,11 +321,7 @@ const ViewStationSsModal: FunctionComponent<ViewStationSsModalProps> = ({
                               <LabelInput
                                 id="scheduleTimeOut"
                                 label="Time out"
-                                value={
-                                  schedule.timeOut
-                                    ? formatTime(schedule.timeOut)
-                                    : '-- : --'
-                                }
+                                value={schedule.timeOut ? formatTime(schedule.timeOut) : '-- : --'}
                                 isError={errors.scheduleId ? true : false}
                                 errorMessage={errors.scheduleId?.message}
                                 disabled

@@ -74,14 +74,14 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
     setSelectGroupModalIsOpen(false);
   };
 
-  const [selectScheduleModalIsOpen, setSelectScheduleModalIsopen] = useState<boolean>(false);
+  const [selectScheduleModalIsOpen, setSelectScheduleModalIsOpen] = useState<boolean>(false);
 
   // open select schedule modal
-  const openSelectScheduleModal = () => setSelectScheduleModalIsopen(true);
+  const openSelectScheduleModal = () => setSelectScheduleModalIsOpen(true);
 
   // close select schedule modal
   const closeSelectScheduleModal = () => {
-    setSelectScheduleModalIsopen(false);
+    setSelectScheduleModalIsOpen(false);
   };
 
   // schedule sheet store
@@ -267,7 +267,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
 
             <SelectFieldSchedSsModal
               modalState={selectScheduleModalIsOpen}
-              setModalState={setSelectScheduleModalIsopen}
+              setModalState={setSelectScheduleModalIsOpen}
               closeModalAction={closeSelectScheduleModal}
             />
             <form id="addFieldSsForm" onSubmit={handleSubmit(onSubmit)}>

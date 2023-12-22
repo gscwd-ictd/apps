@@ -1,14 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, LoadingSpinner, Modal, useDataTable } from '@gscwd-apps/oneui';
+import { DataTable, Modal, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import { CustomGroup, CustomGroupWithMembers } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
-import dayjs from 'dayjs';
+import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { EmployeeAsOptionWithPosition } from 'libs/utils/src/lib/types/employee.type';
-import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';

@@ -79,14 +79,14 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
     setSelectGroupModalIsOpen(false);
   };
 
-  const [selectScheduleModalIsOpen, setSelectScheduleModalIsopen] = useState<boolean>(false);
+  const [selectScheduleModalIsOpen, setSelectScheduleModalIsOpen] = useState<boolean>(false);
 
   // open select schedule modal
-  const openSelectScheduleModal = () => setSelectScheduleModalIsopen(true);
+  const openSelectScheduleModal = () => setSelectScheduleModalIsOpen(true);
 
   // close select schedule modal
   const closeSelectScheduleModal = () => {
-    setSelectScheduleModalIsopen(false);
+    setSelectScheduleModalIsOpen(false);
   };
 
   // schedule sheet store
@@ -151,7 +151,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
   // on submit
   const onSubmit = async () => {
     // extract the unnecessary items for posting
-    const { scheduleName, customGroupName, id, customGroupId, ...rest } = currentScheduleSheet;
+    const { scheduleName, customGroupName, id, ...rest } = currentScheduleSheet;
 
     // call the function to start loading
     postScheduleSheet();
@@ -270,7 +270,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
 
             <SelectStationSchedSsModal
               modalState={selectScheduleModalIsOpen}
-              setModalState={setSelectScheduleModalIsopen}
+              setModalState={setSelectScheduleModalIsOpen}
               closeModalAction={closeSelectScheduleModal}
             />
             <form id="addStationSsForm" onSubmit={handleSubmit(onSubmit)}>
