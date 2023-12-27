@@ -85,9 +85,7 @@ export const TrainingNominationModal = ({
               return a.label.localeCompare(b.label);
             })
           );
-          // console.log(listOfEmployees[i], `added ${i}`);
         } else {
-          // console.log(listOfEmployees[i], `not added ${i}`);
           for (let k = 0; k < selectedAuxiliaryEmployees.length; k++) {
             if (listOfEmployees[i].value === selectedAuxiliaryEmployees[k].value) {
               const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
@@ -103,7 +101,6 @@ export const TrainingNominationModal = ({
         }
       }
     }
-    console.log(employeePool);
   };
 
   const setAuxParticipant = (employee: Array<SelectOption>) => {
@@ -125,9 +122,7 @@ export const TrainingNominationModal = ({
               return a.label.localeCompare(b.label);
             })
           );
-          // console.log(listOfEmployees[i], `added ${i}`);
         } else {
-          // console.log(listOfEmployees[i], `not added ${i}`);
           for (let k = 0; k < selectedEmployees.length; k++) {
             if (listOfEmployees[i].value === selectedEmployees[k].value) {
               const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
@@ -143,7 +138,6 @@ export const TrainingNominationModal = ({
         }
       }
     }
-    console.log(employeePool);
   };
 
   const CheckForDuplicate = () => {
