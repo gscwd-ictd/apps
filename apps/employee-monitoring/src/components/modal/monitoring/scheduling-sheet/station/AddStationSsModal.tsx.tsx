@@ -13,6 +13,7 @@ import SelectedEmployeesSsTable from '../SelectedEmployeesSsTable';
 import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import SelectGroupSsModal from '../SelectGroupSsModal';
+import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
 type AddStationSsModalProps = {
   modalState: boolean;
@@ -91,41 +92,57 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
 
   // schedule sheet store
   const {
-    group,
+    scheduleSheet,
     schedule,
     selectedGroupId,
     selectedScheduleId,
     currentScheduleSheet,
-    getGroupById,
-    getScheduleById,
-    getGroupByIdFail,
-    postScheduleSheet,
-    setSelectedGroupId,
-    getScheduleByIdFail,
-    getGroupByIdSuccess,
-    postScheduleSheetFail,
-    setSelectedScheduleId,
-    getScheduleByIdSuccess,
+
     setCurrentScheduleSheet,
+    setSelectedGroupId,
+    setSelectedScheduleId,
+
+    getScheduleById,
+    getScheduleByIdSuccess,
+    getScheduleByIdFail,
+
+    getScheduleSheet,
+    getScheduleSheetSuccess,
+    getScheduleSheetFail,
+
+    postScheduleSheet,
     postScheduleSheetSuccess,
+    postScheduleSheetFail,
   } = useScheduleSheetStore((state) => ({
-    group: state.group,
+    scheduleSheet: state.getScheduleSheetResponse,
     schedule: state.schedule,
     selectedGroupId: state.selectedGroupId,
     selectedScheduleId: state.selectedScheduleId,
     currentScheduleSheet: state.currentScheduleSheet,
+
     setCurrentScheduleSheet: state.setCurrentScheduleSheet,
     setSelectedGroupId: state.setSelectedGroupId,
     setSelectedScheduleId: state.setSelectedScheduleId,
+
     getScheduleById: state.getScheduleById,
     getScheduleByIdSuccess: state.getScheduleByIdSuccess,
     getScheduleByIdFail: state.getScheduleByIdFail,
-    getGroupById: state.getGroupById,
-    getGroupByIdSuccess: state.getGroupByIdSuccess,
-    getGroupByIdFail: state.getGroupByIdFail,
+
+    getScheduleSheet: state.getScheduleSheet,
+    getScheduleSheetSuccess: state.getScheduleSheetSuccess,
+    getScheduleSheetFail: state.getScheduleSheetFail,
+
     postScheduleSheet: state.postScheduleSheet,
     postScheduleSheetSuccess: state.postScheduleSheetSuccess,
     postScheduleSheetFail: state.postScheduleSheetFail,
+  }));
+
+  // custom group store
+  const { getCustomGroups, getCustomGroupsSuccess, getCustomGroupsFail } = useCustomGroupStore((state) => ({
+    customGroups: state.customGroups,
+    getCustomGroups: state.getCustomGroups,
+    getCustomGroupsSuccess: state.getCustomGroupsSuccess,
+    getCustomGroupsFail: state.getCustomGroupsFail,
   }));
 
   // fetch all schedules for pumping station
@@ -148,6 +165,16 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
     revalidateOnMount: false,
   });
 
+  // fetch data for list of custom groups
+  const {
+    data: swrCustomGroups,
+    isLoading: swrCustomGroupsIsLoading,
+    error: swrCustomGroupsError,
+  } = useSWR('/custom-groups', fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
   // on submit
   const onSubmit = async () => {
     // extract the unnecessary items for posting
@@ -162,7 +189,6 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
 
   // function for posting the schedule sheet
   const handlePostScheduling = async (data: any) => {
-    console.log(data);
     const { error, result } = await postEmpMonitoring('/employee-schedule/group', data);
 
     if (!error) {
@@ -176,6 +202,24 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
       postScheduleSheetFail(result);
     }
   };
+
+  // fetch of custom groups
+  useEffect(() => {
+    if (swrCustomGroupsIsLoading) {
+      getCustomGroups();
+    }
+  }, [swrCustomGroupsIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrCustomGroups)) {
+      getCustomGroupsSuccess(swrCustomGroups.data);
+    }
+
+    if (!isEmpty(swrCustomGroupsError)) {
+      getCustomGroupsFail(swrCustomGroupsError.message);
+    }
+  }, [swrCustomGroups, swrCustomGroupsError]);
 
   // set schedule id loading to true
   useEffect(() => {
@@ -194,7 +238,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
   // swr is loading
   useEffect(() => {
     if (swrGroupDetailsIsLoading) {
-      getGroupById();
+      getScheduleSheet();
     }
   }, [swrGroupDetailsIsLoading]);
 
@@ -202,12 +246,12 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
   useEffect(() => {
     // success
     if (!isEmpty(swrGroupDetails)) {
-      getGroupByIdSuccess(swrGroupDetails.data);
+      getScheduleSheetSuccess(swrGroupDetails.data);
     }
 
     // fail
     if (!isEmpty(swrGroupDetailsError)) {
-      getGroupByIdFail(swrGroupDetailsError.message);
+      getScheduleSheetFail(swrGroupDetailsError.message);
     }
   }, [swrGroupDetails, swrGroupDetailsError]);
 
@@ -218,13 +262,13 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
   }, [schedule]);
 
   useEffect(() => {
-    if (!isEmpty(group)) {
-      if (!isEmpty(group.customGroupDetails)) {
-        setValue('customGroupId', group.customGroupDetails.id);
-        setValue('customGroupName', group.customGroupDetails.name);
+    if (!isEmpty(scheduleSheet)) {
+      if (!isEmpty(scheduleSheet.customGroupDetails)) {
+        setValue('customGroupId', scheduleSheet.customGroupDetails.id);
+        setValue('customGroupName', scheduleSheet.customGroupDetails.name);
       }
     }
-  }, [group]);
+  }, [scheduleSheet]);
 
   // watch
   useEffect(() => {
@@ -330,7 +374,9 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                         name="groupName"
                         type="text"
                         label=""
-                        value={!isEmpty(group.customGroupDetails) ? group.customGroupDetails.name : '--'}
+                        value={
+                          !isEmpty(scheduleSheet.customGroupDetails) ? scheduleSheet.customGroupDetails.name : '--'
+                        }
                         isError={errors.dateFrom ? true : false}
                         errorMessage={errors.dateFrom?.message}
                         disabled

@@ -60,11 +60,16 @@ const SelectedEmployeesSsTable = () => {
     data: swrUnassignedEmployees,
     isLoading: swrUnassignedEmployeesIsLoading,
     error: swrUnassignedEmployeesError,
-    mutate: mutateUnassignedMembers,
-  } = useSWR(`/custom-groups/${currentScheduleSheet.customGroupId}/unassigned/dropdown`, fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(
+    !isEmpty(currentScheduleSheet.customGroupId)
+      ? `/custom-groups/${currentScheduleSheet.customGroupId}/unassigned/dropdown`
+      : null,
+    fetcherEMS,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
 
   const [restDaysModalIsOpen, setRestDaysModalIsOpen] = useState<boolean>(false);
   const openRestDaysModal = (rowData: EmployeeAsOptionWithRestDays) => {

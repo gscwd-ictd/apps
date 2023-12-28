@@ -36,7 +36,7 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
 
   // use custom groups store
   const {
-    groups,
+    customGroups,
     groupWithMembers,
     emptyResponse,
     getCustomGroups,
@@ -47,7 +47,7 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
     getCustomGroupWithMembersSuccess,
     setSelectedCustomGroupWithMembers,
   } = useCustomGroupStore((state) => ({
-    groups: state.customGroups,
+    customGroups: state.customGroups,
     groupWithMembers: state.customGroupWithMembers,
 
     setSelectedCustomGroupWithMembers: state.setSelectedCustomGroupWithMembers,
@@ -77,14 +77,14 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
   const [transformedGroups, setTransformedGroups] = useState<Array<SelectOption>>([]);
 
   // use SWR for all groups
-  const {
-    data: swrGroups,
-    isLoading: swrIsLoading,
-    error: swrError,
-  } = useSWR('/custom-groups', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // const {
+  //   data: swrGroups,
+  //   isLoading: swrIsLoading,
+  //   error: swrError,
+  // } = useSWR('/custom-groups', fetcherEMS, {
+  //   shouldRetryOnError: false,
+  //   revalidateOnFocus: false,
+  // });
 
   // use SWR for all groups
   const {
@@ -164,11 +164,11 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
   });
 
   // swr loading
-  useEffect(() => {
-    if (swrIsLoading && modalState) {
-      getCustomGroups();
-    }
-  }, [modalState, swrIsLoading]);
+  // useEffect(() => {
+  //   if (swrIsLoading && modalState) {
+  //     getCustomGroups();
+  //   }
+  // }, [modalState, swrIsLoading]);
 
   // swr loading for the custom group details
   useEffect(() => {
@@ -178,24 +178,24 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
   }, [swrGroupDetailsIsLoading]);
 
   // swr success or error
-  useEffect(() => {
-    // if data
-    if (!isEmpty(swrGroups)) {
-      getCustomGroupsSuccess(swrGroups.data);
-    }
+  // useEffect(() => {
+  //   // if data
+  //   if (!isEmpty(swrGroups)) {
+  //     getCustomGroupsSuccess(swrGroups.data);
+  //   }
 
-    // if error
-    if (!isEmpty(swrError)) {
-      getCustomGroupsFail(swrError.message);
-    }
-  }, [swrGroups, swrError]);
+  //   // if error
+  //   if (!isEmpty(swrError)) {
+  //     getCustomGroupsFail(swrError.message);
+  //   }
+  // }, [swrGroups, swrError]);
 
   // transform/mutate group
   useEffect(() => {
-    if (!isEmpty(groups)) {
-      transformGroups(groups);
+    if (!isEmpty(customGroups)) {
+      transformGroups(customGroups);
     }
-  }, [groups]);
+  }, [customGroups]);
 
   // fetch by id
   useEffect(() => {

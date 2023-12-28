@@ -13,7 +13,7 @@ export const LoadingSpinner: FunctionComponent<LoadingSpinnerProps> = (
   props
 ) => {
   return (
-    <div role="status" className="flex justify-center">
+    <div role="status" className="flex justify-center overflow-hidden">
       <svg
         aria-hidden="true"
         className={svgClass(props)}

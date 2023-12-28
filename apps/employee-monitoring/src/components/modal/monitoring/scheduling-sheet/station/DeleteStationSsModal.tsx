@@ -5,14 +5,18 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import {
+  CurrentScheduleSheet,
+  ScheduleSheet,
+  useScheduleSheetStore,
+} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import dayjs from 'dayjs';
 
 type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: ScheduleSheet;
+  rowData: CurrentScheduleSheet;
 };
 
 type DeleteFormProps = {
