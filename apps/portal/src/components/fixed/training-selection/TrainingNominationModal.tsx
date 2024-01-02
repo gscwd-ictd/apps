@@ -16,18 +16,18 @@ const listOfEmployees: Array<SelectOption> = [
   { label: 'Ricardo Vicente Narvaiza', value: '0' },
   { label: 'Mikhail Sebua', value: '1' },
   { label: 'Jay Nosotros', value: '2' },
-  { label: 'Eric Sison', value: '3' },
-  { label: 'Allyn Joseph Cubero', value: '4' },
-  { label: 'John Henry Alfeche', value: '5' },
-  { label: 'Phyll Patrick Fragata', value: '6' },
-  { label: 'Deo Del Rosario', value: '7' },
-  { label: 'Cara Jade Reyes', value: '8' },
-  { label: 'Rizza Baugbog', value: '9' },
-  { label: 'Kumier Lou Arancon', value: '10' },
-  { label: 'Roland Bacayo', value: '11' },
-  { label: 'Alfred Perez', value: '12' },
-  { label: 'Elea Glen Lacerna', value: '13' },
-  { label: 'Ricky Libertad', value: '14' },
+  // { label: 'Eric Sison', value: '3' },
+  // { label: 'Allyn Joseph Cubero', value: '4' },
+  // { label: 'John Henry Alfeche', value: '5' },
+  // { label: 'Phyll Patrick Fragata', value: '6' },
+  // { label: 'Deo Del Rosario', value: '7' },
+  // { label: 'Cara Jade Reyes', value: '8' },
+  // { label: 'Rizza Baugbog', value: '9' },
+  // { label: 'Kumier Lou Arancon', value: '10' },
+  // { label: 'Roland Bacayo', value: '11' },
+  // { label: 'Alfred Perez', value: '12' },
+  // { label: 'Elea Glen Lacerna', value: '13' },
+  // { label: 'Ricky Libertad', value: '14' },
 ];
 
 type TrainingNominationModalProps = {
@@ -62,23 +62,20 @@ export const TrainingNominationModal = ({
   }));
 
   const [employeePool, setEmployeePool] = useState<Array<SelectOption>>([]);
+  const [tempEmployeePool, setTempEmployeePool] = useState<Array<SelectOption>>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
+  const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
 
-  const setParticipant = (employee: Array<SelectOption>) => {
+  const setParticipant = async (employee: Array<SelectOption>) => {
     setSelectedEmployees(employee);
 
-    //remove employee from pool
-    for (let a = 0; a < employee.length; a++) {
-      setEmployeePool(employeePool.filter((e) => e.value !== employee[a].value));
-    }
-
-    //add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
+    // add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
     for (let i = 0; i < listOfEmployees.length; i++) {
-      for (let j = 0; j < selectedEmployees.length; j++) {
-        //check if selectedEmployee has specific employee in its array
-        if (listOfEmployees[i].value === selectedEmployees[j].value) {
+      for (let j = 0; j < combinedNominatedEmployees.length; j++) {
+        //check if combinedEmployees has specific employee in its array
+        if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
           const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
           setEmployeePool(
             uniqueNames.sort(function (a, b) {
@@ -86,36 +83,20 @@ export const TrainingNominationModal = ({
             })
           );
         } else {
-          for (let k = 0; k < selectedAuxiliaryEmployees.length; k++) {
-            if (listOfEmployees[i].value === selectedAuxiliaryEmployees[k].value) {
-              const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-              setEmployeePool(
-                uniqueNames.sort(function (a, b) {
-                  return a.label.localeCompare(b.label);
-                })
-              );
-            } else {
-              //do nothing
-            }
-          }
+          //do nothing
         }
       }
     }
   };
 
-  const setAuxParticipant = (employee: Array<SelectOption>) => {
+  const setAuxParticipant = async (employee: Array<SelectOption>) => {
     setSelectedAuxiliaryEmployees(employee);
-
-    //remove employee from pool
-    for (let a = 0; a < employee.length; a++) {
-      setEmployeePool(employeePool.filter((e) => e.value !== employee[a].value));
-    }
 
     //add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
     for (let i = 0; i < listOfEmployees.length; i++) {
-      for (let j = 0; j < selectedAuxiliaryEmployees.length; j++) {
-        //check if selectedEmployee has specific employee in its array
-        if (listOfEmployees[i].value === selectedAuxiliaryEmployees[j].value) {
+      for (let j = 0; j < combinedNominatedEmployees.length; j++) {
+        //check if combinedEmployees has specific employee in its array
+        if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
           const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
           setEmployeePool(
             uniqueNames.sort(function (a, b) {
@@ -123,18 +104,7 @@ export const TrainingNominationModal = ({
             })
           );
         } else {
-          for (let k = 0; k < selectedEmployees.length; k++) {
-            if (listOfEmployees[i].value === selectedEmployees[k].value) {
-              const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-              setEmployeePool(
-                uniqueNames.sort(function (a, b) {
-                  return a.label.localeCompare(b.label);
-                })
-              );
-            } else {
-              //do nothing
-            }
-          }
+          //do nothing
         }
       }
     }
@@ -155,10 +125,68 @@ export const TrainingNominationModal = ({
   };
 
   useEffect(() => {
-    setNominatedEmployees(selectedEmployees);
-    setAuxiliaryEmployees(selectedAuxiliaryEmployees);
-    CheckForDuplicate();
+    // setEmployeePool(listOfEmployees);
+    // console.log(selectedEmployees, 'selected');
+    // console.log(selectedAuxiliaryEmployees, 'aux');
+    setNominatedEmployees(selectedEmployees); //store
+    setAuxiliaryEmployees(selectedAuxiliaryEmployees); //store
+    const uniqueNames = Array.from(new Set([...selectedEmployees, ...selectedAuxiliaryEmployees]));
+    setCombinedNominatedEmployees(
+      uniqueNames.sort(function (a, b) {
+        return a.label.localeCompare(b.label);
+      })
+    );
+
+    // setCombinedNominatedEmployees([...selectedEmployees, ...selectedAuxiliaryEmployees]);
   }, [selectedEmployees, selectedAuxiliaryEmployees]);
+
+  useEffect(() => {
+    console.log(combinedNominatedEmployees, 'combined');
+    //remove nominated employees from employee pool
+    if (combinedNominatedEmployees.length >= 1) {
+      for (let i = 0; i < combinedNominatedEmployees.length; i++) {
+        setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[i].value));
+      }
+      setTempEmployeePool(employeePool);
+    }
+  }, [combinedNominatedEmployees]);
+
+  useEffect(() => {
+    console.log(employeePool, 'pool');
+    // for (let i = 0; i < listOfEmployees.length; i++) {
+    //   for (let j = 0; j < combinedNominatedEmployees.length; j++) {
+    //     //check if combinedEmployees has specific employee in its array
+    //     if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
+    //       const uniqueNames = Array.from(new Set([...tempEmployeePool, listOfEmployees[i]]));
+    //       setEmployeePool(
+    //         uniqueNames.sort(function (a, b) {
+    //           return a.label.localeCompare(b.label);
+    //         })
+    //       );
+    //     } else {
+    //       //do nothing
+    //     }
+    //   }
+    // }
+  }, [tempEmployeePool]);
+
+  // useEffect(() => {
+  //   for (let i = 0; i < listOfEmployees.length; i++) {
+  //     for (let j = 0; j < combinedNominatedEmployees.length; j++) {
+  //       //check if combinedEmployees has specific employee in its array
+  //       if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
+  //         const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+  //         setEmployeePool(
+  //           uniqueNames.sort(function (a, b) {
+  //             return a.label.localeCompare(b.label);
+  //           })
+  //         );
+  //       } else {
+  //         //do nothing
+  //       }
+  //     }
+  //   }
+  // }, [employeePool]);
 
   useEffect(() => {
     setEmployeePool(
@@ -232,7 +260,7 @@ export const TrainingNominationModal = ({
                   label=""
                   multiple
                   options={employeePool}
-                  onChange={(o) => setParticipant(o)}
+                  onChange={(o) => setSelectedEmployees(o)}
                   value={selectedEmployees}
                 />
               </div>
@@ -248,7 +276,7 @@ export const TrainingNominationModal = ({
                   label=""
                   multiple
                   options={employeePool}
-                  onChange={(o) => setAuxParticipant(o)}
+                  onChange={(o) => setSelectedAuxiliaryEmployees(o)}
                   value={selectedAuxiliaryEmployees}
                 />
               </div>
