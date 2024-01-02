@@ -28,6 +28,7 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
           (card) =>
             card.destination === 'pds' ||
             card.destination === 'dtr' ||
+            card.destination === 'pass-slip' ||
             card.destination === 'leaves' ||
             card.destination === 'email' ||
             card.destination === 'overtime-accomplishment'

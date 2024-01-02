@@ -25,9 +25,19 @@ type SelectProps = {
   label: string;
   id: string;
   disabled?: boolean;
+  isSelectedHidden?: boolean; //hide currently selected options from drop down list
 } & (SingleSelectProps | MultipleSelectProps);
 
-export function MySelectList({ multiple, value, onChange, id, label, disabled = false, options }: SelectProps) {
+export function MySelectList({
+  multiple,
+  value,
+  onChange,
+  id,
+  label,
+  disabled = false,
+  options,
+  isSelectedHidden = false,
+}: SelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -163,27 +173,53 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
           > */}
           <ul className="border  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full">
             {options.map((option, index) => (
-              <li
-                onClick={(e) => {
-                  e.stopPropagation();
-                  selectOption(option);
-                }}
-                key={option.value}
-                onMouseEnter={() => setHighlightedIndex(index)}
-                className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
-                  isOptionSelected(option) && index === highlightedIndex
-                    ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-500 hover hover:cursor-grab '
-                    : !isOptionSelected(option) && index === highlightedIndex
-                    ? 'hover:bg-blue-600 hover:text-white'
-                    : isOptionSelected(option) && index !== highlightedIndex
-                    ? 'bg-blue-100 text-gray-500'
-                    : 'text-gray-700'
-                }
+              <div key={option.value}>
+                {isSelectedHidden ? (
+                  //hides selected options from list pool
+                  <li
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      selectOption(option);
+                    }}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    className={`px-2  text-xs  cursor-pointer select-none   ${
+                      isOptionSelected(option) && index === highlightedIndex
+                        ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-500 hover hover:cursor-grab'
+                        : !isOptionSelected(option) && index === highlightedIndex
+                        ? 'py-1 hover:bg-blue-600 hover:text-white'
+                        : isOptionSelected(option) && index !== highlightedIndex
+                        ? 'bg-blue-100 text-gray-500'
+                        : 'py-1 text-gray-700'
+                    }
           
               `}
-              >
-                {option.label}
-              </li>
+                  >
+                    {isSelectedHidden && isOptionSelected(option) ? null : option.label}
+                  </li>
+                ) : (
+                  //original list view
+                  <li
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      selectOption(option);
+                    }}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
+                      isOptionSelected(option) && index === highlightedIndex
+                        ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-500 hover hover:cursor-grab '
+                        : !isOptionSelected(option) && index === highlightedIndex
+                        ? 'hover:bg-blue-600 hover:text-white'
+                        : isOptionSelected(option) && index !== highlightedIndex
+                        ? 'bg-blue-100 text-gray-500'
+                        : 'text-gray-700'
+                    }
+          
+              `}
+                  >
+                    {option.label}
+                  </li>
+                )}
+              </div>
             ))}
           </ul>
         </Popover.Content>

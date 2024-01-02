@@ -28,7 +28,6 @@ const listOfEmployees: Array<SelectOption> = [
   { label: 'Alfred Perez', value: '12' },
   { label: 'Elea Glen Lacerna', value: '13' },
   { label: 'Ricky Libertad', value: '14' },
-  { label: 'Deo Del Rosario 2', value: '15' },
 ];
 
 type TrainingNominationModalProps = {
@@ -43,9 +42,7 @@ export const TrainingNominationModal = ({
   closeModalAction,
 }: TrainingNominationModalProps) => {
   const {
-    trainingList,
-    loadingTrainingList,
-    errorTrainingList,
+    recommendedEmployees,
     individualTrainingDetails,
     trainingModalIsOpen,
     setIndividualTrainingDetails,
@@ -54,9 +51,7 @@ export const TrainingNominationModal = ({
     auxiliaryEmployees,
     setAuxiliaryEmployees,
   } = useTrainingSelectionStore((state) => ({
-    trainingList: state.trainingList,
-    loadingTrainingList: state.loading.loadingTrainingList,
-    errorTrainingList: state.error.errorTrainingList,
+    recommendedEmployees: state.recommendedEmployees,
     individualTrainingDetails: state.individualTrainingDetails,
     trainingModalIsOpen: state.setTrainingModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
@@ -66,9 +61,84 @@ export const TrainingNominationModal = ({
     setAuxiliaryEmployees: state.setAuxiliaryEmployees,
   }));
 
+  const [employeePool, setEmployeePool] = useState<Array<SelectOption>>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
+
+  const setParticipant = (employee: Array<SelectOption>) => {
+    setSelectedEmployees(employee);
+
+    //remove employee from pool
+    for (let a = 0; a < employee.length; a++) {
+      setEmployeePool(employeePool.filter((e) => e.value !== employee[a].value));
+    }
+
+    //add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
+    for (let i = 0; i < listOfEmployees.length; i++) {
+      for (let j = 0; j < selectedEmployees.length; j++) {
+        //check if selectedEmployee has specific employee in its array
+        if (listOfEmployees[i].value === selectedEmployees[j].value) {
+          const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+          setEmployeePool(
+            uniqueNames.sort(function (a, b) {
+              return a.label.localeCompare(b.label);
+            })
+          );
+        } else {
+          for (let k = 0; k < selectedAuxiliaryEmployees.length; k++) {
+            if (listOfEmployees[i].value === selectedAuxiliaryEmployees[k].value) {
+              const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+              setEmployeePool(
+                uniqueNames.sort(function (a, b) {
+                  return a.label.localeCompare(b.label);
+                })
+              );
+            } else {
+              //do nothing
+            }
+          }
+        }
+      }
+    }
+  };
+
+  const setAuxParticipant = (employee: Array<SelectOption>) => {
+    setSelectedAuxiliaryEmployees(employee);
+
+    //remove employee from pool
+    for (let a = 0; a < employee.length; a++) {
+      setEmployeePool(employeePool.filter((e) => e.value !== employee[a].value));
+    }
+
+    //add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
+    for (let i = 0; i < listOfEmployees.length; i++) {
+      for (let j = 0; j < selectedAuxiliaryEmployees.length; j++) {
+        //check if selectedEmployee has specific employee in its array
+        if (listOfEmployees[i].value === selectedAuxiliaryEmployees[j].value) {
+          const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+          setEmployeePool(
+            uniqueNames.sort(function (a, b) {
+              return a.label.localeCompare(b.label);
+            })
+          );
+        } else {
+          for (let k = 0; k < selectedEmployees.length; k++) {
+            if (listOfEmployees[i].value === selectedEmployees[k].value) {
+              const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+              setEmployeePool(
+                uniqueNames.sort(function (a, b) {
+                  return a.label.localeCompare(b.label);
+                })
+              );
+            } else {
+              //do nothing
+            }
+          }
+        }
+      }
+    }
+  };
 
   const CheckForDuplicate = () => {
     console.log(selectedEmployees);
@@ -90,10 +160,13 @@ export const TrainingNominationModal = ({
     CheckForDuplicate();
   }, [selectedEmployees, selectedAuxiliaryEmployees]);
 
-  // useEffect(() => {
-
-  //   CheckForDuplicate();
-  // }, [selectedAuxiliaryEmployees]);
+  useEffect(() => {
+    setEmployeePool(
+      listOfEmployees.sort(function (a, b) {
+        return a.label.localeCompare(b.label);
+      })
+    );
+  }, []);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -142,7 +215,7 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <div className="w-auto sm:w-96 flex flex-wrap text-slate-500 text-md font-medium">
-                  {individualTrainingDetails.recommended.map((employee, index) => {
+                  {recommendedEmployees.map((employee, index) => {
                     return <label key={index}>{index == 0 ? employee.name : `, ${employee.name}`}</label>;
                   })}
                 </div>
@@ -154,11 +227,12 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <MySelectList
+                  isSelectedHidden={true}
                   id="employees"
                   label=""
                   multiple
-                  options={listOfEmployees}
-                  onChange={(o) => setSelectedEmployees(o)}
+                  options={employeePool}
+                  onChange={(o) => setParticipant(o)}
                   value={selectedEmployees}
                 />
               </div>
@@ -169,11 +243,12 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <MySelectList
+                  isSelectedHidden={true}
                   id="employees"
                   label=""
                   multiple
-                  options={listOfEmployees}
-                  onChange={(o) => setSelectedAuxiliaryEmployees(o)}
+                  options={employeePool}
+                  onChange={(o) => setAuxParticipant(o)}
                   value={selectedAuxiliaryEmployees}
                 />
               </div>

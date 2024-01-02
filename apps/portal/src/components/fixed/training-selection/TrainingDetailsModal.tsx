@@ -11,6 +11,9 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import TrainingNominationModal from './TrainingNominationModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import useSWR from 'swr';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { isEmpty } from 'lodash';
 
 type ModalProps = {
   modalState: boolean;
@@ -20,9 +23,9 @@ type ModalProps = {
 
 export const TrainingDetailsModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    trainingList,
-    loadingTrainingList,
-    errorTrainingList,
+    recommendedEmployees,
+    loadingRecommendedEmployee,
+    errorRecommendedEmployee,
     individualTrainingDetails,
     trainingModalIsOpen,
     setIndividualTrainingDetails,
@@ -32,10 +35,13 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     setAuxiliaryEmployees,
     trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
+    getRecommendedEmployees,
+    getRecommendedEmployeesSuccess,
+    getRecommendedEmployeesFail,
   } = useTrainingSelectionStore((state) => ({
-    trainingList: state.trainingList,
-    loadingTrainingList: state.loading.loadingTrainingList,
-    errorTrainingList: state.error.errorTrainingList,
+    recommendedEmployees: state.recommendedEmployees,
+    loadingRecommendedEmployee: state.loading.loadingRecommendedEmployee,
+    errorRecommendedEmployee: state.error.errorRecommendedEmployee,
     individualTrainingDetails: state.individualTrainingDetails,
     trainingModalIsOpen: state.setTrainingModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
@@ -45,21 +51,43 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     setAuxiliaryEmployees: state.setAuxiliaryEmployees,
     trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
+    getRecommendedEmployees: state.getRecommendedEmployees,
+    getRecommendedEmployeesSuccess: state.getRecommendedEmployeesSuccess,
+    getRecommendedEmployeesFail: state.getRecommendedEmployeesFail,
   }));
 
   const [courseContentsArray, setCourseContentsArray] = useState([{ title: 'N/A' }]);
   const [postTrainingRequirementArray, setPostTrainingRequirementArray] = useState([{ document: 'N/A' }]);
 
-  // useEffect(() => {
-  //   if (individualTrainingDetails.courseContent) {
-  //     setCourseContentsArray(JSON.parse(individualTrainingDetails.courseContent as unknown as string));
-  //   }
-  //   if (individualTrainingDetails.postTrainingRequirements) {
-  //     setPostTrainingRequirementArray(
-  //       JSON.parse(individualTrainingDetails.postTrainingRequirements as unknown as string)
-  //     );
-  //   }
-  // }, [individualTrainingDetails]);
+  const recommendedEmployeeUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/distributions/${individualTrainingDetails.distributionId}/recommended`;
+
+  const {
+    data: swrRecommendedEmployee,
+    isLoading: swrRecommendedEmployeeIsLoading,
+    error: swrRecommendedEmployeeError,
+    mutate: mutateTraining,
+  } = useSWR(recommendedEmployeeUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrRecommendedEmployeeIsLoading) {
+      getRecommendedEmployees(swrRecommendedEmployeeIsLoading);
+    }
+  }, [swrRecommendedEmployeeIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrRecommendedEmployee)) {
+      getRecommendedEmployeesSuccess(swrRecommendedEmployeeIsLoading, swrRecommendedEmployee);
+    }
+
+    if (!isEmpty(swrRecommendedEmployeeError)) {
+      getRecommendedEmployeesFail(swrRecommendedEmployeeIsLoading, swrRecommendedEmployeeError.message);
+    }
+  }, [swrRecommendedEmployee, swrRecommendedEmployeeError]);
 
   // cancel action for Leave Application Modal
   const closeTrainingNominationModal = async () => {
@@ -92,7 +120,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             />
 
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {individualTrainingDetails.preparationStatus === TrainingStatus.ONGOING ? (
+              {individualTrainingDetails.trainingPreparationStatus === TrainingStatus.ONGOING ? (
                 <AlertNotification alertType="info" notifMessage="On Going Nomination" dismissible={false} />
               ) : null}
 
@@ -139,10 +167,28 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 </div>
               </div> */}
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Slots</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Slots:</label>
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.numberOfSlots}</label>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Source:</label>
+
+                <div className="w-auto sm:w-96">
+                  <label className="text-slate-500 h-12 w-96 text-md capitalize ">
+                    {individualTrainingDetails.source}
+                  </label>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Type:</label>
+
+                <div className="w-auto sm:w-96">
+                  <label className="text-slate-500 h-12 w-96 text-md capitalize ">
+                    {individualTrainingDetails.type}
+                  </label>
                 </div>
               </div>
               {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-start">
