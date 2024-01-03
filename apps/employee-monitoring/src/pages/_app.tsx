@@ -35,6 +35,7 @@ const mockData = {
     { I: 'access', this: 'Daily_time_record' },
     { I: 'access', this: 'Leave_ledger' },
     { I: 'access', this: 'Scheduling_sheets' },
+    { I: 'access', this: 'Scheduling_sheet_office' },
     { I: 'access', this: 'Scheduling_sheet_station' },
     { I: 'access', this: 'Scheduling_sheet_field' },
     { I: 'access', this: 'Overtime' },

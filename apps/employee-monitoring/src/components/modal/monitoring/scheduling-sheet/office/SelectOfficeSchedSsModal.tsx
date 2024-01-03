@@ -20,7 +20,7 @@ type SelectSchedSsModalProps = {
   closeModalAction: () => void;
 };
 
-const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
+const SelectOfficeSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
   modalState,
   closeModalAction,
   setModalState,
@@ -30,7 +30,7 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
     data: swrSchedules,
     isLoading: swrIsLoading,
     error: swrError,
-  } = useSWR(modalState ? '/schedules?base=Field' : null, fetcherEMS, {
+  } = useSWR(modalState ? '/schedules?base=Office' : null, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -136,7 +136,7 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header>
-          <h1 className="text-xl font-medium">Select a Field Schedule</h1>
+          <h1 className="text-xl font-medium">Select a Office Schedule</h1>
         </Modal.Header>
         <Modal.Body>
           {transformedScheds ? (
@@ -222,4 +222,4 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
   );
 };
 
-export default SelectFieldSchedSsModal;
+export default SelectOfficeSchedSsModal;

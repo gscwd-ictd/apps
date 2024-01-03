@@ -8,13 +8,13 @@ import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import SelectGroupSsModal from '../SelectGroupSsModal';
-import SelectFieldSchedSsModal from './SelectFieldSchedSsModal';
+import SelectOfficeSchedSsModal from './SelectOfficeSchedSsModal';
 import SelectedEmployeesSsTable from '../SelectedEmployeesSsTable';
 import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
-type AddFieldSsModalProps = {
+type AddOfficeSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
@@ -24,7 +24,11 @@ type ScheduleSheetForm = ScheduleSheet & {
   employees: Array<EmployeeAsOptionWithRestDays>;
 };
 
-const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, closeModalAction, setModalState }) => {
+const AddOfficeSsModal: FunctionComponent<AddOfficeSsModalProps> = ({
+  modalState,
+  closeModalAction,
+  setModalState,
+}) => {
   // react hook form
   const {
     watch,
@@ -140,7 +144,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
     getCustomGroupsFail: state.getCustomGroupsFail,
   }));
 
-  // get all schedules for field
+  // get all schedules for Office
   const {
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
@@ -297,7 +301,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="px-5 text-xl font-medium">Add Field Scheduling Sheet</h1>
+          <h1 className="px-5 text-xl font-medium">Add Office Scheduling Sheet</h1>
         </Modal.Header>
         <Modal.Body>
           <div className=" xs:px-0 sm:px-0 md:px-0 lg:px-4">
@@ -307,12 +311,12 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
               closeModalAction={closeSelectGroupModal}
             />
 
-            <SelectFieldSchedSsModal
+            <SelectOfficeSchedSsModal
               modalState={selectScheduleModalIsOpen}
               setModalState={setSelectScheduleModalIsOpen}
               closeModalAction={closeSelectScheduleModal}
             />
-            <form id="addFieldSsForm" onSubmit={handleSubmit(onSubmit)}>
+            <form id="addOfficeSsForm" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[20rem]">
                 {/* Effectivity */}
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
@@ -321,7 +325,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                       <LabelInput
-                        id="fieldsStartDate"
+                        id="officesStartDate"
                         name="dateFrom"
                         type="date"
                         label="Start Date"
@@ -338,7 +342,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                         errorMessage={errors.dateFrom?.message}
                       />
                       <LabelInput
-                        id="fieldSsEndDate"
+                        id="officeSsEndDate"
                         name="dateTo"
                         type="date"
                         label="End Date"
@@ -365,7 +369,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                       <LoadingSpinner size="lg" />
                     ) : (
                       <LabelInput
-                        id="fieldGroupName"
+                        id="officeGroupName"
                         name="groupName"
                         type="text"
                         label=""
@@ -394,7 +398,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                 {/* Schedule */}
                 <section className="flex flex-col justify-between w-full h-full gap-2 px-5 py-4 rounded-xl">
                   <div className="flex flex-col justify-between w-full h-full">
-                    <p className="flex items-center justify-start w-full font-light">Field Schedule</p>
+                    <p className="flex items-center justify-start w-full font-light">Office Schedule</p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="flex flex-col w-full gap-2">
                       {swrScheduleIsLoading ? (
@@ -470,7 +474,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                   : 'bg-blue-500 hover:bg-blue-400'
               } rounded text-sm disabled:cursor-not-allowed `}
               type="submit"
-              form="addFieldSsForm"
+              form="addOfficeSsForm"
               disabled={isEmpty(currentScheduleSheet.employees) || isEmpty(getValues('scheduleId')) ? true : false}
             >
               Submit
@@ -482,4 +486,4 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
   );
 };
 
-export default AddFieldSsModal;
+export default AddOfficeSsModal;
