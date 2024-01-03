@@ -1,13 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { useOfficerOfTheDayStore } from 'apps/employee-monitoring/src/store/officer-of-the-day.store';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
+import {
+  FormPostOfficerOfTheDay,
+  OfficerOfTheDay,
+} from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
 import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { isEmpty } from 'lodash';
 
 type AddModalProps = {
   modalState: boolean;
@@ -15,7 +19,7 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
-const OfficerOfTheDaySchema = yup.object().shape({
+const yupSchema = yup.object().shape({
   //   id: yup.string().notRequired().trim(),
   name: yup.string().nullable(false).required().label('Name'),
   assignment: yup.string().nullable(false).required().label('Assignment'),
@@ -24,55 +28,53 @@ const OfficerOfTheDaySchema = yup.object().shape({
 });
 
 const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
-  const { IsLoading, PostOfficerOfTheDay, PostOfficerOfTheDayFail, PostOfficerOfTheDaySuccess } =
-    useOfficerOfTheDayStore((state) => ({
-      OfficerOfTheDayPostResponse: state.officerOfTheDay.postResponse,
-      IsLoading: state.loading.loadingOfficerOfTheDay,
-      Error: state.error.errorOfficerOfTheDay,
+  const {
+    PostOfficerOfTheDay,
+    SetPostOfficerOfTheDay,
 
-      PostOfficerOfTheDay: state.postOfficerOfTheDay,
-      PostOfficerOfTheDaySuccess: state.postOfficerOfTheDaySuccess,
-      PostOfficerOfTheDayFail: state.postOfficerOfTheDayFail,
-    }));
+    SetErrorOfficerOfTheDay,
+    EmptyResponse,
+  } = useOfficerOfTheDayStore((state) => ({
+    PostOfficerOfTheDay: state.postOfficerOfTheDay,
+    SetPostOfficerOfTheDay: state.setPostOfficerOfTheDay,
+
+    SetErrorOfficerOfTheDay: state.setErrorOfficerOfTheDay,
+    EmptyResponse: state.emptyResponse,
+  }));
 
   const {
     handleSubmit,
     reset,
     register,
-    formState: { errors, isValid },
-  } = useForm<OfficerOfTheDay>({
-    resolver: yupResolver(OfficerOfTheDaySchema),
+    formState: { errors, isSubmitting: postFormLoading },
+  } = useForm<FormPostOfficerOfTheDay>({
     mode: 'onChange',
-    reValidateMode: 'onSubmit',
+    // reValidateMode: 'onSubmit',
     defaultValues: {
       name: '',
       assignment: '',
       dateFrom: '',
       dateTo: '',
+      app: 'ems',
     },
+    resolver: yupResolver(yupSchema),
   });
 
-  // reset all values
-  const resetToDefaultValues = () => {
-    reset();
+  const onSubmit: SubmitHandler<FormPostOfficerOfTheDay> = (data: FormPostOfficerOfTheDay) => {
+    EmptyResponse();
+
+    handlePostResult(data);
   };
 
-  const onSubmit: SubmitHandler<OfficerOfTheDay> = (officerOfTheDay: OfficerOfTheDay) => {
-    // set loading to true
-    PostOfficerOfTheDay();
-
-    handlePostResult(officerOfTheDay);
-  };
-
-  const handlePostResult = async (data: OfficerOfTheDay) => {
+  const handlePostResult = async (data: FormPostOfficerOfTheDay) => {
     const { error, result } = await postEmpMonitoring('/officer-of-the-day', data);
 
     if (error) {
       // set value for error message
-      PostOfficerOfTheDayFail(result);
+      SetErrorOfficerOfTheDay(result);
     } else {
       // set value from returned response
-      PostOfficerOfTheDaySuccess(result);
+      SetPostOfficerOfTheDay(result);
       //   mutate('/holidays');
 
       reset();
@@ -80,12 +82,19 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
     }
   };
 
+  // If modal is open, reset input values
   useEffect(() => {
-    if (modalState === true) resetToDefaultValues();
+    if (!modalState) {
+      reset();
+    }
   }, [modalState]);
 
   return (
     <>
+      {/* Notification */}
+      {!isEmpty(PostOfficerOfTheDay) ? (
+        <ToastNotification toastType="success" notifMessage="Officer of the day added successfully" />
+      ) : null}
       <Modal open={modalState} setOpen={setModalState} steady size="md">
         <Modal.Header>
           <div className="flex justify-between w-full">
@@ -102,19 +111,17 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
         </Modal.Header>
 
         <Modal.Body>
-          {/* Notification */}
-          {IsLoading ? (
-            <div className="fixed z-50 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-              <AlertNotification
-                logo={<LoadingSpinner size="xs" />}
-                alertType="info"
-                notifMessage="Submitting request"
-                dismissible={false}
-              />
-            </div>
+          {/* Notifications */}
+          {postFormLoading ? (
+            <AlertNotification
+              logo={<LoadingSpinner size="xs" />}
+              alertType="info"
+              notifMessage="Submitting request"
+              dismissible={true}
+            />
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="addofficerofthedaymodal">
+          <form onSubmit={handleSubmit(onSubmit)} id="addOfficerOfTheDay">
             <div className="flex flex-col w-full gap-5">
               {/** name */}
               <LabelInput
@@ -123,7 +130,6 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
                 controller={{ ...register('name') }}
                 isError={errors.name ? true : false}
                 errorMessage={errors.name?.message}
-                disabled={IsLoading ? true : false}
               />
 
               <LabelInput
@@ -132,7 +138,6 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
                 controller={{ ...register('assignment') }}
                 isError={errors.assignment ? true : false}
                 errorMessage={errors.assignment?.message}
-                disabled={IsLoading ? true : false}
               />
 
               {/** Date From */}
@@ -143,7 +148,6 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
                 controller={{ ...register('dateFrom') }}
                 isError={errors.dateFrom ? true : false}
                 errorMessage={errors.dateFrom?.message}
-                disabled={IsLoading ? true : false}
               />
 
               {/** Date To */}
@@ -154,7 +158,6 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
                 controller={{ ...register('dateTo') }}
                 isError={errors.dateTo ? true : false}
                 errorMessage={errors.dateTo?.message}
-                disabled={IsLoading ? true : false}
               />
             </div>
           </form>
@@ -165,9 +168,9 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
             <Button
               variant="info"
               type="submit"
-              form="addofficerofthedaymodal"
+              form="addOfficerOfTheDay"
               className="disabled:cursor-not-allowed"
-              disabled={IsLoading ? true : !isValid ? true : false}
+              disabled={postFormLoading ? true : false}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>

@@ -6,4 +6,6 @@ export type OfficerOfTheDay = {
   dateTo: string;
 };
 
+export type FormPostOfficerOfTheDay = Omit<OfficerOfTheDay, '_id'> & { app: string };
+
 export type OfficerOfTheDayId = Pick<OfficerOfTheDay, '_id'>;
