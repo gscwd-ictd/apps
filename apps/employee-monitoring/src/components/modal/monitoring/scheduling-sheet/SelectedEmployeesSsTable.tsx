@@ -62,7 +62,7 @@ const SelectedEmployeesSsTable = () => {
     error: swrUnassignedEmployeesError,
   } = useSWR(
     !isEmpty(currentScheduleSheet.customGroupId)
-      ? `/custom-groups/${currentScheduleSheet.customGroupId}/unassigned/dropdown`
+      ? `/custom-groups/${currentScheduleSheet.customGroupId}/unassigned/dropdown/job-order-cos`
       : null,
     fetcherEMS,
     {

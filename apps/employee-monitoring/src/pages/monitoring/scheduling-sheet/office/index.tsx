@@ -149,16 +149,6 @@ export default function Index() {
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('customGroupName', {
-      enableSorting: false,
-      header: () => 'Group Name',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('scheduleName', {
-      enableSorting: false,
-      header: () => 'Schedule Name',
-      cell: (info) => info.getValue(),
-    }),
     columnHelper.group({
       id: 'effectivityDate',
       header: () => <span className="w-full text-center underline">Effectivity Date</span>,
@@ -175,6 +165,16 @@ export default function Index() {
           cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
         }),
       ],
+    }),
+    columnHelper.accessor('customGroupName', {
+      enableSorting: false,
+      header: () => 'Group Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('scheduleName', {
+      enableSorting: false,
+      header: () => 'Schedule Name',
+      cell: (info) => info.getValue(),
     }),
     columnHelper.display({
       id: 'actions',
