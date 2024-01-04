@@ -7,7 +7,9 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 // store and type
 // import { useOfficerOfTheDayStore } from 'apps/employee-monitoring/src/store/officer-of-the-day.store';
-import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
+// import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
+import { useSystemLogsStore } from 'apps/employee-monitoring/src/store/system-logs.store';
+import { SystemLog } from 'apps/employee-monitoring/src/utils/types/system-logs.type';
 
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
@@ -16,16 +18,15 @@ import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 
 // modals
-import AddOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/AddOfficerOfTheDayModal';
-import DeleteOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/DeleteOfficerOfTheDayModal';
+// import AddOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/AddOfficerOfTheDayModal';
+// import DeleteOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/DeleteOfficerOfTheDayModal';
+import ViewSystemLogModal from 'apps/employee-monitoring/src/components/modal/settings/system-logs/ViewSystemLogModal';
 
 // sample static data
-const OfficersOfTheDay: OfficerOfTheDay[] = [
-  { _id: '2001', name: 'Jeric', assignment: 'Secret', dateFrom: '2000-05-13', dateTo: '2000-05-13' },
-  { _id: '2002', name: 'Lloyd', assignment: 'Secret', dateFrom: '2001-05-13', dateTo: '2001-05-13' },
+const SystemLogs: SystemLog[] = [
+  { _id: '2001', userName: 'Jeric', dateLogged: '2000-05-13', timeLogged: '12:00 PM', method: 'GET', route: '/api/logs', body: {} },
+  { _id: '2002', userName: 'Lloyd', dateLogged: '2001-05-13', timeLogged: '12:00 PM', method: '', route: '', body: {} },
 ];
-
-// use /maintenance/schedules/pumping-station as example for adding and deleting OD
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -33,33 +34,36 @@ const Index = () => {
 
   // fetch data for list of officer of the day
   const {
-    data: swrOfficerOfTheDay,
+    data: swrSystemLogs,
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateOfficersOfTheDay,
-  } = useSWR('/officers-of-the-day', fetcherEMS, {
+  } = useSWR('/system-logs', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
 
   // Add modal function
-  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
-  const openAddActionModal = () => setAddModalIsOpen(true);
-  const closeAddActionModal = () => setAddModalIsOpen(false);
-
-  // Delete modal function
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
-
-  // open delete action
-  const openDeleteActionModal = (rowData: OfficerOfTheDay) => {
-    setDeleteModalIsOpen(true);
+  const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
+  const openViewActionModal = (rowData: SystemLog) => {
+    setViewModalIsOpen(true);
     setCurrentRowData(rowData);
   };
+  const closeViewActionModal = () => setViewModalIsOpen(false);
+
+  // Delete modal function
+  // const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+
+  // open delete action
+  // const openDeleteActionModal = (rowData: SystemLog) => {
+  //   setDeleteModalIsOpen(true);
+  //   setCurrentRowData(rowData);
+  // };
 
   // close delete action
-  const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
+  // const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
+  const [currentRowData, setCurrentRowData] = useState<SystemLog>({} as SystemLog);
 
   // transform date
   const transformDate = (date: string | Date | null) => {
@@ -68,53 +72,50 @@ const Index = () => {
   };
 
   // Render row actions in the table component
-  const renderRowActions = (rowData: OfficerOfTheDay) => {
+  const renderRowActions = (rowData: SystemLog) => {
     return (
       <div className="text-center">
         <button
           type="button"
-          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          onClick={() => openDeleteActionModal(rowData)}
+          className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+          onClick={() => openViewActionModal(rowData)}
         >
-          <i className="bx bx-trash-alt"></i>
+          <i className="bx bx-show"></i>
         </button>
       </div>
     );
   };
 
   // Define table columns
-  const columnHelper = createColumnHelper<OfficerOfTheDay>();
+  const columnHelper = createColumnHelper<SystemLog>();
   const columns = [
     columnHelper.accessor('_id', {
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('name', {
+    columnHelper.accessor('userName', {
       enableSorting: true,
       header: () => 'Name',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('assignment', {
+    columnHelper.accessor('dateLogged', {
       enableSorting: true,
-      header: () => 'Assignment',
-      cell: (info) => info.getValue(),
+      header: () => 'Date and Time Logged',
+      cell: (info: any) => {
+        const dateLogged = info.row.original.dateLogged;
+        const timeLogged = info.row.original.timeLogged;
+        return (
+          <>
+            {transformDate(dateLogged)} {timeLogged}
+          </>
+        );
+      },
     }),
-    columnHelper.group({
-      id: 'effectivityDate',
-      header: () => <span className="w-full text-center underline">Effectivity Date</span>,
 
-      columns: [
-        columnHelper.accessor('dateFrom', {
-          enableSorting: true,
-          header: () => <span className="w-full text-center">Date From</span>,
-          cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
-        }),
-        columnHelper.accessor('dateTo', {
-          enableSorting: true,
-          header: () => <span className="w-full text-center ">Date To</span>,
-          cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
-        }),
-      ],
-    }),
+    // columnHelper.accessor('dateLogged', {
+    //   enableSorting: true,
+    //   header: () => <span className="w-full text-center">Date Logged</span>,
+    //   cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
+    // }),
     columnHelper.display({
       id: 'actions',
       header: () => <span className="w-full text-center ">Actions</span>,
@@ -127,7 +128,7 @@ const Index = () => {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: OfficersOfTheDay,
+    data: SystemLogs,
     columnVisibility: { _id: false },
   });
 
@@ -142,11 +143,7 @@ const Index = () => {
   return (
     <>
       <div className="w-full">
-        <BreadCrumbs title="Officer of the Day" />
-        {/* Error Notifications */}
-
-        {/* Success Notifications */}
-
+        <BreadCrumbs title="System Logs" />
         <Can I="access" this="Officer_of_the_day">
           <div className="mx-5">
             <Card>
@@ -154,33 +151,18 @@ const Index = () => {
                 <LoadingSpinner size="lg" />
               ) : (
                 <div className="flex flex-row flex-wrap">
-                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                    <button
-                      type="button"
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                      onClick={openAddActionModal}
-                    >
-                      <i className="bx bxs-plus-square"></i>&nbsp; Add Officer Of The Day
-                    </button>
-                  </div>
+                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper"></div>
                   <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
               )}
             </Card>
           </div>
 
-          {/* Add modal */}
-          <AddOfficerOfTheDayModal
-            modalState={addModalIsOpen}
-            setModalState={setAddModalIsOpen}
-            closeModalAction={closeAddActionModal}
-          />
-
-          {/* Delete modal */}
-          <DeleteOfficerOfTheDayModal
-            modalState={deleteModalIsOpen}
-            setModalState={setDeleteModalIsOpen}
-            closeModalAction={closeDeleteActionModal}
+          {/* View modal */}
+          <ViewSystemLogModal
+            modalState={viewModalIsOpen}
+            setModalState={setViewModalIsOpen}
+            closeModalAction={closeViewActionModal}
             rowData={currentRowData}
           />
         </Can>

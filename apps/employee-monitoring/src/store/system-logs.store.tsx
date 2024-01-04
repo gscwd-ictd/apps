@@ -1,57 +1,43 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { Module, ModuleId } from '../utils/types/module.type';
+import { SystemLog, SystemLogId } from '../utils/types/system-logs.type';
 
-export type ModulesState = {
-  getModules: Array<Module>;
-  setGetModules: (getModules: Array<Module>) => void;
+// comment
 
-  errorModules: string;
-  setErrorModules: (errorModules: string) => void;
+export type SystemLogsState = {
+  getSystemLogs: Array<SystemLog>;
+  setGetSystemLogs: (getSystemLogs: Array<SystemLog>) => void;
 
-  postModule: Module;
-  setPostModule: (postModule: Module) => void;
+  getSystemLogDetails: SystemLogId;
+  setGetSystemLogDetails: (getSystemLogDetails: SystemLogId) => void;
 
-  updateModule: Module;
-  setUpdateModule: (updateModule: Module) => void;
+  errorSystemLogs: string;
+  setErrorSystemLogs: (errorSystemLogs: string) => void;
 
-  deleteModule: ModuleId;
-  setDeleteModule: (deleteModule: ModuleId) => void;
-
-  errorModule: string;
-  setErrorModule: (errorModule: string) => void;
+  errorSystemLog: string;
+  setErrorSystemLog: (errorSystemLog: string) => void;
 
   emptyResponse: () => void;
 };
 
-export const useModulesStore = create<ModulesState>()(
+export const useSystemLogsStore = create<SystemLogsState>()(
   devtools((set) => ({
-    getModules: [],
-    setGetModules: (getModules) => set({ getModules }),
+    getSystemLogs: [],
+    setGetSystemLogs: (getSystemLogs) => set({ getSystemLogs }),
 
-    errorModules: '',
-    setErrorModules: (errorModules) => set({ errorModules }),
+    getSystemLogDetails: {} as SystemLogId,
+    setGetSystemLogDetails: (getSystemLogDetails) => set({ getSystemLogDetails }),
 
-    postModule: {} as Module,
-    setPostModule: (postModule) => set({ postModule }),
+    errorSystemLogs: '',
+    setErrorSystemLogs: (errorSystemLogs) => set({ errorSystemLogs }),
 
-    updateModule: {} as Module,
-    setUpdateModule: (updateModule) => set({ updateModule }),
-
-    deleteModule: {} as ModuleId,
-    setDeleteModule: (deleteModule) => set({ deleteModule }),
-
-    errorModule: '',
-    setErrorModule: (errorModule) => set({ errorModule }),
+    errorSystemLog: '',
+    setErrorSystemLog: (errorSystemLog) => set({ errorSystemLog }),
 
     emptyResponse: () =>
       set({
-        postModule: {} as Module,
-        updateModule: {} as Module,
-        deleteModule: {} as ModuleId,
-
-        errorModules: '',
-        errorModule: '',
+        errorSystemLogs: '',
+        errorSystemLog: '',
       }),
   }))
 );
