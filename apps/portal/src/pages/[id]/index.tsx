@@ -24,10 +24,12 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
 import { useDtrStore } from '../../store/dtr.store';
-import { HiCalendar, HiClock, HiDocument } from 'react-icons/hi';
+import { HiCalendar, HiCash, HiClock, HiDocument } from 'react-icons/hi';
 import { useLeaveLedgerStore } from '../../store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
+import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 
 export type NavDetails = {
   fullName: string;
@@ -38,15 +40,22 @@ export type NavDetails = {
 export default function Dashboard({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const setAllowedModules = useAllowedModulesStore((state) => state.setAllowedModules);
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
-
-  async function hydration() {
-    if (schedule && userDetails) {
-      const modules = await setModules(userDetails, schedule);
-      setAllowedModules(modules);
-    }
-  }
+  const employee = useEmployeeStore((state) => state.employeeDetails);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
+  const sgAmount = employee.employmentDetails.salaryGradeAmount;
+  const sgIncrement = employee.employmentDetails.salaryGrade;
+
+  const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
+  const [leaveCredits, setLeaveCredits] = useState<number>(0);
+  const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
+
+  const { leaveCalculatorModalIsOpen, setLeaveCalculatorModalIsOpen } = useLeaveMonetizationCalculatorStore(
+    (state) => ({
+      leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
+      setLeaveCalculatorModalIsOpen: state.setLeaveCalculatorModalIsOpen,
+    })
+  );
 
   const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
     useTimeLogStore((state) => ({
@@ -79,6 +88,13 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
   const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
   const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
+
+  async function hydration() {
+    if (schedule && userDetails) {
+      const modules = await setModules(userDetails, schedule);
+      setAllowedModules(modules);
+    }
+  }
 
   // get the latest balance by last index value
   const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
@@ -196,6 +212,27 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   const { windowHeight } = UseWindowDimensions();
 
+  //add all leave credits
+  useEffect(() => {
+    setLeaveCredits(Number(vacationLeaveBalance) + Number(forcedLeaveBalance) + Number(sickLeaveBalance));
+  }, [vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance]);
+
+  //compute max leave credits
+  useEffect(() => {
+    const totalValue = sgAmount * leaveCredits * leaveCreditMultiplier;
+    setEstimatedAmount(totalValue);
+  }, [leaveCredits]);
+
+  const closeLeaveCalculator = async () => {
+    setLeaveCalculatorModalIsOpen(false);
+  };
+
+  const openLeaveCalculator = async () => {
+    if (vacationLeaveBalance && forcedLeaveBalance && sickLeaveBalance && sgAmount && sgIncrement) {
+      setLeaveCalculatorModalIsOpen(true);
+    }
+  };
+
   return (
     <>
       {/* Leave Ledger Load Failed */}
@@ -217,6 +254,18 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
         <title>{employeeName}</title>
       </Head>
       <SideNav employeeDetails={userDetails} />
+
+      <LeaveCreditMonetizationCalculatorModal
+        modalState={leaveCalculatorModalIsOpen}
+        setModalState={setLeaveCalculatorModalIsOpen}
+        closeModalAction={closeLeaveCalculator}
+        vacationLeave={vacationLeaveBalance}
+        forcedLeave={forcedLeaveBalance}
+        sickLeave={sickLeaveBalance}
+        sgAmount={employee.employmentDetails.salaryGradeAmount}
+        sgIncrement={employee.employmentDetails.salaryGrade}
+        estimatedMaxAmount={estimatedAmount}
+      />
 
       <MainContainer>
         <>
@@ -302,6 +351,21 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         height={windowHeight > 820 ? 'h-32' : 'h-28'}
                         svg={<HiCalendar className="w-7 h-7 text-pink-500" />}
                         svgBgColor={'bg-pink-100'}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
+                    <div className="w-full" onClick={openLeaveCalculator}>
+                      <StatsCard
+                        name={'Max Leave Credit Monetization'}
+                        count={estimatedAmount}
+                        isLoading={swrLeaveLedgerLoading}
+                        width={'w-auto'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-32'}
+                        svg={<HiCash className="w-7 h-7 text-green-500" />}
+                        svgBgColor={'bg-green-100'}
+                        canHover={true}
                       />
                     </div>
                   </div>

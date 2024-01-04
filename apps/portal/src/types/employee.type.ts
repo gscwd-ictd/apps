@@ -26,6 +26,8 @@ export type Assignment = {
 };
 
 export type EmploymentDetails = {
+  salaryGrade: string;
+  salaryGradeAmount: number;
   userId: string;
   companyId: string | null;
   assignment: Assignment;
@@ -85,6 +87,8 @@ export const employeeDummy: EmployeeDetails = {
     photoUrl: '/profile.jpg',
   },
   employmentDetails: {
+    salaryGrade: '',
+    salaryGradeAmount: 0,
     overtimeImmediateSupervisorId: '',
     userId: '62fef63c-b26f-11ed-a79b-000c29f95a80',
     companyId: '2020-007',

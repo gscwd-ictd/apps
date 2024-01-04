@@ -12,6 +12,9 @@ interface Props {
   height: string;
   svg: any;
   svgBgColor: string;
+  canHover?: boolean;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  onClick?: Function;
 }
 export const StatsCard: React.FC<Props> = ({
   count = 0,
@@ -21,9 +24,15 @@ export const StatsCard: React.FC<Props> = ({
   height = 'h-full',
   svg,
   svgBgColor = 'bg-white',
+  canHover = false,
+  onClick = null,
 }) => {
   return (
-    <div className={`${width} ${height} shadow bg-white flex flex-col justify-center p-4 gap-2 rounded-md`}>
+    <div
+      className={`${width} ${height} shadow bg-white flex flex-col justify-center p-4 gap-2 rounded-md transition-all ease-in-out ${
+        canHover ? 'hover:scale-[102%] hover:shadow-xl hover:shadow-slate-200 cursor-pointer' : ''
+      }`}
+    >
       {isLoading ? (
         <>
           <Skeleton count={3} />
@@ -31,10 +40,10 @@ export const StatsCard: React.FC<Props> = ({
       ) : (
         <>
           <div className="flex justify-between">
-            <label className="text-3xl xl:text-5xl text-gray-700">{count ? count : '0'}</label>
+            <div className="text-3xl xl:text-5xl text-gray-700">{count ? count.toLocaleString() : '0'}</div>
             <div className={` ${svgBgColor} flex justify-center items-center rounded-full w-12 h-12`}>{svg}</div>
           </div>
-          <label className="text-xs text-stone-500">{name}</label>
+          <div className="text-xs text-stone-500">{name}</div>
         </>
       )}
       {name === 'Lates Count' || name == 'Pass Slip Count' ? (

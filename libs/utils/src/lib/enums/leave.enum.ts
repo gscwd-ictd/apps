@@ -31,4 +31,6 @@ export enum LeaveName {
   SPECIAL_EMERGENCY_CALAMITY = 'Special Emergency (Calamity) Leave',
   ADOPTION = 'Adoption Leave',
   OTHERS = 'Others',
+  MONETIZATION = 'Monetization',
+  LEAVE_WITHOUT_PAY = 'Leave Without Pay',
 }
