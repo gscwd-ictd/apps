@@ -16,10 +16,10 @@ const listOfEmployees: Array<SelectOption> = [
   { label: 'Ricardo Vicente Narvaiza', value: '0' },
   { label: 'Mikhail Sebua', value: '1' },
   { label: 'Jay Nosotros', value: '2' },
-  // { label: 'Eric Sison', value: '3' },
-  // { label: 'Allyn Joseph Cubero', value: '4' },
-  // { label: 'John Henry Alfeche', value: '5' },
-  // { label: 'Phyll Patrick Fragata', value: '6' },
+  { label: 'Eric Sison', value: '3' },
+  { label: 'Allyn Joseph Cubero', value: '4' },
+  { label: 'John Henry Alfeche', value: '5' },
+  { label: 'Phyll Patrick Fragata', value: '6' },
   // { label: 'Deo Del Rosario', value: '7' },
   // { label: 'Cara Jade Reyes', value: '8' },
   // { label: 'Rizza Baugbog', value: '9' },
@@ -68,125 +68,43 @@ export const TrainingNominationModal = ({
   const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
 
-  const setParticipant = async (employee: Array<SelectOption>) => {
-    setSelectedEmployees(employee);
-
-    // add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
-    for (let i = 0; i < listOfEmployees.length; i++) {
-      for (let j = 0; j < combinedNominatedEmployees.length; j++) {
-        //check if combinedEmployees has specific employee in its array
-        if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
-          const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-          setEmployeePool(
-            uniqueNames.sort(function (a, b) {
-              return a.label.localeCompare(b.label);
-            })
-          );
-        } else {
-          //do nothing
-        }
-      }
-    }
-  };
-
-  const setAuxParticipant = async (employee: Array<SelectOption>) => {
-    setSelectedAuxiliaryEmployees(employee);
-
-    //add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
-    for (let i = 0; i < listOfEmployees.length; i++) {
-      for (let j = 0; j < combinedNominatedEmployees.length; j++) {
-        //check if combinedEmployees has specific employee in its array
-        if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
-          const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-          setEmployeePool(
-            uniqueNames.sort(function (a, b) {
-              return a.label.localeCompare(b.label);
-            })
-          );
-        } else {
-          //do nothing
-        }
-      }
-    }
-  };
-
-  const CheckForDuplicate = () => {
-    console.log(selectedEmployees);
-    console.log(selectedAuxiliaryEmployees);
-    for (let i = 0; i < selectedEmployees.length; i++) {
-      for (let j = 0; j < selectedAuxiliaryEmployees.length; j++) {
-        if (selectedEmployees[i].value === selectedAuxiliaryEmployees[j].value) {
-          setIsDuplicatedNominee(true);
-        } else {
-          setIsDuplicatedNominee(false);
-        }
-      }
-    }
-  };
-
   useEffect(() => {
     // setEmployeePool(listOfEmployees);
-    // console.log(selectedEmployees, 'selected');
-    // console.log(selectedAuxiliaryEmployees, 'aux');
     setNominatedEmployees(selectedEmployees); //store
     setAuxiliaryEmployees(selectedAuxiliaryEmployees); //store
-    const uniqueNames = Array.from(new Set([...selectedEmployees, ...selectedAuxiliaryEmployees]));
-    setCombinedNominatedEmployees(
-      uniqueNames.sort(function (a, b) {
-        return a.label.localeCompare(b.label);
-      })
-    );
-
-    // setCombinedNominatedEmployees([...selectedEmployees, ...selectedAuxiliaryEmployees]);
   }, [selectedEmployees, selectedAuxiliaryEmployees]);
 
   useEffect(() => {
-    console.log(combinedNominatedEmployees, 'combined');
-    //remove nominated employees from employee pool
-    if (combinedNominatedEmployees.length >= 1) {
-      for (let i = 0; i < combinedNominatedEmployees.length; i++) {
-        setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[i].value));
-      }
-      setTempEmployeePool(employeePool);
-    }
-  }, [combinedNominatedEmployees]);
+    const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
+    setCombinedNominatedEmployees(uniqueNames);
+  }, [nominatedEmployees, auxiliaryEmployees]);
 
   useEffect(() => {
-    console.log(employeePool, 'pool');
-    // for (let i = 0; i < listOfEmployees.length; i++) {
-    //   for (let j = 0; j < combinedNominatedEmployees.length; j++) {
-    //     //check if combinedEmployees has specific employee in its array
-    //     if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
-    //       const uniqueNames = Array.from(new Set([...tempEmployeePool, listOfEmployees[i]]));
-    //       setEmployeePool(
-    //         uniqueNames.sort(function (a, b) {
-    //           return a.label.localeCompare(b.label);
-    //         })
-    //       );
-    //     } else {
-    //       //do nothing
-    //     }
-    //   }
-    // }
-  }, [tempEmployeePool]);
+    console.log(combinedNominatedEmployees, 'combined');
 
-  // useEffect(() => {
-  //   for (let i = 0; i < listOfEmployees.length; i++) {
-  //     for (let j = 0; j < combinedNominatedEmployees.length; j++) {
-  //       //check if combinedEmployees has specific employee in its array
-  //       if (listOfEmployees[i].value === combinedNominatedEmployees[j].value) {
-  //         const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-  //         setEmployeePool(
-  //           uniqueNames.sort(function (a, b) {
-  //             return a.label.localeCompare(b.label);
-  //           })
-  //         );
-  //       } else {
-  //         //do nothing
-  //       }
-  //     }
-  //   }
-  // }, [employeePool]);
+    //remove employee from pool
+    for (let i = 0; i < employeePool.length; i++) {
+      for (let a = 0; a < combinedNominatedEmployees.length; a++) {
+        if (employeePool[i].value === combinedNominatedEmployees[a].value) {
+          console.log(combinedNominatedEmployees[a].value);
+          setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+        } else {
+          //do nothing
+        }
+      }
+    }
+    //add back employee
+    for (let i = 0; i < listOfEmployees.length; i++) {
+      if (!employeePool.includes(listOfEmployees[i]) && !combinedNominatedEmployees.includes(listOfEmployees[i])) {
+        const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+        setEmployeePool(
+          uniqueNames.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          })
+        );
+      }
+    }
+  }, [combinedNominatedEmployees]);
 
   useEffect(() => {
     setEmployeePool(
