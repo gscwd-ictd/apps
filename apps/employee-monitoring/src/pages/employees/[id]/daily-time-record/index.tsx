@@ -16,6 +16,8 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { EmployeeDtrTable } from 'apps/employee-monitoring/src/components/tables/EmployeeDtrTable';
 import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
+import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
 
 export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
@@ -74,73 +76,88 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           <DailyTimeRecordPdfModal printModalIsOpen={printModalIsOpen} toggle={toggle} employeeData={employeeData} />
         ) : null}
 
-        <div className="flex flex-col w-full gap-6 px-5">
-          {/* DTR CARD */}
-          <Card>
-            {/* HEADER */}
-            <div className="grid xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-              <section className="flex items-center gap-4 px-2">
-                {employeeData.photoUrl ? (
-                  <div className="flex flex-wrap justify-center">
-                    <div className="w-[6rem]">
-                      <img
-                        src={employeeData.photoUrl}
-                        alt="user-circle"
-                        className="h-auto max-w-full align-middle border-none rounded-full shadow"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
-                )}
-
-                <div className="flex flex-col">
-                  <div className="text-2xl font-semibold text-gray-600">
-                    {employeeData ? employeeData.fullName : null}
-                  </div>
-                  <div className="text-xl text-gray-500">{employeeData ? employeeData.companyId : null}</div>
-                  <div className="text-xl text-gray-500">
-                    {employeeData ? employeeData.assignment.positionTitle : null}
-                  </div>
-                </div>
-              </section>
-              <section className="flex justify-end">
-                <div className="px-5 py-2 bg-gray-200 rounded">
-                  <span className="text-sm font-medium">Legend</span>
-                  <div className="grid grid-rows-2">
-                    <div className="grid items-center grid-cols-2 gap-1">
-                      <span className="text-xs font-light">Regular Holiday -</span>
-                      <i className="text-2xl text-red-400 bx bxs-checkbox"></i>
-                    </div>
-                    <div className="grid items-center grid-cols-2 gap-1">
-                      <span className="text-xs font-light">Special Holiday -</span>
-                      <i className="text-2xl text-blue-400 bx bxs-checkbox"></i>
-                    </div>
-                    <div className="grid items-center grid-cols-2 gap-1">
-                      <span className="text-xs font-light">Late/Undertime -</span>
-                      <div className="">
-                        <span className="max-w-[5rem] px-2 py-0.5  text-xs font-light text-center text-black rounded bg-yellow-400">
-                          Time Log
-                        </span>
+        <Can I="access" this="Daily_time_record">
+          <div className="flex flex-col w-full gap-6 px-5">
+            {/* DTR CARD */}
+            <Card>
+              {/* HEADER */}
+              <div className="grid xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+                {/* Employee details */}
+                <section className="flex items-center gap-4 px-2">
+                  {employeeData.photoUrl ? (
+                    <div className="flex flex-wrap justify-center">
+                      <div className="w-[6rem]">
+                        <img
+                          src={employeeData.photoUrl}
+                          alt="user-circle"
+                          className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                        />
                       </div>
                     </div>
+                  ) : (
+                    <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+                  )}
+
+                  <div className="flex flex-col">
+                    <div className="text-2xl font-semibold text-gray-600">
+                      {employeeData ? employeeData.fullName : null}
+                    </div>
+                    <div className="text-xl text-gray-500">{employeeData ? employeeData.companyId : null}</div>
+                    <div className="text-xl text-gray-500">
+                      {employeeData ? employeeData.assignment.positionTitle : null}
+                    </div>
                   </div>
+                </section>
+
+                {/* Legend */}
+                <Can I="access" this="Daily_time_record_view">
+                  <section className="flex justify-end">
+                    <div className="px-5 py-2 bg-gray-200 rounded">
+                      <span className="text-sm font-medium">Legend</span>
+                      <div className="grid grid-rows-2">
+                        <div className="grid items-center grid-cols-2 gap-1">
+                          <span className="text-xs font-light">Regular Holiday -</span>
+                          <i className="text-2xl text-red-400 bx bxs-checkbox"></i>
+                        </div>
+                        <div className="grid items-center grid-cols-2 gap-1">
+                          <span className="text-xs font-light">Special Holiday -</span>
+                          <i className="text-2xl text-blue-400 bx bxs-checkbox"></i>
+                        </div>
+                        <div className="grid items-center grid-cols-2 gap-1">
+                          <span className="text-xs font-light">Late/Undertime -</span>
+                          <div className="">
+                            <span className="max-w-[5rem] px-2 py-0.5  text-xs font-light text-center text-black rounded bg-yellow-400">
+                              Time Log
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </Can>
+              </div>
+
+              <Can I="access" this="Daily_time_record_view">
+                <div className="flex justify-end gap-2">
+                  <DtrDateSelect />
+                  <PrintButton onClick={toggle} />
                 </div>
-              </section>
-            </div>
 
-            <div className="flex justify-end gap-2">
-              <DtrDateSelect />
-              <PrintButton onClick={toggle} />
-            </div>
+                {/* EMPLOYEE DTR TABLE */}
+                <EmployeeDtrTable employeeData={employeeData} />
+              </Can>
+            </Card>
 
-            {/* EMPLOYEE DTR TABLE */}
-            <EmployeeDtrTable employeeData={employeeData} />
-          </Card>
+            {/* SCHEDULE CARD */}
+            <Can I="access" this="Employee_schedules_view">
+              <CardEmployeeSchedules employeeData={employeeData} />
+            </Can>
+          </div>
+        </Can>
 
-          {/* SCHEDULE CARD */}
-          <CardEmployeeSchedules employeeData={employeeData} />
-        </div>
+        <Can not I="access" this="Daily_time_record">
+          <Navigate to="/page-404" />
+        </Can>
       </div>
     </>
   );

@@ -7,15 +7,14 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import SelectFieldGroupSsModal from '../SelectGroupSsModal';
-import SelectStationSchedSsModal from './SelectStationSchedSsModal';
+import SelectGroupSsModal from '../SelectGroupSsModal';
+import SelectOfficeSchedSsModal from './SelectOfficeSchedSsModal';
 import SelectedEmployeesSsTable from '../SelectedEmployeesSsTable';
 import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-import SelectGroupSsModal from '../SelectGroupSsModal';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
-type AddStationSsModalProps = {
+type AddOfficeSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
@@ -25,7 +24,7 @@ type ScheduleSheetForm = ScheduleSheet & {
   employees: Array<EmployeeAsOptionWithRestDays>;
 };
 
-const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
+const AddOfficeSsModal: FunctionComponent<AddOfficeSsModalProps> = ({
   modalState,
   closeModalAction,
   setModalState,
@@ -145,7 +144,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
     getCustomGroupsFail: state.getCustomGroupsFail,
   }));
 
-  // fetch all schedules for pumping station
+  // get all schedules for Office
   const {
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
@@ -195,7 +194,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
       // post scheduling sheet success
       postScheduleSheetSuccess(result);
 
-      // close the modal since it is a success
+      // close the modal since the scheduling sheet is a success
       onCloseScheduleSheet();
     } else if (error) {
       // post scheduling sheet fail
@@ -302,22 +301,22 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="px-5 text-xl font-medium">Add Station Scheduling Sheet</h1>
+          <h1 className="px-5 text-xl font-medium">Add Office Scheduling Sheet</h1>
         </Modal.Header>
         <Modal.Body>
-          <div className="sm:px-0 md:px-0 lg:px-4">
+          <div className=" xs:px-0 sm:px-0 md:px-0 lg:px-4">
             <SelectGroupSsModal
               modalState={selectGroupModalIsOpen}
               setModalState={setSelectGroupModalIsOpen}
               closeModalAction={closeSelectGroupModal}
             />
 
-            <SelectStationSchedSsModal
+            <SelectOfficeSchedSsModal
               modalState={selectScheduleModalIsOpen}
               setModalState={setSelectScheduleModalIsOpen}
               closeModalAction={closeSelectScheduleModal}
             />
-            <form id="addStationSsForm" onSubmit={handleSubmit(onSubmit)}>
+            <form id="addOfficeSsForm" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[20rem]">
                 {/* Effectivity */}
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
@@ -326,7 +325,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                       <LabelInput
-                        id="stationSsStartDate"
+                        id="officesStartDate"
                         name="dateFrom"
                         type="date"
                         label="Start Date"
@@ -343,7 +342,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                         errorMessage={errors.dateFrom?.message}
                       />
                       <LabelInput
-                        id="stationSsEndDate"
+                        id="officeSsEndDate"
                         name="dateTo"
                         type="date"
                         label="End Date"
@@ -370,7 +369,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                       <LoadingSpinner size="lg" />
                     ) : (
                       <LabelInput
-                        id="stationGroupName"
+                        id="officeGroupName"
                         name="groupName"
                         type="text"
                         label=""
@@ -399,7 +398,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                 {/* Schedule */}
                 <section className="flex flex-col justify-between w-full h-full gap-2 px-5 py-4 rounded-xl">
                   <div className="flex flex-col justify-between w-full h-full">
-                    <p className="flex items-center justify-start w-full font-light">Station Schedule</p>
+                    <p className="flex items-center justify-start w-full font-light">Office Schedule</p>
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="flex flex-col w-full gap-2">
                       {swrScheduleIsLoading ? (
@@ -469,13 +468,13 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
             </button>
 
             <button
-              className={`px-3 py-2 text-white ${
+              className={`px-3 py-2 text-white  ${
                 isEmpty(currentScheduleSheet.employees) || isEmpty(getValues('scheduleId'))
                   ? 'bg-gray-500 hover:bg-gray-400'
                   : 'bg-blue-500 hover:bg-blue-400'
               } rounded text-sm disabled:cursor-not-allowed `}
               type="submit"
-              form="addStationSsForm"
+              form="addOfficeSsForm"
               disabled={isEmpty(currentScheduleSheet.employees) || isEmpty(getValues('scheduleId')) ? true : false}
             >
               Submit
@@ -487,4 +486,4 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
   );
 };
 
-export default AddStationSsModal;
+export default AddOfficeSsModal;

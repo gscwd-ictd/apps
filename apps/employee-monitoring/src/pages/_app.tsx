@@ -35,6 +35,7 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 //     { I: 'access', this: 'Daily_time_record' },
 //     { I: 'access', this: 'Leave_ledger' },
 //     { I: 'access', this: 'Scheduling_sheets' },
+//     { I: 'access', this: 'Scheduling_sheet_office' },
 //     { I: 'access', this: 'Scheduling_sheet_station' },
 //     { I: 'access', this: 'Scheduling_sheet_field' },
 //     { I: 'access', this: 'Overtime' },
@@ -61,6 +62,8 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 //     { I: 'access', this: 'Officer_of_the_day' },
 //     { I: 'access', this: 'System_logs' },
 //     { I: 'access', this: 'Reports' },
+//     { I: 'access', this: 'Daily_time_record_view' },
+//     { I: 'access', this: 'Employee_schedules_view' },
 //   ],
 //   userId: '123',
 // };

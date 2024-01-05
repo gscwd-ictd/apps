@@ -2,7 +2,7 @@ import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gsc
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import AddFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/AddFieldSsModal';
+
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import {
   CurrentScheduleSheet,
@@ -14,8 +14,9 @@ import { useEffect, useState } from 'react';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import ViewFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/ViewFieldSsModal';
-import DeleteFieldSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/field/DeleteFieldSsModal';
+import AddOfficeSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/office/AddOfficeSsModal';
+import ViewOfficeSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/office/ViewOfficeSsModal';
+import DeleteOfficeSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/office/DeleteOfficeSsModal';
 
 export default function Index() {
   const {
@@ -47,7 +48,7 @@ export default function Index() {
     isLoading: swrSchedulingSheetsIsLoading,
     error: swrSchedulingSheetsError,
     mutate: swrMutateSchedulingSheets,
-  } = useSWR(`/custom-groups/schedule-sheets?schedule_base=field`, fetcherEMS, {
+  } = useSWR(`/custom-groups/schedule-sheets?schedule_base=office`, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -229,11 +230,11 @@ export default function Index() {
             },
             {
               layerNo: 2,
-              layerText: 'Field',
+              layerText: 'Office',
               path: '',
             },
           ]}
-          title="Field Scheduling Sheet"
+          title="Office Scheduling Sheet"
         />
 
         {!isEmpty(swrSchedulingSheetsError) ? (
@@ -248,20 +249,20 @@ export default function Index() {
           <ToastNotification toastType="success" notifMessage="Successfully deleted the Scheduling Sheet!" />
         ) : null}
 
-        <ViewFieldSsModal
+        <ViewOfficeSsModal
           modalState={viewModalIsOpen}
           setModalState={setViewModalIsOpen}
           closeModalAction={closeViewActionModal}
           rowData={currentRowData}
         />
 
-        <AddFieldSsModal
+        <AddOfficeSsModal
           modalState={addModalIsOpen}
           setModalState={setAddModalIsOpen}
           closeModalAction={closeAddActionModal}
         />
 
-        <DeleteFieldSsModal
+        <DeleteOfficeSsModal
           modalState={deleteModalIsOpen}
           setModalState={setDeleteModalIsOpen}
           closeModalAction={closeDeleteActionModal}

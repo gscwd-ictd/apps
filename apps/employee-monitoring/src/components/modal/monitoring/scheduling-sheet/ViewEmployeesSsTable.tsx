@@ -8,18 +8,16 @@ import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/funct
 import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 
 const ViewEmployeesSsTable = () => {
-  const { currentScheduleSheet } = useScheduleSheetStore((state) => ({
+  const { currentScheduleSheet, scheduleSheet } = useScheduleSheetStore((state) => ({
     currentScheduleSheet: state.currentScheduleSheet,
+    scheduleSheet: state.getScheduleSheetResponse,
   }));
 
   const [isDateRangeFilled, setIsDateRangeFilled] = useState<boolean>(false);
 
   // listens to date from and date to, if both are filled-out then set the state to true
   useEffect(() => {
-    if (
-      !isEmpty(currentScheduleSheet.dateFrom) &&
-      !isEmpty(currentScheduleSheet.dateTo)
-    ) {
+    if (!isEmpty(currentScheduleSheet.dateFrom) && !isEmpty(currentScheduleSheet.dateTo)) {
       setIsDateRangeFilled(true);
     }
   }, [currentScheduleSheet.dateFrom, currentScheduleSheet.dateTo]);
@@ -43,8 +41,7 @@ const ViewEmployeesSsTable = () => {
     columnHelper.accessor('restDays', {
       header: 'Rest Days',
       enableSorting: false,
-      cell: (info) =>
-        UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
+      cell: (info) => UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
     }),
   ];
 
@@ -61,14 +58,9 @@ const ViewEmployeesSsTable = () => {
         <>
           {/* <hr className="mt-2 border border-dashed rounded " /> */}
 
-          <p className="flex items-center justify-start w-full px-5 font-light">
-            Employees
-          </p>
+          <p className="flex items-center justify-start w-full px-5 font-light">Employees</p>
           <hr className="h-1 mt-2 bg-gray-200 border-0 rounded" />
-          <DataTable
-            model={table}
-            paginate={!isEmpty(currentScheduleSheet.employees) ? true : false}
-          />
+          <DataTable model={table} paginate={!isEmpty(currentScheduleSheet.employees) ? true : false} />
         </>
       ) : null}
     </>

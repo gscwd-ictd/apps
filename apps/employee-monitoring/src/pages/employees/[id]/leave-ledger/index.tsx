@@ -80,8 +80,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           <Card>
             <div className="flex flex-col gap-2">
               {/* HEADER */}
-              <div className="flex gap-2 xs:pb-2 sm:mb-5 md:mb-5 lg:mb-5 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-                <section className="flex items-center gap-4 px-2">
+              <div className="grid xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+                {/* <section className="flex items-center gap-4 px-2">
                   {employeeData.photoUrl ? (
                     <div className="flex flex-wrap justify-center">
                       <div className="w-[6rem]">
@@ -105,6 +105,31 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                     </div>
                     <div className="text-xl font-medium text-gray-600">
                       {employeeData ? employeeData.companyId : null}
+                    </div>
+                  </div>
+                </section> */}
+                <section className="flex items-center gap-4 px-2">
+                  {employeeData.photoUrl ? (
+                    <div className="flex flex-wrap justify-center">
+                      <div className="w-[6rem]">
+                        <img
+                          src={employeeData.photoUrl}
+                          alt="user-circle"
+                          className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
+                  )}
+
+                  <div className="flex flex-col">
+                    <div className="text-2xl font-semibold text-gray-600">
+                      {employeeData ? employeeData.fullName : null}
+                    </div>
+                    <div className="text-xl text-gray-500">{employeeData ? employeeData.companyId : null}</div>
+                    <div className="text-xl text-gray-500">
+                      {employeeData ? employeeData.assignment.positionTitle : null}
                     </div>
                   </div>
                 </section>
