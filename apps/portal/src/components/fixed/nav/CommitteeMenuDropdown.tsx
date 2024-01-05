@@ -1,6 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
+import { isEqual } from 'lodash';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { HiBadgeCheck, HiClock, HiOutlineBadgeCheck, HiOutlineIdentification, HiUserGroup } from 'react-icons/hi';
@@ -83,7 +85,12 @@ export const CommitteeMenuDropdown = ({
                     )}
                   </Menu.Item>
                 ) : null}
-                {employeeDetails.employmentDetails.overtimeImmediateSupervisorId !== null ? (
+
+                {/* show overtime application link if OT immediate supervisor or is a manager*/}
+                {employeeDetails.employmentDetails.overtimeImmediateSupervisorId !== null ||
+                employeeDetails.employmentDetails.overtimeImmediateSupervisorId ||
+                (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
+                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                   <Menu.Item>
                     {({ active }) => (
                       <button

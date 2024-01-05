@@ -112,7 +112,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
 
               {/* PSB / OVERTIME SUPERVISOR */}
               {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ||
-              employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ? (
+              employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ||
+              (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
+                !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                 <li className="ml-10 lg:ml-0">
                   <CommitteeMenuDropdown right />
                 </li>
