@@ -20,14 +20,14 @@ const listOfEmployees: Array<SelectOption> = [
   { label: 'Allyn Joseph Cubero', value: '4' },
   { label: 'John Henry Alfeche', value: '5' },
   { label: 'Phyll Patrick Fragata', value: '6' },
-  { label: 'Deo Del Rosario', value: '7' },
-  { label: 'Cara Jade Reyes', value: '8' },
-  { label: 'Rizza Baugbog', value: '9' },
-  { label: 'Kumier Lou Arancon', value: '10' },
-  { label: 'Roland Bacayo', value: '11' },
-  { label: 'Alfred Perez', value: '12' },
-  { label: 'Elea Glen Lacerna', value: '13' },
-  { label: 'Ricky Libertad', value: '14' },
+  // { label: 'Deo Del Rosario', value: '7' },
+  // { label: 'Cara Jade Reyes', value: '8' },
+  // { label: 'Rizza Baugbog', value: '9' },
+  // { label: 'Kumier Lou Arancon', value: '10' },
+  // { label: 'Roland Bacayo', value: '11' },
+  // { label: 'Alfred Perez', value: '12' },
+  // { label: 'Elea Glen Lacerna', value: '13' },
+  // { label: 'Ricky Libertad', value: '14' },
 ];
 
 type TrainingNominationModalProps = {
@@ -62,103 +62,49 @@ export const TrainingNominationModal = ({
   }));
 
   const [employeePool, setEmployeePool] = useState<Array<SelectOption>>([]);
+  const [tempEmployeePool, setTempEmployeePool] = useState<Array<SelectOption>>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
+  const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
 
-  const setParticipant = (employee: Array<SelectOption>) => {
-    setSelectedEmployees(employee);
-
-    //remove employee from pool
-    for (let a = 0; a < employee.length; a++) {
-      setEmployeePool(employeePool.filter((e) => e.value !== employee[a].value));
-    }
-
-    //add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
-    for (let i = 0; i < listOfEmployees.length; i++) {
-      for (let j = 0; j < selectedEmployees.length; j++) {
-        //check if selectedEmployee has specific employee in its array
-        if (listOfEmployees[i].value === selectedEmployees[j].value) {
-          const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-          setEmployeePool(
-            uniqueNames.sort(function (a, b) {
-              return a.label.localeCompare(b.label);
-            })
-          );
-        } else {
-          for (let k = 0; k < selectedAuxiliaryEmployees.length; k++) {
-            if (listOfEmployees[i].value === selectedAuxiliaryEmployees[k].value) {
-              const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-              setEmployeePool(
-                uniqueNames.sort(function (a, b) {
-                  return a.label.localeCompare(b.label);
-                })
-              );
-            } else {
-              //do nothing
-            }
-          }
-        }
-      }
-    }
-  };
-
-  const setAuxParticipant = (employee: Array<SelectOption>) => {
-    setSelectedAuxiliaryEmployees(employee);
-
-    //remove employee from pool
-    for (let a = 0; a < employee.length; a++) {
-      setEmployeePool(employeePool.filter((e) => e.value !== employee[a].value));
-    }
-
-    //add back employee to pool if they don't exist in selectedEmployees or selectedAuxiliaryEmployees
-    for (let i = 0; i < listOfEmployees.length; i++) {
-      for (let j = 0; j < selectedAuxiliaryEmployees.length; j++) {
-        //check if selectedEmployee has specific employee in its array
-        if (listOfEmployees[i].value === selectedAuxiliaryEmployees[j].value) {
-          const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-          setEmployeePool(
-            uniqueNames.sort(function (a, b) {
-              return a.label.localeCompare(b.label);
-            })
-          );
-        } else {
-          for (let k = 0; k < selectedEmployees.length; k++) {
-            if (listOfEmployees[i].value === selectedEmployees[k].value) {
-              const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
-              setEmployeePool(
-                uniqueNames.sort(function (a, b) {
-                  return a.label.localeCompare(b.label);
-                })
-              );
-            } else {
-              //do nothing
-            }
-          }
-        }
-      }
-    }
-  };
-
-  const CheckForDuplicate = () => {
-    console.log(selectedEmployees);
-    console.log(selectedAuxiliaryEmployees);
-    for (let i = 0; i < selectedEmployees.length; i++) {
-      for (let j = 0; j < selectedAuxiliaryEmployees.length; j++) {
-        if (selectedEmployees[i].value === selectedAuxiliaryEmployees[j].value) {
-          setIsDuplicatedNominee(true);
-        } else {
-          setIsDuplicatedNominee(false);
-        }
-      }
-    }
-  };
+  useEffect(() => {
+    // setEmployeePool(listOfEmployees);
+    setNominatedEmployees(selectedEmployees); //store
+    setAuxiliaryEmployees(selectedAuxiliaryEmployees); //store
+  }, [selectedEmployees, selectedAuxiliaryEmployees]);
 
   useEffect(() => {
-    setNominatedEmployees(selectedEmployees);
-    setAuxiliaryEmployees(selectedAuxiliaryEmployees);
-    CheckForDuplicate();
-  }, [selectedEmployees, selectedAuxiliaryEmployees]);
+    const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
+    setCombinedNominatedEmployees(uniqueNames);
+  }, [nominatedEmployees, auxiliaryEmployees]);
+
+  useEffect(() => {
+    console.log(combinedNominatedEmployees, 'combined');
+
+    //remove employee from pool
+    for (let i = 0; i < employeePool.length; i++) {
+      for (let a = 0; a < combinedNominatedEmployees.length; a++) {
+        if (employeePool[i].value === combinedNominatedEmployees[a].value) {
+          console.log(combinedNominatedEmployees[a].value);
+          setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+        } else {
+          //do nothing
+        }
+      }
+    }
+    //add back employee
+    for (let i = 0; i < listOfEmployees.length; i++) {
+      if (!employeePool.includes(listOfEmployees[i]) && !combinedNominatedEmployees.includes(listOfEmployees[i])) {
+        const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+        setEmployeePool(
+          uniqueNames.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          })
+        );
+      }
+    }
+  }, [combinedNominatedEmployees]);
 
   useEffect(() => {
     setEmployeePool(
@@ -232,7 +178,7 @@ export const TrainingNominationModal = ({
                   label=""
                   multiple
                   options={employeePool}
-                  onChange={(o) => setParticipant(o)}
+                  onChange={(o) => setSelectedEmployees(o)}
                   value={selectedEmployees}
                 />
               </div>
@@ -248,7 +194,7 @@ export const TrainingNominationModal = ({
                   label=""
                   multiple
                   options={employeePool}
-                  onChange={(o) => setAuxParticipant(o)}
+                  onChange={(o) => setSelectedAuxiliaryEmployees(o)}
                   value={selectedAuxiliaryEmployees}
                 />
               </div>
