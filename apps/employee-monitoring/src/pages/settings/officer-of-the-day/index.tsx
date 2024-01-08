@@ -6,7 +6,6 @@ import { isEmpty } from 'lodash';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 // store and type
-// import { useOfficerOfTheDayStore } from 'apps/employee-monitoring/src/store/officer-of-the-day.store';
 import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
 
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
@@ -21,27 +20,11 @@ import DeleteOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/
 
 // sample static data
 const OfficersOfTheDay: OfficerOfTheDay[] = [
-  { _id: '2001', name: 'Jeric', assignment: 'Secret', dateFrom: '2000-05-13', dateTo: '2000-05-13' },
-  { _id: '2002', name: 'Lloyd', assignment: 'Secret', dateFrom: '2001-05-13', dateTo: '2001-05-13' },
+  { _id: '2001', name: 'John', assignment: 'Secret', dateFrom: '2000-05-13', dateTo: '2000-05-13' },
+  { _id: '2002', name: 'Doe', assignment: 'Secret', dateFrom: '2001-05-13', dateTo: '2001-05-13' },
 ];
 
-// use /maintenance/schedules/pumping-station as example for adding and deleting OD
-
 const Index = () => {
-  // Current row data in the table that has been clicked
-  //   const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
-
-  // fetch data for list of officer of the day
-  // const {
-  //   data: swrOfficerOfTheDay,
-  //   error: swrError,
-  //   isLoading: swrIsLoading,
-  //   mutate: mutateOfficersOfTheDay,
-  // } = useSWR('/officers-of-the-day', fetcherEMS, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
-
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);
@@ -122,8 +105,6 @@ const Index = () => {
     }),
   ];
 
-  // Zustand initialization
-
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
@@ -131,28 +112,13 @@ const Index = () => {
     columnVisibility: { _id: false },
   });
 
-  // Reset responses on load of page
-
-  // Initial zustand state update
-
-  // Upon success/fail of swr request, zustand state will be updated
-
-  // Reset responses from all modal actions
-
   return (
     <>
       <div className="w-full">
         <BreadCrumbs title="Officer of the Day" />
-        {/* Error Notifications */}
-
-        {/* Success Notifications */}
-
         <Can I="access" this="Officer_of_the_day">
           <div className="mx-5">
             <Card>
-              {/* {swrIsLoading ? (
-                <LoadingSpinner size="lg" />
-              ) : ( */}
               <div className="flex flex-row flex-wrap">
                 <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
                   <button
@@ -165,7 +131,6 @@ const Index = () => {
                 </div>
                 <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
               </div>
-              {/* )} */}
             </Card>
           </div>
 

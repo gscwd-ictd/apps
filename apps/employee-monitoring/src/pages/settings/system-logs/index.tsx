@@ -6,8 +6,6 @@ import { isEmpty } from 'lodash';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 // store and type
-// import { useOfficerOfTheDayStore } from 'apps/employee-monitoring/src/store/officer-of-the-day.store';
-// import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
 import { useSystemLogsStore } from 'apps/employee-monitoring/src/store/system-log.store';
 import { SystemLog } from 'apps/employee-monitoring/src/utils/types/system-log.type';
 
@@ -18,58 +16,31 @@ import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 
 // modals
-// import AddOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/AddOfficerOfTheDayModal';
-// import DeleteOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/DeleteOfficerOfTheDayModal';
 import ViewSystemLogModal from 'apps/employee-monitoring/src/components/modal/settings/system-logs/ViewSystemLogModal';
 
 // sample static data
 const SystemLogs: SystemLog[] = [
   {
     _id: '2001',
-    userName: 'Jeric',
+    userName: 'John',
     dateLogged: '2000-05-13',
     timeLogged: '12:00 PM',
     method: 'GET',
     route: '/api/logs',
     body: {},
   },
-  { _id: '2002', userName: 'Lloyd', dateLogged: '2001-05-13', timeLogged: '12:00 PM', method: '', route: '', body: {} },
+  { _id: '2002', userName: 'Doe', dateLogged: '2001-05-13', timeLogged: '12:00 PM', method: '', route: '', body: {} },
 ];
 
 const Index = () => {
-  // Current row data in the table that has been clicked
-  //   const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
-
-  // fetch data for list of officer of the day
-  // const {
-  //   data: swrSystemLogs,
-  //   error: swrError,
-  //   isLoading: swrIsLoading,
-  //   mutate: mutateOfficersOfTheDay,
-  // } = useSWR('/system-logs', fetcherEMS, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
-
-  // Add modal function
+  
+  // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
   const openViewActionModal = (rowData: SystemLog) => {
     setViewModalIsOpen(true);
     setCurrentRowData(rowData);
   };
   const closeViewActionModal = () => setViewModalIsOpen(false);
-
-  // Delete modal function
-  // const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
-
-  // open delete action
-  // const openDeleteActionModal = (rowData: SystemLog) => {
-  //   setDeleteModalIsOpen(true);
-  //   setCurrentRowData(rowData);
-  // };
-
-  // close delete action
-  // const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
   const [currentRowData, setCurrentRowData] = useState<SystemLog>({} as SystemLog);
 
@@ -118,20 +89,12 @@ const Index = () => {
         );
       },
     }),
-
-    // columnHelper.accessor('dateLogged', {
-    //   enableSorting: true,
-    //   header: () => <span className="w-full text-center">Date Logged</span>,
-    //   cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
-    // }),
     columnHelper.display({
       id: 'actions',
       header: () => <span className="w-full text-center ">Actions</span>,
       cell: (props) => <div className="w-full text-center">{renderRowActions(props.row.original)}</div>,
     }),
   ];
-
-  // Zustand initialization
 
   // React Table initialization
   const { table } = useDataTable({
@@ -140,14 +103,6 @@ const Index = () => {
     columnVisibility: { _id: false },
   });
 
-  // Reset responses on load of page
-
-  // Initial zustand state update
-
-  // Upon success/fail of swr request, zustand state will be updated
-
-  // Reset responses from all modal actions
-
   return (
     <>
       <div className="w-full">
@@ -155,14 +110,10 @@ const Index = () => {
         <Can I="access" this="System_logs">
           <div className="mx-5">
             <Card>
-              {/* {swrIsLoading ? (
-                <LoadingSpinner size="lg" />
-              ) : ( */}
               <div className="flex flex-row flex-wrap">
                 <div className="flex justify-end order-2 w-1/2 table-actions-wrapper"></div>
                 <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
               </div>
-              {/* )} */}
             </Card>
           </div>
 

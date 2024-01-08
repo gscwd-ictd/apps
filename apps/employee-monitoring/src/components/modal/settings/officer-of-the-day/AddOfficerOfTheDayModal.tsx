@@ -20,7 +20,6 @@ type AddModalProps = {
 };
 
 const yupSchema = yup.object().shape({
-  //   id: yup.string().notRequired().trim(),
   name: yup.string().nullable(false).required().label('Name'),
   assignment: yup.string().nullable(false).required().label('Assignment'),
   dateFrom: yup.string().nullable(false).required().label('Date From'),
@@ -49,7 +48,7 @@ const AddOfficerOfTheDayModal: FunctionComponent<AddModalProps> = ({ modalState,
     formState: { errors, isSubmitting: postFormLoading },
   } = useForm<FormPostOfficerOfTheDay>({
     mode: 'onChange',
-    // reValidateMode: 'onSubmit',
+    reValidateMode: 'onSubmit',
     defaultValues: {
       name: '',
       assignment: '',
