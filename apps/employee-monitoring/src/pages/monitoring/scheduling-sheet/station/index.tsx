@@ -4,7 +4,11 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import AddStationSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/station/AddStationSsModal.tsx';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
-import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import {
+  CurrentScheduleSheet,
+  ScheduleSheet,
+  useScheduleSheetStore,
+} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
@@ -15,10 +19,10 @@ import DeleteStationSsModal from 'apps/employee-monitoring/src/components/modal/
 
 export default function Index() {
   const {
-    postResponse,
-    deleteResponse,
-    updateResponse,
     scheduleSheets,
+    postScheduleSheets,
+    deleteScheduleSheets,
+
     getScheduleSheets,
     setSelectedScheduleId,
     getScheduleSheetsFail,
@@ -27,9 +31,9 @@ export default function Index() {
     errorScheduleSheets,
   } = useScheduleSheetStore((state) => ({
     scheduleSheets: state.scheduleSheets,
-    postResponse: state.scheduleSheet.postResponse,
-    updateResponse: state.scheduleSheet.updateResponse,
-    deleteResponse: state.scheduleSheet.deleteResponse,
+    postScheduleSheets: state.postScheduleSheetResponse,
+    deleteScheduleSheets: state.deleteScheduleSheetResponse,
+
     getScheduleSheets: state.getScheduleSheets,
     getScheduleSheetsFail: state.getScheduleSheetsFail,
     setSelectedScheduleId: state.setSelectedScheduleId,
@@ -39,10 +43,10 @@ export default function Index() {
   }));
 
   const {
-    data: swrGroupSchedules,
-    isLoading: swrGsIsLoading,
-    error: swrGsError,
-    mutate: swrMutate,
+    data: swrSchedulingSheets,
+    isLoading: swrSchedulingSheetsIsLoading,
+    error: swrSchedulingSheetsError,
+    mutate: swrMutateSchedulingSheets,
   } = useSWR(`/custom-groups/schedule-sheets?schedule_base=pumping station`, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
@@ -56,10 +60,9 @@ export default function Index() {
     setAddModalIsOpen(false);
   };
 
-  // view
+  // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
   const openViewActionModal = (rowData: ScheduleSheet) => {
-    // setCurrentRowData(rowData);
     setCurrentRowData({
       ...currentRowData,
       customGroupId: rowData.id,
@@ -80,14 +83,12 @@ export default function Index() {
       scheduleId: '',
       customGroupName: '',
       scheduleName: '',
-    } as ScheduleSheet);
+    } as CurrentScheduleSheet);
     setViewModalIsOpen(false);
   };
 
   // Delete modal function
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
-
-  // open delete action
   const openDeleteActionModal = (rowData: ScheduleSheet) => {
     setCurrentRowData({
       ...currentRowData,
@@ -100,8 +101,6 @@ export default function Index() {
     });
     setDeleteModalIsOpen(true);
   };
-
-  // close delete action
   const closeDeleteActionModal = () => {
     setCurrentRowData({
       customGroupId: '',
@@ -110,10 +109,11 @@ export default function Index() {
       scheduleId: '',
       customGroupName: '',
       scheduleName: '',
-    } as ScheduleSheet);
+    } as CurrentScheduleSheet);
     setDeleteModalIsOpen(false);
   };
-  const [currentRowData, setCurrentRowData] = useState<ScheduleSheet>({} as ScheduleSheet);
+
+  const [currentRowData, setCurrentRowData] = useState<CurrentScheduleSheet>({} as CurrentScheduleSheet);
 
   // transform date
   const transformDate = (date: string | Date | null) => {
@@ -151,16 +151,6 @@ export default function Index() {
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('customGroupName', {
-      enableSorting: false,
-      header: () => 'Group Name',
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor('scheduleName', {
-      enableSorting: false,
-      header: () => 'Schedule Name',
-      cell: (info) => info.getValue(),
-    }),
     columnHelper.group({
       id: 'effectivityDate',
       header: () => <span className="w-full text-center underline">Effectivity Date</span>,
@@ -178,6 +168,16 @@ export default function Index() {
         }),
       ],
     }),
+    columnHelper.accessor('customGroupName', {
+      enableSorting: false,
+      header: () => 'Group Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('scheduleName', {
+      enableSorting: false,
+      header: () => 'Schedule Name',
+      cell: (info) => info.getValue(),
+    }),
     columnHelper.display({
       id: 'actions',
       header: () => <span className="w-full text-center ">Actions</span>,
@@ -187,43 +187,39 @@ export default function Index() {
 
   // swr is loading
   useEffect(() => {
-    if (swrGsIsLoading) {
+    if (swrSchedulingSheetsIsLoading) {
       getScheduleSheets();
     }
-  }, [swrGsIsLoading]);
+  }, [swrSchedulingSheetsIsLoading]);
 
   // success or fail gs
   useEffect(() => {
     // success
-    if (!isEmpty(swrGroupSchedules)) {
-      getScheduleSheetsSuccess(swrGroupSchedules.data);
+    if (!isEmpty(swrSchedulingSheets)) {
+      getScheduleSheetsSuccess(swrSchedulingSheets.data);
     }
 
     // fail
-    if (!isEmpty(swrGsError)) getScheduleSheetsFail(swrGsError);
-  }, [swrGroupSchedules, swrGsError]);
+    if (!isEmpty(swrSchedulingSheetsError)) getScheduleSheetsFail(swrSchedulingSheetsError);
+  }, [swrSchedulingSheets, swrSchedulingSheetsError]);
 
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: swrGsIsLoading ? null : scheduleSheets,
+    data: swrSchedulingSheetsIsLoading ? null : scheduleSheets,
     columnVisibility: { id: false },
   });
 
   // response listener
   useEffect(() => {
-    if (
-      !isEmpty(postResponse) ||
-      !isEmpty(updateResponse) ||
-      !isEmpty(deleteResponse) ||
-      !isEmpty(errorScheduleSheets)
-    ) {
-      swrMutate();
+    if (!isEmpty(postScheduleSheets) || !isEmpty(deleteScheduleSheets) || !isEmpty(errorScheduleSheets)) {
+      swrMutateSchedulingSheets();
       setTimeout(() => {
         emptyResponseAndErrors();
       }, 2500);
     }
-  }, [postResponse, updateResponse, deleteResponse, errorScheduleSheets]);
+  }, [postScheduleSheets, deleteScheduleSheets, errorScheduleSheets]);
+
   return (
     <>
       <div>
@@ -243,17 +239,15 @@ export default function Index() {
           title="Station Scheduling Sheet"
         />
 
-        {!isEmpty(swrGsError) ? <ToastNotification toastType="error" notifMessage={swrGsError.message} /> : null}
+        {!isEmpty(swrSchedulingSheetsError) ? (
+          <ToastNotification toastType="error" notifMessage={swrSchedulingSheetsError.message} />
+        ) : null}
 
-        {!isEmpty(postResponse) ? (
+        {!isEmpty(postScheduleSheets) ? (
           <ToastNotification toastType="success" notifMessage="Successfully Added a Scheduling Sheet!" />
         ) : null}
 
-        {!isEmpty(updateResponse) ? (
-          <ToastNotification toastType="success" notifMessage="Successfully Updated the Scheduling Sheet!" />
-        ) : null}
-
-        {!isEmpty(deleteResponse) ? (
+        {!isEmpty(deleteScheduleSheets) ? (
           <ToastNotification toastType="success" notifMessage="Successfully deleted the Scheduling Sheet!" />
         ) : null}
 
@@ -280,7 +274,7 @@ export default function Index() {
         <Can I="access" this="Schedules">
           <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
-              {swrGsIsLoading ? (
+              {swrSchedulingSheetsIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
                 <div className="flex flex-row flex-wrap">

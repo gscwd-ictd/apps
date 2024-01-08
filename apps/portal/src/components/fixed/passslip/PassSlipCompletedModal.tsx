@@ -246,7 +246,7 @@ export const PassSlipCompletedModal = ({
               !passSlip.disputeRemarks &&
               passSlip.timeIn &&
               GetDateDifference(`${passSlip.dateOfApplication} 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `)
-                .days <= 100 ? (
+                .days <= 10 ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   File Dispute
                 </Button>

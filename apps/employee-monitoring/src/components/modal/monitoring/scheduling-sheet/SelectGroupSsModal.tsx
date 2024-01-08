@@ -1,14 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, LoadingSpinner, Modal, useDataTable } from '@gscwd-apps/oneui';
+import { DataTable, Modal, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-import { CustomGroup, CustomGroupWithMembers } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
-import dayjs from 'dayjs';
+import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { EmployeeAsOptionWithPosition } from 'libs/utils/src/lib/types/employee.type';
-import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
@@ -38,18 +36,14 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
 
   // use custom groups store
   const {
-    groups,
+    customGroups,
     groupWithMembers,
-    emptyResponse,
-    getCustomGroups,
-    getCustomGroupsFail,
-    getCustomGroupsSuccess,
     getCustomGroupWithMembers,
     getCustomGroupWithMembersFail,
     getCustomGroupWithMembersSuccess,
     setSelectedCustomGroupWithMembers,
   } = useCustomGroupStore((state) => ({
-    groups: state.customGroups,
+    customGroups: state.customGroups,
     groupWithMembers: state.customGroupWithMembers,
 
     setSelectedCustomGroupWithMembers: state.setSelectedCustomGroupWithMembers,
@@ -77,16 +71,6 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
 
   // transformed groups
   const [transformedGroups, setTransformedGroups] = useState<Array<SelectOption>>([]);
-
-  // use SWR for all groups
-  const {
-    data: swrGroups,
-    isLoading: swrIsLoading,
-    error: swrError,
-  } = useSWR('/custom-groups', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
 
   // use SWR for all groups
   const {
@@ -165,13 +149,6 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
     columnVisibility: { employeeId: false },
   });
 
-  // swr loading
-  useEffect(() => {
-    if (swrIsLoading && modalState) {
-      getCustomGroups();
-    }
-  }, [modalState, swrIsLoading]);
-
   // swr loading for the custom group details
   useEffect(() => {
     if (swrGroupDetailsIsLoading) {
@@ -179,25 +156,12 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
     }
   }, [swrGroupDetailsIsLoading]);
 
-  // swr success or error
-  useEffect(() => {
-    // if data
-    if (!isEmpty(swrGroups)) {
-      getCustomGroupsSuccess(swrGroups.data);
-    }
-
-    // if error
-    if (!isEmpty(swrError)) {
-      getCustomGroupsFail(swrError.message);
-    }
-  }, [swrGroups, swrError]);
-
   // transform/mutate group
   useEffect(() => {
-    if (!isEmpty(groups)) {
-      transformGroups(groups);
+    if (!isEmpty(customGroups)) {
+      transformGroups(customGroups);
     }
-  }, [groups]);
+  }, [customGroups]);
 
   // fetch by id
   useEffect(() => {

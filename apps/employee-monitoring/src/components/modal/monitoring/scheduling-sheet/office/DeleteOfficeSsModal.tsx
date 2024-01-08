@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
@@ -26,7 +26,7 @@ type DeleteFormProps = {
   dateTo: string;
 };
 
-const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteOfficeSsModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -57,6 +57,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
     }
   };
 
+  // function for deleting a scheduling sheet
   const handleDeleteResult = async (data: DeleteFormProps) => {
     // format data
     const config = {
@@ -67,7 +68,6 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
         dateTo: dayjs(data.dateTo).format('YYYY-MM-DD'),
       },
     };
-
     const { error, result } = await deleteEmpMonitoring(`/schedules/`, config);
 
     if (error) {
@@ -93,7 +93,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
             />
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="deleteStationSs">
+          <form onSubmit={handleSubmit(onSubmit)} id="deleteOfficeSs">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
@@ -108,7 +108,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
           <div className="flex justify-between w-full gap-2">
             <button
               type="submit"
-              form="deleteStationSs"
+              form="deleteOfficeSs"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={deleteFormLoading ? true : false}
             >
@@ -129,4 +129,4 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteStationSsModal;
+export default DeleteOfficeSsModal;

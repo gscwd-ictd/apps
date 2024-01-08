@@ -118,7 +118,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     isLoading: swrOvertimeListIsLoading,
     error: swrOvertimeListError,
     mutate: mutateOvertime,
-  } = useSWR(overtimeListUrl, fetchWithToken, {
+  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeListUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });

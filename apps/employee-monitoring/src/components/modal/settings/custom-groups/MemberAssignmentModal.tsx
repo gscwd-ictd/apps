@@ -127,7 +127,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
     isLoading: swrUnassignedEmployeesIsLoading,
     error: swrUnassignedEmployeesError,
     mutate: mutateUnassignedMembers,
-  } = useSWR(modalState ? `/custom-groups/${rowData.id}/unassigned/dropdown` : null, fetcherEMS, {
+  } = useSWR(modalState ? `/custom-groups/${rowData.id}/unassigned/dropdown/rank-file` : null, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });

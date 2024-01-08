@@ -20,15 +20,14 @@ const listOfEmployees: Array<SelectOption> = [
   { label: 'Allyn Joseph Cubero', value: '4' },
   { label: 'John Henry Alfeche', value: '5' },
   { label: 'Phyll Patrick Fragata', value: '6' },
-  { label: 'Deo Del Rosario', value: '7' },
-  { label: 'Cara Jade Reyes', value: '8' },
-  { label: 'Rizza Baugbog', value: '9' },
-  { label: 'Kumier Lou Arancon', value: '10' },
-  { label: 'Roland Bacayo', value: '11' },
-  { label: 'Alfred Perez', value: '12' },
-  { label: 'Elea Glen Lacerna', value: '13' },
-  { label: 'Ricky Libertad', value: '14' },
-  { label: 'Deo Del Rosario 2', value: '15' },
+  // { label: 'Deo Del Rosario', value: '7' },
+  // { label: 'Cara Jade Reyes', value: '8' },
+  // { label: 'Rizza Baugbog', value: '9' },
+  // { label: 'Kumier Lou Arancon', value: '10' },
+  // { label: 'Roland Bacayo', value: '11' },
+  // { label: 'Alfred Perez', value: '12' },
+  // { label: 'Elea Glen Lacerna', value: '13' },
+  // { label: 'Ricky Libertad', value: '14' },
 ];
 
 type TrainingNominationModalProps = {
@@ -43,9 +42,7 @@ export const TrainingNominationModal = ({
   closeModalAction,
 }: TrainingNominationModalProps) => {
   const {
-    trainingList,
-    loadingTrainingList,
-    errorTrainingList,
+    recommendedEmployees,
     individualTrainingDetails,
     trainingModalIsOpen,
     setIndividualTrainingDetails,
@@ -54,9 +51,7 @@ export const TrainingNominationModal = ({
     auxiliaryEmployees,
     setAuxiliaryEmployees,
   } = useTrainingSelectionStore((state) => ({
-    trainingList: state.trainingList,
-    loadingTrainingList: state.loading.loadingTrainingList,
-    errorTrainingList: state.error.errorTrainingList,
+    recommendedEmployees: state.recommendedEmployees,
     individualTrainingDetails: state.individualTrainingDetails,
     trainingModalIsOpen: state.setTrainingModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
@@ -66,34 +61,58 @@ export const TrainingNominationModal = ({
     setAuxiliaryEmployees: state.setAuxiliaryEmployees,
   }));
 
+  const [employeePool, setEmployeePool] = useState<Array<SelectOption>>([]);
+  const [tempEmployeePool, setTempEmployeePool] = useState<Array<SelectOption>>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
+  const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
 
-  const CheckForDuplicate = () => {
-    console.log(selectedEmployees);
-    console.log(selectedAuxiliaryEmployees);
-    for (let i = 0; i < selectedEmployees.length; i++) {
-      for (let j = 0; j < selectedAuxiliaryEmployees.length; j++) {
-        if (selectedEmployees[i].value === selectedAuxiliaryEmployees[j].value) {
-          setIsDuplicatedNominee(true);
+  useEffect(() => {
+    // setEmployeePool(listOfEmployees);
+    setNominatedEmployees(selectedEmployees); //store
+    setAuxiliaryEmployees(selectedAuxiliaryEmployees); //store
+  }, [selectedEmployees, selectedAuxiliaryEmployees]);
+
+  useEffect(() => {
+    const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
+    setCombinedNominatedEmployees(uniqueNames);
+  }, [nominatedEmployees, auxiliaryEmployees]);
+
+  useEffect(() => {
+    console.log(combinedNominatedEmployees, 'combined');
+
+    //remove employee from pool
+    for (let i = 0; i < employeePool.length; i++) {
+      for (let a = 0; a < combinedNominatedEmployees.length; a++) {
+        if (employeePool[i].value === combinedNominatedEmployees[a].value) {
+          console.log(combinedNominatedEmployees[a].value);
+          setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
         } else {
-          setIsDuplicatedNominee(false);
+          //do nothing
         }
       }
     }
-  };
+    //add back employee
+    for (let i = 0; i < listOfEmployees.length; i++) {
+      if (!employeePool.includes(listOfEmployees[i]) && !combinedNominatedEmployees.includes(listOfEmployees[i])) {
+        const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+        setEmployeePool(
+          uniqueNames.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          })
+        );
+      }
+    }
+  }, [combinedNominatedEmployees]);
 
   useEffect(() => {
-    setNominatedEmployees(selectedEmployees);
-    setAuxiliaryEmployees(selectedAuxiliaryEmployees);
-    CheckForDuplicate();
-  }, [selectedEmployees, selectedAuxiliaryEmployees]);
-
-  // useEffect(() => {
-
-  //   CheckForDuplicate();
-  // }, [selectedAuxiliaryEmployees]);
+    setEmployeePool(
+      listOfEmployees.sort(function (a, b) {
+        return a.label.localeCompare(b.label);
+      })
+    );
+  }, []);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -142,7 +161,7 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <div className="w-auto sm:w-96 flex flex-wrap text-slate-500 text-md font-medium">
-                  {individualTrainingDetails.recommended.map((employee, index) => {
+                  {recommendedEmployees.map((employee, index) => {
                     return <label key={index}>{index == 0 ? employee.name : `, ${employee.name}`}</label>;
                   })}
                 </div>
@@ -154,10 +173,11 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <MySelectList
+                  isSelectedHidden={true}
                   id="employees"
                   label=""
                   multiple
-                  options={listOfEmployees}
+                  options={employeePool}
                   onChange={(o) => setSelectedEmployees(o)}
                   value={selectedEmployees}
                 />
@@ -169,10 +189,11 @@ export const TrainingNominationModal = ({
                 </label>
 
                 <MySelectList
+                  isSelectedHidden={true}
                   id="employees"
                   label=""
                   multiple
-                  options={listOfEmployees}
+                  options={employeePool}
                   onChange={(o) => setSelectedAuxiliaryEmployees(o)}
                   value={selectedAuxiliaryEmployees}
                 />

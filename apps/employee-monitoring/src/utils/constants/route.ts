@@ -25,7 +25,7 @@ export const Paths = [
   '/maintenance/schedules/pumping-station', // 18
   '/monitoring/scheduling-sheet/field', // 19
   '/monitoring/scheduling-sheet/station', // 20
-  '/monitoring/scheduling-sheet/station', // 21
+  '/monitoring/scheduling-sheet/office', // 21
   '/settings/custom-groups', //22
   '/monitoring/leave/leave-cancellations', //23
   '/settings/modules', // 24

@@ -49,10 +49,12 @@ export const PdfHeader: FunctionComponent<HeaderProps> = ({ isoCode, withIsoLogo
 
         {/* CENTER */}
         <View style={[styles.w40, styles.horizontalCenter]}>
-          <Text style={{ fontSize: 10, fontFamily: 'Helvetica-Bold' }}>GENERAL SANTOS WATER DISTRICT</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>Republic of the Philippines</Text>
+          <Text style={{ fontSize: 10, fontFamily: 'Helvetica-Bold' }}>GENERAL SANTOS CITY WATER DISTRICT</Text>
           <Text style={{ fontSize: 8, paddingTop: 3 }}>E. Fernandez St., Brgy. Lagao, General Santos City</Text>
           <Text style={{ fontSize: 8, paddingTop: 3 }}>Telephone No.: 552-3824; Telefax No.: 553-4960</Text>
           <Text style={{ fontSize: 8, paddingTop: 3 }}>Email Address: gscwaterdistrict@yahoo.com</Text>
+          <Text style={{ fontSize: 8, paddingTop: 3 }}>www.gensanwater.gov.ph</Text>
         </View>
 
         {/* RIGHT */}
