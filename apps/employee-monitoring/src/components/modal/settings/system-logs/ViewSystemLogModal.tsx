@@ -5,7 +5,7 @@ import React, { FunctionComponent } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
 
 //type
-import { SystemLog } from 'apps/employee-monitoring/src/utils/types/system-logs.type';
+import { SystemLog } from 'apps/employee-monitoring/src/utils/types/system-log.type';
 
 type ViewSystemLogModalProps = {
   modalState: boolean;

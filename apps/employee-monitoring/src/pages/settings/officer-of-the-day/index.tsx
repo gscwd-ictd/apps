@@ -32,15 +32,15 @@ const Index = () => {
   //   const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
 
   // fetch data for list of officer of the day
-  const {
-    data: swrOfficerOfTheDay,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateOfficersOfTheDay,
-  } = useSWR('/officers-of-the-day', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // const {
+  //   data: swrOfficerOfTheDay,
+  //   error: swrError,
+  //   isLoading: swrIsLoading,
+  //   mutate: mutateOfficersOfTheDay,
+  // } = useSWR('/officers-of-the-day', fetcherEMS, {
+  //   shouldRetryOnError: false,
+  //   revalidateOnFocus: false,
+  // });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -150,22 +150,22 @@ const Index = () => {
         <Can I="access" this="Officer_of_the_day">
           <div className="mx-5">
             <Card>
-              {swrIsLoading ? (
+              {/* {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
-              ) : (
-                <div className="flex flex-row flex-wrap">
-                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                    <button
-                      type="button"
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                      onClick={openAddActionModal}
-                    >
-                      <i className="bx bxs-plus-square"></i>&nbsp; Add Officer Of The Day
-                    </button>
-                  </div>
-                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
+              ) : ( */}
+              <div className="flex flex-row flex-wrap">
+                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                  <button
+                    type="button"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                    onClick={openAddActionModal}
+                  >
+                    <i className="bx bxs-plus-square"></i>&nbsp; Add Officer Of The Day
+                  </button>
                 </div>
-              )}
+                <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
+              </div>
+              {/* )} */}
             </Card>
           </div>
 

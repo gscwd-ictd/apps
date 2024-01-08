@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { SystemLog, SystemLogId } from '../utils/types/system-logs.type';
+import { SystemLog, SystemLogId } from '../utils/types/system-log.type';
 
 // comment
 

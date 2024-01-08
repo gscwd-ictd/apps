@@ -8,8 +8,8 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 // store and type
 // import { useOfficerOfTheDayStore } from 'apps/employee-monitoring/src/store/officer-of-the-day.store';
 // import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
-import { useSystemLogsStore } from 'apps/employee-monitoring/src/store/system-logs.store';
-import { SystemLog } from 'apps/employee-monitoring/src/utils/types/system-logs.type';
+import { useSystemLogsStore } from 'apps/employee-monitoring/src/store/system-log.store';
+import { SystemLog } from 'apps/employee-monitoring/src/utils/types/system-log.type';
 
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
@@ -24,7 +24,15 @@ import ViewSystemLogModal from 'apps/employee-monitoring/src/components/modal/se
 
 // sample static data
 const SystemLogs: SystemLog[] = [
-  { _id: '2001', userName: 'Jeric', dateLogged: '2000-05-13', timeLogged: '12:00 PM', method: 'GET', route: '/api/logs', body: {} },
+  {
+    _id: '2001',
+    userName: 'Jeric',
+    dateLogged: '2000-05-13',
+    timeLogged: '12:00 PM',
+    method: 'GET',
+    route: '/api/logs',
+    body: {},
+  },
   { _id: '2002', userName: 'Lloyd', dateLogged: '2001-05-13', timeLogged: '12:00 PM', method: '', route: '', body: {} },
 ];
 
@@ -33,15 +41,15 @@ const Index = () => {
   //   const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
 
   // fetch data for list of officer of the day
-  const {
-    data: swrSystemLogs,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateOfficersOfTheDay,
-  } = useSWR('/system-logs', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // const {
+  //   data: swrSystemLogs,
+  //   error: swrError,
+  //   isLoading: swrIsLoading,
+  //   mutate: mutateOfficersOfTheDay,
+  // } = useSWR('/system-logs', fetcherEMS, {
+  //   shouldRetryOnError: false,
+  //   revalidateOnFocus: false,
+  // });
 
   // Add modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -144,17 +152,17 @@ const Index = () => {
     <>
       <div className="w-full">
         <BreadCrumbs title="System Logs" />
-        <Can I="access" this="Officer_of_the_day">
+        <Can I="access" this="System_logs">
           <div className="mx-5">
             <Card>
-              {swrIsLoading ? (
+              {/* {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
-              ) : (
-                <div className="flex flex-row flex-wrap">
-                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper"></div>
-                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
-                </div>
-              )}
+              ) : ( */}
+              <div className="flex flex-row flex-wrap">
+                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper"></div>
+                <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
+              </div>
+              {/* )} */}
             </Card>
           </div>
 

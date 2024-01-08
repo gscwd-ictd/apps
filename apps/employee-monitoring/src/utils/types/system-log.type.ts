@@ -10,6 +10,3 @@ export type SystemLog = {
 };
 
 export type SystemLogId = Pick<SystemLog, '_id'>;
-
-
-// comment
