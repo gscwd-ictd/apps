@@ -220,7 +220,6 @@ export const ApprovalsCompletedPassSlipModal = ({
                   !passSlip.timeOut) ||
                 ((passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ||
                   NatureOfBusiness.PERSONAL_BUSINESS) &&
-                  !passSlip.timeOut &&
                   !passSlip.timeIn) ? (
                   <>
                     <Button
