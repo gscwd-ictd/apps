@@ -15,7 +15,7 @@ import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { employeeDummy } from '../../../../src/types/employee.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
 import useSWR from 'swr';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeApplicationModal } from 'apps/portal/src/components/fixed/overtime/OvertimeApplicationModal';
 import OvertimeModal from 'apps/portal/src/components/fixed/overtime/OvertimeModal';
@@ -23,6 +23,7 @@ import { OvertimeTabs } from 'apps/portal/src/components/fixed/overtime/Overtime
 import { OvertimeTabWindow } from 'apps/portal/src/components/fixed/overtime/OvertimeTabWindow';
 import { useRouter } from 'next/router';
 import { OvertimeSummaryModal } from 'apps/portal/src/components/fixed/overtime/OvertimeSummaryModal';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function Overtime({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -358,7 +359,11 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   const employeeDetails = getUserDetails();
 
   // check if user role is rank_and_file or job order = kick out
-  if (employeeDetails.employmentDetails.overtimeImmediateSupervisorId == null) {
+  if (
+    employeeDetails.employmentDetails.overtimeImmediateSupervisorId == null &&
+    (isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) ||
+      isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER))
+  ) {
     // if true, the employee is not allowed to access this page
     return {
       redirect: {

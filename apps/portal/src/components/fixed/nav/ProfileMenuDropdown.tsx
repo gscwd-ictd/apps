@@ -322,7 +322,9 @@ export const ProfileMenuDropdown = ({
                         </Menu.Item>
                       ) : null}
 
-                      {employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ? (
+                      {employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ||
+                      (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
+                        !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                         <Menu.Item>
                           {({ active }) => (
                             <button
