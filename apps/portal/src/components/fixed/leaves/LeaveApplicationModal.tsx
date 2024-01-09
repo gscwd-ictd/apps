@@ -1254,10 +1254,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
                       estimatedAmount > Number(maxMonetizationAmount) / 2
                     ? true
-                    : Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance) < 10 &&
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                    ? true
-                    : //initial value of one of the leave is already below 5/10 but other one is still sufficient
+                    : // : Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance) < 10 &&
+                    //   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    // ? true
+                    //initial value of one of the leave is already below 5/10 but other one is still sufficient
                     (finalVacationAndForcedLeaveBalance < 5 &&
                         vacationLeaveInput > 0 &&
                         finalSickLeaveBalance < 10 &&

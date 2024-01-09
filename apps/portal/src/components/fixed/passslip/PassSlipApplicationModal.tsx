@@ -13,6 +13,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -30,6 +31,11 @@ const natureOfBusiness: Array<SelectOption> = [
   { label: NatureOfBusiness.HALF_DAY, value: NatureOfBusiness.HALF_DAY },
   { label: NatureOfBusiness.UNDERTIME, value: NatureOfBusiness.UNDERTIME },
   { label: NatureOfBusiness.OFFICIAL_BUSINESS, value: NatureOfBusiness.OFFICIAL_BUSINESS },
+];
+
+const natureOfBusiness_Field: Array<SelectOption> = [
+  { label: NatureOfBusiness.HALF_DAY, value: NatureOfBusiness.HALF_DAY },
+  { label: NatureOfBusiness.UNDERTIME, value: NatureOfBusiness.UNDERTIME },
 ];
 
 const obTransportation: Array<SelectOption> = [
@@ -192,11 +198,20 @@ export const PassSlipApplicationModal = ({
                       <option value="" disabled>
                         Select Nature of Business
                       </option>
-                      {natureOfBusiness.map((item: Item, idx: number) => (
-                        <option value={item.value} key={idx}>
-                          {item.label}
-                        </option>
-                      ))}
+                      {schedule.scheduleBase == ScheduleBases.FIELD ||
+                      schedule.scheduleBase == ScheduleBases.PUMPING_STATION
+                        ? natureOfBusiness_Field.map((item: Item, idx: number) => (
+                            <option value={item.value} key={idx}>
+                              {item.label}
+                            </option>
+                          ))
+                        : schedule.scheduleBase == ScheduleBases.OFFICE
+                        ? natureOfBusiness.map((item: Item, idx: number) => (
+                            <option value={item.value} key={idx}>
+                              {item.label}
+                            </option>
+                          ))
+                        : null}
                     </select>
                   </div>
                 </div>
