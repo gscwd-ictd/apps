@@ -17,7 +17,7 @@ import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import ViewEmployeesSsTable from '../ViewEmployeesSsTable';
 
-type ViewFieldSsModalProps = {
+type ViewOfficeSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
@@ -28,7 +28,7 @@ type ScheduleSheetForm = ScheduleSheet & {
   employees: Array<EmployeeAsOptionWithRestDays>;
 };
 
-const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
+const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
   modalState,
   closeModalAction,
   setModalState,
@@ -233,7 +233,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="px-5 text-xl font-medium">View Field Scheduling Sheet</h1>
+          <h1 className="px-5 text-xl font-medium">View Office Scheduling Sheet</h1>
         </Modal.Header>
 
         <Modal.Body>
@@ -246,7 +246,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                   <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                   <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
                     <LabelInput
-                      id="fieldsStartDate"
+                      id="officesStartDate"
                       name="dateFrom"
                       type="date"
                       label="Start Date"
@@ -263,7 +263,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                       errorMessage={errors.dateFrom?.message}
                     />
                     <LabelInput
-                      id="fieldSsEndDate"
+                      id="officeSsEndDate"
                       name="dateTo"
                       type="date"
                       label="End Date"
@@ -284,7 +284,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
 
                 <div className="flex flex-col justify-center w-full">
                   <LabelInput
-                    id="fieldGroupName"
+                    id="officeGroupName"
                     name="groupName"
                     type="text"
                     label="Group Name"
@@ -299,7 +299,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
               {/* Schedule */}
               <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
                 <div className="flex flex-col justify-start w-full h-full">
-                  <p className="flex items-center justify-start w-full font-light">Field Schedule</p>
+                  <p className="flex items-center justify-start w-full font-light">Office Schedule</p>
                   <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                   <div className="flex flex-col w-full gap-4">
                     {swrScheduleIsLoading ? (
@@ -364,4 +364,4 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
   );
 };
 
-export default ViewFieldSsModal;
+export default ViewOfficeSsModal;

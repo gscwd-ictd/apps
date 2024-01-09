@@ -5,14 +5,18 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import {
+  CurrentScheduleSheet,
+  ScheduleSheet,
+  useScheduleSheetStore,
+} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import dayjs from 'dayjs';
 
 type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: ScheduleSheet;
+  rowData: CurrentScheduleSheet;
 };
 
 type DeleteFormProps = {
@@ -29,19 +33,13 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
   rowData,
 }) => {
   // zustand store initialization
-  const {
-    IsLoading,
-
-    deleteScheduleSheet,
-    deleteScheduleSheetFail,
-    deleteScheduleSheetSuccess,
-  } = useScheduleSheetStore((state) => ({
-    IsLoading: state.loading.loadingScheduleSheet,
-
-    deleteScheduleSheet: state.deleteScheduleSheet,
-    deleteScheduleSheetSuccess: state.deleteScheduleSheetSuccess,
-    deleteScheduleSheetFail: state.deleteScheduleSheetFail,
-  }));
+  const { deleteScheduleSheet, deleteScheduleSheetFail, deleteScheduleSheetSuccess } = useScheduleSheetStore(
+    (state) => ({
+      deleteScheduleSheet: state.deleteScheduleSheet,
+      deleteScheduleSheetSuccess: state.deleteScheduleSheetSuccess,
+      deleteScheduleSheetFail: state.deleteScheduleSheetFail,
+    })
+  );
 
   const {
     handleSubmit,
@@ -112,7 +110,7 @@ const DeleteFieldSsModal: FunctionComponent<DeleteModalProps> = ({
               type="submit"
               form="deleteFieldSs"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
-              disabled={IsLoading ? true : false}
+              disabled={deleteFormLoading ? true : false}
             >
               <span className="text-sm font-normal">Confirm</span>
             </button>

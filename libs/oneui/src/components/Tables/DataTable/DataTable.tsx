@@ -124,7 +124,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
       {model && paginate ? (
         <div className="order-4 w-full flex px-6 py-3 space-x-3 bg-white border-t border-gray-200 sm:px-4">
           <div className="left-container w-full flex items-center sm:w-1/2"></div>
-          <div className="right-container w-full flex items-center justify-end gap-2 sm:w-1/2">
+          <div className="right-container  flex items-center justify-end gap-2 w-2/3 md:w-1/2 lg:w-full">
             {/* Next and Previous button */}
             <div className="flex justify-between flex-1 sm:hidden">
               <button

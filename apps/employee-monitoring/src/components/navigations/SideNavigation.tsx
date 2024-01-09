@@ -112,6 +112,21 @@ export const SideNavigation = () => {
               selected={pathname === Paths[19] || pathname === Paths[20]}
               subItems={
                 <>
+                  {/* OFFICE */}
+                  <Can I="access" this="Scheduling_sheet_office">
+                    <Sidebar.Item
+                      display="Office"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[21] ? true : false}
+                      icon={
+                        <>
+                          <i className="text-xl bx bxs-buildings"></i>
+                        </>
+                      }
+                      path={Paths[21]}
+                    />
+                  </Can>
+
                   {/* FIELD */}
                   <Can I="access" this="Scheduling_sheet_field">
                     <Sidebar.Item
