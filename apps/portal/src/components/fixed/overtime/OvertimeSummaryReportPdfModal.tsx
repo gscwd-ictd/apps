@@ -154,10 +154,16 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
     isLoading: swrOvertimeSummaryIsLoading,
     error: swrOvertimeSummaryError,
     mutate: mutateOvertimeSummary,
-  } = useSWR(pdfOvertimeSummaryModalIsOpen ? overtimeSummaryUrl : null, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(
+    pdfOvertimeSummaryModalIsOpen && selectedYear && selectedMonth && employeeDetails.user._id
+      ? overtimeSummaryUrl
+      : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
 
   // Initial zustand state update
   useEffect(() => {
@@ -888,16 +894,31 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       }}
                     >
                       <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 110, marginTop: -50 }}
-                        src={overtimeSummaryReport?.signatories?.preparedBy?.signature}
+                        style={{
+                          width: overtimeSummaryReport?.signatories?.preparedBy?.signature ? 50 : 0,
+                          position: 'absolute',
+                          marginLeft: 110,
+                          marginTop: -50,
+                        }}
+                        src={overtimeSummaryReport?.signatories?.preparedBy?.signature ?? null}
                       />
                       <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 415, marginTop: -50 }}
-                        src={overtimeSummaryReport?.signatories?.notedBy?.signature}
+                        style={{
+                          width: overtimeSummaryReport?.signatories?.notedBy?.signature ? 50 : 0,
+                          position: 'absolute',
+                          marginLeft: 415,
+                          marginTop: -50,
+                        }}
+                        src={overtimeSummaryReport?.signatories?.notedBy?.signature ?? null}
                       />
                       <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 735, marginTop: -50 }}
-                        src={overtimeSummaryReport?.signatories?.approvedBy?.signature}
+                        style={{
+                          width: overtimeSummaryReport?.signatories?.approvedBy?.signature ? 50 : 0,
+                          position: 'absolute',
+                          marginLeft: 735,
+                          marginTop: -50,
+                        }}
+                        src={overtimeSummaryReport?.signatories?.approvedBy?.signature ?? null}
                       />
                     </View>
                   </View>
