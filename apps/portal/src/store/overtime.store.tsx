@@ -182,10 +182,10 @@ export const useOvertimeStore = create<OvertimeState>()(
     pdfOvertimeSummaryModalIsOpen: false,
     tab: 1,
 
-    selectedMonth: 1,
-    selectedYear: 2023,
-    selectedPeriod: 'first',
-    selectedEmployeeType: 'Regular',
+    selectedMonth: null,
+    selectedYear: null,
+    selectedPeriod: null,
+    selectedEmployeeType: null,
 
     setSelectedMonth: (selectedMonth: number) => {
       set((state) => ({ ...state, selectedMonth }));

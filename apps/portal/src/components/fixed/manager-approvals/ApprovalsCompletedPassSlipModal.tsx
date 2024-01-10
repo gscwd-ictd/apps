@@ -77,8 +77,15 @@ export const ApprovalsCompletedPassSlipModal = ({
                       : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
                       ? 'For HRMO Approval'
                       : passSlip.status === PassSlipStatus.APPROVED
-                      ? 'Approved'
-                      : passSlip.status === PassSlipStatus.DISAPPROVED
+                      ? `Approved`
+                      : // ${
+                      //   GetDateDifference(
+                      //     `${dayjs(passSlip.dateOfApplication).format('YYYY-MM-DD')} 00:00:00`,
+                      //     `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
+                      //   ).days
+                      // } days ago
+
+                      passSlip.status === PassSlipStatus.DISAPPROVED
                       ? 'Disapproved'
                       : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
                       ? 'Disapproved by HRMO'
@@ -216,12 +223,16 @@ export const ApprovalsCompletedPassSlipModal = ({
           <div className="flex justify-end gap-2">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED ? (
-                ((passSlip.natureOfBusiness === NatureOfBusiness.HALF_DAY || NatureOfBusiness.UNDERTIME) &&
-                  !passSlip.timeOut) ||
-                ((passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ||
-                  NatureOfBusiness.PERSONAL_BUSINESS) &&
-                  !passSlip.timeOut &&
-                  !passSlip.timeIn) ? (
+                passSlip.natureOfBusiness !== NatureOfBusiness.HALF_DAY &&
+                passSlip.natureOfBusiness !== NatureOfBusiness.UNDERTIME &&
+                // &&
+                // GetDateDifference(
+                //   `${dayjs(passSlip.dateOfApplication).format('YYYY-MM-DD')} 00:00:00`,
+                //   `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
+                // ).days <= 1
+                (passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ||
+                  passSlip.natureOfBusiness === NatureOfBusiness.PERSONAL_BUSINESS) &&
+                !passSlip.timeIn ? (
                   <>
                     <Button
                       variant={'warning'}

@@ -634,23 +634,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
 
-                  {/* Monetization Notif for insufficient combined VL/FL/SL */}
-                  {Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance) < 10 &&
-                  watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
-                    <AlertNotification
-                      alertType="warning"
-                      notifMessage="Minimum of 10 Combined Leave Credit Balance must be retained"
-                      dismissible={false}
-                      className="mb-1"
-                    />
-                  ) : null}
-
                   {/* Monetization Notif for insufficient VL/FL even with 0 input */}
-                  {finalVacationAndForcedLeaveBalance < 10 &&
+                  {finalVacationAndForcedLeaveBalance < 5 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Minimum of 10 Vacation Leave Credit Balance must be retained"
+                      notifMessage="Retaining a minimum of 5 Vacation/Forced Leave Credit Balance is required for its monetization"
                       dismissible={false}
                       className="mb-1"
                     />
@@ -660,14 +649,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   {finalSickLeaveBalance < 10 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Minimum of 10 Sick Leave Credit Balance must be retained"
+                      notifMessage="Retaining a minimum 10 Sick Leave Credit Balance is required for its monetization"
                       dismissible={false}
                       className="mb-1"
                     />
                   ) : null}
 
                   {/* Monetization Notif for more than 50% amount */}
-                  {/* {estimatedAmount > Number(maxMonetizationAmount) / 2 &&
+                  {estimatedAmount > Number(maxMonetizationAmount) / 2 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
@@ -675,7 +664,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       dismissible={false}
                       className="mb-1"
                     />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Overlapping Leaves Notifications */}
                   {overlappingLeaveCount > 0 &&
@@ -1125,7 +1114,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               finalVacationLeaveBalance < 0 &&
                               watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                                 ? 'bg-red-300'
-                                : finalVacationAndForcedLeaveBalance < 10 &&
+                                : finalVacationAndForcedLeaveBalance < 5 &&
                                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                                 ? 'bg-red-300'
                                 : ''
@@ -1262,57 +1251,56 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : employeeDetails.profile.sex === 'Female' &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY
                     ? true
-                    : // : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
-                    //   estimatedAmount > Number(maxMonetizationAmount) / 2
-                    // ? true
-                    Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance) < 10 &&
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
+                      estimatedAmount > Number(maxMonetizationAmount) / 2
                     ? true
-                    : //initial value of one of the leave is already below 10 but other one is still sufficient
-                    (finalVacationAndForcedLeaveBalance < 10 &&
+                    : // : Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance) < 10 &&
+                    //   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    // ? true
+                    //initial value of one of the leave is already below 5/10 but other one is still sufficient
+                    (finalVacationAndForcedLeaveBalance < 5 &&
                         vacationLeaveInput > 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput <= 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
-                      (finalVacationAndForcedLeaveBalance < 10 &&
+                      (finalVacationAndForcedLeaveBalance < 5 &&
                         vacationLeaveInput <= 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION)
                     ? true
-                    : //both fields have input but one of them is less than 10
-                    (finalVacationAndForcedLeaveBalance < 10 &&
+                    : //both fields have input but one of them is less than 5/10
+                    (finalVacationAndForcedLeaveBalance < 5 &&
                         vacationLeaveInput > 0 &&
                         finalSickLeaveBalance >= 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
-                      (finalVacationAndForcedLeaveBalance >= 10 &&
+                      (finalVacationAndForcedLeaveBalance >= 5 &&
                         vacationLeaveInput > 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION)
                     ? true
                     : //one field has input and is less than 10
-                    (finalVacationAndForcedLeaveBalance < 10 &&
+                    (finalVacationAndForcedLeaveBalance < 5 &&
                         vacationLeaveInput > 0 &&
                         finalSickLeaveBalance >= 10 &&
                         sickLeaveInput <= 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
-                      (finalVacationAndForcedLeaveBalance >= 10 &&
+                      (finalVacationAndForcedLeaveBalance >= 5 &&
                         vacationLeaveInput <= 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION)
                     ? true
-                    : //both fields have input and both is less than 10
-                    finalVacationAndForcedLeaveBalance < 10 &&
+                    : //both fields have input and VL is less than 5 while SL is less than 10 - disabled
+                    finalVacationAndForcedLeaveBalance < 5 &&
                       vacationLeaveInput > 0 &&
                       finalSickLeaveBalance < 10 &&
                       sickLeaveInput > 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
                     : //both fields have no input
-
                     vacationLeaveInput <= 0 &&
                       sickLeaveInput <= 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION

@@ -109,6 +109,22 @@ export const LeaveCreditMonetizationCalculatorModal = ({
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   <div className="flex flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-col justify-center items-center w-full -mt-4 pb-4">
+                      <label className="text-slate-500 text-xl font-medium">
+                        Computation: Salary x Leave Credits x 0.0481927
+                      </label>
+                      <label className="text-slate-500 text-sm font-medium">
+                        1. The maximum total leave credits is the combination of SL and VL
+                      </label>
+                      <label className="text-slate-500 text-sm font-medium">
+                        2. The default of computed leave credits is maximum total leave
+                      </label>
+                      <label className="text-slate-500 text-sm font-medium">
+                        3. The constant 0.048….. is based on CSC MC No. 02, s.. 2016
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Salary Grade:</label>
 
@@ -116,7 +132,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                         <input
                           disabled
                           type="text"
-                          className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="SG"
                           defaultValue={`SG ${sgIncrement} : P${sgAmount ? sgAmount.toLocaleString() : 0}`}
                         />
@@ -132,7 +148,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                       <div className="w-full md:w-80">
                         <input
                           type="number"
-                          className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="VL and Forced Leave Credits"
                           value={Number(vacationLeave) + Number(forcedLeave)}
                           disabled
@@ -150,7 +166,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                       <div className="w-full md:w-80">
                         <input
                           type="number"
-                          className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="Sick Leave Credits"
                           value={sickLeave}
                           disabled
@@ -168,7 +184,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                       <div className="w-full md:w-80">
                         <input
                           type="number"
-                          className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="Total Leave Credit"
                           value={Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)}
                           disabled
@@ -186,7 +202,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                       <div className="w-full md:w-80">
                         <input
                           type="number"
-                          className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-blue-400 border-2 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="Enter Leave Credit"
                           onChange={(e: any) => computeEstimateAmount(e.target.value)}
                           value={leaveCreditsToCompute}
@@ -206,7 +222,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           disabled
                           type="text"
                           id="monetization"
-                          className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
                           placeholder="Estimated Monetization"
                           value={estimatedAmount.toLocaleString()}
                         />
@@ -219,8 +235,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-between gap-2 text-md">
-            <label>Computation: Salary x Leave Credits x 0.0481927</label>
+          <div className="flex justify-end gap-2 text-md">
             <div className="flex justify-end gap-2 text-md">
               <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={resetComputation}>
                 Reset

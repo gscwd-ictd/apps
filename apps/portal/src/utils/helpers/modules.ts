@@ -14,16 +14,7 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
     //do nothing
   } else {
     if (isEqual(userDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE)) {
-      if (isEmpty(schedule)) {
-        allowed = Modules.filter(
-          (card) =>
-            card.destination === 'pds' ||
-            card.destination === 'dtr' ||
-            card.destination === 'leaves' ||
-            card.destination === 'email' ||
-            card.destination === 'overtime-accomplishment'
-        );
-      } else if (schedule.id && schedule.scheduleBase == ScheduleBases.PUMPING_STATION) {
+      if (schedule.scheduleBase == ScheduleBases.PUMPING_STATION || schedule.scheduleBase == ScheduleBases.FIELD) {
         allowed = Modules.filter(
           (card) =>
             card.destination === 'pds' ||
@@ -50,10 +41,16 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
           (card) =>
             card.destination === 'dtr' || card.destination === 'email' || card.destination === 'overtime-accomplishment'
         );
-      } else if (schedule && schedule.scheduleBase == ScheduleBases.PUMPING_STATION) {
+      } else if (
+        (schedule && schedule.scheduleBase == ScheduleBases.PUMPING_STATION) ||
+        schedule.scheduleBase == ScheduleBases.FIELD
+      ) {
         allowed = Modules.filter(
           (card) =>
-            card.destination === 'dtr' || card.destination === 'email' || card.destination === 'overtime-accomplishment'
+            card.destination === 'dtr' ||
+            card.destination === 'pass-slip' ||
+            card.destination === 'email' ||
+            card.destination === 'overtime-accomplishment'
         );
       } else {
         allowed = Modules.filter(

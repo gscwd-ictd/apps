@@ -43,8 +43,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
-  const sgAmount = employee.employmentDetails.salaryGradeAmount;
-  const sgIncrement = employee.employmentDetails.salaryGrade;
+  const sgAmount = userDetails.employmentDetails.salaryGradeAmount;
+  const sgIncrement = userDetails.employmentDetails.salaryGrade;
 
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(0);

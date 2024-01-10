@@ -28,6 +28,8 @@ import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useRouter } from 'next/router';
+import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
+import { format } from 'date-fns';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -71,6 +73,17 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getPassSlipListFail: state.getPassSlipListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+    }));
 
   const router = useRouter();
 
@@ -145,6 +158,39 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [responsePatch, responsePost, responseCancel]);
 
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+    employeeDetails.employmentDetails.companyId
+  }/${format(new Date(), 'yyyy-MM-dd')}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrFaceScan,
+    isLoading: swrFaceScanIsLoading,
+    error: swrFaceScanError,
+    mutate: mutateFaceScanUrl,
+  } = useSWR(faceScanUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrFaceScanIsLoading) {
+      getTimeLogs(swrFaceScanIsLoading);
+    }
+  }, [swrFaceScanIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrFaceScan)) {
+      getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
+    }
+
+    if (!isEmpty(swrFaceScanError)) {
+      getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
+    }
+  }, [swrFaceScan, swrFaceScanError]);
+
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
   useEffect(() => {
@@ -158,6 +204,11 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   return (
     <>
       <>
+        {/* Failed to get face scan today */}
+        {!isEmpty(swrFaceScanError) ? (
+          <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
+        ) : null}
+
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlips) ? (
           <ToastNotification toastType="error" notifMessage={`${errorPassSlips}: Failed to load Pass Slips.`} />

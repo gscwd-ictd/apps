@@ -323,11 +323,12 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                 size={'md'}
                 loading={false}
                 onClick={() => setConfirmAlertIsOpen(true)}
-                disabled={isDirty && isValid ? false : true}
+                // disabled={isDirty && isValid ? false : true}
+                disabled
                 type="button"
                 className="disabled:cursor-not-allowed"
               >
-                Request Update
+                Request Update Disabled
               </Button>
             </div>
           </div>
