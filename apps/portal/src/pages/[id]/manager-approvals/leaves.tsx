@@ -120,7 +120,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     isLoading: swrLeaveIsLoading,
     error: swrLeaveError,
     mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken, {
+  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });

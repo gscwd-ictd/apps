@@ -11,8 +11,11 @@ import {
   HiClipboardList,
   HiClock,
   HiCollection,
+  HiKey,
+  HiLockClosed,
   HiOutlineBell,
   HiOutlineCheck,
+  HiOutlineCog,
   HiOutlineHome,
   HiOutlineLogout,
   HiOutlineNewspaper,
@@ -26,6 +29,7 @@ import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { isEqual } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import ChangePasswordModal from '../change-password/ChangePasswordModal';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -58,10 +62,25 @@ export const ProfileMenuDropdown = ({
     router.reload();
   };
   const { windowWidth } = UseWindowDimensions();
+
+  const [changePasswordModalIsOpen, setChangePasswordModalIsOpen] = useState<boolean>(false);
+
+  // lose Change Password Modal
+  const closeChangePasswordModal = async () => {
+    setChangePasswordModalIsOpen(false);
+  };
+
   return (
     <>
       {employeeDetails ? (
         <>
+          <ChangePasswordModal
+            modalState={changePasswordModalIsOpen}
+            setModalState={setChangePasswordModalIsOpen}
+            closeModalAction={closeChangePasswordModal}
+            userEmail={employeeDetails.profile.email}
+          />
+
           <Menu as="div" className={`z-50 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
             <div>
               <Menu.Button
@@ -378,14 +397,19 @@ export const ProfileMenuDropdown = ({
                     </div>
                   ) : null}
 
-                  {/* <Menu.Item>
-                {({ active }) => (
-                  <button className={`${active ? 'bg-slate-100' : 'text-gray-900'} group flex w-full items-center gap-3 px-3 py-3 text-sm`}>
-                    <HiOutlineCog className="h-5 w-5 text-gray-600" />
-                    <span className="text-sm tracking-tight text-gray-700">Account Settings</span>
-                  </button>
-                )}
-              </Menu.Item> */}
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? 'bg-slate-100' : 'text-gray-900'
+                        } group flex w-full items-center gap-3 px-3 py-3 text-sm`}
+                        onClick={() => setChangePasswordModalIsOpen(true)}
+                      >
+                        <HiKey className="h-5 w-5 text-gray-600" />
+                        <span className="text-sm tracking-tight text-slate-500">Change Password</span>
+                      </button>
+                    )}
+                  </Menu.Item>
                 </div>
                 <div>
                   <Menu.Item>

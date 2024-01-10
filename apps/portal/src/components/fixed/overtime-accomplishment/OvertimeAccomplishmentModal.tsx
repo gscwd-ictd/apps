@@ -168,6 +168,48 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       />
                     ) : null}
 
+                    {/* not submitted, late OT filing, beyond 5 days allowance for submission from date of approval of OT */}
+                    {!overtimeAccomplishmentDetails.accomplishments &&
+                    overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                    overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+                    GetDateDifference(
+                      `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                      `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                    ).days > 5 ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage={'Deadline for submission has been reached'}
+                        dismissible={false}
+                      />
+                    ) : null}
+
+                    {/* not submitted, future OT filing, beyond 5 days allowance for submission from planned date of OT */}
+                    {!overtimeAccomplishmentDetails.accomplishments &&
+                    overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                    overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                    GetDateDifference(
+                      `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                      `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                    ).days > 5 ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage={'Deadline for submission has been reached'}
+                        dismissible={false}
+                      />
+                    ) : (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage={`${
+                          Number(5) -
+                          GetDateDifference(
+                            `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                            `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                          ).days
+                        } day(s) left before deadline`}
+                        dismissible={false}
+                      />
+                    )}
+
                     {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
                       <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
                     ) : null}
@@ -182,7 +224,18 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         <div className="md:w-1/2">
                           <label className="text-slate-500 w-full text-md ">
                             {DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')}
-                            {/* {overtimeAccomplishmentDetails.overtimeApplicationId} */}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Approval Date:</label>
+
+                        <div className="md:w-1/2">
+                          <label className="text-slate-500 w-full text-md ">
+                            {DateFormatter(overtimeAccomplishmentDetails.dateOfOTApproval, 'MM-DD-YYYY')}
                           </label>
                         </div>
                       </div>
@@ -190,6 +243,20 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                     {/* {schedule.scheduleBase === ScheduleBases.OFFICE ? ( */}
                     <>
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                            Overtime Estimated Hours:
+                          </label>
+
+                          <div className="md:w-1/2">
+                            <label className="text-slate-500 w-full text-md ">
+                              {overtimeAccomplishmentDetails?.estimatedHours}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-col md:flex-row justify-between items-start w-full">
                           <label className="text-slate-500 text-md font-medium whitespace-nowrap">
@@ -414,7 +481,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                 size={'md'}
                 loading={false}
                 form="SubmitAccomplishmentForm"
-                // onClick={(e) => setConfirmOvertimeAccomplishmentModalIsOpen(true)}
                 type="submit"
               >
                 {'Submit Accomplishment'}

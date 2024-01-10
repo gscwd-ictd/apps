@@ -127,7 +127,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     isLoading: swrPassSlipIsLoading,
     error: swrPassSlipError,
     mutate: mutatePassSlips,
-  } = useSWR(passSlipUrl, fetchWithToken, {
+  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
