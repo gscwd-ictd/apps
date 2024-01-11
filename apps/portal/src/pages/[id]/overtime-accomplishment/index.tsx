@@ -11,8 +11,8 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
-import { employeeDummy } from '../../../../src/types/employee.type';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { employeeDummy } from '../../../types/employee.type';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { OvertimeApplicationModal } from 'apps/portal/src/components/fixed/overtime/OvertimeApplicationModal';
@@ -21,6 +21,8 @@ import { OvertimeAccomplishmentTabWindow } from 'apps/portal/src/components/fixe
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import OvertimeAccomplishmentModal from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentModal';
 import { useRouter } from 'next/router';
+import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
+import { format } from 'date-fns';
 
 export default function OvertimeAccomplishment({
   employeeDetails,
@@ -61,6 +63,17 @@ export default function OvertimeAccomplishment({
     getOvertimeAccomplishmentListFail: state.getOvertimeAccomplishmentListFail,
   }));
 
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+    }));
+
   const router = useRouter();
 
   // cancel action for Overtime Pending Modal
@@ -80,6 +93,39 @@ export default function OvertimeAccomplishment({
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
+
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+    employeeDetails.employmentDetails.companyId
+  }/${format(new Date(), 'yyyy-MM-dd')}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrFaceScan,
+    isLoading: swrFaceScanIsLoading,
+    error: swrFaceScanError,
+    mutate: mutateFaceScanUrl,
+  } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrFaceScanIsLoading) {
+      getTimeLogs(swrFaceScanIsLoading);
+    }
+  }, [swrFaceScanIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrFaceScan)) {
+      getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
+    }
+
+    if (!isEmpty(swrFaceScanError)) {
+      getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
+    }
+  }, [swrFaceScan, swrFaceScanError]);
 
   const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/employees/${employeeDetails.employmentDetails.userId}/accomplishments/`;
 
@@ -125,29 +171,31 @@ export default function OvertimeAccomplishment({
 
   return (
     <>
-      <>
-        {/* Overtime Accomplishment List Load Faled */}
-        {!isEmpty(errorOvertimeAccomplishment) ? (
-          <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${errorOvertimeAccomplishment}: Failed to load Overtime Accomplishment List.`}
-            />
-          </>
-        ) : null}
+      {!isEmpty(swrFaceScanError) ? (
+        <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
+      ) : null}
 
-        {/* Submit Accomplishment Error*/}
-        {!isEmpty(errorResponse) ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
-          </>
-        ) : null}
+      {/* Overtime Accomplishment List Load Faled */}
+      {!isEmpty(errorOvertimeAccomplishment) ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorOvertimeAccomplishment}: Failed to load Overtime Accomplishment List.`}
+          />
+        </>
+      ) : null}
 
-        {/* Submit Accomplishment Success*/}
-        {!isEmpty(patchResponse) ? (
-          <ToastNotification toastType="success" notifMessage="Overtime Accomplishment Submitted!" />
-        ) : null}
-      </>
+      {/* Submit Accomplishment Error*/}
+      {!isEmpty(errorResponse) ? (
+        <>
+          <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
+        </>
+      ) : null}
+
+      {/* Submit Accomplishment Success*/}
+      {!isEmpty(patchResponse) ? (
+        <ToastNotification toastType="success" notifMessage="Overtime Accomplishment Submitted!" />
+      ) : null}
 
       <EmployeeProvider employeeData={employee}>
         <Head>

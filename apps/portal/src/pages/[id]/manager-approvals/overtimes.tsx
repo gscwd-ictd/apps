@@ -150,6 +150,12 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     }
   }, [patchResponseOvertime]);
 
+  useEffect(() => {
+    if (!pendingOvertimeModalIsOpen) {
+      setSelectedOvertimeId(''); //reset selected OT ID for OT modal content
+    }
+  }, [pendingOvertimeModalIsOpen]);
+
   const photoUrl_temp = '/profile.jpg';
 
   // // Rendering of leave dates in row

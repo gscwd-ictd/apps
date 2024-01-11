@@ -86,10 +86,14 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     isLoading: swrOvertimeDetailsIsLoading,
     error: swrOvertimeDetailsError,
     mutate: mutateOvertimeDetailsUrl,
-  } = useSWR(overtimeDetailsUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(
+    selectedOvertimeId && employeeDetails.employmentDetails.userId ? overtimeDetailsUrl : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: true,
+    }
+  );
 
   // Initial zustand state update
   useEffect(() => {

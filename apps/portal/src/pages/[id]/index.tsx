@@ -126,7 +126,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     isLoading: swrLeaveMonetizationLoading,
     error: swrLeaveMonetizationError,
   } = useSWR(leaveMonetizationUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+    shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
 
@@ -155,8 +155,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     data: swrLeaveLedger,
     isLoading: swrLeaveLedgerLoading,
     error: swrLeaveLedgerError,
-  } = useSWR(leaveLedgerUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.user._id && userDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
 
@@ -189,8 +189,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(faceScanUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: true,
   });
 
@@ -222,8 +222,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     isLoading: swrDtrIsLoading,
     error: swrDtrError,
     mutate: mutateDtrUrl,
-  } = useSWR(dtrUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.employmentDetails.companyId ? dtrUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: true,
   });
 
