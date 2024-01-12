@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useLeaveMonetizationCalculatorStore } from 'apps/portal/src/store/leave-monetization-calculator.store';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
-import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useChangePasswordStore } from 'apps/portal/src/store/change-password.store';
 
 type ModalProps = {
@@ -65,18 +65,6 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
     },
   });
 
-  const onSubmit: SubmitHandler<ChangePasswordForm> = (data: ChangePasswordForm) => {
-    if (passwordModalPage === 1) {
-      postVerifyCurrentPassword();
-      verifyCurrentPassword(userEmail, watch('currentPassword'));
-    } else if (passwordModalPage === 2) {
-      if (watch('newPassword') != watch('repeatNewPassword')) {
-        setPasswordError('New Password and Repeat New Password mismatch');
-      }
-    } else {
-    }
-  };
-
   const verifyCurrentPassword = async (email: string, password: string) => {
     const { error, result } = await postPortal(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/verify-password`, {
       email,
@@ -88,6 +76,38 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
     } else {
       postVerifyCurrentPasswordSuccess(result);
       setPasswordModalPage(2);
+    }
+  };
+
+  const handleChangePassword = async (email: string, oldPassword: string, newPassword: string) => {
+    const { error, result } = await patchPortal(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/change-password`, {
+      email,
+      oldPassword,
+      newPassword,
+    });
+    if (error) {
+      patchChangePasswordFail(result);
+      setPasswordModalPage(2);
+    } else {
+      patchChangePasswordSuccess(result);
+      closeModalAction();
+      setPasswordModalPage(1);
+    }
+  };
+
+  const onSubmit: SubmitHandler<ChangePasswordForm> = (data: ChangePasswordForm) => {
+    if (passwordModalPage === 1) {
+      postVerifyCurrentPassword();
+      verifyCurrentPassword(userEmail, watch('currentPassword'));
+    } else if (passwordModalPage === 2) {
+      if (watch('newPassword') != watch('repeatNewPassword')) {
+        setPasswordError('New Password and Repeat New Password mismatch');
+      } else if (watch('newPassword').includes(' ') || watch('repeatNewPassword').includes(' ')) {
+        setPasswordError('New Password cannot have spaces');
+      } else {
+        patchChangePassword();
+        handleChangePassword(userEmail, watch('currentPassword'), watch('newPassword'));
+      }
     }
   };
 
@@ -112,10 +132,16 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
           <ToastNotification toastType="error" notifMessage={`${errorVerifyCurrentPassword}`} />
         ) : null}
 
+        {/* New Password Error */}
+        {!isEmpty(errorChangePassword) && modalState ? (
+          <ToastNotification toastType="error" notifMessage={`${errorChangePassword}`} />
+        ) : null}
+
         {/* Password Error */}
         {!isEmpty(passwordError) && modalState ? (
           <ToastNotification toastType="error" notifMessage={`${passwordError}`} />
         ) : null}
+
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">

@@ -27,9 +27,11 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ManagerMenuDropdown } from './ManagerMenuDropdown';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ChangePasswordModal from '../change-password/ChangePasswordModal';
+import { useChangePasswordStore } from 'apps/portal/src/store/change-password.store';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -65,6 +67,10 @@ export const ProfileMenuDropdown = ({
 
   const [changePasswordModalIsOpen, setChangePasswordModalIsOpen] = useState<boolean>(false);
 
+  const { responseChangePassword } = useChangePasswordStore((state) => ({
+    responseChangePassword: state.response.responseChangePassword,
+  }));
+
   // lose Change Password Modal
   const closeChangePasswordModal = async () => {
     setChangePasswordModalIsOpen(false);
@@ -74,6 +80,11 @@ export const ProfileMenuDropdown = ({
     <>
       {employeeDetails ? (
         <>
+          {/* Change Password Success */}
+          {!isEmpty(responseChangePassword) ? (
+            <ToastNotification toastType="success" notifMessage={`Employee Portal Password Changed Successfully`} />
+          ) : null}
+
           <ChangePasswordModal
             modalState={changePasswordModalIsOpen}
             setModalState={setChangePasswordModalIsOpen}
