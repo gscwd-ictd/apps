@@ -141,7 +141,7 @@ export const useChangePasswordStore = create<ChangePasswordState>()(
         response: {
           ...state.response,
           responseVerifyCurrentPassword: false,
-          responseChangePassword: false,
+          responseChangePassword: {},
         },
         error: {
           ...state.error,
