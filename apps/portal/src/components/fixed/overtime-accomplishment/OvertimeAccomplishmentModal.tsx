@@ -157,54 +157,92 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               <div className="w-full h-full flex flex-col  ">
                 <div className="w-full h-full flex flex-col gap-2 ">
                   <div className="w-full flex flex-col gap-2 p-4 rounded">
-                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage={
-                          overtimeAccomplishmentDetails.accomplishments
-                            ? 'For Supervisor Approval'
-                            : 'Awaiting Submission'
-                        }
-                        dismissible={false}
-                      />
-                    ) : null}
+                    <div className="w-full flex flex-col gap-0">
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
+                        <AlertNotification
+                          alertType="warning"
+                          notifMessage={
+                            overtimeAccomplishmentDetails.accomplishments
+                              ? 'For Supervisor Approval'
+                              : 'Awaiting Submission'
+                          }
+                          dismissible={false}
+                        />
+                      ) : null}
 
-                    {/* not submitted, late OT filing, beyond 5 days allowance for submission from date of approval of OT */}
-                    {!overtimeAccomplishmentDetails.accomplishments &&
-                    overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                    overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
-                    GetDateDifference(
-                      `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
-                      `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                    ).days > 5 ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage={'Deadline for submission has been reached'}
-                        dismissible={false}
-                      />
-                    ) : null}
+                      {/* not submitted, late OT filing, beyond 5 days allowance for submission from date of approval of OT */}
+                      {!overtimeAccomplishmentDetails.accomplishments &&
+                      overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                      overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      GetDateDifference(
+                        `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                        `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                      ).days > 5 ? (
+                        <AlertNotification
+                          alertType="error"
+                          notifMessage={'Deadline for submission has been reached'}
+                          dismissible={false}
+                        />
+                      ) : !overtimeAccomplishmentDetails.accomplishments &&
+                        overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                        overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+                        GetDateDifference(
+                          `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                          `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                        ).days <= 5 ? (
+                        <AlertNotification
+                          alertType="warning"
+                          notifMessage={`${
+                            Number(5) -
+                            GetDateDifference(
+                              `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                              `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                            ).days
+                          } day(s) left before deadline of submission`}
+                          dismissible={false}
+                        />
+                      ) : null}
 
-                    {/* not submitted, future OT filing, beyond 30 days allowance for submission from planned date of OT */}
-                    {!overtimeAccomplishmentDetails.accomplishments &&
-                    overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                    overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                    GetDateDifference(
-                      `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
-                      `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                    ).days > 30 ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage={'Deadline for submission has been reached'}
-                        dismissible={false}
-                      />
-                    ) : null}
+                      {/* not submitted, future OT filing, beyond 30 days allowance for submission from planned date of OT */}
+                      {!overtimeAccomplishmentDetails.accomplishments &&
+                      overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                      overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      GetDateDifference(
+                        `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                        `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                      ).days > 30 ? (
+                        <AlertNotification
+                          alertType="error"
+                          notifMessage={'Deadline for submission has been reached'}
+                          dismissible={false}
+                        />
+                      ) : !overtimeAccomplishmentDetails.accomplishments &&
+                        overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                        overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                        GetDateDifference(
+                          `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                          `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                        ).days <= 30 ? (
+                        <AlertNotification
+                          alertType="warning"
+                          notifMessage={`${
+                            Number(30) -
+                            GetDateDifference(
+                              `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                              `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                            ).days
+                          } day(s) left before deadline of submission`}
+                          dismissible={false}
+                        />
+                      ) : null}
 
-                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
-                      <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
-                    ) : null}
-                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
-                      <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
-                    ) : null}
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                        <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
+                      ) : null}
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                        <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
+                      ) : null}
+                    </div>
 
                     <div className="flex flex-row justify-between items-center w-full">
                       <div className="flex flex-col md:flex-row justify-between items-start w-full">
@@ -465,17 +503,37 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
           <div className="flex justify-end gap-2">
             {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
             overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
-            overtimeAccomplishmentDetails?.accomplishments ? (
+            overtimeAccomplishmentDetails?.accomplishments ||
+            (!overtimeAccomplishmentDetails.accomplishments &&
+              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+              overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+              GetDateDifference(
+                `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+              ).days > 5) ||
+            (!overtimeAccomplishmentDetails.accomplishments &&
+              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+              overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+              GetDateDifference(
+                `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+              ).days > 30) ? (
               <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                 Close
               </Button>
             ) : (
               <Button
                 disabled={
-                  ((!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                  (schedule.scheduleBase === ScheduleBases.OFFICE &&
+                    (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
                     (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
                   overtimeAccomplishmentDetails.plannedDate > dayjs().format('YYYY-MM-DD') ||
                   !watch('accomplishments')
+                    ? true
+                    : (schedule.scheduleBase != ScheduleBases.OFFICE &&
+                        (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
+                      overtimeAccomplishmentDetails.plannedDate > dayjs().format('YYYY-MM-DD') ||
+                      !watch('accomplishments')
                     ? true
                     : false
                 }

@@ -26,6 +26,8 @@ export type ChangePasswordState = {
   patchChangePassword: () => void;
   patchChangePasswordSuccess: (response: any) => void;
   patchChangePasswordFail: (error: string) => void;
+
+  emptyResponseAndError: () => void;
 };
 
 export const useChangePasswordStore = create<ChangePasswordState>()(
@@ -129,6 +131,22 @@ export const useChangePasswordStore = create<ChangePasswordState>()(
         error: {
           ...state.error,
           errorChangePassword: error,
+        },
+      }));
+    },
+
+    emptyResponseAndError: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          responseVerifyCurrentPassword: false,
+          responseChangePassword: false,
+        },
+        error: {
+          ...state.error,
+          errorVerifyCurrentPassword: '',
+          errorChangePassword: '',
         },
       }));
     },

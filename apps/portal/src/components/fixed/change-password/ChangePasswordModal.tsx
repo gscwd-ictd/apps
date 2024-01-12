@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
 import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useChangePasswordStore } from 'apps/portal/src/store/change-password.store';
+import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 
 type ModalProps = {
   modalState: boolean;
@@ -37,6 +38,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
     patchChangePassword,
     patchChangePasswordSuccess,
     patchChangePasswordFail,
+    emptyResponseAndError,
   } = useChangePasswordStore((state) => ({
     responseVerifyCurrentPassword: state.response.responseVerifyCurrentPassword,
     responseChangePassword: state.response.responseChangePassword,
@@ -50,6 +52,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
     patchChangePassword: state.patchChangePassword,
     patchChangePasswordSuccess: state.patchChangePasswordSuccess,
     patchChangePasswordFail: state.patchChangePasswordFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const { windowWidth } = UseWindowDimensions();
@@ -120,6 +123,14 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
   }, [passwordError]);
 
   useEffect(() => {
+    if (errorVerifyCurrentPassword) {
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
+    }
+  }, [errorVerifyCurrentPassword]);
+
+  useEffect(() => {
     setPasswordModalPage(1);
     reset();
   }, [modalState]);
@@ -128,19 +139,19 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
     <>
       <Modal size={`${windowWidth > 768 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
         {/* Incorrect Current Password Error */}
-        {!isEmpty(errorVerifyCurrentPassword) && modalState ? (
+        {/* {!isEmpty(errorVerifyCurrentPassword) && modalState ? (
           <ToastNotification toastType="error" notifMessage={`${errorVerifyCurrentPassword}`} />
-        ) : null}
+        ) : null} */}
 
         {/* New Password Error */}
-        {!isEmpty(errorChangePassword) && modalState ? (
+        {/* {!isEmpty(errorChangePassword) && modalState ? (
           <ToastNotification toastType="error" notifMessage={`${errorChangePassword}`} />
-        ) : null}
+        ) : null} */}
 
-        {/* Password Error */}
-        {!isEmpty(passwordError) && modalState ? (
+        {/* Front End Password Error */}
+        {/* {!isEmpty(passwordError) && modalState ? (
           <ToastNotification toastType="error" notifMessage={`${passwordError}`} />
-        ) : null}
+        ) : null} */}
 
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
@@ -170,6 +181,42 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
             </>
           ) : (
             <form id="ChangePasswordForm" onSubmit={handleSubmit(onSubmit)}>
+              {loadingVerifyCurrentPassword || loadingChangePassword ? (
+                <AlertNotification
+                  logo={<LoadingSpinner size="xs" />}
+                  alertType="info"
+                  notifMessage="Submitting request"
+                  dismissible={false}
+                />
+              ) : null}
+
+              {!isEmpty(errorVerifyCurrentPassword) ? (
+                <AlertNotification
+                  alertType="error"
+                  notifMessage={errorVerifyCurrentPassword}
+                  dismissible={false}
+                  className="mb-1"
+                />
+              ) : null}
+
+              {!isEmpty(errorChangePassword) ? (
+                <AlertNotification
+                  alertType="error"
+                  notifMessage={errorChangePassword}
+                  dismissible={false}
+                  className="mb-1"
+                />
+              ) : null}
+
+              {!isEmpty(passwordError) ? (
+                <AlertNotification
+                  alertType="error"
+                  notifMessage={passwordError}
+                  dismissible={false}
+                  className="mb-1"
+                />
+              ) : null}
+
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-3 p-4 rounded">
                   <div className="flex flex-col gap-2">
@@ -182,13 +229,30 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
                           <span className="text-red-600">*</span>
                         </label>
                         <div className="w-full lg:w-60">
-                          <input
+                          <LabelInput
+                            id=""
+                            label=""
+                            type="password"
+                            controller={{
+                              ...register('currentPassword', {
+                                onChange: (e) => {
+                                  setValue('currentPassword', e.target.value, {
+                                    shouldValidate: true,
+                                  });
+                                },
+                              }),
+                            }}
+                            isError={errorVerifyCurrentPassword ? true : false}
+                            errorMessage={''}
+                            className="border-slate-300 text-slate-500 h-12 text-md w-full lg:w-60 rounded"
+                          />
+                          {/* <input
                             type="password"
                             className="border-slate-300 text-slate-500 h-12 text-md w-full lg:w-60 rounded"
                             placeholder="Enter Current Password"
                             required
                             {...register('currentPassword')}
-                          />
+                          /> */}
                         </div>
                       </div>
                     ) : passwordModalPage === 2 ? (

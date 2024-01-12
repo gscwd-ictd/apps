@@ -67,14 +67,23 @@ export const ProfileMenuDropdown = ({
 
   const [changePasswordModalIsOpen, setChangePasswordModalIsOpen] = useState<boolean>(false);
 
-  const { responseChangePassword } = useChangePasswordStore((state) => ({
+  const { responseChangePassword, emptyResponseAndError } = useChangePasswordStore((state) => ({
     responseChangePassword: state.response.responseChangePassword,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
-  // lose Change Password Modal
+  // close Change Password Modal
   const closeChangePasswordModal = async () => {
     setChangePasswordModalIsOpen(false);
   };
+
+  useEffect(() => {
+    if (!isEmpty(responseChangePassword)) {
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 3000);
+    }
+  }, [responseChangePassword]);
 
   return (
     <>
