@@ -409,22 +409,18 @@ export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
     try {
       const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`);
       if (applicantPds.status === 200 && employee.employmentDetails.userId === context.params?.id) {
-        console.log('1');
         return { props: { employee, pdsDetails: applicantPds.data } };
       } else if (applicantPds.status === 200 && employee.employmentDetails.userId !== context.params?.id) {
-        console.log('2');
         return {
           props: {},
           redirect: { destination: '/404', permanent: false },
         };
       } else if (applicantPds.status === 404 && employee.employmentDetails.userId === context.params?.id) {
-        console.log('3');
         return {
           props: { employee, pdsDetails: applicantPds.data },
           redirect: { destination: '/401', permanent: false },
         };
       } else {
-        console.log('4');
         return {
           props: {},
           redirect: {
@@ -434,7 +430,6 @@ export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
         };
       }
     } catch {
-      console.log('5');
       return {
         props: {},
         redirect: { destination: '/404', permanent: false },
