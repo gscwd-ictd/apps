@@ -27,6 +27,8 @@ import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { useRouter } from 'next/router';
 import UseRenderOvertimeStatus from 'apps/portal/src/utils/functions/RenderOvertimeStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import TempPhotoProfile from '../.../../../../../public/profile.jpg';
+import Image from 'next/image';
 
 export default function OvertimeApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -156,8 +158,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     }
   }, [pendingOvertimeModalIsOpen]);
 
-  const photoUrl_temp = '/profile.jpg';
-
   // // Rendering of leave dates in row
   const renderRowEmployeeAvatar = (employee: Array<EmployeeOvertimeDetail>) => {
     if (employee.length <= 4) {
@@ -165,11 +165,18 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
         <div className="flex flex-row gap-1 justify-start items-center">
           {employee.map((employees: EmployeeOvertimeDetail) => (
             <div key={employees.employeeId}>
-              <img
+              <Image
+                width={20}
+                height={20}
                 className="rounded-full border w-8"
-                src={employees.avatarUrl ? employees.avatarUrl : photoUrl_temp}
+                src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
                 alt={'photo'}
-              ></img>
+              />
+              {/* <img
+                className="rounded-full border w-8"
+                src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
+                alt={'photo'}
+              ></img> */}
             </div>
           ))}
         </div>
@@ -177,11 +184,18 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     } else {
       return (
         <div className="flex flex-row gap-1 justify-start items-center">
-          <img
+          <Image
+            width={20}
+            height={20}
             className="rounded-full border w-8"
-            src={employee[0].avatarUrl ? employee[0].avatarUrl : photoUrl_temp}
+            src={employee[0].avatarUrl ? employee[0].avatarUrl : TempPhotoProfile}
             alt={'photo'}
-          ></img>
+          />
+          {/* <img
+            className="rounded-full border w-8"
+            src={employee[0].avatarUrl ? employee[0].avatarUrl : TempPhotoProfile}
+            alt={'photo'}
+          ></img> */}
           <label>{`+ ${employee.length - 1} more...`}</label>
         </div>
       );

@@ -19,10 +19,17 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { TrainingTable } from 'apps/portal/src/components/fixed/training-selection/TrainingTable';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
 import TrainingNominationModal from 'apps/portal/src/components/fixed/training-selection/TrainingNominationModal';
 import { useRouter } from 'next/router';
+import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { Training } from 'libs/utils/src/lib/types/training.type';
+import { createColumnHelper } from '@tanstack/react-table';
+import dayjs from 'dayjs';
+import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
+import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -45,6 +52,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionListFail,
     trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
+    setIndividualTrainingDetails,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
     loadingTrainingList: state.loading.loadingTrainingList,
@@ -56,6 +64,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
     trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
+    setIndividualTrainingDetails: state.setIndividualTrainingDetails,
   }));
 
   const router = useRouter();
@@ -98,6 +107,54 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
   const closeTrainingNominationModal = async () => {
     setTrainingNominationModalIsOpen(false);
   };
+
+  // Render row actions in the table component
+  const renderRowActions = (rowData: Training) => {
+    setIndividualTrainingDetails(rowData);
+    setTrainingModalIsOpen(true);
+  };
+
+  // Define table columns
+  const columnHelper = createColumnHelper<Training>();
+  const columns = [
+    columnHelper.accessor('courseTitle', {
+      header: 'Course Title',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('location', {
+      header: 'Location',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('trainingStart', {
+      header: 'Start',
+      filterFn: 'equalsString',
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+    columnHelper.accessor('trainingEnd', {
+      header: 'End',
+      filterFn: 'equalsString',
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+    columnHelper.accessor('numberOfSlots', {
+      header: 'Slots',
+      cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.accessor('trainingPreparationStatus', {
+      header: 'Status',
+      cell: (info) => UseRenderTrainingStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+  ];
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: trainingList,
+    columnVisibility: { id: false, employeeId: false },
+  });
+  console.log(trainingList);
 
   return (
     <>
@@ -142,7 +199,15 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
             ) : (
               <ContentBody>
                 <div className="pb-10">
-                  <TrainingTable employeeDetails={employeeDetails} />
+                  <DataTablePortal
+                    onRowClick={(row) => renderRowActions(row.original as Training)}
+                    textSize={'text-lg'}
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={false}
+                    paginate={true}
+                  />
+                  {/* <TrainingTable employeeDetails={employeeDetails} /> */}
                 </div>
               </ContentBody>
             )}

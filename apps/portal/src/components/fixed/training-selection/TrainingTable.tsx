@@ -92,7 +92,7 @@ export const TrainingTable = ({ employeeDetails }: TrainingProps) => {
                             {DateFormatter(training.trainingEnd, 'MM-DD-YYYY')}
                           </td>
                           <td className={`whitespace-nowrap border text-center py-2 px-2`}>{training.numberOfSlots}</td>
-                          <td className={`border text-center py-2 capitalize`}>{training.preparationStatus}</td>
+                          <td className={`border text-center py-2 capitalize`}>{training.trainingPreparationStatus}</td>
 
                           <td className={`py-2 text-center border`}>
                             <Button

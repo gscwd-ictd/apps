@@ -1,4 +1,5 @@
-import { TrainingTypeId } from './training-type.type';
+import { TrainingPreparationStatus, TrainingStatus } from '../enums/training.enum';
+import { TrainingType, TrainingTypeId } from './training-type.type';
 
 export type RecommendedEmployee = {
   employeeId: string;
@@ -14,9 +15,9 @@ export type Training = {
   trainingStart: string;
   trainingEnd: string;
   source: string;
-  type: string;
-  trainingPreparationStatus: string;
-  status: string;
+  type: TrainingType;
+  trainingPreparationStatus: TrainingPreparationStatus;
+  status: TrainingStatus;
 };
 
 // edit/viewing type
