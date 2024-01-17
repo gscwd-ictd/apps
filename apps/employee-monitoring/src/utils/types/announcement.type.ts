@@ -6,6 +6,7 @@ export type Announcement = {
   description: string;
   url: string;
   image: string;
+  status: string;
 };
 
 export type FormPostAnnouncement = Omit<Announcement, '_id'> & { app: string };

@@ -13,6 +13,9 @@ import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } f
 import { LabelInput } from '../../../inputs/LabelInput';
 import { isEmpty } from 'lodash';
 
+import { SelectListRF } from '../../../inputs/SelectListRF';
+import { announcementStatus } from 'libs/utils/src/lib/constants/announcement-status.const';
+
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,7 +29,94 @@ const yupSchema = yup
     date: yup.string().required('Date is required'),
     description: yup.string().required('Description is required'),
     url: yup.string().required('URL is required'),
-    image: yup.string().required('Image is required'),
+    status: yup.string().required('Status is required'),
+    image: yup
+      .mixed()
+      .test('fileExists', 'No file uploaded', async (value) => {
+        return value instanceof FileList && value.length > 0;
+      })
+      .test('type', 'Only .jpeg, .jpg, or .png file is supported', (value) => {
+        if (value instanceof FileList && value.length > 0) {
+          const isCorrectType = Array.from(value).every((file) => {
+            return ['image/jpeg', 'image/png'].includes(file.type);
+          });
+          if (!isCorrectType) {
+            return false;
+          }
+        }
+        return true;
+      })
+      .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
+        if (value instanceof FileList && value.length > 0) {
+          const file = value[0];
+          const fileSizeInMB = file.size / (1024 * 1024);
+          if (fileSizeInMB > 5) {
+            return false;
+          }
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              const { width, height } = img;
+              resolve(width <= 843 && height <= 843);
+            };
+            img.onerror = () => resolve(false);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              img.src = e.target.result as string;
+            };
+            reader.onerror = () => resolve(false);
+            reader.readAsDataURL(file);
+          });
+        }
+        return false;
+      }),
+    // .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
+    //   if (value instanceof FileList && value.length > 0) {
+    //     const file = value[0];
+    //     const fileSizeInMB = file.size / (1024 * 1024);
+    //     const reader = new FileReader();
+    //     reader.onload = (e) => {
+    //       const img = new Image();
+    //       img.onload = () => {
+    //         const { width, height } = img;
+    //         if (fileSizeInMB <= 5 && width <= 843 && height <= 843) {
+    //           return true;
+    //         }
+    //       };
+    //       img.src = e.target.result as string;
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    //   return false;
+    // }),
+
+    // .test('fileSize', 'Image must be less than or equal to 5MB', async (value) => {
+    //   if (value instanceof FileList && value.length > 0) {
+    //     const file = value[0];
+    //     const fileSizeInMB = file.size / (1024 * 1024);
+    //     return fileSizeInMB <= 5;
+    //   } else {
+    //     return false;
+    //   }
+    // })
+    // .test('fileDimensions', 'Image must be less than or equal to 843x843 pixels', (value) => {
+    //   if (value instanceof FileList && value.length > 0) {
+    //     const file = value[0];
+    //     const reader = new FileReader();
+    //     reader.onload = (e) => {
+    //       const img = new Image();
+    //       img.onload = () => {
+    //         const { width, height } = img;
+    //         if (width <= 843 && height <= 843) {
+    //           return true;
+    //         }
+    //       };
+    //       img.src = e.target.result as string;
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    //   return false;
+    // }),
   })
   .required();
 
@@ -91,6 +181,58 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
       reset();
     }
   }, [modalState]);
+
+  // drag and drop
+  // const [selectedImage, setSelectedImage] = useState(null);
+  // const [isImageUploaded, setIsImageUploaded] = useState(false);
+
+  // const onDragOver = (event) => {
+  //   event.preventDefault();
+  // };
+
+  // click to upload
+  // const onDrop = (event) => {
+  //   event.preventDefault();
+  //   const files = event.dataTransfer.files;
+  //   if (files.length) {
+  //     handleImageUpload(files[0]);
+  //   }
+  // };
+
+  // const handleImageUpload = (event) => {
+  //   if (event.target.files.length > 0) {
+  //     const file = event.target.files[0];
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setSelectedImage(reader.result);
+  //       setIsImageUploaded(true); // Set isImageUploaded to true after an image is uploaded
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  // drag and drop
+  // const onDrop = (event) => {
+  //   event.preventDefault();
+  //   const files = event.dataTransfer.files;
+  //   if (files.length) {
+  //     handleImageUpload(files[0]);
+  //   }
+  // };
+
+  // const handleImageUpload = (file: File) => {
+  //   const reader = new FileReader();
+  //   reader.onloadend = () => {
+  //     setSelectedImage(reader.result);
+  //     setIsImageUploaded(true); // Set isImageUploaded to true after an image is uploaded
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
+
+  // const handleImageRemove = () => {
+  //   setSelectedImage(null);
+  //   setIsImageUploaded(false); // Set isImageUploaded to false after an image is removed
+  // };
 
   return (
     <>
@@ -193,6 +335,44 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                   errorMessage={errors.image?.message}
                 />
               </div>
+
+              {/* drag and drop */}
+              {/* <div style={{ position: 'relative', height: '200px', width: '200px', marginBottom: '5rem' }}>
+                <LabelInput
+                  label={'Image'}
+                  id={'image'}
+                  type={'file'}
+                  controller={{
+                    ...register('image', { onChange: handleImageUpload }),
+                  }}
+                  isError={!isImageUploaded || errors.image ? true : false}
+                  errorMessage={!isImageUploaded ? 'No file uploaded' : errors.image?.message}
+                  style={{ position: 'absolute', top: '0', left: '0', zIndex: '1', display: 'none' }}
+                />
+                <div
+                  onClick={() => !isImageUploaded && document.getElementById('image')?.click()}
+                  onDragOver={isImageUploaded ? null : onDragOver}
+                  onDrop={isImageUploaded ? null : onDrop}
+                  style={{ height: '200px', width: '200px', border: '1px dashed black', position: 'relative' }}
+                >
+                  {selectedImage ? (
+                    <div>
+                      <img src={selectedImage} alt="Selected" style={{ width: '100%', height: '100%' }} />
+                      <button onClick={handleImageRemove}>Remove</button>
+                    </div>
+                  ) : (
+                    <div>Drag and drop or click to upload</div>
+                  )}
+                </div>
+              </div> */}
+
+              {/* Active / inactive announcement select*/}
+              <SelectListRF
+                id={'status'}
+                selectList={announcementStatus}
+                controller={{ ...register('status') }}
+                label={'Status'}
+              />
             </form>
           </div>
         </Modal.Body>

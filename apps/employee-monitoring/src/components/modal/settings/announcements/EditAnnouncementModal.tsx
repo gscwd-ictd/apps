@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -12,6 +12,9 @@ import { Announcement } from 'apps/employee-monitoring/src/utils/types/announcem
 
 import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+
+import { SelectListRF } from '../../../inputs/SelectListRF';
+import { announcementStatus } from 'libs/utils/src/lib/constants/announcement-status.const';
 
 type EditModalProps = {
   modalState: boolean;
@@ -27,6 +30,7 @@ enum AnnouncementKeys {
   DATE = 'date',
   URL = 'url',
   IMAGE = 'image',
+  STATUS = 'status',
 }
 
 const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
@@ -57,7 +61,47 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
       date: yup.string().required('Date is required'),
       description: yup.string().required('Description is required'),
       url: yup.string().required('URL is required'),
-      image: yup.string().required('Image is required'),
+      status: yup.string().required('Status is required'),
+      image: yup
+        .mixed()
+        .test('fileExists', 'No file uploaded', async (value) => {
+          return value instanceof FileList && value.length > 0;
+        })
+        .test('type', 'Only .jpeg, .jpg, or .png file is supported', (value) => {
+          if (value instanceof FileList && value.length > 0) {
+            const isCorrectType = Array.from(value).every((file) => {
+              return ['image/jpeg', 'image/png'].includes(file.type);
+            });
+            if (!isCorrectType) {
+              return false;
+            }
+          }
+          return true;
+        })
+        .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
+          if (value instanceof FileList && value.length > 0) {
+            const file = value[0];
+            const fileSizeInMB = file.size / (1024 * 1024);
+            if (fileSizeInMB > 5) {
+              return false;
+            }
+            return new Promise((resolve) => {
+              const img = new Image();
+              img.onload = () => {
+                const { width, height } = img;
+                resolve(width <= 843 && height <= 843);
+              };
+              img.onerror = () => resolve(false);
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                img.src = e.target.result as string;
+              };
+              reader.onerror = () => resolve(false);
+              reader.readAsDataURL(file);
+            });
+          }
+          return false;
+        }),
     })
     .required();
 
@@ -107,6 +151,39 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
       });
     }
   }, [rowData]);
+
+  // drag and drop
+  // const [selectedImage, setSelectedImage] = useState(null);
+  // const [isImageUploaded, setIsImageUploaded] = useState(false);
+
+  // const onDragOver = (event) => {
+  //   event.preventDefault();
+  // };
+
+  // const onDrop = (event) => {
+  //   event.preventDefault();
+  //   const files = event.dataTransfer.files;
+  //   if (files.length) {
+  //     handleImageUpload(files[0]);
+  //   }
+  // };
+
+  // const handleImageUpload = (event) => {
+  //   if (event.target.files.length > 0) {
+  //     const file = event.target.files[0];
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setSelectedImage(reader.result);
+  //       setIsImageUploaded(true); // Set isImageUploaded to true after an image is uploaded
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  // const handleImageRemove = () => {
+  //   setSelectedImage(null);
+  //   setIsImageUploaded(false); // Set isImageUploaded to false after an image is removed
+  // };
 
   return (
     <>
@@ -200,6 +277,47 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
                   errorMessage={errors.image?.message}
                 />
               </div>
+
+              {/* drag and drop */}
+              {/* <div style={{ position: 'relative', height: '200px', width: '200px', marginBottom: '5rem' }}>
+                <LabelInput
+                  label={'Image'}
+                  id={'image'}
+                  type={'file'}
+                  controller={{
+                    ...register('image', { onChange: handleImageUpload }),
+                  }}
+                  isError={!isImageUploaded || errors.image ? true : false}
+                  errorMessage={!isImageUploaded ? 'No file uploaded' : errors.image?.message}
+                  style={{ position: 'absolute', top: '0', left: '0', zIndex: '1', display: 'none' }}
+                />
+                <div
+                  onClick={() => !isImageUploaded && document.getElementById('image')?.click()}
+                  onDragOver={isImageUploaded ? null : onDragOver}
+                  onDrop={isImageUploaded ? null : onDrop}
+                  style={{ height: '200px', width: '200px', border: '1px dashed black', position: 'relative' }}
+                >
+                  {selectedImage ? (
+                    <div>
+                      <img src={selectedImage} alt="Selected" style={{ width: '100%', height: '100%' }} />
+                      <button onClick={handleImageRemove}>Remove</button>
+                    </div>
+                  ) : (
+                    <div>Drag and drop or click to upload</div>
+                  )}
+                </div>
+              </div> */}
+
+              {/* Active / inactive announcement select*/}
+              <SelectListRF
+                id={'status'}
+                selectList={announcementStatus}
+                defaultOption={announcementStatus.find((status) => status.value === rowData.status)?.label}
+                controller={{ ...register('status') }}
+                label={'Status'}
+                isError={errors.status ? true : false}
+                errorMessage={errors.status?.message}
+              />
             </form>
           </div>
         </Modal.Body>

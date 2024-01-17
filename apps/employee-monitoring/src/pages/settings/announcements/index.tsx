@@ -9,6 +9,8 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
 import { Announcement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
+import TestAnnouncement from 'apps/employee-monitoring/public/Test-Announcement.png';
+
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -28,17 +30,59 @@ const Announcements: Announcement[] = [
     description: 'This is announcement 1',
     date: '2021-09-01',
     url: 'https://www.google.com',
-    image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
+    image: TestAnnouncement.src,
+    status: 'inactive',
+    // image: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
+    // image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
   },
   {
     _id: '2002',
     title: 'Announcement 2',
     description: 'This is announcement 2',
-    date: '2021-09-01',
-    url: 'https://www.google.com',
-    image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
+    date: '2021-09-02',
+    url: 'https://www.google2.com',
+    image: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
+    status: 'active',
+    // image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
+  },
+  {
+    _id: '2003',
+    title: 'Announcement 3',
+    description: 'This is announcement 3',
+    date: '2021-09-03',
+    url: 'https://www.google3.com',
+    image: TestAnnouncement.src,
+    status: 'active',
+    // image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
   },
 ];
+
+const imageUrl = 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png';
+
+const getImageResolution = async (imageUrl: string) => {
+  const image = new Image();
+  image.src = imageUrl;
+
+  return new Promise<{ width: number; height: number }>((resolve, reject) => {
+    image.onload = () => {
+      console.log('Image resolution:', { width: image.width, height: image.height });
+      resolve({ width: image.width, height: image.height });
+    };
+
+    image.onerror = () => {
+      reject(new Error('Failed to load image'));
+    };
+  });
+};
+
+// Usage
+getImageResolution(imageUrl)
+  .then((resolution) => {
+    console.log('Image resolution:', resolution);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -118,11 +162,6 @@ const Index = () => {
       header: () => 'Title',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('description', {
-      enableSorting: true,
-      header: () => 'Description',
-      cell: (info) => info.getValue(),
-    }),
     columnHelper.accessor('date', {
       enableSorting: true,
       header: () => 'Date',
@@ -142,9 +181,14 @@ const Index = () => {
       header: () => 'Image',
       cell: (info) => (
         <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
-          <img src={info.getValue()} alt="Image" width={'50rem'} height={'50rem'} />
+          <img src={info.getValue()} alt="Image" width={'84.3rem'} height={'84.3rem'} />
         </a>
       ),
+    }),
+    columnHelper.accessor('status', {
+      enableSorting: true,
+      header: () => 'Status',
+      cell: (info) => info.getValue().charAt(0).toUpperCase() + info.getValue().slice(1),
     }),
     columnHelper.display({
       id: 'actions',
