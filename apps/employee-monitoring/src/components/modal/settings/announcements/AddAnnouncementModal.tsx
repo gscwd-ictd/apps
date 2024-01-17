@@ -14,13 +14,18 @@ import { LabelInput } from '../../../inputs/LabelInput';
 import { isEmpty } from 'lodash';
 
 import { SelectListRF } from '../../../inputs/SelectListRF';
-import { announcementStatus } from 'libs/utils/src/lib/constants/announcement-status.const';
+
 
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
+
+const announcementStatus = [
+  { label: 'Active', value: 'active' },
+  { label: 'Inactive', value: 'inactive' },
+];
 
 // yup error handling initialization
 const yupSchema = yup
@@ -70,53 +75,6 @@ const yupSchema = yup
         }
         return false;
       }),
-    // .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
-    //   if (value instanceof FileList && value.length > 0) {
-    //     const file = value[0];
-    //     const fileSizeInMB = file.size / (1024 * 1024);
-    //     const reader = new FileReader();
-    //     reader.onload = (e) => {
-    //       const img = new Image();
-    //       img.onload = () => {
-    //         const { width, height } = img;
-    //         if (fileSizeInMB <= 5 && width <= 843 && height <= 843) {
-    //           return true;
-    //         }
-    //       };
-    //       img.src = e.target.result as string;
-    //     };
-    //     reader.readAsDataURL(file);
-    //   }
-    //   return false;
-    // }),
-
-    // .test('fileSize', 'Image must be less than or equal to 5MB', async (value) => {
-    //   if (value instanceof FileList && value.length > 0) {
-    //     const file = value[0];
-    //     const fileSizeInMB = file.size / (1024 * 1024);
-    //     return fileSizeInMB <= 5;
-    //   } else {
-    //     return false;
-    //   }
-    // })
-    // .test('fileDimensions', 'Image must be less than or equal to 843x843 pixels', (value) => {
-    //   if (value instanceof FileList && value.length > 0) {
-    //     const file = value[0];
-    //     const reader = new FileReader();
-    //     reader.onload = (e) => {
-    //       const img = new Image();
-    //       img.onload = () => {
-    //         const { width, height } = img;
-    //         if (width <= 843 && height <= 843) {
-    //           return true;
-    //         }
-    //       };
-    //       img.src = e.target.result as string;
-    //     };
-    //     reader.readAsDataURL(file);
-    //   }
-    //   return false;
-    // }),
   })
   .required();
 
@@ -190,7 +148,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   //   event.preventDefault();
   // };
 
-  // click to upload
   // const onDrop = (event) => {
   //   event.preventDefault();
   //   const files = event.dataTransfer.files;
@@ -209,24 +166,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   //     };
   //     reader.readAsDataURL(file);
   //   }
-  // };
-
-  // drag and drop
-  // const onDrop = (event) => {
-  //   event.preventDefault();
-  //   const files = event.dataTransfer.files;
-  //   if (files.length) {
-  //     handleImageUpload(files[0]);
-  //   }
-  // };
-
-  // const handleImageUpload = (file: File) => {
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => {
-  //     setSelectedImage(reader.result);
-  //     setIsImageUploaded(true); // Set isImageUploaded to true after an image is uploaded
-  //   };
-  //   reader.readAsDataURL(file);
   // };
 
   // const handleImageRemove = () => {

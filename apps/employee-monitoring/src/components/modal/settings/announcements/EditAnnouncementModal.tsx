@@ -14,7 +14,6 @@ import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } f
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
 import { SelectListRF } from '../../../inputs/SelectListRF';
-import { announcementStatus } from 'libs/utils/src/lib/constants/announcement-status.const';
 
 type EditModalProps = {
   modalState: boolean;
@@ -32,6 +31,11 @@ enum AnnouncementKeys {
   IMAGE = 'image',
   STATUS = 'status',
 }
+
+const announcementStatus = [
+  { label: 'Active', value: 'active' },
+  { label: 'Inactive', value: 'inactive' },
+];
 
 const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
   modalState,
