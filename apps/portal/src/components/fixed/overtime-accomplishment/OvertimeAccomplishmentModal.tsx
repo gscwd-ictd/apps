@@ -469,6 +469,23 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
                           overtimeAccomplishmentDetails?.accomplishments
                             ? true
+                            : (!overtimeAccomplishmentDetails.accomplishments &&
+                                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                                overtimeAccomplishmentDetails.plannedDate <
+                                  overtimeAccomplishmentDetails.dateOfOTApproval &&
+                                GetDateDifference(
+                                  `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                                ).days > 5) ||
+                              (!overtimeAccomplishmentDetails.accomplishments &&
+                                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                                overtimeAccomplishmentDetails.plannedDate >=
+                                  overtimeAccomplishmentDetails.dateOfOTApproval &&
+                                GetDateDifference(
+                                  `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                                ).days > 30)
+                            ? true
                             : false
                         }
                         rows={3}

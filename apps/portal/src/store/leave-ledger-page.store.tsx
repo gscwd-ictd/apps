@@ -1,4 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+//this store is for the leave ledger found in the dedicated view leave ledger modal
 import { create } from 'zustand';
 import { LeaveLedgerEntry, LeaveAdjustmentResponse } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { LeaveBenefit } from 'libs/utils/src/lib/types/leave-benefits.type';
