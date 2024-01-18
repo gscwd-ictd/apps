@@ -15,6 +15,11 @@ import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/Label
 
 import { SelectListRF } from '../../../inputs/SelectListRF';
 
+const announcementStatus = [
+  { label: 'Active', value: 'active' },
+  { label: 'Inactive', value: 'inactive' },
+];
+
 type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,11 +36,6 @@ enum AnnouncementKeys {
   IMAGE = 'image',
   STATUS = 'status',
 }
-
-const announcementStatus = [
-  { label: 'Active', value: 'active' },
-  { label: 'Inactive', value: 'inactive' },
-];
 
 const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
   modalState,
@@ -116,15 +116,18 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
     setValue,
     handleSubmit,
     formState: { errors, isSubmitting: updateFormLoading },
+    trigger,
   } = useForm<Announcement>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     resolver: yupResolver(yupSchema),
   });
 
   // form submission
-  const onSubmit: SubmitHandler<Announcement> = (data: Announcement) => {
-    EmptyResponse();
+  const onSubmit: SubmitHandler<Announcement> = async (data: Announcement) => {
+    const isValid = await trigger(); // manually trigger validation
+    if (!isValid) return; // if form is not valid, stop here
 
+    EmptyResponse();
     handlePatchResult(data);
   };
 
@@ -149,45 +152,12 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
       // traverse to each object and setValue
       keys.forEach((key: AnnouncementKeys) => {
         return setValue(key, rowData[key], {
-          shouldValidate: true,
+          shouldValidate: false,
           shouldDirty: true,
         });
       });
     }
   }, [rowData]);
-
-  // drag and drop
-  // const [selectedImage, setSelectedImage] = useState(null);
-  // const [isImageUploaded, setIsImageUploaded] = useState(false);
-
-  // const onDragOver = (event) => {
-  //   event.preventDefault();
-  // };
-
-  // const onDrop = (event) => {
-  //   event.preventDefault();
-  //   const files = event.dataTransfer.files;
-  //   if (files.length) {
-  //     handleImageUpload(files[0]);
-  //   }
-  // };
-
-  // const handleImageUpload = (event) => {
-  //   if (event.target.files.length > 0) {
-  //     const file = event.target.files[0];
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setSelectedImage(reader.result);
-  //       setIsImageUploaded(true); // Set isImageUploaded to true after an image is uploaded
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
-  // const handleImageRemove = () => {
-  //   setSelectedImage(null);
-  //   setIsImageUploaded(false); // Set isImageUploaded to false after an image is removed
-  // };
 
   return (
     <>
@@ -279,38 +249,9 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
                   controller={{ ...register('image') }}
                   isError={errors.image ? true : false}
                   errorMessage={errors.image?.message}
+                  accept={'.jpg,.png'}
                 />
               </div>
-
-              {/* drag and drop */}
-              {/* <div style={{ position: 'relative', height: '200px', width: '200px', marginBottom: '5rem' }}>
-                <LabelInput
-                  label={'Image'}
-                  id={'image'}
-                  type={'file'}
-                  controller={{
-                    ...register('image', { onChange: handleImageUpload }),
-                  }}
-                  isError={!isImageUploaded || errors.image ? true : false}
-                  errorMessage={!isImageUploaded ? 'No file uploaded' : errors.image?.message}
-                  style={{ position: 'absolute', top: '0', left: '0', zIndex: '1', display: 'none' }}
-                />
-                <div
-                  onClick={() => !isImageUploaded && document.getElementById('image')?.click()}
-                  onDragOver={isImageUploaded ? null : onDragOver}
-                  onDrop={isImageUploaded ? null : onDrop}
-                  style={{ height: '200px', width: '200px', border: '1px dashed black', position: 'relative' }}
-                >
-                  {selectedImage ? (
-                    <div>
-                      <img src={selectedImage} alt="Selected" style={{ width: '100%', height: '100%' }} />
-                      <button onClick={handleImageRemove}>Remove</button>
-                    </div>
-                  ) : (
-                    <div>Drag and drop or click to upload</div>
-                  )}
-                </div>
-              </div> */}
 
               {/* Active / inactive announcement select*/}
               <SelectListRF

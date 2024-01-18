@@ -15,17 +15,16 @@ import { isEmpty } from 'lodash';
 
 import { SelectListRF } from '../../../inputs/SelectListRF';
 
+const announcementStatus = [
+  { label: 'Active', value: 'active' },
+  { label: 'Inactive', value: 'inactive' },
+];
 
 type AddModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
-
-const announcementStatus = [
-  { label: 'Active', value: 'active' },
-  { label: 'Inactive', value: 'inactive' },
-];
 
 // yup error handling initialization
 const yupSchema = yup
@@ -140,39 +139,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     }
   }, [modalState]);
 
-  // drag and drop
-  // const [selectedImage, setSelectedImage] = useState(null);
-  // const [isImageUploaded, setIsImageUploaded] = useState(false);
-
-  // const onDragOver = (event) => {
-  //   event.preventDefault();
-  // };
-
-  // const onDrop = (event) => {
-  //   event.preventDefault();
-  //   const files = event.dataTransfer.files;
-  //   if (files.length) {
-  //     handleImageUpload(files[0]);
-  //   }
-  // };
-
-  // const handleImageUpload = (event) => {
-  //   if (event.target.files.length > 0) {
-  //     const file = event.target.files[0];
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setSelectedImage(reader.result);
-  //       setIsImageUploaded(true); // Set isImageUploaded to true after an image is uploaded
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
-  // const handleImageRemove = () => {
-  //   setSelectedImage(null);
-  //   setIsImageUploaded(false); // Set isImageUploaded to false after an image is removed
-  // };
-
   return (
     <>
       {/* Notification */}
@@ -272,38 +238,9 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                   controller={{ ...register('image') }}
                   isError={errors.image ? true : false}
                   errorMessage={errors.image?.message}
+                  accept={'.jpg,.png'}
                 />
               </div>
-
-              {/* drag and drop */}
-              {/* <div style={{ position: 'relative', height: '200px', width: '200px', marginBottom: '5rem' }}>
-                <LabelInput
-                  label={'Image'}
-                  id={'image'}
-                  type={'file'}
-                  controller={{
-                    ...register('image', { onChange: handleImageUpload }),
-                  }}
-                  isError={!isImageUploaded || errors.image ? true : false}
-                  errorMessage={!isImageUploaded ? 'No file uploaded' : errors.image?.message}
-                  style={{ position: 'absolute', top: '0', left: '0', zIndex: '1', display: 'none' }}
-                />
-                <div
-                  onClick={() => !isImageUploaded && document.getElementById('image')?.click()}
-                  onDragOver={isImageUploaded ? null : onDragOver}
-                  onDrop={isImageUploaded ? null : onDrop}
-                  style={{ height: '200px', width: '200px', border: '1px dashed black', position: 'relative' }}
-                >
-                  {selectedImage ? (
-                    <div>
-                      <img src={selectedImage} alt="Selected" style={{ width: '100%', height: '100%' }} />
-                      <button onClick={handleImageRemove}>Remove</button>
-                    </div>
-                  ) : (
-                    <div>Drag and drop or click to upload</div>
-                  )}
-                </div>
-              </div> */}
 
               {/* Active / inactive announcement select*/}
               <SelectListRF

@@ -32,8 +32,6 @@ const Announcements: Announcement[] = [
     url: 'https://www.google.com',
     image: TestAnnouncement.src,
     status: 'inactive',
-    // image: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
-    // image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
   },
   {
     _id: '2002',
@@ -43,7 +41,6 @@ const Announcements: Announcement[] = [
     url: 'https://www.google2.com',
     image: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
     status: 'active',
-    // image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
   },
   {
     _id: '2003',
@@ -53,36 +50,8 @@ const Announcements: Announcement[] = [
     url: 'https://www.google3.com',
     image: TestAnnouncement.src,
     status: 'active',
-    // image: 'https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
   },
 ];
-
-const imageUrl = 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png';
-
-const getImageResolution = async (imageUrl: string) => {
-  const image = new Image();
-  image.src = imageUrl;
-
-  return new Promise<{ width: number; height: number }>((resolve, reject) => {
-    image.onload = () => {
-      console.log('Image resolution:', { width: image.width, height: image.height });
-      resolve({ width: image.width, height: image.height });
-    };
-
-    image.onerror = () => {
-      reject(new Error('Failed to load image'));
-    };
-  });
-};
-
-// Usage
-getImageResolution(imageUrl)
-  .then((resolution) => {
-    console.log('Image resolution:', resolution);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
 
 const Index = () => {
   // Current row data in the table that has been clicked
