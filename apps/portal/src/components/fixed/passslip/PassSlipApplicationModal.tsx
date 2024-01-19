@@ -126,7 +126,6 @@ export const PassSlipApplicationModal = ({
       postPassSlipListFail(result);
     } else {
       postPassSlipListSuccess(result);
-
       reset();
       closeModalAction();
     }

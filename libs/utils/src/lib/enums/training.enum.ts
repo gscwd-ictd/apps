@@ -1,8 +1,9 @@
 export enum TrainingTypes {
-  MANAGERIAL = 'managerial',
+  SUPERVISORY = 'supervisory',
   PROFESSIONAL = 'professional',
   TECHNICAL = 'technical',
   FOUNDATIONAL = 'foundational',
+  MANAGERIAL = 'leadership/managerial',
 }
 
 export enum TrainingPreparationStatus {
@@ -21,4 +22,9 @@ export enum TrainingStatus {
   ONGOING = 'on going',
   REQUIREMENTS_SUBMISSION = 'requirements submission',
   COMPLETED = 'completed',
+}
+
+export enum NomineeType {
+  NOMINEE = 'nominee',
+  STAND_IN = 'stand-in',
 }

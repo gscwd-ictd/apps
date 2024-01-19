@@ -1,5 +1,11 @@
-import { TrainingPreparationStatus, TrainingStatus } from '../enums/training.enum';
-import { TrainingType, TrainingTypeId } from './training-type.type';
+import { NomineeType, TrainingPreparationStatus, TrainingStatus, TrainingTypes } from '../enums/training.enum';
+
+export type TrainingType = {
+  id: string;
+  name: string;
+};
+
+export type TrainingTypeId = Pick<TrainingType, 'id'>;
 
 export type RecommendedEmployee = {
   employeeId: string;
@@ -15,7 +21,7 @@ export type Training = {
   trainingStart: string;
   trainingEnd: string;
   source: string;
-  type: TrainingType;
+  type: TrainingTypes;
   trainingPreparationStatus: TrainingPreparationStatus;
   status: TrainingStatus;
 };
@@ -24,3 +30,14 @@ export type Training = {
 export type TrainingWithTrainingId = Omit<Training, 'seminarTrainingType'> & TrainingTypeId;
 
 export type TrainingId = Pick<Training, 'trainingId'>;
+
+export type TrainingNominee = {
+  employeeId: string;
+  nomineeType: NomineeType;
+};
+
+//for POST request, submission of training nomination
+export type TrainingNominationData = {
+  trainingDistribution: string;
+  employees: Array<TrainingNominee>;
+};

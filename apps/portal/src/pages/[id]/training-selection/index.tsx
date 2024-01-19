@@ -46,31 +46,34 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     loadingTrainingList,
     errorTrainingList,
     trainingModalIsOpen,
+    postResponseApply,
+    errorResponse,
     setTrainingModalIsOpen,
     getTrainingSelectionList,
     getTrainingSelectionListSuccess,
     getTrainingSelectionListFail,
-    trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails,
+    emptyResponseAndError,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
     loadingTrainingList: state.loading.loadingTrainingList,
     errorTrainingList: state.error.errorTrainingList,
     trainingModalIsOpen: state.trainingModalIsOpen,
+    postResponseApply: state.response.postResponseApply,
+    errorResponse: state.error.errorResponse,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     getTrainingSelectionList: state.getTrainingSelectionList,
     getTrainingSelectionListSuccess: state.getTrainingSelectionListSuccess,
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
-    trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
 
   const trainingUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/supervisors/${employeeDetails.employmentDetails.userId}`;
-  // const trainingUrl = `${process.env.NEXT_PUBLIC_LMS}api/lms/v1/training-details?lsp-type=individual`;
 
   const {
     data: swrTrainingList,
@@ -154,7 +157,14 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     data: trainingList,
     columnVisibility: { id: false, employeeId: false },
   });
-  console.log(trainingList);
+
+  useEffect(() => {
+    if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [postResponseApply, errorResponse, errorTrainingList]);
 
   return (
     <>
@@ -163,6 +173,18 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
         <>
           <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
         </>
+      ) : null}
+
+      {/* Training List Load Failed */}
+      {!isEmpty(postResponseApply) ? (
+        <>
+          <ToastNotification toastType="success" notifMessage={`Nominations submitted successfully.`} />
+        </>
+      ) : null}
+
+      {/* failed to submit */}
+      {!isEmpty(errorResponse) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
       ) : null}
 
       <EmployeeProvider employeeData={employee}>
