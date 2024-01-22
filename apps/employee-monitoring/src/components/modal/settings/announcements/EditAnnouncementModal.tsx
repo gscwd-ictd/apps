@@ -131,27 +131,52 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
     handlePatchResult(data);
   };
 
+  // const handlePatchResult = async (data: Announcement) => {
+  //   const { error, result } = await putEmpMonitoring(`/announcements`, data);
+
+  //   if (error) {
+  //     SetErrorAnnouncement(result);
+  //   } else {
+  //     SetUpdateAnnouncement(result);
+
+  //     reset();
+  //     closeModalAction();
+  //   }
+  // };
+
   const handlePatchResult = async (data: Announcement) => {
-    const { error, result } = await putEmpMonitoring(`/announcements`, data);
-
-    if (error) {
-      SetErrorAnnouncement(result);
-    } else {
+    try {
+      const { result } = await putEmpMonitoring(`/announcements`, data);
       SetUpdateAnnouncement(result);
-
       reset();
       closeModalAction();
+    } catch (error) {
+      SetErrorAnnouncement(error.message);
     }
   };
 
   // Set default values in the form
+  // useEffect(() => {
+  //   if (!isEmpty(rowData)) {
+  //     const keys = Object.keys(rowData);
+
+  //     // traverse to each object and setValue
+  //     keys.forEach((key: AnnouncementKeys) => {
+  //       return setValue(key, rowData[key], {
+  //         shouldValidate: false,
+  //         shouldDirty: true,
+  //       });
+  //     });
+  //   }
+  // }, [rowData]);
+
   useEffect(() => {
     if (!isEmpty(rowData)) {
-      const keys = Object.keys(rowData);
+      const keys = Object.values(AnnouncementKeys);
 
       // traverse to each object and setValue
-      keys.forEach((key: AnnouncementKeys) => {
-        return setValue(key, rowData[key], {
+      keys.forEach((key) => {
+        return setValue(key, rowData[key as AnnouncementKeys], {
           shouldValidate: false,
           shouldDirty: true,
         });
