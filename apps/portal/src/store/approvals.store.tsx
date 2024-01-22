@@ -160,6 +160,7 @@ export type ApprovalState = {
 
   // OVERTIME
   overtimeDetails: OvertimeDetails;
+  setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void; // for resetting OT modal contents
 
   selectedOvertimeId: string;
   setSelectedOvertimeId: (selectedOvertimeId: string) => void;
@@ -284,6 +285,9 @@ export const useApprovalStore = create<ApprovalState>()(
     accomplishmentDetails: {} as OvertimeAccomplishment,
 
     overtimeDetails: {} as OvertimeDetails,
+    setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
+      set((state) => ({ ...state, overtimeDetails }));
+    },
 
     selectedOvertimeId: '',
     setSelectedOvertimeId: (selectedOvertimeId: string) => {

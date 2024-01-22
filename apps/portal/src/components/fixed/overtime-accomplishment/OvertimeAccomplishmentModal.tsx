@@ -16,6 +16,7 @@ import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifferenc
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 
 type ModalProps = {
   modalState: boolean;
@@ -49,7 +50,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       getTimeLogsFail: state.getTimeLogsFail,
     }));
 
-  // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
   const [encodedHours, setEncodedHours] = useState<number>(0);
@@ -156,24 +157,92 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               <div className="w-full h-full flex flex-col  ">
                 <div className="w-full h-full flex flex-col gap-2 ">
                   <div className="w-full flex flex-col gap-2 p-4 rounded">
-                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
-                      <AlertNotification
-                        alertType="warning"
-                        notifMessage={
-                          overtimeAccomplishmentDetails.accomplishments
-                            ? 'For Supervisor Approval'
-                            : 'Awaiting Submission'
-                        }
-                        dismissible={false}
-                      />
-                    ) : null}
+                    <div className="w-full flex flex-col gap-0">
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
+                        <AlertNotification
+                          alertType="warning"
+                          notifMessage={
+                            overtimeAccomplishmentDetails.accomplishments
+                              ? 'For Supervisor Approval'
+                              : 'Awaiting Submission'
+                          }
+                          dismissible={false}
+                        />
+                      ) : null}
 
-                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
-                      <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
-                    ) : null}
-                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
-                      <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
-                    ) : null}
+                      {/* not submitted, late OT filing, beyond 5 days allowance for submission from date of approval of OT */}
+                      {!overtimeAccomplishmentDetails.accomplishments &&
+                      overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                      overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      GetDateDifference(
+                        `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                        `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                      ).days > 5 ? (
+                        <AlertNotification
+                          alertType="error"
+                          notifMessage={'Deadline for submission has been reached'}
+                          dismissible={false}
+                        />
+                      ) : !overtimeAccomplishmentDetails.accomplishments &&
+                        overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                        overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+                        GetDateDifference(
+                          `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                          `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                        ).days <= 5 ? (
+                        <AlertNotification
+                          alertType="warning"
+                          notifMessage={`${
+                            Number(5) -
+                            GetDateDifference(
+                              `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                              `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                            ).days
+                          } day(s) left before deadline of submission`}
+                          dismissible={false}
+                        />
+                      ) : null}
+
+                      {/* not submitted, future OT filing, beyond 30 days allowance for submission from planned date of OT */}
+                      {!overtimeAccomplishmentDetails.accomplishments &&
+                      overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                      overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      GetDateDifference(
+                        `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                        `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                      ).days > 30 ? (
+                        <AlertNotification
+                          alertType="error"
+                          notifMessage={'Deadline for submission has been reached'}
+                          dismissible={false}
+                        />
+                      ) : !overtimeAccomplishmentDetails.accomplishments &&
+                        overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                        overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                        GetDateDifference(
+                          `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                          `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                        ).days <= 30 ? (
+                        <AlertNotification
+                          alertType="warning"
+                          notifMessage={`${
+                            Number(30) -
+                            GetDateDifference(
+                              `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                              `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                            ).days
+                          } day(s) left before deadline of submission`}
+                          dismissible={false}
+                        />
+                      ) : null}
+
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                        <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
+                      ) : null}
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                        <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
+                      ) : null}
+                    </div>
 
                     <div className="flex flex-row justify-between items-center w-full">
                       <div className="flex flex-col md:flex-row justify-between items-start w-full">
@@ -182,84 +251,110 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         <div className="md:w-1/2">
                           <label className="text-slate-500 w-full text-md ">
                             {DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')}
-                            {/* {overtimeAccomplishmentDetails.overtimeApplicationId} */}
                           </label>
                         </div>
                       </div>
                     </div>
 
-                    {/* {schedule.scheduleBase === ScheduleBases.OFFICE ? ( */}
-                    <>
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                            Computed IVMS Hours:
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Approval Date:</label>
+
+                        <div className="md:w-1/2">
+                          <label className="text-slate-500 w-full text-md ">
+                            {DateFormatter(overtimeAccomplishmentDetails.dateOfOTApproval, 'MM-DD-YYYY')}
                           </label>
-
-                          <div className="md:w-1/2">
-                            <label className="text-slate-500 w-full text-md ">
-                              {overtimeAccomplishmentDetails?.computedIvmsHours}
-                            </label>
-                          </div>
                         </div>
                       </div>
+                    </div>
 
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">IVMS In & Out:</label>
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                          Overtime Estimated Hours:
+                        </label>
 
-                          <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
-                            <label className="text-slate-500 w-full text-md ">
-                              <LabelInput
-                                id={'ivmsTimeIn'}
-                                type="text"
-                                label={''}
-                                className="w-full  text-slate-400 font-medium"
-                                textSize="md"
-                                disabled
-                                value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeIn)}
-                              />
-                            </label>
-                            <label className="text-slate-500 w-auto text-lg">-</label>
-                            <label className="text-slate-500 w-full text-md ">
-                              <LabelInput
-                                id={'ivmsTimeOut'}
-                                type="text"
-                                label={''}
-                                className="w-full text-slate-400 font-medium"
-                                textSize="md"
-                                disabled
-                                value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeOut)}
-                              />
-                            </label>
-                            <label className="text-slate-500 w-full text-md ">
-                              <LabelInput
-                                id={'computedIvmsHours'}
-                                type="text"
-                                label={''}
-                                className="w-full text-slate-400 font-medium"
-                                textSize="md"
-                                disabled
-                                value={`${overtimeAccomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
-                              />
-                            </label>
-                          </div>
+                        <div className="md:w-1/2">
+                          <label className="text-slate-500 w-full text-md ">
+                            {overtimeAccomplishmentDetails?.estimatedHours}
+                          </label>
                         </div>
                       </div>
-                    </>
-                    {/* ) : null} */}
+                    </div>
 
+                    {schedule.scheduleBase === ScheduleBases.OFFICE ? (
+                      <>
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                            <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                              Computed IVMS Hours:
+                            </label>
+
+                            <div className="md:w-1/2">
+                              <label className="text-slate-500 w-full text-md ">
+                                {overtimeAccomplishmentDetails?.computedIvmsHours}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                            <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                              IVMS In & Out:
+                            </label>
+
+                            <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
+                              <label className="text-slate-500 w-full text-md ">
+                                <LabelInput
+                                  id={'ivmsTimeIn'}
+                                  type="text"
+                                  label={''}
+                                  className="w-full  text-slate-400 font-medium"
+                                  textSize="md"
+                                  disabled
+                                  value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeIn)}
+                                />
+                              </label>
+                              <label className="text-slate-500 w-auto text-lg">-</label>
+                              <label className="text-slate-500 w-full text-md ">
+                                <LabelInput
+                                  id={'ivmsTimeOut'}
+                                  type="text"
+                                  label={''}
+                                  className="w-full text-slate-400 font-medium"
+                                  textSize="md"
+                                  disabled
+                                  value={UseTwelveHourFormat(overtimeAccomplishmentDetails.ivmsTimeOut)}
+                                />
+                              </label>
+                              <label className="text-slate-500 w-full text-md ">
+                                <LabelInput
+                                  id={'computedIvmsHours'}
+                                  type="text"
+                                  label={''}
+                                  className="w-full text-slate-400 font-medium"
+                                  textSize="md"
+                                  disabled
+                                  value={`${overtimeAccomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
+                                />
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
                     <div className="flex flex-row justify-between items-center w-full">
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                         <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                          Encode Time In & Out:
+                          Encode Overtime Start and End Time:
                         </label>
 
                         <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
                           <label className="text-slate-500 w-full text-md ">
                             <LabelInput
                               required={
-                                overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
+                                overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut
                                   ? false
                                   : true
                               }
@@ -268,7 +363,12 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               label={''}
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
-                              disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
+                              disabled={
+                                overtimeAccomplishmentDetails?.accomplishments ||
+                                (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
+                                  ? true
+                                  : false
+                              }
                               defaultValue={overtimeAccomplishmentDetails?.encodedTimeIn ?? null}
                               controller={{
                                 ...register('encodedTimeIn', {
@@ -295,7 +395,12 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               label={''}
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
-                              disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
+                              disabled={
+                                overtimeAccomplishmentDetails?.accomplishments ||
+                                (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
+                                  ? true
+                                  : false
+                              }
                               defaultValue={overtimeAccomplishmentDetails?.encodedTimeOut ?? null}
                               controller={{
                                 ...register('encodedTimeOut', {
@@ -364,6 +469,23 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
                           overtimeAccomplishmentDetails?.accomplishments
                             ? true
+                            : (!overtimeAccomplishmentDetails.accomplishments &&
+                                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                                overtimeAccomplishmentDetails.plannedDate <
+                                  overtimeAccomplishmentDetails.dateOfOTApproval &&
+                                GetDateDifference(
+                                  `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                                ).days > 5) ||
+                              (!overtimeAccomplishmentDetails.accomplishments &&
+                                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                                overtimeAccomplishmentDetails.plannedDate >=
+                                  overtimeAccomplishmentDetails.dateOfOTApproval &&
+                                GetDateDifference(
+                                  `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                                ).days > 30)
+                            ? true
                             : false
                         }
                         rows={3}
@@ -398,15 +520,37 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
           <div className="flex justify-end gap-2">
             {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
             overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
-            overtimeAccomplishmentDetails?.accomplishments ? (
+            overtimeAccomplishmentDetails?.accomplishments ||
+            (!overtimeAccomplishmentDetails.accomplishments &&
+              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+              overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+              GetDateDifference(
+                `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+              ).days > 5) ||
+            (!overtimeAccomplishmentDetails.accomplishments &&
+              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+              overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+              GetDateDifference(
+                `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+              ).days > 30) ? (
               <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                 Close
               </Button>
             ) : (
               <Button
                 disabled={
-                  (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                  (finalEncodedHours <= 0 || isNaN(finalEncodedHours))
+                  (schedule.scheduleBase === ScheduleBases.OFFICE &&
+                    (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                    (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
+                  overtimeAccomplishmentDetails.plannedDate > dayjs().format('YYYY-MM-DD') ||
+                  !watch('accomplishments')
+                    ? true
+                    : (schedule.scheduleBase != ScheduleBases.OFFICE &&
+                        (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
+                      overtimeAccomplishmentDetails.plannedDate > dayjs().format('YYYY-MM-DD') ||
+                      !watch('accomplishments')
                     ? true
                     : false
                 }
@@ -414,7 +558,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                 size={'md'}
                 loading={false}
                 form="SubmitAccomplishmentForm"
-                // onClick={(e) => setConfirmOvertimeAccomplishmentModalIsOpen(true)}
                 type="submit"
               >
                 {'Submit Accomplishment'}

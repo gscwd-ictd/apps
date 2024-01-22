@@ -14,15 +14,15 @@ import { MySelectList } from '../../modular/inputs/SelectList';
 
 const listOfEmployees: Array<SelectOption> = [
   { label: 'Ricardo Vicente Narvaiza', value: '0' },
-  { label: 'Mikhail Sebua', value: '1' },
-  { label: 'Jay Nosotros', value: '2' },
-  { label: 'Eric Sison', value: '3' },
-  { label: 'Allyn Joseph Cubero', value: '4' },
-  { label: 'John Henry Alfeche', value: '5' },
-  { label: 'Phyll Patrick Fragata', value: '6' },
-  // { label: 'Deo Del Rosario', value: '7' },
-  // { label: 'Cara Jade Reyes', value: '8' },
-  // { label: 'Rizza Baugbog', value: '9' },
+  { label: 'Mikhail Sebua', value: '6e0eecab-0e63-11ee-8b82-005056b680ac' },
+  { label: 'Jay Nosotros', value: 'af761daa-b26e-11ed-a79b-000c29f95a80' },
+  { label: 'Eric Sison', value: '62fef63c-b26f-11ed-a79b-000c29f95a80' },
+  { label: 'Allyn Joseph Cubero', value: 'af5633d6-b26e-11ed-a79b-000c29f95a80' },
+  { label: 'John Henry Alfeche', value: '05b0614c-b191-11ed-a79b-000c29f95a80' },
+  { label: 'Phyll Patrick Fragata', value: 'af635f15-b26e-11ed-a79b-000c29f95a80' },
+  { label: 'Deo Del Rosario', value: 'af59e049-b26e-11ed-a79b-000c29f95a80' },
+  { label: 'Cara Jade Reyes', value: '6e0ef093-0e63-11ee-8b82-005056b680ac' },
+  { label: 'Rizza Baugbog', value: 'b34db5e3-b1c6-11ed-a79b-000c29f95a80' },
   // { label: 'Kumier Lou Arancon', value: '10' },
   // { label: 'Roland Bacayo', value: '11' },
   // { label: 'Alfred Perez', value: '12' },
@@ -80,8 +80,6 @@ export const TrainingNominationModal = ({
   }, [nominatedEmployees, auxiliaryEmployees]);
 
   useEffect(() => {
-    console.log(combinedNominatedEmployees, 'combined');
-
     //remove employee from pool
     for (let i = 0; i < employeePool.length; i++) {
       for (let a = 0; a < combinedNominatedEmployees.length; a++) {
@@ -160,9 +158,9 @@ export const TrainingNominationModal = ({
                   Recommended Participants:
                 </label>
 
-                <div className="w-auto sm:w-96 flex flex-wrap text-slate-500 text-md font-medium">
+                <div className="w-auto sm:w-96 flex flex-col flex-wrap text-slate-500 text-md font-medium">
                   {recommendedEmployees.map((employee, index) => {
-                    return <label key={index}>{index == 0 ? employee.name : `, ${employee.name}`}</label>;
+                    return <label key={index}>{index == 0 ? employee.name : `${employee.name}`}</label>;
                   })}
                 </div>
               </div>

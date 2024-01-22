@@ -16,6 +16,7 @@ type ModalProps = {
   sgAmount: number;
   sgIncrement: string;
   estimatedMaxAmount: number;
+  monetizationConstant: number;
 };
 
 export const LeaveCreditMonetizationCalculatorModal = ({
@@ -28,6 +29,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
   sgAmount,
   sgIncrement,
   estimatedMaxAmount,
+  monetizationConstant = 0,
 }: ModalProps) => {
   const { windowWidth } = UseWindowDimensions();
 
@@ -35,7 +37,6 @@ export const LeaveCreditMonetizationCalculatorModal = ({
     leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
   }));
 
-  const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(
     Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)
   );
@@ -47,14 +48,14 @@ export const LeaveCreditMonetizationCalculatorModal = ({
     if (credits) {
       if (credits <= leaveCredits) {
         setLeaveCreditsToCompute(credits);
-        setEstimatedAmount(salaryGrade * credits * leaveCreditMultiplier);
+        setEstimatedAmount(salaryGrade * credits * monetizationConstant);
       } else {
         setLeaveCreditsToCompute(leaveCredits);
-        setEstimatedAmount(salaryGrade * leaveCredits * leaveCreditMultiplier);
+        setEstimatedAmount(salaryGrade * leaveCredits * monetizationConstant);
       }
     } else {
       setLeaveCreditsToCompute(null);
-      setEstimatedAmount(salaryGrade * 0 * leaveCreditMultiplier);
+      setEstimatedAmount(salaryGrade * 0 * monetizationConstant);
     }
   };
 
@@ -62,7 +63,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
     setLeaveCredits(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
     setLeaveCreditsToCompute(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
     setSalaryGrade(sgAmount);
-    setEstimatedAmount(salaryGrade * leaveCredits * leaveCreditMultiplier);
+    setEstimatedAmount(salaryGrade * leaveCredits * monetizationConstant);
   };
 
   useEffect(() => {
@@ -111,7 +112,9 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-col justify-center items-center w-full -mt-4 pb-4">
                       <label className="text-slate-500 text-xl font-medium">
-                        Computation: Salary x Leave Credits x 0.0481927
+                        {`Computation: Salary X Leave Credits X ${
+                          monetizationConstant === 0 ? '-- -- --' : monetizationConstant
+                        }`}
                       </label>
                       <label className="text-slate-500 text-sm font-medium">
                         1. The maximum total leave credits is the combination of SL and VL

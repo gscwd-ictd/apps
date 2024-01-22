@@ -18,10 +18,10 @@ import {
 import { getPrfById, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
 import { Position, PrfDetailsForApproval, PrfStatus } from '../../../../types/prf.types';
-import { withCookieSession } from '../../../../../src/utils/helpers/session';
+import { withCookieSession } from '../../../../utils/helpers/session';
 import { Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
-import { PrfOtpContents } from '../../../../../src/components/fixed/prf/prfOtp/PrfOtpContents';
-import { usePrfStore } from '../../../../../src/store/prf.store';
+import { PrfOtpContents } from '../../../../components/fixed/prf/prfOtp/PrfOtpContents';
+import { usePrfStore } from '../../../../store/prf.store';
 import { useEffect, useState } from 'react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { isEmpty } from 'lodash';

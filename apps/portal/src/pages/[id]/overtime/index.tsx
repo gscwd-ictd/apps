@@ -12,8 +12,8 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { employeeDummy } from '../../../../src/types/employee.type';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { employeeDummy } from '../../../types/employee.type';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty, isEqual } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';

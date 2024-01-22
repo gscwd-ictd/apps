@@ -1,7 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { RecommendedEmployee, Training } from '../../../../libs/utils/src/lib/types/training.type';
+import {
+  RecommendedEmployee,
+  Training,
+  TrainingNominationData,
+} from '../../../../libs/utils/src/lib/types/training.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 type NominatedEmployees = {
@@ -46,6 +50,9 @@ export type TrainingSelectionState = {
   trainingNominationModalIsOpen: boolean;
   setTrainingNominationModalIsOpen: (trainingNominationModalIsOpen: boolean) => void;
 
+  confirmNominationModalIsOpen: boolean;
+  setConfirmNominationModalIsOpen: (confirmNominationModalIsOpen: boolean) => void;
+
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
   getTrainingSelectionListSuccess: (loading: boolean, response) => void;
@@ -80,6 +87,7 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
 
     trainingModalIsOpen: false,
     trainingNominationModalIsOpen: false,
+    confirmNominationModalIsOpen: false,
 
     nominatedEmployees: [],
     setNominatedEmployees: (nominatedEmployees: Array<SelectOption>) => {
@@ -99,6 +107,10 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
 
     setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => {
       set((state) => ({ ...state, trainingModalIsOpen }));
+    },
+
+    setConfirmNominationModalIsOpen: (confirmNominationModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmNominationModalIsOpen }));
     },
 
     setTrainingNominationModalIsOpen: (trainingNominationModalIsOpen: boolean) => {
@@ -198,7 +210,7 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
         },
       }));
     },
-    postTrainingSelectionSuccess: (response) => {
+    postTrainingSelectionSuccess: (response: TrainingNominationData) => {
       set((state) => ({
         ...state,
         response: {
@@ -235,8 +247,9 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
         },
         error: {
           ...state.error,
+          errorTrainingList: '',
+          errorRecommendedEmployee: '',
           errorResponse: '',
-          errorPassSlips: '',
         },
       }));
     },

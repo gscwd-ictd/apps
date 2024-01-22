@@ -101,7 +101,6 @@ export const PassSlipApplicationModal = ({
     },
   });
 
-  console.log(dtr);
   useEffect(() => {
     if (
       watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
@@ -127,7 +126,6 @@ export const PassSlipApplicationModal = ({
       postPassSlipListFail(result);
     } else {
       postPassSlipListSuccess(result);
-
       reset();
       closeModalAction();
     }

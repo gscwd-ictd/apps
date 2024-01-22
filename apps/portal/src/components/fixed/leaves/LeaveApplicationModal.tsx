@@ -403,9 +403,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        leaveApplicationDates: data.leaveApplicationDates,
-        other: data.other,
-        commutation: data.commutation ? data.commutation : null,
       };
     } else {
       dataToSend = {

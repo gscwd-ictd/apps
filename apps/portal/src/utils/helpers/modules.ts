@@ -39,7 +39,10 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
       if (isEmpty(schedule)) {
         allowed = Modules.filter(
           (card) =>
-            card.destination === 'dtr' || card.destination === 'email' || card.destination === 'overtime-accomplishment'
+            card.destination === 'dtr' ||
+            card.destination === 'pass-slip' ||
+            card.destination === 'email' ||
+            card.destination === 'overtime-accomplishment'
         );
       } else if (
         (schedule && schedule.scheduleBase == ScheduleBases.PUMPING_STATION) ||

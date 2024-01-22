@@ -82,6 +82,7 @@ export type OvertimeAccomplishment = {
   id: string;
   ivmsTimeIn: string;
   ivmsTimeOut: string;
+  estimatedHours: number;
   encodedTimeIn: string | null;
   encodedTimeOut: string | null;
   accomplishments: Array<string> | null;
@@ -91,6 +92,7 @@ export type OvertimeAccomplishment = {
   computedEncodedHours: number;
   didFaceScan: boolean;
   overtimeApplicationId: string;
+  dateOfOTApproval: string;
   plannedDate: string;
   employeeId: string;
   purpose: string;

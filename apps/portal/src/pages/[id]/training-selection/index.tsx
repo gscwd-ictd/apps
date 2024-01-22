@@ -12,17 +12,24 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import React from 'react';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
-import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { TrainingTable } from 'apps/portal/src/components/fixed/training-selection/TrainingTable';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
 import TrainingNominationModal from 'apps/portal/src/components/fixed/training-selection/TrainingNominationModal';
 import { useRouter } from 'next/router';
+import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { Training } from 'libs/utils/src/lib/types/training.type';
+import { createColumnHelper } from '@tanstack/react-table';
+import dayjs from 'dayjs';
+import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
+import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -39,29 +46,34 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     loadingTrainingList,
     errorTrainingList,
     trainingModalIsOpen,
+    postResponseApply,
+    errorResponse,
     setTrainingModalIsOpen,
     getTrainingSelectionList,
     getTrainingSelectionListSuccess,
     getTrainingSelectionListFail,
-    trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
+    setIndividualTrainingDetails,
+    emptyResponseAndError,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
     loadingTrainingList: state.loading.loadingTrainingList,
     errorTrainingList: state.error.errorTrainingList,
     trainingModalIsOpen: state.trainingModalIsOpen,
+    postResponseApply: state.response.postResponseApply,
+    errorResponse: state.error.errorResponse,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     getTrainingSelectionList: state.getTrainingSelectionList,
     getTrainingSelectionListSuccess: state.getTrainingSelectionListSuccess,
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
-    trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
+    setIndividualTrainingDetails: state.setIndividualTrainingDetails,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
 
   const trainingUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/supervisors/${employeeDetails.employmentDetails.userId}`;
-  // const trainingUrl = `${process.env.NEXT_PUBLIC_LMS}api/lms/v1/training-details?lsp-type=individual`;
 
   const {
     data: swrTrainingList,
@@ -99,6 +111,61 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     setTrainingNominationModalIsOpen(false);
   };
 
+  // Render row actions in the table component
+  const renderRowActions = (rowData: Training) => {
+    setIndividualTrainingDetails(rowData);
+    setTrainingModalIsOpen(true);
+  };
+
+  // Define table columns
+  const columnHelper = createColumnHelper<Training>();
+  const columns = [
+    columnHelper.accessor('courseTitle', {
+      header: 'Course Title',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('location', {
+      header: 'Location',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('trainingStart', {
+      header: 'Start',
+      filterFn: 'equalsString',
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+    columnHelper.accessor('trainingEnd', {
+      header: 'End',
+      filterFn: 'equalsString',
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+    columnHelper.accessor('numberOfSlots', {
+      header: 'Slots',
+      cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.accessor('trainingPreparationStatus', {
+      header: 'Status',
+      cell: (info) => UseRenderTrainingStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+  ];
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: trainingList,
+    columnVisibility: { id: false, employeeId: false },
+  });
+
+  useEffect(() => {
+    if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [postResponseApply, errorResponse, errorTrainingList]);
+
   return (
     <>
       {/* Training List Load Failed */}
@@ -106,6 +173,18 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
         <>
           <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
         </>
+      ) : null}
+
+      {/* Training List Load Failed */}
+      {!isEmpty(postResponseApply) ? (
+        <>
+          <ToastNotification toastType="success" notifMessage={`Nominations submitted successfully.`} />
+        </>
+      ) : null}
+
+      {/* failed to submit */}
+      {!isEmpty(errorResponse) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
       ) : null}
 
       <EmployeeProvider employeeData={employee}>
@@ -142,7 +221,15 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
             ) : (
               <ContentBody>
                 <div className="pb-10">
-                  <TrainingTable employeeDetails={employeeDetails} />
+                  <DataTablePortal
+                    onRowClick={(row) => renderRowActions(row.original as Training)}
+                    textSize={'text-lg'}
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={false}
+                    paginate={true}
+                  />
+                  {/* <TrainingTable employeeDetails={employeeDetails} /> */}
                 </div>
               </ContentBody>
             )}

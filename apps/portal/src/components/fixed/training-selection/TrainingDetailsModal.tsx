@@ -1,19 +1,16 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import Link from 'next/link';
-import { HiPencilAlt, HiPlus, HiX } from 'react-icons/hi';
-import { usePassSlipStore } from '../../../store/passslip.store';
-import { useRouter } from 'next/router';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
+import { TrainingPreparationStatus, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import TrainingNominationModal from './TrainingNominationModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
+import { ConfirmationNominationModal } from './ConfirmationModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -25,31 +22,33 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   const {
     recommendedEmployees,
     loadingRecommendedEmployee,
+    loadingResponse,
     errorRecommendedEmployee,
     individualTrainingDetails,
-    trainingModalIsOpen,
-    setIndividualTrainingDetails,
     nominatedEmployees,
-    setNominatedEmployees,
     auxiliaryEmployees,
-    setAuxiliaryEmployees,
     trainingNominationModalIsOpen,
+    confirmNominationModalIsOpen,
+    trainingModalIsOpen,
+
+    setConfirmNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
     getRecommendedEmployees,
     getRecommendedEmployeesSuccess,
     getRecommendedEmployeesFail,
   } = useTrainingSelectionStore((state) => ({
+    confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
     recommendedEmployees: state.recommendedEmployees,
     loadingRecommendedEmployee: state.loading.loadingRecommendedEmployee,
     errorRecommendedEmployee: state.error.errorRecommendedEmployee,
     individualTrainingDetails: state.individualTrainingDetails,
-    trainingModalIsOpen: state.setTrainingModalIsOpen,
-    setIndividualTrainingDetails: state.setIndividualTrainingDetails,
-    nominatedEmployees: state.nominatedEmployees,
-    setNominatedEmployees: state.setNominatedEmployees,
-    auxiliaryEmployees: state.auxiliaryEmployees,
-    setAuxiliaryEmployees: state.setAuxiliaryEmployees,
     trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
+    nominatedEmployees: state.nominatedEmployees,
+    auxiliaryEmployees: state.auxiliaryEmployees,
+    trainingModalIsOpen: state.trainingModalIsOpen,
+    loadingResponse: state.loading.loadingResponse,
+
+    setConfirmNominationModalIsOpen: state.setConfirmNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     getRecommendedEmployees: state.getRecommendedEmployees,
     getRecommendedEmployeesSuccess: state.getRecommendedEmployeesSuccess,
@@ -66,7 +65,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     isLoading: swrRecommendedEmployeeIsLoading,
     error: swrRecommendedEmployeeError,
     mutate: mutateTraining,
-  } = useSWR(recommendedEmployeeUrl, fetchWithToken, {
+  } = useSWR(individualTrainingDetails.distributionId ? recommendedEmployeeUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -89,14 +88,29 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     }
   }, [swrRecommendedEmployee, swrRecommendedEmployeeError]);
 
-  // cancel action for Leave Application Modal
+  //close training nomination modal
   const closeTrainingNominationModal = async () => {
     setTrainingNominationModalIsOpen(false);
+  };
+
+  //close confirmation modal
+  const closeConfirmationModal = async () => {
+    setConfirmNominationModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
+      {/* failed to load recommended employee list */}
+      {!isEmpty(errorRecommendedEmployee) && trainingModalIsOpen ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorRecommendedEmployee}: Failed to load recommended participants.`}
+          />
+        </>
+      ) : null}
+
       <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
@@ -113,6 +127,12 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2">
+            <ConfirmationNominationModal
+              modalState={confirmNominationModalIsOpen}
+              setModalState={setConfirmNominationModalIsOpen}
+              closeModalAction={closeConfirmationModal}
+            />
+
             <TrainingNominationModal
               modalState={trainingNominationModalIsOpen}
               setModalState={setTrainingNominationModalIsOpen}
@@ -120,8 +140,18 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             />
 
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {individualTrainingDetails.trainingPreparationStatus === TrainingStatus.ONGOING ? (
+              {individualTrainingDetails.trainingPreparationStatus === TrainingPreparationStatus.ON_GOING_NOMINATION ? (
                 <AlertNotification alertType="info" notifMessage="On Going Nomination" dismissible={false} />
+              ) : null}
+
+              {/* loading post reponse */}
+              {loadingResponse ? (
+                <AlertNotification
+                  logo={<LoadingSpinner size="xs" />}
+                  alertType="info"
+                  notifMessage="Submitting Request"
+                  dismissible={false}
+                />
               ) : null}
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
@@ -148,24 +178,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   </label>
                 </div>
               </div>
-              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Invitation URL:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">
-                    <a href={individualTrainingDetails.invitationUrl} target="_blank" className="text-indigo-600">
-                      Link
-                    </a>
-                  </label>
-                </div>
-              </div> */}
-              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Hours:</label>
-
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.numberOfHours}</label>
-                </div>
-              </div> */}
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Slots:</label>
 
@@ -186,35 +199,10 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Type:</label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md capitalize ">
-                    {individualTrainingDetails.type}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96 text-md">{individualTrainingDetails?.type}</label>
                 </div>
               </div>
-              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-start">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Course Content:</label>
 
-                <div className="w-auto sm:w-96 ">
-                  <label className="text-slate-500 w-96 text-md bg-red-200">
-                    {courseContentsArray.map((course, idx: number) => {
-                      return <div key={idx}>{course?.title}</div>;
-                    })}
-                  </label>
-                </div>
-              </div> */}
-              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-start">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                  Post Training Requirements:
-                </label>
-
-                <div className="w-auto sm:w-96 ">
-                  <label className="text-slate-500 w-96 text-md ">
-                    {postTrainingRequirementArray.map((training, idx: number) => {
-                      return <div key={idx}>{training?.document}</div>;
-                    })}
-                  </label>
-                </div>
-              </div> */}
               <div className="flex flex-row md:gap-2 justify-between items-start md:items-start">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Participants:</label>
 
@@ -237,12 +225,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         <th className="px-10 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
                           Nominated Employee(s)
                         </th>
-                        {/* <th className="px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
-                          Status
-                        </th>
-                        <th className="w-28 py-2 text-sm text-center border md:text-md font-medium text-gray-700">
-                          Edit
-                        </th> */}
                       </tr>
                     </thead>
                     <tbody className="text-sm text-center ">
@@ -251,18 +233,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                           return (
                             <tr key={index}>
                               <td className={`px-2 text-start border`}>{employees.label}</td>
-                              {/* <td className={`text-center border`}>PENDING</td>
-                              <td className={`py-2 text-center border`}>
-                                <Button
-                                  variant={'primary'}
-                                  size={'sm'}
-                                  loading={false}
-                                  disabled
-                                  // onClick={() => setTrainingNominationModalIsOpen(true)}
-                                >
-                                  <div className="flex justify-center">Swap</div>
-                                </Button>
-                              </td> */}
                             </tr>
                           );
                         })
@@ -309,7 +279,15 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="min-w-[6rem] max-w-auto">
-              <Button variant={'primary'} size={'md'} loading={false} form="ApplyOvertimeForm" type="submit">
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                form="ApplyOvertimeForm"
+                type="submit"
+                onClick={(e) => setConfirmNominationModalIsOpen(true)}
+                disabled={nominatedEmployees.length <= 0 ? true : false}
+              >
                 Send Invitation
               </Button>
             </div>
