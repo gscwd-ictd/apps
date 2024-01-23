@@ -203,14 +203,14 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         />
                       ) : null}
 
-                      {/* not submitted, future OT filing, beyond 30 days allowance for submission from planned date of OT */}
+                      {/* not submitted, future OT filing, beyond 5 days allowance for submission from planned date of OT */}
                       {!overtimeAccomplishmentDetails.accomplishments &&
                       overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
                       overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
                       GetDateDifference(
                         `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
                         `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                      ).days > 30 ? (
+                      ).days > 5 ? (
                         <AlertNotification
                           alertType="error"
                           notifMessage={'Deadline for submission has been reached'}
@@ -222,11 +222,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         GetDateDifference(
                           `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
                           `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                        ).days <= 30 ? (
+                        ).days <= 5 ? (
                         <AlertNotification
                           alertType="warning"
                           notifMessage={`${
-                            Number(30) -
+                            Number(5) -
                             GetDateDifference(
                               `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
                               `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
@@ -484,7 +484,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                 GetDateDifference(
                                   `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
                                   `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                                ).days > 30)
+                                ).days > 5)
                             ? true
                             : false
                         }
@@ -534,7 +534,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               GetDateDifference(
                 `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
                 `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-              ).days > 30) ? (
+              ).days > 5) ? (
               <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                 Close
               </Button>
