@@ -123,7 +123,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     isLoading: swrScheduleSheetIsLoading,
     error: swrScheduleSheetError,
   } = useSWR(
-    !isEmpty(selectedGroupId) && modalState
+    modalState
       ? `/custom-groups/${selectedGroupId}/?date_from=${formatDate(rowData.dateFrom)}&date_to=${formatDate(
           rowData.dateTo
         )}&schedule_id=${selectedScheduleId}`

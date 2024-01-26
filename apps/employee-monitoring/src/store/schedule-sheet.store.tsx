@@ -376,7 +376,7 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         },
       })),
 
-    // updateSchedulingSheetEmployees: (data: Array<EmployeeAsOptionWithRestDays>) =>
+    // updateSchedulingSheetEmployees: (rowData: EmployeeAsOptionWithRestDays) =>
     //   set((state) => ({
     //     ...state,
     //     currentScheduleSheet: {

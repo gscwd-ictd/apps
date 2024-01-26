@@ -17,7 +17,6 @@ export * from './types/leave-benefits.type';
 export * from './types/pass-slip.type';
 export * from './types/schedule.type';
 export * from './types/select.type';
-export * from './types/training-type.type';
 export * from './types/training.type';
 export * from './types/travel-order.type';
 export * from './types/dtr.type';

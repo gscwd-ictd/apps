@@ -1,4 +1,4 @@
-import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
@@ -25,6 +25,8 @@ type ScheduleSheetForm = ScheduleSheet & {
 };
 
 const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, closeModalAction, setModalState }) => {
+  const [employeeRestDayIsEmpty, setEmployeeRestDayIsEmpty] = useState<boolean>(true);
+
   // react hook form
   const {
     watch,
@@ -155,7 +157,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
     data: swrGroupDetails,
     isLoading: swrGroupDetailsIsLoading,
     error: swrGroupDetailsError,
-  } = useSWR(`/custom-groups/${selectedGroupId}`, fetcherEMS, {
+  } = useSWR(modalState ? `/custom-groups/${selectedGroupId}` : null, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnMount: false,
   });
@@ -292,6 +294,18 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
       register('customGroupId', { required: true });
     }
   }, [modalState]);
+
+  // Disable submit if an employee has an empty rest day
+  useEffect(() => {
+    if (!isEmpty(currentScheduleSheet.employees)) {
+      const result = currentScheduleSheet.employees.some((employeeRestDays) => isEmpty(employeeRestDays.restDays));
+      if (result) {
+        setEmployeeRestDayIsEmpty(true);
+      } else {
+        setEmployeeRestDayIsEmpty(false);
+      }
+    }
+  }, [currentScheduleSheet]);
 
   return (
     <>
@@ -448,6 +462,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                   </div>
                 </section>
               </div>
+
               <section className="col-span-2 rounded bg-inherit min-h-auto">
                 <SelectedEmployeesSsTable />
               </section>
@@ -465,14 +480,17 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
 
             <button
               className={`px-3 py-2 text-white  ${
-                isEmpty(currentScheduleSheet.employees) || isEmpty(getValues('scheduleId'))
+                isEmpty(currentScheduleSheet.employees) || isEmpty(getValues('scheduleId')) || employeeRestDayIsEmpty
                   ? 'bg-gray-500 hover:bg-gray-400'
                   : 'bg-blue-500 hover:bg-blue-400'
               } rounded text-sm disabled:cursor-not-allowed `}
               type="submit"
               form="addFieldSsForm"
-              disabled={isEmpty(currentScheduleSheet.employees) || isEmpty(getValues('scheduleId')) ? true : false}
-            >
+              disabled={
+                isEmpty(currentScheduleSheet.employees) || isEmpty(getValues('scheduleId')) || employeeRestDayIsEmpty
+                  ? true
+                  : false
+              }            >
               Submit
             </button>
           </div>

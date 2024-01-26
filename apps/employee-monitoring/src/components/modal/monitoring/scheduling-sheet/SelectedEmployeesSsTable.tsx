@@ -114,6 +114,17 @@ const SelectedEmployeesSsTable = () => {
     setSelectedOptions([]);
   };
 
+  // Remove employee to be scheduled
+  const removeEmployee = (rowData: EmployeeAsOptionWithRestDays) => {
+    const currentEmployees = currentScheduleSheet.employees;
+    const updatedEmployees = currentEmployees.filter((employees) => employees.employeeId != rowData.employeeId);
+
+    setCurrentScheduleSheet({
+      ...currentScheduleSheet,
+      employees: updatedEmployees,
+    });
+  };
+
   // Render row actions in the table component
   const renderRowActions = (rowData: EmployeeAsOptionWithRestDays) => {
     return (
@@ -126,13 +137,15 @@ const SelectedEmployeesSsTable = () => {
           <i className="text-md bx bxs-sleepy"></i>
         </button>
 
-        <button
-          type="button"
-          className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
-          // onClick={() => openDeleteActionModal(rowData)}
-        >
-          <i className="bx bx-trash-alt"></i>
-        </button>
+        {isEmpty(rowData.restDays) ? (
+          <button
+            type="button"
+            className="text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+            onClick={() => removeEmployee(rowData)}
+          >
+            <i className="bx bx-trash-alt"></i>
+          </button>
+        ) : null}
       </div>
     );
   };
@@ -169,12 +182,13 @@ const SelectedEmployeesSsTable = () => {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: currentScheduleSheet.employees,
+    data: !isEmpty(currentScheduleSheet.employees) ? currentScheduleSheet.employees : [],
     columnVisibility: { employeeId: false },
   });
 
   // listens to date from and date to, if both are filled-out then set the state to true
   useEffect(() => {
+    // console.log(currentScheduleSheet.employees);
     if (!isEmpty(currentScheduleSheet.dateFrom) && !isEmpty(currentScheduleSheet.dateTo)) {
       setIsDateRangeFilled(true);
     }
