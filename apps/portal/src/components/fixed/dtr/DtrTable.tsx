@@ -82,9 +82,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                     <th className="px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Remarks
                     </th>
-                    {/* <th className="px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    <th className="px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Edit
-                    </th> */}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="text-sm text-center ">
@@ -179,7 +179,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                           >
                             {logs.dtr.remarks}
                           </td>
-                          {/* <td
+                          <td
                             className={`${
                               logs.holidayType === HolidayTypes.REGULAR
                                 ? 'border-rose-300'
@@ -198,7 +198,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 <HiPencilAlt className="w-4 h-5 md:w-4 md:h-5" />
                               </div>
                             </Button>
-                          </td> */}
+                          </td>
                         </tr>
                       );
                     })

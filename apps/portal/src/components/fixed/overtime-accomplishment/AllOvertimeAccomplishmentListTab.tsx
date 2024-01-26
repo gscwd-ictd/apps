@@ -60,7 +60,7 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
                     {overtime.status === OvertimeAccomplishmentStatus.PENDING && !overtime.accomplishments
                       ? 'NOT SUBMITTED'
                       : overtime.status === OvertimeAccomplishmentStatus.PENDING && overtime.accomplishments
-                      ? 'FOR SUPERVISOR APPROVAL'
+                      ? 'SUBMITTED: FOR SUPERVISOR REVIEW'
                       : overtime.status.toUpperCase()}
                   </p>
                 </div>

@@ -117,6 +117,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [encodedHours]);
 
+  console.log(overtimeAccomplishmentDetails?.plannedDate);
+  console.log(dayjs().format('YYYY-MM-DD'));
   return (
     <>
       <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>
@@ -381,7 +383,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className="text-slate-500 w-full text-md ">
                             <LabelInput
                               required={
-                                overtimeAccomplishmentDetails.ivmsTimeIn || overtimeAccomplishmentDetails.ivmsTimeOut
+                                overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut
                                   ? false
                                   : true
                               }
@@ -512,50 +514,49 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
-            overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
-            overtimeAccomplishmentDetails?.accomplishments ||
-            (!overtimeAccomplishmentDetails.accomplishments &&
-              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-              overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
-              GetDateDifference(
-                `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
-                `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-              ).days > 5) ||
-            (!overtimeAccomplishmentDetails.accomplishments &&
-              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-              overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
-              GetDateDifference(
-                `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
-                `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-              ).days > 5) ? (
-              <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
-                Close
-              </Button>
-            ) : (
-              <Button
-                disabled={
-                  ((!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                    (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
-                  overtimeAccomplishmentDetails.plannedDate > dayjs().format('YYYY-MM-DD') ||
-                  !watch('accomplishments')
-                    ? true
-                    : (schedule.scheduleBase != ScheduleBases.OFFICE &&
-                        (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
-                      overtimeAccomplishmentDetails.plannedDate > dayjs().format('YYYY-MM-DD') ||
-                      !watch('accomplishments')
-                    ? true
-                    : false
-                }
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                form="SubmitAccomplishmentForm"
-                type="submit"
-              >
-                {'Submit Accomplishment'}
-              </Button>
-            )}
+            {
+              //status is approved or disapproved
+              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
+              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
+              overtimeAccomplishmentDetails?.accomplishments ||
+              //late filing
+              (!overtimeAccomplishmentDetails.accomplishments &&
+                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+                GetDateDifference(
+                  `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                ).days > 5) ||
+              //future filing
+              (!overtimeAccomplishmentDetails.accomplishments &&
+                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                GetDateDifference(
+                  `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                ).days > 5) ? (
+                <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                  Close
+                </Button>
+              ) : (
+                <Button
+                  disabled={
+                    ((!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                      (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
+                    !watch('accomplishments')
+                      ? true
+                      : false
+                  }
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  form="SubmitAccomplishmentForm"
+                  type="submit"
+                >
+                  {'Submit Accomplishment'}
+                </Button>
+              )
+            }
           </div>
         </Modal.Footer>
       </Modal>
