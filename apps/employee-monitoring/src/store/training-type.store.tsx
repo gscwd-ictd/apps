@@ -1,9 +1,7 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import {
-  TrainingTypeId,
-  TrainingType,
-} from 'libs/utils/src/lib/types/training-type.type';
+import { TrainingTypeId, TrainingType } from 'libs/utils/src/lib/types/training.type';
 
 type ResponseTrainingType = {
   postResponse: TrainingType;
@@ -28,10 +26,7 @@ export type TrainingTypesState = {
   error: ErrorTrainingType;
 
   getTrainingTypes: (loading: boolean) => void;
-  getTrainingTypesSuccess: (
-    loading: boolean,
-    response: Array<TrainingType>
-  ) => void;
+  getTrainingTypesSuccess: (loading: boolean, response: Array<TrainingType>) => void;
   getTrainingTypesFail: (loading: boolean, error: string) => void;
 
   postTrainingType: () => void;
@@ -73,10 +68,7 @@ export const useTrainingTypesStore = create<TrainingTypesState>()(
         loading: { ...state.loading, loadingTrainingTypes: loading },
         error: { ...state.error, errorTrainingTypes: '' },
       })),
-    getTrainingTypesSuccess: (
-      loading: boolean,
-      response: Array<TrainingType>
-    ) =>
+    getTrainingTypesSuccess: (loading: boolean, response: Array<TrainingType>) =>
       set((state) => ({
         ...state,
         trainingTypes: response,

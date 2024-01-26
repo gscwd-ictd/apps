@@ -38,6 +38,10 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
   const {
     customGroups,
     groupWithMembers,
+    emptyResponse,
+    getCustomGroups,
+    getCustomGroupsFail,
+    getCustomGroupsSuccess,
     getCustomGroupWithMembers,
     getCustomGroupWithMembersFail,
     getCustomGroupWithMembersSuccess,
@@ -149,12 +153,32 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
     columnVisibility: { employeeId: false },
   });
 
+  // swr loading
+  // useEffect(() => {
+  //   if (swrIsLoading && modalState) {
+  //     getCustomGroups();
+  //   }
+  // }, [modalState, swrIsLoading]);
+
   // swr loading for the custom group details
   useEffect(() => {
     if (swrGroupDetailsIsLoading) {
       //
     }
   }, [swrGroupDetailsIsLoading]);
+
+  // swr success or error
+  // useEffect(() => {
+  //   // if data
+  //   if (!isEmpty(swrGroups)) {
+  //     getCustomGroupsSuccess(swrGroups.data);
+  //   }
+
+  //   // if error
+  //   if (!isEmpty(swrError)) {
+  //     getCustomGroupsFail(swrError.message);
+  //   }
+  // }, [swrGroups, swrError]);
 
   // transform/mutate group
   useEffect(() => {
