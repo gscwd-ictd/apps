@@ -123,7 +123,7 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
     isLoading: swrScheduleSheetIsLoading,
     error: swrScheduleSheetError,
   } = useSWR(
-    !isEmpty(selectedGroupId) && modalState
+    modalState
       ? `/custom-groups/${selectedGroupId}/?date_from=${formatDate(rowData.dateFrom)}&date_to=${formatDate(
           rowData.dateTo
         )}&schedule_id=${selectedScheduleId}`
@@ -173,7 +173,7 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
   // swr schedule sheet details loading
   useEffect(() => {
     if (swrScheduleSheetIsLoading) {
-      getScheduleSheet();
+      // getScheduleSheet();
     }
   }, [swrScheduleSheetIsLoading]);
 
