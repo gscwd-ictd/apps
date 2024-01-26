@@ -101,14 +101,12 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
       scheduleType: rowData.scheduleType,
       timeIn: removeSeconds(rowData.timeIn),
       timeOut: removeSeconds(rowData.timeOut),
-      scheduleBase: ScheduleBases.OFFICE,
+      scheduleBase: sched.scheduleBase,
       shift: rowData.shift,
       lunchIn: removeSeconds(rowData.lunchIn),
       lunchOut: removeSeconds(rowData.lunchOut),
       withLunch: rowData.withLunch,
     });
-
-    // console.log(sched.withLunch);
 
     if (sched.withLunch) {
       setWithLunch(true);

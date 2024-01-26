@@ -4,10 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { isEmpty } from 'lodash';
-import {
-  patchEmpMonitoring,
-  putEmpMonitoring,
-} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { putEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';

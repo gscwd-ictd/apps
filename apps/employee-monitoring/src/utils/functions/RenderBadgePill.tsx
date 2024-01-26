@@ -1,8 +1,8 @@
-function UseRenderBadgePill(value: string | number) {
+function UseRenderBadgePill(value: string | number, textSize?: string) {
   return (
-    <span className="min-w-[1rem]  bg-blue-400 px-2 text-white rounded">
-      {value}
-    </span>
+    <div className={`min-w-[1rem] ${textSize ?? 'text-xs'}`}>
+      <span className="bg-gray-300 text-gray-700 px-2 py-[0.2rem] rounded font-mono text-center">{value}</span>
+    </div>
   );
 }
 

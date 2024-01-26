@@ -1,19 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Alert, Button, ToastNotification } from '@gscwd-apps/oneui';
 import Head from 'next/head';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEffect, useState } from 'react';
 import { HiSearch } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { employee } from '../../../utils/constants/data';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { AppSelectionTabs } from '../../../components/fixed/selection/AppSelectionTabs';
 import { AppSelectionTabWindow } from '../../../components/fixed/selection/AppSelectionTabWindow';
@@ -31,10 +24,9 @@ import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { Roles } from 'apps/portal/src/utils/constants/user-roles';
 import { AppSelAlertConfirmation } from 'apps/portal/src/components/fixed/selection/alert/AppSelAlertConfirmation';
 import { AppSelAlertInfo } from 'apps/portal/src/components/fixed/selection/alert/AppSelAlertInfo';
+import { useRouter } from 'next/router';
 
-export default function AppPosAppointment({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function AppPosAppointment({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     loadingFulfilledPublicationList,
     loadingPendingPublicationList,
@@ -51,8 +43,7 @@ export default function AppPosAppointment({
     getFulfilledPublicationListFail,
     emptyResponseAndError,
   } = useAppSelectionStore((state) => ({
-    loadingFulfilledPublicationList:
-      state.loading.loadingFulfilledPublicationList,
+    loadingFulfilledPublicationList: state.loading.loadingFulfilledPublicationList,
     loadingPendingPublicationList: state.loading.loadingPendingPublicationList,
     errorPublicationList: state.errors.errorPublicationList,
     errorFulfilledPublicationList: state.errors.errorFulfilledPublicationList,
@@ -63,11 +54,12 @@ export default function AppPosAppointment({
     getPendingPublicationListSuccess: state.getPendingPublicationListSuccess,
     getPendingPublicationListFail: state.getPendingPublicationListFail,
     getFulfilledPublicationList: state.getFulfilledPublicationList,
-    getFulfilledPublicationListSuccess:
-      state.getFulfilledPublicationListSuccess,
+    getFulfilledPublicationListSuccess: state.getFulfilledPublicationListSuccess,
     getFulfilledPublicationListFail: state.getFulfilledPublicationListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const router = useRouter();
 
   // get state for the modal
   const modal = useAppSelectionStore((state) => state.modal);
@@ -76,22 +68,16 @@ export default function AppPosAppointment({
   const setModal = useAppSelectionStore((state) => state.setModal);
 
   // get the selected publication id state
-  const selectedPublication = useAppSelectionStore(
-    (state) => state.selectedPublication
-  );
+  const selectedPublication = useAppSelectionStore((state) => state.selectedPublication);
 
   // get the selected applicants state
-  const selectedApplicants = useAppSelectionStore(
-    (state) => state.selectedApplicants
-  );
+  const selectedApplicants = useAppSelectionStore((state) => state.selectedApplicants);
 
   // get the tab state
   const tab = useAppSelectionStore((state) => state.tab);
 
   // set the employee details state from store
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
 
   // open the modal
   const openModal = () => {
@@ -139,10 +125,7 @@ export default function AppPosAppointment({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPendingPublications)) {
-      getPendingPublicationListSuccess(
-        swrPendingPublicationIsLoading,
-        swrPendingPublications.data
-      );
+      getPendingPublicationListSuccess(swrPendingPublicationIsLoading, swrPendingPublications.data);
     }
 
     if (!isEmpty(swrPendingPublicationError)) {
@@ -161,10 +144,7 @@ export default function AppPosAppointment({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFulfilledPublications)) {
-      getFulfilledPublicationListSuccess(
-        swrFulfilledPublicationIsLoading,
-        swrFulfilledPublications.data
-      );
+      getFulfilledPublicationListSuccess(swrFulfilledPublicationIsLoading, swrFulfilledPublications.data);
     }
 
     if (!isEmpty(swrFulfilledPublicationError)) {
@@ -189,34 +169,20 @@ export default function AppPosAppointment({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
 
   return (
     <>
       {!isEmpty(patchResponseApply) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage={`Selection Complete!`}
-        />
+        <ToastNotification toastType="success" notifMessage={`Selection Complete!`} />
       ) : null}
 
-      {!isEmpty(errorResponse) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={` ${errorResponse}.`}
-        />
-      ) : null}
+      {!isEmpty(errorResponse) ? <ToastNotification toastType="error" notifMessage={` ${errorResponse}.`} /> : null}
 
       {!isEmpty(errorPublicationList) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`Search Publication: ${errorPublicationList}.`}
-        />
+        <ToastNotification toastType="error" notifMessage={`Search Publication: ${errorPublicationList}.`} />
       ) : null}
 
       {!isEmpty(errorFulfilledPublicationList) ? (
@@ -227,17 +193,14 @@ export default function AppPosAppointment({
       ) : null}
 
       {!isEmpty(errorPendingPublicationList) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`Fulfilled Publications: ${errorPendingPublicationList}.`}
-        />
+        <ToastNotification toastType="error" notifMessage={`Fulfilled Publications: ${errorPendingPublicationList}.`} />
       ) : null}
 
       <Head>
         <title>Appointing Authority Selection</title>
       </Head>
 
-      <SideNav navDetails={navDetails} />
+      <SideNav employeeDetails={employeeDetails} />
 
       <AppSelectionModal />
 
@@ -246,17 +209,14 @@ export default function AppPosAppointment({
       <AppSelAlertInfo />
 
       <MainContainer>
-        <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+        <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
           <ContentHeader
             title="Appointing Authority Selection"
             subtitle="Select an applicant for the position"
+            backUrl={`/${router.query.id}`}
           >
             {tab === 1 ? (
-              <Button
-                onClick={openModal}
-                className="hidden lg:block"
-                size={`md`}
-              >
+              <Button onClick={openModal} className="hidden lg:block" size={`md`}>
                 <div className="flex items-center w-full gap-2">
                   <HiSearch /> Find a Publication
                 </div>
@@ -271,7 +231,7 @@ export default function AppPosAppointment({
           </ContentHeader>
 
           {loadingPendingPublicationList && loadingFulfilledPublicationList ? (
-            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+            <div className="w-full h-96  static flex flex-col justify-items-center items-center place-items-center">
               <SpinnerDotted
                 speed={70}
                 thickness={70}
@@ -288,11 +248,7 @@ export default function AppPosAppointment({
                     <AppSelectionTabs tab={tab} />
                   </div>
                   <div className="w-full">
-                    <AppSelectionTabWindow
-                      positionId={
-                        employeeDetails.employmentDetails.assignment.positionId
-                      }
-                    />
+                    <AppSelectionTabWindow positionId={employeeDetails.employmentDetails.assignment.positionId} />
                   </div>
                 </div>
               </>
@@ -312,23 +268,21 @@ export default function AppPosAppointment({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
-    // check if user role is rank_and_file
-    if (
-      employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER &&
-      employeeDetails.employmentDetails.userRole !== Roles.OIC_GENERAL_MANAGER
-    ) {
-      // if true, the employee is not allowed to access this page
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/${employeeDetails.user._id}`,
-        },
-      };
-    } else {
-      return { props: { employeeDetails } };
-    }
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
+  // check if user role is rank_and_file
+  if (
+    employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER &&
+    employeeDetails.employmentDetails.userRole !== Roles.OIC_GENERAL_MANAGER
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
   }
-);
+});

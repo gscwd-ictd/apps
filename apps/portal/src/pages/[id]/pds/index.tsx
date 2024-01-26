@@ -1,17 +1,9 @@
 import { Button } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEffect, useState } from 'react';
-import {
-  getUserDetails,
-  withCookieSession,
-  withSession,
-} from '../../../utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { PdsTabs } from '../../../components/fixed/pds/PdsTabs';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -24,17 +16,12 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
-export default function Pds({
-  employeeDetails,
-  userId,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Pds({ employeeDetails, userId }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const tab = usePdsStore((state) => state.tab);
 
   const router = useRouter();
 
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
 
   const tabAction = () => {
     let link = '';
@@ -54,10 +41,7 @@ export default function Pds({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
 
@@ -67,14 +51,11 @@ export default function Pds({
         <title>Personal Data Sheet</title>
       </Head>
 
-      <SideNav navDetails={navDetails} />
+      <SideNav employeeDetails={employeeDetails} />
 
       <MainContainer>
-        <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-          <ContentHeader
-            title="Personal Data Sheet"
-            subtitle="Create or view your PDS"
-          >
+        <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+          <ContentHeader title="Personal Data Sheet" subtitle="Create or view your PDS" backUrl={''}>
             {tab === 2 && (
               <div className="w-[12rem]">
                 <Button>Updated selected</Button>
@@ -104,21 +85,19 @@ export default function Pds({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    // check if user role is rank_and_file or job order = kick out
-    if (employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) {
-      // if true, the employee is not allowed to access this page
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/${employeeDetails.user._id}`,
-        },
-      };
-    } else {
-      return { props: { employeeDetails, userId: context.query.id } };
-    }
+  // check if user role is rank_and_file or job order = kick out
+  if (employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails, userId: context.query.id } };
   }
-);
+});

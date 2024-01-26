@@ -1,20 +1,43 @@
-import { TrainingType, TrainingTypeId } from './training-type.type';
+import { NomineeType, TrainingPreparationStatus, TrainingStatus, TrainingTypes } from '../enums/training.enum';
+
+export type TrainingType = {
+  id: string;
+  name: string;
+};
+
+export type TrainingTypeId = Pick<TrainingType, 'id'>;
+
+export type RecommendedEmployee = {
+  employeeId: string;
+  name: string;
+};
 
 export type Training = {
-  id?: string;
-  name: string;
-  dateTo: string | Date | null;
-  dateFrom: string | Date | null;
-  hours: number;
+  distributionId: string;
+  numberOfSlots: number;
+  trainingId: string;
+  courseTitle: string;
   location: string;
-  inOffice: boolean;
-  learningServiceProvider: string;
-  seminarTrainingType: TrainingType;
-  assignedEmployees?: Array<string>;
+  trainingStart: string;
+  trainingEnd: string;
+  source: string;
+  type: TrainingTypes;
+  trainingPreparationStatus: TrainingPreparationStatus;
+  status: TrainingStatus;
 };
 
 // edit/viewing type
-export type TrainingWithTrainingId = Omit<Training, 'seminarTrainingType'> &
-  TrainingTypeId;
+export type TrainingWithTrainingId = Omit<Training, 'seminarTrainingType'> & TrainingTypeId;
 
-export type TrainingId = Pick<Training, 'id'>;
+export type TrainingId = Pick<Training, 'trainingId'>;
+
+export type TrainingNominee = {
+  employeeId: string;
+  nomineeType: NomineeType;
+};
+
+//for POST request, submission of training nomination
+export type TrainingNominationData = {
+  trainingDistribution: string;
+  employees: Array<TrainingNominee>;
+};

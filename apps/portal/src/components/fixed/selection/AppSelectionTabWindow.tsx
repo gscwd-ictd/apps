@@ -7,9 +7,7 @@ type AppSelectionTabWindowProps = {
   positionId: string;
 };
 
-export const AppSelectionTabWindow = ({
-  positionId,
-}: AppSelectionTabWindowProps) => {
+export const AppSelectionTabWindow = ({ positionId }: AppSelectionTabWindowProps) => {
   const {
     pendingPublicationList,
     fulfilledPublicationList,
@@ -22,27 +20,20 @@ export const AppSelectionTabWindow = ({
     fulfilledPublicationList: state.fulfilledPublicationList,
 
     loadingPendingPublicationList: state.loading.loadingPendingPublicationList,
-    loadingFulfilledPublicationList:
-      state.loading.loadingFulfilledPublicationList,
+    loadingFulfilledPublicationList: state.loading.loadingFulfilledPublicationList,
     tab: state.tab,
   }));
 
   return (
     <>
-      <div className="w-full bg-inherit rounded px-5 h-[28rem] overflow-y-auto">
+      <div className="w-full bg-inherit rounded px-5 h-[30rem] overflow-y-auto">
         {tab === 1 &&
           (loadingPendingPublicationList ? null : (
-            <AllSelectionPublicationListTab
-              publications={pendingPublicationList}
-              tab={tab}
-            />
+            <AllSelectionPublicationListTab publications={pendingPublicationList} tab={tab} />
           ))}
         {tab === 2 &&
           (loadingFulfilledPublicationList ? null : (
-            <AllSelectionPublicationListTab
-              publications={fulfilledPublicationList}
-              tab={tab}
-            />
+            <AllSelectionPublicationListTab publications={fulfilledPublicationList} tab={tab} />
           ))}
       </div>
     </>

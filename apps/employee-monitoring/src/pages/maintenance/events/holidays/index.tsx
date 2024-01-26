@@ -60,13 +60,13 @@ const Index = () => {
   const renderHolidayType = (holidayType: string) => {
     if (holidayType === 'regular') {
       return (
-        <span className="bg-red-400 text-white text-xs font-medium px-1 py-0.5 rounded text-center">
+        <span className="bg-red-200 text-red-800 text-xs font-mono px-1 py-0.5 rounded text-center">
           Regular
         </span>
       );
     } else if (holidayType === 'special') {
       return (
-        <span className="bg-blue-400 text-white text-xs font-medium px-1 py-0.5 rounded text-center">
+        <span className="bg-blue-200 text-blue-800 text-xs font-mono px-1 py-0.5 rounded text-center">
           Special
         </span>
       );
@@ -198,7 +198,7 @@ const Index = () => {
   }, [PostHolidayResponse, UpdateHolidayResponse, DeleteHolidayResponse]);
 
   return (
-    <div className="w-full px-4">
+    <div>
       <BreadCrumbs title="Holidays" />
 
       {/* Error Notifications */}
@@ -229,7 +229,7 @@ const Index = () => {
         />
       ) : null}
 
-      <div className="sm:mx-0 md:mx-0 lg:mx-5">
+      <div className="sm:px-2 md:px-2 lg:px-5">
         <Card>
           {IsLoading ? (
             <LoadingSpinner size="lg" />

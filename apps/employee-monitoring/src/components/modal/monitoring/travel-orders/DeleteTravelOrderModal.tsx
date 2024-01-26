@@ -22,40 +22,41 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  // zustand store initialization
+  // zustand store initialization for travel order
   const {
-    IsLoading,
+    SetDeleteTravelOrder,
 
-    DeleteTravelOrder,
-    DeleteTravelOrderSuccess,
-    DeleteTravelOrderFail,
+    SetErrorTravelOrder,
+
+    EmptyResponse,
   } = useTravelOrderStore((state) => ({
-    IsLoading: state.loading.loadingTravelOrder,
+    SetDeleteTravelOrder: state.setDeleteTravelOrder,
 
-    DeleteTravelOrder: state.deleteTravelOrder,
-    DeleteTravelOrderSuccess: state.deleteTravelOrderSuccess,
-    DeleteTravelOrderFail: state.deleteTravelOrderFail,
+    SetErrorTravelOrder: state.setErrorTravelOrder,
+
+    EmptyResponse: state.emptyResponse,
   }));
 
-  const { handleSubmit } = useForm<TravelOrder>();
+  const {
+    handleSubmit,
+    formState: { isSubmitting: deleteFormLoading },
+  } = useForm<TravelOrder>();
 
   const onSubmit: SubmitHandler<TravelOrder> = () => {
     if (!isEmpty(rowData.id)) {
-      DeleteTravelOrder();
+      EmptyResponse();
 
       handleDeleteResult();
     }
   };
 
   const handleDeleteResult = async () => {
-    const { error, result } = await deleteEmpMonitoring(
-      `/travel-order/${rowData.id}`
-    );
+    const { error, result } = await deleteEmpMonitoring(`/travel-order/${rowData.id}`);
 
     if (error) {
-      DeleteTravelOrderFail(result);
+      SetErrorTravelOrder(result);
     } else {
-      DeleteTravelOrderSuccess(result);
+      SetDeleteTravelOrder(result);
 
       closeModalAction();
     }
@@ -66,12 +67,12 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
           {/* Notifications */}
-          {IsLoading ? (
+          {deleteFormLoading ? (
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
               notifMessage="Submitting request"
-              dismissible={true}
+              dismissible={false}
             />
           ) : null}
 
@@ -80,10 +81,7 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
                   Are you sure you want to delete entry
-                  <span className="px-2 font-bold text-center text-md">
-                    {JSON.stringify(rowData.travelOrderNo)}
-                  </span>
-                  ?
+                  <span className="px-2 font-bold text-center text-md">{JSON.stringify(rowData.travelOrderNo)}</span>?
                 </p>
               </div>
             </div>
@@ -95,7 +93,7 @@ const DeleteTravelOrderModal: FunctionComponent<DeleteModalProps> = ({
               type="submit"
               form="deleteTravelOrderForm"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
-              disabled={IsLoading ? true : false}
+              disabled={deleteFormLoading ? true : false}
             >
               <span className="text-sm font-normal">Confirm</span>
             </button>

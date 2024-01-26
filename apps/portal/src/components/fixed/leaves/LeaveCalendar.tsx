@@ -28,10 +28,7 @@ type CalendarProps = {
   type: string; // single or range
 };
 
-export default function Calendar({
-  type = 'single',
-  clickableDate = true,
-}: CalendarProps) {
+export default function Calendar({ type = 'single', clickableDate = true }: CalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
@@ -44,9 +41,7 @@ export default function Calendar({
   const {
     leaveDateFrom,
     leaveDateTo,
-
     overlappingLeaveCount,
-
     setLeaveDateFrom,
     setLeaveDateTo,
     setLeaveDates,
@@ -112,13 +107,10 @@ export default function Calendar({
           })
         );
       } else {
-        //adds date to arry
+        //adds date to array
 
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
-          setSelectedDates((selectedDates) => [
-            ...selectedDates,
-            specifiedDate,
-          ]);
+          setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
         }
       }
     }
@@ -137,9 +129,7 @@ export default function Calendar({
   function getOverlappingLeaveCount() {
     const leave = swrUnavailableDates?.filter(
       (unavailableDate) =>
-        unavailableDate.type === 'Leave' &&
-        unavailableDate.date >= leaveDateFrom &&
-        unavailableDate.date <= leaveDateTo
+        unavailableDate.type === 'Leave' && unavailableDate.date >= leaveDateFrom && unavailableDate.date <= leaveDateTo
     ).length;
     setOverlappingLeaveCount(leave);
   }
@@ -180,46 +170,33 @@ export default function Calendar({
       {type === 'range' ? (
         <div className="flex flex-col md:flex-row gap-2 items-center">
           <div className="flex gap-2 md:w-[30%] items-center">
-            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">
-              From
-            </label>
+            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">From</label>
             <input
               required
               type="date"
+              value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
               className="text-slate-500 text-md border-slate-300"
-              onChange={(e) =>
-                setLeaveDateFrom(e.target.value as unknown as string)
-              }
+              onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
             />
           </div>
 
           <div className="flex gap-2 md:w-[30%] items-center">
-            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">
-              To
-            </label>
+            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">To</label>
             <input
               required
               type="date"
+              value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
               className="text-slate-500 text-md border-slate-300"
-              onChange={(e) =>
-                setLeaveDateTo(e.target.value as unknown as string)
-              }
+              onChange={(e) => setLeaveDateTo(e.target.value as unknown as string)}
             />
           </div>
 
           <label className="text-center text-slate-500 text-sm border-slate-300">
-            ={' '}
-            {leaveDateFrom && leaveDateTo
-              ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1
-              : 0}{' '}
-            Calendar Day(s) - {holidayCount} Holiday(s) -{' '}
-            {overlappingLeaveCount} Overlapping Leave(s) ={' '}
+            = {leaveDateFrom && leaveDateTo ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1 : 0} Calendar
+            Day(s) - {holidayCount} Holiday(s) - {overlappingLeaveCount} Overlapping Leave(s) ={' '}
             <label className="font-bold">
               {leaveDateFrom && leaveDateTo
-                ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') +
-                  1 -
-                  holidayCount -
-                  overlappingLeaveCount
+                ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1 - holidayCount - overlappingLeaveCount
                 : 0}{' '}
               Leave Day(s)
             </label>
@@ -237,10 +214,7 @@ export default function Calendar({
                     className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
                   >
                     <span className="sr-only">Previous month</span>
-                    <HiOutlineChevronLeft
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                    />
+                    <HiOutlineChevronLeft className="w-5 h-5" aria-hidden="true" />
                   </button>
                   <h2 className="flex-auto font-semibold text-gray-900 text-center">
                     {format(firstDayCurrentMonth, 'MMMM yyyy')}
@@ -252,10 +226,7 @@ export default function Calendar({
                     className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
                   >
                     <span className="sr-only">Next month</span>
-                    <HiOutlineChevronRight
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                    />
+                    <HiOutlineChevronRight className="w-5 h-5" aria-hidden="true" />
                   </button>
                 </div>
                 <div className="grid grid-cols-7 mt-3 text-xs leading-6 text-center text-gray-500">
@@ -271,32 +242,26 @@ export default function Calendar({
                   {days.map((day, dayIdx) => (
                     <div
                       key={day.toString()}
-                      className={classNames(
-                        dayIdx === 0 && colStartClasses[getDay(day)],
-                        'py-1.5'
-                      )}
+                      className={classNames(dayIdx === 0 && colStartClasses[getDay(day)], 'py-1.5')}
                     >
                       <button
                         type="button"
                         onClick={() => viewDateActivities(day)}
                         className={classNames(
-                          isEqual(day, selectedDay) &&
-                            'text-gray-900 font-semibold',
-                          !isEqual(day, selectedDay) &&
-                            isToday(day) &&
-                            'text-red-500',
+                          isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
+                          !isEqual(day, selectedDay) && isToday(day) && 'text-red-500',
                           swrUnavailableDates &&
                             swrUnavailableDates.some(
-                              (item) =>
-                                item.date === format(day, 'yyyy-MM-dd') &&
-                                item.type === 'Holiday'
+                              (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                             ) &&
                             'text-red-600 bg-red-200 rounded-full',
                           swrUnavailableDates &&
                             swrUnavailableDates.some(
-                              (item) =>
-                                item.date === format(day, 'yyyy-MM-dd') &&
-                                item.type === 'Leave'
+                              (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Leave'
+                            ) &&
+                            swrUnavailableDates &&
+                            !swrUnavailableDates.some(
+                              (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                             ) &&
                             'text-green-600 bg-green-200 rounded-full',
                           !isEqual(day, selectedDay) &&
@@ -310,17 +275,14 @@ export default function Calendar({
                           isEqual(day, selectedDay) && isToday(day) && '',
                           isEqual(day, selectedDay) && !isToday(day) && '',
                           !isEqual(day, selectedDay) && 'hover:bg-blue-200',
-                          (isEqual(day, selectedDay) || isToday(day)) &&
-                            'font-semibold',
+                          (isEqual(day, selectedDay) || isToday(day)) && 'font-semibold',
                           'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
                           selectedDates.includes(format(day, 'yyyy-MM-dd'))
                             ? 'bg-indigo-200 rounded-full text-gray-900'
                             : ''
                         )}
                       >
-                        <time dateTime={format(day, 'yyyy-MM-dd')}>
-                          {format(day, 'd')}
-                        </time>
+                        <time dateTime={format(day, 'yyyy-MM-dd')}>{format(day, 'd')}</time>
                       </button>
                     </div>
                   ))}
@@ -334,12 +296,4 @@ export default function Calendar({
   );
 }
 
-const colStartClasses = [
-  '',
-  'col-start-2',
-  'col-start-3',
-  'col-start-4',
-  'col-start-5',
-  'col-start-6',
-  'col-start-7',
-];
+const colStartClasses = ['', 'col-start-2', 'col-start-3', 'col-start-4', 'col-start-5', 'col-start-6', 'col-start-7'];

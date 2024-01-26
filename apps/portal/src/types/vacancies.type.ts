@@ -20,6 +20,18 @@ export type VacancyDetails = {
   vppId: string;
 };
 
+export type JobApplicationDetailsResponse = {
+  ApplicantStatus: string;
+  applicantStatus: string;
+  createdAt: string;
+  employeeId: string;
+  examScore: number;
+  updatedAt: string;
+  vacantPositionPostingId: string;
+  withRelevantExperience: boolean;
+  _id: string;
+};
+
 export type JobOpeningDetails = {
   error?: string;
   jobDescription: {

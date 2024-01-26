@@ -18,9 +18,7 @@ const VerticalLayout = (): JSX.Element => {
   const employee = useEmployeeStore((state) => state.employeeDetails);
   // initialize router
   const router = useRouter();
-  const allowedModules = useAllowedModulesStore(
-    (state) => state.allowedModules
-  );
+  const allowedModules = useAllowedModulesStore((state) => state.allowedModules);
 
   return (
     <div className="flex">
@@ -30,8 +28,7 @@ const VerticalLayout = (): JSX.Element => {
          */}
         {allowedModules &&
           allowedModules.map((item, itemIdx: number) => {
-            const { color, description, destination, icon, title, linkType } =
-              item;
+            const { color, description, destination, icon, title, linkType } = item;
             return (
               <div key={itemIdx}>
                 <DashboardCard
@@ -61,6 +58,12 @@ const VerticalLayout = (): JSX.Element => {
                       ? `/${router.query.id}/pass-slip`
                       : destination === 'approvals'
                       ? `/${router.query.id}/approvals`
+                      : destination === 'email'
+                      ? `${process.env.NEXT_PUBLIC_EMPLOYEE_EMAIL}`
+                      : destination === 'final-leave-approvals'
+                      ? `/${router.query.id}/final-leave-approvals`
+                      : destination === 'overtime-accomplishment'
+                      ? `/${router.query.id}/overtime-accomplishment`
                       : destination
                   }
                   // children={<></>}

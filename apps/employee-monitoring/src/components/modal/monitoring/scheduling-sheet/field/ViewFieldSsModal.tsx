@@ -1,31 +1,27 @@
-import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import {
-  ScheduleSheet,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
-import { useForm } from 'react-hook-form';
-import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
-import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
+import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
+import {
+  CurrentScheduleSheet,
+  ScheduleSheet,
+  useScheduleSheetStore,
+} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
+
+import { useForm } from 'react-hook-form';
+import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import ViewEmployeesSsTable from '../ViewEmployeesSsTable';
 
 type ViewFieldSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: ScheduleSheet;
+  rowData: CurrentScheduleSheet;
 };
 
 type ScheduleSheetForm = ScheduleSheet & {
@@ -49,7 +45,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
   // on close sheet
   const onCloseScheduleSheet = () => {
     reset();
-    setIsLoading(false);
+    setIsLoadingMembers(false);
     clearScheduleSheet();
     setSelectedCustomGroupWithMembers({
       customGroupDetails: {} as CustomGroup,
@@ -64,88 +60,93 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
   };
 
+  //  date format to YYYY-MM-DD
+  const formatDate = (date: string | null) => {
+    if (date === null) return '-';
+    else return dayjs(date).format('YYYY-MM-DD');
+  };
+
   // loading
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingMembers, setIsLoadingMembers] = useState<boolean>(false);
 
   // schedule sheet store
   const {
-    group,
+    scheduleSheet,
     schedule,
     selectedGroupId,
     selectedScheduleId,
     currentScheduleSheet,
-    getGroupById,
-    getScheduleById,
-    getGroupByIdFail,
-    setSelectedGroupId,
-    getScheduleByIdFail,
-    getGroupByIdSuccess,
-    setSelectedScheduleId,
-    getScheduleByIdSuccess,
+
     setCurrentScheduleSheet,
+    setSelectedGroupId,
+    setSelectedScheduleId,
+
+    getScheduleSheet,
+    getScheduleSheetSuccess,
+    getScheduleSheetFail,
+
+    getScheduleById,
+    getScheduleByIdSuccess,
+    getScheduleByIdFail,
+
     clearScheduleSheet,
   } = useScheduleSheetStore((state) => ({
-    group: state.group,
+    scheduleSheet: state.getScheduleSheetResponse,
     schedule: state.schedule,
     selectedGroupId: state.selectedGroupId,
     selectedScheduleId: state.selectedScheduleId,
     currentScheduleSheet: state.currentScheduleSheet,
+
     setCurrentScheduleSheet: state.setCurrentScheduleSheet,
     setSelectedGroupId: state.setSelectedGroupId,
     setSelectedScheduleId: state.setSelectedScheduleId,
+
+    getScheduleSheet: state.getScheduleSheet,
+    getScheduleSheetSuccess: state.getScheduleSheetSuccess,
+    getScheduleSheetFail: state.getScheduleSheetFail,
+
     getScheduleById: state.getScheduleById,
     getScheduleByIdSuccess: state.getScheduleByIdSuccess,
     getScheduleByIdFail: state.getScheduleByIdFail,
-    getGroupById: state.getGroupById,
-    getGroupByIdSuccess: state.getGroupByIdSuccess,
-    getGroupByIdFail: state.getGroupByIdFail,
+
     clearScheduleSheet: state.clearScheduleSheet,
   }));
 
   // custom group store
-  const { setSelectedCustomGroupWithMembers } = useCustomGroupStore(
-    (state) => ({
-      setSelectedCustomGroupWithMembers:
-        state.setSelectedCustomGroupWithMembers,
-    })
+  const { setSelectedCustomGroupWithMembers } = useCustomGroupStore((state) => ({
+    setSelectedCustomGroupWithMembers: state.setSelectedCustomGroupWithMembers,
+  }));
+
+  // useSWR for members of scheduling sheet
+  const {
+    data: swrScheduleSheet,
+    isLoading: swrScheduleSheetIsLoading,
+    error: swrScheduleSheetError,
+  } = useSWR(
+    modalState
+      ? `/custom-groups/${selectedGroupId}/?date_from=${formatDate(rowData.dateFrom)}&date_to=${formatDate(
+          rowData.dateTo
+        )}&schedule_id=${selectedScheduleId}`
+      : null,
+    fetcherEMS
   );
 
-  // use SWR
+  // useSWR for schedule details
   const {
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
     error: swrScheduleError,
-  } = useSWR(
-    !isEmpty(selectedScheduleId) ? `/schedules/${selectedScheduleId}` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
-
-  // fetch
-  const {
-    data: swrGroupDetails,
-    isLoading: swrGroupDetailsIsLoading,
-    error: swrGroupDetailsError,
-  } = useSWR(
-    !isEmpty(selectedGroupId) ? `/custom-groups/${selectedGroupId}` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnMount: false,
-    }
-  );
+  } = useSWR(!isEmpty(selectedScheduleId) && modalState ? `/schedules/${selectedScheduleId}` : null, fetcherEMS);
 
   // set default values
-  const setDefaultValues = (rowData: ScheduleSheet) => {
+  const setDefaultValues = (rowData: CurrentScheduleSheet) => {
     setValue('scheduleId', rowData.scheduleId);
     setValue('customGroupId', rowData.customGroupId);
     setValue('customGroupName', rowData.customGroupName);
     setValue('dateFrom', dayjs(rowData.dateFrom).format('YYYY-MM-DD'));
     setValue('dateTo', dayjs(rowData.dateTo).format('YYYY-MM-DD'));
     setValue('scheduleName', rowData.scheduleName);
+
     setSelectedGroupId(rowData.customGroupId);
     setSelectedScheduleId(rowData.scheduleId);
     setCurrentScheduleSheet({
@@ -159,10 +160,42 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     });
   };
 
-  // set schedule id loading to true
+  // register then group id and schedule ids
   useEffect(() => {
-    getScheduleById();
-  }, [selectedScheduleId]);
+    if (modalState) {
+      register('scheduleId', { required: true });
+      register('customGroupId', { required: true });
+      setDefaultValues(rowData);
+      setIsLoadingMembers(true);
+    }
+  }, [modalState]);
+
+  // swr schedule sheet details loading
+  useEffect(() => {
+    if (swrScheduleSheetIsLoading) {
+      getScheduleSheet();
+    }
+  }, [swrScheduleSheetIsLoading]);
+
+  // swr schedule sheet details success or fail
+  useEffect(() => {
+    // success
+    if (!isEmpty(swrScheduleSheet)) {
+      getScheduleSheetSuccess(swrScheduleSheet.data);
+    }
+
+    // fail
+    if (!isEmpty(swrScheduleSheetError)) {
+      getScheduleSheetFail(swrScheduleSheetError.message);
+    }
+  }, [swrScheduleSheet, swrScheduleSheetError]);
+
+  // swr schedule loading
+  useEffect(() => {
+    if (swrScheduleIsLoading) {
+      getScheduleById();
+    }
+  }, [swrScheduleIsLoading]);
 
   // set the schedule
   useEffect(() => {
@@ -170,39 +203,17 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     if (!isEmpty(swrSchedule)) getScheduleByIdSuccess(swrSchedule.data);
 
     // fail
-    if (!isEmpty(swrScheduleError))
-      getScheduleByIdFail(swrScheduleError.message);
+    if (!isEmpty(swrScheduleError)) getScheduleByIdFail(swrScheduleError.message);
   }, [swrSchedule, swrScheduleError]);
-
-  // swr is loading
-  useEffect(() => {
-    if (swrGroupDetailsIsLoading) {
-      getGroupById();
-    }
-  }, [swrGroupDetailsIsLoading]);
-
-  // swr group details success or fail
-  useEffect(() => {
-    // success
-    if (!isEmpty(swrGroupDetails)) {
-      getGroupByIdSuccess(swrGroupDetails.data);
-    }
-
-    // fail
-    if (!isEmpty(swrGroupDetailsError)) {
-      getGroupByIdFail(swrGroupDetailsError.message);
-    }
-  }, [swrGroupDetails, swrGroupDetailsError]);
 
   // load the members
   useEffect(() => {
-    if (!isEmpty(group.members)) {
+    if (!isEmpty(scheduleSheet.members)) {
       // map the selected group and assign an empty array to rest days
-      const membersWithRestDays = group.members.map((member) => {
+      const membersWithRestDays = scheduleSheet?.members.map((member) => {
         return { ...member };
       });
 
-      //! Replaced with groupWithMembers later if rest days are available
       setCurrentScheduleSheet({
         ...currentScheduleSheet,
         employees: membersWithRestDays,
@@ -210,169 +221,134 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
 
       // assign the selected custom group with members on submit only
       setSelectedCustomGroupWithMembers({
-        customGroupDetails: group.customGroupDetails,
+        customGroupDetails: scheduleSheet.customGroupDetails,
         members: membersWithRestDays,
       });
-    }
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  }, [group]);
 
-  // register then group id and schedule ids
-  useEffect(() => {
-    if (modalState && rowData) {
-      setIsLoading(true);
-      register('scheduleId', { required: true });
-      register('customGroupId', { required: true });
-      setDefaultValues(rowData);
+      setIsLoadingMembers(false);
     }
-  }, [modalState, rowData]);
+  }, [scheduleSheet]);
 
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
         <Modal.Header>
-          <h1 className="px-5 text-xl font-medium">
-            View Field Scheduling Sheet
-          </h1>
+          <h1 className="px-5 text-xl font-medium">View Field Scheduling Sheet</h1>
         </Modal.Header>
-        <Modal.Body>
-          {isLoading ? (
-            <LoadingSpinner size="lg" />
-          ) : (
-            <div className=" xs:px-0 sm:px-0 md:px-0 lg:px-4">
-              <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[16rem]">
-                {/* Effectivity */}
-                <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
-                  <div className="flex flex-col justify-start w-full pb-2">
-                    <p className="flex items-center justify-start w-full font-light">
-                      Effectivity Date
-                    </p>
-                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
-                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
-                      <LabelInput
-                        id="fieldsStartDate"
-                        name="dateFrom"
-                        type="date"
-                        label="Start Date"
-                        controller={{
-                          ...register('dateFrom', {
-                            onChange: (e) =>
-                              setCurrentScheduleSheet({
-                                ...currentScheduleSheet,
-                                dateFrom: e.target.value,
-                              }),
-                          }),
-                        }}
-                        isError={errors.dateFrom ? true : false}
-                        errorMessage={errors.dateFrom?.message}
-                      />
-                      <LabelInput
-                        id="fieldSsEndDate"
-                        name="dateTo"
-                        type="date"
-                        label="End Date"
-                        controller={{
-                          ...register('dateTo', {
-                            onChange: (e) =>
-                              setCurrentScheduleSheet({
-                                ...currentScheduleSheet,
-                                dateTo: e.target.value,
-                              }),
-                          }),
-                        }}
-                        isError={errors.dateTo ? true : false}
-                        errorMessage={errors.dateTo?.message}
-                      />
-                    </div>
-                  </div>
 
-                  <div className="flex flex-col justify-center w-full">
-                    {swrGroupDetailsIsLoading ? (
+        <Modal.Body>
+          <div className=" xs:px-0 sm:px-0 md:px-0 lg:px-4">
+            <div className="flex w-full gap-10 mb-2 xs:flex-col sm:flex-col md:flex-col lg:flex-row xs:h-auto sm:h-auto md:h-auto lg:h-[16rem]">
+              {/* Effectivity */}
+              <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
+                <div className="flex flex-col justify-start w-full pb-2">
+                  <p className="flex items-center justify-start w-full font-light">Effectivity Date</p>
+                  <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
+                  <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
+                    <LabelInput
+                      id="fieldsStartDate"
+                      name="dateFrom"
+                      type="date"
+                      label="Start Date"
+                      controller={{
+                        ...register('dateFrom', {
+                          onChange: (e) =>
+                            setCurrentScheduleSheet({
+                              ...currentScheduleSheet,
+                              dateFrom: e.target.value,
+                            }),
+                        }),
+                      }}
+                      isError={errors.dateFrom ? true : false}
+                      errorMessage={errors.dateFrom?.message}
+                    />
+                    <LabelInput
+                      id="fieldSsEndDate"
+                      name="dateTo"
+                      type="date"
+                      label="End Date"
+                      controller={{
+                        ...register('dateTo', {
+                          onChange: (e) =>
+                            setCurrentScheduleSheet({
+                              ...currentScheduleSheet,
+                              dateTo: e.target.value,
+                            }),
+                        }),
+                      }}
+                      isError={errors.dateTo ? true : false}
+                      errorMessage={errors.dateTo?.message}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-center w-full">
+                  <LabelInput
+                    id="fieldGroupName"
+                    name="groupName"
+                    type="text"
+                    label="Group Name"
+                    value={!isEmpty(rowData.customGroupName) ? rowData.customGroupName : '--'}
+                    isError={errors.dateFrom ? true : false}
+                    errorMessage={errors.dateFrom?.message}
+                    disabled
+                  />
+                </div>
+              </section>
+
+              {/* Schedule */}
+              <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
+                <div className="flex flex-col justify-start w-full h-full">
+                  <p className="flex items-center justify-start w-full font-light">Field Schedule</p>
+                  <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
+                  <div className="flex flex-col w-full gap-4">
+                    {swrScheduleIsLoading ? (
                       <LoadingSpinner size="lg" />
                     ) : (
-                      <LabelInput
-                        id="fieldGroupName"
-                        name="groupName"
-                        type="text"
-                        label="Group Name"
-                        value={
-                          !isEmpty(group.customGroupDetails)
-                            ? group.customGroupDetails.name
-                            : '--'
-                        }
-                        isError={errors.dateFrom ? true : false}
-                        errorMessage={errors.dateFrom?.message}
-                        disabled
-                      />
-                    )}
-                  </div>
-                </section>
+                      <div className="flex flex-col gap-4">
+                        <LabelInput
+                          id="scheduleName"
+                          label="Name"
+                          value={schedule.name ?? '--'}
+                          isError={errors.scheduleId ? true : false}
+                          errorMessage={errors.scheduleId?.message}
+                          disabled
+                        />
+                        <div className="gap-2 sm:flex-col md:flex-col lg:flex-row lg:flex">
+                          <div className="sm:w-full md:w-full lg:w-[50%]">
+                            <LabelInput
+                              id="scheduleTimeIn"
+                              label="Time in"
+                              value={schedule.timeIn ? formatTime(schedule.timeIn) : '-- : --'}
+                              isError={errors.scheduleId ? true : false}
+                              errorMessage={errors.scheduleId?.message}
+                              disabled
+                            />
+                          </div>
 
-                {/* Schedule */}
-                <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
-                  <div className="flex flex-col justify-start w-full h-full">
-                    <p className="flex items-center justify-start w-full font-light">
-                      Field Schedule
-                    </p>
-                    <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
-                    <div className="flex flex-col w-full gap-4">
-                      {swrScheduleIsLoading ? (
-                        <LoadingSpinner size="lg" />
-                      ) : (
-                        <div className="flex flex-col gap-4">
-                          <LabelInput
-                            id="scheduleName"
-                            label="Name"
-                            value={schedule.name ?? '--'}
-                            isError={errors.scheduleId ? true : false}
-                            errorMessage={errors.scheduleId?.message}
-                            disabled
-                          />
-                          <div className="gap-2 sm:flex-col md:flex-col lg:flex-row lg:flex">
-                            <div className="sm:w-full md:w-full lg:w-[50%]">
-                              <LabelInput
-                                id="scheduleTimeIn"
-                                label="Time in"
-                                value={
-                                  schedule.timeIn
-                                    ? formatTime(schedule.timeIn)
-                                    : '-- : --'
-                                }
-                                isError={errors.scheduleId ? true : false}
-                                errorMessage={errors.scheduleId?.message}
-                                disabled
-                              />
-                            </div>
-
-                            <div className="sm:w-full md:w-full lg:w-[50%]">
-                              <LabelInput
-                                id="scheduleTimeOut"
-                                label="Time out"
-                                value={
-                                  schedule.timeOut
-                                    ? formatTime(schedule.timeOut)
-                                    : '-- : --'
-                                }
-                                isError={errors.scheduleId ? true : false}
-                                errorMessage={errors.scheduleId?.message}
-                                disabled
-                              />
-                            </div>
+                          <div className="sm:w-full md:w-full lg:w-[50%]">
+                            <LabelInput
+                              id="scheduleTimeOut"
+                              label="Time out"
+                              value={schedule.timeOut ? formatTime(schedule.timeOut) : '-- : --'}
+                              isError={errors.scheduleId ? true : false}
+                              errorMessage={errors.scheduleId?.message}
+                              disabled
+                            />
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
-                </section>
-              </div>
-              <section className="col-span-2 rounded bg-inherit min-h-auto">
-                <ViewEmployeesSsTable />
+                </div>
               </section>
             </div>
-          )}
+            <section className="col-span-2 rounded bg-inherit min-h-auto">
+              {isLoadingMembers ? <LoadingSpinner size="lg" /> : <ViewEmployeesSsTable />}
+            </section>
+          </div>
         </Modal.Body>
+
         <Modal.Footer>
           <div className="flex justify-end w-full gap-2">
             <button

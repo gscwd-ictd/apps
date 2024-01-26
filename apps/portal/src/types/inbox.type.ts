@@ -1,3 +1,6 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+
 export type PsbMessageContent = {
   details: {
     assignment: string;
@@ -21,4 +24,20 @@ export type PsbMembers = {
   employeePosition: string;
   assignment: string;
   acknowledgedSchedule: number;
+};
+
+export type OvertimeMessageContent = {
+  plannedDate: string;
+  purpose: string;
+  status: OvertimeStatus;
+  estimatedHours: number;
+  employeeDetails: Array<OvertimeMembers>;
+};
+
+export type OvertimeMembers = {
+  employeeId: string;
+  employeeFullName: string;
+  avatarUrl: string;
+  position: string;
+  assignment: string;
 };

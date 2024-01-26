@@ -1,5 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# ENV
+.env
+
 # compiled output
 dist
 tmp
@@ -41,11 +44,4 @@ Thumbs.db
 # Next.js
 .next
 
-# ENV
-**/.env
-**/apps/.env
-apps/employee-monitoring/.env
-apps/pds/.env
-apps/portal/.env
-apps/learning-development/.env
-apps/job-portal/.env
+

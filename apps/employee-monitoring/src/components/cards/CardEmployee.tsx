@@ -7,7 +7,7 @@ export const CardEmployee = () => {
       <section className="min-w-full h-[50%] bg-sky-300/80 rounded-t">
         <div className="flex flex-col m-5">
           <span className="font-medium text-sky-800">Welcome Back!</span>
-          <span className="text-xs font-normal text-sky-800">
+          <span className="z-10 text-xs font-normal text-sky-800">
             Employee Monitoring Dashboard
           </span>
         </div>
@@ -22,7 +22,7 @@ export const CardEmployee = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            className="mx-5 bg-white border rounded-full sm:w-6 sm:h-6 md:w-10 md:h-10 lg:w-16 lg:h-16 sm:-mt-8 lg:-mt-8 fill-slate-700/90"
+            className="mx-5 bg-white border rounded-full xs:h-16 sm:w-6 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 xs:-mt-8 sm:-mt-8 md:-mt-8 lg:-mt-8 fill-slate-700/90"
           >
             <path
               fillRule="evenodd"

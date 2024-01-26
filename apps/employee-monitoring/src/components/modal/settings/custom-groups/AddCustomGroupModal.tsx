@@ -8,12 +8,7 @@ import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/emp
 import { CustomGroup } from 'apps/employee-monitoring/src/utils/types/custom-group.type';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
-import {
-  Modal,
-  AlertNotification,
-  LoadingSpinner,
-  Button,
-} from '@gscwd-apps/oneui';
+import { Modal, AlertNotification, LoadingSpinner, Button } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../../inputs/LabelInput';
 
 type AddModalProps = {
@@ -30,11 +25,7 @@ const yupSchema = yup
   })
   .required();
 
-const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}) => {
+const AddCustomGroupModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
   // zustand store initialization for travel order
   const {
     IsLoading,

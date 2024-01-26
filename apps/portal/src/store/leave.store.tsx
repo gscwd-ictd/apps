@@ -5,29 +5,26 @@ import {
   EmployeeLeave,
   EmployeeLeaveDetails,
   CalendarDate,
-  LeaveApplicationForm,
   EmployeeLeaveList,
   EmployeeLeaveCredits,
   LeaveId,
+  LeaveApplicationResponse,
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
+import axios, { AxiosResponse } from 'axios';
 
 export type LeavesState = {
   leaves: {
     onGoing: Array<EmployeeLeave>;
     completed: Array<EmployeeLeave>;
   };
-  leaveCredits: {
-    vacation: number;
-    forced: number;
-    sick: number;
-  };
+
   leaveId: string;
   leaveIndividualDetail: EmployeeLeaveDetails;
   unavailableDates: Array<CalendarDate>;
   response: {
-    postResponseApply: LeaveApplicationForm;
-    deleteResponseCancel: LeaveId;
+    postResponseApply: LeaveApplicationResponse;
+    patchResponseCancel: any;
   };
   loading: {
     loadingLeaves: boolean;
@@ -54,6 +51,7 @@ export type LeavesState = {
   applyLeaveModalIsOpen: boolean;
   pendingLeaveModalIsOpen: boolean;
   completedLeaveModalIsOpen: boolean;
+  cancelLeaveModalIsOpen: boolean;
   tab: number;
   isGetLeaveLoading: boolean;
 
@@ -68,16 +66,16 @@ export type LeavesState = {
   getLeaveListFail: (loading: boolean, error: string) => void;
 
   postLeave: () => void;
-  postLeaveSuccess: (response: LeaveApplicationForm) => void;
+  postLeaveSuccess: (response: LeaveApplicationResponse) => void;
   postLeaveFail: (error: string) => void;
+
+  patchLeave: () => void;
+  patchLeaveSuccess: (response: any) => void;
+  patchLeaveFail: (error: string) => void;
 
   getLeaveTypes: (loading: boolean) => void;
   getLeaveTypesSuccess: (loading: boolean, response) => void;
   getLeaveTypesFail: (loading: boolean, error: string) => void;
-
-  getLeaveCredits: (loading: boolean) => void;
-  getLeaveCreditsSuccess: (loading: boolean, response) => void;
-  getLeaveCreditsFail: (loading: boolean, error: string) => void;
 
   getLeaveIndividualDetail: (loading: boolean) => void;
   getLeaveIndividualDetailSuccess: (loading: boolean, response) => void;
@@ -90,6 +88,7 @@ export type LeavesState = {
   setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
   setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => void;
+  setCancelLeaveModalIsOpen: (cancelLeaveModalIsOpen: boolean) => void;
 
   setIsGetLeaveLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
@@ -103,18 +102,14 @@ export const useLeaveStore = create<LeavesState>()(
       onGoing: [],
       completed: [],
     },
-    leaveCredits: {
-      vacation: 10.3,
-      forced: 5,
-      sick: 5.8,
-    },
+
     leaveId: '',
     leaveIndividualDetail: {} as EmployeeLeaveDetails,
     unavailableDates: [] as Array<CalendarDate>,
 
     response: {
-      postResponseApply: {} as LeaveApplicationForm,
-      deleteResponseCancel: {} as LeaveId,
+      postResponseApply: {} as LeaveApplicationResponse,
+      patchResponseCancel: {} as any,
     },
     loading: {
       loadingLeaves: false,
@@ -142,6 +137,7 @@ export const useLeaveStore = create<LeavesState>()(
     applyLeaveModalIsOpen: false,
     pendingLeaveModalIsOpen: false,
     completedLeaveModalIsOpen: false,
+    cancelLeaveModalIsOpen: false,
 
     isGetLeaveLoading: true,
     tab: 1,
@@ -184,6 +180,10 @@ export const useLeaveStore = create<LeavesState>()(
 
     setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => {
       set((state) => ({ ...state, completedLeaveModalIsOpen }));
+    },
+
+    setCancelLeaveModalIsOpen: (cancelLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, cancelLeaveModalIsOpen }));
     },
 
     //GET LEAVE ACTIONS
@@ -233,13 +233,13 @@ export const useLeaveStore = create<LeavesState>()(
       }));
     },
 
-    //POST LEAVE ACTIONS
+    //POST LEAVE ACTIONS (APPLY LEAVE)
     postLeave: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveApplicationForm,
+          postResponseApply: {} as LeaveApplicationResponse,
         },
         loading: {
           ...state.loading,
@@ -251,7 +251,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    postLeaveSuccess: (response: LeaveApplicationForm) => {
+    postLeaveSuccess: (response: LeaveApplicationResponse) => {
       set((state) => ({
         ...state,
         response: {
@@ -265,6 +265,51 @@ export const useLeaveStore = create<LeavesState>()(
       }));
     },
     postLeaveFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
+    //POST LEAVE ACTIONS (CANCEL LEAVE)
+    patchLeave: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponseCancel: {} as any,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    patchLeaveSuccess: (response: any) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponseCancel: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    patchLeaveFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -295,10 +340,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveTypesSuccess: (
-      loading: boolean,
-      response: Array<LeaveBenefitOptions>
-    ) => {
+    getLeaveTypesSuccess: (loading: boolean, response: Array<LeaveBenefitOptions>) => {
       set((state) => ({
         ...state,
         leaveTypes: response,
@@ -322,56 +364,6 @@ export const useLeaveStore = create<LeavesState>()(
       }));
     },
 
-    //GET LEAVE CREDIT ACTIONS
-    getLeaveCredits: (loading: boolean) => {
-      set((state) => ({
-        ...state,
-        leaveCredits: {
-          ...state.leaveCredits,
-          vacation: null,
-          sick: null,
-        },
-        loading: {
-          ...state.loading,
-          loadingLeaveCredits: loading,
-        },
-        error: {
-          ...state.error,
-          errorLeaveCredits: '',
-        },
-      }));
-    },
-    getLeaveCreditsSuccess: (
-      loading: boolean,
-      response: EmployeeLeaveCredits
-    ) => {
-      set((state) => ({
-        ...state,
-        leaves: {
-          ...state.leaves,
-          vacation: response.vacation,
-          sick: response.sick,
-        },
-        loading: {
-          ...state.loading,
-          loadingLeaveCredits: loading,
-        },
-      }));
-    },
-    getLeaveCreditsFail: (loading: boolean, error: string) => {
-      set((state) => ({
-        ...state,
-        loading: {
-          ...state.loading,
-          loadingLeaveCredits: loading,
-        },
-        error: {
-          ...state.error,
-          errorLeaveCredits: error,
-        },
-      }));
-    },
-
     //GET CURRENT APPROVED/PENDING LEAVE DATES ACTIONS
     getUnavailableDates: (loading: boolean) => {
       set((state) => ({
@@ -390,10 +382,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getUnavailableSuccess: (
-      loading: boolean,
-      response: Array<CalendarDate>
-    ) => {
+    getUnavailableSuccess: (loading: boolean, response: Array<CalendarDate>) => {
       set((state) => ({
         ...state,
         unavailableDates: {
@@ -435,10 +424,7 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getLeaveIndividualDetailSuccess: (
-      loading: boolean,
-      response: EmployeeLeaveDetails
-    ) => {
+    getLeaveIndividualDetailSuccess: (loading: boolean, response: EmployeeLeaveDetails) => {
       set((state) => ({
         ...state,
         leaveIndividualDetail: response,
@@ -466,8 +452,8 @@ export const useLeaveStore = create<LeavesState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as LeaveApplicationForm,
-          deleteResponseCancel: {} as LeaveId,
+          postResponseApply: {} as LeaveApplicationResponse,
+          patchResponseCancel: {} as any,
         },
         error: {
           ...state.error,

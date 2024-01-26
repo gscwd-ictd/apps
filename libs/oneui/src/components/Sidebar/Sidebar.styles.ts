@@ -30,7 +30,7 @@ export const linkClass = (
   return cls(
     'flex items-center font-light py-3 duration-100 ease-in-out transition-all',
     {
-      'justify-center hover:pl-1': collapsed,
+      'justify-center': collapsed,
 
       'pl-4 gap-5': !collapsed,
 

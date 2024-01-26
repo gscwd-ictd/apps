@@ -64,6 +64,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
     setValue('withLunch', false);
     setValue('timeIn', removeSeconds(sched.timeIn));
     setValue('timeOut', removeSeconds(sched.timeOut));
+    setValue('scheduleBase', sched.scheduleBase);
     setValue('lunchIn', sched.lunchIn);
     setValue('lunchOut', sched.lunchOut);
     setValue('shift', sched.shift);
@@ -74,7 +75,7 @@ const EditFieldSchedModal: FunctionComponent<EditModalProps> = ({
       scheduleType: rowData.scheduleType,
       timeIn: removeSeconds(rowData.timeIn),
       timeOut: removeSeconds(rowData.timeOut),
-      scheduleBase: ScheduleBases.OFFICE,
+      scheduleBase: sched.scheduleBase,
       shift: rowData.shift,
       lunchIn: removeSeconds(rowData.lunchIn),
       lunchOut: removeSeconds(rowData.lunchOut),

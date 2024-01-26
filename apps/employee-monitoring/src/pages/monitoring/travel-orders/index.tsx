@@ -9,12 +9,7 @@ import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-o
 import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
-import {
-  DataTable,
-  useDataTable,
-  LoadingSpinner,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import AddTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/AddTravelOrderModal';
@@ -24,20 +19,47 @@ import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/func
 
 const Index = () => {
   // Current row data in the table that has been clicked
-  const [currentRowData, setCurrentRowData] = useState<TravelOrder>(
-    {} as TravelOrder
-  );
+  const [currentRowData, setCurrentRowData] = useState<TravelOrder>({} as TravelOrder);
 
   // fetch data for list of travel orders
   const {
-    data: swrTravelOrder,
-    error: swrError,
-    isLoading: swrIsLoading,
+    data: travelOrders,
+    error: travelOrdersError,
+    isLoading: travelOrdersLoading,
     mutate: mutateTravelOrders,
   } = useSWR('/travel-order', fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
+
+  // Zustand initialization
+  const {
+    TravelOrders,
+    SetTravelOrders,
+
+    ErrorTravelOrders,
+    SetErrorTravelOrders,
+
+    PostTravelOrder,
+    UpdateTravelOrder,
+    DeleteTravelOrder,
+    ErrorTravelOrder,
+
+    EmptyResponse,
+  } = useTravelOrderStore((state) => ({
+    TravelOrders: state.travelOrders,
+    SetTravelOrders: state.setTravelOrders,
+
+    ErrorTravelOrders: state.errorTravelOrders,
+    SetErrorTravelOrders: state.setErrorTravelOrders,
+
+    PostTravelOrder: state.postTravelOrder,
+    UpdateTravelOrder: state.updateTravelOrder,
+    DeleteTravelOrder: state.deleteTravelOrder,
+    ErrorTravelOrder: state.errorTravelOrder,
+
+    EmptyResponse: state.emptyResponse,
+  }));
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -122,119 +144,58 @@ const Index = () => {
     }),
   ];
 
-  // Zustand initialization
-  const {
-    TravelOrders,
-    PostTravelOrderResponse,
-    UpdateTravelOrderResponse,
-    DeleteTravelOrderResponse,
-
-    IsLoading,
-    ErrorTravelOrders,
-    ErrorTravelOrder,
-
-    GetTravelOrders,
-    GetTravelOrdersSuccess,
-    GetTravelOrdersFail,
-
-    EmptyResponse,
-  } = useTravelOrderStore((state) => ({
-    TravelOrders: state.travelOrders,
-    PostTravelOrderResponse: state.travelOrder.postResponse,
-    UpdateTravelOrderResponse: state.travelOrder.updateResponse,
-    DeleteTravelOrderResponse: state.travelOrder.deleteResponse,
-
-    IsLoading: state.loading.loadingTravelOrders,
-    ErrorTravelOrders: state.error.errorTravelOrders,
-    ErrorTravelOrder: state.error.errorTravelOrder,
-
-    GetTravelOrders: state.getTravelOrders,
-    GetTravelOrdersSuccess: state.getTravelOrdersSuccess,
-    GetTravelOrdersFail: state.getTravelOrdersFail,
-
-    EmptyResponse: state.emptyResponse,
-  }));
-
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    // data: TypesMockData,
     data: TravelOrders,
     columnVisibility: { id: false },
   });
 
-  // Initial zustand state update
+  // Reset responses on load of page
   useEffect(() => {
-    if (swrIsLoading) {
-      GetTravelOrders(swrIsLoading);
-    }
-  }, [swrIsLoading]);
+    EmptyResponse();
+  }, []);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (!isEmpty(swrTravelOrder)) {
-      GetTravelOrdersSuccess(swrIsLoading, swrTravelOrder.data);
+    if (!isEmpty(travelOrders)) {
+      SetTravelOrders(travelOrders.data);
     }
 
-    if (!isEmpty(swrError)) {
-      GetTravelOrdersFail(swrIsLoading, swrError.message);
+    if (!isEmpty(travelOrdersError)) {
+      SetErrorTravelOrders(travelOrdersError.message);
     }
-  }, [swrTravelOrder, swrError]);
+  }, [travelOrders, travelOrdersError]);
 
   // Get new list of travel orders
   useEffect(() => {
-    if (
-      !isEmpty(PostTravelOrderResponse) ||
-      !isEmpty(UpdateTravelOrderResponse) ||
-      !isEmpty(DeleteTravelOrderResponse)
-    ) {
+    if (!isEmpty(PostTravelOrder) || !isEmpty(UpdateTravelOrder) || !isEmpty(DeleteTravelOrder)) {
       mutateTravelOrders();
-
-      setTimeout(() => {
-        EmptyResponse();
-      }, 3000);
     }
-  }, [
-    PostTravelOrderResponse,
-    UpdateTravelOrderResponse,
-    DeleteTravelOrderResponse,
-  ]);
+  }, [PostTravelOrder, UpdateTravelOrder, DeleteTravelOrder]);
 
   return (
-    <div className="w-full px-4">
+    <div>
       <BreadCrumbs title="Travel Orders" />
 
-      {/* Error Notifications */}
-      {!isEmpty(ErrorTravelOrders) ? (
-        <ToastNotification toastType="error" notifMessage={ErrorTravelOrders} />
+      {/* Notifications */}
+      {!isEmpty(ErrorTravelOrders) ? <ToastNotification toastType="error" notifMessage={ErrorTravelOrders} /> : null}
+
+      {!isEmpty(ErrorTravelOrder) ? <ToastNotification toastType="error" notifMessage={ErrorTravelOrder} /> : null}
+
+      {!isEmpty(PostTravelOrder) ? (
+        <ToastNotification toastType="success" notifMessage="Travel order added successfully" />
       ) : null}
-      {!isEmpty(ErrorTravelOrder) ? (
-        <ToastNotification toastType="error" notifMessage={ErrorTravelOrder} />
+      {!isEmpty(UpdateTravelOrder) ? (
+        <ToastNotification toastType="success" notifMessage="Travel order updated successfully" />
+      ) : null}
+      {!isEmpty(DeleteTravelOrder) ? (
+        <ToastNotification toastType="success" notifMessage="Travel order deleted successfully" />
       ) : null}
 
-      {/* Success Notifications */}
-      {!isEmpty(PostTravelOrderResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Travel order added successfully"
-        />
-      ) : null}
-      {!isEmpty(UpdateTravelOrderResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Travel order updated successfully"
-        />
-      ) : null}
-      {!isEmpty(DeleteTravelOrderResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Travel order deleted successfully"
-        />
-      ) : null}
-
-      <div className="sm:mx-0 md:mx-0 lg:mx-5">
+      <div className="sm:px-2 md:px-2 lg:px-5">
         <Card>
-          {IsLoading ? (
+          {travelOrdersLoading ? (
             <LoadingSpinner size="lg" />
           ) : (
             <div className="flex flex-row flex-wrap">
@@ -248,12 +209,7 @@ const Index = () => {
                 </button>
               </div>
 
-              <DataTable
-                model={table}
-                showGlobalFilter={true}
-                showColumnFilter={true}
-                paginate={true}
-              />
+              <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
             </div>
           )}
         </Card>

@@ -13,6 +13,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
 import { LoadingSpinner } from '@gscwd-apps/oneui';
+import { ScheduleBase } from '../../utils/enum/schedule-bases.enum';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -22,16 +23,9 @@ type EmployeeDtrTableProps = {
   employeeData: EmployeeWithDetails;
 };
 
-export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
-  employeeData,
-}) => {
-  // temporary, will be used if office schedules will be captured
-  const [isOfficeSchedule, setIsOfficeSchedule] = useState<boolean>(true);
-
+export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ employeeData }) => {
   // Edit modal function
-  const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>(
-    {} as EmployeeDtrWithSchedule
-  );
+  const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
 
   // edit modal state
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
@@ -73,9 +67,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
     isLoading: swrDtrIsLoading,
     error: swrDtrError,
   } = useSWR(
-    isDateSearched
-      ? `daily-time-record/employees/${employeeData.companyId}/${selectedYear}/${selectedMonth}`
-      : null,
+    isDateSearched ? `daily-time-record/employees/${employeeData.companyId}/${selectedYear}/${selectedMonth}` : null,
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -84,24 +76,12 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
   );
 
   // compare if after
-  const compareIfEarly = (
-    day: string,
-    actualTime: string,
-    scheduledTime: string
-  ) => {
-    return dayjs(day + ' ' + actualTime).isBefore(
-      day + ' ' + scheduledTime,
-      'minute'
-    );
+  const compareIfEarly = (day: string, actualTime: string, scheduledTime: string) => {
+    return dayjs(day + ' ' + actualTime).isBefore(day + ' ' + scheduledTime, 'minute');
   };
 
   // compare if before
-  const compareIfLate = (
-    day: string,
-    actualTime: string,
-    scheduledTime: string,
-    addition?: number
-  ) => {
+  const compareIfLate = (day: string, actualTime: string, scheduledTime: string, addition?: number) => {
     // addition is included since we do not set the lunch in duration
     if (addition) {
       return dayjs(day + ' ' + actualTime).isAfter(
@@ -111,10 +91,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
         'minutes'
       );
     } else {
-      return dayjs(day + ' ' + actualTime).isAfter(
-        day + ' ' + scheduledTime,
-        'minute'
-      );
+      return dayjs(day + ' ' + actualTime).isAfter(day + ' ' + scheduledTime, 'minute');
     }
   };
 
@@ -169,33 +146,27 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
       />
 
       {/* OFFICE EMPLOYEE DTR TABLE */}
-      {isOfficeSchedule ? (
-        <div className="flex w-full border rounded">
-          <table className="w-full overflow-auto border-separate bg-slate-50 border-spacing-0">
-            <thead className="border-0">
-              <tr className="text-xs">
-                <th className="px-6 py-2 text-center border">Date</th>
-                <th className="px-5 py-2 text-center border">Time In</th>
-                <th className="px-5 py-2 text-center border">Lunch Out</th>
-                <th className="px-5 py-2 text-center border">Lunch In</th>
-                <th className="px-5 py-2 text-center border">Time Out</th>
-                <th className="px-5 py-2 text-center border">Schedule</th>
-                <th className="px-5 py-2 text-center border w-[12rem]">
-                  Remarks
-                </th>
-                <th className="px-5 py-2 text-center border">Actions</th>
+      {employeeData.scheduleBase === ScheduleBase.OFFICE ? (
+        <div className="flex w-full mt-2 overflow-x-auto ">
+          <table className="w-full border table-auto border-spacing-0 bg-slate-50">
+            <thead className="">
+              <tr className="text-xs border-b divide-x divide-y">
+                <th className="px-6 py-2 text-center ">Date</th>
+                <th className="px-5 py-2 text-center ">Time In</th>
+                <th className="px-5 py-2 text-center ">Lunch Out</th>
+                <th className="px-5 py-2 text-center ">Lunch In</th>
+                <th className="px-5 py-2 text-center ">Time Out</th>
+                <th className="px-5 py-2 text-center ">Schedule</th>
+                <th className="px-5 py-2 text-center  w-[12rem]">Remarks</th>
+                <th className="px-5 py-2 text-center ">Actions</th>
               </tr>
             </thead>
             <tbody className="text-sm text-center ">
-              {!getIsLoading &&
-              selectedMonth !== '--' &&
-              selectedYear !== '--' &&
-              !isEmpty(employeeDtr) ? (
+              {!getIsLoading && selectedMonth !== '--' && selectedYear !== '--' && !isEmpty(employeeDtr) ? (
                 employeeDtr.dtrDays.map((logs, index) => {
                   const regularHoliday = 'bg-red-400';
                   const specialHoliday = 'bg-blue-400';
-                  const underTime =
-                    'bg-yellow-400 font-light rounded px-2 text-black ';
+                  const underTime = 'bg-yellow-400 font-light rounded px-2 text-black ';
                   const normal = 'text-gray-700 ';
                   let timeInColor = '';
                   let lunchOutColor = '';
@@ -204,34 +175,18 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                   let isHoliday = false;
 
                   // time in color
-                  compareIfLate(
-                    logs.day,
-                    logs.dtr.timeIn,
-                    logs.schedule.timeIn
-                  ) === true
+                  compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true
                     ? (timeInColor = underTime)
                     : (timeInColor = normal);
 
                   // lunch out color
-                  compareIfEarly(
-                    logs.day,
-                    logs.dtr.lunchOut,
-                    logs.schedule.lunchOut
-                  ) ||
-                  compareIfLate(
-                    logs.day,
-                    logs.dtr.lunchOut,
-                    logs.schedule.lunchIn
-                  ) === true
+                  compareIfEarly(logs.day, logs.dtr.lunchOut, logs.schedule.lunchOut) ||
+                  compareIfLate(logs.day, logs.dtr.lunchOut, logs.schedule.lunchIn) === true
                     ? (lunchOutColor = underTime)
                     : (lunchOutColor = normal);
 
                   // lunch in color
-                  compareIfEarly(
-                    logs.day,
-                    logs.dtr.lunchIn,
-                    logs.schedule.lunchIn
-                  ) ||
+                  compareIfEarly(logs.day, logs.dtr.lunchIn, logs.schedule.lunchIn) ||
                   compareIfLate(
                     logs.day,
                     logs.dtr.lunchIn,
@@ -242,21 +197,14 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                     : (lunchInColor = normal);
 
                   // time out color
-                  compareIfEarly(
-                    logs.day,
-                    logs.dtr.timeOut,
-                    logs.schedule.timeOut
-                  ) === true
+                  compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true
                     ? (timeOutColor = underTime)
                     : (timeOutColor = normal);
 
                   return (
                     <Fragment key={index}>
-                      <tr>
-                        <td colSpan={8}></td>
-                      </tr>
                       <tr
-                        className={`text-xs ${
+                        className={`text-xs divide-x divide-y ${
                           logs.holidayType === HolidayTypes.REGULAR
                             ? regularHoliday
                             : logs.holidayType === HolidayTypes.SPECIAL
@@ -264,88 +212,50 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                             : 'bg-inherit '
                         } `}
                       >
-                        <td
-                          className={`py-2 text-center border max-w-[6rem] ${checkIfHoliday(
-                            logs.holidayType
-                          )}`}
-                        >
+                        <td className={`py-2 text-center border-b  max-w-[6rem] ${checkIfHoliday(logs.holidayType)}`}>
                           <div className="flex justify-center gap-2">
                             <span>{formatDateInWords(logs.day)}</span>
                             <span>{dayjs(logs.day).format('ddd')}</span>
                           </div>
                         </td>
-                        <td className="py-2 text-center border">
-                          <span
-                            className={`${checkIfHoliday(
-                              logs.holidayType
-                            )} ${timeInColor}`}
-                          >
-                            {logs.dtr.timeIn
-                              ? formatTime(logs.dtr.timeIn)
-                              : '-'}
+                        <td className="py-2 text-center ">
+                          <span className={`${checkIfHoliday(logs.holidayType)} ${timeInColor}`}>
+                            {logs.dtr.timeIn ? formatTime(logs.dtr.timeIn) : '-'}
                           </span>
                         </td>
-                        <td className="py-2 text-center border">
-                          <span
-                            className={`${checkIfHoliday(
-                              logs.holidayType
-                            )} ${lunchOutColor}`}
-                          >
-                            {logs.dtr.lunchOut
-                              ? formatTime(logs.dtr.lunchOut)
-                              : '-'}
+                        <td className="py-2 text-center ">
+                          <span className={`${checkIfHoliday(logs.holidayType)} ${lunchOutColor}`}>
+                            {logs.dtr.lunchOut ? formatTime(logs.dtr.lunchOut) : '-'}
                           </span>
                         </td>
-                        <td className="py-2 text-center border">
-                          <span
-                            className={`${checkIfHoliday(
-                              logs.holidayType
-                            )} ${lunchInColor}`}
-                          >
-                            {logs.dtr.lunchIn
-                              ? formatTime(logs.dtr.lunchIn)
-                              : '-'}
+                        <td className="py-2 text-center ">
+                          <span className={`${checkIfHoliday(logs.holidayType)} ${lunchInColor}`}>
+                            {logs.dtr.lunchIn ? formatTime(logs.dtr.lunchIn) : '-'}
                           </span>
                         </td>
-                        <td className="py-2 text-center border">
-                          <span
-                            className={`${checkIfHoliday(
-                              logs.holidayType
-                            )} ${timeOutColor}`}
-                          >
-                            {logs.dtr.timeOut
-                              ? formatTime(logs.dtr.timeOut)
-                              : '-'}
+                        <td className="py-2 text-center ">
+                          <span className={`${checkIfHoliday(logs.holidayType)} ${timeOutColor}`}>
+                            {logs.dtr.timeOut ? formatTime(logs.dtr.timeOut) : '-'}
                           </span>
                         </td>
-                        <td
-                          className={`py-2 text-center border ${checkIfHoliday(
-                            logs.holidayType
-                          )} `}
-                        >
-                          {formatTime(logs.schedule.timeIn)} -{' '}
-                          {formatTime(logs.schedule.timeOut)}
+                        <td className={`py-2 text-center  ${checkIfHoliday(logs.holidayType)} `}>
+                          {formatTime(logs.schedule.timeIn)} - {formatTime(logs.schedule.timeOut)}
                         </td>
-                        <td
-                          className={`py-2 text-xs text-center break-words border ${checkIfHoliday(
-                            logs.holidayType
-                          )} `}
-                        >
+                        <td className={`py-2 text-xs text-center break-words  ${checkIfHoliday(logs.holidayType)} `}>
                           {logs.dtr.remarks ? logs.dtr.remarks : '-'}
                         </td>
-                        <td className="py-2 text-center border">
+                        <td className="py-2 text-center ">
                           <div>
                             <button
-                              className="text-green-700 disabled:text-red-600"
+                              className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                               onClick={() => openEditActionModal(logs)}
                               disabled={
-                                dayjs().isBefore(dayjs(logs.day)) ||
-                                dayjs().isSame(dayjs(logs.day), 'day')
+                                dayjs().isBefore(dayjs(logs.day)) || dayjs().isSame(dayjs(logs.day), 'day')
                                   ? true
                                   : false
                               }
                             >
-                              <i className="text-xl text-inherit bx bxs-edit"></i>
+                              <i className="text-lg text-inherit bx bx-edit"></i>
                             </button>
                           </div>
                         </td>
@@ -364,28 +274,21 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
       ) : null}
 
       {/* MAINTENANCE or STATION EMPLOYEE DTR TABLE */}
-      {!isOfficeSchedule ? (
+      {employeeData.scheduleBase === ScheduleBase.FIELD ||
+      employeeData.scheduleBase === ScheduleBase.PUMPING_STATION ? (
         <>
-          <section className="grid grid-cols-11 grid-rows-2 text-xs font-semibold border rounded-tl rounded-tr border-slate-300 bg-gray-50">
+          <section className="grid grid-cols-11 grid-rows-2 text-xs font-semibold border rounded-tl rounded-tr border-slate-300 bg-gray-50 mt-2">
             <div className="col-span-2 row-span-2 border rounded-tl ">
-              <span className="flex items-center justify-center w-full h-full">
-                Remarks
-              </span>
+              <span className="flex items-center justify-center w-full h-full">Remarks</span>
             </div>
             <div className="col-span-4 row-span-1 py-1 border">
-              <span className="flex items-center justify-center w-full ">
-                Time in
-              </span>
+              <span className="flex items-center justify-center w-full ">Time in</span>
             </div>
             <div className="col-span-4 row-span-1 py-1 border">
-              <span className="flex items-center justify-center w-full ">
-                Time out
-              </span>
+              <span className="flex items-center justify-center w-full ">Time out</span>
             </div>
             <div className="col-span-1 row-span-2 border rounded-tr ">
-              <span className="flex items-center justify-center w-full h-full">
-                Actions
-              </span>
+              <span className="flex items-center justify-center w-full h-full">Actions</span>
             </div>
 
             <div className="col-span-4 row-span-1 border">
@@ -403,16 +306,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
               </div>
             </div>
           </section>
+
           {/* Table contents */}
-          {!getIsLoading &&
-          selectedMonth !== '--' &&
-          selectedYear !== '--' &&
-          !isEmpty(employeeDtr)
+          {!getIsLoading && selectedMonth !== '--' && selectedYear !== '--' && !isEmpty(employeeDtr)
             ? employeeDtr.dtrDays.map((logs, index) => {
                 const regularHoliday = 'bg-red-400';
                 const specialHoliday = 'bg-blue-400';
-                const underTime =
-                  'bg-yellow-400 font-light rounded px-2 text-black ';
+                const underTime = 'bg-yellow-400 font-light rounded px-2 text-black ';
                 const normal = 'text-gray-700 ';
                 let timeInColor = '';
                 let lunchOutColor = '';
@@ -420,34 +320,18 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                 let timeOutColor = '';
 
                 // time in color
-                compareIfLate(
-                  logs.day,
-                  logs.dtr.timeIn,
-                  logs.schedule.timeIn
-                ) === true
+                compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true
                   ? (timeInColor = underTime)
                   : (timeInColor = normal);
 
                 // lunch out color
-                compareIfEarly(
-                  logs.day,
-                  logs.dtr.lunchOut,
-                  logs.schedule.lunchOut
-                ) ||
-                compareIfLate(
-                  logs.day,
-                  logs.dtr.lunchOut,
-                  logs.schedule.lunchIn
-                ) === true
+                compareIfEarly(logs.day, logs.dtr.lunchOut, logs.schedule.lunchOut) ||
+                compareIfLate(logs.day, logs.dtr.lunchOut, logs.schedule.lunchIn) === true
                   ? (lunchOutColor = underTime)
                   : (lunchOutColor = normal);
 
                 // lunch in color
-                compareIfEarly(
-                  logs.day,
-                  logs.dtr.lunchIn,
-                  logs.schedule.lunchIn
-                ) ||
+                compareIfEarly(logs.day, logs.dtr.lunchIn, logs.schedule.lunchIn) ||
                 compareIfLate(
                   logs.day,
                   logs.dtr.lunchIn,
@@ -458,11 +342,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                   : (lunchInColor = normal);
 
                 // time out color
-                compareIfEarly(
-                  logs.day,
-                  logs.dtr.timeOut,
-                  logs.schedule.timeOut
-                ) === true
+                compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true
                   ? (timeOutColor = underTime)
                   : (timeOutColor = normal);
 
@@ -484,52 +364,35 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
                     </div>
                     <div className="col-span-4 border">
                       <div className="grid grid-cols-5 ">
-                        <div className="col-span-2 py-3 text-center ">
-                          {formatDateInWords(logs.day)}
-                        </div>
-                        <div className="col-span-1 py-3 text-center border-x">
-                          {dayjs(logs.day).format('ddd')}
-                        </div>
+                        <div className="col-span-2 py-3 text-center ">{formatDateInWords(logs.day)}</div>
+                        <div className="col-span-1 py-3 text-center border-x">{dayjs(logs.day).format('ddd')}</div>
                         <div className="col-span-2 py-3 text-center">
-                          <span className={timeInColor}>
-                            {logs.dtr.timeIn
-                              ? formatTime(logs.dtr.timeIn)
-                              : '-'}
-                          </span>
+                          <span className={timeInColor}>{logs.dtr.timeIn ? formatTime(logs.dtr.timeIn) : '-'}</span>
                         </div>
                       </div>
                     </div>
                     <div className="col-span-4 border">
                       <div className="grid grid-cols-5 ">
                         <div className="col-span-2 py-3 text-center ">
-                          {formatDateInWords(
-                            dayjs(logs.day).add(1, 'day').format('MM-DD-YYYY')
-                          )}
+                          {formatDateInWords(dayjs(logs.day).add(1, 'day').format('MM-DD-YYYY'))}
                         </div>
                         <div className="col-span-1 py-3 text-center border-x">
                           {dayjs(logs.day).add(1, 'day').format('ddd')}
                         </div>
                         <div className="col-span-2 py-3 text-center">
-                          <span className={timeOutColor}>
-                            {logs.dtr.timeOut
-                              ? formatTime(logs.dtr.timeOut)
-                              : '-'}
-                          </span>
+                          <span className={timeOutColor}>{logs.dtr.timeOut ? formatTime(logs.dtr.timeOut) : '-'}</span>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center justify-center w-full col-span-1 border">
                       <button
-                        className="text-green-600 disabled:text-red-600"
+                        className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                         onClick={() => openEditActionModal(logs)}
                         disabled={
-                          dayjs().isBefore(dayjs(logs.day)) ||
-                          dayjs().isSame(dayjs(logs.day), 'day')
-                            ? true
-                            : false
+                          dayjs().isBefore(dayjs(logs.day)) || dayjs().isSame(dayjs(logs.day), 'day') ? true : false
                         }
                       >
-                        <i className="text-xl text-inherit bx bxs-edit"></i>
+                        <i className="text-lg text-inherit bx bx-edit"></i>
                       </button>
                     </div>
                   </section>
@@ -539,83 +402,66 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({
         </>
       ) : null}
 
-      <table className="mt-5 border table-auto ">
+      <table className="w-full mt-5 border table-auto ">
         <thead>
           <tr className="text-sm font-medium text-center">
             <td className="p-1 text-gray-700 border">No. of Times Late</td>
             <td className="p-1 text-gray-700 border">Total Minutes Late</td>
             <td className="p-1 text-gray-700 border">Dates Late</td>
             <td className="p-1 text-gray-700 border">No. of Times Undertime</td>
-            <td className="p-1 text-gray-700 border">
-              Total Minutes Undertime
-            </td>
+            <td className="p-1 text-gray-700 border">Total Minutes Undertime</td>
             <td className="p-1 text-gray-700 border">Dates/Undertime</td>
             <td className="p-1 text-gray-700 border">No. of Times Halfday</td>
+            <td className="p-1 text-gray-700 border">Dates Halfday</td>
             <td className="p-1 text-gray-700 border">No Attendance</td>
           </tr>
         </thead>
         <tbody>
           <tr className="text-sm font-light text-center">
+            <td className="p-1 border">{employeeDtr?.summary?.noOfTimesLate ?? '--'}</td>
+            <td className="p-1 border">{employeeDtr?.summary?.totalMinutesLate ?? '--'}</td>
             <td className="p-1 border">
-              {employeeDtr.summary?.noOfTimesLate ?? '--'}
-            </td>
-            <td className="p-1 border">
-              {employeeDtr.summary?.totalMinutesLate ?? '--'}
-            </td>
-            <td className="p-1 border">
-              {employeeDtr.summary?.lateDates &&
-              employeeDtr.summary?.lateDates.length > 0
-                ? employeeDtr.summary?.lateDates.map((day, index) => {
+              {employeeDtr?.summary?.lateDates && employeeDtr?.summary?.lateDates.length > 0
+                ? employeeDtr?.summary?.lateDates.map((day, index) => {
                     return (
                       <span key={index}>
-                        {index === employeeDtr.summary?.lateDates.length - 1 ? (
-                          <>{day}</>
-                        ) : (
-                          <>{day}, </>
-                        )}
+                        {index === employeeDtr?.summary?.lateDates.length - 1 ? <>{day}</> : <>{day}, </>}
+                      </span>
+                    );
+                  })
+                : '--'}
+            </td>
+            <td className="p-1 border">{employeeDtr?.summary?.noOfTimesUndertime ?? '--'}</td>
+            <td className="p-1 border">{employeeDtr?.summary?.totalMinutesUndertime ?? '--'}</td>
+            <td className="p-1 border">
+              {employeeDtr?.summary?.undertimeDates && employeeDtr?.summary?.undertimeDates.length > 0
+                ? employeeDtr?.summary?.undertimeDates.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index === employeeDtr?.summary?.undertimeDates.length - 1 ? <>{day}</> : <>{day}, </>}
+                      </span>
+                    );
+                  })
+                : '--'}
+            </td>
+            <td className="p-1 border">{employeeDtr?.summary?.noOfTimesHalfDay ?? '--'}</td>
+            <td className="p-1 border">
+              {employeeDtr?.summary?.halfDayDates && employeeDtr?.summary?.halfDayDates.length > 0
+                ? employeeDtr?.summary?.halfDayDates.map((day, index) => {
+                    return (
+                      <span key={index}>
+                        {index === employeeDtr?.summary?.halfDayDates.length - 1 ? <>{day}</> : <>{day}, </>}
                       </span>
                     );
                   })
                 : '--'}
             </td>
             <td className="p-1 border">
-              {employeeDtr.summary?.noOfTimesUndertime ?? '--'}
-            </td>
-            <td className="p-1 border">
-              {employeeDtr.summary?.totalMinutesUndertime ?? '--'}
-            </td>
-            <td className="p-1 border">
-              {employeeDtr.summary?.undertimeDates &&
-              employeeDtr.summary?.undertimeDates.length > 0
-                ? employeeDtr.summary?.undertimeDates.map((day, index) => {
+              {employeeDtr?.summary?.noAttendance && employeeDtr?.summary?.noAttendance.length > 0
+                ? employeeDtr?.summary?.noAttendance.map((day, index) => {
                     return (
                       <span key={index}>
-                        {index ===
-                        employeeDtr.summary?.undertimeDates.length - 1 ? (
-                          <>{day}</>
-                        ) : (
-                          <>{day}, </>
-                        )}
-                      </span>
-                    );
-                  })
-                : '--'}
-            </td>
-            <td className="p-1 border">
-              {employeeDtr.summary?.noOfTimesHalfDay ?? '--'}
-            </td>
-            <td className="p-1 border">
-              {employeeDtr.summary?.noAttendance &&
-              employeeDtr.summary?.noAttendance.length > 0
-                ? employeeDtr.summary?.noAttendance.map((day, index) => {
-                    return (
-                      <span key={index}>
-                        {index ===
-                        employeeDtr.summary?.noAttendance.length - 1 ? (
-                          <>{day}</>
-                        ) : (
-                          <>{day}, </>
-                        )}
+                        {index === employeeDtr?.summary?.noAttendance.length - 1 ? <>{day}</> : <>{day}, </>}
                       </span>
                     );
                   })

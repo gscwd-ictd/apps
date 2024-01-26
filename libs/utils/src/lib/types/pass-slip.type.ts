@@ -1,10 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 
-import {
-  NatureOfBusiness,
-  ObTransportation,
-  PassSlipStatus,
-} from '../enums/pass-slip.enum';
+import { NatureOfBusiness, ObTransportation, PassSlipStatus } from '../enums/pass-slip.enum';
 
 // Pass slip application form
 export type PassSlipApplicationForm = {
@@ -15,13 +11,15 @@ export type PassSlipApplicationForm = {
   obTransportation: ObTransportation | null;
   estimateHours?: number | null;
   purposeDestination: string;
-  timeIn?: string;
-  timeOut?: string;
+  timeIn: string | null;
+  timeOut: string | null;
   isCancelled: boolean;
+  isMedical?: boolean;
 };
 
 // List of pass slips per employee
 export type EmployeePassSlipList = {
+  allowedToApplyForNew?: boolean;
   completed: Array<PassSlip>;
   forApproval: Array<PassSlip>;
 };
@@ -31,12 +29,17 @@ export type PassSlip = {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
+  avatarUrl?: string;
   id: string;
   employeeName: string;
   supervisorName: string;
   supervisorId: string;
   assignmentName?: string;
   status: PassSlipStatus;
+  disputeRemarks?: string;
+  isDisputeApproved?: boolean | null;
+  encodedTimeIn?: string;
+  isMedical?: boolean;
 } & PassSlipApplicationForm;
 
 // Individual pass slip id
@@ -60,4 +63,11 @@ export type PassSlipPdf = {
     signature: string;
   };
   assignment: string;
+};
+
+// EMS HRMO action to pass slip application
+export type HrmoApprovalPassSlip = {
+  passSlipId: string;
+  status: string;
+  hrmoDisapprovalRemarks?: string;
 };
