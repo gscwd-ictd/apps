@@ -140,12 +140,12 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       }
                       notifMessage={
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? 'For HRDM Approval'
+                          ? 'Reviewed by Supervisor: For HRDM Final Review'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
                           ? 'Disapproved by HRDM'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Approval'
+                          ? 'Reviewed by HRMO: For Supervisor Review'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                           ? 'Disapproved by Supervisor'

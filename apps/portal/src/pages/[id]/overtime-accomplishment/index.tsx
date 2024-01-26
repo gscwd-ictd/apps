@@ -149,7 +149,6 @@ export default function OvertimeAccomplishment({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishmentList)) {
-      console.log(swrOvertimeAccomplishmentList);
       getOvertimeAccomplishmentListSuccess(swrOvertimeAccomplishmentListIsLoading, swrOvertimeAccomplishmentList);
     }
     if (!isEmpty(swrOvertimeAccomplishmentListError)) {

@@ -68,11 +68,11 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                 }
                 notifMessage={`${
                   passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-                    ? `For Supervisor Approval`
+                    ? `For Supervisor Review`
                     : passSlip.status === PassSlipStatus.FOR_DISPUTE
-                    ? 'For Dispute Approval'
+                    ? 'For Dispute Review'
                     : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
-                    ? 'For HRMO Approval'
+                    ? 'For HRMO Review'
                     : passSlip.status === PassSlipStatus.DISAPPROVED
                     ? 'Disapproved'
                     : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO

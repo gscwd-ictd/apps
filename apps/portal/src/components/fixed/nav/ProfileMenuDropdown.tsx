@@ -318,7 +318,7 @@ export const ProfileMenuDropdown = ({
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                         employeeDetails.employmentDetails.assignment.name ===
                           'Recruitment and Personnel Welfare Division' ||
-                        employeeDetails.employmentDetails.assignment.name === 'Training and Development Division' ? (
+                        employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                           <Menu.Item>
                             {({ active }) => (
                               <button

@@ -126,12 +126,12 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                       alertType="info"
                       notifMessage={
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? 'For HRDM Approval'
+                          ? 'Reviewed by Supervisor: For HRDM Final Review'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL
-                          ? 'For HRMO Approval'
+                          ? 'For HRMO Review'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Approval '
+                          ? 'Reviewed by HRMO: For Supervisor Review'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status.charAt(0).toUpperCase() +
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.status.slice(1)
                       }

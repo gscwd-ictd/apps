@@ -461,11 +461,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setRoundedFinalSickLeaveBalance(Math.round(sickLeaveBalance) - leaveDates.length);
   }, [leaveDates, watch('typeOfLeaveDetails.leaveName')]);
 
-  useEffect(() => {
-    console.log(finalSickLeaveBalance);
-    console.log(leaveDates.length);
-  }, [leaveDates, watch('typeOfLeaveDetails.leaveName')]);
-
   const getVacationLeaveInput = (credits: number) => {
     const totalVacationLeave = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
     if (credits <= 0) {
