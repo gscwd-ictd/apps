@@ -1220,36 +1220,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 loading={false}
                 form="ApplyLeaveForm"
                 type="submit"
-<<<<<<< HEAD
-                disabled
-                // disabled={
-                //   vacationBalance < 0 &&
-                //   watch('typeOfLeaveDetails.leaveName') === 'Vacation Leave'
-                //     ? true
-                //     : forcedBalance < 0 &&
-                //       watch('typeOfLeaveDetails.leaveName') === 'Forced Leave'
-                //     ? true
-                //     : sickBalance < 0 &&
-                //       watch('typeOfLeaveDetails.leaveName') === 'Sick Leave'
-                //     ? true
-                //     : overlappingLeaveCount > 0 &&
-                //       (watch('typeOfLeaveDetails.leaveName') ===
-                //         'Maternity Leave' ||
-                //         watch('typeOfLeaveDetails.leaveName') === 'Study Leave')
-                //     ? true
-                //     : leaveDates.length <= 0 &&
-                //       watch('typeOfLeaveDetails.leaveName') !==
-                //         'Maternity Leave' &&
-                //       watch('typeOfLeaveDetails.leaveName') !== 'Study Leave'
-                //     ? true
-                //     : leaveDateTo < leaveDateFrom &&
-                //       (watch('typeOfLeaveDetails.leaveName') ==
-                //         'Maternity Leave' ||
-                //         watch('typeOfLeaveDetails.leaveName') == 'Study Leave')
-                //     ? true
-                //     : false
-                // }
-=======
                 disabled={
                   roundedFinalVacationLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                     ? true
@@ -1348,7 +1318,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : false
                 }
->>>>>>> 13761ca59b7709d133207e83699e2adb884de29e
               >
                 {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                   ? 'Apply Monetization'

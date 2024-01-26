@@ -20,7 +20,7 @@ import { InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
 import { InboxPsbContent } from 'apps/portal/src/components/fixed/inbox/InboxPsbContent';
 import { ConfirmationInboxModal } from 'apps/portal/src/components/fixed/inbox/ConfirmationModal';
 import { InboxTrainingContent } from 'apps/portal/src/components/fixed/inbox/InboxTrainingContent';
-import { InboxOvertimeContent } from 'apps/portal/src/components/fixed/inbox/InboxOvertimeContent';
+
 import { useRouter } from 'next/router';
 
 export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -235,7 +235,7 @@ export default function Inbox({ employeeDetails }: InferGetServerSidePropsType<t
             <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4 rounded-xl">
               {selectedMessageType == InboxMessageType.PSB ? <InboxPsbContent /> : null}
               {selectedMessageType == InboxMessageType.TRAINING_NOMINATION ? <InboxTrainingContent /> : null}
-              {selectedMessageType == InboxMessageType.OVERTIME ? <InboxOvertimeContent /> : null}
+              {selectedMessageType == InboxMessageType.OVERTIME ? <></> : null}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center w-full pt-1 text-4xl text-center text-gray-400 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">

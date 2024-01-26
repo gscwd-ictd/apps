@@ -88,13 +88,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-<<<<<<< HEAD
-              <span className="text-xl md:text-2xl">
-                For Approval Leave Application
-              </span>
-=======
               <span className="text-xl md:text-2xl">Ongoing Leave Application</span>
->>>>>>> 13761ca59b7709d133207e83699e2adb884de29e
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}

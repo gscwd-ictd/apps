@@ -330,44 +330,10 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
             <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
               <Image src={'/gwdlogo.png'} priority className="w-2/4 " alt={''} width={'500'} height={'500'} />
             </div>
-<<<<<<< HEAD
-            <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
-              <div className="h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
-                <Carousel />
-              </div>
-
-              <div className="z-10 order-1 col-span-1 md:col-span-3 lg:col-span-3 lg:order-2">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 ">
-                  <div className="order-3 col-span-2 md:col-span-2 md:order-1 lg:col-span-2 lg:order-1">
-                    <div className="flex flex-row gap-4">
-                      <StatsCard
-                        name={'Lates Count'}
-                        count={
-                          swrDtr?.summary?.noOfTimesLate
-                            ? swrDtr?.summary?.noOfTimesLate
-                            : 0
-                        }
-                        isLoading={swrDtrIsLoading}
-                      />
-                      <StatsCard
-                        name={'Pass Slip Count'}
-                        count={0}
-                        isLoading={swrDtrIsLoading}
-                      />
-                      <StatsCard
-                        name={'Force Leaves'}
-                        count={0}
-                        isLoading={swrDtrIsLoading}
-                      />
-                    </div>
-                  </div>
-                  <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
-=======
             <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
               <div className="z-10 order-1 col-span-1 md:col-span-5 lg:col-span-5 lg:order-1">
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 ">
                   <div className="order-1 col-span-2 md:order-1 md:col-span-2 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
->>>>>>> 13761ca59b7709d133207e83699e2adb884de29e
                     <ProfileCard
                       firstName={userDetails.profile.firstName}
                       lastName={userDetails.profile.lastName}

@@ -361,9 +361,10 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
                               disabled={
-                                overtimeAccomplishmentDetails?.accomplishments ||
-                                (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
-                                  ? true
+                                overtimeAccomplishmentDetails?.accomplishments
+                                  ? // ||
+                                    // (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
+                                    true
                                   : false
                               }
                               defaultValue={overtimeAccomplishmentDetails?.encodedTimeIn ?? null}
@@ -393,9 +394,10 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
                               disabled={
-                                overtimeAccomplishmentDetails?.accomplishments ||
-                                (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
-                                  ? true
+                                overtimeAccomplishmentDetails?.accomplishments
+                                  ? // ||
+                                    // (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
+                                    true
                                   : false
                               }
                               defaultValue={overtimeAccomplishmentDetails?.encodedTimeOut ?? null}

@@ -11,6 +11,7 @@ import { Publication } from '../../../types/publication.type';
 import { useEffect, useState } from 'react';
 import { UseNameInitials } from '../../../utils/hooks/useNameInitials';
 import { NavButtonDetails } from '../../../types/nav.type';
+import { useRouter } from 'next/router';
 
 type AppEndSummaryProps = {
   employee: any;
@@ -22,6 +23,7 @@ export default function AppEndSummary({ employee, publicationDetails }: AppEndSu
   const publication = useAppEndStore((state) => state.selectedPublication);
   // const selectedApplicants = useAppEndStore((state) => state.selectedApplicants);
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+  const router = useRouter();
 
   return (
     <>
@@ -32,7 +34,11 @@ export default function AppEndSummary({ employee, publicationDetails }: AppEndSu
 
       <MainContainer>
         <div className="w-full h-full px-20">
-          <ContentHeader title="Applicant Endorsement Summary" subtitle=""></ContentHeader>
+          <ContentHeader
+            title="Applicant Endorsement Summary"
+            subtitle=""
+            backUrl={`/${router.query.id}`}
+          ></ContentHeader>
           <ContentBody>
             <>
               <div className="w-full mt-14">

@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 import { useEffect, useState } from 'react';
-import { HiOutlineEye, HiOutlinePlusCircle } from 'react-icons/hi';
-=======
 import { HiOutlineEye, HiOutlinePencilAlt, HiOutlinePlusCircle } from 'react-icons/hi';
 import { usePdsStore } from '../../../store/pds.store';
->>>>>>> 13761ca59b7709d133207e83699e2adb884de29e
 import { TabHeader } from '../tab/TabHeader';
 
 type PdsTabsProps = {
