@@ -165,12 +165,18 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const [leaveReminder, setLeaveReminder] = useState<string>(
-    'For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985).'
+    'The number of leave days you can apply is the rounded off value of your current Leave Credits. For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985). '
   );
   const [finalVacationLeaveBalance, setFinalVacationLeaveBalance] = useState<number>(0);
   const [finalForcedLeaveBalance, setFinalForcedLeaveBalance] = useState<number>(0);
   const [finalSickLeaveBalance, setFinalSickLeaveBalance] = useState<number>(0);
   const [finalSpecialPrivilegekBalance, setFinalSpecialPrivilegekBalance] = useState<number>(0);
+
+  //ROUNDED OFF LEAVE CREDITS
+  const [roundedFinalVacationLeaveBalance, setRoundedFinalVacationLeaveBalance] = useState<number>(0);
+  const [roundedFinalForcedLeaveBalance, setRoundedFinalForcedLeaveBalance] = useState<number>(0);
+  const [roundedFinalSickLeaveBalance, setRoundedFinalSickLeaveBalance] = useState<number>(0);
+
   const [leaveObject, setLeaveObject] = useState<string>('');
   const [selectedStudy, setSelectedStudy] = useState<string>('');
   const [hasPendingLeave, setHasPendingLeave] = useState<boolean>(false);
@@ -184,14 +190,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
   };
-
-  // Set state for leave credits in table below of modal
-  useEffect(() => {
-    setFinalVacationLeaveBalance(vacationLeaveBalance - leaveDates.length);
-    setFinalSickLeaveBalance(sickLeaveBalance - leaveDates.length);
-    setFinalForcedLeaveBalance(forcedLeaveBalance - leaveDates.length);
-    setFinalSpecialPrivilegekBalance(specialPrivilegeLeaveBalance - leaveDates.length);
-  }, [leaveDates]);
 
   //fetch employee leave ledger
   const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeDetails.user._id}/${employeeDetails.profile.companyId}`;
@@ -450,6 +448,24 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [sickLeaveInput, setSickLeaveInput] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
+  // Set state for leave credits in table below of modal
+  useEffect(() => {
+    setFinalVacationLeaveBalance(vacationLeaveBalance - leaveDates.length);
+    setFinalSickLeaveBalance(Number(sickLeaveBalance - leaveDates.length));
+    setFinalForcedLeaveBalance(forcedLeaveBalance - leaveDates.length);
+    setFinalSpecialPrivilegekBalance(specialPrivilegeLeaveBalance - leaveDates.length);
+
+    //update rounded off leave credits also
+    setRoundedFinalVacationLeaveBalance(Math.round(vacationLeaveBalance) - leaveDates.length);
+    setRoundedFinalForcedLeaveBalance(Math.round(forcedLeaveBalance) - leaveDates.length);
+    setRoundedFinalSickLeaveBalance(Math.round(sickLeaveBalance) - leaveDates.length);
+  }, [leaveDates, watch('typeOfLeaveDetails.leaveName')]);
+
+  useEffect(() => {
+    console.log(finalSickLeaveBalance);
+    console.log(leaveDates.length);
+  }, [leaveDates, watch('typeOfLeaveDetails.leaveName')]);
+
   const getVacationLeaveInput = (credits: number) => {
     const totalVacationLeave = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
     if (credits <= 0) {
@@ -476,7 +492,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   };
 
   useEffect(() => {
-    computeEstimateAmount();
+    if (watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) {
+      computeEstimateAmount();
+    }
   }, [vacationLeaveInput, sickLeaveInput, watch('typeOfLeaveDetails.leaveName')]);
 
   const computeEstimateAmount = () => {
@@ -593,7 +611,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
                   {/* Vacation Leave Credits Notifications */}
-                  {finalVacationLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? (
+                  {roundedFinalVacationLeaveBalance < 0 &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Insufficient Vacation Leave Credits"
@@ -602,7 +621,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
                   {/* Vacation Leave Credits Notifications */}
-                  {finalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
+                  {roundedFinalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Insufficient Forced Leave Credits"
@@ -611,7 +630,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
                   {/* Sick Leave Credits Notifications */}
-                  {finalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
+                  {roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Insufficient Sick Leave Credits"
@@ -1207,11 +1226,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 form="ApplyLeaveForm"
                 type="submit"
                 disabled={
-                  finalVacationLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
+                  roundedFinalVacationLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                     ? true
-                    : finalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+                    : roundedFinalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                     ? true
-                    : finalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
+                    : roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                     ? true
                     : finalSpecialPrivilegekBalance < 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE

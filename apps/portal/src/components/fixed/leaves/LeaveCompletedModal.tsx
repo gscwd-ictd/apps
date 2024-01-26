@@ -523,11 +523,12 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
                 Close
               </Button>
-            ) : dateNow >= leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0] ? (
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
-                Close
-              </Button>
             ) : (
+              // : dateNow >= leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0] ? (
+              //   <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+              //     Close
+              //   </Button>
+              // )
               <Button
                 variant={'warning'}
                 size={'md'}
