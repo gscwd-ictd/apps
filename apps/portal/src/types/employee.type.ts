@@ -26,11 +26,14 @@ export type Assignment = {
 };
 
 export type EmploymentDetails = {
+  salaryGrade: string;
+  salaryGradeAmount: number;
   userId: string;
   companyId: string | null;
   assignment: Assignment;
   userRole: string;
   isHRMPSB?: boolean;
+  overtimeImmediateSupervisorId: string;
 };
 
 export type EmployeeDetails = {
@@ -70,7 +73,8 @@ export const employeeDummy: EmployeeDetails = {
     email: 'ericsison003@gmail.com',
   },
   profile: {
-    _id: '1c0787b0-093e-4362-85ff-c372c0dde496',
+    // _id: '1c0787b0-093e-4362-85ff-c372c0dde496',
+    _id: '62fef63c-b26f-11ed-a79b-000c29f95a80', //allyn
     companyId: null,
     firstName: 'Ferdz Dummy',
     middleName: 'Dionaldo',
@@ -83,6 +87,9 @@ export const employeeDummy: EmployeeDetails = {
     photoUrl: '/profile.jpg',
   },
   employmentDetails: {
+    salaryGrade: '',
+    salaryGradeAmount: 0,
+    overtimeImmediateSupervisorId: '',
     userId: '62fef63c-b26f-11ed-a79b-000c29f95a80',
     companyId: '2020-007',
     assignment: {

@@ -119,7 +119,7 @@ export function MySelectList({
             id={id}
             ref={containerRef}
             tabIndex={0}
-            className="flex relative w-full bg-gray-50 border border-gray-300/90 rounded-lg min-h-[2.25rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
+            className="flex relative w-full bg-gray-50 border border-gray-300/90 rounded-lg h-[2.5rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
           >
             <span className="flex text-xs text-left text-gray-700 ">
               {multiple
@@ -150,7 +150,6 @@ export function MySelectList({
             <div className="flex items-center gap-2">
               <div
                 className="flex px-2 text-xl text-gray-500 rounded hover:text-white hover:bg-red-400"
-                // type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   clearOptions();
@@ -180,7 +179,7 @@ export function MySelectList({
               isOpen ? 'block' : 'hidden'
             } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
           > */}
-          <ul className="border  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full">
+          <ul className="border  rounded  max-h-[10em] bg-white z-50 overflow-y-auto w-full">
             {options.map((option, index) => (
               <li
                 onClick={(e) => {
@@ -198,7 +197,7 @@ export function MySelectList({
                     ? 'bg-blue-100 text-gray-500'
                     : 'text-gray-700'
                 }
-          
+
               `}
               >
                 {option.label}

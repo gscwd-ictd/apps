@@ -1,11 +1,11 @@
-import {
-  JobOpeningDetails,
-  JobCompetencies,
-} from '../../../types/vacancies.type';
+import { JobOpeningDetails, JobCompetencies } from '../../../types/vacancies.type';
+import { useWorkExpStore } from 'apps/portal/src/store/workexperience.store';
 
-export const VacancyJobInformation = (props: {
-  data: JobOpeningDetails;
-}): JSX.Element => {
+export const VacancyJobInformation = (props: { data: JobOpeningDetails }): JSX.Element => {
+  const { hasApplied } = useWorkExpStore((state) => ({
+    hasApplied: state.hasApplied,
+  }));
+
   return (
     <>
       <div className="px-2 py-4 m-2 text-gray-800 bg-slate-100 rounded-xl">
@@ -38,9 +38,7 @@ export const VacancyJobInformation = (props: {
           {props.data.jobDescription.natureOfAppointment}
         </div>
         <div className="px-2">
-          <label className="font-bold">
-            Description of the Office/Department/Division:{' '}
-          </label>
+          <label className="font-bold">Description of the Office/Department/Division: </label>
           {props.data.jobDescription.summary}
         </div>
 
@@ -80,69 +78,57 @@ export const VacancyJobInformation = (props: {
         {props.data.competencies.functional.length > 0 && (
           <>
             <div>
-              <label className="pl-2 font-bold">
-                Functional/Cross Cutting Competency:{' '}
-              </label>
+              <label className="pl-2 font-bold">Functional/Cross Cutting Competency: </label>
             </div>
-            {props.data.competencies.functional.map(
-              (competency: JobCompetencies, Idx: number) => {
-                return (
-                  <div
-                    className="px-4 py-2 my-2 text-justify bg-white border rounded-xl"
-                    key={Idx}
-                  >
-                    <div>
-                      <label className="font-bold">Name: </label>
-                      {competency.name}
-                    </div>
-                    <div>
-                      <label className="font-bold">Level: </label>
-                      {competency.level}
-                    </div>
-                    <div>
-                      <label className="font-bold">Description: </label>
-                      {competency.description}
-                    </div>
-                    <div className="pb-4">
-                      <label className="font-bold">Key Actions: </label>
-                      {competency.keyActions}
-                    </div>
+            {props.data.competencies.functional.map((competency: JobCompetencies, Idx: number) => {
+              return (
+                <div className="px-4 py-2 my-2 text-justify bg-white border rounded-xl" key={Idx}>
+                  <div>
+                    <label className="font-bold">Name: </label>
+                    {competency.name}
                   </div>
-                );
-              }
-            )}
+                  <div>
+                    <label className="font-bold">Level: </label>
+                    {competency.level}
+                  </div>
+                  <div>
+                    <label className="font-bold">Description: </label>
+                    {competency.description}
+                  </div>
+                  <div className="pb-4">
+                    <label className="font-bold">Key Actions: </label>
+                    {competency.keyActions}
+                  </div>
+                </div>
+              );
+            })}
           </>
         )}
 
         {props.data.competencies.crossCutting.length > 0 && (
           <>
-            {props.data.competencies.crossCutting.map(
-              (competency: JobCompetencies, Idx: number) => {
-                return (
-                  <div
-                    className="px-4 py-2 my-2 text-justify bg-white border rounded-xl"
-                    key={Idx}
-                  >
-                    <div>
-                      <label className="font-bold">Name: </label>
-                      {competency.name}
-                    </div>
-                    <div>
-                      <label className="font-bold">Level: </label>
-                      {competency.level}
-                    </div>
-                    <div>
-                      <label className="font-bold">Description: </label>
-                      {competency.description}
-                    </div>
-                    <div className="pb-4">
-                      <label className="font-bold">Key Actions: </label>
-                      {competency.keyActions}
-                    </div>
+            {props.data.competencies.crossCutting.map((competency: JobCompetencies, Idx: number) => {
+              return (
+                <div className="px-4 py-2 my-2 text-justify bg-white border rounded-xl" key={Idx}>
+                  <div>
+                    <label className="font-bold">Name: </label>
+                    {competency.name}
                   </div>
-                );
-              }
-            )}
+                  <div>
+                    <label className="font-bold">Level: </label>
+                    {competency.level}
+                  </div>
+                  <div>
+                    <label className="font-bold">Description: </label>
+                    {competency.description}
+                  </div>
+                  <div className="pb-4">
+                    <label className="font-bold">Key Actions: </label>
+                    {competency.keyActions}
+                  </div>
+                </div>
+              );
+            })}
           </>
         )}
       </div>
@@ -153,33 +139,28 @@ export const VacancyJobInformation = (props: {
             <div className="pt-4 pb-4 pr-2">
               <label className="pl-2 font-bold">Managerial Competency: </label>
             </div>
-            {props.data.competencies.managerial.map(
-              (competency: JobCompetencies, Idx: number) => {
-                return (
-                  <div
-                    className="px-4 py-2 my-2 text-justify bg-white border rounded-xl"
-                    key={Idx}
-                  >
-                    <div>
-                      <label className="font-bold">Name: </label>
-                      {competency.name}
-                    </div>
-                    <div>
-                      <label className="font-bold">Level: </label>
-                      {competency.level}
-                    </div>
-                    <div>
-                      <label className="font-bold">Description: </label>
-                      {competency.description}
-                    </div>
-                    <div className="pb-4">
-                      <label className="font-bold">Key Actions: </label>
-                      {competency.keyActions}
-                    </div>
+            {props.data.competencies.managerial.map((competency: JobCompetencies, Idx: number) => {
+              return (
+                <div className="px-4 py-2 my-2 text-justify bg-white border rounded-xl" key={Idx}>
+                  <div>
+                    <label className="font-bold">Name: </label>
+                    {competency.name}
                   </div>
-                );
-              }
-            )}
+                  <div>
+                    <label className="font-bold">Level: </label>
+                    {competency.level}
+                  </div>
+                  <div>
+                    <label className="font-bold">Description: </label>
+                    {competency.description}
+                  </div>
+                  <div className="pb-4">
+                    <label className="font-bold">Key Actions: </label>
+                    {competency.keyActions}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </>
       )}

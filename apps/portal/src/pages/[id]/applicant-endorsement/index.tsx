@@ -11,15 +11,8 @@ import { employee } from '../../../utils/constants/data';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { AppEndTabs } from '../../../components/fixed/endorsement/AppEndTabs';
 import { AppEndTabWindow } from '../../../components/fixed/endorsement/AppEndTabWindow';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../utils/helpers/session';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { Button } from '@gscwd-apps/oneui';
 import useSWR from 'swr';
@@ -27,10 +20,11 @@ import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import AppEndAlert from 'apps/portal/src/components/fixed/endorsement/alert/AppEndAlert';
 import AppEndModal from 'apps/portal/src/components/fixed/endorsement/modal/AppEndModal';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import { useRouter } from 'next/router';
 
 export default function ApplicantEndorsement({
   employeeDetails,
@@ -41,11 +35,10 @@ export default function ApplicantEndorsement({
     isLoading: swrPendingIsLoading,
     error: swrPendingError,
     mutate: swrPendingMutate,
-  } = useSWR(
-    `applicant-endorsement/publications/${employeeDetails.employmentDetails.userId}/pending`,
-    fetcherHRIS,
-    { shouldRetryOnError: false, revalidateOnFocus: false }
-  );
+  } = useSWR(`applicant-endorsement/publications/${employeeDetails.employmentDetails.userId}/pending`, fetcherHRIS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // swr fulfilled
   const {
@@ -53,11 +46,10 @@ export default function ApplicantEndorsement({
     isLoading: swrFulfilledIsLoading,
     error: swrFulfilledError,
     mutate: swrFulfilledMutate,
-  } = useSWR(
-    `/applicant-endorsement/publications/${employeeDetails.employmentDetails.userId}/selected`,
-    fetcherHRIS,
-    { shouldRetryOnError: false, revalidateOnFocus: false }
-  );
+  } = useSWR(`/applicant-endorsement/publications/${employeeDetails.employmentDetails.userId}/selected`, fetcherHRIS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // call app-end store
   const {
@@ -86,10 +78,10 @@ export default function ApplicantEndorsement({
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
+  const router = useRouter();
+
   // set state for employee store
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
 
   // open the modal
   const openModal = () => {
@@ -113,19 +105,16 @@ export default function ApplicantEndorsement({
 
   // pending publications set
   useEffect(() => {
-    if (!isEmpty(swrPendingPublications))
-      getPendingPublicationsSuccess(swrPendingPublications.data);
+    if (!isEmpty(swrPendingPublications)) getPendingPublicationsSuccess(swrPendingPublications.data);
 
     if (!isEmpty(swrPendingError)) getPendingPublicationsFail(swrPendingError);
   }, [swrPendingPublications, swrPendingError]);
 
   // fulfilled publications set
   useEffect(() => {
-    if (!isEmpty(swrFulfilledPublications))
-      getFulfilledPublicationsSuccess(swrFulfilledPublications.data);
+    if (!isEmpty(swrFulfilledPublications)) getFulfilledPublicationsSuccess(swrFulfilledPublications.data);
 
-    if (!isEmpty(swrFulfilledError))
-      getFulfilledPublicationsFail(swrFulfilledError);
+    if (!isEmpty(swrFulfilledError)) getFulfilledPublicationsFail(swrFulfilledError);
   }, [swrFulfilledPublications, swrFulfilledError]);
 
   // mutate on response
@@ -145,10 +134,7 @@ export default function ApplicantEndorsement({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
 
@@ -160,33 +146,26 @@ export default function ApplicantEndorsement({
             <title>Applicant Endorsement</title>
           </Head>
 
-          <SideNav navDetails={navDetails} />
+          <SideNav employeeDetails={employeeDetails} />
 
           <AppEndModal />
 
           <AppEndAlert />
 
           <MainContainer>
-            <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
+            <div className="w-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Applicant Endorsement"
                 subtitle="Select a list of endorsed applicants"
+                backUrl={`/${router.query.id}`}
               >
-                <Button
-                  onClick={openModal}
-                  className="hidden lg:block"
-                  size={`md`}
-                >
+                <Button onClick={openModal} className="hidden lg:block" size={`md`}>
                   <div className="flex items-center w-full gap-2">
                     <HiSearch /> Find an Endorsement
                   </div>
                 </Button>
 
-                <Button
-                  onClick={openModal}
-                  className="block lg:hidden"
-                  size={`lg`}
-                >
+                <Button onClick={openModal} className="block lg:hidden" size={`lg`}>
                   <div className="flex items-center w-full gap-2">
                     <HiSearch />
                   </div>
@@ -221,24 +200,22 @@ export default function ApplicantEndorsement({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    // check if user role is rank_and_file or job order = kick out
-    if (
-      employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
-    ) {
-      // if true, the employee is not allowed to access this page
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/${employeeDetails.user._id}`,
-        },
-      };
-    } else {
-      return { props: { employeeDetails } };
-    }
+  // check if user role is rank_and_file or job order = kick out
+  if (
+    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
   }
-);
+});

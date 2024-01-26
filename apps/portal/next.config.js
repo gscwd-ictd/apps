@@ -14,4 +14,9 @@ const nextConfig = {
   },
 };
 
-module.exports = withNx(nextConfig);
+module.exports = withNx({
+  ...nextConfig,
+  images: {
+    domains: ['172.20.110.45'],
+  },
+});

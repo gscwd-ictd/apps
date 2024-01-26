@@ -32,6 +32,7 @@ export type EmployeeDtrWithSummary = {
   noOfTimesUndertime: number | null;
   totalMinutesUndertime: number | null;
   undertimeDates: Array<number>;
+  halfDayDates: Array<number>;
   noOfTimesHalfDay: number | null;
   noAttendance: Array<number>;
 };

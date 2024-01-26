@@ -1,10 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
-import {
-  MutatedSsSelectOption,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { MutatedSsSelectOption, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
@@ -13,13 +10,7 @@ import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import Select from 'react-select';
 import useSWR from 'swr';
 
@@ -39,18 +30,16 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
     data: swrSchedules,
     isLoading: swrIsLoading,
     error: swrError,
-  } = useSWR('/schedules?base=Field', fetcherEMS, {
+  } = useSWR(modalState ? '/schedules?base=Field' : null, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
 
   // use schedule sheet store
-  const { selectedScheduleId, setSelectedScheduleId } = useScheduleSheetStore(
-    (state) => ({
-      selectedScheduleId: state.selectedScheduleId,
-      setSelectedScheduleId: state.setSelectedScheduleId,
-    })
-  );
+  const { selectedScheduleId, setSelectedScheduleId } = useScheduleSheetStore((state) => ({
+    selectedScheduleId: state.selectedScheduleId,
+    setSelectedScheduleId: state.setSelectedScheduleId,
+  }));
 
   // on submit
   const onSubmit = () => {
@@ -64,31 +53,27 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
   };
 
   // state for the transformed schedules for rendering
-  const [transformedScheds, setTransformedScheds] = useState<
-    Array<MutatedSsSelectOption>
-  >([]);
+  const [transformedScheds, setTransformedScheds] = useState<Array<MutatedSsSelectOption>>([]);
 
   // state value for the mutated component
-  const [selectedSchedule, setSelectedSchedule] =
-    useState<MutatedSsSelectOption>({
-      label: '',
-      lunchIn: '',
-      lunchOut: '',
-      shift: ScheduleShifts.DAY,
-      timeIn: '',
-      timeOut: '',
-      value: '',
-      withLunch: false,
-    } as MutatedSsSelectOption);
+  const [selectedSchedule, setSelectedSchedule] = useState<MutatedSsSelectOption>({
+    label: '',
+    lunchIn: '',
+    lunchOut: '',
+    shift: ScheduleShifts.DAY,
+    timeIn: '',
+    timeOut: '',
+    value: '',
+    withLunch: false,
+  } as MutatedSsSelectOption);
 
   //  schedule store
-  const { schedules, getSchedules, getSchedulesFail, getSchedulesSuccess } =
-    useScheduleStore((state) => ({
-      schedules: state.schedules,
-      getSchedules: state.getSchedules,
-      getSchedulesSuccess: state.getSchedulesSuccess,
-      getSchedulesFail: state.getSchedulesFail,
-    }));
+  const { schedules, getSchedules, getSchedulesFail, getSchedulesSuccess } = useScheduleStore((state) => ({
+    schedules: state.schedules,
+    getSchedules: state.getSchedules,
+    getSchedulesSuccess: state.getSchedulesSuccess,
+    getSchedulesFail: state.getSchedulesFail,
+  }));
 
   // transform schedules
   const transformSchedules = (schedules: Array<Schedule>) => {
@@ -141,9 +126,7 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
   // load the selected schedule by the provided id
   useEffect(() => {
     if (!isEmpty(transformedScheds) && !isEmpty(selectedScheduleId)) {
-      const filtered = transformedScheds.filter(
-        (sched) => sched.value === selectedScheduleId
-      );
+      const filtered = transformedScheds.filter((sched) => sched.value === selectedScheduleId);
 
       setSelectedSchedule(filtered[0]);
     }
@@ -190,38 +173,24 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
                       label="Lunch in: "
                       direction="left-to-right"
                       textSize="sm"
-                      value={
-                        selectedSchedule.lunchIn
-                          ? formatTime(selectedSchedule.lunchIn)
-                          : 'N/A'
-                      }
+                      value={selectedSchedule.lunchIn ? formatTime(selectedSchedule.lunchIn) : 'N/A'}
                     />
                     <LabelValue
                       label="Lunch out: "
                       direction="left-to-right"
                       textSize="sm"
-                      value={
-                        selectedSchedule.lunchOut
-                          ? formatTime(selectedSchedule.lunchOut)
-                          : 'N/A'
-                      }
+                      value={selectedSchedule.lunchOut ? formatTime(selectedSchedule.lunchOut) : 'N/A'}
                     />
                     <LabelValue
                       label="Shift: "
                       direction="left-to-right"
                       textSize="sm"
-                      value={
-                        selectedSchedule.shift
-                          ? UseCapitalizer(selectedSchedule.shift)
-                          : null
-                      }
+                      value={selectedSchedule.shift ? UseCapitalizer(selectedSchedule.shift) : null}
                     />
                   </div>
                 </div>
               ) : (
-                <div className="flex justify-center w-full mt-2 text-gray-400">
-                  --No selected schedule--
-                </div>
+                <div className="flex justify-center w-full mt-2 text-gray-400">--No selected schedule--</div>
               )}
             </>
           ) : (

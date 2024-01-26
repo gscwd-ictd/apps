@@ -32,7 +32,7 @@ export const TabHeader: FC<TabHeaderProps> = ({
         onClick={onClick}
         className={`${
           tab === tabIndex && 'bg-slate-200'
-        } hover:bg-slate-100 border-b border-gray-200 cursor-pointer rounded-xl rounded-tr-none rounded-bl-none pt-1 hover:drop-shadow-lg  transition-all ease-in-out hover:scale-105 h-[5rem]  items-center flex justify-start mr-6`}
+        } w-[90%] hover:bg-slate-100 border-b border-gray-200 cursor-pointer rounded-xl rounded-tr-none rounded-bl-none pt-1 hover:drop-shadow-lg  transition-all ease-in-out hover:scale-105 h-[5rem]  items-center flex justify-start mr-6`}
         rel="noreferrer"
       >
         <div

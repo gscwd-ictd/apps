@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { EmployeeDetails } from '../types/employee.type';
+import { devtools } from 'zustand/middleware';
 
 export type EmployeeState = {
   employeeDetails: EmployeeDetails;
@@ -25,6 +26,8 @@ export const EMPLOYEE_DATA: EmployeeDetails = {
     photoUrl: '',
   },
   employmentDetails: {
+    salaryGrade: '',
+    salaryGradeAmount: 0,
     userId: '',
     companyId: null,
     assignment: {
@@ -34,15 +37,18 @@ export const EMPLOYEE_DATA: EmployeeDetails = {
       positionTitle: '',
     },
     userRole: '',
+    overtimeImmediateSupervisorId: '',
   },
 };
 
-export const useEmployeeStore = create<EmployeeState>((set) => ({
-  employeeDetails: EMPLOYEE_DATA,
-  setEmployeeDetails: (employeeDetails: EmployeeDetails) => {
-    set((state) => ({ ...state, employeeDetails }));
-  },
-}));
+export const useEmployeeStore = create<EmployeeState>()(
+  devtools((set) => ({
+    employeeDetails: EMPLOYEE_DATA,
+    setEmployeeDetails: (employeeDetails: EmployeeDetails) => {
+      set((state) => ({ ...state, employeeDetails }));
+    },
+  }))
+);
 
 export const mockEmployeeDetails = {
   user: {

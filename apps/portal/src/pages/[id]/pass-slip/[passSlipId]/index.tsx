@@ -1,24 +1,17 @@
 import Head from 'next/head';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
-import { getUserDetails, withSession } from '../../../../utils/helpers/session';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
+import { getUserDetails, withCookieSession } from '../../../../utils/helpers/session';
 import { usePassSlipStore } from '../../../../store/passslip.store';
 import React, { useEffect } from 'react';
 import { PassSlipPdfView } from '../../../../components/fixed/passslip/PassSlipPdf';
-import { employeeDummy } from '../../../../../src/types/employee.type';
-import { useLeaveStore } from '../../../../../src/store/leave.store';
+import { employeeDummy } from '../../../../types/employee.type';
 import useSWR from 'swr';
-import { fetchWithToken } from '../../../../../src/utils/hoc/fetcher';
+import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
 import { ToastNotification } from '@gscwd-apps/oneui';
 
-export default function PassSlipPage({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function PassSlipPage({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     passSlip,
     loading,
@@ -78,18 +71,12 @@ export default function PassSlipPage({
       <>
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlips) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorPassSlips}: Failed to load Pass Slip data.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${errorPassSlips}: Failed to load Pass Slip data.`} />
         ) : null}
         <Head>
           <title>Employee Pass Slips</title>
         </Head>
-        <PassSlipPdfView
-          employeeDetails={employeeDetails}
-          passSlipDetails={swrPassSlipDetailsPdf}
-        />
+        <PassSlipPdfView employeeDetails={employeeDetails} passSlipDetails={swrPassSlipDetailsPdf} />
       </>
     )
   );
@@ -103,10 +90,8 @@ export default function PassSlipPage({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDetails } };
+});

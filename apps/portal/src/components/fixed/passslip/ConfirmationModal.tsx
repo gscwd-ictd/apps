@@ -13,25 +13,25 @@ type ConfirmationApplicationModalProps = {
   closeModalAction: () => void;
   action: PassSlipStatus; // disapprove or cancel
   tokenId: string; //like pass Slip Id, leave Id etc.
+  title: string;
 };
 
 export const ConfirmationApplicationModal = ({
   modalState,
   setModalState,
   closeModalAction,
-  action, tokenId
+  action,
+  tokenId,
+  title,
 }: ConfirmationApplicationModalProps) => {
-  const {
-    cancelPassSlip,
-    cancelPassSlipSuccess,
-    cancelPassSlipFail,
-    setPendingPassSlipModalIsOpen
-  } = usePassSlipStore((state) => ({
-    cancelPassSlip: state.cancelPassSlip,
-    cancelPassSlipSuccess: state.cancelPassSlipSuccess,
-    cancelPassSlipFail: state.cancelPassSlipFail,
-    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
-  }));
+  const { cancelPassSlip, cancelPassSlipSuccess, cancelPassSlipFail, setPendingPassSlipModalIsOpen } = usePassSlipStore(
+    (state) => ({
+      cancelPassSlip: state.cancelPassSlip,
+      cancelPassSlipSuccess: state.cancelPassSlipSuccess,
+      cancelPassSlipFail: state.cancelPassSlipFail,
+      setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    })
+  );
 
   const handleSubmit = () => {
     if (tokenId) {
@@ -44,9 +44,8 @@ export const ConfirmationApplicationModal = ({
     } else {
       //nothing to do
     }
+  };
 
-  }
-      
   const handlePatchResult = async (data: passSlipAction) => {
     const { error, result } = await patchPortal('/v1/pass-slip', data);
     if (error) {
@@ -59,21 +58,16 @@ export const ConfirmationApplicationModal = ({
       }, 200);
     }
   };
-  
-  
+
   const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
-      <Modal
-        size={`${windowWidth > 768 ? 'sm' : 'xl'}`}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={`${windowWidth > 768 ? 'sm' : 'xl'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Cancel Application</span>
+              <span>{title}</span>
             </div>
           </h3>
         </Modal.Header>
@@ -84,21 +78,11 @@ export const ConfirmationApplicationModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => handleSubmit()}
-              >
+            <div className="min-w-[6rem] max-w-auto flex gap-2">
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes
               </Button>
-              <Button
-                variant={'danger'}
-                size={'md'}
-                loading={false}
-                onClick={closeModalAction}
-              >
+              <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
                 No
               </Button>
             </div>

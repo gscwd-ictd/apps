@@ -6,15 +6,24 @@ import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/e
 
 import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import {
+  CurrentScheduleSheet,
   ScheduleSheet,
   useScheduleSheetStore,
 } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import dayjs from 'dayjs';
 
 type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: ScheduleSheet;
+  rowData: CurrentScheduleSheet;
+};
+
+type DeleteFormProps = {
+  customGroupId: string;
+  scheduleId: string;
+  dateFrom: string;
+  dateTo: string;
 };
 
 const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
@@ -24,34 +33,42 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
   rowData,
 }) => {
   // zustand store initialization
+  const { deleteScheduleSheet, deleteScheduleSheetFail, deleteScheduleSheetSuccess } = useScheduleSheetStore(
+    (state) => ({
+      deleteScheduleSheet: state.deleteScheduleSheet,
+      deleteScheduleSheetSuccess: state.deleteScheduleSheetSuccess,
+      deleteScheduleSheetFail: state.deleteScheduleSheetFail,
+    })
+  );
+
   const {
-    IsLoading,
-
-    deleteScheduleSheet,
-    deleteScheduleSheetFail,
-    deleteScheduleSheetSuccess,
-  } = useScheduleSheetStore((state) => ({
-    IsLoading: state.loading.loadingScheduleSheet,
-
-    deleteScheduleSheet: state.deleteScheduleSheet,
-    deleteScheduleSheetSuccess: state.deleteScheduleSheetSuccess,
-    deleteScheduleSheetFail: state.deleteScheduleSheetFail,
-  }));
-
-  const { handleSubmit } = useForm<ScheduleSheet>();
+    handleSubmit,
+    formState: { isSubmitting: deleteFormLoading },
+  } = useForm<ScheduleSheet>();
 
   const onSubmit: SubmitHandler<ScheduleSheet> = () => {
-    if (!isEmpty(rowData.id)) {
+    if (!isEmpty(rowData.customGroupId)) {
+      // extract the unnecessary items for posting
+      const { customGroupName, scheduleName, ...rest } = rowData;
+
       deleteScheduleSheet();
 
-      handleDeleteResult();
+      handleDeleteResult(rest);
     }
   };
 
-  const handleDeleteResult = async () => {
-    const { error, result } = await deleteEmpMonitoring(
-      `/travel-order/${rowData.id}`
-    );
+  const handleDeleteResult = async (data: DeleteFormProps) => {
+    // format data
+    const config = {
+      data: {
+        customGroupId: data.customGroupId,
+        scheduleId: data.scheduleId,
+        dateFrom: dayjs(data.dateFrom).format('YYYY-MM-DD'),
+        dateTo: dayjs(data.dateTo).format('YYYY-MM-DD'),
+      },
+    };
+
+    const { error, result } = await deleteEmpMonitoring(`/schedules/`, config);
 
     if (error) {
       deleteScheduleSheetFail(result);
@@ -67,7 +84,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
           {/* Notifications */}
-          {IsLoading ? (
+          {deleteFormLoading ? (
             <AlertNotification
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
@@ -81,10 +98,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 font-medium text-center text-gray-600 text-md">
                   Are you sure you want to delete entry
-                  <span className="px-2 font-bold text-center text-md">
-                    {JSON.stringify(rowData.customGroupId)}
-                  </span>
-                  ?
+                  <span className="px-2 font-bold text-center text-md">{JSON.stringify(rowData.customGroupName)}</span>?
                 </p>
               </div>
             </div>
@@ -96,7 +110,7 @@ const DeleteStationSsModal: FunctionComponent<DeleteModalProps> = ({
               type="submit"
               form="deleteStationSs"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
-              disabled={IsLoading ? true : false}
+              disabled={deleteFormLoading ? true : false}
             >
               <span className="text-sm font-normal">Confirm</span>
             </button>

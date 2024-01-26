@@ -1,24 +1,21 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import {
-  PassSlip,
-  PassSlipId,
-  EmployeePassSlipList,
-} from '../../../../libs/utils/src/lib/types/pass-slip.type';
+import { PassSlip, PassSlipId, EmployeePassSlipList } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
 export type PassSlipState = {
   //PASS SLIP TO SUBMIT
   passSlips: {
+    allowedToApplyForNew: boolean;
     forApproval: Array<PassSlip>;
     completed: Array<PassSlip>;
   };
   response: {
-    postResponseApply: PassSlip;
+    postResponse: PassSlip;
+    patchResponse: PassSlip;
     cancelResponse: PassSlip;
   };
 
-  
   loading: {
     loadingPassSlips: boolean;
     loadingResponse: boolean;
@@ -29,10 +26,11 @@ export type PassSlipState = {
   };
 
   passSlip: PassSlip;
-  cancelApplicationModalIsOpen: boolean,
+  cancelApplicationModalIsOpen: boolean;
   applyPassSlipModalIsOpen: boolean;
   pendingPassSlipModalIsOpen: boolean;
   completedPassSlipModalIsOpen: boolean;
+  disputePassSlipModalIsOpen: boolean;
   tab: number;
 
   getPassSlipList: (loading: boolean) => void;
@@ -47,12 +45,16 @@ export type PassSlipState = {
   postPassSlipListSuccess: (response: PassSlip) => void;
   postPassSlipListFail: (error: string) => void;
 
+  //for dispute
+  patchPassSlip: () => void;
+  patchPassSlipSuccess: (response: PassSlip) => void;
+  patchPassSlipFail: (error: string) => void;
+
   setCancelApplicationModalIsOpen: (cancelApplicationModalIsOpen: boolean) => void;
   setApplyPassSlipModalIsOpen: (applyPassSlipModalIsOpen: boolean) => void;
   setPendingPassSlipModalIsOpen: (pendingPassSlipModalIsOpen: boolean) => void;
-  setCompletedPassSlipModalIsOpen: (
-    completedPassSlipModalIsOpen: boolean
-  ) => void;
+  setCompletedPassSlipModalIsOpen: (completedPassSlipModalIsOpen: boolean) => void;
+  setDisputePassSlipModalIsOpen: (disputePassSlipModalIsOpen: boolean) => void;
 
   getPassSlip: (PassSlip: PassSlip) => void;
   setTab: (tab: number) => void;
@@ -63,11 +65,13 @@ export type PassSlipState = {
 export const usePassSlipStore = create<PassSlipState>()(
   devtools((set) => ({
     passSlips: {
+      allowedToApplyForNew: false,
       forApproval: [],
       completed: [],
     },
     response: {
-      postResponseApply: {} as PassSlip,
+      patchResponse: {} as PassSlip,
+      postResponse: {} as PassSlip,
       cancelResponse: {} as PassSlip,
     },
     loading: {
@@ -85,6 +89,7 @@ export const usePassSlipStore = create<PassSlipState>()(
     applyPassSlipModalIsOpen: false,
     pendingPassSlipModalIsOpen: false,
     completedPassSlipModalIsOpen: false,
+    disputePassSlipModalIsOpen: false,
 
     cancelApplicationModalIsOpen: false,
 
@@ -106,10 +111,12 @@ export const usePassSlipStore = create<PassSlipState>()(
       set((state) => ({ ...state, pendingPassSlipModalIsOpen }));
     },
 
-    setCompletedPassSlipModalIsOpen: (
-      completedPassSlipModalIsOpen: boolean
-    ) => {
+    setCompletedPassSlipModalIsOpen: (completedPassSlipModalIsOpen: boolean) => {
       set((state) => ({ ...state, completedPassSlipModalIsOpen }));
+    },
+
+    setDisputePassSlipModalIsOpen: (disputePassSlipModalIsOpen: boolean) => {
+      set((state) => ({ ...state, disputePassSlipModalIsOpen }));
     },
 
     getPassSlip: (passSlip: PassSlip) => {
@@ -122,6 +129,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         ...state,
         passSlips: {
           ...state.passSlips,
+          allowedToApplyForNew: false,
           forApproval: [],
           completed: [],
         },
@@ -135,14 +143,12 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
       }));
     },
-    getPassSlipListSuccess: (
-      loading: boolean,
-      response: EmployeePassSlipList
-    ) => {
+    getPassSlipListSuccess: (loading: boolean, response: EmployeePassSlipList) => {
       set((state) => ({
         ...state,
         passSlips: {
           ...state.passSlips,
+          allowedToApplyForNew: response.allowedToApplyForNew,
           forApproval: response.forApproval,
           completed: response.completed,
         },
@@ -165,7 +171,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         },
         response: {
           ...state.response,
-          postResponseApply: null,
+          postResponse: null,
         },
       }));
     },
@@ -176,7 +182,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as PassSlip,
+          postResponse: {} as PassSlip,
         },
         loading: {
           ...state.loading,
@@ -193,7 +199,7 @@ export const usePassSlipStore = create<PassSlipState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: response,
+          postResponse: response,
         },
         loading: {
           ...state.loading,
@@ -202,6 +208,51 @@ export const usePassSlipStore = create<PassSlipState>()(
       }));
     },
     postPassSlipListFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
+    //PATCH PASS SLIP ACTIONS
+    patchPassSlip: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponse: {} as PassSlip,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    patchPassSlipSuccess: (response: PassSlip) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponse: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    patchPassSlipFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -260,13 +311,13 @@ export const usePassSlipStore = create<PassSlipState>()(
       }));
     },
 
-
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {} as PassSlip,
+          patchResponse: {} as PassSlip,
+          postResponse: {} as PassSlip,
           cancelResponse: {} as PassSlip,
         },
         error: {

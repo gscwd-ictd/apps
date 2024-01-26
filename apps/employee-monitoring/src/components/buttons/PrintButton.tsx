@@ -10,9 +10,7 @@ type PrintButtonProps = {
   onClick: () => void;
 };
 
-export const PrintButton: FunctionComponent<PrintButtonProps> = ({
-  onClick,
-}) => {
+export const PrintButton: FunctionComponent<PrintButtonProps> = ({ onClick }) => {
   const { employeeDtr } = useDtrStore((state) => ({
     employeeDtr: state.employeeDtr,
   }));

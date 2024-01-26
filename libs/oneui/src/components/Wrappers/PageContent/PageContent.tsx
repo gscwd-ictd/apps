@@ -13,6 +13,7 @@ type PageContentProps = {
 type PageContentContextState = {
   //main : {},
   aside: {
+    windowWidth: number;
     isCollapsed: boolean;
     setIsCollapsed: (state: boolean) => void;
     previousState: boolean;
@@ -73,6 +74,7 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
     <PageContentContext.Provider
       value={{
         aside: {
+          windowWidth,
           isCollapsed,
           setIsCollapsed,
           previousState,

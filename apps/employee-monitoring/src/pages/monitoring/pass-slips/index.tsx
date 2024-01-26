@@ -1,10 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  DataTable,
-  LoadingSpinner,
-  ToastNotification,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import ViewPassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/ViewPassSlipModal';
@@ -12,6 +7,7 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { usePassSlipStore } from 'apps/employee-monitoring/src/store/pass-slip.store';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import UseRenderAvatarInTable from 'apps/employee-monitoring/src/utils/functions/RenderAvatarInTable';
 import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
 import UseRenderObTransportation from 'apps/employee-monitoring/src/utils/functions/RenderObTransporation';
 import UseRenderPassSlipStatus from 'apps/employee-monitoring/src/utils/functions/RenderPassSlipStatus';
@@ -23,35 +19,39 @@ import useSWR from 'swr';
 
 export default function Index() {
   const {
-    passSlip,
     passSlips,
     errorPassSlips,
+
+    ResponseHrmoApprovalPassSlip,
+
     getPassSlips,
     getPassSlipsFail,
     getPassSlipsSuccess,
+
     emptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
-    passSlip: state.passSlip,
     passSlips: state.passSlips,
+    errorPassSlips: state.error.errorPassSlips,
+
+    ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
+
     getPassSlips: state.getPassSlips,
     getPassSlipsSuccess: state.getPassSlipsSuccess,
     getPassSlipsFail: state.getPassSlipsFail,
-    errorPassSlips: state.error.errorPassSlips,
+
     emptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
 
-  const [currentRowData, setCurrentRowData] = useState<PassSlip>(
-    {} as PassSlip
-  );
+  const [currentRowData, setCurrentRowData] = useState<PassSlip>({} as PassSlip);
 
   // use swr pass slips
   const {
     data: swrPassSlips,
     isLoading: swrIsLoading,
     error: swrError,
+    mutate: mutatePassSlipApplications,
   } = useSWR('/pass-slip', fetcherEMS, {
     shouldRetryOnError: false,
-    revalidateOnFocus: false,
   });
 
   // view modal function
@@ -83,45 +83,45 @@ export default function Index() {
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
-
+    columnHelper.display({
+      id: 'avatarUrl',
+      header: '',
+      enableColumnFilter: false,
+      cell: (props) => UseRenderAvatarInTable(props.row.original.avatarUrl, props.row.original.employeeName),
+    }),
     columnHelper.accessor('dateOfApplication', {
       header: 'Date of Application',
       enableSorting: false,
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
-
     columnHelper.accessor('employeeName', {
       header: 'Employee Name',
       enableSorting: false,
       cell: (info) => info.getValue(),
     }),
-
     columnHelper.accessor('natureOfBusiness', {
       header: 'Nature of Business',
       enableSorting: false,
       cell: (info) => UseRenderNatureOfBusiness(info.getValue()),
     }),
-
     columnHelper.accessor('obTransportation', {
       header: 'OB Transportation',
       enableSorting: false,
       cell: (info) => UseRenderObTransportation(info.getValue()),
     }),
 
-    columnHelper.accessor('purposeDestination', {
-      header: 'Purpose/Destination',
-      enableSorting: false,
-      cell: (info) => (
-        <div className="max-w-[6rem] truncate">{info.getValue()}</div>
-      ),
-    }),
+    // columnHelper.accessor('purposeDestination', {
+    //   header: 'Purpose/Destination',
+    //   enableSorting: false,
+    //   cell: (info) => <div className="max-w-[6rem] truncate">{info.getValue()}</div>,
+    // }),
 
     columnHelper.accessor('status', {
       header: 'Status',
       enableSorting: false,
       cell: (info) => UseRenderPassSlipStatus(info.getValue()),
+      filterFn: 'equals',
     }),
-
     columnHelper.display({
       header: () => 'Actions',
       id: 'actions',
@@ -141,7 +141,7 @@ export default function Index() {
     if (swrIsLoading) getPassSlips();
   }, [swrIsLoading]);
 
-  // get passlips success or fail
+  // get pass slips success or fail
   useEffect(() => {
     // success
     if (!isEmpty(swrPassSlips)) getPassSlipsSuccess(swrPassSlips.data);
@@ -150,14 +150,26 @@ export default function Index() {
     if (!isEmpty(swrError)) getPassSlipsFail(swrError.message);
   }, [swrPassSlips, swrError]);
 
-  // if error getting pass slips
+  // clear errors and
   useEffect(() => {
-    if (!isEmpty(errorPassSlips) || !isEmpty(passSlip)) emptyErrorsAndResponse;
-  }, [errorPassSlips]);
+    if (!isEmpty(ResponseHrmoApprovalPassSlip)) {
+      closeViewModal();
+      mutatePassSlipApplications();
+      setTimeout(() => {
+        emptyErrorsAndResponse();
+      }, 1500);
+    }
+
+    if (!isEmpty(errorPassSlips)) {
+      setTimeout(() => {
+        emptyErrorsAndResponse();
+      }, 1500);
+    }
+  }, [errorPassSlips, ResponseHrmoApprovalPassSlip]);
 
   return (
     <>
-      <div className="w-full px-4">
+      <div>
         <BreadCrumbs
           title="Pass Slips"
           crumbs={[
@@ -170,9 +182,7 @@ export default function Index() {
         />
 
         {/* Fetch employees error */}
-        {!isEmpty(errorPassSlips) ? (
-          <ToastNotification toastType="error" notifMessage={errorPassSlips} />
-        ) : null}
+        {!isEmpty(errorPassSlips) ? <ToastNotification toastType="error" notifMessage={errorPassSlips} /> : null}
 
         {/* view modal */}
         <ViewPassSlipModal
@@ -183,18 +193,13 @@ export default function Index() {
         />
 
         <Can I="access" this="Pass_slips">
-          <div className="sm:mx-0 md:mx-0 lg:mx-5 ">
+          <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
                 <div className="flex flex-row flex-wrap ">
-                  <DataTable
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={true}
-                    paginate={true}
-                  />
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
                 </div>
               )}
             </Card>

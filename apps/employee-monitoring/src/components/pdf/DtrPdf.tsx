@@ -1,44 +1,17 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable jsx-a11y/alt-text */
-import {
-  Page,
-  Text,
-  Document,
-  StyleSheet,
-  PDFViewer,
-  View,
-  Image,
-} from '@react-pdf/renderer';
-import {
-  EmployeeDtrWithSchedule,
-  EmployeeDtrWithScheduleAndSummary,
-} from 'libs/utils/src/lib/types/dtr.type';
+import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
+import { EmployeeDtrWithSchedule, EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
-
-type EmployeeAssignment = {
-  id: string;
-  name: string;
-  positionId: string;
-  positionTitle: string;
-};
-
-type EmployeeData = {
-  assignment: EmployeeAssignment;
-  companyId: string;
-  fullName: string;
-  isHRMPSB: number;
-  photoUrl: string;
-  userId: string;
-  userRole: string;
-};
+import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
 
 type DtrPdfProps = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
-  employeeData: EmployeeData;
+  employeeData: EmployeeWithDetails;
 };
 
 const styles = StyleSheet.create({
@@ -102,6 +75,7 @@ const styles = StyleSheet.create({
   },
   tableDataText: {
     paddingVertical: 3,
+    paddingHorizontal: 1,
     textTransform: 'capitalize',
   },
   certifyContainer: {
@@ -153,15 +127,12 @@ const styles = StyleSheet.create({
   w5: { width: '5%' },
 });
 
-export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
-  employeeData,
-  employeeDtr,
-}) => {
+export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeDtr }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   // Temporary states
-  const [isOfficeSchedule] = useState<boolean>(false);
-  const [isFieldStationSchedule] = useState<boolean>(true);
+  const [isOfficeSchedule] = useState<boolean>(true);
+  const [isFieldStationSchedule] = useState<boolean>(false);
 
   // convert to 12-hour time format
   const twelveHourFormat = (time: string | null) => {
@@ -170,24 +141,12 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
   };
 
   // compare to schedule if undertime
-  const compareIfEarly = (
-    day: string,
-    actualTime: string,
-    scheduledTime: string
-  ) => {
-    return dayjs(day + ' ' + actualTime).isBefore(
-      day + ' ' + scheduledTime,
-      'minute'
-    );
+  const compareIfEarly = (day: string, actualTime: string, scheduledTime: string) => {
+    return dayjs(day + ' ' + actualTime).isBefore(day + ' ' + scheduledTime, 'minute');
   };
 
   // comparison to schedule if late
-  const compareIfLate = (
-    day: string,
-    actualTime: string,
-    scheduledTime: string,
-    addition?: number
-  ) => {
+  const compareIfLate = (day: string, actualTime: string, scheduledTime: string, addition?: number) => {
     // addition is included since we do not set the lunch in duration
     if (addition) {
       return dayjs(day + ' ' + actualTime).isAfter(
@@ -197,10 +156,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
         'minutes'
       );
     } else {
-      return dayjs(day + ' ' + actualTime).isAfter(
-        day + ' ' + scheduledTime,
-        'minute'
-      );
+      return dayjs(day + ' ' + actualTime).isAfter(day + ' ' + scheduledTime, 'minute');
     }
   };
 
@@ -243,14 +199,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
 
                   {/* CENTER */}
                   <View style={[styles.w40, styles.horizontalCenter]}>
-                    <Text
-                      style={{ fontSize: 11, fontFamily: 'Helvetica-Bold' }}
-                    >
-                      GENERAL SANTOS WATER DISTRICT
-                    </Text>
-                    <Text style={{ fontSize: 9, paddingTop: 3 }}>
-                      E. Ferdnandez St., Lagao General Santos City
-                    </Text>
+                    <Text style={{ fontSize: 11, fontFamily: 'Helvetica-Bold' }}>GENERAL SANTOS WATER DISTRICT</Text>
+                    <Text style={{ fontSize: 9, paddingTop: 3 }}>E. Ferdnandez St., Lagao General Santos City</Text>
                     <Text
                       style={{
                         fontSize: 11,
@@ -262,19 +212,14 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                     </Text>
 
                     {/* DATE PERIOD */}
-                    <Text style={{ fontSize: 9, paddingTop: 10 }}>
-                      As of{' '}
-                      <Text>
-                        {dayjs(employeeDtr.dtrDays[0].day).format('MM/DD/YYYY')}
-                      </Text>{' '}
-                      to{' '}
-                      <Text>
-                        {dayjs(
-                          employeeDtr.dtrDays[employeeDtr.dtrDays.length - 1]
-                            .day
-                        ).format('MM/DD/YYYY')}
+                    {employeeDtr.dtrDays?.length > 0 ? (
+                      <Text style={{ fontSize: 9, paddingTop: 10 }}>
+                        As of <Text>{dayjs(employeeDtr.dtrDays[0]?.day).format('MM/DD/YYYY')}</Text> to{' '}
+                        <Text>
+                          {dayjs(employeeDtr.dtrDays[employeeDtr.dtrDays?.length - 1]?.day).format('MM/DD/YYYY')}
+                        </Text>
                       </Text>
-                    </Text>
+                    ) : null}
 
                     {/* <Text style={{ fontSize: 9, paddingTop: 10 }}>
                       For the month of{' '}
@@ -316,12 +261,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                     {/* DESIGNATION */}
                     <View style={[styles.rowContainer, { paddingTop: 2 }]}>
                       <Text style={[styles.w20]}>DESIGNATION</Text>
-                      <Text
-                        style={[
-                          styles.w80,
-                          { textTransform: 'uppercase', fontSize: 8 },
-                        ]}
-                      >
+                      <Text style={[styles.w80, { textTransform: 'uppercase', fontSize: 8 }]}>
                         {employeeData.assignment.positionTitle}
                       </Text>
                     </View>
@@ -329,19 +269,19 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                     {/* OFFICE */}
                     <View style={[styles.rowContainer, { paddingTop: 4 }]}>
                       <Text style={[styles.w20]}>OFFICE</Text>
-                      <Text style={[styles.w80]}>office_name</Text>
+                      <Text style={[styles.w80]}>{employeeData.assignment.officeName}</Text>
                     </View>
 
                     {/* DEPARTMENT */}
                     <View style={[styles.rowContainer]}>
                       <Text style={[styles.w20]}>DEPARTMENT</Text>
-                      <Text style={[styles.w80]}>department_name</Text>
+                      <Text style={[styles.w80]}>{employeeData.assignment.departmentName}</Text>
                     </View>
 
                     {/* DIVISION */}
                     <View style={[styles.rowContainer]}>
                       <Text style={[styles.w20]}>DIVISION</Text>
-                      <Text style={[styles.w80]}>division_name</Text>
+                      <Text style={[styles.w80]}>{employeeData.assignment.divisionName}</Text>
                     </View>
                   </View>
                 </View>
@@ -366,20 +306,12 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                           <Text style={[styles.tableHeaderText]}>TIME IN</Text>
                         </View>
                         <View style={[styles.tableHeader, styles.w15]}>
-                          <Text style={[styles.tableHeaderText]}>
-                            LUNCH OUT
-                          </Text>
+                          <Text style={[styles.tableHeaderText]}>LUNCH OUT</Text>
                         </View>
                         <View style={[styles.tableHeader, styles.w15]}>
                           <Text style={[styles.tableHeaderText]}>LUNCH IN</Text>
                         </View>
-                        <View
-                          style={[
-                            styles.tableHeader,
-                            styles.w15,
-                            { borderRight: 'none' },
-                          ]}
-                        >
+                        <View style={[styles.tableHeader, styles.w15, { borderRight: 'none' }]}>
                           <Text style={[styles.tableHeaderText]}>TIME OUT</Text>
                         </View>
                       </View>
@@ -395,13 +327,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         {/* TIME IN */}
                         <View style={[styles.tableHeader, styles.w37_5]}>
                           <Text style={[styles.tableHeaderText]}>TIME IN</Text>
-                          <View
-                            style={[
-                              styles.rowContainer,
-                              styles.w100,
-                              styles.borderTop,
-                            ]}
-                          >
+                          <View style={[styles.rowContainer, styles.w100, styles.borderTop]}>
                             <View style={[styles.tableHeader, styles.w45]}>
                               <Text style={[styles.tableHeaderText]}>DATE</Text>
                             </View>
@@ -410,36 +336,16 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                               <Text></Text>
                             </View>
 
-                            <View
-                              style={[
-                                styles.tableHeader,
-                                styles.w45,
-                                { borderRight: 'none' },
-                              ]}
-                            >
-                              <Text style={[styles.tableHeaderText]}>
-                                TIME LOG
-                              </Text>
+                            <View style={[styles.tableHeader, styles.w45, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableHeaderText]}>TIME LOG</Text>
                             </View>
                           </View>
                         </View>
 
                         {/* TIME OUT */}
-                        <View
-                          style={[
-                            styles.tableHeader,
-                            styles.w37_5,
-                            { borderRight: 'none' },
-                          ]}
-                        >
+                        <View style={[styles.tableHeader, styles.w37_5, { borderRight: 'none' }]}>
                           <Text style={[styles.tableHeaderText]}>TIME OUT</Text>
-                          <View
-                            style={[
-                              styles.rowContainer,
-                              styles.w100,
-                              styles.borderTop,
-                            ]}
-                          >
+                          <View style={[styles.rowContainer, styles.w100, styles.borderTop]}>
                             <View style={[styles.tableHeader, styles.w45]}>
                               <Text style={[styles.tableHeaderText]}>DATE</Text>
                             </View>
@@ -448,16 +354,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                               <Text></Text>
                             </View>
 
-                            <View
-                              style={[
-                                styles.tableHeader,
-                                styles.w45,
-                                { borderRight: 'none' },
-                              ]}
-                            >
-                              <Text style={[styles.tableHeaderText]}>
-                                TIME LOG
-                              </Text>
+                            <View style={[styles.tableHeader, styles.w45, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableHeaderText]}>TIME LOG</Text>
                             </View>
                           </View>
                         </View>
@@ -469,7 +367,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                   <View>
                     {/* For Office Schedule */}
                     {isOfficeSchedule
-                      ? employeeDtr.dtrDays.map((log, index) => {
+                      ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';
@@ -483,45 +381,27 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                           let timeOutColor = '';
 
                           // row color
-                          checkIfHoliday(log.holidayType) ===
-                          HolidayTypes.REGULAR
+                          checkIfHoliday(log.holidayType) === HolidayTypes.REGULAR
                             ? (logBgColor = red)
-                            : checkIfHoliday(log.holidayType) ===
-                              HolidayTypes.SPECIAL
+                            : checkIfHoliday(log.holidayType) === HolidayTypes.SPECIAL
                             ? (logBgColor = blue)
                             : checkIfRestDay(log.dtr.remarks) === true
                             ? (logBgColor = gray)
                             : (logBgColor = white);
 
                           // time in color
-                          compareIfLate(
-                            log.day,
-                            log.dtr.timeIn,
-                            log.schedule.timeIn
-                          ) === true
+                          compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true
                             ? (timeInColor = yellow)
                             : (timeInColor = '');
 
                           // lunch out color
-                          compareIfEarly(
-                            log.day,
-                            log.dtr.lunchOut,
-                            log.schedule.lunchOut
-                          ) ||
-                          compareIfLate(
-                            log.day,
-                            log.dtr.lunchOut,
-                            log.schedule.lunchIn
-                          ) === true
+                          compareIfEarly(log.day, log.dtr.lunchOut, log.schedule.lunchOut) ||
+                          compareIfLate(log.day, log.dtr.lunchOut, log.schedule.lunchIn) === true
                             ? (lunchOutColor = yellow)
                             : (lunchOutColor = '');
 
                           // lunch in color
-                          compareIfEarly(
-                            log.day,
-                            log.dtr.lunchIn,
-                            log.schedule.lunchIn
-                          ) ||
+                          compareIfEarly(log.day, log.dtr.lunchIn, log.schedule.lunchIn) ||
                           compareIfLate(
                             log.day,
                             log.dtr.lunchIn,
@@ -532,11 +412,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                             : (lunchInColor = '');
 
                           // time out color
-                          compareIfEarly(
-                            log.day,
-                            log.dtr.timeOut,
-                            log.schedule.timeOut
-                          ) === true
+                          compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true
                             ? (timeOutColor = yellow)
                             : (timeOutColor = '');
 
@@ -551,103 +427,49 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                             >
                               {/* DATE */}
                               <View style={[styles.tableData, styles.w10]}>
-                                <Text style={[styles.tableDataText]}>
-                                  {log.day}
-                                </Text>
+                                <Text style={[styles.tableDataText]}>{log.day}</Text>
                               </View>
 
                               {/* DAY OF THE WEEK */}
                               <View style={[styles.tableData, styles.w5]}>
-                                <Text style={[styles.tableDataText]}>
-                                  {dayjs(log.day).format('ddd')}
-                                </Text>
+                                <Text style={[styles.tableDataText]}>{dayjs(log.day).format('ddd')}</Text>
                               </View>
 
                               {/* REMARKS */}
                               <View style={[styles.tableData, styles.w25]}>
-                                <Text style={[styles.tableDataText]}>
-                                  {log.dtr.remarks}
-                                </Text>
+                                <Text style={[styles.tableDataText]}>{log.dtr.remarks}</Text>
                               </View>
 
                               {/* TIME IN */}
-                              <View
-                                style={[
-                                  styles.tableData,
-                                  styles.w15,
-                                  { backgroundColor: timeInColor },
-                                ]}
-                              >
+                              <View style={[styles.tableData, styles.w15, { backgroundColor: timeInColor }]}>
                                 {log.dtr.timeIn ? (
-                                  <Text style={[styles.tableDataText]}>
-                                    {twelveHourFormat(log.dtr.timeIn)}
-                                  </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ||
-                                  !isEmpty(log.holidayType) ? (
+                                  <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeIn)}</Text>
+                                ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text
-                                    style={[
-                                      styles.tableDataText,
-                                      { color: 'red' },
-                                    ]}
-                                  >
-                                    No Entry
-                                  </Text>
+                                  <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
                                 )}
                               </View>
 
                               {/* LUNCH OUT */}
-                              <View
-                                style={[
-                                  styles.tableData,
-                                  styles.w15,
-                                  { backgroundColor: lunchOutColor },
-                                ]}
-                              >
+                              <View style={[styles.tableData, styles.w15, { backgroundColor: lunchOutColor }]}>
                                 {log.dtr.lunchOut ? (
-                                  <Text style={[styles.tableDataText]}>
-                                    {twelveHourFormat(log.dtr.lunchOut)}
-                                  </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ||
-                                  !isEmpty(log.holidayType) ? (
+                                  <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.lunchOut)}</Text>
+                                ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text
-                                    style={[
-                                      styles.tableDataText,
-                                      { color: 'red' },
-                                    ]}
-                                  >
-                                    No Entry
-                                  </Text>
+                                  <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
                                 )}
                               </View>
 
                               {/* LUNCH IN */}
-                              <View
-                                style={[
-                                  styles.tableData,
-                                  styles.w15,
-                                  { backgroundColor: lunchInColor },
-                                ]}
-                              >
+                              <View style={[styles.tableData, styles.w15, { backgroundColor: lunchInColor }]}>
                                 {log.dtr.lunchIn ? (
-                                  <Text style={[styles.tableDataText]}>
-                                    {twelveHourFormat(log.dtr.lunchIn)}
-                                  </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ||
-                                  !isEmpty(log.holidayType) ? (
+                                  <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.lunchIn)}</Text>
+                                ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text
-                                    style={[
-                                      styles.tableDataText,
-                                      { color: 'red' },
-                                    ]}
-                                  >
-                                    No Entry
-                                  </Text>
+                                  <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
                                 )}
                               </View>
 
@@ -663,21 +485,11 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                                 ]}
                               >
                                 {log.dtr.timeOut ? (
-                                  <Text style={[styles.tableDataText]}>
-                                    {twelveHourFormat(log.dtr.timeOut)}
-                                  </Text>
-                                ) : checkIfRestDay(log.dtr.remarks) ||
-                                  !isEmpty(log.holidayType) ? (
+                                  <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeOut)}</Text>
+                                ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
                                   <Text></Text>
                                 ) : (
-                                  <Text
-                                    style={[
-                                      styles.tableDataText,
-                                      { color: 'red' },
-                                    ]}
-                                  >
-                                    No Entry
-                                  </Text>
+                                  <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
                                 )}
                               </View>
                             </View>
@@ -687,7 +499,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
 
                     {/* For Field/Pumping Station Schedule | WAITING FOR UPDATES*/}
                     {isFieldStationSchedule
-                      ? employeeDtr.dtrDays.map((log, index) => {
+                      ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';
@@ -699,31 +511,21 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                           let timeOutColor = '';
 
                           // row color
-                          checkIfHoliday(log.holidayType) ===
-                          HolidayTypes.REGULAR
+                          checkIfHoliday(log.holidayType) === HolidayTypes.REGULAR
                             ? (logBgColor = red)
-                            : checkIfHoliday(log.holidayType) ===
-                              HolidayTypes.SPECIAL
+                            : checkIfHoliday(log.holidayType) === HolidayTypes.SPECIAL
                             ? (logBgColor = blue)
                             : checkIfRestDay(log.dtr.remarks) === true
                             ? (logBgColor = gray)
                             : (logBgColor = white);
 
                           // time in color
-                          compareIfLate(
-                            log.day,
-                            log.dtr.timeIn,
-                            log.schedule.timeIn
-                          ) === true
+                          compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true
                             ? (timeInColor = yellow)
                             : (timeInColor = '');
 
                           // time out color
-                          compareIfEarly(
-                            log.day,
-                            log.dtr.timeOut,
-                            log.schedule.timeOut
-                          ) === true
+                          compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true
                             ? (timeOutColor = yellow)
                             : (timeOutColor = '');
 
@@ -737,26 +539,18 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                               key={index}
                             >
                               <View style={[styles.tableData, styles.w25]}>
-                                <Text style={{ margin: 'auto 0' }}>
-                                  {log.dtr.remarks}
-                                </Text>
+                                <Text style={{ margin: 'auto 0' }}>{log.dtr.remarks}</Text>
                               </View>
 
                               {/* TIME IN */}
                               <View style={[styles.tableData, styles.w37_5]}>
-                                <View
-                                  style={[styles.rowContainer, styles.w100]}
-                                >
+                                <View style={[styles.rowContainer, styles.w100]}>
                                   <View style={[styles.tableData, styles.w45]}>
-                                    <Text style={[styles.tableDataText]}>
-                                      {log.day}
-                                    </Text>
+                                    <Text style={[styles.tableDataText]}>{log.day}</Text>
                                   </View>
 
                                   <View style={[styles.tableData, styles.w10]}>
-                                    <Text style={[styles.tableDataText]}>
-                                      {dayjs(log.day).format('ddd')}
-                                    </Text>
+                                    <Text style={[styles.tableDataText]}>{dayjs(log.day).format('ddd')}</Text>
                                   </View>
 
                                   <View
@@ -770,53 +564,31 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                                     ]}
                                   >
                                     {log.dtr.timeIn ? (
-                                      <Text style={[styles.tableDataText]}>
-                                        {twelveHourFormat(log.dtr.timeIn)}
-                                      </Text>
-                                    ) : checkIfRestDay(log.dtr.remarks) ||
-                                      !isEmpty(log.holidayType) ? (
+                                      <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeIn)}</Text>
+                                    ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
                                       <Text></Text>
                                     ) : (
-                                      <Text
-                                        style={[
-                                          styles.tableDataText,
-                                          { color: 'red' },
-                                        ]}
-                                      >
-                                        No Entry
-                                      </Text>
+                                      <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
                                     )}
                                   </View>
                                 </View>
                               </View>
 
                               {/* TIME OUT */}
-                              <View
-                                style={[
-                                  styles.tableData,
-                                  styles.w37_5,
-                                  { borderRight: 'none' },
-                                ]}
-                              >
-                                <View
-                                  style={[styles.rowContainer, styles.w100]}
-                                >
+                              <View style={[styles.tableData, styles.w37_5, { borderRight: 'none' }]}>
+                                <View style={[styles.rowContainer, styles.w100]}>
                                   <View style={[styles.tableData, styles.w45]}>
                                     <Text style={[styles.tableDataText]}>
                                       {/* add 1 day if night shift */}
                                       {log.schedule.shift === 'night'
-                                        ? dayjs(log.day)
-                                            .add(1, 'day')
-                                            .format('YYYY-MM-DD')
+                                        ? dayjs(log.day).add(1, 'day').format('YYYY-MM-DD')
                                         : log.dtr.dtrDate}
                                     </Text>
                                   </View>
 
                                   <View style={[styles.tableData, styles.w10]}>
                                     <Text style={[styles.tableDataText]}>
-                                      {dayjs(log.day)
-                                        .add(1, 'day')
-                                        .format('ddd')}
+                                      {dayjs(log.day).add(1, 'day').format('ddd')}
                                     </Text>
                                   </View>
 
@@ -833,21 +605,11 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                                   >
                                     <Text>
                                       {log.dtr.timeOut ? (
-                                        <Text style={[styles.tableDataText]}>
-                                          {twelveHourFormat(log.dtr.timeOut)}
-                                        </Text>
-                                      ) : checkIfRestDay(log.dtr.remarks) ||
-                                        !isEmpty(log.holidayType) ? (
+                                        <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeOut)}</Text>
+                                      ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
                                         <Text></Text>
                                       ) : (
-                                        <Text
-                                          style={[
-                                            styles.tableDataText,
-                                            { color: 'red' },
-                                          ]}
-                                        >
-                                          No Entry
-                                        </Text>
+                                        <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
                                       )}
                                     </Text>
                                   </View>
@@ -864,111 +626,141 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                 <View style={styles.aggregateContainer}>
                   {/* COLUMN HEADER */}
                   <View style={[styles.rowContainer]}>
+                    {/* NO. OF TIMES LATE */}
                     <View style={[styles.tableHeader2, styles.w11]}>
-                      <Text style={[styles.tableHeaderText]}>
-                        NO. OF TIMES LATE
-                      </Text>
+                      <Text style={[styles.tableHeaderText]}>NO. OF TIMES LATE</Text>
                     </View>
+
+                    {/* TOTAL MINUTES LATE */}
                     <View style={[styles.tableHeader2, styles.w9]}>
-                      <Text
-                        style={[
-                          styles.tableHeaderText,
-                          { paddingHorizontal: 3 },
-                        ]}
-                      >
-                        TOTAL MINUTES LATE
-                      </Text>
+                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>TOTAL MINUTES LATE</Text>
                     </View>
+
+                    {/* DATE/S LATE */}
                     <View style={[styles.tableHeader2, styles.w15]}>
                       <Text style={[styles.tableHeaderText]}>DATE/S LATE</Text>
                     </View>
+
+                    {/* NO. OF TIMES UNDERTIME */}
                     <View style={[styles.tableHeader2, styles.w8]}>
-                      <Text style={[styles.tableHeaderText]}>
-                        NO. OF TIMES UNDERTIME
-                      </Text>
+                      <Text style={[styles.tableHeaderText]}>NO. OF TIMES UNDERTIME</Text>
                     </View>
+
+                    {/* TOTAL MINUTES UNDERTIME */}
                     <View style={[styles.tableHeader2, styles.w9]}>
-                      <Text
-                        style={[
-                          styles.tableHeaderText,
-                          { paddingHorizontal: 3 },
-                        ]}
-                      >
-                        TOTAL MINUTES UNDERTIME
-                      </Text>
+                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>TOTAL MINUTES UNDERTIME</Text>
                     </View>
+
+                    {/* DATE/S UNDERTIME */}
                     <View style={[styles.tableHeader2, styles.w15]}>
-                      <Text
-                        style={[
-                          styles.tableHeaderText,
-                          { paddingHorizontal: 3 },
-                        ]}
-                      >
-                        DATE/S UNDERTIME
-                      </Text>
+                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>DATE/S UNDERTIME</Text>
                     </View>
+
+                    {/* NO. OF TIMES HALF DAY (AM/PM) */}
                     <View style={[styles.tableHeader2, styles.w10]}>
-                      <Text
-                        style={[
-                          styles.tableHeaderText,
-                          { paddingHorizontal: 3 },
-                        ]}
-                      >
+                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>
                         NO. OF TIMES HALF DAY (AM/PM)
                       </Text>
                     </View>
+
+                    {/* DATE/S HALF DAY */}
                     <View style={[styles.tableHeader2, styles.w12]}>
-                      <Text style={[styles.tableHeaderText]}>
-                        DATE/S HALF DAY
-                      </Text>
+                      <Text style={[styles.tableHeaderText]}>DATE/S HALF DAY</Text>
                     </View>
-                    <View
-                      style={[
-                        styles.tableHeader2,
-                        styles.w11,
-                        { borderRight: 'none' },
-                      ]}
-                    >
-                      <Text style={[styles.tableHeaderText]}>
-                        NO ATTENDANCE
-                      </Text>
+
+                    {/* NO ATTENDANCE */}
+                    <View style={[styles.tableHeader2, styles.w11, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText]}>NO ATTENDANCE</Text>
                     </View>
                   </View>
 
                   {/* TABLE ROW */}
                   <View style={[styles.rowContainer, styles.borderTop]}>
+                    {/* NO. OF TIMES LATE */}
                     <View style={[styles.tableData, styles.w11]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>{employeeDtr.summary?.noOfTimesLate ?? '-'}</Text>
                     </View>
+
+                    {/* TOTAL MINUTES LATE */}
                     <View style={[styles.tableData, styles.w9]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>{employeeDtr.summary?.totalMinutesLate ?? '-'}</Text>
                     </View>
+
+                    {/* DATE/S LATE */}
                     <View style={[styles.tableData, styles.w15]}>
-                      <Text style={[styles.tableDataText]}>1,2,3</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.lateDates && employeeDtr.summary?.lateDates.length > 0
+                          ? employeeDtr.summary?.lateDates.map((day, index) => {
+                              return (
+                                <Text key={index}>
+                                  {index === employeeDtr.summary?.lateDates.length - 1 ? (
+                                    <Text>{day}</Text>
+                                  ) : (
+                                    <Text>{day}, </Text>
+                                  )}
+                                </Text>
+                              );
+                            })
+                          : '-'}
+                      </Text>
                     </View>
+
+                    {/* NO. OF TIMES UNDERTIME */}
                     <View style={[styles.tableData, styles.w8]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>{employeeDtr.summary?.noOfTimesUndertime ?? '-'}</Text>
                     </View>
+
+                    {/* TOTAL MINUTES UNDERTIME */}
                     <View style={[styles.tableData, styles.w9]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>{employeeDtr.summary?.totalMinutesUndertime ?? '-'}</Text>
                     </View>
+
+                    {/* DATE/S UNDERTIME */}
                     <View style={[styles.tableData, styles.w15]}>
-                      <Text style={[styles.tableDataText]}>4,5,6</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.undertimeDates && employeeDtr.summary?.undertimeDates.length > 0
+                          ? employeeDtr.summary?.undertimeDates.map((day, index) => {
+                              return (
+                                <Text key={index}>
+                                  {index === employeeDtr.summary?.undertimeDates.length - 1 ? (
+                                    <Text>{day}</Text>
+                                  ) : (
+                                    <Text>{day}, </Text>
+                                  )}
+                                </Text>
+                              );
+                            })
+                          : '-'}
+                      </Text>
                     </View>
+
+                    {/* NO. OF TIMES HALF DAY (AM/PM) */}
                     <View style={[styles.tableData, styles.w10]}>
-                      <Text style={[styles.tableDataText]}>0.00</Text>
+                      <Text style={[styles.tableDataText]}>{employeeDtr.summary?.noOfTimesHalfDay ?? '-'}</Text>
                     </View>
+
+                    {/* DATE/S HALF DAY */}
                     <View style={[styles.tableData, styles.w12]}>
-                      <Text style={[styles.tableDataText]}>7,8,9</Text>
+                      <Text style={[styles.tableDataText]}>-</Text>
                     </View>
-                    <View
-                      style={[
-                        styles.tableData,
-                        styles.w11,
-                        { borderRight: 'none' },
-                      ]}
-                    >
-                      <Text style={[styles.tableDataText]}>10,11,12</Text>
+
+                    {/* NO ATTENDANCE */}
+                    <View style={[styles.tableData, styles.w11, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.noAttendance && employeeDtr.summary?.noAttendance.length > 0
+                          ? employeeDtr.summary?.noAttendance.map((day, index) => {
+                              return (
+                                <Text key={index}>
+                                  {index === employeeDtr.summary?.noAttendance.length - 1 ? (
+                                    <Text>{day}</Text>
+                                  ) : (
+                                    <Text>{day}, </Text>
+                                  )}
+                                </Text>
+                              );
+                            })
+                          : '-'}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -976,10 +768,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                 {/* CERTIFY TEXT */}
                 <View style={[styles.certifyContainer]}>
                   <Text style={[styles.certifyText]}>
-                    I certify on my honor that the above is true and correct
-                    report of the hours of work performed record of which was
-                    made daily at the time of arrival and departure from the
-                    office.
+                    I certify on my honor that the above is true and correct report of the hours of work performed
+                    record of which was made daily at the time of arrival and departure from the office.
                   </Text>
                 </View>
 
@@ -998,9 +788,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         },
                       ]}
                     ></Text>
-                    <Text style={[{ padding: '2 0 0 2' }]}>
-                      Employee&apos;s Signature
-                    </Text>
+                    <Text style={[{ padding: '2 0 0 2' }]}>Employee&apos;s Signature</Text>
                   </View>
 
                   {/* RIGHT */}
@@ -1014,19 +802,16 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({
                         },
                       ]}
                     ></Text>
-                    <Text style={[{ padding: '2 0 0 2' }]}>
-                      Supervisor&apos;s/Department Manager&apos;s Signature
-                    </Text>
+                    <Text style={[{ padding: '2 0 0 2' }]}>Supervisor&apos;s/Department Manager&apos;s Signature</Text>
                   </View>
                 </View>
 
                 {/* NOTES */}
                 <View style={[styles.notesContainer]}>
                   <Text style={[styles.notesText]}>
-                    Incomplete time logs must be supported by an Accomplishment
-                    Report, Travel Order, Certificate of Attendance, Approved
-                    Leave Application Form or Trip Ticket. Moreover, Please see
-                    Human Resource for inquiry.
+                    Incomplete time logs must be supported by an Accomplishment Report, Travel Order, Certificate of
+                    Attendance, Approved Leave Application Form or Trip Ticket. Moreover, Please see Human Resource for
+                    inquiry.
                   </Text>
                 </View>
               </View>

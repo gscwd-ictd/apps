@@ -1,24 +1,14 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import SideNav from '../../components/fixed/nav/SideNav';
 import { MainContainer } from '../../components/modular/custom/containers/MainContainer';
 import { useAllowedModulesStore } from '../../store/allowed-modules.store';
-import {
-  withSession,
-  getUserDetails,
-  withCookieSession,
-} from '../../utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../utils/helpers/session';
 import { useEmployeeStore } from '../../store/employee.store';
 import { EmployeeDashboard } from '../../components/fixed/dashboard/EmployeeDashboard';
-import { SpinnerDotted } from 'spinners-react';
 import { setModules } from '../../utils/helpers/modules';
-import { setLocalStorage } from '../../utils/helpers/local-storage';
 import Carousel from '../../components/fixed/home/carousel/Carousel';
 import Image from 'next/image';
 import EmployeeCalendar from '../../components/fixed/home/calendar/Calendar';
@@ -30,12 +20,16 @@ import { employeeDummy } from '../../types/employee.type';
 import { fetchWithToken } from '../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { format } from 'date-fns';
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
-import { UseNameInitials } from '../../utils/hooks/useNameInitials';
 import { useDtrStore } from '../../store/dtr.store';
+import { HiCalendar, HiCash, HiClock, HiDocument } from 'react-icons/hi';
+import { useLeaveLedgerStore } from '../../store/leave-ledger.store';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
+import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 
 export type NavDetails = {
   fullName: string;
@@ -43,76 +37,149 @@ export type NavDetails = {
   profile: string;
 };
 
-export default function Dashboard({
-  userDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const setAllowedModules = useAllowedModulesStore(
-    (state) => state.setAllowedModules
-  );
+export default function Dashboard({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const setAllowedModules = useAllowedModulesStore((state) => state.setAllowedModules);
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [navDetails, setNavDetails] = useState<NavDetails>();
-
-  async function hydration() {
-    // setLocalStorage(userDetails);
-    setNavDetails({
-      profile: userDetails.user.email,
-      fullName: `${userDetails.profile.firstName} ${userDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        userDetails.profile.firstName,
-        userDetails.profile.lastName
-      ),
-    });
-
-    const modules = await setModules(userDetails);
-
-    setAllowedModules(modules);
-
-    return setIsLoading(false);
-  }
-
-  useEffect(() => {
-    setEmployee(userDetails);
-    setIsLoading(true);
-    hydration();
-  }, []);
+  const employee = useEmployeeStore((state) => state.employeeDetails);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
+  const sgAmount = userDetails.employmentDetails.salaryGradeAmount;
+  const sgIncrement = userDetails.employmentDetails.salaryGrade;
+
+  const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
+  const [leaveCredits, setLeaveCredits] = useState<number>(0);
+  const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
   const {
-    dtr,
-    schedule,
-    loadingTimeLogs,
-    errorTimeLogs,
-    getTimeLogs,
-    getTimeLogsSuccess,
-    getTimeLogsFail,
-  } = useTimeLogStore((state) => ({
-    dtr: state.dtr,
-    schedule: state.schedule,
-    loadingTimeLogs: state.loading.loadingTimeLogs,
-    errorTimeLogs: state.error.errorTimeLogs,
-    getTimeLogs: state.getTimeLogs,
-    getTimeLogsSuccess: state.getTimeLogsSuccess,
-    getTimeLogsFail: state.getTimeLogsFail,
+    leaveCalculatorModalIsOpen,
+    setLeaveCalculatorModalIsOpen,
+    monetizationConstant,
+    loadingMonetizationConstant,
+    errorMonetizationConstant,
+    getMonetizationConstant,
+    getMonetizationConstantSuccess,
+    getMonetizationConstantFail,
+  } = useLeaveMonetizationCalculatorStore((state) => ({
+    leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
+    setLeaveCalculatorModalIsOpen: state.setLeaveCalculatorModalIsOpen,
+    monetizationConstant: state.monetizationConstant,
+    loadingMonetizationConstant: state.loading.loadingMonetizationConstant,
+    errorMonetizationConstant: state.error.errorMonetizationConstant,
+    getMonetizationConstant: state.getMonetizationConstant,
+    getMonetizationConstantSuccess: state.getMonetizationConstantSuccess,
+    getMonetizationConstantFail: state.getMonetizationConstantFail,
   }));
 
-  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail } =
-    useDtrStore((state) => ({
-      getEmployeeDtr: state.getEmployeeDtr,
-      getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
-      getEmployeeDtrFail: state.getEmployeeDtrFail,
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
     }));
 
-  // const  = useDtrStore((state) => state.getEmployeeDtr);
-  // const getEmployeeDtrSuccess = useDtrStore(
-  //   (state) => state.getEmployeeDtrSuccess
-  // );
-  // const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
+  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail } = useDtrStore((state) => ({
+    getEmployeeDtr: state.getEmployeeDtr,
+    getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+    getEmployeeDtrFail: state.getEmployeeDtrFail,
+  }));
 
-  const faceScanUrl = `${
-    process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
-  }/v1/daily-time-record/employees/${
+  const { leaveLedger, loadingLedger, errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } =
+    useLeaveLedgerStore((state) => ({
+      leaveLedger: state.leaveLedger,
+      loadingLedger: state.loading.loadingLeaveLedger,
+      errorLedger: state.error.errorLeaveLedger,
+      getLeaveLedger: state.getLeaveLedger,
+      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+      getLeaveLedgerFail: state.getLeaveLedgerFail,
+    }));
+
+  const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
+  const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
+  const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
+  const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
+
+  async function hydration() {
+    if (schedule && userDetails) {
+      const modules = await setModules(userDetails, schedule);
+      setAllowedModules(modules);
+    }
+  }
+
+  // get the latest balance by last index value
+  const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
+    const lastIndexValue = leaveLedger[leaveLedger.length - 1];
+    setForcedLeaveBalance(lastIndexValue.forcedLeaveBalance);
+    setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
+    setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
+    setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+  };
+
+  //fetch leave monetization settings (monetization constant)
+  const leaveMonetizationUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/ems-settings/monetization`;
+
+  const {
+    data: swrLeaveMonetization,
+    isLoading: swrLeaveMonetizationLoading,
+    error: swrLeaveMonetizationError,
+  } = useSWR(leaveMonetizationUrl, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveMonetizationLoading) {
+      getMonetizationConstant(swrLeaveMonetizationLoading);
+    }
+  }, [swrLeaveMonetizationLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveMonetization)) {
+      getMonetizationConstantSuccess(swrLeaveMonetizationLoading, swrLeaveMonetization);
+    }
+
+    if (!isEmpty(swrLeaveMonetizationError)) {
+      getMonetizationConstantFail(swrLeaveMonetizationLoading, swrLeaveMonetizationError.message);
+    }
+  }, [swrLeaveMonetization, swrLeaveMonetizationError]);
+
+  //fetch employee leave ledger
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${userDetails.user._id}/${userDetails.profile.companyId}`;
+
+  const {
+    data: swrLeaveLedger,
+    isLoading: swrLeaveLedgerLoading,
+    error: swrLeaveLedgerError,
+  } = useSWR(userDetails.user._id && userDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveLedgerLoading) {
+      getLeaveLedger(swrLeaveLedgerLoading);
+    }
+  }, [swrLeaveLedgerLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveLedger)) {
+      getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
+      getLatestBalance(swrLeaveLedger);
+    }
+
+    if (!isEmpty(swrLeaveLedgerError)) {
+      getLeaveLedgerFail(swrLeaveLedgerLoading, swrLeaveLedgerError.message);
+    }
+  }, [swrLeaveLedger, swrLeaveLedgerError]);
+
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
     userDetails.employmentDetails.companyId
   }/${format(new Date(), 'yyyy-MM-dd')}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
@@ -122,8 +189,8 @@ export default function Dashboard({
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(faceScanUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: true,
   });
 
@@ -155,8 +222,8 @@ export default function Dashboard({
     isLoading: swrDtrIsLoading,
     error: swrDtrError,
     mutate: mutateDtrUrl,
-  } = useSWR(dtrUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.employmentDetails.companyId ? dtrUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: true,
   });
 
@@ -170,7 +237,6 @@ export default function Dashboard({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrDtr)) {
-      console.log(swrDtr);
       getEmployeeDtrSuccess(swrDtrIsLoading, swrDtr);
     }
 
@@ -179,39 +245,92 @@ export default function Dashboard({
     }
   }, [swrDtr, swrDtrError]);
 
+  //store server side props (userDetails) to store
+  //run hydration function which displays allowed modules of employee
+  //requirements - userDetails(server-side) and schedule(swr)
+  useEffect(() => {
+    setEmployee(userDetails);
+    hydration();
+  }, [userDetails, schedule]);
+
+  const { windowHeight } = UseWindowDimensions();
+
+  //add all leave credits
+  useEffect(() => {
+    setLeaveCredits(Number(vacationLeaveBalance) + Number(forcedLeaveBalance) + Number(sickLeaveBalance));
+  }, [vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance]);
+
+  //compute max leave credits
+  useEffect(() => {
+    if (leaveCredits && monetizationConstant) {
+      setEstimatedAmount(sgAmount * leaveCredits * monetizationConstant);
+    } else {
+      setEstimatedAmount(0);
+    }
+  }, [leaveCredits, monetizationConstant]);
+
+  const closeLeaveCalculator = async () => {
+    setLeaveCalculatorModalIsOpen(false);
+  };
+
+  const openLeaveCalculator = async () => {
+    if (vacationLeaveBalance && forcedLeaveBalance && sickLeaveBalance && sgAmount && sgIncrement) {
+      setLeaveCalculatorModalIsOpen(true);
+    }
+  };
+
   return (
     <>
+      {/* Leave Monetization Constant Load Failed */}
+      {!isEmpty(errorMonetizationConstant) ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorMonetizationConstant}: Failed to load Monetization Constant and compute Leave Monetization.`}
+          />
+        </>
+      ) : null}
+
+      {/* Leave Ledger Load Failed */}
+      {!isEmpty(errorLedger) ? (
+        <>
+          <ToastNotification toastType="error" notifMessage={`${errorLedger}: Failed to load Leave Ledger.`} />
+        </>
+      ) : null}
+
       {!isEmpty(swrFaceScanError) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`Face Scans: ${swrFaceScanError.message}.`}
-        />
+        <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
       ) : null}
 
       {!isEmpty(swrDtrError) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`DTR: ${swrDtrError.message}.`}
-        />
+        <ToastNotification toastType="error" notifMessage={`DTR: ${swrDtrError.message}.`} />
       ) : null}
 
       <Head>
         <title>{employeeName}</title>
       </Head>
-      <SideNav navDetails={navDetails} />
+      <SideNav employeeDetails={userDetails} />
+
+      <LeaveCreditMonetizationCalculatorModal
+        modalState={leaveCalculatorModalIsOpen}
+        setModalState={setLeaveCalculatorModalIsOpen}
+        closeModalAction={closeLeaveCalculator}
+        vacationLeave={vacationLeaveBalance}
+        forcedLeave={forcedLeaveBalance}
+        sickLeave={sickLeaveBalance}
+        sgAmount={employee.employmentDetails.salaryGradeAmount}
+        sgIncrement={employee.employmentDetails.salaryGrade}
+        estimatedMaxAmount={estimatedAmount}
+        monetizationConstant={monetizationConstant}
+      />
 
       <MainContainer>
         <>
           <>
             <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
-              <Image
-                src={'/gwdlogo.png'}
-                className="w-2/4 "
-                alt={''}
-                width={'500'}
-                height={'500'}
-              />
+              <Image src={'/gwdlogo.png'} priority className="w-2/4 " alt={''} width={'500'} height={'500'} />
             </div>
+<<<<<<< HEAD
             <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
               <div className="h-[24rem] sm:h-[35rem] md:h-full col-span-1 md:col-span-3 md:order-last lg:col-span-2 order-last lg:order-1">
                 <Carousel />
@@ -243,33 +362,113 @@ export default function Dashboard({
                     </div>
                   </div>
                   <div className="order-1 col-span-2 md:order-2 md:col-span-1 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-2 ">
+=======
+            <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
+              <div className="z-10 order-1 col-span-1 md:col-span-5 lg:col-span-5 lg:order-1">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 ">
+                  <div className="order-1 col-span-2 md:order-1 md:col-span-2 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
+>>>>>>> 13761ca59b7709d133207e83699e2adb884de29e
                     <ProfileCard
                       firstName={userDetails.profile.firstName}
                       lastName={userDetails.profile.lastName}
-                      position={
-                        userDetails.employmentDetails.assignment.positionTitle
-                      }
+                      position={userDetails.employmentDetails.assignment.positionTitle}
                       division={userDetails.employmentDetails.assignment.name}
                       photoUrl={userDetails.profile.photoUrl}
                     />
                   </div>
-                  <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-3">
-                    <AttendanceCard
-                      timeLogData={swrFaceScan}
-                      swrFaceScanIsLoading={swrFaceScanIsLoading}
-                    />
+                  <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-2">
+                    <AttendanceCard timeLogData={swrFaceScan} swrFaceScanIsLoading={swrFaceScanIsLoading} />
                   </div>
-                  <div className="order-5 col-span-2 md:order-4 md:col-span-2 lg:col-span-2 lg:order-4">
-                    <RemindersCard reminders={''} />
+                  <div className="order-8 col-span-2 row-span-4 md:col-span-4 md:order-8 lg:col-span-2 lg:order-3">
+                    <Carousel />
                   </div>
-
-                  <div className="order-4 col-span-2 row-span-3 md:col-span-1 md:order-5 lg:col-span-1 lg:order-5">
+                  <div className="order-5 col-span-2 md:row-span-2 lg:row-span-4 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
                     <EmployeeDashboard />
                   </div>
-                  <div className="order-6 col-span-2">
+                  <div className="grid grid-cols-2 gap-4 order-3 col-span-2 md:order-3 md:col-span-2 lg:col-span-2 lg:order-4">
+                    <StatsCard
+                      name={'Lates Count'}
+                      count={swrDtr?.summary?.noOfTimesLate ?? 0}
+                      isLoading={swrDtrIsLoading}
+                      width={'w-full'}
+                      height={windowHeight > 820 ? 'h-52' : 'h-36'}
+                      svg={<HiClock className="w-7 h-7 text-indigo-500" />}
+                      svgBgColor={'bg-indigo-100'}
+                    />
+                    <StatsCard
+                      name={'Pass Slip Count'}
+                      count={0}
+                      isLoading={swrDtrIsLoading}
+                      width={'w-full'}
+                      height={windowHeight > 820 ? 'h-52' : 'h-36'}
+                      svg={<HiDocument className="w-7 h-7 text-indigo-500" />}
+                      svgBgColor={'bg-indigo-100'}
+                    />
+                  </div>
+                  <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <StatsCard
+                        name={'Force Leave'}
+                        count={forcedLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
+                        width={'w-full'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                        svg={<HiCalendar className="w-7 h-7 text-rose-500" />}
+                        svgBgColor={'bg-rose-100'}
+                      />
+                      <StatsCard
+                        name={'Special Privilege Leave'}
+                        count={specialPrivilegeLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
+                        width={'w-full'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                        svg={<HiCalendar className="w-7 h-7 text-orange-500" />}
+                        svgBgColor={'bg-orange-100'}
+                      />
+                      <StatsCard
+                        name={'Vacation Leave'}
+                        count={vacationLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
+                        width={'w-full'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                        svg={<HiCalendar className="w-7 h-7 text-lime-500" />}
+                        svgBgColor={'bg-lime-100'}
+                      />
+                      <StatsCard
+                        name={'Sick Leave'}
+                        count={sickLeaveBalance}
+                        isLoading={swrLeaveLedgerLoading}
+                        width={'w-full'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                        svg={<HiCalendar className="w-7 h-7 text-pink-500" />}
+                        svgBgColor={'bg-pink-100'}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
+                    <div className="w-full" onClick={openLeaveCalculator}>
+                      <StatsCard
+                        name={'Max Leave Credit Monetization'}
+                        count={estimatedAmount}
+                        isLoading={swrLeaveLedgerLoading}
+                        width={'w-auto'}
+                        height={windowHeight > 820 ? 'h-32' : 'h-32'}
+                        svg={<HiCash className="w-7 h-7 text-green-500" />}
+                        svgBgColor={'bg-green-100'}
+                        canHover={true}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="order-6 md:order-5 lg:order-7 col-span-2 row-span-2">
                     <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
                       <EmployeeCalendar />
                     </div>
+                  </div>
+
+                  <div className="order-7 col-span-2 row-span-1 md:col-span-2 md:order-6 lg:col-span-2 lg:order-8">
+                    <RemindersCard reminders={''} />
                   </div>
                 </div>
               </div>
@@ -290,10 +489,7 @@ export default function Dashboard({
 // };
 
 //use for official user
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const userDetails = getUserDetails();
-
-    return { props: { userDetails } };
-  }
-);
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const userDetails = getUserDetails();
+  return { props: { userDetails } };
+});

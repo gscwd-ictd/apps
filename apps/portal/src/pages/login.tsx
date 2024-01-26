@@ -15,6 +15,7 @@ import { Button } from '../components/modular/common/forms/Button';
 import { Checkbox } from '../components/modular/common/forms/Checkbox';
 import { TextField } from '../components/modular/common/forms/TextField';
 import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 type LoginFormInput = {
   email: string;
@@ -46,6 +47,7 @@ export default function Login() {
 
   // set state for handling backend request loading status
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowPassword, seIsShowPassword] = useState(false);
 
   // initialize router
   const router = useRouter();
@@ -106,13 +108,9 @@ export default function Login() {
     setError({ status: true, message, animate: true });
   };
 
-  const login: SubmitHandler<LoginFormInput> = async ({
-    email,
-    password,
-  }: LoginFormInput) => {
+  const login: SubmitHandler<LoginFormInput> = async ({ email, password }: LoginFormInput) => {
     // check if there is a query error in the url and remove the query param
-    if (router.query.error)
-      router.replace('/login', undefined, { shallow: true });
+    if (router.query.error) router.replace('/login', undefined, { shallow: true });
 
     // set the loading state to true
     setIsLoading(true);
@@ -145,62 +143,52 @@ export default function Login() {
           </div>
           <div className="w-[95%] md:w-[75%] px-6 md:px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl">
             <header className="mb-8">
-              <h1 className="mt-10 text-2xl font-medium text-gray-700">
-                Sign in
-              </h1>
-              <p className="text-sm text-gray-500">
-                Welcome back! Please enter your credentials below.
-              </p>
+              <h1 className="mt-10 text-2xl font-medium text-gray-700">Sign in</h1>
+              <p className="text-sm text-gray-500">Welcome back! Please enter your credentials below.</p>
             </header>
 
             {error.status && (
-              <section
-                className="mb-5"
-                onAnimationEnd={() => setError({ ...error, animate: false })}
-              >
-                <Alert
-                  type="error"
-                  message={error.message}
-                  animate={error.animate}
-                />
+              <section className="mb-5" onAnimationEnd={() => setError({ ...error, animate: false })}>
+                <Alert type="error" message={error.message} animate={error.animate} />
               </section>
             )}
 
             <form className="flex flex-col" onSubmit={handleSubmit(login)}>
-              <section
-                className={`${errors.email ? 'space-y-5' : 'space-y-3'}`}
-              >
+              <section className={`${errors.email ? 'space-y-5' : 'space-y-3'}`}>
                 <TextField
                   controller={{ ...register('email', { required: true }) }}
-                  type="text"
+                  type="email"
                   defaultValue=""
                   placeholder="Email Address"
                   isError={errors.email && errors.email.message ? true : false}
                   errorMessage={errors.email?.message}
                 />
 
-                <TextField
-                  controller={{ ...register('password', { required: true }) }}
-                  type="password"
-                  defaultValue=""
-                  placeholder="Password"
-                  isError={
-                    errors.password && errors.password.message ? true : false
-                  }
-                  errorMessage={errors.password?.message}
-                />
+                <div className="relative">
+                  <TextField
+                    controller={{ ...register('password', { required: true }) }}
+                    type={`${isShowPassword ? 'text' : 'password'}`}
+                    defaultValue=""
+                    placeholder="Password"
+                    isError={errors.password && errors.password.message ? true : false}
+                    errorMessage={errors.password?.message}
+                  />
+                  {isShowPassword ? (
+                    <HiEyeOff
+                      className="absolute -mt-9 right-0 pr-2 fill-indigo-500 h-8 w-8 hover:fill-indigo-600 cursor-pointer opacity-70"
+                      onClick={() => seIsShowPassword(!isShowPassword)}
+                    ></HiEyeOff>
+                  ) : (
+                    <HiEye
+                      className="absolute -mt-9 right-0 pr-2 fill-indigo-500 h-8 w-8 hover:fill-indigo-600 cursor-pointer opacity-70"
+                      onClick={() => seIsShowPassword(!isShowPassword)}
+                    ></HiEye>
+                  )}
+                </div>
               </section>
 
-              <section
-                className={`${
-                  errors.password ? 'mt-5' : 'mt-3'
-                } flex items-end justify-between`}
-              >
-                <Checkbox
-                  label="Remember me"
-                  isChecked={rememberMe}
-                  setIsChecked={setRememberMe}
-                />
+              <section className={`${errors.password ? 'mt-5' : 'mt-3'} flex items-end justify-between`}>
+                <Checkbox label="Remember me" isChecked={rememberMe} setIsChecked={setRememberMe} />
                 <a href="#" className="text-sm text-indigo-700">
                   Forgot password?
                 </a>
@@ -226,9 +214,7 @@ export default function Login() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   // check if session cookie is defined
   if (context.req.headers.cookie !== undefined) {
     // assign context cookie to cookie
@@ -242,17 +228,14 @@ export const getServerSideProps: GetServerSideProps = async (
 
     // used if else instead of trycatch
     if (portalSsid.length > 0) {
-      const userDetails = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-        {
-          withCredentials: true,
+      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+        withCredentials: true,
 
-          // pass the generated ssid
+        // pass the generated ssid
 
-          headers: { Cookie: portalSsid },
-          // headers: { Cookie: `${context.req.headers.cookie}` },
-        }
-      );
+        headers: { Cookie: portalSsid },
+        // headers: { Cookie: `${context.req.headers.cookie}` },
+      });
 
       const { user } = userDetails.data;
 

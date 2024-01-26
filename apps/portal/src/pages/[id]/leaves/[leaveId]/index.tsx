@@ -1,28 +1,18 @@
 import Head from 'next/head';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../../utils/helpers/session';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
+import { getUserDetails, withCookieSession } from '../../../../utils/helpers/session';
 import React, { useEffect } from 'react';
 import { employeeDummy } from '../../../../types/employee.type';
-import LeavePdf from '../../../../../src/components/fixed/leaves/LeavePdf';
-import { useLeaveStore } from '../../../../../src/store/leave.store';
+import LeavePdf from '../../../../components/fixed/leaves/LeavePdf';
+import { useLeaveStore } from '../../../../store/leave.store';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
-import { fetchWithToken } from '../../../../../src/utils/hoc/fetcher';
+import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
 
-export default function LeavePdfPage({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function LeavePdfPage({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     leaveIndividualDetail,
     leaveId,
@@ -48,26 +38,6 @@ export default function LeavePdfPage({
   }));
 
   const router = useRouter();
-
-  // useEffect(() => {
-  //   // getLeaveDetail();
-
-  //   console.log(employeeDetails, 'test');
-  // }, [employeeDetails]);
-
-  // const getLeaveDetail = async () => {
-  //   try {
-  //     const { data } = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`
-  //     );
-
-  //     if (!isEmpty(data)) {
-  //       getLeaveIndividualDetailSuccess(false, data);
-  //     }
-  //   } catch (error) {
-  //     getLeaveIndividualDetailFail(false, error.message);
-  //   }
-  // };
 
   const leaveDetailPdf = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/details/${employeeDetails.user._id}/${router.query.leaveId}`;
   const {
@@ -108,10 +78,7 @@ export default function LeavePdfPage({
         {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
         {!isEmpty(errorLeaveDetails) ? (
           <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`}
-            />
+            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
           </>
         ) : null}
 
@@ -127,10 +94,7 @@ export default function LeavePdfPage({
           </div>
         ) : (
           <>
-            <LeavePdf
-              employeeDetails={employeeDetails}
-              leaveDetails={swrLeaveDetailsPdf}
-            />
+            <LeavePdf employeeDetails={employeeDetails} leaveDetails={swrLeaveDetailsPdf} />
           </>
         )}
       </>
@@ -138,10 +102,8 @@ export default function LeavePdfPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDetails } };
+});

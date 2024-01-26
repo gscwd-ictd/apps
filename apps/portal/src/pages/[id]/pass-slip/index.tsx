@@ -8,36 +8,30 @@ import { ContentHeader } from '../../../components/modular/custom/containers/Con
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { EmployeeProvider } from '../../../context/EmployeeContext';
 import { employee } from '../../../utils/constants/data';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next/types';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
-import { PassSlipTabWindow } from '../../../../src/components/fixed/passslip/PassSlipTabWindow';
-import { usePassSlipStore } from '../../../../src/store/passslip.store';
+import { PassSlipTabs } from '../../../components/fixed/passslip/PassSlipTabs';
+import { PassSlipTabWindow } from '../../../components/fixed/passslip/PassSlipTabWindow';
+import { usePassSlipStore } from '../../../store/passslip.store';
 import React from 'react';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
-import PassSlipApplicationModal from '../../../../src/components/fixed/passslip/PassSlipApplicationModal';
-import PassSlipPendingModal from '../../../../src/components/fixed/passslip/PassSlipPendingModal';
-import PassSlipCompletedModal from '../../../../src/components/fixed/passslip/PassSlipCompletedModal';
+import PassSlipApplicationModal from '../../../components/fixed/passslip/PassSlipApplicationModal';
+import PassSlipPendingModal from '../../../components/fixed/passslip/PassSlipPendingModal';
+import PassSlipCompletedModal from '../../../components/fixed/passslip/PassSlipCompletedModal';
 import { isEmpty } from 'lodash';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
-import {
-  getUserDetails,
-  withCookieSession,
-} from '../../../../src/utils/helpers/session';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
+import { useRouter } from 'next/router';
+import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
+import { format } from 'date-fns';
 
-export default function PassSlip({
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
     applyPassSlipModalIsOpen,
@@ -46,7 +40,8 @@ export default function PassSlip({
     loading,
     errorPassSlips,
     errorResponse,
-    responseApply,
+    responsePatch,
+    responsePost,
     responseCancel,
 
     setApplyPassSlipModalIsOpen,
@@ -65,7 +60,8 @@ export default function PassSlip({
     loading: state.loading.loadingPassSlips,
     errorPassSlips: state.error.errorPassSlips,
     errorResponse: state.error.errorResponse,
-    responseApply: state.response.postResponseApply,
+    responsePatch: state.response.patchResponse,
+    responsePost: state.response.postResponse,
     responseCancel: state.response.cancelResponse,
 
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
@@ -77,6 +73,19 @@ export default function PassSlip({
     getPassSlipListFail: state.getPassSlipListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
+
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+    }));
+
+  const router = useRouter();
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
     setEmployeeDetails: state.setEmployeeDetails,
@@ -141,13 +150,46 @@ export default function PassSlip({
   }, [swrPassSlips, swrError]);
 
   useEffect(() => {
-    if (!isEmpty(responseApply) || !isEmpty(responseCancel)) {
+    if (!isEmpty(responsePost) || !isEmpty(responseCancel) || !isEmpty(responsePatch)) {
       mutatePassSlips();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [responseApply, responseCancel]);
+  }, [responsePatch, responsePost, responseCancel]);
+
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+    employeeDetails.employmentDetails.companyId
+  }/${format(new Date(), 'yyyy-MM-dd')}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrFaceScan,
+    isLoading: swrFaceScanIsLoading,
+    error: swrFaceScanError,
+    mutate: mutateFaceScanUrl,
+  } = useSWR(faceScanUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrFaceScanIsLoading) {
+      getTimeLogs(swrFaceScanIsLoading);
+    }
+  }, [swrFaceScanIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrFaceScan)) {
+      getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
+    }
+
+    if (!isEmpty(swrFaceScanError)) {
+      getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
+    }
+  }, [swrFaceScan, swrFaceScanError]);
 
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
@@ -155,46 +197,41 @@ export default function PassSlip({
     setNavDetails({
       profile: employeeDetails.user.email,
       fullName: `${employeeDetails.profile.firstName} ${employeeDetails.profile.lastName}`,
-      initials: UseNameInitials(
-        employeeDetails.profile.firstName,
-        employeeDetails.profile.lastName
-      ),
+      initials: UseNameInitials(employeeDetails.profile.firstName, employeeDetails.profile.lastName),
     });
   }, []);
 
   return (
     <>
       <>
+        {/* Failed to get face scan today */}
+        {!isEmpty(swrFaceScanError) ? (
+          <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
+        ) : null}
+
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlips) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorPassSlips}: Failed to load Pass Slips.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${errorPassSlips}: Failed to load Pass Slips.`} />
         ) : null}
 
         {/* Post/Submit Pass Slip Error */}
         {!isEmpty(errorResponse) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorResponse}: Failed to Submit.`}
-          />
+          <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
         ) : null}
 
         {/* Post/Submit Pass Slip Success */}
-        {!isEmpty(responseApply) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Pass Slip Application Successful! Please wait for supervisor's decision on this application"
-          />
+        {!isEmpty(responsePost) ? (
+          <ToastNotification toastType="success" notifMessage="Pass Slip Application Successful!" />
+        ) : null}
+
+        {/* Post/Submit Pass Slip Success */}
+        {!isEmpty(responsePatch) ? (
+          <ToastNotification toastType="success" notifMessage="Pass Slip Dispute Application Successful!" />
         ) : null}
 
         {/* Cancel Pass Slip Success */}
         {!isEmpty(responseCancel) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Pass Slip Cancellation Successful!"
-          />
+          <ToastNotification toastType="success" notifMessage="Pass Slip Cancellation Successful!" />
         ) : null}
       </>
 
@@ -203,7 +240,7 @@ export default function PassSlip({
           <title>Employee Pass Slips</title>
         </Head>
 
-        <SideNav navDetails={navDetails} />
+        <SideNav employeeDetails={employeeDetails} />
 
         {/* Pass Slip Application Modal */}
         <PassSlipApplicationModal
@@ -227,26 +264,15 @@ export default function PassSlip({
         />
 
         <MainContainer>
-          <div className={`w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-            <ContentHeader
-              title="Employee Pass Slips"
-              subtitle="Apply for pass slip"
-            >
-              <Button
-                className="hidden lg:block"
-                size={`md`}
-                onClick={openApplyPassSlipModal}
-              >
+          <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+            <ContentHeader title="Employee Pass Slips" subtitle="Apply for pass slip" backUrl={`/${router.query.id}`}>
+              <Button className="hidden lg:block" size={`md`} onClick={openApplyPassSlipModal}>
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd /> Apply Pass Slip
                 </div>
               </Button>
 
-              <Button
-                className="block lg:hidden"
-                size={`lg`}
-                onClick={openApplyPassSlipModal}
-              >
+              <Button className="block lg:hidden" size={`lg`} onClick={openApplyPassSlipModal}>
                 <div className="flex items-center w-full gap-2">
                   <HiDocumentAdd />
                 </div>
@@ -254,7 +280,7 @@ export default function PassSlip({
             </ContentHeader>
 
             {loading ? (
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
@@ -292,10 +318,8 @@ export default function PassSlip({
 //   return { props: { employeeDetails } };
 // };
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(
-  async (context: GetServerSidePropsContext) => {
-    const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-    return { props: { employeeDetails } };
-  }
-);
+  return { props: { employeeDetails } };
+});

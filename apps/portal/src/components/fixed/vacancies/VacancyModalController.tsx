@@ -9,11 +9,7 @@ type VacancyModalControllerProps = {
   workExperience: WorkExperiencePds;
 };
 
-export const VacancyModalController = ({
-  page,
-  dataJobOpening,
-  workExperience,
-}: VacancyModalControllerProps) => {
+export const VacancyModalController = ({ page, dataJobOpening, workExperience }: VacancyModalControllerProps) => {
   return (
     <div className="max-h-[90%]">
       <>
@@ -21,7 +17,6 @@ export const VacancyModalController = ({
         {page === 1 && <VacancyJobInformation data={dataJobOpening} />}
         {/* display employee work experience module */}
         {page === 2 && <VacancyWorkExperience data={workExperience} />}
-        {page === 3 && <></>}
       </>
     </div>
   );

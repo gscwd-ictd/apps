@@ -24,6 +24,7 @@ const LeaveBenefitSchema = yup.object().shape({
         .number()
         .required()
         .nullable(false)
+        .typeError('Credits must be a number')
         .transform((v, o) => (o === '' ? null : v))
         .label('Credits'),
     }),

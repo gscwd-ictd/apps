@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* This function is used for rendering pass slip valuees */
 
 import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';

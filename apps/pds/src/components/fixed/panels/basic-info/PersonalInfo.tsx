@@ -12,12 +12,7 @@ import { isEmpty } from 'lodash';
 import { PersonalInfo } from '../../../../types/data/basic-info.type';
 import { useEmployeeStore } from '../../../../store/employee.store';
 import { usePdsStore } from '../../../../store/pds.store';
-import {
-  gender,
-  civilStatus,
-  bloodType,
-  citizenshipType,
-} from '../../../../../utils/constants/constants';
+import { gender, civilStatus, bloodType, citizenshipType } from '../../../../../utils/constants/constants';
 import { PersonalInfoAlert } from './PersonalInfoAlert';
 import fetcher from '../../../modular/fetcher/Fetcher';
 
@@ -111,9 +106,7 @@ export const PersonalInfoBI = (): JSX.Element => {
     <>
       <Card
         title={'Personal Information'}
-        subtitle={
-          'This contains your personal information. Write N/A if not applicable'
-        }
+        subtitle={'This contains your personal information. Write N/A if not applicable'}
         remarks={
           <div className="">
             <PersonalInfoAlert setInitialValues={setInitialValues} />
@@ -178,9 +171,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 type="text"
                 controller={{
                   ...register('middleName', {
-                    value: isEmpty(personalInfo.middleName)
-                      ? 'N/A'
-                      : personalInfo.middleName.trim(),
+                    value: isEmpty(personalInfo.middleName) ? 'N/A' : personalInfo.middleName.trim(),
                     onChange: (e) =>
                       setPersonalInfo({
                         ...personalInfo,
@@ -189,13 +180,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }),
                 }}
                 // muted={hasPds ? true : false}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
                 // muted={true}
                 isError={errors.middleName ? true : false}
                 errorMessage={errors.middleName?.message}
@@ -212,27 +197,16 @@ export const PersonalInfoBI = (): JSX.Element => {
                 type="text"
                 controller={{
                   ...register('nameExtension', {
-                    value: isEmpty(personalInfo.nameExtension)
-                      ? 'N/A'
-                      : personalInfo.nameExtension.trim(),
+                    value: isEmpty(personalInfo.nameExtension) ? 'N/A' : personalInfo.nameExtension.trim(),
                     onChange: (e) =>
                       setPersonalInfo({
                         ...personalInfo,
-                        nameExtension:
-                          e.target.value === 'n/a'
-                            ? e.target.value.toUppercase()
-                            : e.target.value,
+                        nameExtension: e.target.value === 'n/a' ? e.target.value.toUppercase() : e.target.value,
                       }),
                   }),
                 }}
                 // muted={hasPds ? true : false}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
                 isError={errors.nameExtension ? true : false}
                 errorMessage={errors.nameExtension?.message}
               />
@@ -246,9 +220,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 className="hover:peer-placeholder-shown:cursor-pointer"
                 placeholder="Date of Birth"
                 isRequired
-                defaultValue={
-                  personalInfo.birthDate ? personalInfo.birthDate : ''
-                }
+                defaultValue={personalInfo.birthDate ? personalInfo.birthDate : ''}
                 type="date"
                 controller={{
                   ...register('birthDate', {
@@ -261,13 +233,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }),
                 }}
                 // muted={hasPds ? true : false}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
                 isError={errors.birthDate ? true : false}
                 errorMessage={errors.birthDate?.message}
               />
@@ -284,20 +250,13 @@ export const PersonalInfoBI = (): JSX.Element => {
                 controller={{
                   ...register('sex', {
                     value: personalInfo.sex,
-                    onChange: (e) =>
-                      setPersonalInfo({ ...personalInfo, sex: e.target.value }),
+                    onChange: (e) => setPersonalInfo({ ...personalInfo, sex: e.target.value }),
                   }),
                 }}
                 isError={errors.sex ? true : false}
                 errorMessage={errors.sex?.message}
                 // muted={hasPds ? true : false}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
               />
             </div>
           </div>
@@ -308,9 +267,7 @@ export const PersonalInfoBI = (): JSX.Element => {
               isRequired
               placeholder="Place of Birth"
               type="text"
-              defaultValue={
-                personalInfo.birthPlace ? personalInfo.birthPlace : ''
-              }
+              defaultValue={personalInfo.birthPlace ? personalInfo.birthPlace : ''}
               controller={{
                 ...register('birthPlace', {
                   value: personalInfo.birthPlace.trim(),
@@ -321,13 +278,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                     }),
                 }),
               }}
-              muted={
-                hasPds && personalInfoOnEdit
-                  ? false
-                  : hasPds && !personalInfoOnEdit
-                  ? true
-                  : !hasPds && false
-              }
+              muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
               isError={errors.birthPlace ? true : false}
               errorMessage={errors.birthPlace?.message}
             />
@@ -341,9 +292,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 selectList={civilStatus}
                 variant="light"
                 defaultOption="Civil Status"
-                defaultValue={
-                  personalInfo.civilStatus ? personalInfo.civilStatus : ''
-                }
+                defaultValue={personalInfo.civilStatus ? personalInfo.civilStatus : ''}
                 controller={{
                   ...register('civilStatus', {
                     value: personalInfo.civilStatus,
@@ -356,13 +305,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 }}
                 isError={errors.civilStatus ? true : false}
                 errorMessage={errors.civilStatus?.message}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
               />
             </div>
 
@@ -371,18 +314,10 @@ export const PersonalInfoBI = (): JSX.Element => {
                 id="height"
                 isRequired
                 placeholder="Height in meters (m)"
-                defaultValue={
-                  personalInfo.height ? personalInfo.height : undefined
-                }
+                defaultValue={personalInfo.height ? personalInfo.height : undefined}
                 type="number"
                 step={0.01}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
                 onWheel={(e) => e.currentTarget.blur()}
                 controller={{
                   ...register('height', {
@@ -405,9 +340,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 isRequired
                 placeholder="Weight in kilograms (kg)"
                 step={0.01}
-                defaultValue={
-                  personalInfo.weight ? personalInfo.weight : undefined
-                }
+                defaultValue={personalInfo.weight ? personalInfo.weight : undefined}
                 type="number"
                 onWheel={(e) => e.currentTarget.blur()}
                 controller={{
@@ -421,13 +354,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }),
                 }}
                 isError={errors.weight ? true : false}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
                 errorMessage={errors.weight?.message}
               />
             </div>
@@ -436,19 +363,11 @@ export const PersonalInfoBI = (): JSX.Element => {
               <SelectListRFFL
                 id="bloodType"
                 isRequired
-                defaultValue={
-                  personalInfo.bloodType ? personalInfo.bloodType : ''
-                }
+                defaultValue={personalInfo.bloodType ? personalInfo.bloodType : ''}
                 selectList={bloodType}
                 variant="light"
                 defaultOption="Blood Type"
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
                 controller={{
                   ...register('bloodType', {
                     value: personalInfo.bloodType,
@@ -480,16 +399,8 @@ export const PersonalInfoBI = (): JSX.Element => {
                       id="filipino"
                       name="citizenship"
                       label="Filipino"
-                      muted={
-                        hasPds && personalInfo.citizenship === 'Filipino'
-                          ? false
-                          : !hasPds
-                          ? false
-                          : true
-                      }
-                      checked={
-                        personalInfo.citizenship === 'Filipino' ? true : false
-                      }
+                      muted={hasPds && personalInfo.citizenship === 'Filipino' ? false : !hasPds ? false : true}
+                      checked={personalInfo.citizenship === 'Filipino' ? true : false}
                       value="Filipino"
                       controller={{
                         ...register('citizenship', {
@@ -502,19 +413,8 @@ export const PersonalInfoBI = (): JSX.Element => {
                       id="dual-citizenship"
                       name="citizenship"
                       label="Dual Citizenship"
-                      muted={
-                        hasPds &&
-                        personalInfo.citizenship === 'Dual Citizenship'
-                          ? false
-                          : !hasPds
-                          ? false
-                          : true
-                      }
-                      checked={
-                        personalInfo.citizenship === 'Dual Citizenship'
-                          ? true
-                          : false
-                      }
+                      muted={hasPds && personalInfo.citizenship === 'Dual Citizenship' ? false : !hasPds ? false : true}
+                      checked={personalInfo.citizenship === 'Dual Citizenship' ? true : false}
                       value="Dual Citizenship"
                       controller={{
                         ...register('citizenship', {
@@ -538,11 +438,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   </label>
                 </>
               </RadioGroup>
-              {errors.citizenship && (
-                <span className="mt-1 text-xs text-red-600 ">
-                  {errors.citizenship.message}
-                </span>
-              )}
+              {errors.citizenship && <span className="mt-1 text-xs text-red-600 ">{errors.citizenship.message}</span>}
             </div>
 
             <div className="w-full col-span-1 sm:mt-2 sm:mb-7 sm:grid md:mt-2 md:mb-7 md:grid lg:col-span-1 lg:mt-2 lg:mb-7">
@@ -554,11 +450,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                     selectList={citizenshipType}
                     variant="light"
                     defaultOption="Citizenship Type"
-                    defaultValue={
-                      personalInfo.citizenshipType
-                        ? personalInfo.citizenshipType
-                        : ''
-                    }
+                    defaultValue={personalInfo.citizenshipType ? personalInfo.citizenshipType : ''}
                     controller={{
                       ...register('citizenshipType', {
                         value: personalInfo.citizenshipType,
@@ -594,13 +486,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   value={personalInfo.country ? personalInfo.country : ''}
                   variant="primary"
                   selectList={countryList}
-                  muted={
-                    hasPds
-                      ? true
-                      : watch('citizenship') === 'Filipino'
-                      ? true
-                      : false
-                  }
+                  muted={hasPds ? true : watch('citizenship') === 'Filipino' ? true : false}
                   controller={{
                     ...register('country', {
                       value: personalInfo.country,
@@ -609,11 +495,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }}
                   isError={errors.country ? true : false}
                 />
-                {errors.country && (
-                  <span className="text-xs text-red-600 ">
-                    {errors.country.message}
-                  </span>
-                )}
+                {errors.country && <span className="text-xs text-red-600 ">{errors.country.message}</span>}
               </>
             )}
           </div>
@@ -623,11 +505,7 @@ export const PersonalInfoBI = (): JSX.Element => {
               <FloatingLabelInputRF
                 id="telNo"
                 placeholder="Telephone Number"
-                defaultValue={
-                  personalInfo.telephoneNumber
-                    ? personalInfo.telephoneNumber
-                    : ''
-                }
+                defaultValue={personalInfo.telephoneNumber ? personalInfo.telephoneNumber : ''}
                 type="text"
                 isRequired
                 // maxLength={10}
@@ -643,13 +521,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 }}
                 isError={errors.telephoneNumber ? true : false}
                 errorMessage={errors.telephoneNumber?.message}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
               />
             </div>
 
@@ -658,9 +530,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 id="mobileNo"
                 isRequired
                 maxLength={11}
-                defaultValue={
-                  personalInfo.mobileNumber ? personalInfo.mobileNumber : ''
-                }
+                defaultValue={personalInfo.mobileNumber ? personalInfo.mobileNumber : ''}
                 placeholder="Mobile Number"
                 type="text"
                 controller={{
@@ -675,13 +545,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 }}
                 isError={errors.mobileNumber ? true : false}
                 errorMessage={errors.mobileNumber?.message}
-                muted={
-                  hasPds && personalInfoOnEdit
-                    ? false
-                    : hasPds && !personalInfoOnEdit
-                    ? true
-                    : !hasPds && false
-                }
+                muted={hasPds && personalInfoOnEdit ? false : hasPds && !personalInfoOnEdit ? true : !hasPds && false}
               />
             </div>
 

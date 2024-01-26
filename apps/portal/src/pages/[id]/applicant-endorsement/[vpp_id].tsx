@@ -9,8 +9,8 @@ import { MainContainer } from '../../../components/modular/custom/containers/Mai
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { Publication } from '../../../types/publication.type';
 import { useEffect, useState } from 'react';
-import { UseNameInitials } from '../../../../src/utils/hooks/useNameInitials';
-import { NavButtonDetails } from '../../../../../portal/src/types/nav.type';
+import { UseNameInitials } from '../../../utils/hooks/useNameInitials';
+import { NavButtonDetails } from '../../../types/nav.type';
 
 type AppEndSummaryProps = {
   employee: any;
@@ -18,10 +18,7 @@ type AppEndSummaryProps = {
   // applicants: Applicant[]
 };
 
-export default function AppEndSummary({
-  employee,
-  publicationDetails,
-}: AppEndSummaryProps) {
+export default function AppEndSummary({ employee, publicationDetails }: AppEndSummaryProps) {
   const publication = useAppEndStore((state) => state.selectedPublication);
   // const selectedApplicants = useAppEndStore((state) => state.selectedApplicants);
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
@@ -31,26 +28,15 @@ export default function AppEndSummary({
       <Head>
         <title>Applicant Endorsement Summary</title>
       </Head>
-      <SideNav
-        navDetails={{
-          fullName: '',
-          initials: '',
-          profile: '',
-        }}
-      />
+      <SideNav employeeDetails={employee} />
 
       <MainContainer>
         <div className="w-full h-full px-20">
-          <ContentHeader
-            title="Applicant Endorsement Summary"
-            subtitle=""
-          ></ContentHeader>
+          <ContentHeader title="Applicant Endorsement Summary" subtitle=""></ContentHeader>
           <ContentBody>
             <>
               <div className="w-full mt-14">
-                <div className="text-xl font-semibold text-gray-800">
-                  {publication.positionTitle}
-                </div>
+                <div className="text-xl font-semibold text-gray-800">{publication.positionTitle}</div>
                 <div className="flex justify-between w-full font-normal text-gray-600 text-md">
                   <div>
                     <div>{publication.itemNumber}</div>

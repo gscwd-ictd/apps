@@ -1,13 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Modal } from '@gscwd-apps/oneui';
 import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
@@ -31,16 +25,13 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
-    []
-  );
+  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>([]);
 
   // use schedule sheet store
-  const { currentScheduleSheet, setCurrentScheduleSheet } =
-    useScheduleSheetStore((state) => ({
-      currentScheduleSheet: state.currentScheduleSheet,
-      setCurrentScheduleSheet: state.setCurrentScheduleSheet,
-    }));
+  const { currentScheduleSheet, setCurrentScheduleSheet } = useScheduleSheetStore((state) => ({
+    currentScheduleSheet: state.currentScheduleSheet,
+    setCurrentScheduleSheet: state.setCurrentScheduleSheet,
+  }));
 
   // submit
   const onSubmit = () => {
@@ -85,20 +76,11 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
 
   return (
     <>
-      <Modal
-        open={modalState}
-        setOpen={setModalState}
-        size="sm"
-        steady
-        noShakeOnSteady={true}
-      >
+      <Modal open={modalState} setOpen={setModalState} size="sm" steady noShakeOnSteady={true}>
         <Modal.Header>
           <div className="flex justify-between w-full pl-5">
             <span className="text-xl font-medium">Select Rest Days</span>
-            <button
-              onClick={closeModal}
-              className="px-2 rounded hover:bg-gray-200"
-            >
+            <button onClick={closeModal} className="px-2 rounded hover:bg-gray-200">
               &times;
             </button>
           </div>

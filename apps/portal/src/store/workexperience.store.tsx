@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { WorkExperience } from '../types/workexp.type';
 import { devtools } from 'zustand/middleware';
+import { JobApplicationDetailsResponse } from '../types/vacancies.type';
+
+export type WorkExpModal = {
+  isOpen: boolean;
+  page: number;
+};
 
 export type WorkExpState = {
   loading: {
@@ -18,8 +24,21 @@ export type WorkExpState = {
     errorMessage: string;
   };
   response: {
-    responseApplyJob: string;
+    responseApplyJob: JobApplicationDetailsResponse;
   };
+
+  modal: WorkExpModal;
+  setModal: (modal: WorkExpModal) => void;
+
+  captchaModalIsOpen: boolean;
+  setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
+
+  hasApplied: boolean;
+  setHasApplied: (hasApplied: boolean) => void;
+
+  postJobApplication: () => void;
+  postJobApplicationSuccess: (response) => void;
+  postJobApplicationFail: (error: string) => void;
 
   setloadingJobOpening: (loading: boolean) => void;
   setloadingifApplied: (loading: boolean) => void;
@@ -33,8 +52,6 @@ export type WorkExpState = {
   setErrorCaptcha: (error: string) => void;
   setErrorMessage: (error: string) => void;
 
-  setResponseApply: (response: string) => void;
-
   workExperience: Array<WorkExperience>;
   withRelevantExperience: boolean;
   setWithRelevantExperience: (withExperience: boolean) => void;
@@ -45,21 +62,10 @@ export type WorkExpState = {
   inputOffice: (name: string, workExperienceId: string) => void;
   addAccomplishment: (workExperienceId: string, name: string) => void;
   addDuty: (workExperienceId: string, name: string) => void;
-  deleteAccomplishment: (
-    workExperienceId: string,
-    indexForDelete: number
-  ) => void;
+  deleteAccomplishment: (workExperienceId: string, indexForDelete: number) => void;
   deleteDuty: (workExperienceId: string, indexForDelete: number) => void;
-  editAccomplishment: (
-    workExperienceId: string,
-    indexForEdit: number,
-    newAccomplishment: string
-  ) => void;
-  editDuty: (
-    workExperienceId: string,
-    indexForEdit: number,
-    newDuty: string
-  ) => void;
+  editAccomplishment: (workExperienceId: string, indexForEdit: number, newAccomplishment: string) => void;
+  editDuty: (workExperienceId: string, indexForEdit: number, newDuty: string) => void;
 
   emptyResponseAndError: () => void;
 };
@@ -81,7 +87,26 @@ export const useWorkExpStore = create<WorkExpState>()(
       errorMessage: '',
     },
     response: {
-      responseApplyJob: '',
+      responseApplyJob: {} as JobApplicationDetailsResponse,
+    },
+
+    modal: {
+      isOpen: false,
+      page: 1,
+    },
+
+    setModal: (modal: WorkExpModal) => {
+      set((state) => ({ ...state, modal }));
+    },
+
+    hasApplied: false,
+    setHasApplied: (hasApplied: boolean) => {
+      set((state) => ({ ...state, hasApplied }));
+    },
+
+    captchaModalIsOpen: false,
+    setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => {
+      set((state) => ({ ...state, captchaModalIsOpen }));
     },
 
     workExperience: [] as Array<WorkExperience>,
@@ -98,9 +123,7 @@ export const useWorkExpStore = create<WorkExpState>()(
     },
     removeWorkExperience: (workExperienceId: string) => {
       set((state) => ({
-        workExperience: state.workExperience.filter(
-          (exp) => exp.basic.workExperienceId !== workExperienceId
-        ),
+        workExperience: state.workExperience.filter((exp) => exp.basic.workExperienceId !== workExperienceId),
       }));
     },
     setWithRelevantExperience: (withExperience: boolean) => {
@@ -111,18 +134,14 @@ export const useWorkExpStore = create<WorkExpState>()(
     inputSupervisor: (name: string, workExperienceId: string) => {
       set((state) => ({
         workExperience: state.workExperience.map((exp) =>
-          exp.basic.workExperienceId === workExperienceId
-            ? { ...exp, basic: { ...exp.basic, supervisor: name } }
-            : exp
+          exp.basic.workExperienceId === workExperienceId ? { ...exp, basic: { ...exp.basic, supervisor: name } } : exp
         ),
       }));
     },
     inputOffice: (name: string, workExperienceId: string) => {
       set((state) => ({
         workExperience: state.workExperience.map((exp) =>
-          exp.basic.workExperienceId === workExperienceId
-            ? { ...exp, basic: { ...exp.basic, office: name } }
-            : exp
+          exp.basic.workExperienceId === workExperienceId ? { ...exp, basic: { ...exp.basic, office: name } } : exp
         ),
       }));
     },
@@ -150,18 +169,13 @@ export const useWorkExpStore = create<WorkExpState>()(
         ),
       }));
     },
-    deleteAccomplishment: (
-      workExperienceId: string,
-      indexForDelete: number
-    ) => {
+    deleteAccomplishment: (workExperienceId: string, indexForDelete: number) => {
       set((state) => ({
         workExperience: state.workExperience.map((exp) =>
           exp.basic.workExperienceId === workExperienceId
             ? {
                 ...exp,
-                accomplishments: exp.accomplishments.filter(
-                  (a, index) => index !== indexForDelete
-                ),
+                accomplishments: exp.accomplishments.filter((a, index) => index !== indexForDelete),
               }
             : exp
         ),
@@ -173,19 +187,13 @@ export const useWorkExpStore = create<WorkExpState>()(
           exp.basic.workExperienceId === workExperienceId
             ? {
                 ...exp,
-                duties: exp.duties.filter(
-                  (d, index) => index !== indexForDelete
-                ),
+                duties: exp.duties.filter((d, index) => index !== indexForDelete),
               }
             : exp
         ),
       }));
     },
-    editAccomplishment: (
-      workExperienceId: string,
-      indexForEdit: number,
-      newAccomplishment: string
-    ) => {
+    editAccomplishment: (workExperienceId: string, indexForEdit: number, newAccomplishment: string) => {
       set((state) => ({
         workExperience: state.workExperience.map((exp) => {
           if (exp.basic.workExperienceId === workExperienceId) {
@@ -206,11 +214,7 @@ export const useWorkExpStore = create<WorkExpState>()(
         }),
       }));
     },
-    editDuty: (
-      workExperienceId: string,
-      indexForEdit: number,
-      newDuty: string
-    ) => {
+    editDuty: (workExperienceId: string, indexForEdit: number, newDuty: string) => {
       set((state) => ({
         workExperience: state.workExperience.map((exp) => {
           if (exp.basic.workExperienceId === workExperienceId) {
@@ -332,12 +336,47 @@ export const useWorkExpStore = create<WorkExpState>()(
       }));
     },
 
-    setResponseApply: (response: string) => {
+    //POST JOB APPLICATION ACTION - apply for position
+    postJobApplication: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          responseApplyJob: {} as JobApplicationDetailsResponse,
+        },
+        loading: {
+          ...state.loading,
+          loadingApplyJob: true,
+        },
+        error: {
+          ...state.error,
+          errorApplyJob: '',
+        },
+      }));
+    },
+    postJobApplicationSuccess: (response: JobApplicationDetailsResponse) => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
           responseApplyJob: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingApplyJob: false,
+        },
+      }));
+    },
+    postJobApplicationFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingApplyJob: false,
+        },
+        error: {
+          ...state.error,
+          errorApplyJob: error,
         },
       }));
     },
@@ -347,7 +386,7 @@ export const useWorkExpStore = create<WorkExpState>()(
         ...state,
         response: {
           ...state.response,
-          responseApplyJob: '',
+          responseApplyJob: {} as JobApplicationDetailsResponse,
         },
         error: {
           ...state.error,
