@@ -115,7 +115,6 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
 
   // if a result is returned
   useEffect(() => {
-    console.log(swrLeaveLedger);
     // success
     if (!isEmpty(swrLeaveLedger)) {
       // check if leave ledger is empty

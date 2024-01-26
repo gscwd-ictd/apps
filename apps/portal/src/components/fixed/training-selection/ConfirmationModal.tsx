@@ -82,7 +82,6 @@ export const ConfirmationNominationModal = ({
       employees: finalEmployees,
     };
     handlePatchResult(data);
-    console.log(data);
   };
 
   const handlePatchResult = async (data: TrainingNominationData) => {
