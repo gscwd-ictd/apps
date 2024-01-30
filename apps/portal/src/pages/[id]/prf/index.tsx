@@ -377,7 +377,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
       <MainContainer>
         <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-          <ContentHeader title="Position Request" subtitle="Request for new personnel" backUrl={''}>
+          <ContentHeader title="Position Request" subtitle="Request for new personnel" backUrl={`/${router.query.id}`}>
             <Button className="hidden lg:block" size={`md`} onClick={handleOpen}>
               <div className="flex items-center w-full gap-2">
                 <HiDocumentAdd /> Create Request
