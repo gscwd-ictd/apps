@@ -312,6 +312,35 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   }
                 />
               </div>
+              <div className="">
+                <LabelInput
+                  id="remarks"
+                  label="Remarks"
+                  type="text"
+                  isDirty={dirtyFields.timeOut}
+                  step="any"
+                  placeholder="Enter remarks"
+                  // controller={{
+                  //   ...register('timeOut', {
+                  //     onChange: (e) => {
+                  //       setValue('timeOut', e.target.value, {
+                  //         shouldValidate: true,
+                  //       });
+                  //       trigger(); // trigger all validations for all inputs
+                  //     },
+                  //   }),
+                  // }}
+                  isError={errors.timeOut ? true : false}
+                  errorMessage={errors.timeOut?.message}
+                  className={
+                    dirtyFields.timeOut && !errors.timeOut
+                      ? 'bg-green-300'
+                      : errors.timeOut
+                      ? 'bg-red-200'
+                      : 'bg-inherit'
+                  }
+                />
+              </div>
             </div>
           </form>
         </Modal.Body>

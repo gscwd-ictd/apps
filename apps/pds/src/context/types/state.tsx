@@ -5,11 +5,7 @@ import Organizations from '../../schema/Organizations';
 import Recognitions from '../../schema/Recognitions';
 import Skills from '../../schema/Skills';
 import { Address } from '../../types/data/address.type';
-import {
-  PersonalInfo,
-  GovernmentIssuedIds,
-  BasicInfo,
-} from '../../types/data/basic-info.type';
+import { PersonalInfo, GovernmentIssuedIds, BasicInfo } from '../../types/data/basic-info.type';
 import { Child, Parent, Spouse } from '../../types/data/family.type';
 import { LearningDevelopment } from '../../types/data/lnd.type';
 import {
@@ -280,8 +276,8 @@ export type PDSFormInputs = {
 export type TabState = {
   selectedTab: number;
   setSelectedTab: Dispatch<SetStateAction<number>>;
-  handlePrevTab: () => void;
-  handleNextTab: () => void;
+  handlePrevTab: (tab: number) => void;
+  handleNextTab: (tab: number) => void;
   // nodeRef: MutableRefObject<any>
 };
 

@@ -117,8 +117,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [encodedHours]);
 
-  console.log(overtimeAccomplishmentDetails?.plannedDate);
-  console.log(dayjs().format('YYYY-MM-DD'));
   return (
     <>
       <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>

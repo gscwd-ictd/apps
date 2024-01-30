@@ -84,7 +84,7 @@ export const TrainingNominationModal = ({
     for (let i = 0; i < employeePool.length; i++) {
       for (let a = 0; a < combinedNominatedEmployees.length; a++) {
         if (employeePool[i].value === combinedNominatedEmployees[a].value) {
-          console.log(combinedNominatedEmployees[a].value);
+          // console.log(combinedNominatedEmployees[a].value);
           setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
         } else {
           //do nothing
