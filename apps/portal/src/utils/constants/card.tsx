@@ -19,7 +19,7 @@ export const Modules: Array<Card> = [
   {
     icon: <HiClock className="w-6 h-6 text-rose-600" />,
     color: 'rose',
-    title: 'Data Time Record',
+    title: 'Daily Time Record',
     description: 'View your DTR',
     destination: 'dtr',
     linkType: 'router',
