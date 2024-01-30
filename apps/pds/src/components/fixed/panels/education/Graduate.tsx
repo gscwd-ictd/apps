@@ -4,11 +4,7 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import {
-  Table,
-  TableDimension,
-  TableHeader,
-} from '../../../modular/tables/Table';
+import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { CheckboxRF } from '../../../modular/inputs/CheckboxRF';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -35,23 +31,13 @@ export const Graduate = (): JSX.Element => {
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const setGraduate = usePdsStore((state) => state.setGraduate);
   const setGraduateOnEdit = usePdsStore((state) => state.setGraduateOnEdit);
-  const [removedCourse, setRemovedCourse] = useState<EducationInfo>(
-    {} as EducationInfo
-  );
-  const deletedGraduateEducs = useUpdatePdsStore(
-    (state) => state.deletedGraduateEducs
-  );
-  const allowEditGraduate = useUpdatePdsStore(
-    (state) => state.allowEditGraduate
-  );
-  const allowDeleteGraduate = useUpdatePdsStore(
-    (state) => state.allowDeleteGraduate
-  );
+  const [removedCourse, setRemovedCourse] = useState<EducationInfo>({} as EducationInfo);
+  const deletedGraduateEducs = useUpdatePdsStore((state) => state.deletedGraduateEducs);
+  const allowEditGraduate = useUpdatePdsStore((state) => state.allowEditGraduate);
+  const allowDeleteGraduate = useUpdatePdsStore((state) => state.allowDeleteGraduate);
   const [action, setAction] = useState<string>('');
   const [courseIndexForEdit, setCourseIndexForEdit] = useState<number>(-1);
-  const [courseForEdit, setCourseForEdit] = useState<EducationInfo>(
-    {} as EducationInfo
-  );
+  const [courseForEdit, setCourseForEdit] = useState<EducationInfo>({} as EducationInfo);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // initialize react hook form and set default values, mode is on change
@@ -112,13 +98,8 @@ export const Graduate = (): JSX.Element => {
 
       const updatedGraduate = [...graduate];
       updatedGraduate.push(course);
-      const sortedUpdatedGraduateOnCreate = [...updatedGraduate].sort(
-        (firstItem, secondItem) =>
-          firstItem.from! > secondItem.from!
-            ? -1
-            : secondItem.from! > firstItem.from!
-            ? 1
-            : 0
+      const sortedUpdatedGraduateOnCreate = [...updatedGraduate].sort((firstItem, secondItem) =>
+        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
       );
       setGraduate(sortedUpdatedGraduateOnCreate);
       reset();
@@ -126,37 +107,30 @@ export const Graduate = (): JSX.Element => {
     } else if (action === 'update') {
       e.preventDefault();
       const updatedCourses: Array<EducationInfo> = [...graduate];
-      const newUpdatedCourses = updatedCourses.map(
-        (previousCourse: EducationInfo, orgIdx: number) => {
-          if (orgIdx === courseIndexForEdit) {
-            return {
-              ...previousCourse,
-              _id: course._id,
-              awards: course.awards,
-              degree: course.degree,
-              employeeId: course.employeeId,
-              from: course.from,
-              to: course.to,
-              schoolName: course.schoolName,
-              units: course.units,
-              yearGraduated: course.yearGraduated,
-              isGraduated: course.isGraduated,
-              isOngoing: course.isOngoing,
-              isEdited: true,
-            };
-          }
-
-          return previousCourse;
+      const newUpdatedCourses = updatedCourses.map((previousCourse: EducationInfo, orgIdx: number) => {
+        if (orgIdx === courseIndexForEdit) {
+          return {
+            ...previousCourse,
+            _id: course._id,
+            awards: course.awards,
+            degree: course.degree,
+            employeeId: course.employeeId,
+            from: course.from,
+            to: course.to,
+            schoolName: course.schoolName,
+            units: course.units,
+            yearGraduated: course.yearGraduated,
+            isGraduated: course.isGraduated,
+            isOngoing: course.isOngoing,
+            isEdited: true,
+          };
         }
-      );
 
-      const sortedUpdatedCourses = [...newUpdatedCourses].sort(
-        (firstItem, secondItem) =>
-          firstItem.from! > secondItem.from!
-            ? -1
-            : secondItem.from! > firstItem.from!
-            ? 1
-            : 0
+        return previousCourse;
+      });
+
+      const sortedUpdatedCourses = [...newUpdatedCourses].sort((firstItem, secondItem) =>
+        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
       );
       setGraduate(sortedUpdatedCourses);
       setCourseForEdit({} as EducationInfo);
@@ -221,6 +195,7 @@ export const Graduate = (): JSX.Element => {
   useEffect(() => {
     if (getValues('isGraduated') === true) {
       setValue('yearGraduated', getValues('to'));
+      setValue('units', '');
       clearErrors('yearGraduated');
     } else {
       setValue('yearGraduated', null);
@@ -238,10 +213,7 @@ export const Graduate = (): JSX.Element => {
         }
 
         // sets the graduated checkbox
-        else if (
-          courseForEdit.to !== null &&
-          courseForEdit.yearGraduated !== null
-        ) {
+        else if (courseForEdit.to !== null && courseForEdit.yearGraduated !== null) {
           setValue('isGraduated', true);
         }
         setIsLoaded(false);
@@ -253,11 +225,7 @@ export const Graduate = (): JSX.Element => {
     <>
       <Card
         title="Graduate Studies"
-        subtitle={
-          graduate.length === 0
-            ? ''
-            : "Courses are sorted by 'Year Started' in descending order."
-        }
+        subtitle={graduate.length === 0 ? '' : "Courses are sorted by 'Year Started' in descending order."}
         remarks={<GraduateAlert setInitialValues={setInitialValues} />}
       >
         <>
@@ -279,8 +247,7 @@ export const Graduate = (): JSX.Element => {
             title="Graduate Studies"
             subtitle={
               <>
-                Please fill-out all required fields ({' '}
-                <span className="text-red-700">*</span> )
+                Please fill-out all required fields ( <span className="text-red-700">*</span> )
               </>
             }
             formId="graduate"
@@ -292,13 +259,7 @@ export const Graduate = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="xxxxxl"
-            actionLabel={
-              action === 'create'
-                ? 'Submit'
-                : action === 'update'
-                ? 'Update'
-                : ''
-            }
+            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -313,11 +274,7 @@ export const Graduate = (): JSX.Element => {
                       labelIsRequired
                       controller={{ ...register('schoolName') }}
                       withLabel={true}
-                      isError={
-                        errors.schoolName && errors.schoolName.message
-                          ? true
-                          : false
-                      }
+                      isError={errors.schoolName && errors.schoolName.message ? true : false}
                       errorMessage={errors.schoolName?.message}
                     />
                   </div>
@@ -352,9 +309,7 @@ export const Graduate = (): JSX.Element => {
                         withLabel={true}
                         withHelpButton
                         helpContent="Indicate beginning school year"
-                        isError={
-                          errors.from && errors.from.message ? true : false
-                        }
+                        isError={errors.from && errors.from.message ? true : false}
                         errorMessage={errors.from?.message}
                       />
                     </div>
@@ -373,9 +328,7 @@ export const Graduate = (): JSX.Element => {
                         id="gradyearended"
                         name="gradyearended"
                         label="To"
-                        placeholder={
-                          getIsOnGoing === true ? 'Present' : 'Year Ended'
-                        }
+                        placeholder={getIsOnGoing === true ? 'Present' : 'Year Ended'}
                         labelIsRequired={getIsOnGoing === true ? false : true}
                         type="number"
                         controller={{ ...register('to') }}
@@ -394,15 +347,14 @@ export const Graduate = (): JSX.Element => {
                         id="gradunits"
                         name="gradunits"
                         label="Highest Level or Units Earned"
-                        placeholder="Leave blank if not applicable"
+                        placeholder={watchIsGraduated ? 'Not applicable' : 'Leave blank if not applicable'}
+                        muted={watchIsGraduated ? true : false}
                         type="text"
                         controller={{ ...register('units') }}
                         withHelpButton
                         helpContent="Indicated the highest level or units earned only if not graduated"
                         withLabel={true}
-                        isError={
-                          errors.units && errors.units.message ? true : false
-                        }
+                        isError={errors.units && errors.units.message ? true : false}
                         errorMessage={errors.units?.message}
                       />
                     </div>
@@ -435,11 +387,7 @@ export const Graduate = (): JSX.Element => {
                           controller={{ ...register('yearGraduated') }}
                           withLabel={true}
                           muted={true}
-                          isError={
-                            errors.yearGraduated && errors.yearGraduated.message
-                              ? true
-                              : false
-                          }
+                          isError={errors.yearGraduated && errors.yearGraduated.message ? true : false}
                           errorMessage={errors.yearGraduated?.message}
                         />
                       </div>
@@ -455,9 +403,7 @@ export const Graduate = (): JSX.Element => {
                       type="text"
                       controller={{ ...register('awards') }}
                       withLabel={true}
-                      isError={
-                        errors.awards && errors.awards.message ? true : false
-                      }
+                      isError={errors.awards && errors.awards.message ? true : false}
                       errorMessage={errors.awards?.message}
                     />
                   </div>
@@ -484,10 +430,7 @@ export const Graduate = (): JSX.Element => {
                     />
                   </svg>
                 </div>
-                <p className="w-[75%] px-4">
-                  Are you sure you want to remove this? This action cannot be
-                  undone.{' '}
-                </p>
+                <p className="w-[75%] px-4">Are you sure you want to remove this? This action cannot be undone. </p>
               </div>
             </Alert.Description>
             <Alert.Footer>
@@ -500,10 +443,7 @@ export const Graduate = (): JSX.Element => {
                 >
                   No
                 </Button>
-                <Button
-                  variant="theme"
-                  onClick={() => handleRemoveCourse(courseToRemove)}
-                >
+                <Button variant="theme" onClick={() => handleRemoveCourse(courseToRemove)}>
                   Yes
                 </Button>
               </div>
@@ -516,150 +456,94 @@ export const Graduate = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader
-                      label="Name of School"
-                      headerWidth="w-[20%]"
-                      className="pl-4"
-                    />
+                    <TableHeader label="Name of School" headerWidth="w-[20%]" className="pl-4" />
                     <TableHeader label="Course" headerWidth="w-[25%]" />
                     <TableHeader label="Period" headerWidth="w-[10%]" />
                     <TableHeader label="Year Graduated" headerWidth="w-[10%]" />
-                    <TableHeader
-                      label="Level/Units Earned"
-                      headerWidth="w-[10%]"
-                    />
-                    <TableHeader
-                      label="Honors Received"
-                      headerWidth="w-[10%]"
-                    />
-                    <TableHeader
-                      label="Actions"
-                      headerWidth="w-[15%]"
-                      alignment="center"
-                    />
+                    <TableHeader label="Level/Units Earned" headerWidth="w-[10%]" />
+                    <TableHeader label="Honors Received" headerWidth="w-[10%]" />
+                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
                   </>
                 }
                 tableBody={
                   <tbody>
-                    {graduate.map(
-                      (course: EducationInfo, courseIdx: number) => {
-                        return (
-                          <tr
-                            key={courseIdx}
-                            className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
-                          >
-                            <TableDimension
-                              isText={true}
-                              label={course.schoolName}
-                              className="px-4"
-                            />
-                            <TableDimension
-                              isText={true}
-                              label={course.degree}
-                              className="px-1 select-none"
-                            />
-                            <TableDimension
-                              isText={true}
-                              isPeriod={true}
-                              periodLabel1={course.from}
-                              periodLabel2={course.to ? course.to : 'Present'}
-                              label=""
-                            />
-                            <TableDimension
-                              isText={true}
-                              className="px-1"
-                              label={
-                                course.yearGraduated
-                                  ? course.yearGraduated
-                                  : 'N/A'
-                              }
-                            />
-                            <TableDimension
-                              isText={true}
-                              className="px-1"
-                              label={course.units ? course.units : 'N/A'}
-                            />
-                            <TableDimension
-                              isText={true}
-                              className="px-1"
-                              label={course.awards ? course.awards : 'N/A'}
-                            />
-                            <TableDimension
-                              isText={false}
-                              className="px-2 text-center select-none"
-                              tableDimension={
-                                <>
-                                  {!isEmpty(course._id) ? (
-                                    <div className="flex justify-center gap-4">
-                                      {allowEditGraduate ? (
-                                        <div className="w-8">
-                                          <EditButton
-                                            action={() =>
-                                              onEdit(course, courseIdx)
-                                            }
-                                            type="button"
-                                            disabled={
-                                              graduateOnEdit ? false : true
-                                            }
-                                          />
-                                        </div>
-                                      ) : null}
-                                      {allowDeleteGraduate ? (
-                                        <div className="w-8">
-                                          <DeleteButton
-                                            muted={
-                                              hasPds && graduateOnEdit
-                                                ? false
-                                                : hasPds && !graduateOnEdit
-                                                ? true
-                                                : !hasPds && false
-                                            }
-                                            action={() =>
-                                              openRemoveActionModal(
-                                                courseIdx,
-                                                course
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      ) : null}
-                                      {!allowEditGraduate &&
-                                      !allowDeleteGraduate ? (
-                                        <div className="flex justify-center w-full">
-                                          -
-                                        </div>
-                                      ) : null}
-                                    </div>
-                                  ) : isEmpty(course._id) ? (
-                                    <div className="flex justify-center gap-4">
+                    {graduate.map((course: EducationInfo, courseIdx: number) => {
+                      return (
+                        <tr
+                          key={courseIdx}
+                          className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
+                        >
+                          <TableDimension isText={true} label={course.schoolName} className="px-4" />
+                          <TableDimension isText={true} label={course.degree} className="px-1 select-none" />
+                          <TableDimension
+                            isText={true}
+                            isPeriod={true}
+                            periodLabel1={course.from}
+                            periodLabel2={course.to ? course.to : 'Present'}
+                            label=""
+                          />
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={course.yearGraduated ? course.yearGraduated : 'N/A'}
+                          />
+                          <TableDimension isText={true} className="px-1" label={course.units ? course.units : 'N/A'} />
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={course.awards ? course.awards : 'N/A'}
+                          />
+                          <TableDimension
+                            isText={false}
+                            className="px-2 text-center select-none"
+                            tableDimension={
+                              <>
+                                {!isEmpty(course._id) ? (
+                                  <div className="flex justify-center gap-4">
+                                    {allowEditGraduate ? (
                                       <div className="w-8">
                                         <EditButton
-                                          action={() =>
-                                            onEdit(course, courseIdx)
-                                          }
+                                          action={() => onEdit(course, courseIdx)}
                                           type="button"
+                                          disabled={graduateOnEdit ? false : true}
                                         />
                                       </div>
-
+                                    ) : null}
+                                    {allowDeleteGraduate ? (
                                       <div className="w-8">
                                         <DeleteButton
-                                          action={() =>
-                                            openRemoveActionModal(
-                                              courseIdx,
-                                              course
-                                            )
+                                          muted={
+                                            hasPds && graduateOnEdit
+                                              ? false
+                                              : hasPds && !graduateOnEdit
+                                              ? true
+                                              : !hasPds && false
                                           }
+                                          action={() => openRemoveActionModal(courseIdx, course)}
                                         />
                                       </div>
+                                    ) : null}
+                                    {!allowEditGraduate && !allowDeleteGraduate ? (
+                                      <div className="flex justify-center w-full">-</div>
+                                    ) : null}
+                                  </div>
+                                ) : isEmpty(course._id) ? (
+                                  <div className="flex justify-center gap-4">
+                                    <div className="w-8">
+                                      <EditButton action={() => onEdit(course, courseIdx)} type="button" />
                                     </div>
-                                  ) : null}
-                                </>
-                              }
-                            />
-                          </tr>
-                        );
-                      }
-                    )}
+
+                                    <div className="w-8">
+                                      <DeleteButton action={() => openRemoveActionModal(courseIdx, course)} />
+                                    </div>
+                                  </div>
+                                ) : null}
+                              </>
+                            }
+                          />
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 }
               />

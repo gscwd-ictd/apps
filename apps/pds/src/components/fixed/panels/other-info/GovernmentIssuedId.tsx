@@ -12,13 +12,9 @@ import { GovernmentIssuedIdAlert } from './GovernmentIssuedIdAlert';
 export const OIGovtID = (): JSX.Element => {
   // set government issued id object, employee object state to pds context
   const governmentIssuedId = usePdsStore((state) => state.governmentIssuedId);
-  const setGovernmentIssuedId = usePdsStore(
-    (state) => state.setGovernmentIssuedId
-  );
+  const setGovernmentIssuedId = usePdsStore((state) => state.setGovernmentIssuedId);
   const employee = useEmployeeStore((state) => state.employeeDetails);
-  const governmentIssuedIdOnEdit = usePdsStore(
-    (state) => state.governmentIssuedIdOnEdit
-  );
+  const governmentIssuedIdOnEdit = usePdsStore((state) => state.governmentIssuedIdOnEdit);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const hasPds = useEmployeeStore((state) => state.hasPds);
 
@@ -51,10 +47,8 @@ export const OIGovtID = (): JSX.Element => {
     <>
       <Card
         title={'Government Issued ID'}
-        subtitle=""
-        remarks={
-          <GovernmentIssuedIdAlert setInitialValues={setInitialValues} />
-        }
+        subtitle="Only use a valid or non expired ID."
+        remarks={<GovernmentIssuedIdAlert setInitialValues={setInitialValues} />}
       >
         <>
           <div className="w-full col-span-1 my-7">

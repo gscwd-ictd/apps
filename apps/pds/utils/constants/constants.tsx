@@ -153,5 +153,5 @@ export const govtIds = [
   { label: `Solo Parent ID`, value: `Solo Parent ID` },
   { label: `School ID`, value: `School ID` },
   { label: `SSS ID`, value: `SSS ID` },
-  { label: `Others (Please Specify)`, value: `Others (Please Specify)` },
+  // { label: `Others (Please Specify)`, value: `Others (Please Specify)` }, // removed this one because we should request for another option instead of selecting this
 ];
