@@ -114,7 +114,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
   };
 
   const overtimeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval`;
-  console.log(overtimeListUrl);
 
   const {
     data: swrOvertimeList,

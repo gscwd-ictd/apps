@@ -84,7 +84,7 @@ export const ManagerMenuDropdown = ({
                     </button>
                   )}
                 </Menu.Item>
-                <Menu.Item>
+                {/* <Menu.Item>
                   {({ active }) => (
                     <button
                       className={`${
@@ -98,7 +98,7 @@ export const ManagerMenuDropdown = ({
                       </span>
                     </button>
                   )}
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item>
                   {({ active }) => (
                     <button

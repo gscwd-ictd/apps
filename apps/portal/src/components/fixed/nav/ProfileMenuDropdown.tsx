@@ -237,7 +237,7 @@ export const ProfileMenuDropdown = ({
                             )}
                           </Menu.Item>
 
-                          <Menu.Item>
+                          {/* <Menu.Item>
                             {({ active }) => (
                               <button
                                 className={`${
@@ -253,7 +253,7 @@ export const ProfileMenuDropdown = ({
                                 </div>
                               </button>
                             )}
-                          </Menu.Item>
+                          </Menu.Item> */}
 
                           <Menu.Item>
                             {({ active }) => (
