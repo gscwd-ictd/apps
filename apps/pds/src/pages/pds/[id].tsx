@@ -305,6 +305,7 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
     } else {
       setNumberOfTabs(tabs.length);
     }
+    setIsLoadingPdsData(true);
   }
 
   // set the employee details state from server side props
@@ -342,7 +343,7 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
   useEffect(() => {
     if (isLoadingEmployeeData) {
       setPdsDetailsOnLoad();
-      setIsLoadingPdsData(true);
+      // setIsLoadingPdsData(true);
     }
   }, [isLoadingEmployeeData]);
 
@@ -378,7 +379,7 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
     <>
       <div className="w-full min-h-screen col-span-1 ">
         <div className={`min-h-screen ${background}`}>
-          {isLoading && !pdsDetails ? (
+          {isLoading ? (
             <>
               <div className="flex items-center justify-center w-full h-screen">
                 {/* <LoadingIndicator /> */}
@@ -408,17 +409,13 @@ export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
 
     try {
       const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`);
+
       if (applicantPds.status === 200 && employee.employmentDetails.userId === context.params?.id) {
         return { props: { employee, pdsDetails: applicantPds.data } };
       } else if (applicantPds.status === 200 && employee.employmentDetails.userId !== context.params?.id) {
         return {
           props: {},
           redirect: { destination: '/404', permanent: false },
-        };
-      } else if (applicantPds.status === 404 && employee.employmentDetails.userId === context.params?.id) {
-        return {
-          props: { employee, pdsDetails: applicantPds.data },
-          redirect: { destination: '/401', permanent: false },
         };
       } else {
         return {
@@ -430,10 +427,21 @@ export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
         };
       }
     } catch {
-      return {
-        props: {},
-        redirect: { destination: '/404', permanent: false },
-      };
+      if (employee.employmentDetails.userId === context.params?.id) {
+        return {
+          props: { employee, pdsDetails: {} },
+          // redirect: { destination: '/404', permanent: false },
+        };
+      } else if (employee.employmentDetails.userId !== context.params?.id) {
+        return {
+          props: {},
+          redirect: { destination: '/401', permanent: false },
+        };
+      } else
+        return {
+          props: {},
+          redirect: { destination: '/404', permanent: false },
+        };
     }
   }
 );
