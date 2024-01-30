@@ -55,7 +55,7 @@ export default function Pds({ employeeDetails, userId }: InferGetServerSideProps
 
       <MainContainer>
         <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-          <ContentHeader title="Personal Data Sheet" subtitle="Create or view your PDS" backUrl={''}>
+          <ContentHeader title="Personal Data Sheet" subtitle="Create or view your PDS" backUrl={`/${router.query.id}`}>
             {tab === 2 && (
               <div className="w-[12rem]">
                 <Button>Updated selected</Button>
