@@ -349,7 +349,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className="text-slate-500 w-full text-md ">
                             <LabelInput
                               required={
-                                overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut
+                                overtimeAccomplishmentDetails.ivmsTimeIn &&
+                                overtimeAccomplishmentDetails.ivmsTimeOut &&
+                                overtimeAccomplishmentDetails.computedIvmsHours > 0
                                   ? false
                                   : true
                               }
@@ -359,9 +361,10 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
                               disabled={
-                                overtimeAccomplishmentDetails?.accomplishments ||
-                                (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
-                                  ? true
+                                overtimeAccomplishmentDetails?.accomplishments
+                                  ? // ||
+                                    // (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
+                                    true
                                   : false
                               }
                               defaultValue={overtimeAccomplishmentDetails?.encodedTimeIn ?? null}
@@ -381,7 +384,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className="text-slate-500 w-full text-md ">
                             <LabelInput
                               required={
-                                overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut
+                                overtimeAccomplishmentDetails.ivmsTimeIn &&
+                                overtimeAccomplishmentDetails.ivmsTimeOut &&
+                                overtimeAccomplishmentDetails.computedIvmsHours > 0
                                   ? false
                                   : true
                               }
@@ -391,9 +396,10 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               className="w-full text-slate-400 font-medium cursor-pointer"
                               textSize="md"
                               disabled={
-                                overtimeAccomplishmentDetails?.accomplishments ||
-                                (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
-                                  ? true
+                                overtimeAccomplishmentDetails?.accomplishments
+                                  ? // ||
+                                    // (overtimeAccomplishmentDetails.ivmsTimeIn && overtimeAccomplishmentDetails.ivmsTimeOut)
+                                    true
                                   : false
                               }
                               defaultValue={overtimeAccomplishmentDetails?.encodedTimeOut ?? null}
@@ -463,24 +469,25 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
                           overtimeAccomplishmentDetails?.accomplishments
                             ? true
-                            : (!overtimeAccomplishmentDetails.accomplishments &&
-                                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                                overtimeAccomplishmentDetails.plannedDate <
-                                  overtimeAccomplishmentDetails.dateOfOTApproval &&
-                                GetDateDifference(
-                                  `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
-                                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                                ).days > 5) ||
-                              (!overtimeAccomplishmentDetails.accomplishments &&
-                                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                                overtimeAccomplishmentDetails.plannedDate >=
-                                  overtimeAccomplishmentDetails.dateOfOTApproval &&
-                                GetDateDifference(
-                                  `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
-                                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                                ).days > 5)
-                            ? true
-                            : false
+                            : // :
+                              // (!overtimeAccomplishmentDetails.accomplishments &&
+                              //     overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                              //     overtimeAccomplishmentDetails.plannedDate <
+                              //       overtimeAccomplishmentDetails.dateOfOTApproval &&
+                              //     GetDateDifference(
+                              //       `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                              //       `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                              //     ).days > 5) ||
+                              //   (!overtimeAccomplishmentDetails.accomplishments &&
+                              //     overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                              //     overtimeAccomplishmentDetails.plannedDate >=
+                              //       overtimeAccomplishmentDetails.dateOfOTApproval &&
+                              //     GetDateDifference(
+                              //       `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                              //       `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                              //     ).days > 5)
+                              // ? true
+                              false
                         }
                         rows={3}
                         className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"

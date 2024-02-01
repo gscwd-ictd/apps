@@ -16,6 +16,8 @@ import { Checkbox } from '../components/modular/common/forms/Checkbox';
 import { TextField } from '../components/modular/common/forms/TextField';
 import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
+import Image from 'next/image';
+import PortalSVG from '../components/fixed/svg/PortalSvg';
 
 type LoginFormInput = {
   email: string;
@@ -135,10 +137,19 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col items-center justify-center pt-16 overflow-y-auto drop-shadow-xl">
-        <main className="w-full md:w-[40rem] py-5  flex justify-center">
+        <main className="w-full md:w-[40rem] py-5 flex justify-center">
           <div className="hidden md:block w-[25%] bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-slate-300 to-slate-600 rounded-tl-xl rounded-bl-xl ">
-            <div className="h-full px-4 mt-48 text-2xl font-medium tracking-wider text-left text-white uppercase place-items-center drop-shadow-2xl">
-              Employee Portal
+            <div
+              className="bg-cover bg-right bg-no-repeat relative px-0 mt-0 flex flex-row text-2xl font-medium tracking-wider text-left text-white uppercase place-items-center "
+              style={{ backgroundImage: `url('/loginSideBackground.jpg')`, width: '100%', height: '100%' }}
+            >
+              {/* <label>Employee Portal</label>
+              <div className="flex flex-col gap-0">
+                <Image src={'/ethnic.jpg'} className="h-full w-12" alt={''} width={20} height={10} />
+                <Image src={'/ethnic.jpg'} className="h-full w-12" alt={''} width={20} height={10} />
+              </div> */}
+              {/* <PortalSVG.PortalLoginBg className="relative w-full h-full" /> */}
+              <div></div>
             </div>
           </div>
           <div className="w-[95%] md:w-[75%] px-6 md:px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl">
