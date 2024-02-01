@@ -17,7 +17,6 @@ import { TextField } from '../components/modular/common/forms/TextField';
 import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import Image from 'next/image';
-import PortalSVG from '../components/fixed/svg/PortalSvg';
 
 type LoginFormInput = {
   email: string;
@@ -130,29 +129,31 @@ export default function Login() {
     error ? handleLoginError(result) : router.reload();
   };
 
+  const [heartCount, setHeartCount] = useState(0);
+
   return (
     <>
+      <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
+        <Image src={'/gwdlogo.png'} priority className="w-full md:w-2/4 " alt={''} width={'500'} height={'500'} />
+      </div>
       <Head>
         <title>Employee Portal Login</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col items-center justify-center pt-16 overflow-y-auto drop-shadow-xl">
-        <main className="w-full md:w-[40rem] py-5 flex justify-center">
+        <main className="w-full md:w-[45rem] py-5 flex justify-center">
           <div className="hidden md:block w-[25%] bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-slate-300 to-slate-600 rounded-tl-xl rounded-bl-xl ">
-            <div
-              className="bg-cover bg-right bg-no-repeat relative px-0 mt-0 flex flex-row text-2xl font-medium tracking-wider text-left text-white uppercase place-items-center "
-              style={{ backgroundImage: `url('/loginSideBackground.jpg')`, width: '100%', height: '100%' }}
-            >
-              {/* <label>Employee Portal</label>
-              <div className="flex flex-col gap-0">
-                <Image src={'/ethnic.jpg'} className="h-full w-12" alt={''} width={20} height={10} />
-                <Image src={'/ethnic.jpg'} className="h-full w-12" alt={''} width={20} height={10} />
-              </div> */}
-              {/* <PortalSVG.PortalLoginBg className="relative w-full h-full" /> */}
-              <div></div>
+            <div className="px-0 mt-0 flex flex-row text-2xl font-medium h-full tracking-wider text-left text-white uppercase place-items-center ">
+              <div className="w-80 p-3">
+                <label>Employee Portal</label>
+              </div>
+              <div
+                className="bg-contain bg-right w-80 "
+                style={{ backgroundImage: `url('/ethnic.jpg')`, width: '100%', height: '100%' }}
+              ></div>
             </div>
           </div>
-          <div className="w-[95%] md:w-[75%] px-6 md:px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl">
+          <div className="w-[95%] md:w-[75%] px-6 md:px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl opacity-80">
             <header className="mb-8">
               <h1 className="mt-10 text-2xl font-medium text-gray-700">Sign in</h1>
               <p className="text-sm text-gray-500">Welcome back! Please enter your credentials below.</p>
@@ -198,12 +199,12 @@ export default function Login() {
                 </div>
               </section>
 
-              <section className={`${errors.password ? 'mt-5' : 'mt-3'} flex items-end justify-between`}>
+              {/* <section className={`${errors.password ? 'mt-5' : 'mt-3'} flex items-end justify-between`}>
                 <Checkbox label="Remember me" isChecked={rememberMe} setIsChecked={setRememberMe} />
                 <a href="#" className="text-sm text-indigo-700">
                   Forgot password?
                 </a>
-              </section>
+              </section> */}
 
               <section className="mt-10">
                 <Button

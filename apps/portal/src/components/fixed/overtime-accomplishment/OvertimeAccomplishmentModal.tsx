@@ -97,9 +97,25 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   }, []);
 
   useEffect(() => {
-    setEncodedHours(
-      GetDateDifference(`2023-01-01 ${watch('encodedTimeIn')}:00`, `2023-01-01 ${watch('encodedTimeOut')}:00`).hours
-    );
+    let encodeTimeIn = dayjs(`2024-01-01 ${watch('encodedTimeIn')}`).format('HH:mm');
+    let encodeTimeOut = dayjs(`2024-01-01 ${watch('encodedTimeOut')}`).format('HH:mm');
+    let difference;
+
+    if (encodeTimeOut > encodeTimeIn) {
+      difference = dayjs(`2024-01-01 ${watch('encodedTimeIn')}`).diff(
+        dayjs(`2024-01-01 ${watch('encodedTimeOut')}`),
+        'hours'
+      );
+    } else {
+      difference = dayjs(`2024-01-01 ${watch('encodedTimeIn')}`).diff(
+        dayjs(`2024-01-02 ${watch('encodedTimeOut')}`),
+        'hours'
+      );
+    }
+    setEncodedHours(difference < 0 ? difference * -1 : difference);
+    // setEncodedHours(
+    //   GetDateDifference(`2024-01-01 ${watch('encodedTimeIn')}:00`, `2024-01-01 ${watch('encodedTimeOut')}:00`).hours
+    // );
   }, [watch('encodedTimeIn'), watch('encodedTimeOut')]);
 
   // compute encoded overtime duration based on encoded time IN and OUT
