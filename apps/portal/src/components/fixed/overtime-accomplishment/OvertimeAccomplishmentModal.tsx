@@ -516,23 +516,24 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               //status is approved or disapproved
               overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
               overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
-              overtimeAccomplishmentDetails?.accomplishments ||
-              //late filing
-              (!overtimeAccomplishmentDetails.accomplishments &&
-                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
-                GetDateDifference(
-                  `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
-                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                ).days > 5) ||
-              //future filing
-              (!overtimeAccomplishmentDetails.accomplishments &&
-                overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                GetDateDifference(
-                  `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
-                  `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-                ).days > 5) ? (
+              overtimeAccomplishmentDetails?.accomplishments ? (
+                // ||
+                //late filing
+                // (!overtimeAccomplishmentDetails.accomplishments &&
+                //   overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                //   overtimeAccomplishmentDetails.plannedDate < overtimeAccomplishmentDetails.dateOfOTApproval &&
+                //   GetDateDifference(
+                //     `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
+                //     `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                //   ).days > 5) ||
+                //future filing
+                // (!overtimeAccomplishmentDetails.accomplishments &&
+                //   overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                //   overtimeAccomplishmentDetails.plannedDate >= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                //   GetDateDifference(
+                //     `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
+                //     `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+                //   ).days > 5)
                 <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>
