@@ -30,6 +30,7 @@ import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.ty
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
+import dayjs from 'dayjs';
 
 export type NavDetails = {
   fullName: string;
@@ -279,8 +280,23 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   };
 
+  const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY');
+
   return (
     <>
+      {/* Falling Hears Effect for February Only */}
+      {/* January is 0  */}
+      {dateNow == '02-14-2024' ? (
+        <div className="wrapper absolute">
+          <div className="heart x1"></div>
+          <div className="heart x2"></div>
+          <div className="heart x3"></div>
+          <div className="heart x4"></div>
+          <div className="heart x5"></div>
+          <div className="altheart x6"></div>
+        </div>
+      ) : null}
+
       {/* Leave Monetization Constant Load Failed */}
       {!isEmpty(errorMonetizationConstant) ? (
         <>
