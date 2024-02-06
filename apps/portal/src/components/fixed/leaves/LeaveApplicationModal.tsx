@@ -693,7 +693,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   ) : null}
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1">
+                <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1 pt-1">
                   <div className="flex flex-row justify-between items-center w-full">
                     <label className="pt-2 text-slate-500 text-md font-medium">
                       Leave Type:<span className="text-red-600">*</span>
@@ -1011,7 +1011,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             ? 'Specify Study Leave Purpose'
                             : 'Specify Leave Details'
                         }`}
-                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300 mb-2"
                       ></textarea>
                     ) : null}
                   </>
@@ -1045,7 +1045,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                   <div className="w-full pb-4 pt-2">
                     <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
-                    <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md table-fixed">
+                    <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md table-fixed">
                       <tbody>
                         <tr className="border border-slate-400">
                           <td className="border border-slate-400"></td>

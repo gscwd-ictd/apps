@@ -125,7 +125,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
             <textarea
               required
               placeholder="Reason for decline"
-              className={`w-full h-32 p-2 border resize-none`}
+              className={`w-full h-32 p-2 border resize-none rounded-lg border-gray-300/90 `}
               onChange={(e) => setRemarks(e.target.value as unknown as string)}
               value={remarks}
             ></textarea>
