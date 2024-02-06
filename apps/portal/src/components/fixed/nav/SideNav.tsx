@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
-import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
+import { HiExclamationCircle, HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -13,6 +13,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { HRMenuDropdown } from './HRMenuDropdown';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -29,6 +30,10 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
   // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+
+  const { pendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+  }));
 
   return (
     <>
@@ -74,6 +79,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 <>
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="w-3 h-3 text-red-600 animate-ping" />
+                    ) : null}
                   </li>
                 </>
               ) : null}

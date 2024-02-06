@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import {
@@ -8,7 +9,10 @@ import {
   HiClipboardCheck,
   HiClipboardList,
   HiCollection,
+  HiDotsCircleHorizontal,
+  HiExclamationCircle,
   HiFolder,
+  HiOutlineDotsVertical,
   HiOutlineFolder,
   HiOutlineIdentification,
   HiPuzzle,
@@ -31,6 +35,10 @@ export const ManagerMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
+  const { pendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+  }));
+
   const router = useRouter();
 
   return (
@@ -76,11 +84,18 @@ export const ManagerMenuDropdown = ({
                     <button
                       className={`${
                         active ? 'bg-slate-100' : 'text-gray-900'
-                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
+                      } group flex justify-between w-80 items-center gap-2 px-3 py-3 text-sm`}
                       onClick={() => router.push(`/${router.query.id}/manager-approvals`)}
                     >
-                      <HiBadgeCheck className="w-6 h-6 text-blue-600" />
-                      <span className="text-sm tracking-tight text-gray-700 text-left">Approvals</span>
+                      <div className="flex gap-2">
+                        <HiBadgeCheck className="w-6 h-6 text-blue-600" />
+                        <span className="text-sm tracking-tight text-gray-700 text-left">Approvals</span>
+                      </div>
+                      {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                        <HiExclamationCircle className="w-3 h-3 text-red-600 animate-ping" />
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>
