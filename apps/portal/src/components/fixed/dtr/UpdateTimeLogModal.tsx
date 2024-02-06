@@ -23,6 +23,9 @@ type EditDailySchedModalProps = {
   rowData: EmployeeDtrWithSchedule; // TBD
 };
 
+type TimeLogRemarks = {
+  remarks: string;
+};
 enum KEYS {
   COMPANYID = 'companyId',
   DTRDATE = 'dtrDate',
@@ -45,7 +48,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     handleSubmit,
     reset,
     formState: { errors, isDirty, dirtyFields, isValid },
-  } = useForm<EmployeeDtr>({
+  } = useForm<EmployeeDtr & TimeLogRemarks>({
     resolver: yupResolver(OfficeSchema),
     mode: 'onChange',
     reValidateMode: 'onBlur',
@@ -54,7 +57,9 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
 
   // default values
-  const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr>({} as EmployeeDtr);
+  const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr & TimeLogRemarks>(
+    {} as EmployeeDtr & TimeLogRemarks
+  );
 
   const closeModal = () => {
     reset();
@@ -116,7 +121,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     // }
   };
 
-  const setDefaultValues = (rowData: EmployeeDtrWithSchedule) => {
+  const setDefaultValues = (rowData: EmployeeDtrWithSchedule, remarks: string) => {
     reset({
       companyId: rowData.companyId,
       dtrDate: rowData.day,
@@ -126,6 +131,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
       timeOut: removeSeconds(rowData.dtr.timeOut),
       withLunch: true,
       shift: rowData.schedule.shift,
+      remarks: remarks,
     });
 
     setDefaultDtrValues({
@@ -137,6 +143,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
       timeOut: removeSeconds(rowData.dtr.timeOut),
       withLunch: true,
       shift: rowData.schedule.shift,
+      remarks: remarks,
     });
 
     setValue('companyId', rowData.companyId);
@@ -147,10 +154,11 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     setValue('lunchOut', removeSeconds(rowData.dtr.lunchOut));
     setValue('withLunch', true);
     setValue('shift', rowData.schedule.shift);
+    setValue('remarks', remarks);
   };
 
   useEffect(() => {
-    if (modalState) setDefaultValues(rowData);
+    if (modalState) setDefaultValues(rowData, '');
   }, [modalState]);
 
   const { windowWidth } = UseWindowDimensions();
@@ -224,6 +232,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   className={
                     dirtyFields.timeIn && !errors.timeIn ? 'bg-green-300' : errors.timeIn ? 'bg-red-200' : 'bg-inherit'
                   }
+                  disabled={rowData.dtr?.timeIn || rowData.dtr?.remarks === 'Rest Day' ? true : false}
                 />
               </div>
               <div className="">
@@ -251,7 +260,13 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-                  disabled={getValues('withLunch') === true ? false : true}
+                  disabled={
+                    getValues('withLunch') === true
+                      ? rowData.dtr?.lunchOut || rowData.dtr?.remarks === 'Rest Day'
+                        ? true
+                        : false
+                      : true
+                  }
                 />
               </div>
               <div className="">
@@ -281,7 +296,13 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-                  disabled={getValues('withLunch') === true ? false : true}
+                  disabled={
+                    getValues('withLunch') === true
+                      ? rowData.dtr?.lunchIn || rowData.dtr?.remarks === 'Rest Day'
+                        ? true
+                        : false
+                      : true
+                  }
                 />
               </div>
               <div className="">
@@ -310,32 +331,34 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
+                  disabled={rowData.dtr?.timeOut || rowData.dtr?.remarks === 'Rest Day' ? true : false}
                 />
               </div>
               <div className="">
                 <LabelInput
                   id="remarks"
                   label="Remarks"
-                  type="text"
-                  isDirty={dirtyFields.timeOut}
+                  type="textarea"
+                  rows={3}
+                  isDirty={dirtyFields.remarks}
                   step="any"
                   placeholder="Enter remarks"
-                  // controller={{
-                  //   ...register('timeOut', {
-                  //     onChange: (e) => {
-                  //       setValue('timeOut', e.target.value, {
-                  //         shouldValidate: true,
-                  //       });
-                  //       trigger(); // trigger all validations for all inputs
-                  //     },
-                  //   }),
-                  // }}
-                  isError={errors.timeOut ? true : false}
-                  errorMessage={errors.timeOut?.message}
+                  controller={{
+                    ...register('remarks', {
+                      onChange: (e) => {
+                        setValue('remarks', e.target.value, {
+                          shouldValidate: true,
+                        });
+                        trigger(); // trigger all validations for all inputs
+                      },
+                    }),
+                  }}
+                  isError={errors.remarks ? true : false}
+                  errorMessage={errors.remarks?.message}
                   className={
-                    dirtyFields.timeOut && !errors.timeOut
+                    dirtyFields.remarks && !errors.remarks
                       ? 'bg-green-300'
-                      : errors.timeOut
+                      : errors.remarks
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
