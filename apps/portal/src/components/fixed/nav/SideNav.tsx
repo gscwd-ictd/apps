@@ -79,11 +79,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 <>
                   <li className="ml-10 lg:ml-0">
                     <ManagerMenuDropdown right />
-                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    {/* {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
                     pendingApprovalsCount.pendingLeavesCount != 0 ||
                     pendingApprovalsCount.pendingOvertimesCount != 0 ? (
                       <HiExclamationCircle className="w-3 h-3 text-red-600 animate-ping" />
-                    ) : null}
+                    ) : null} */}
                   </li>
                 </>
               ) : null}
