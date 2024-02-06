@@ -15,6 +15,8 @@ import Calendar from './LeaveCalendar';
 import CancelLeaveCalendar from './CancelLeaveCalendar';
 import { LeaveApplicationForm } from 'libs/utils/src/lib/types/leave-application.type';
 import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { MySelectList } from '../../modular/inputs/SelectList';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -29,7 +31,6 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
     loadingLeaveDetails,
     errorLeaveDetails,
     cancelLeaveModalIsOpen,
-    leaveDates,
     setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen,
     patchLeave,
@@ -42,7 +43,6 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
     loadingLeaveDetails: state.loading.loadingIndividualLeave,
     errorLeaveDetails: state.error.errorIndividualLeave,
     cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
-    leaveDates: state.leaveDates,
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
     patchLeave: state.patchLeave,
@@ -53,6 +53,21 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [remarks, setRemarks] = useState<string>('');
+  const [selectedDatesToCancel, setSelectedDatesToCancel] = useState<Array<SelectOption>>([]);
+  const [leaveDates, setLeaveDates] = useState<Array<SelectOption>>([]);
+
+  useEffect(() => {
+    let leaveDates = [];
+    if (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length >= 1) {
+      for (let i = 0; i < leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length; i++) {
+        leaveDates.push({
+          label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+          value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+        });
+      }
+    }
+    setLeaveDates(leaveDates);
+  }, [leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates]);
 
   const handleCancel = async () => {
     const data = {
@@ -94,12 +109,23 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
-            {'Please indicate reason for cancelling application:'}
+          <div className="flex flex-col w-full h-full px-2 gap-1 text-md ">
+            <label>Select dates possible for cancellation:</label>
+            <MySelectList
+              id="employees"
+              label=""
+              multiple
+              options={leaveDates}
+              onChange={(o) => setSelectedDatesToCancel(o)}
+              value={selectedDatesToCancel}
+            />
+
+            <label className="pt-3">Indicate reason for cancelling application:</label>
+
             <textarea
               required
               placeholder="Reason for decline"
-              className={`w-full h-32 p-2 border resize-none`}
+              className={`w-full h-32 p-2 border resize-none rounded-lg border-gray-300/90 `}
               onChange={(e) => setRemarks(e.target.value as unknown as string)}
               value={remarks}
             ></textarea>
@@ -108,7 +134,11 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
         <Modal.Footer>
           <div className="flex justify-end">
             <div className="max-w-auto flex">
-              <Button variant={'primary'} disabled={!isEmpty(remarks) ? false : true} onClick={(e) => handleCancel()}>
+              <Button
+                variant={'primary'}
+                disabled={!isEmpty(remarks) && selectedDatesToCancel.length > 0 ? false : true}
+                onClick={(e) => handleCancel()}
+              >
                 Submit
               </Button>
             </div>
