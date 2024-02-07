@@ -58,6 +58,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                   </li>
 
                   <li className="ml-10 lg:ml-0">
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
                     <ManagerMenuDropdown right />
                   </li>
                 </>
@@ -68,6 +73,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
                     <ManagerMenuDropdown right />
                   </li>
                 </>
@@ -78,12 +88,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    <ManagerMenuDropdown right />
-                    {/* {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
                     pendingApprovalsCount.pendingLeavesCount != 0 ||
                     pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="w-3 h-3 text-red-600 animate-ping" />
-                    ) : null} */}
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
+                    <ManagerMenuDropdown right />
                   </li>
                 </>
               ) : null}
@@ -93,6 +103,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
                     <ManagerMenuDropdown right />
                   </li>
                 </>

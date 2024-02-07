@@ -103,11 +103,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     mutate: mutateMessages,
   } = useSWR(
     Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? unacknowledgedPsbUrl : null,
-    fetchWithToken,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: true,
-    }
+    fetchWithToken
   );
 
   // Initial zustand state update

@@ -146,10 +146,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {

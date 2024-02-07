@@ -28,3 +28,9 @@ export enum NomineeType {
   NOMINEE = 'nominee',
   STAND_IN = 'stand-in',
 }
+
+export enum NomineeStatus {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  DECLINED = 'declined',
+}

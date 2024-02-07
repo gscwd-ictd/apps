@@ -57,8 +57,8 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     data: swrPendingApprovalsCount,
     isLoading: swrPendingApprovalsCountIsLoading,
     error: swrPendingApprovalsCountError,
-    mutate: mutatePassSlips,
-  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
+    mutate: mutatePendingApprovals,
+  } = useSWR(employeeDetails.employmentDetails.userId ? pendingApprovalsCountUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });

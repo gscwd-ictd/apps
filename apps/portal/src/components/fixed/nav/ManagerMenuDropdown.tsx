@@ -94,7 +94,7 @@ export const ManagerMenuDropdown = ({
                       {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
                       pendingApprovalsCount.pendingLeavesCount != 0 ||
                       pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                        <HiExclamationCircle className="w-3 h-3 text-red-600 animate-ping" />
+                        <HiExclamationCircle className="w-4 h-4 text-red-600" />
                       ) : null}
                     </button>
                   )}
