@@ -50,6 +50,7 @@ export const TrainingNominationModal = ({
     setNominatedEmployees,
     auxiliaryEmployees,
     setAuxiliaryEmployees,
+    employeeList,
   } = useTrainingSelectionStore((state) => ({
     recommendedEmployees: state.recommendedEmployees,
     individualTrainingDetails: state.individualTrainingDetails,
@@ -59,6 +60,7 @@ export const TrainingNominationModal = ({
     setNominatedEmployees: state.setNominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
     setAuxiliaryEmployees: state.setAuxiliaryEmployees,
+    employeeList: state.employeeList,
   }));
 
   const [employeePool, setEmployeePool] = useState<Array<SelectOption>>([]);
@@ -92,9 +94,9 @@ export const TrainingNominationModal = ({
       }
     }
     //add back employee
-    for (let i = 0; i < listOfEmployees.length; i++) {
-      if (!employeePool.includes(listOfEmployees[i]) && !combinedNominatedEmployees.includes(listOfEmployees[i])) {
-        const uniqueNames = Array.from(new Set([...employeePool, listOfEmployees[i]]));
+    for (let i = 0; i < employeeList.length; i++) {
+      if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
+        const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
         setEmployeePool(
           uniqueNames.sort(function (a, b) {
             return a.label.localeCompare(b.label);
@@ -106,7 +108,7 @@ export const TrainingNominationModal = ({
 
   useEffect(() => {
     setEmployeePool(
-      listOfEmployees.sort(function (a, b) {
+      employeeList.sort(function (a, b) {
         return a.label.localeCompare(b.label);
       })
     );

@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
-import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
+import { HiExclamationCircle, HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -13,6 +13,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { HRMenuDropdown } from './HRMenuDropdown';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -29,6 +30,10 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
   // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+
+  const { pendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+  }));
 
   return (
     <>
@@ -53,6 +58,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                   </li>
 
                   <li className="ml-10 lg:ml-0">
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
                     <ManagerMenuDropdown right />
                   </li>
                 </>
@@ -63,6 +73,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
                     <ManagerMenuDropdown right />
                   </li>
                 </>
@@ -73,6 +88,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
                     <ManagerMenuDropdown right />
                   </li>
                 </>
@@ -83,6 +103,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
+                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                    pendingApprovalsCount.pendingLeavesCount != 0 ||
+                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    ) : null}
                     <ManagerMenuDropdown right />
                   </li>
                 </>

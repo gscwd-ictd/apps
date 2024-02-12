@@ -9,6 +9,7 @@ import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-ax
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { TrainingNominationData } from 'libs/utils/src/lib/types/training.type';
 import { isEmpty } from 'lodash';
+import { NomineeType } from 'libs/utils/src/lib/enums/training.enum';
 
 type ConfirmationNominationModalProps = {
   modalState: boolean;
@@ -58,7 +59,7 @@ export const ConfirmationNominationModal = ({
           ...finalNominated,
           {
             employeeId: nominatedEmployees[a].value,
-            nomineeType: 'nominee',
+            nomineeType: NomineeType.NOMINEE,
           },
         ])
       );
@@ -71,7 +72,7 @@ export const ConfirmationNominationModal = ({
           ...finalEmployees,
           {
             employeeId: auxiliaryEmployees[b].value,
-            nomineeType: 'stand-in',
+            nomineeType: NomineeType.STAND_IN,
           },
         ])
       );

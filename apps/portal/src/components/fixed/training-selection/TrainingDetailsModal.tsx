@@ -2,7 +2,12 @@
 import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { TrainingPreparationStatus, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
+import {
+  NomineeStatus,
+  NomineeType,
+  TrainingPreparationStatus,
+  TrainingStatus,
+} from 'libs/utils/src/lib/enums/training.enum';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { useEffect, useState } from 'react';
 import TrainingNominationModal from './TrainingNominationModal';
@@ -24,7 +29,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     loadingRecommendedEmployee,
     loadingResponse,
     errorRecommendedEmployee,
+    errorNominatedEmployeeList,
     individualTrainingDetails,
+    nominatedEmployeeList,
     nominatedEmployees,
     auxiliaryEmployees,
     trainingNominationModalIsOpen,
@@ -36,13 +43,18 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getRecommendedEmployees,
     getRecommendedEmployeesSuccess,
     getRecommendedEmployeesFail,
+    getNominatedEmployeeList,
+    getNominatedEmployeeListSuccess,
+    getNominatedEmployeeListFail,
   } = useTrainingSelectionStore((state) => ({
     confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
     recommendedEmployees: state.recommendedEmployees,
     loadingRecommendedEmployee: state.loading.loadingRecommendedEmployee,
     errorRecommendedEmployee: state.error.errorRecommendedEmployee,
+    errorNominatedEmployeeList: state.error.errorNominatedEmployeeList,
     individualTrainingDetails: state.individualTrainingDetails,
     trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
+    nominatedEmployeeList: state.nominatedEmployeeList,
     nominatedEmployees: state.nominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
     trainingModalIsOpen: state.trainingModalIsOpen,
@@ -53,6 +65,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getRecommendedEmployees: state.getRecommendedEmployees,
     getRecommendedEmployeesSuccess: state.getRecommendedEmployeesSuccess,
     getRecommendedEmployeesFail: state.getRecommendedEmployeesFail,
+    getNominatedEmployeeList: state.getNominatedEmployeeList,
+    getNominatedEmployeeListSuccess: state.getNominatedEmployeeListSuccess,
+    getNominatedEmployeeListFail: state.getNominatedEmployeeListFail,
   }));
 
   const [courseContentsArray, setCourseContentsArray] = useState([{ title: 'N/A' }]);
@@ -64,7 +79,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     data: swrRecommendedEmployee,
     isLoading: swrRecommendedEmployeeIsLoading,
     error: swrRecommendedEmployeeError,
-    mutate: mutateTraining,
+    mutate: mutateRecommendedEmployees,
   } = useSWR(individualTrainingDetails.distributionId ? recommendedEmployeeUrl : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
@@ -88,6 +103,37 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     }
   }, [swrRecommendedEmployee, swrRecommendedEmployeeError]);
 
+  const nominatedEmployeeUrl = `http://172.20.10.58:4001/trainings/nominees/${individualTrainingDetails.distributionId}`;
+  // const nominatedEmployeeUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/distributions/${individualTrainingDetails.distributionId}/recommended`;
+
+  const {
+    data: swrNominatedEmployee,
+    isLoading: swrNominatedEmployeeIsLoading,
+    error: swrNominatedEmployeeError,
+    mutate: mutateNominatedEmployees,
+  } = useSWR(individualTrainingDetails.distributionId ? nominatedEmployeeUrl : null, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrNominatedEmployeeIsLoading) {
+      getNominatedEmployeeList(swrNominatedEmployeeIsLoading);
+    }
+  }, [swrNominatedEmployeeIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrNominatedEmployee)) {
+      getNominatedEmployeeListSuccess(swrNominatedEmployeeIsLoading, swrNominatedEmployee);
+    }
+
+    if (!isEmpty(swrNominatedEmployeeError)) {
+      getNominatedEmployeeListFail(swrNominatedEmployeeIsLoading, swrNominatedEmployeeError.message);
+    }
+  }, [swrNominatedEmployee, swrNominatedEmployeeError]);
+
   //close training nomination modal
   const closeTrainingNominationModal = async () => {
     setTrainingNominationModalIsOpen(false);
@@ -101,6 +147,16 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
+      {/* failed to load previously nominated employee list */}
+      {!isEmpty(errorNominatedEmployeeList) && trainingModalIsOpen ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorNominatedEmployeeList}: Failed to load nominated participants.`}
+          />
+        </>
+      ) : null}
+
       {/* failed to load recommended employee list */}
       {!isEmpty(errorRecommendedEmployee) && trainingModalIsOpen ? (
         <>
@@ -199,7 +255,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Type:</label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md">{individualTrainingDetails?.type}</label>
+                  <label className="text-slate-500 h-12 w-96 text-md capitalize">
+                    {individualTrainingDetails?.type}
+                  </label>
                 </div>
               </div>
 
@@ -222,23 +280,50 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                     <thead className="border-0">
                       <tr>
-                        <th className="px-10 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
+                        <th
+                          colSpan={3}
+                          className="px-10 py-2 text-sm text-center items-center border md:px-6 md:text-md font-medium text-gray-700 "
+                        >
                           Nominated Employee(s)
                         </th>
                       </tr>
                     </thead>
                     <tbody className="text-sm text-center ">
-                      {nominatedEmployees?.length > 0 ? (
+                      {nominatedEmployeeList?.length > 0 ? (
+                        <tr>
+                          <td className={`px-2 w-1/2 text-start border`}>Name</td>
+                          <td className={`px-2 w-1/6 text-start border`}>Status</td>
+                          <td className={`px-2 text-start border`}>Remarks</td>
+                        </tr>
+                      ) : (
+                        <tr>
+                          <td className={`px-2 w-1/2 text-start border`}>Name</td>
+                        </tr>
+                      )}
+
+                      {nominatedEmployeeList?.length > 0 ? (
+                        nominatedEmployeeList.map((employees, index) =>
+                          employees.nomineeType === NomineeType.NOMINEE ? (
+                            <tr key={index}>
+                              <td className={`px-2 w-1/2 text-start border`}>{employees.name}</td>
+                              <td className={`px-2 w-1/6 text-start border capitalize`}>{employees.status}</td>
+                              <td className={`px-2 text-start border`}>{employees.remarks}</td>
+                            </tr>
+                          ) : null
+                        )
+                      ) : nominatedEmployees?.length > 0 ? (
                         nominatedEmployees.map((employees, index) => {
                           return (
                             <tr key={index}>
-                              <td className={`px-2 text-start border`}>{employees.label}</td>
+                              <td colSpan={3} className={`px-2 text-start border`}>
+                                {employees.label}
+                              </td>
                             </tr>
                           );
                         })
                       ) : (
                         <tr className="border-0">
-                          <td colSpan={6}>NO EMPLOYEE SELECTED</td>
+                          <td colSpan={3}>NO EMPLOYEE SELECTED</td>
                         </tr>
                       )}
                     </tbody>
@@ -250,23 +335,38 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                     <thead className="border-0">
                       <tr>
-                        <th className="px-10 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
+                        <th
+                          colSpan={3}
+                          className="px-10 py-2 text-sm text-center items-center border md:px-6 md:text-md font-medium text-gray-700 "
+                        >
                           Auxiliary Employee(s)
                         </th>
                       </tr>
                     </thead>
                     <tbody className="text-sm text-center ">
-                      {auxiliaryEmployees?.length > 0 ? (
+                      {nominatedEmployeeList?.length > 0 ? (
+                        nominatedEmployeeList.map((employees, index) =>
+                          employees.nomineeType === NomineeType.STAND_IN ? (
+                            <tr key={index}>
+                              <td className={`px-2 w-1/2 text-start border`}>{employees.name}</td>
+                              <td className={`px-2 w-1/6 text-start border capitalize`}>{employees.status}</td>
+                              <td className={`px-2 text-start border`}>{employees.remarks}</td>
+                            </tr>
+                          ) : null
+                        )
+                      ) : auxiliaryEmployees?.length > 0 ? (
                         auxiliaryEmployees.map((employees, index) => {
                           return (
                             <tr key={index}>
-                              <td className={`px-2 text-start border`}>{employees.label}</td>
+                              <td colSpan={3} className={`px-2 text-start border`}>
+                                {employees.label}
+                              </td>
                             </tr>
                           );
                         })
                       ) : (
                         <tr className="border-0">
-                          <td colSpan={6}>NO EMPLOYEE SELECTED</td>
+                          <td colSpan={3}>NO EMPLOYEE SELECTED</td>
                         </tr>
                       )}
                     </tbody>
