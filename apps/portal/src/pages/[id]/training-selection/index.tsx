@@ -252,31 +252,19 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {loadingTrainingList ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
+            <ContentBody>
+              <div className="pb-10">
+                <DataTablePortal
+                  onRowClick={(row) => renderRowActions(row.original as Training)}
+                  textSize={'text-lg'}
+                  model={table}
+                  showGlobalFilter={true}
+                  showColumnFilter={false}
+                  paginate={true}
                 />
+                {/* <TrainingTable employeeDetails={employeeDetails} /> */}
               </div>
-            ) : (
-              <ContentBody>
-                <div className="pb-10">
-                  <DataTablePortal
-                    onRowClick={(row) => renderRowActions(row.original as Training)}
-                    textSize={'text-lg'}
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={false}
-                    paginate={true}
-                  />
-                  {/* <TrainingTable employeeDetails={employeeDetails} /> */}
-                </div>
-              </ContentBody>
-            )}
+            </ContentBody>
           </div>
         </MainContainer>
       </EmployeeProvider>

@@ -255,7 +255,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Type:</label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md">{individualTrainingDetails?.type}</label>
+                  <label className="text-slate-500 h-12 w-96 text-md capitalize">
+                    {individualTrainingDetails?.type}
+                  </label>
                 </div>
               </div>
 
@@ -287,6 +289,18 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                       </tr>
                     </thead>
                     <tbody className="text-sm text-center ">
+                      {nominatedEmployeeList?.length > 0 ? (
+                        <tr>
+                          <td className={`px-2 w-1/2 text-start border`}>Name</td>
+                          <td className={`px-2 w-1/6 text-start border`}>Status</td>
+                          <td className={`px-2 text-start border`}>Remarks</td>
+                        </tr>
+                      ) : (
+                        <tr>
+                          <td className={`px-2 w-1/2 text-start border`}>Name</td>
+                        </tr>
+                      )}
+
                       {nominatedEmployeeList?.length > 0 ? (
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.NOMINEE ? (
