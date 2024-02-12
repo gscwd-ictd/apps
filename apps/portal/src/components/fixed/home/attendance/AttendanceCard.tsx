@@ -58,7 +58,7 @@ export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoad
                 </label>
               )}
             </div>
-            {timeLogData?.schedule?.scheduleBase === 'Office' ? (
+            {timeLogData?.schedule?.lunchOut || timeLogData?.schedule?.lunchIn ? (
               <>
                 <div className="flex flex-col justify-center items-center">
                   <label className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}>
