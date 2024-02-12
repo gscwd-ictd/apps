@@ -31,8 +31,10 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     loadingResponse,
     loadingPsbMessages,
     loadingOvertimeMessages,
-    errorOvertimeMessage,
-    errorPsbMessage,
+    loadingTrainingMessages,
+    errorOvertimeMessages,
+    errorPsbMessages,
+    errorTrainingMessages,
     errorResponse,
     patchResponseApply,
 
@@ -43,6 +45,10 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeMessageList,
     getOvertimeMessageListSuccess,
     getOvertimeMessageListFail,
+
+    getTrainingMessageList,
+    getTrainingMessageListSuccess,
+    getTrainingMessageListFail,
 
     emptyResponseAndError,
 
@@ -58,8 +64,10 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     loadingResponse: state.loading.loadingResponse,
     loadingPsbMessages: state.loading.loadingPsbMessages,
     loadingOvertimeMessages: state.loading.loadingOvertimeMessages,
-    errorPsbMessage: state.error.errorPsbMessages,
-    errorOvertimeMessage: state.error.errorOvertimeMessages,
+    loadingTrainingMessages: state.loading.loadingTrainingMessages,
+    errorPsbMessages: state.error.errorPsbMessages,
+    errorOvertimeMessages: state.error.errorOvertimeMessages,
+    errorTrainingMessages: state.error.errorTrainingMessages,
     errorResponse: state.error.errorResponse,
     patchResponseApply: state.response.patchResponseApply,
 
@@ -70,6 +78,10 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeMessageList: state.getOvertimeMessageList,
     getOvertimeMessageListSuccess: state.getOvertimeMessageListSuccess,
     getOvertimeMessageListFail: state.getOvertimeMessageListFail,
+
+    getTrainingMessageList: state.getTrainingMessageList,
+    getTrainingMessageListSuccess: state.getTrainingMessageListSuccess,
+    getTrainingMessageListFail: state.getTrainingMessageListFail,
 
     emptyResponseAndError: state.emptyResponseAndError,
 
@@ -155,6 +167,38 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [swrOvertimeMessages, swrOvertimeMessageError]);
 
+  const trainingMessagesUrl = `http://172.20.10.58:4001/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  // const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrTrainingMessages,
+    isLoading: swrIsLoadingTrainingMessages,
+    error: swrTrainingMessageError,
+    mutate: mutateTrainingMessages,
+  } = useSWR(trainingMessagesUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoadingTrainingMessages) {
+      getTrainingMessageList(swrIsLoadingTrainingMessages);
+    }
+  }, [swrIsLoadingTrainingMessages]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrTrainingMessages)) {
+      getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
+    }
+
+    if (!isEmpty(swrTrainingMessageError)) {
+      getTrainingMessageListFail(swrIsLoadingTrainingMessages, swrTrainingMessageError.message);
+    }
+  }, [swrTrainingMessages, swrTrainingMessageError]);
+
   useEffect(() => {
     if (!isEmpty(patchResponseApply)) {
       mutateMessages();
@@ -182,12 +226,22 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
         <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
       ) : null}
 
-      {!isEmpty(errorOvertimeMessage) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorOvertimeMessage}: Failed to Overtime Inbox.`} />
+      {!isEmpty(errorOvertimeMessages) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorOvertimeMessages}: Failed to load Overtime Inbox.`}
+        />
       ) : null}
 
-      {!isEmpty(errorPsbMessage) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorPsbMessage}: Failed to PSB Inbox.`} />
+      {!isEmpty(errorPsbMessages) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorPsbMessages}: Failed to load PSB Inbox.`} />
+      ) : null}
+
+      {!isEmpty(errorTrainingMessages) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorTrainingMessages}: Failed to load Training Inbox.`}
+        />
       ) : null}
 
       <EmployeeProvider employeeData={employee}>
@@ -219,7 +273,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {loadingPsbMessages && loadingOvertimeMessages ? (
+            {loadingPsbMessages && loadingOvertimeMessages && loadingTrainingMessages ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

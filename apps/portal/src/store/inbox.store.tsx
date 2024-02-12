@@ -5,14 +5,16 @@ import { OvertimeMessageContent, PsbMessageContent } from '../types/inbox.type';
 import { InboxMessageResponse, InboxMessageType } from '../../../../libs/utils/src/lib/enums/inbox.enum';
 import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { TrainingByEmployeeId } from 'libs/utils/src/lib/types/training.type';
 
 export type InboxState = {
   message: {
     overtimeMessages: Array<OvertimeMessageContent>;
     psbMessages: Array<PsbMessageContent>;
+    trainingMessages: Array<TrainingByEmployeeId>;
     psb: PsbMessageContent;
     overtime: OvertimeMessageContent;
-    training: any;
+    training: TrainingByEmployeeId;
   };
   response: {
     patchResponseApply: any;
@@ -20,11 +22,13 @@ export type InboxState = {
   loading: {
     loadingOvertimeMessages: boolean;
     loadingPsbMessages: boolean;
+    loadingTrainingMessages: boolean;
     loadingResponse: boolean;
   };
   error: {
     errorOvertimeMessages: string;
     errorPsbMessages: string;
+    errorTrainingMessages: string;
     errorResponse: string;
   };
 
@@ -73,13 +77,20 @@ export type InboxState = {
   isMessageOpen: boolean;
   setIsMessageOpen: (isMessageOpen: boolean) => void;
 
+  //get list of psb messages
   getPsbMessageList: (loading: boolean) => void;
   getPsbMessageListSuccess: (loading: boolean, response) => void;
   getPsbMessageListFail: (loading: boolean, error: string) => void;
 
+  //get list of overtime assignment messages
   getOvertimeMessageList: (loading: boolean) => void;
   getOvertimeMessageListSuccess: (loading: boolean, response) => void;
   getOvertimeMessageListFail: (loading: boolean, error: string) => void;
+
+  //get training invites messages
+  getTrainingMessageList: (loading: boolean) => void;
+  getTrainingMessageListSuccess: (loading: boolean, response) => void;
+  getTrainingMessageListFail: (loading: boolean, error: string) => void;
 
   patchInboxReponse: () => void;
   patchInboxReponseSuccess: (response: any) => void;
@@ -93,9 +104,10 @@ export const useInboxStore = create<InboxState>()(
     message: {
       overtimeMessages: [],
       psbMessages: [],
+      trainingMessages: [],
       psb: {} as PsbMessageContent,
       overtime: {} as OvertimeMessageContent,
-      training: {} as any,
+      training: {} as TrainingByEmployeeId,
     },
     response: {
       patchResponseApply: {},
@@ -103,11 +115,13 @@ export const useInboxStore = create<InboxState>()(
     loading: {
       loadingOvertimeMessages: false,
       loadingPsbMessages: false,
+      loadingTrainingMessages: false,
       loadingResponse: false,
     },
     error: {
       errorOvertimeMessages: '',
       errorPsbMessages: '',
+      errorTrainingMessages: '',
       errorResponse: '',
     },
 
@@ -301,6 +315,56 @@ export const useInboxStore = create<InboxState>()(
         error: {
           ...state.error,
           errorOvertimeMessages: error,
+        },
+      }));
+    },
+
+    //GET TRAINING MESSAGES
+    getTrainingMessageList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          trainingMessages: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingTrainingMessages: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeMessages: '',
+        },
+      }));
+    },
+    getTrainingMessageListSuccess: (loading: boolean, response: Array<TrainingByEmployeeId>) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          trainingMessages: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingTrainingMessages: loading,
+        },
+
+        error: {
+          ...state.error,
+          errorTrainingMessages: '',
+        },
+      }));
+    },
+    getTrainingMessageListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingTrainingMessages: loading,
+        },
+        error: {
+          ...state.error,
+          errorTrainingMessages: error,
         },
       }));
     },

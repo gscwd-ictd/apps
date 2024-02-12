@@ -55,3 +55,11 @@ export type NominatedEmployees = {
   status: NomineeStatus;
   remarks: string;
 };
+
+export type TrainingByEmployeeId = {
+  nomineeId: string;
+  name: string; //training name
+  location: string;
+  trainingStart: string;
+  trainingEnd: string;
+};

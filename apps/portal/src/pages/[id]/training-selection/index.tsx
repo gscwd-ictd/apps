@@ -113,11 +113,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     data: swrTrainingList,
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
-    mutate: mutateTraining,
-  } = useSWR(trainingUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+    mutate: mutateTrainingList,
+  } = useSWR(trainingUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -194,6 +191,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   useEffect(() => {
     if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+      mutateTrainingList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);

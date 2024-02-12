@@ -6,6 +6,7 @@ import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useInboxStore } from '../../../../src/store/inbox.store';
 import { OvertimeMessageContent, PsbMessageContent } from 'apps/portal/src/types/inbox.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { TrainingByEmployeeId } from 'libs/utils/src/lib/types/training.type';
 
 type TabProps = {
   tab: number;
@@ -13,6 +14,7 @@ type TabProps = {
 
 export const AllInboxListTab = ({ tab }: TabProps) => {
   const {
+    trainingMessages,
     overtimeMessages,
     psbMessages,
     psbMessageModalIsOpen,
@@ -22,6 +24,7 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
     setMessagePsb,
     setMessageOvertime,
   } = useInboxStore((state) => ({
+    trainingMessages: state.message.trainingMessages,
     overtimeMessages: state.message.overtimeMessages,
     psbMessages: state.message.psbMessages,
     psbMessageModalIsOpen: state.psbMessageModalIsOpen,
@@ -90,7 +93,43 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
         </div>
       ) : null}
 
-      {tab === 2 ? (
+      {tab === 2 && trainingMessages && trainingMessages.length > 0 ? (
+        <ul className={'mt-4 lg:mt-0'}>
+          {trainingMessages.map((item: TrainingByEmployeeId, index: number) => {
+            return (
+              <li
+                key={index}
+                onClick={() => onSelect(item)}
+                className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
+              >
+                <div className={`w-full px-1 py-2`}>
+                  <h1 className={`text-lg font-medium text-gray-600 `}>{item.name}</h1>
+
+                  <p className={`text-sm text-gray-500 `}>Location: {item.location}</p>
+                  <p className={`text-sm text-gray-500 `}>
+                    Start Date: {DateFormatter(item?.trainingStart, 'MMMM DD, YYYY')}
+                  </p>
+                  <p className={`text-sm text-gray-500 `}>
+                    End Date: {DateFormatter(item?.trainingEnd, 'MMMM DD, YYYY')}
+                  </p>
+                  {/* <p className={`text-sm w-96 text-indigo-500 `}>
+                  Status:{' '}
+                  {item.status == OvertimeStatus.APPROVED
+                    ? 'APPROVED'
+                    : item.status == OvertimeStatus.DISAPPROVED
+                    ? 'DISAPPROVED'
+                    : item.status == OvertimeStatus.CANCELLED
+                    ? 'CANCELLED'
+                    : item.status == OvertimeStatus.PENDING
+                    ? 'PENDING'
+                    : item.status}
+                </p> */}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      ) : tab === 2 && trainingMessages && trainingMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>
