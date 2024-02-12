@@ -1,22 +1,17 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { Button, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../store/leave.store';
 import { HiX } from 'react-icons/hi';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
-import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import Calendar from './LeaveCalendar';
-import CancelLeaveCalendar from './CancelLeaveCalendar';
-import { LeaveApplicationForm } from 'libs/utils/src/lib/types/leave-application.type';
-import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { MySelectList } from '../../modular/inputs/SelectList';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -27,10 +22,7 @@ type CancelLeaveModalProps = {
 export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }: CancelLeaveModalProps) => {
   const {
     leaveIndividualDetail,
-    leaveId,
-    loadingLeaveDetails,
-    errorLeaveDetails,
-    cancelLeaveModalIsOpen,
+
     setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen,
     patchLeave,
@@ -39,10 +31,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
     emptyResponseAndError,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
-    leaveId: state.leaveId,
-    loadingLeaveDetails: state.loading.loadingIndividualLeave,
-    errorLeaveDetails: state.error.errorIndividualLeave,
-    cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
+
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
     patchLeave: state.patchLeave,
@@ -56,14 +45,36 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
   const [selectedDatesToCancel, setSelectedDatesToCancel] = useState<Array<SelectOption>>([]);
   const [leaveDates, setLeaveDates] = useState<Array<SelectOption>>([]);
 
+  //get dtr for the day
+  const getDailyDtr = async (date: string) => {
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${date}`
+    );
+    return data;
+  };
+
+  //add cancellable leave dates to new array for selection
   useEffect(() => {
     let leaveDates = [];
     if (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length >= 1) {
+      //loop through each leave date
       for (let i = 0; i < leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length; i++) {
-        leaveDates.push({
-          label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-          value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-        });
+        const dtrTrest = async () => {
+          const timeLogs: EmployeeDtrWithSchedule = await getDailyDtr(
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i]
+          );
+          console.log(timeLogs);
+          //check if there's a time in or time out
+          if (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) {
+            //add leave date to selection array
+            leaveDates.push({
+              label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+              value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+            });
+          } else if (timeLogs.holidayType === HolidayTypes.REGULAR) {
+          }
+        };
+        dtrTrest();
       }
     }
     setLeaveDates(leaveDates);

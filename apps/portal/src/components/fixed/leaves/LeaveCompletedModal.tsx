@@ -323,7 +323,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
                         leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther) ? (
                         <div className="flex flex-col justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row justify-between items-center w-full mb-1">
                             <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                               Specific Details:
                             </label>
@@ -451,7 +451,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                           Your {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Credits at the time of this
                           application:
                         </span>
-                        <table className="bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
                           <tbody>
                             <tr className="border border-slate-400">
                               <td className="border border-slate-400 text-center">Total Earned</td>

@@ -130,10 +130,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrEmployeeListIsLoading,
     error: swrEmployeeListError,
     mutate: mutateEmployeeList,
-  } = useSWR(employeeListUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -160,10 +157,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrOvertimeListIsLoading,
     error: swrOvertimeListError,
     mutate: mutateOvertimeList,
-  } = useSWR(overtimeListUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.overtimeImmediateSupervisorId ? overtimeListUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {

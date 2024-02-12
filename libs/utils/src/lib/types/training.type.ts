@@ -1,4 +1,10 @@
-import { NomineeType, TrainingPreparationStatus, TrainingStatus, TrainingTypes } from '../enums/training.enum';
+import {
+  NomineeStatus,
+  NomineeType,
+  TrainingPreparationStatus,
+  TrainingStatus,
+  TrainingTypes,
+} from '../enums/training.enum';
 
 export type TrainingType = {
   id: string;
@@ -40,4 +46,12 @@ export type TrainingNominee = {
 export type TrainingNominationData = {
   trainingDistribution: string;
   employees: Array<TrainingNominee>;
+};
+
+export type NominatedEmployees = {
+  employeeId: string;
+  name: string;
+  nomineeType: NomineeType;
+  status: NomineeStatus;
+  remarks: string;
 };

@@ -120,10 +120,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     isLoading: swrOvertimeListIsLoading,
     error: swrOvertimeListError,
     mutate: mutateOvertime,
-  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeListUrl : null, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeListUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {

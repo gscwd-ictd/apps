@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -31,6 +33,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
+import { useApprovalStore } from '../../store/approvals.store';
 
 export type NavDetails = {
   fullName: string;
@@ -282,6 +285,53 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY');
 
+  const {
+    tab,
+    errorPendingApprovalsCount,
+    pendingApprovalsCount,
+    getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail,
+  } = useApprovalStore((state) => ({
+    tab: state.tab,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    getPendingApprovalsCount: state.getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
+  }));
+
+  const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${userDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPendingApprovalsCount,
+    isLoading: swrPendingApprovalsCountIsLoading,
+    error: swrPendingApprovalsCountError,
+    mutate: mutatePassSlips,
+  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPendingApprovalsCountIsLoading) {
+      getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
+    }
+  }, [swrPendingApprovalsCountIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPendingApprovalsCount)) {
+      getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
+    }
+
+    if (!isEmpty(swrPendingApprovalsCountError)) {
+      getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
+    }
+  }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
+
   return (
     <>
       {/* Falling Hears Effect for February Only */}
@@ -295,6 +345,14 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
           <div className="heart x5"></div>
           <div className="altheart x6"></div>
         </div>
+      ) : null}
+
+      {/* Approval List Load Failed Error */}
+      {!isEmpty(errorPendingApprovalsCount) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorPendingApprovalsCount}: Failed to load Pending Approval Count.`}
+        />
       ) : null}
 
       {/* Leave Monetization Constant Load Failed */}

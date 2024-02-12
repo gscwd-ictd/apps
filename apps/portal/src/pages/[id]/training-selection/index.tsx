@@ -54,6 +54,9 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionListFail,
     setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails,
+    getEmployeeList,
+    getEmployeeListSuccess,
+    getEmployeeListFail,
     emptyResponseAndError,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
@@ -68,10 +71,41 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
+    getEmployeeList: state.getEmployeeList,
+    getEmployeeListSuccess: state.getEmployeeListSuccess,
+    getEmployeeListFail: state.getEmployeeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
+
+  const employeeListUrl = `http://172.20.10.58:4003/api/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
+  // const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/api/employees/supervisor/${employeeDetails.employmentDetails.userId}/subordinates/`;
+
+  const {
+    data: swrEmployeeList,
+    isLoading: swrEmployeeListIsLoading,
+    error: swrEmployeeListError,
+    mutate: mutateEmployeeList,
+  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrEmployeeListIsLoading) {
+      getEmployeeList(swrEmployeeListIsLoading);
+    }
+  }, [swrEmployeeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrEmployeeList)) {
+      getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
+    }
+
+    if (!isEmpty(swrEmployeeListError)) {
+      getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
+    }
+  }, [swrEmployeeList, swrEmployeeListError]);
 
   const trainingUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/supervisors/${employeeDetails.employmentDetails.userId}`;
 
@@ -168,6 +202,16 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   return (
     <>
+      {/* Employee List Load Failed */}
+      {!isEmpty(swrEmployeeListError) ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
+          />
+        </>
+      ) : null}
+
       {/* Training List Load Failed */}
       {!isEmpty(errorTrainingList) ? (
         <>
@@ -208,31 +252,19 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {loadingTrainingList ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
+            <ContentBody>
+              <div className="pb-10">
+                <DataTablePortal
+                  onRowClick={(row) => renderRowActions(row.original as Training)}
+                  textSize={'text-lg'}
+                  model={table}
+                  showGlobalFilter={true}
+                  showColumnFilter={false}
+                  paginate={true}
                 />
+                {/* <TrainingTable employeeDetails={employeeDetails} /> */}
               </div>
-            ) : (
-              <ContentBody>
-                <div className="pb-10">
-                  <DataTablePortal
-                    onRowClick={(row) => renderRowActions(row.original as Training)}
-                    textSize={'text-lg'}
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={false}
-                    paginate={true}
-                  />
-                  {/* <TrainingTable employeeDetails={employeeDetails} /> */}
-                </div>
-              </ContentBody>
-            )}
+            </ContentBody>
           </div>
         </MainContainer>
       </EmployeeProvider>
