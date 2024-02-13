@@ -79,8 +79,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   const router = useRouter();
 
-  const employeeListUrl = `http://172.20.10.58:4003/api/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
-  // const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/api/employees/supervisor/${employeeDetails.employmentDetails.userId}/subordinates/`;
+  const employeeListUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
 
   const {
     data: swrEmployeeList,
@@ -260,7 +259,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
                   showColumnFilter={false}
                   paginate={true}
                 />
-                {/* <TrainingTable employeeDetails={employeeDetails} /> */}
               </div>
             </ContentBody>
           </div>

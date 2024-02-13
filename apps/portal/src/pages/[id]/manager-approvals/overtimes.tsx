@@ -284,7 +284,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
       ) : null}
       {/* Overtime List Load Failed Error */}
       {!isEmpty(errorOvertime) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtimes.`} />
+        <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtime List.`} />
       ) : null}
       {/* Overtime Accomplishment Data Load Failed Error */}
       {!isEmpty(errorAccomplishment) ? (

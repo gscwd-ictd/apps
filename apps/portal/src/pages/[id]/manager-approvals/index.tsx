@@ -17,7 +17,7 @@ import useSWR from 'swr';
 import { employeeDummy } from '../../../types/employee.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { TabHeader } from 'apps/portal/src/components/fixed/tab/TabHeader';
-import { HiQuestionMarkCircle } from 'react-icons/hi';
+import { HiCalendar, HiClipboard, HiDocumentText, HiQuestionMarkCircle } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
@@ -108,12 +108,12 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
             <ContentBody>
               <>
-                <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500 w-1/2">
+                <ul className="flex flex-col lg:flex-col text-gray-500 w-full md:w-1/2 justify-center items-center">
                   <TabHeader
                     tab={0}
                     tabIndex={1}
                     title="Pass Slip Requests"
-                    icon={<HiQuestionMarkCircle size={26} />}
+                    icon={<HiDocumentText size={26} />}
                     subtitle="Show all Pass Slips requests"
                     notificationCount={
                       pendingApprovalsCount.pendingPassSlipsCount != 0 ? pendingApprovalsCount.pendingPassSlipsCount : 0
@@ -125,7 +125,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     tab={0}
                     tabIndex={2}
                     title="Leave Requests"
-                    icon={<HiQuestionMarkCircle size={26} />}
+                    icon={<HiCalendar size={26} />}
                     subtitle="Show all Leave requests"
                     notificationCount={
                       pendingApprovalsCount.pendingLeavesCount != 0 ? pendingApprovalsCount.pendingLeavesCount : 0
@@ -137,7 +137,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     tab={0}
                     tabIndex={3}
                     title="Overtime Requests"
-                    icon={<HiQuestionMarkCircle size={26} />}
+                    icon={<HiClipboard size={26} />}
                     subtitle="Show all Overtime requests"
                     notificationCount={
                       pendingApprovalsCount.pendingOvertimesCount != 0 ? pendingApprovalsCount.pendingOvertimesCount : 0

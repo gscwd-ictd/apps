@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
-import { HiExclamationCircle, HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
+import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -61,7 +61,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                     {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
                     pendingApprovalsCount.pendingLeavesCount != 0 ||
                     pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>
@@ -76,7 +76,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                     {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
                     pendingApprovalsCount.pendingLeavesCount != 0 ||
                     pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>
@@ -91,7 +91,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                     {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
                     pendingApprovalsCount.pendingLeavesCount != 0 ||
                     pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>
@@ -106,7 +106,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                     {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
                     pendingApprovalsCount.pendingLeavesCount != 0 ||
                     pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>

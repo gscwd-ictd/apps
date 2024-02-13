@@ -20,6 +20,7 @@ import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifferenc
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -301,6 +302,18 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
+
+                      <div className="md:w-1/2">
+                        <label className="text-slate-500 w-full text-md ">
+                          {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Estimated Hours:</label>
 
                       <div className="md:w-1/2">
@@ -404,7 +417,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                     <textarea
                       disabled
                       rows={3}
-                      className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                      className="resize-none w-full p-2 mt-1 rounded-lg text-slate-500 text-md border-slate-300"
                       value={accomplishmentDetails.accomplishments ?? 'Not yet filled out'}
                     ></textarea>
                   </div>

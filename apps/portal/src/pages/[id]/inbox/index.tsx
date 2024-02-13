@@ -167,8 +167,8 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [swrOvertimeMessages, swrOvertimeMessageError]);
 
-  const trainingMessagesUrl = `http://172.20.10.58:4001/trainings/employees/${employeeDetails.employmentDetails.userId}`;
-  // const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  // const trainingMessagesUrl = `http://172.20.10.58:4001/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {

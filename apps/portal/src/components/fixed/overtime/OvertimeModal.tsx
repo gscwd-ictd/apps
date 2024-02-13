@@ -132,6 +132,23 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
                   ) : null}
 
+                  {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Type:</label>
+
+                        <div className="w-full md:w-96 ">
+                          <label className="text-slate-500 w-full text-md ">
+                            {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY') <=
+                            DateFormatter(overtimeDetails.dateApproved, 'MM-DD-YYYY')
+                              ? 'Emergency Overtime'
+                              : 'Scheduled Overtime'}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
@@ -143,6 +160,30 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       </div>
                     </div>
                   </div>
+
+                  {overtimeDetails.status === OvertimeStatus.APPROVED ||
+                  overtimeDetails.status === OvertimeStatus.DISAPPROVED ||
+                  overtimeDetails.status === OvertimeStatus.CANCELLED ? (
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                          {overtimeDetails.status === OvertimeStatus.APPROVED
+                            ? 'Date Approved:'
+                            : overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                            ? 'Date Disapproved:'
+                            : overtimeDetails.status === OvertimeStatus.CANCELLED
+                            ? 'Date Cancelled'
+                            : ''}
+                        </label>
+
+                        <div className="w-full md:w-96 ">
+                          <label className="text-slate-500 w-full text-md ">
+                            {DateFormatter(overtimeDetails.dateApproved, 'MM-DD-YYYY')}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
