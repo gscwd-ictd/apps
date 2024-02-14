@@ -47,6 +47,8 @@ export type InboxState = {
 
   setMessageOvertime: (overtime: OvertimeMessageContent) => void;
 
+  setMessageTraining: (training: TrainingByEmployeeId) => void;
+
   confirmModalIsOpen: boolean;
   setConfirmModalIsOpen: (submitModalIsOpen: boolean) => void;
 
@@ -215,6 +217,17 @@ export const useInboxStore = create<InboxState>()(
         message: {
           ...state.message,
           overtime: overtime,
+        },
+      }));
+    },
+
+    //SET TRAINING MESSAGE CONTENT
+    setMessageTraining: (training: TrainingByEmployeeId) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          training: training,
         },
       }));
     },

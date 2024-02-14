@@ -19,35 +19,48 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
     psbMessages,
     psbMessageModalIsOpen,
     overtimeMessageModalIsOpen,
+    trainingMessageModalIsOpen,
     setOvertimeMessageModalIsOpen,
     setPsbMessageModalIsOpen,
+    setTrainingMessageModalIsOpen,
     setMessagePsb,
     setMessageOvertime,
+    setMessageTraining,
   } = useInboxStore((state) => ({
     trainingMessages: state.message.trainingMessages,
     overtimeMessages: state.message.overtimeMessages,
     psbMessages: state.message.psbMessages,
     psbMessageModalIsOpen: state.psbMessageModalIsOpen,
     overtimeMessageModalIsOpen: state.overtimeMessageModalIsOpen,
+    trainingMessageModalIsOpen: state.trainingMessageModalIsOpen,
     setOvertimeMessageModalIsOpen: state.setOvertimeMessageModalIsOpen,
     setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
+    setTrainingMessageModalIsOpen: state.setTrainingMessageModalIsOpen,
     setMessagePsb: state.setMessagePsb,
     setMessageOvertime: state.setMessageOvertime,
+    setMessageTraining: state.setMessageTraining,
   }));
 
   const onSelect = (messageDetails) => {
-    //PSB
-    if (tab === 3) {
-      setMessagePsb(messageDetails);
-      if (!psbMessageModalIsOpen) {
-        setPsbMessageModalIsOpen(true);
-      }
-    }
     //Overtime
-    else if (tab === 1) {
+    if (tab === 1) {
       setMessageOvertime(messageDetails);
       if (!overtimeMessageModalIsOpen) {
         setOvertimeMessageModalIsOpen(true);
+      }
+    }
+    //Training
+    else if (tab === 2) {
+      setMessageTraining(messageDetails);
+      if (!trainingMessageModalIsOpen) {
+        setTrainingMessageModalIsOpen(true);
+      }
+    }
+    //PSB
+    else if (tab === 3) {
+      setMessagePsb(messageDetails);
+      if (!psbMessageModalIsOpen) {
+        setPsbMessageModalIsOpen(true);
       }
     }
   };

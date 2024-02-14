@@ -24,6 +24,7 @@ import { InboxTabs } from 'apps/portal/src/components/fixed/inbox/InboxTabs';
 import { InboxTabWindow } from 'apps/portal/src/components/fixed/inbox/InboxTabWindow';
 import InboxPsbModal from 'apps/portal/src/components/fixed/inbox/InboxPsbModal';
 import InboxOvertimeModal from 'apps/portal/src/components/fixed/inbox/InboxOvertimeModal';
+import InboxTrainingModal from 'apps/portal/src/components/fixed/inbox/InboxTrainingModal';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -216,6 +217,10 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     setOvertimeMessageModalIsOpen(false);
   };
 
+  const closeTrainingMessageModal = async () => {
+    setTrainingMessageModalIsOpen(false);
+  };
+
   return (
     <>
       {!isEmpty(patchResponseApply) ? (
@@ -250,6 +255,13 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
         </Head>
 
         <SideNav employeeDetails={employeeDetails} />
+
+        {/* Training Message Modal */}
+        <InboxTrainingModal
+          modalState={trainingMessageModalIsOpen}
+          setModalState={setTrainingMessageModalIsOpen}
+          closeModalAction={closeTrainingMessageModal}
+        />
 
         {/* Psb Message Modal */}
         <InboxPsbModal

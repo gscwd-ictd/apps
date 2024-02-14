@@ -52,6 +52,11 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeListSuccess,
     getOvertimeListFail,
     emptyResponseAndError,
+
+    setSelectedMonth,
+    setSelectedYear,
+    setSelectedPeriod,
+    setSelectedEmployeeType,
   } = useOvertimeStore((state) => ({
     tab: state.tab,
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
@@ -79,6 +84,11 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeListSuccess: state.getOvertimeListSuccess,
     getOvertimeListFail: state.getOvertimeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
+
+    setSelectedMonth: state.setSelectedMonth,
+    setSelectedYear: state.setSelectedYear,
+    setSelectedPeriod: state.setSelectedPeriod,
+    setSelectedEmployeeType: state.setSelectedEmployeeType,
   }));
 
   const router = useRouter();
@@ -92,6 +102,10 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   const openOvertimeSummaryModal = () => {
     if (!overtimeSummaryModalIsOpen) {
       setOvertimeSummaryModalIsOpen(true);
+      setSelectedMonth(null);
+      setSelectedYear(null);
+      setSelectedPeriod(null);
+      setSelectedEmployeeType(null);
     }
   };
 

@@ -63,7 +63,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           const timeLogs: EmployeeDtrWithSchedule = await getDailyDtr(
             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i]
           );
-          console.log(timeLogs);
+
           //check if there's a time in or time out
           if (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) {
             //add leave date to selection array

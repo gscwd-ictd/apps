@@ -14,12 +14,12 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions();
 
-  const { overtimeMessage } = useInboxStore((state) => ({
-    overtimeMessage: state.message.overtime,
+  const { trainingMessage } = useInboxStore((state) => ({
+    trainingMessage: state.message.training,
   }));
 
   return (
@@ -45,64 +45,48 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
                 <AlertNotification
                   alertType="info"
                   notifMessage={
-                    'This is to inform you that you have been requested for Overtime with the specified details below'
+                    'This is to inform you that you have been nominated to attend the Training session specified below'
                   }
                   dismissible={false}
                 />
               </div>
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Date:</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Training Title:</label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">
-                    {DateFormatter(overtimeMessage.plannedDate, 'MM-DD-YYYY')}
-                  </label>
+                  <label className="text-slate-500 h-12 w-96 text-md capitalize">{trainingMessage.name}</label>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Estimated Hours:</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Location:</label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">{overtimeMessage.estimatedHours}</label>
+                  <label className="text-slate-500 h-12 w-96  text-md ">{trainingMessage.location}</label>
                 </div>
               </div>
 
               <div className={` flex flex-col gap-2`}>
                 <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Purpose:</label>
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Start Date:</label>
                   <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">{overtimeMessage.purpose}</label>
+                    <label className="text-slate-500 h-12 w-96  text-md ">
+                      {DateFormatter(trainingMessage.trainingStart, 'MM-DD-YYYY')}
+                    </label>
                   </div>
                 </div>
               </div>
 
-              <div className={`flex flex-col gap-2`}>
-                <label className="text-slate-500 text-md font-medium">Other Employees Assigned:</label>
-                {overtimeMessage?.employeeDetails?.map((employee: OvertimeMembers, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className={`${
-                        index != 0 ? 'border-t border-slate-200' : ''
-                      } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
-                    >
-                      <img
-                        className="rounded-full border border-stone-100 shadow w-14"
-                        src={employee?.avatarUrl ?? ''}
-                        alt={'photo'}
-                      ></img>
-                      <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
-                        <div className="w-full flex flex-row items-center gap-4 text-sm md:text-md text-slate-500">
-                          <label className="w-full">{employee.employeeFullName}</label>
-                          <label className="w-full">{employee.position}</label>
-                          <label className="w-full">{employee.assignment}</label>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className={` flex flex-col gap-2`}>
+                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">End Date:</label>
+                  <div className="w-auto sm:w-96">
+                    <label className="text-slate-500 h-12 w-96  text-md ">
+                      {DateFormatter(trainingMessage.trainingEnd, 'MM-DD-YYYY')}
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -121,4 +105,4 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
   );
 };
 
-export default InboxOvertimeModal;
+export default InboxTrainingModal;
