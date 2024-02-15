@@ -199,7 +199,7 @@ export default function Vacancies({
         <ToastNotification toastType="success" notifMessage={`Job Application Submitted`} />
       ) : null}
 
-      {data && (
+      {data ? (
         <div>
           <Head>
             <title>Job Vacancies</title>
@@ -356,6 +356,8 @@ export default function Vacancies({
             </div>
           </MainContainer>
         </div>
+      ) : (
+        'No Data'
       )}
     </>
   );
