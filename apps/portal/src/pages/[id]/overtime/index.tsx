@@ -324,7 +324,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
                 </Button>
               </div>
             </ContentHeader>
-            {!overtimeList ? (
+            {swrOvertimeListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

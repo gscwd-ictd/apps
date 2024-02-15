@@ -232,7 +232,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   className={
                     dirtyFields.timeIn && !errors.timeIn ? 'bg-green-300' : errors.timeIn ? 'bg-red-200' : 'bg-inherit'
                   }
-                  disabled={rowData.dtr?.timeIn || rowData.dtr?.remarks === 'Rest Day' ? true : false}
+                  disabled={rowData.dtr?.timeIn ? true : false}
                 />
               </div>
               <div className="">
@@ -260,13 +260,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-                  disabled={
-                    getValues('withLunch') === true
-                      ? rowData.dtr?.lunchOut || rowData.dtr?.remarks === 'Rest Day'
-                        ? true
-                        : false
-                      : true
-                  }
+                  disabled={getValues('withLunch') === true ? (rowData.dtr?.lunchOut ? true : false) : true}
                 />
               </div>
               <div className="">
@@ -296,13 +290,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-                  disabled={
-                    getValues('withLunch') === true
-                      ? rowData.dtr?.lunchIn || rowData.dtr?.remarks === 'Rest Day'
-                        ? true
-                        : false
-                      : true
-                  }
+                  disabled={getValues('withLunch') === true ? (rowData.dtr?.lunchIn ? true : false) : true}
                 />
               </div>
               <div className="">
@@ -331,7 +319,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-                  disabled={rowData.dtr?.timeOut || rowData.dtr?.remarks === 'Rest Day' ? true : false}
+                  disabled={rowData.dtr?.timeOut ? true : false}
                 />
               </div>
               <div className="">

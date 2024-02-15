@@ -43,16 +43,27 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
   }));
 
-  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
-    useTimeLogStore((state) => ({
-      dtr: state.dtr,
-      schedule: state.schedule,
-      loadingTimeLogs: state.loading.loadingTimeLogs,
-      errorTimeLogs: state.error.errorTimeLogs,
-      getTimeLogs: state.getTimeLogs,
-      getTimeLogsSuccess: state.getTimeLogsSuccess,
-      getTimeLogsFail: state.getTimeLogsFail,
-    }));
+  const {
+    dtr,
+    schedule,
+    isHoliday,
+    isRestday,
+    loadingTimeLogs,
+    errorTimeLogs,
+    getTimeLogs,
+    getTimeLogsSuccess,
+    getTimeLogsFail,
+  } = useTimeLogStore((state) => ({
+    dtr: state.dtr,
+    schedule: state.schedule,
+    loadingTimeLogs: state.loading.loadingTimeLogs,
+    errorTimeLogs: state.error.errorTimeLogs,
+    isHoliday: state.isHoliday,
+    isRestday: state.isRestDay,
+    getTimeLogs: state.getTimeLogs,
+    getTimeLogsSuccess: state.getTimeLogsSuccess,
+    getTimeLogsFail: state.getTimeLogsFail,
+  }));
 
   const employeeDtr = useDtrStore((state) => state.employeeDtr);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -135,18 +146,34 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   useEffect(() => {
     if (Number(encodedHours.toFixed(2)) < 5) {
       setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-    } else if (encodedHours % 4 == 0 && encodedHours >= 5) {
-      if (encodedHours % 4 == 0) {
-        setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 4));
-      } else if (encodedHours / 4 > 0) {
-        setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 4));
-      } else {
-        setFinalEncodedHours(encodedHours);
-      }
-    } else {
+    } else if (Number(encodedHours.toFixed(2)) >= 5 && Number(encodedHours.toFixed(2)) < 13) {
+      let temporaryHours = Number(encodedHours - 1);
+      setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+    } else if (Number(encodedHours.toFixed(2)) >= 13 && Number(encodedHours.toFixed(2)) < 17) {
+      let temporaryHours = Number(encodedHours - 2);
+      setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+    } else if (Number(encodedHours.toFixed(2)) >= 17 && Number(encodedHours.toFixed(2)) < 21) {
+      let temporaryHours = Number(encodedHours - 3);
+      setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+    } else if (Number(encodedHours.toFixed(2)) >= 21 && Number(encodedHours.toFixed(2)) < 24) {
+      let temporaryHours = Number(encodedHours - 4);
+      setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+    } else if (Number(encodedHours.toFixed(2)) >= 24) {
+      let temporaryHours = Number(encodedHours - 4);
+      setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+    }
+    // else if (encodedHours % 4 == 0 && encodedHours >= 5) {
+    //   if (encodedHours % 4 == 0) {
+    //     setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 4));
+    //   } else if (encodedHours / 4 > 0) {
+    //     setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 4));
+    //   } else {
+    //     setFinalEncodedHours(encodedHours);
+    //   }
+    // }
+    else {
       setFinalEncodedHours(Number(encodedHours.toFixed(2)));
     }
-    setFinalEncodedHours(Number(encodedHours.toFixed(2)));
   }, [encodedHours]);
 
   const checkIfRestDayOrHoliday = () => {};
@@ -177,6 +204,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
+      console.log(swrFaceScan);
       getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
     }
 
@@ -230,27 +258,55 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                 <div className="w-full h-full flex flex-col gap-2 ">
                   <div className="w-full flex flex-col gap-2 p-4 rounded">
                     <div className="w-full flex flex-col gap-0">
-                      {/* Scheduled OT but IVMS is incomplete/empty */}
+                      {/* Scheduled OT but IVMS is incomplete/empty - for Office, Field, Pumping*/}
                       {overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
                       (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) ? (
                         <AlertNotification
                           alertType="error"
                           notifMessage={
-                            'Empty or Incomplete Time Log detected. Please conduct a Time Log Correction in the DTR page for this date as this is a scheduled Overtime.'
+                            'Empty or Incomplete Time Log detected. Please conduct a Time Log Correction in the DTR page for this date as this was a scheduled Overtime.'
                           }
                           dismissible={false}
                         />
                       ) : null}
 
-                      {/* Emergency OT but IVMS is incomplete/empty - for Office */}
+                      {/* Emergency OT but IVMS is incomplete/empty and OT day is Restday or Holiday - for Office Only */}
                       {overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
                       schedule.scheduleBase === ScheduleBases.OFFICE &&
-                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) ? (
+                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                      (isHoliday || isRestday) ? (
                         <AlertNotification
                           alertType="error"
                           notifMessage={
-                            'Empty or Incomplete Time Log detected. Please conduct a Time Log Correction in the DTR page for this date as this is a scheduled Overtime.'
+                            'Empty or Incomplete Time Log detected. Please conduct a Time Log Correction in the DTR page for this date as this was an Emergency Overtime conducted during a holiday or rest day.'
                           }
+                          dismissible={false}
+                        />
+                      ) : null}
+
+                      {/* Emergency OT but IVMS is incomplete/empty and OT day is REGULAR SCHEDULED WORK DAY - for Office Only */}
+                      {overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      schedule.scheduleBase === ScheduleBases.OFFICE &&
+                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                      !isHoliday &&
+                      !isRestday ? (
+                        <AlertNotification
+                          alertType="error"
+                          notifMessage={
+                            'Empty or Incomplete Time Log detected. Submission is not possible as this was an Emergency Overtime conducted during a regular scheduled work day.'
+                          }
+                          dismissible={false}
+                        />
+                      ) : null}
+
+                      {/* Emergency OT and Encoded TimeIn/Out is empty - for Field, Pumping Only */}
+                      {overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      (schedule.scheduleBase === ScheduleBases.FIELD ||
+                        schedule.scheduleBase === ScheduleBases.PUMPING_STATION) &&
+                      (finalEncodedHours <= 0 || isNaN(finalEncodedHours)) ? (
+                        <AlertNotification
+                          alertType="error"
+                          notifMessage={'Encoded Time In and Time Out fields are empty.'}
                           dismissible={false}
                         />
                       ) : null}
@@ -284,7 +340,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       ).days > 5 ? (
                         <AlertNotification
                           alertType="error"
-                          notifMessage={'Deadline for submission has been reached'}
+                          notifMessage={'Deadline for submission has been reached.'}
                           dismissible={false}
                         />
                       ) : !overtimeAccomplishmentDetails.accomplishments &&
@@ -302,7 +358,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               `${overtimeAccomplishmentDetails.dateOfOTApproval} 00:00:00`,
                               `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
                             ).days
-                          } day(s) left before deadline of submission`}
+                          } day(s) left before deadline of submission.`}
                           dismissible={false}
                         />
                       ) : null}
@@ -317,7 +373,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       ).days > 5 ? (
                         <AlertNotification
                           alertType="error"
-                          notifMessage={'Deadline for submission has been reached'}
+                          notifMessage={'Deadline for submission has been reached.'}
                           dismissible={false}
                         />
                       ) : !overtimeAccomplishmentDetails.accomplishments &&
@@ -335,7 +391,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               `${overtimeAccomplishmentDetails.plannedDate} 00:00:00`,
                               `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
                             ).days
-                          } day(s) left before deadline of submission`}
+                          } day(s) left before deadline of submission.`}
                           dismissible={false}
                         />
                       ) : null}
@@ -619,19 +675,26 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               ) : (
                 <Button
                   disabled={
-                    //if scheduled OT and has incomplete IVMS (regardless if office or field/pumping)
+                    // If Scheduled OT but IVMS is incomplete/empty - for Office, Field, Pumping
                     (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
                       (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut)) ||
-                    //if emergency OT and is FIELD/PUMPING EMPLOYEE and has no encoded timeIn/Out
+                    // If Emergency OT but IVMS is incomplete/empty and OT day is Restday or Holiday - for Office Only
+                    (overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      schedule.scheduleBase === ScheduleBases.OFFICE &&
+                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                      (isHoliday || isRestday)) ||
+                    // If Emergency OT but IVMS is incomplete/empty and OT day is REGULAR SCHEDULED WORK DAY - for Office Only */}
+                    (overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
+                      schedule.scheduleBase === ScheduleBases.OFFICE &&
+                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
+                      !isHoliday &&
+                      !isRestday) ||
+                    //If Emergency OT and is FIELD/PUMPING EMPLOYEE and has no encoded timeIn/Out
                     (overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
                       (schedule.scheduleBase === ScheduleBases.FIELD ||
                         schedule.scheduleBase === ScheduleBases.PUMPING_STATION) &&
                       (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
-                    //if emergency OT and is OFFICE EMPLOYEE and has incomplete IVMS
-                    (overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      schedule.scheduleBase === ScheduleBases.OFFICE &&
-                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut)) ||
-                    // if accomplishment field hasn't been filled out
+                    // If accomplishment field hasn't been filled out
                     !watch('accomplishments')
                       ? true
                       : false

@@ -122,11 +122,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
-                    <AlertNotification
-                      alertType="warning"
-                      notifMessage={'For Supervisor Approval'}
-                      dismissible={false}
-                    />
+                    <AlertNotification alertType="warning" notifMessage={'For Supervisor Review'} dismissible={false} />
                   ) : null}
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
                     <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />

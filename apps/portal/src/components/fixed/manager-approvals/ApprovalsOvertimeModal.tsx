@@ -213,7 +213,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     }
                     notifMessage={
                       overtimeDetails.status === OvertimeStatus.PENDING
-                        ? 'For Supervisor Approval'
+                        ? 'For Supervisor Review'
                         : overtimeDetails.status === OvertimeStatus.APPROVED
                         ? 'Approved'
                         : overtimeDetails.status === OvertimeStatus.DISAPPROVED

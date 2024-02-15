@@ -7,6 +7,7 @@ import { useInboxStore } from '../../../../src/store/inbox.store';
 import { OvertimeMessageContent, PsbMessageContent } from 'apps/portal/src/types/inbox.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { TrainingByEmployeeId } from 'libs/utils/src/lib/types/training.type';
+import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
 
 type TabProps = {
   tab: number;
@@ -125,18 +126,16 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
                   <p className={`text-sm text-gray-500 `}>
                     End Date: {DateFormatter(item?.trainingEnd, 'MMMM DD, YYYY')}
                   </p>
-                  {/* <p className={`text-sm w-96 text-indigo-500 `}>
-                  Status:{' '}
-                  {item.status == OvertimeStatus.APPROVED
-                    ? 'APPROVED'
-                    : item.status == OvertimeStatus.DISAPPROVED
-                    ? 'DISAPPROVED'
-                    : item.status == OvertimeStatus.CANCELLED
-                    ? 'CANCELLED'
-                    : item.status == OvertimeStatus.PENDING
-                    ? 'PENDING'
-                    : item.status}
-                </p> */}
+                  <p className={`text-sm w-96 text-indigo-500 `}>
+                    Status:{' '}
+                    {item.nomineeStatus == NomineeStatus.ACCEPTED
+                      ? 'ACCEPTED'
+                      : item.nomineeStatus == NomineeStatus.DECLINED
+                      ? 'DECLINED'
+                      : item.nomineeStatus == NomineeStatus.PENDING
+                      ? 'PENDING'
+                      : item.nomineeStatus}
+                  </p>
                 </div>
               </li>
             );

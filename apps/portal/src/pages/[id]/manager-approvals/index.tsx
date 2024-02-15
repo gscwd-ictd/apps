@@ -50,37 +50,6 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
 
-  const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
-
-  const {
-    data: swrPendingApprovalsCount,
-    isLoading: swrPendingApprovalsCountIsLoading,
-    error: swrPendingApprovalsCountError,
-    mutate: mutatePendingApprovals,
-  } = useSWR(employeeDetails.employmentDetails.userId ? pendingApprovalsCountUrl : null, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
-
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrPendingApprovalsCountIsLoading) {
-      getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
-    }
-  }, [swrPendingApprovalsCountIsLoading]);
-
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrPendingApprovalsCount)) {
-      getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
-    }
-
-    if (!isEmpty(swrPendingApprovalsCountError)) {
-      getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
-    }
-  }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
-
   return (
     <>
       <EmployeeProvider employeeData={employee}>
@@ -89,14 +58,6 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
         </Head>
 
         <SideNav employeeDetails={employeeDetails} />
-
-        {/* Leave List Load Failed Error */}
-        {!isEmpty(errorPendingApprovalsCount) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorPendingApprovalsCount}: Failed to load Pending Approval Count.`}
-          />
-        ) : null}
 
         <MainContainer>
           <div className="w-full pl-4 pr-4 lg:pl-32 lg:pr-32">

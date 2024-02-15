@@ -73,8 +73,9 @@ export const ProfileMenuDropdown = ({
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
-  const { pendingApprovalsCount } = useApprovalStore((state) => ({
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
     pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
   }));
 
   // close Change Password Modal
@@ -238,9 +239,10 @@ export const ProfileMenuDropdown = ({
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
-                                {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                                pendingApprovalsCount.pendingLeavesCount != 0 ||
-                                pendingApprovalsCount.pendingOvertimesCount != 0 ? (
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                                  pendingApprovalsCount.pendingLeavesCount != 0 ||
+                                  pendingApprovalsCount.pendingOvertimesCount != 0) ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>

@@ -255,7 +255,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
+                <div className="w-full flex flex-col gap-3 md:gap-2 p-4 rounded">
                   {/* {loadingAccomplishmentResponse ? (
                     <AlertNotification alertType={'info'} notifMessage={'Processing'} dismissible={false} />
                   ) : null} */}
@@ -277,7 +277,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
                       !loadingAccomplishmentResponse
                         ? accomplishmentDetails.accomplishments
-                          ? 'For Supervisor Approval'
+                          ? 'For Supervisor Review'
                           : 'Awaitng Completion from Employee'
                         : accomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED &&
                           !loadingAccomplishmentResponse
@@ -438,22 +438,29 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
                     <form id="OvertimeAccomplishmentAction" onSubmit={handleSubmit(onSubmit)}>
-                      <div className="w-full flex gap-2 justify-start items-center pt-4">
-                        <span className="text-slate-500 text-md font-medium">Follow Estimated Hours:</span>
-                        <Checkbox
-                          checkboxId="followEstimatedHrs"
-                          label=""
-                          // checked={watch('followEstimatedHrs')}
-                          onChange={() => setFollowEstimatedHrs(!followEstimatedHrs)}
-                          // {...register('followEstimatedHrs')}
-                        />
+                      <div className="w-full flex flex-col md:flex-row gap-1 justify-between items-start md:items-center pt-0 md:pt-3">
+                        <span className="text-slate-500 text-md font-medium">Approved Hours:</span>
+
+                        <div className="w-full md:w-60">
+                          <input
+                            type="number"
+                            className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded-lg"
+                            placeholder="Enter number of hours"
+                            required
+                            defaultValue={0}
+                            max="24"
+                            min="1"
+                            // {...register('estimatedHours')}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full flex gap-2 justify-start items-center pt-4">
+
+                      <div className="w-full flex flex-col md:flex-row gap-1 justify-between items-start md:items-center pt-3 md:pt-4">
                         <span className="text-slate-500 text-md font-medium">Action:</span>
 
                         <select
                           id="action"
-                          className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
+                          className="text-slate-500 h-12 w-full md:w-60 rounded-lg text-md border-slate-300"
                           required
                           {...register('status')}
                         >

@@ -200,7 +200,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                               loading={false}
                               onClick={() => openEditActionModal(logs)}
                               disabled={
-                                DateFormatter(logs.day, 'MM-DD-YYYY') <=
+                                DateFormatter(logs.day, 'MM-DD-YYYY') <
                                 dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
                                   ? false
                                   : true

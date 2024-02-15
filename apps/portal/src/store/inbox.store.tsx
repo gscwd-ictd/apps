@@ -18,6 +18,7 @@ export type InboxState = {
   };
   response: {
     patchResponseApply: any;
+    putResponseApply: any;
   };
   loading: {
     loadingOvertimeMessages: boolean;
@@ -55,8 +56,8 @@ export type InboxState = {
   confirmationModalTitle: string;
   setConfirmationModalTitle: (confirmationModalTitle: string) => void;
 
-  selectedVppId: string;
-  setSelectedVppId: (selectedVppId: string) => void;
+  selectedPayloadId: string;
+  setSelectedPayloadId: (selectedPayloadId: string) => void;
 
   selectedMessageType: InboxMessageType;
   setSelectedMessageType: (selectedMessageType: InboxMessageType) => void;
@@ -94,9 +95,13 @@ export type InboxState = {
   getTrainingMessageListSuccess: (loading: boolean, response) => void;
   getTrainingMessageListFail: (loading: boolean, error: string) => void;
 
-  patchInboxReponse: () => void;
-  patchInboxReponseSuccess: (response: any) => void;
-  patchInboxReponseFail: (error: string) => void;
+  patchInboxResponse: () => void;
+  patchInboxResponseSuccess: (response: any) => void;
+  patchInboxResponseFail: (error: string) => void;
+
+  putInboxResponse: () => void;
+  putInboxResponseSuccess: (response: any) => void;
+  putInboxResponseFail: (error: string) => void;
 
   emptyResponseAndError: () => void;
 };
@@ -113,6 +118,7 @@ export const useInboxStore = create<InboxState>()(
     },
     response: {
       patchResponseApply: {},
+      putResponseApply: {},
     },
     loading: {
       loadingOvertimeMessages: false,
@@ -164,9 +170,9 @@ export const useInboxStore = create<InboxState>()(
       set((state) => ({ ...state, selectedMessageType }));
     },
 
-    selectedVppId: '',
-    setSelectedVppId: (selectedVppId: string) => {
-      set((state) => ({ ...state, selectedVppId }));
+    selectedPayloadId: '',
+    setSelectedPayloadId: (selectedPayloadId: string) => {
+      set((state) => ({ ...state, selectedPayloadId }));
     },
 
     declineRemarks: '',
@@ -382,8 +388,8 @@ export const useInboxStore = create<InboxState>()(
       }));
     },
 
-    //POST PASS SLIP ACTIONS
-    patchInboxReponse: () => {
+    //PATCH ACTIONS
+    patchInboxResponse: () => {
       set((state) => ({
         ...state,
         response: {
@@ -400,7 +406,7 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    patchInboxReponseSuccess: (response) => {
+    patchInboxResponseSuccess: (response) => {
       set((state) => ({
         ...state,
         response: {
@@ -413,7 +419,7 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    patchInboxReponseFail: (error: string) => {
+    patchInboxResponseFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -426,12 +432,58 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
+
+    putInboxResponse: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          putResponseApply: {},
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    putInboxResponseSuccess: (response) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          putResponseApply: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    putInboxResponseFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
           patchResponseApply: {},
+          putResponseApply: {},
         },
         error: {
           ...state.error,

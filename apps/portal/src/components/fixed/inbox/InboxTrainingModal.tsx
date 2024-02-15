@@ -7,6 +7,9 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
 import { OvertimeMembers, PsbMembers } from 'apps/portal/src/types/inbox.type';
+import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
+import { InboxMessageResponse } from 'libs/utils/src/lib/enums/inbox.enum';
+import { ConfirmationInboxModal } from './ConfirmationModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -18,9 +21,41 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions();
 
-  const { trainingMessage } = useInboxStore((state) => ({
+  const {
+    trainingMessage,
+    declineRemarks,
+    confirmModalIsOpen,
+    setConfirmModalIsOpen,
+    setSelectedPayloadId,
+    setConfirmationResponse,
+    setConfirmationModalTitle,
+    setDeclineRemarks,
+  } = useInboxStore((state) => ({
+    declineRemarks: state.declineRemarks,
     trainingMessage: state.message.training,
+    confirmModalIsOpen: state.confirmModalIsOpen,
+    setConfirmModalIsOpen: state.setConfirmModalIsOpen,
+    setSelectedPayloadId: state.setSelectedPayloadId,
+    setConfirmationResponse: state.setConfirmationResponse,
+    setConfirmationModalTitle: state.setConfirmationModalTitle,
+    setDeclineRemarks: state.setDeclineRemarks,
   }));
+
+  //UPDATE REMARKS ON RESPONSE
+  const handleRemarks = (e: string) => {
+    setDeclineRemarks(e);
+  };
+
+  const openSubmitModalAction = async (selectedNominationId: string, response: InboxMessageResponse) => {
+    setSelectedPayloadId(selectedNominationId); // to be used for training put request
+    setConfirmationResponse(response); // set as accept or decline
+    setConfirmationModalTitle('Training Acknowledgment');
+    setConfirmModalIsOpen(true);
+  };
+
+  const closeConfirmModalAction = async () => {
+    setConfirmModalIsOpen(false);
+  };
 
   return (
     <>
@@ -39,16 +74,42 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
           </h3>
         </Modal.Header>
         <Modal.Body>
+          <ConfirmationInboxModal
+            modalState={confirmModalIsOpen}
+            setModalState={setConfirmModalIsOpen}
+            closeModalAction={closeConfirmModalAction}
+          />
+
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 p-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 <AlertNotification
                   alertType="info"
                   notifMessage={
-                    'This is to inform you that you have been nominated to attend the Training session specified below'
+                    'This is to inform you that you have been nominated to attend the Training Session specified below.'
                   }
                   dismissible={false}
                 />
+
+                {trainingMessage?.nomineeStatus === NomineeStatus.ACCEPTED ? (
+                  <AlertNotification
+                    alertType={`success`}
+                    notifMessage={`You have confirmed to attend this Training.`}
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {trainingMessage?.nomineeStatus === NomineeStatus.DECLINED ? (
+                  <AlertNotification
+                    alertType="error"
+                    notifMessage={'You have declined to attend this Training.'}
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {trainingMessage?.nomineeStatus === NomineeStatus.PENDING ? (
+                  <AlertNotification alertType="warning" notifMessage={'Awaiting acknowledgment'} dismissible={false} />
+                ) : null}
               </div>
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
@@ -88,15 +149,65 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                   </div>
                 </div>
               </div>
+
+              <div className={`flex flex-col gap-2`}>
+                <label className="text-slate-500 text-md font-medium">
+                  Remarks:{' '}
+                  {trainingMessage?.nomineeStatus === NomineeStatus.ACCEPTED ||
+                  trainingMessage?.nomineeStatus === NomineeStatus.DECLINED ? null : (
+                    <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
+                  )}
+                </label>
+
+                <textarea
+                  className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                  disabled={trainingMessage?.nomineeStatus === NomineeStatus.PENDING ? false : true}
+                  value={
+                    trainingMessage?.remarks
+                      ? trainingMessage?.remarks
+                      : trainingMessage?.nomineeStatus === NomineeStatus.PENDING
+                      ? declineRemarks
+                      : 'N/A'
+                  }
+                  placeholder={'If declining, please state reason.'}
+                  onChange={(e) => handleRemarks(e.target.value as unknown as string)}
+                  rows={3}
+                ></textarea>
+              </div>
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="w-full justify-end flex gap-2">
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
-                Close
-              </Button>
+              {trainingMessage?.nomineeStatus === NomineeStatus.ACCEPTED ||
+              trainingMessage?.nomineeStatus === NomineeStatus.DECLINED ? (
+                <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
+                  Close
+                </Button>
+              ) : (
+                <div className="flex flex-row items-center justify-end gap-4">
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    onClick={(e) =>
+                      openSubmitModalAction(trainingMessage?.nomineeId, InboxMessageResponse.TRAINING_ACCEPT)
+                    }
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    variant={'danger'}
+                    size={'md'}
+                    disabled={declineRemarks ? false : true}
+                    onClick={(e) =>
+                      openSubmitModalAction(trainingMessage?.nomineeId, InboxMessageResponse.TRAINING_DECLINE)
+                    }
+                  >
+                    Decline
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </Modal.Footer>

@@ -45,7 +45,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
                 <AlertNotification
                   alertType="info"
                   notifMessage={
-                    'This is to inform you that you have been requested for Overtime with the specified details below'
+                    'This is to inform you that you have been requested for Overtime with the specified details below.'
                   }
                   dismissible={false}
                 />

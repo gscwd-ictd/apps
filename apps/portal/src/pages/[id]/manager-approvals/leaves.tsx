@@ -305,7 +305,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
                 backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 
-              {loadingLeave ? (
+              {swrLeaveIsLoading ? (
                 <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}
