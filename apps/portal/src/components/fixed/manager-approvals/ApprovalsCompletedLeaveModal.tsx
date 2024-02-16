@@ -87,15 +87,15 @@ export const ApprovalsCompletedLeaveModal = ({
                       }
                       notifMessage={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? 'For HRDM Approval'
+                          ? 'For HRDM Review'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
-                          ? 'For HRMO Approval '
+                          ? 'For HRMO Review '
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Approval '
+                          ? 'For Supervisor Review '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
                           ? 'Disapproved by HRDM '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? 'Disapproved by HRDO '
+                          ? 'Disapproved by HRMO '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                           ? 'Disapproved by Supervisor '
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED

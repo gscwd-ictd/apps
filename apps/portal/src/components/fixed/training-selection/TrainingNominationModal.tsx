@@ -23,11 +23,6 @@ const listOfEmployees: Array<SelectOption> = [
   { label: 'Deo Del Rosario', value: 'af59e049-b26e-11ed-a79b-000c29f95a80' },
   { label: 'Cara Jade Reyes', value: '6e0ef093-0e63-11ee-8b82-005056b680ac' },
   { label: 'Rizza Baugbog', value: 'b34db5e3-b1c6-11ed-a79b-000c29f95a80' },
-  // { label: 'Kumier Lou Arancon', value: '10' },
-  // { label: 'Roland Bacayo', value: '11' },
-  // { label: 'Alfred Perez', value: '12' },
-  // { label: 'Elea Glen Lacerna', value: '13' },
-  // { label: 'Ricky Libertad', value: '14' },
 ];
 
 type TrainingNominationModalProps = {
@@ -136,19 +131,19 @@ export const TrainingNominationModal = ({
           {auxiliaryEmployees.length > 2 ? (
             <AlertNotification
               alertType="warning"
-              notifMessage="Selected Auxiliary Participants exceeded"
+              notifMessage="Selected Auxiliary Participants exceeded."
               dismissible={false}
             />
           ) : null}
 
           {nominatedEmployees.length > individualTrainingDetails.numberOfSlots ? (
-            <AlertNotification alertType="warning" notifMessage="Selected Participants exceeded" dismissible={false} />
+            <AlertNotification alertType="warning" notifMessage="Selected Participants exceeded." dismissible={false} />
           ) : null}
 
           {isDuplicatedNominee ? (
             <AlertNotification
               alertType="warning"
-              notifMessage="There are duplicate employee nominations"
+              notifMessage="There are duplicate employee nominations."
               dismissible={false}
             />
           ) : null}

@@ -32,6 +32,7 @@ import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ChangePasswordModal from '../change-password/ChangePasswordModal';
 import { useChangePasswordStore } from 'apps/portal/src/store/change-password.store';
 import { ToastNotification } from '@gscwd-apps/oneui';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -70,6 +71,11 @@ export const ProfileMenuDropdown = ({
   const { responseChangePassword, emptyResponseAndError } = useChangePasswordStore((state) => ({
     responseChangePassword: state.response.responseChangePassword,
     emptyResponseAndError: state.emptyResponseAndError,
+  }));
+
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
   }));
 
   // close Change Password Modal
@@ -233,6 +239,12 @@ export const ProfileMenuDropdown = ({
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                                  pendingApprovalsCount.pendingLeavesCount != 0 ||
+                                  pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>

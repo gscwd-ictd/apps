@@ -79,8 +79,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   const router = useRouter();
 
-  const employeeListUrl = `http://172.20.10.58:4003/api/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
-  // const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/api/employees/supervisor/${employeeDetails.employmentDetails.userId}/subordinates/`;
+  const employeeListUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
 
   const {
     data: swrEmployeeList,
@@ -113,11 +112,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     data: swrTrainingList,
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
-    mutate: mutateTraining,
-  } = useSWR(trainingUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+    mutate: mutateTrainingList,
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -194,6 +190,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   useEffect(() => {
     if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+      mutateTrainingList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
@@ -252,19 +249,30 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            <ContentBody>
-              <div className="pb-10">
-                <DataTablePortal
-                  onRowClick={(row) => renderRowActions(row.original as Training)}
-                  textSize={'text-lg'}
-                  model={table}
-                  showGlobalFilter={true}
-                  showColumnFilter={false}
-                  paginate={true}
+            {swrTrainingListIsLoading ? (
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
+                <SpinnerDotted
+                  speed={70}
+                  thickness={70}
+                  className="w-full flex h-full transition-all "
+                  color="slateblue"
+                  size={100}
                 />
-                {/* <TrainingTable employeeDetails={employeeDetails} /> */}
               </div>
-            </ContentBody>
+            ) : (
+              <ContentBody>
+                <div className="pb-10">
+                  <DataTablePortal
+                    onRowClick={(row) => renderRowActions(row.original as Training)}
+                    textSize={'text-lg'}
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={false}
+                    paginate={true}
+                  />
+                </div>
+              </ContentBody>
+            )}
           </div>
         </MainContainer>
       </EmployeeProvider>

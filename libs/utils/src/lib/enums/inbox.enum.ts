@@ -1,6 +1,8 @@
 export enum InboxMessageResponse {
-  ACCEPT = 'accept',
-  DECLINE = 'decline',
+  PSB_ACCEPT = 'accept',
+  PSB_DECLINE = 'decline',
+  TRAINING_ACCEPT = 'accepted',
+  TRAINING_DECLINE = 'declined',
 }
 
 export enum InboxMessageType {

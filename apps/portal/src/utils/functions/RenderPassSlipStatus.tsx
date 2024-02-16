@@ -36,9 +36,9 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize: TextSize) {
           : status === PassSlipStatus.ONGOING
           ? 'Ongoing'
           : status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-          ? 'For Supervisor Approval'
+          ? 'For Supervisor Review'
           : status === PassSlipStatus.FOR_HRMO_APPROVAL
-          ? 'For HRMO Approval'
+          ? 'For HRMO Review'
           : status === PassSlipStatus.FOR_DISPUTE
           ? 'For Dispute'
           : status === PassSlipStatus.CANCELLED

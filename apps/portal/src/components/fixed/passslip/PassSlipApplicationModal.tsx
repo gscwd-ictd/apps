@@ -161,13 +161,13 @@ export const PassSlipApplicationModal = ({
           {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
             <AlertNotification
               alertType="warning"
-              notifMessage="You already have an active Pass Slip request"
+              notifMessage="You already have an active Pass Slip request."
               dismissible={false}
             />
           ) : null}
 
           {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
-            <AlertNotification alertType="warning" notifMessage="No Face Scan Time-In Found" dismissible={false} />
+            <AlertNotification alertType="warning" notifMessage="No Face Scan Time-In Found." dismissible={false} />
           ) : null}
 
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>

@@ -545,7 +545,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   {hasPendingLeave ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="You have a pending leave application of the same type"
+                      notifMessage="You have a pending leave application of the same type."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -558,7 +558,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN) ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="You are not allowed to file this type of leave"
+                      notifMessage="You are not allowed to file this type of leave."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -569,7 +569,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="You are not allowed to file this type of leave"
+                      notifMessage="You are not allowed to file this type of leave."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -586,7 +586,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Please select date of leave"
+                      notifMessage="Please select date of leave."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -600,7 +600,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION) ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Please select an acceptable date of leave"
+                      notifMessage="Please select an acceptable date of leave."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -610,7 +610,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Insufficient Vacation Leave Credits"
+                      notifMessage="Insufficient Vacation Leave Credits."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -619,7 +619,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   {roundedFinalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Insufficient Forced Leave Credits"
+                      notifMessage="Insufficient Forced Leave Credits."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -628,7 +628,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   {roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Insufficient Sick Leave Credits"
+                      notifMessage="Insufficient Sick Leave Credits."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -639,7 +639,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Insufficient Special Privilege Leave Credits"
+                      notifMessage="Insufficient Special Privilege Leave Credits."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -650,7 +650,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Retaining a minimum of 5 Vacation/Forced Leave Credit Balance is required for its monetization"
+                      notifMessage="Retaining a minimum of 5 Vacation/Forced Leave Credit Balance is required for its monetization."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -660,7 +660,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   {finalSickLeaveBalance < 10 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Retaining a minimum 10 Sick Leave Credit Balance is required for its monetization"
+                      notifMessage="Retaining a minimum 10 Sick Leave Credit Balance is required for its monetization."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -671,7 +671,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage={`Leaves to monetize should not be more than 50% of max amount of ${maxMonetizationAmount.toLocaleString()}`}
+                      notifMessage={`Leaves to monetize should not be more than 50% of max amount of ${maxMonetizationAmount.toLocaleString()}.`}
                       dismissible={false}
                       className="mb-1"
                     />
@@ -686,7 +686,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION) ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="There are overlapping leaves in your application"
+                      notifMessage="There are overlapping leaves in your application."
                       dismissible={false}
                       className="mb-1"
                     />

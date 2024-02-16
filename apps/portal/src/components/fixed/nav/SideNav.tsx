@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
-import { HiExclamationCircle, HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
+import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -8,12 +8,15 @@ import { useEffect, useState } from 'react';
 import { ManagerMenuDropdown } from './ManagerMenuDropdown';
 import { GeneralManagerMenuDropdown } from './GeneralManagerMenuDropdown';
 import { CommitteeMenuDropdown } from './CommitteeMenuDropdown';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { HRMenuDropdown } from './HRMenuDropdown';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import useSWR from 'swr';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -31,12 +34,62 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
   // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const { pendingApprovalsCount } = useApprovalStore((state) => ({
+  const {
+    tab,
+    errorPendingApprovalsCount,
+    pendingApprovalsCount,
+    getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail,
+  } = useApprovalStore((state) => ({
+    tab: state.tab,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
     pendingApprovalsCount: state.pendingApprovalsCount,
+    getPendingApprovalsCount: state.getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
   }));
+
+  const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPendingApprovalsCount,
+    isLoading: swrPendingApprovalsCountIsLoading,
+    error: swrPendingApprovalsCountError,
+  } = useSWR(employeeDetails.employmentDetails.userId ? pendingApprovalsCountUrl : null, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPendingApprovalsCountIsLoading) {
+      getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
+    }
+  }, [swrPendingApprovalsCountIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPendingApprovalsCount)) {
+      getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
+    }
+
+    if (!isEmpty(swrPendingApprovalsCountError)) {
+      getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
+    }
+  }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
 
   return (
     <>
+      {/* Approval List Load Failed Error */}
+      {!isEmpty(errorPendingApprovalsCount) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorPendingApprovalsCount}: Failed to load Pending Approval Count.`}
+        />
+      ) : null}
+
       <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
         <ul className="z-30 flex flex-col items-center gap-2 text-gray-600 mt-14">
           <li className="mb-3 lg:mb-5 ml-10 lg:ml-0">
@@ -58,10 +111,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                   </li>
 
                   <li className="ml-10 lg:ml-0">
-                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                    pendingApprovalsCount.pendingLeavesCount != 0 ||
-                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    {isEmpty(errorPendingApprovalsCount) &&
+                    (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>
@@ -73,10 +127,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                    pendingApprovalsCount.pendingLeavesCount != 0 ||
-                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    {isEmpty(errorPendingApprovalsCount) &&
+                    (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>
@@ -88,10 +143,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                    pendingApprovalsCount.pendingLeavesCount != 0 ||
-                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    {isEmpty(errorPendingApprovalsCount) &&
+                    (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>
@@ -103,10 +159,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    {pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                    pendingApprovalsCount.pendingLeavesCount != 0 ||
-                    pendingApprovalsCount.pendingOvertimesCount != 0 ? (
-                      <HiExclamationCircle className="absolute w-4 h-4 mt-0 ml-7 z-50 text-red-600" />
+                    {isEmpty(errorPendingApprovalsCount) &&
+                    (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>

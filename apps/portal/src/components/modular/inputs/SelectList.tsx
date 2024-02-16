@@ -116,7 +116,7 @@ export function MySelectList({
             id={id}
             ref={containerRef}
             tabIndex={0}
-            className="flex block w-full bg-white border border-gray-300/90 rounded-lg min-h-[2.25rem] h-18 justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600 focus:border-2"
+            className="flex block w-full bg-white border border-gray-300/90 rounded min-h-[2.25rem] h-18 justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600 focus:border-2"
           >
             <span className="grid grid-cols-3 text-xs text-left text-gray-700">
               {multiple

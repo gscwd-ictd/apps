@@ -71,11 +71,11 @@ export const ApprovalsCompletedPassSlipModal = ({
                   }
                   notifMessage={`${
                     passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-                      ? `For Supervisor Approval`
+                      ? `For Supervisor Review`
                       : passSlip.status === PassSlipStatus.FOR_DISPUTE
-                      ? 'For Dispute Approval'
+                      ? 'For Dispute Review'
                       : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
-                      ? 'For HRMO Approval'
+                      ? 'For HRMO Review'
                       : passSlip.status === PassSlipStatus.APPROVED
                       ? `Approved`
                       : // ${
@@ -104,7 +104,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                   <AlertNotification
                     alertType={`${passSlip.isDisputeApproved ? 'success' : 'error'}`}
                     notifMessage={`${
-                      passSlip.isDisputeApproved ? 'Dispute filed is Approved' : 'Dispute filed is Disapproved'
+                      passSlip.isDisputeApproved ? 'Dispute filed is Approved.' : 'Dispute filed is Disapproved.'
                     }`}
                     dismissible={false}
                   />

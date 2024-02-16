@@ -52,6 +52,16 @@ export type NominatedEmployees = {
   employeeId: string;
   name: string;
   nomineeType: NomineeType;
-  status: NomineeStatus;
+  status: NomineeStatus; //pending,accepted,declined
+  remarks: string;
+};
+
+export type TrainingByEmployeeId = {
+  nomineeId: string;
+  name: string; //training name
+  location: string;
+  trainingStart: string;
+  trainingEnd: string;
+  nomineeStatus: NomineeStatus; //pending,accepted,declined
   remarks: string;
 };

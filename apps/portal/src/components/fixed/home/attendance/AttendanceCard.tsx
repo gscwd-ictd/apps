@@ -17,6 +17,7 @@ export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoad
   const now = dayjs().toDate().toDateString();
   const isLate = UseLateChecker(timeLogData?.dtr?.timeIn, timeLogData?.schedule?.timeIn); //change to scheduled timeIn prop when ready
   const isUnderTime = UseUndertimeChecker(timeLogData?.dtr?.timeOut, timeLogData?.schedule?.timeOut); //change to scheduled timeOut prop when ready
+  const isLunchInLate = UseUndertimeChecker(timeLogData?.dtr?.lunchIn, timeLogData?.schedule?.lunchIn); //change to scheduled timeOut prop when ready
 
   const { windowHeight } = UseWindowDimensions();
 
@@ -58,7 +59,7 @@ export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoad
                 </label>
               )}
             </div>
-            {timeLogData?.schedule?.scheduleBase === 'Office' ? (
+            {timeLogData?.schedule?.lunchOut || timeLogData?.schedule?.lunchIn ? (
               <>
                 <div className="flex flex-col justify-center items-center">
                   <label className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}>
@@ -75,7 +76,13 @@ export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoad
                   <label className={`text-sm md:text-md lg:text-lg font-bold text-gray-400 text-center`}>
                     LUNCH IN
                   </label>
-                  <label className="text-md text-green-600">
+                  <label
+                    className={`text-md ${
+                      isLunchInLate && timeLogData?.dtr?.lunchIn && timeLogData?.dtr?.lunchIn != null
+                        ? 'text-red-600'
+                        : 'text-green-600'
+                    }`}
+                  >
                     {timeLogData?.dtr?.lunchIn && timeLogData?.dtr?.lunchIn != null
                       ? UseTwelveHourFormat(timeLogData?.dtr?.lunchIn)
                       : '-'}

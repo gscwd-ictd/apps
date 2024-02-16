@@ -212,7 +212,11 @@ export const useApprovalStore = create<ApprovalState>()(
     passSlipApplications: [],
     overtimeApplications: [],
 
-    pendingApprovalsCount: {} as PendingApprovalsCount,
+    pendingApprovalsCount: {
+      pendingPassSlipsCount: 0,
+      pendingLeavesCount: 0,
+      pendingOvertimesCount: 0,
+    } as PendingApprovalsCount,
 
     response: {
       patchResponsePassSlip: {} as PassSlip,
@@ -505,65 +509,6 @@ export const useApprovalStore = create<ApprovalState>()(
     setLeaveIndividualDetail: (leaveIndividualDetail: SupervisorLeaveDetails) => {
       set((state) => ({ ...state, leaveIndividualDetail }));
     },
-
-    //GET PASS SLIP ACTIONS OLD APPROVAL PAGE
-    // getPassSlipList: (loading: boolean) => {
-    //   set((state) => ({
-    //     ...state,
-    //     passSlips: {
-    //       ...state.passSlips,
-    //       completed: {
-    //         approved: [],
-    //         disapproved: [],
-    //         cancelled: [],
-    //       },
-    //       forApproval: [],
-    //     },
-    //     response: {
-    //       ...state.response,
-    //       patchResponsePassSlip: {} as PassSlip,
-    //     },
-    //     loading: {
-    //       ...state.loading,
-    //       loadingPassSlips: loading,
-    //     },
-    //     error: {
-    //       ...state.error,
-    //       errorPassSlips: '',
-    //     },
-    //   }));
-    // },
-    // getPassSlipListSuccess: (loading: boolean, response: ApprovalPassSlipList) => {
-    //   set((state) => ({
-    //     ...state,
-    //     passSlips: {
-    //       ...state.passSlips,
-    //       completed: {
-    //         approved: response.completed.approved,
-    //         disapproved: response.completed.disapproved,
-    //         cancelled: response.completed.cancelled,
-    //       },
-    //       forApproval: response.forApproval,
-    //     },
-    //     loading: {
-    //       ...state.loading,
-    //       loadingPassSlips: loading,
-    //     },
-    //   }));
-    // },
-    // getPassSlipListFail: (loading: boolean, error: string) => {
-    //   set((state) => ({
-    //     ...state,
-    //     loading: {
-    //       ...state.loading,
-    //       loadingPassSlips: loading,
-    //     },
-    //     error: {
-    //       ...state.error,
-    //       errorPassSlips: error,
-    //     },
-    //   }));
-    // },
 
     //GET PASS SLIP ACTIONS NEW APPROVAL PAGE USING DATA TABLE
     getPassSlipApplicationsList: (loading: boolean) => {

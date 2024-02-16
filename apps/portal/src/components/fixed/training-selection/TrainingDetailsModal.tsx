@@ -16,6 +16,7 @@ import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { ConfirmationNominationModal } from './ConfirmationModal';
+import UseRenderTrainingNomineeStatus from 'apps/portal/src/utils/functions/RenderTrainingNomineeStatus';
 
 type ModalProps = {
   modalState: boolean;
@@ -70,9 +71,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getNominatedEmployeeListFail: state.getNominatedEmployeeListFail,
   }));
 
-  const [courseContentsArray, setCourseContentsArray] = useState([{ title: 'N/A' }]);
-  const [postTrainingRequirementArray, setPostTrainingRequirementArray] = useState([{ document: 'N/A' }]);
-
   const recommendedEmployeeUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/distributions/${individualTrainingDetails.distributionId}/recommended`;
 
   const {
@@ -103,8 +101,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     }
   }, [swrRecommendedEmployee, swrRecommendedEmployeeError]);
 
-  const nominatedEmployeeUrl = `http://172.20.10.58:4001/trainings/nominees/${individualTrainingDetails.distributionId}`;
-  // const nominatedEmployeeUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/distributions/${individualTrainingDetails.distributionId}/recommended`;
+  const nominatedEmployeeUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/nominees/${individualTrainingDetails.distributionId}`;
 
   const {
     data: swrNominatedEmployee,
@@ -265,14 +262,16 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Participants:</label>
 
                 <div className="w-auto ">
-                  <Button
-                    variant={'primary'}
-                    size={'sm'}
-                    loading={false}
-                    onClick={() => setTrainingNominationModalIsOpen(true)}
-                  >
-                    <div className="flex justify-center">Set Participants</div>
-                  </Button>
+                  {nominatedEmployeeList?.length <= 0 ? (
+                    <Button
+                      variant={'primary'}
+                      size={'sm'}
+                      loading={false}
+                      onClick={() => setTrainingNominationModalIsOpen(true)}
+                    >
+                      <div className="flex justify-center">Set Participants</div>
+                    </Button>
+                  ) : null}
                 </div>
               </div>
               <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
@@ -287,26 +286,28 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                           Nominated Employee(s)
                         </th>
                       </tr>
-                    </thead>
-                    <tbody className="text-sm text-center ">
+
                       {nominatedEmployeeList?.length > 0 ? (
                         <tr>
-                          <td className={`px-2 w-1/2 text-start border`}>Name</td>
-                          <td className={`px-2 w-1/6 text-start border`}>Status</td>
-                          <td className={`px-2 text-start border`}>Remarks</td>
+                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
+                          <td className={`px-2 w-1/6 text-center border`}>Status</td>
+                          <td className={`px-2 text-center border`}>Remarks</td>
                         </tr>
                       ) : (
                         <tr>
-                          <td className={`px-2 w-1/2 text-start border`}>Name</td>
+                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
                         </tr>
                       )}
-
+                    </thead>
+                    <tbody className="text-sm text-center ">
                       {nominatedEmployeeList?.length > 0 ? (
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.NOMINEE ? (
                             <tr key={index}>
-                              <td className={`px-2 w-1/2 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 w-1/6 text-start border capitalize`}>{employees.status}</td>
+                              <td className={`px-2 py-1 w-1/2 text-start border`}>{employees.name}</td>
+                              <td className={`px-2 py-1 w-1/6 text-center border capitalize`}>
+                                {UseRenderTrainingNomineeStatus(employees.status)}
+                              </td>
                               <td className={`px-2 text-start border`}>{employees.remarks}</td>
                             </tr>
                           ) : null
@@ -323,14 +324,14 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         })
                       ) : (
                         <tr className="border-0">
-                          <td colSpan={3}>NO EMPLOYEE SELECTED</td>
+                          <td colSpan={3}>NO EMPLOYEE NOMINATED</td>
                         </tr>
                       )}
                     </tbody>
                   </table>
                 </div>
               </div>
-              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
+              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-1">
                 <div className="w-full overflow-x-auto">
                   <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                     <thead className="border-0">
@@ -342,14 +343,28 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                           Auxiliary Employee(s)
                         </th>
                       </tr>
+
+                      {nominatedEmployeeList?.length > 0 ? (
+                        <tr>
+                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
+                          <td className={`px-2 w-1/6 text-center border`}>Status</td>
+                          <td className={`px-2 text-center border`}>Remarks</td>
+                        </tr>
+                      ) : (
+                        <tr>
+                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
+                        </tr>
+                      )}
                     </thead>
                     <tbody className="text-sm text-center ">
                       {nominatedEmployeeList?.length > 0 ? (
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.STAND_IN ? (
                             <tr key={index}>
-                              <td className={`px-2 w-1/2 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 w-1/6 text-start border capitalize`}>{employees.status}</td>
+                              <td className={`px-2 py-1 w-1/2 text-start border`}>{employees.name}</td>
+                              <td className={`px-2 py-1 w-1/6 text-center border capitalize`}>
+                                {UseRenderTrainingNomineeStatus(employees.status)}
+                              </td>
                               <td className={`px-2 text-start border`}>{employees.remarks}</td>
                             </tr>
                           ) : null
@@ -366,7 +381,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         })
                       ) : (
                         <tr className="border-0">
-                          <td colSpan={3}>NO EMPLOYEE SELECTED</td>
+                          <td colSpan={3}>NO EMPLOYEE NOMINATED</td>
                         </tr>
                       )}
                     </tbody>
@@ -378,18 +393,24 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <div className="min-w-[6rem] max-w-auto">
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                form="ApplyOvertimeForm"
-                type="submit"
-                onClick={(e) => setConfirmNominationModalIsOpen(true)}
-                disabled={nominatedEmployees.length <= 0 ? true : false}
-              >
-                Send Invitation
-              </Button>
+            <div className="max-w-auto">
+              {nominatedEmployeeList?.length > 0 ? (
+                <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                  Close
+                </Button>
+              ) : (
+                <Button
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  form="ApplyOvertimeForm"
+                  type="submit"
+                  onClick={(e) => setConfirmNominationModalIsOpen(true)}
+                  disabled={nominatedEmployees.length <= 0 ? true : false}
+                >
+                  Send Invitation
+                </Button>
+              )}
             </div>
           </div>
         </Modal.Footer>
