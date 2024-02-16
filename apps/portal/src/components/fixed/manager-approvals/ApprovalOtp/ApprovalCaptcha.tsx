@@ -7,7 +7,7 @@ import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { GenerateCaptcha } from '../../captcha/CaptchaGenerator';
-import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeAccomplishmentApprovalPatch, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 
 interface CaptchaProps {
   employeeId?: string;
@@ -15,6 +15,7 @@ interface CaptchaProps {
   captchaName: any;
   dataToSubmitOvertimeAccomplishment?: OvertimeAccomplishmentApprovalPatch;
   dataToSubmitPassSlipDispute?: passSlipAction;
+  dataToSubmitApproveAllAccomplishment?: OvertimeDetails;
 }
 
 export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
@@ -23,6 +24,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   captchaName,
   dataToSubmitOvertimeAccomplishment,
   dataToSubmitPassSlipDispute,
+  dataToSubmitApproveAllAccomplishment,
   ...props
 }) => {
   const [wiggleEffect, setWiggleEffect] = useState(false);
@@ -139,7 +141,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
 
   return (
     <>
-      {dataToSubmitOvertimeAccomplishment || dataToSubmitPassSlipDispute ? (
+      {dataToSubmitOvertimeAccomplishment || dataToSubmitPassSlipDispute || dataToSubmitApproveAllAccomplishment ? (
         <>
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
             <div className="mb-2 text-center">

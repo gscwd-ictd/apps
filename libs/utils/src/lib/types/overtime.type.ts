@@ -77,6 +77,7 @@ export type EmployeeOvertimeDetail = {
   assignment: string;
   isAccomplishmentSubmitted: boolean;
   accomplishmentStatus: OvertimeAccomplishmentStatus;
+  overtimeAccomplishmentId: string;
 };
 
 export type OvertimeAccomplishment = {

@@ -110,8 +110,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeDetails)) {
-      console.log(swrOvertimeDetails);
       getOvertimeDetailsSuccess(swrOvertimeDetailsIsLoading, swrOvertimeDetails);
+      console.log(overtimeDetails);
     }
 
     if (!isEmpty(swrOvertimeDetailsError)) {
@@ -451,9 +451,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
-              dataToSubmitApproveAllAccomplishment={{}}
+              dataToSubmitApproveAllAccomplishment={overtimeDetails}
               tokenId={overtimeDetails.id}
-              captchaName={'Accomplishment Captcha'}
+              captchaName={'Approve All Accomplishment Captcha'}
             />
           </CaptchaModal>
         </Modal.Body>
@@ -465,7 +465,13 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               </Button>
             ) : overtimeDetails.status === OvertimeStatus.APPROVED ? (
               <>
-                <Button variant={'primary'} size={'md'} loading={false} form={`OvertimeAction`} type="submit">
+                <Button
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => setCaptchaModalIsOpen(true)}
+                  type="submit"
+                >
                   Approve All
                 </Button>
 
