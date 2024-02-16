@@ -149,7 +149,12 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
                                 : ''
-                            } py-2 text-center border`}
+                            } py-2 text-center border ${
+                              UseUndertimeChecker(logs.dtr.lunchIn, logs.schedule.lunchIn) == true &&
+                              logs.schedule.scheduleBase === 'Office'
+                                ? 'text-red-500'
+                                : ''
+                            }`}
                           >
                             {logs.dtr.lunchIn ? UseTwelveHourFormat(logs.dtr.lunchIn) : ''}
                           </td>
@@ -195,7 +200,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                               loading={false}
                               onClick={() => openEditActionModal(logs)}
                               disabled={
-                                DateFormatter(logs.day, 'MM-DD-YYYY') <=
+                                DateFormatter(logs.day, 'MM-DD-YYYY') <
                                 dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
                                   ? false
                                   : true

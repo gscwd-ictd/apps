@@ -37,7 +37,7 @@ export const TabHeader: FC<TabHeaderProps> = ({
       >
         <div className={`${icon ? 'hidden md:flex' : 'invisible'}  justify-center w-[15%]`}>{icon}</div>
 
-        <div className="flex flex-col w-full ">
+        <div className="flex flex-col w-full px-3 md:px-0 ">
           <p className={`text-lg lg:text-xl font-normal text-black transition-colors ease-in-out select-none`}>
             {title}
           </p>

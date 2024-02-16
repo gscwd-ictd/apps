@@ -150,15 +150,15 @@ export const ApprovalsPendingLeaveModal = ({
                       }
                       notifMessage={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? 'For HRDM Approval'
+                          ? 'For HRDM Review'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
-                          ? 'For HRMO Approval '
+                          ? 'For HRMO Review '
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Approval '
+                          ? 'For Supervisor Review '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
                           ? 'Disapproved by HRDM '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? 'Disapproved by HRDO '
+                          ? 'Disapproved by HRMO '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                           ? 'Disapproved by Supervisor '
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
@@ -326,12 +326,12 @@ export const ApprovalsPendingLeaveModal = ({
                   leaveIndividualDetail?.status != LeaveStatus.FOR_HRMO_APPROVAL ? (
                     <>
                       <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="w-full flex gap-2 justify-start items-center pt-4">
+                        <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-start items-start md:items-center pt-1 md:pt-2">
                           <span className="text-slate-500 text-md font-medium">Action:</span>
 
                           <select
                             id="action"
-                            className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
+                            className="text-slate-500 h-12 w-full md:w-40 rounded text-md border-slate-300"
                             required
                             {...register('status')}
                           >
@@ -349,8 +349,8 @@ export const ApprovalsPendingLeaveModal = ({
                         {watch('status') === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ? (
                           <textarea
                             required={true}
-                            className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                            placeholder="Enter Reason"
+                            className={'resize-none mt-4 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                            placeholder="Enter Reason for Disapproval"
                             rows={3}
                             onChange={(e) => setReason(e.target.value as unknown as string)}
                           ></textarea>

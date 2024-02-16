@@ -24,6 +24,7 @@ import { InboxTabs } from 'apps/portal/src/components/fixed/inbox/InboxTabs';
 import { InboxTabWindow } from 'apps/portal/src/components/fixed/inbox/InboxTabWindow';
 import InboxPsbModal from 'apps/portal/src/components/fixed/inbox/InboxPsbModal';
 import InboxOvertimeModal from 'apps/portal/src/components/fixed/inbox/InboxOvertimeModal';
+import InboxTrainingModal from 'apps/portal/src/components/fixed/inbox/InboxTrainingModal';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -31,11 +32,13 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     loadingResponse,
     loadingPsbMessages,
     loadingOvertimeMessages,
-    errorOvertimeMessage,
-    errorPsbMessage,
+    loadingTrainingMessages,
+    errorOvertimeMessages,
+    errorPsbMessages,
+    errorTrainingMessages,
     errorResponse,
     patchResponseApply,
-
+    putResponseApply,
     getPsbMessageList,
     getPsbMessageListSuccess,
     getPsbMessageListFail,
@@ -44,7 +47,12 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeMessageListSuccess,
     getOvertimeMessageListFail,
 
+    getTrainingMessageList,
+    getTrainingMessageListSuccess,
+    getTrainingMessageListFail,
+
     emptyResponseAndError,
+    setDeclineRemarks,
 
     psbMessageModalIsOpen,
     overtimeMessageModalIsOpen,
@@ -58,10 +66,13 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     loadingResponse: state.loading.loadingResponse,
     loadingPsbMessages: state.loading.loadingPsbMessages,
     loadingOvertimeMessages: state.loading.loadingOvertimeMessages,
-    errorPsbMessage: state.error.errorPsbMessages,
-    errorOvertimeMessage: state.error.errorOvertimeMessages,
+    loadingTrainingMessages: state.loading.loadingTrainingMessages,
+    errorPsbMessages: state.error.errorPsbMessages,
+    errorOvertimeMessages: state.error.errorOvertimeMessages,
+    errorTrainingMessages: state.error.errorTrainingMessages,
     errorResponse: state.error.errorResponse,
     patchResponseApply: state.response.patchResponseApply,
+    putResponseApply: state.response.putResponseApply,
 
     getPsbMessageList: state.getPsbMessageList,
     getPsbMessageListSuccess: state.getPsbMessageListSuccess,
@@ -71,7 +82,12 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeMessageListSuccess: state.getOvertimeMessageListSuccess,
     getOvertimeMessageListFail: state.getOvertimeMessageListFail,
 
+    getTrainingMessageList: state.getTrainingMessageList,
+    getTrainingMessageListSuccess: state.getTrainingMessageListSuccess,
+    getTrainingMessageListFail: state.getTrainingMessageListFail,
+
     emptyResponseAndError: state.emptyResponseAndError,
+    setDeclineRemarks: state.setDeclineRemarks,
 
     psbMessageModalIsOpen: state.psbMessageModalIsOpen,
     overtimeMessageModalIsOpen: state.overtimeMessageModalIsOpen,
@@ -100,7 +116,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     data: swrPsbMessages,
     isLoading: swrIsLoadingPsbMessages,
     error: swrPsbMessageError,
-    mutate: mutateMessages,
+    mutate: mutatePsbMessages,
   } = useSWR(
     Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? unacknowledgedPsbUrl : null,
     fetchWithToken
@@ -155,21 +171,67 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [swrOvertimeMessages, swrOvertimeMessageError]);
 
+  // const trainingMessagesUrl = `http://172.20.10.58:4001/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrTrainingMessages,
+    isLoading: swrIsLoadingTrainingMessages,
+    error: swrTrainingMessageError,
+    mutate: mutateTrainingMessages,
+  } = useSWR(trainingMessagesUrl, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
   useEffect(() => {
-    if (!isEmpty(patchResponseApply)) {
-      mutateMessages();
+    if (swrIsLoadingTrainingMessages) {
+      getTrainingMessageList(swrIsLoadingTrainingMessages);
+    }
+  }, [swrIsLoadingTrainingMessages]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrTrainingMessages)) {
+      getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
+    }
+
+    if (!isEmpty(swrTrainingMessageError)) {
+      getTrainingMessageListFail(swrIsLoadingTrainingMessages, swrTrainingMessageError.message);
+    }
+  }, [swrTrainingMessages, swrTrainingMessageError]);
+
+  useEffect(() => {
+    if (!isEmpty(patchResponseApply) || !isEmpty(putResponseApply)) {
+      mutatePsbMessages();
+      mutateTrainingMessages();
       setTimeout(() => {
         emptyResponseAndError();
-      }, 3000);
+      }, 5000);
     }
-  }, [patchResponseApply]);
+  }, [patchResponseApply, putResponseApply]);
+
+  useEffect(() => {
+    if (psbMessageModalIsOpen || overtimeMessageModalIsOpen || trainingMessageModalIsOpen) {
+      setDeclineRemarks('');
+    }
+  }, [psbMessageModalIsOpen, overtimeMessageModalIsOpen, trainingMessageModalIsOpen]);
 
   const closePsbMessageModal = async () => {
     setPsbMessageModalIsOpen(false);
+    setDeclineRemarks('');
   };
 
   const closeOvertimeMessageModal = async () => {
     setOvertimeMessageModalIsOpen(false);
+    setDeclineRemarks('');
+  };
+
+  const closeTrainingMessageModal = async () => {
+    setTrainingMessageModalIsOpen(false);
+    setDeclineRemarks('');
   };
 
   return (
@@ -178,16 +240,30 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
         <ToastNotification toastType="success" notifMessage={`Response to PSB Assignment Submitted.`} />
       ) : null}
 
+      {!isEmpty(putResponseApply) ? (
+        <ToastNotification toastType="success" notifMessage={`Response to Training Nomination Submitted.`} />
+      ) : null}
+
       {!isEmpty(errorResponse) ? (
         <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
       ) : null}
 
-      {!isEmpty(errorOvertimeMessage) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorOvertimeMessage}: Failed to Overtime Inbox.`} />
+      {!isEmpty(errorOvertimeMessages) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorOvertimeMessages}: Failed to load Overtime Inbox.`}
+        />
       ) : null}
 
-      {!isEmpty(errorPsbMessage) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorPsbMessage}: Failed to PSB Inbox.`} />
+      {!isEmpty(errorPsbMessages) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorPsbMessages}: Failed to load PSB Inbox.`} />
+      ) : null}
+
+      {!isEmpty(errorTrainingMessages) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorTrainingMessages}: Failed to load Training Inbox.`}
+        />
       ) : null}
 
       <EmployeeProvider employeeData={employee}>
@@ -196,6 +272,13 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
         </Head>
 
         <SideNav employeeDetails={employeeDetails} />
+
+        {/* Training Message Modal */}
+        <InboxTrainingModal
+          modalState={trainingMessageModalIsOpen}
+          setModalState={setTrainingMessageModalIsOpen}
+          closeModalAction={closeTrainingMessageModal}
+        />
 
         {/* Psb Message Modal */}
         <InboxPsbModal
@@ -219,7 +302,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {loadingPsbMessages && loadingOvertimeMessages ? (
+            {loadingPsbMessages && loadingOvertimeMessages && loadingTrainingMessages ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

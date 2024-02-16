@@ -14,7 +14,7 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions();
 
@@ -45,7 +45,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                 <AlertNotification
                   alertType="info"
                   notifMessage={
-                    'This is to inform you that you have been requested for Overtime with the specified details below'
+                    'This is to inform you that you have been requested for Overtime with the specified details below.'
                   }
                   dismissible={false}
                 />
@@ -121,4 +121,4 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
   );
 };
 
-export default InboxPsbModal;
+export default InboxOvertimeModal;

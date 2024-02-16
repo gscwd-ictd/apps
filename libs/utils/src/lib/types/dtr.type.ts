@@ -17,12 +17,15 @@ export type EmployeeRestDay = {
   restDaysNumbers: string;
 };
 
+//individual dtr per day of employee
 export type EmployeeDtrWithSchedule = {
   day: string;
   companyId: string;
   dtr: EmployeeTimeLog; //dtr
   schedule: Schedule & EmployeeRestDay; // schedule with rest days
   holidayType: HolidayTypes | null; // recently added
+  isHoliday: boolean;
+  isRestDay: boolean;
 };
 
 export type EmployeeDtrWithSummary = {

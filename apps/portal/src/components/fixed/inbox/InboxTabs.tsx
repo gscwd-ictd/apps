@@ -11,10 +11,11 @@ type TabsProps = {
 };
 
 export const InboxTabs = ({ tab }: TabsProps) => {
-  const { setTab, psbMessages, overtimeMessages, patchResponseApply } = useInboxStore((state) => ({
+  const { setTab, psbMessages, overtimeMessages, trainingMessages, patchResponseApply } = useInboxStore((state) => ({
     setTab: state.setTab,
     psbMessages: state.message.psbMessages,
     overtimeMessages: state.message.overtimeMessages,
+    trainingMessages: state.message.trainingMessages,
     patchResponseApply: state.response.patchResponseApply,
   }));
 
@@ -55,7 +56,7 @@ export const InboxTabs = ({ tab }: TabsProps) => {
             title="Training"
             icon={<HiMail size={26} />}
             subtitle="Notifications"
-            notificationCount={0}
+            notificationCount={trainingMessages ? trainingMessages.length : 0}
             className="bg-indigo-500"
           />
           {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (

@@ -294,7 +294,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
                 backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 
-              {loadingPassSlip ? (
+              {swrPassSlipIsLoading ? (
                 <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}

@@ -15,6 +15,7 @@ import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeAccomplishmentReportPdfModal from './OvertimeAccomplishmentReportPdfModal';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -121,11 +122,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 p-4 rounded">
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
-                    <AlertNotification
-                      alertType="warning"
-                      notifMessage={'For Supervisor Approval'}
-                      dismissible={false}
-                    />
+                    <AlertNotification alertType="warning" notifMessage={'For Supervisor Review'} dismissible={false} />
                   ) : null}
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
                     <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
@@ -139,6 +136,18 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
 
                       <div className="md:w-1/2">
                         <label className="text-slate-500 w-full text-md ">{overtimeAccomplishmentEmployeeName}</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-between items-center w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
+
+                      <div className="md:w-1/2 ">
+                        <label className="text-slate-500 w-full text-md ">
+                          {DateFormatter(accomplishmentDetails.plannedDate, 'MM-DD-YYYY')}
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -240,7 +249,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                     <textarea
                       disabled
                       rows={3}
-                      className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                      className="resize-none w-full p-2 mt-1 rounded-lg text-slate-500 text-md border-slate-300"
                       placeholder="N/A"
                       value={accomplishmentDetails.accomplishments ?? 'Not yet filled'}
                     ></textarea>
@@ -253,7 +262,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       <textarea
                         required
                         rows={3}
-                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
+                        className="resize-none w-full p-2 mt-1 rounded-lg text-slate-500 text-md border-slate-300"
                         placeholder="N/A"
                         defaultValue={accomplishmentDetails?.remarks ?? 'N/A'}
                       ></textarea>

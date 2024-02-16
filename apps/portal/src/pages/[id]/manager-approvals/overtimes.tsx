@@ -284,7 +284,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
       ) : null}
       {/* Overtime List Load Failed Error */}
       {!isEmpty(errorOvertime) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtimes.`} />
+        <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtime List.`} />
       ) : null}
       {/* Overtime Accomplishment Data Load Failed Error */}
       {!isEmpty(errorAccomplishment) ? (
@@ -309,7 +309,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
               backUrl={`/${router.query.id}/manager-approvals`}
             ></ContentHeader>
 
-            {loadingOvertime ? (
+            {swrOvertimeListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

@@ -12,6 +12,8 @@ import { MySelectList } from '../../modular/inputs/SelectList';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import dayjs from 'dayjs';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -63,7 +65,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           const timeLogs: EmployeeDtrWithSchedule = await getDailyDtr(
             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i]
           );
-          console.log(timeLogs);
+
           //check if there's a time in or time out
           if (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) {
             //add leave date to selection array
@@ -72,6 +74,18 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
               value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
             });
           } else if (timeLogs.holidayType === HolidayTypes.REGULAR) {
+            //do not add leave date to selectable dates for cancellation
+          }
+          //check if date is future
+          else if (
+            DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i], 'MM-DD-YYYY') >=
+            dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
+          ) {
+            //add leave date to selection array
+            leaveDates.push({
+              label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+              value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+            });
           }
         };
         dtrTrest();

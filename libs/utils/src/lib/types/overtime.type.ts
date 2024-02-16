@@ -58,6 +58,7 @@ export type OvertimeList = {
 export type OvertimeDetails = {
   id: string;
   plannedDate: string;
+  dateApproved: string;
   estimatedHours: string;
   purpose: string;
   status: OvertimeStatus;

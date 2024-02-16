@@ -199,12 +199,12 @@ export default function Login() {
                 </div>
               </section>
 
-              {/* <section className={`${errors.password ? 'mt-5' : 'mt-3'} flex items-end justify-between`}>
+              <section className={`${errors.password ? 'mt-5' : 'mt-3'} flex items-end justify-between`}>
                 <Checkbox label="Remember me" isChecked={rememberMe} setIsChecked={setRememberMe} />
-                <a href="#" className="text-sm text-indigo-700">
+                {/* <a href="#" className="text-sm text-indigo-700">
                   Forgot password?
-                </a>
-              </section> */}
+                </a> */}
+              </section>
 
               <section className="mt-10">
                 <Button
