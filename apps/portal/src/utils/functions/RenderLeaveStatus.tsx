@@ -30,11 +30,11 @@ function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: TextSize)
       }
       label={
         status === LeaveStatus.FOR_HRMO_APPROVAL
-          ? 'For HRMO Approval'
+          ? 'For HRMO Review'
           : status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-          ? 'For Supervisor Approval'
+          ? 'For Supervisor Review'
           : status === LeaveStatus.FOR_HRDM_APPROVAL
-          ? 'For HRDM Approval'
+          ? 'For HRDM Review'
           : status === LeaveStatus.APPROVED
           ? 'Approved'
           : status === LeaveStatus.DISAPPROVED_BY_HRDM
