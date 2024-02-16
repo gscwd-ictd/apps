@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -22,6 +22,7 @@ import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 
 type ModalProps = {
   modalState: boolean;
@@ -55,6 +56,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     getOvertimeDetailsFail,
     emptyResponseAndError,
     patchResponseAccomplishment,
+    captchaModalIsOpen,
+    setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
@@ -75,6 +78,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     getOvertimeDetailsFail: state.getOvertimeDetailsFail,
     emptyResponseAndError: state.emptyResponseAndError,
     patchResponseAccomplishment: state.response.patchResponseAccomplishment,
+    captchaModalIsOpen: state.captchaModalIsOpen,
+    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
   }));
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [reason, setReason] = useState<string>('');
@@ -437,6 +442,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setOvertimeAccomplishmentModalIsOpen}
             closeModalAction={closeAccomplishmentModal}
           />
+
+          <CaptchaModal
+            modalState={captchaModalIsOpen}
+            setModalState={setCaptchaModalIsOpen}
+            title={'APPROVE ALL ACCOMPLISHMENT CAPTCHA'}
+          >
+            {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetails.user._id}
+              dataToSubmitApproveAllAccomplishment={{}}
+              tokenId={overtimeDetails.id}
+              captchaName={'Accomplishment Captcha'}
+            />
+          </CaptchaModal>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
@@ -444,6 +463,22 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               <Button variant={'primary'} size={'md'} loading={false} form={`OvertimeAction`} type="submit">
                 Submit
               </Button>
+            ) : overtimeDetails.status === OvertimeStatus.APPROVED ? (
+              <>
+                <Button variant={'primary'} size={'md'} loading={false} form={`OvertimeAction`} type="submit">
+                  Approve All
+                </Button>
+
+                <Button
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => closeModalAction()}
+                  type="submit"
+                >
+                  Close
+                </Button>
+              </>
             ) : (
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
                 Close
