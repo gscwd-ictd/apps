@@ -246,7 +246,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                               LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
-                              // show first and last date (array) only if maternity or study leave
+                              // show first and last date (array) only if SBL (maternity, study, rehab...)
                               `${DateFormatter(
                                 leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0],
                                 'MM-DD-YYYY'
@@ -257,7 +257,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                 'MM-DD-YYYY'
                               )}`
                             ) : (
-                              // show all dates if not maternity or study leave
+                              // show all dates if not SBL (maternity, study, rehab...)
                               <div className="flex flex-wrap flex-row">
                                 {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.map(
                                   (dates: string, index: number) => {
