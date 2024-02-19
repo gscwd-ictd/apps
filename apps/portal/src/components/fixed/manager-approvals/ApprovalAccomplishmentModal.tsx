@@ -203,24 +203,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   ) => {
     setDataToSubmit(data);
     setCaptchaModalIsOpen(true);
-
-    // if (password != captchaPassword || password == '' || captchaPassword == '') {
-    //   setIsCaptchaError(true);
-    //   setWiggleEffect(true);
-    //   setErrorCaptcha('Incorrect Captcha!');
-    // } else {
-    //   patchOvertimeAccomplishment();
-    //   const { error, result } = await patchPortal('/v1/overtime/accomplishments/approval', data);
-    //   if (error) {
-    //     patchOvertimeAccomplishmentFail(result);
-    //   } else {
-    //     patchOvertimeAccomplishmentSuccess(result);
-    //     closeModalAction(); // close confirmation of decline modal
-    //     setTimeout(() => {
-    //       setOvertimeAccomplishmentModalIsOpen(false); // close accomplishment modal
-    //     }, 200);
-    //   }
-    // }
   };
 
   return (
