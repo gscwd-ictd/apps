@@ -108,6 +108,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   async function hydration() {
     if (schedule && userDetails) {
+      console.log(userDetails);
       const modules = await setModules(userDetails, schedule);
       setAllowedModules(modules);
     }

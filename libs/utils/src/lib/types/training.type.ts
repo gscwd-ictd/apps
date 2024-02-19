@@ -19,8 +19,10 @@ export type RecommendedEmployee = {
 };
 
 export type Training = {
+  id?: string; //for pdc secretariat/chairman //training ID
   distributionId: string;
   numberOfSlots: number;
+  numberOfParticipants?: number; //for pdc secretariat/chairman
   trainingId: string;
   courseTitle: string;
   location: string;
@@ -28,8 +30,8 @@ export type Training = {
   trainingEnd: string;
   source: string;
   type: TrainingTypes;
-  trainingPreparationStatus: TrainingPreparationStatus;
-  status: TrainingStatus;
+  trainingPreparationStatus?: TrainingPreparationStatus; //for training selection
+  status?: TrainingStatus; //for training selection
 };
 
 // edit/viewing type
