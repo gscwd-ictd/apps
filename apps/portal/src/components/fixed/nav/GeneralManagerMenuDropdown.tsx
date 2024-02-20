@@ -2,12 +2,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import {
-  HiClipboardCheck,
-  HiCube,
-  HiOutlineCube,
-  HiOutlineIdentification,
-} from 'react-icons/hi';
+import { HiAcademicCap, HiClipboardCheck, HiCube, HiOutlineCube, HiOutlineIdentification } from 'react-icons/hi';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -30,10 +25,7 @@ export const GeneralManagerMenuDropdown = ({
 
   return (
     <>
-      <Menu
-        as="div"
-        className={`z-40 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}
-      >
+      <Menu as="div" className={`z-40 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
         <div>
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
@@ -59,15 +51,9 @@ export const GeneralManagerMenuDropdown = ({
             <div>
               <Menu.Item>
                 {({ active }) => (
-                  <div
-                    className={`${
-                      active ? 'bg-slate-50' : null
-                    } cursor-pointer rounded-md p-4`}
-                  >
+                  <div className={`${active ? 'bg-slate-50' : null} cursor-pointer rounded-md p-4`}>
                     <div>
-                      <h5 className="truncate font-semibold ">
-                        General Manager Actions
-                      </h5>
+                      <h5 className="truncate font-semibold ">General Manager Actions</h5>
                     </div>
                   </div>
                 )}
@@ -81,11 +67,7 @@ export const GeneralManagerMenuDropdown = ({
                       className={`${
                         active ? 'bg-slate-100' : 'text-gray-900'
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() =>
-                        router.push(
-                          `/${router.query.id}/appointing-authority-selection`
-                        )
-                      }
+                      onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
                     >
                       <div>
                         <HiClipboardCheck className="w-6 h-6 text-green-600" />
@@ -93,6 +75,22 @@ export const GeneralManagerMenuDropdown = ({
                       <span className="text-sm tracking-tight text-gray-700 text-left">
                         Appointing Authority Selection
                       </span>
+                    </button>
+                  )}
+                </Menu.Item>
+
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? 'bg-slate-100' : 'text-gray-900'
+                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
+                      onClick={() => router.push(`/${router.query.id}/pdc-gm-approvals`)}
+                    >
+                      <div>
+                        <HiAcademicCap className="w-6 h-6 text-red-600" />
+                      </div>
+                      <span className="text-sm tracking-tight text-gray-700 text-left">Training Approvals</span>
                     </button>
                   )}
                 </Menu.Item>

@@ -1,10 +1,4 @@
-import {
-  NomineeStatus,
-  NomineeType,
-  TrainingPreparationStatus,
-  TrainingStatus,
-  TrainingTypes,
-} from '../enums/training.enum';
+import { NomineeStatus, NomineeType, TrainingStatus, TrainingTypes } from '../enums/training.enum';
 
 export type TrainingType = {
   id: string;
@@ -22,7 +16,9 @@ export type Training = {
   id?: string; //for pdc secretariat/chairman //training ID
   distributionId: string;
   numberOfSlots: number;
-  numberOfParticipants?: number; //for pdc secretariat/chairman
+  numberOfParticipants?: number; //for pdc secretariat/chairman/gm
+  numberOfHours?: number; //for pdc secretariat/chairman/gm
+  nominee?: Array<NominatedEmployees>; //for pdc secretariat/chairman/gm
   trainingId: string;
   courseTitle: string;
   location: string;
@@ -30,7 +26,7 @@ export type Training = {
   trainingEnd: string;
   source: string;
   type: TrainingTypes;
-  trainingPreparationStatus?: TrainingPreparationStatus; //for training selection
+  trainingPreparationStatus?: TrainingStatus; //for training selection
   status?: TrainingStatus; //for training selection
 };
 
@@ -56,6 +52,12 @@ export type NominatedEmployees = {
   nomineeType: NomineeType;
   status: NomineeStatus; //pending,accepted,declined
   remarks: string;
+  supervisor?: NomineeSupervisor; //used for pdc chairman/secretary/gm view
+};
+
+export type NomineeSupervisor = {
+  name: string;
+  supervisorId: string;
 };
 
 export type TrainingByEmployeeId = {
@@ -66,4 +68,14 @@ export type TrainingByEmployeeId = {
   trainingEnd: string;
   nomineeStatus: NomineeStatus; //pending,accepted,declined
   remarks: string;
+};
+
+export type PdcSecretariatApproval = {
+  pdcSecretary: string;
+  trainingDetails: string;
+};
+
+export type PdcChairmanApproval = {
+  pdcChairman: string;
+  trainingDetails: string;
 };

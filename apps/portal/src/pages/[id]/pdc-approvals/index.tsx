@@ -16,37 +16,36 @@ import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
-import { TrainingTable } from 'apps/portal/src/components/fixed/training-selection/TrainingTable';
 import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
-import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
-import TrainingNominationModal from 'apps/portal/src/components/fixed/training-selection/TrainingNominationModal';
 import { useRouter } from 'next/router';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import { Training } from 'libs/utils/src/lib/types/training.type';
 import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
-import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
 import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import TrainingDetailsModal from 'apps/portal/src/components/fixed/pdc-approvals/TrainingDetailsModal';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
-export default function PdcApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { setEmployeeDetails } = useEmployeeStore((state) => ({
+export default function PdcApprovals({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { employeeDetails, setEmployeeDetails } = useEmployeeStore((state) => ({
+    employeeDetails: state.employeeDetails,
     setEmployeeDetails: state.setEmployeeDetails,
   }));
 
   // set the employee details on page load
   useEffect(() => {
-    setEmployeeDetails(employeeDetails);
-  }, [employeeDetails]);
+    setEmployeeDetails(userDetails);
+  }, [userDetails]);
 
   const {
     trainingList,
     loadingTrainingList,
     errorTrainingList,
     trainingModalIsOpen,
-    postResponseApply,
+    patchResponseApply,
     errorResponse,
     setTrainingModalIsOpen,
     getTrainingSelectionList,
@@ -63,7 +62,7 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
     loadingTrainingList: state.loading.loadingTrainingList,
     errorTrainingList: state.error.errorTrainingList,
     trainingModalIsOpen: state.trainingModalIsOpen,
-    postResponseApply: state.response.postResponseApply,
+    patchResponseApply: state.response.patchResponseApply,
     errorResponse: state.error.errorResponse,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     getTrainingSelectionList: state.getTrainingSelectionList,
@@ -79,33 +78,6 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
 
   const router = useRouter();
 
-  // const employeeListUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
-
-  // const {
-  //   data: swrEmployeeList,
-  //   isLoading: swrEmployeeListIsLoading,
-  //   error: swrEmployeeListError,
-  //   mutate: mutateEmployeeList,
-  // } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
-
-  // // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrEmployeeListIsLoading) {
-  //     getEmployeeList(swrEmployeeListIsLoading);
-  //   }
-  // }, [swrEmployeeListIsLoading]);
-
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrEmployeeList)) {
-  //     getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
-  //   }
-
-  //   if (!isEmpty(swrEmployeeListError)) {
-  //     getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
-  //   }
-  // }, [swrEmployeeList, swrEmployeeListError]);
-
   const trainingSecretariatUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/secretariat`;
   const trainingChairmanUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/chairman`;
 
@@ -114,7 +86,14 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
     mutate: mutateTrainingList,
-  } = useSWR(trainingSecretariatUrl, fetchWithToken);
+  } = useSWR(
+    employeeDetails.employmentDetails.isPdcChairman
+      ? trainingChairmanUrl
+      : employeeDetails.employmentDetails.isPdcSecretariat
+      ? trainingSecretariatUrl
+      : null,
+    fetchWithToken
+  );
 
   // Initial zustand state update
   useEffect(() => {
@@ -126,6 +105,7 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingList)) {
+      console.log(swrTrainingList);
       getTrainingSelectionListSuccess(swrTrainingListIsLoading, swrTrainingList);
     }
 
@@ -155,8 +135,8 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
       header: 'Course Title',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('location', {
-      header: 'Location',
+    columnHelper.accessor('source', {
+      header: 'Source',
       filterFn: 'fuzzy',
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
@@ -171,12 +151,17 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
       filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
-    columnHelper.accessor('numberOfSlots', {
-      header: 'Slots',
+    // columnHelper.accessor('numberOfHours', {
+    //   header: 'Hours',
+    //   filterFn: 'equalsString',
+    //   cell: (info) => info.getValue(),
+    // }),
+    columnHelper.accessor('numberOfParticipants', {
+      header: 'Participants',
       cell: (info) => info.getValue(),
     }),
 
-    columnHelper.accessor('trainingPreparationStatus', {
+    columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderTrainingStatus(info.getValue(), TextSize.TEXT_SM),
     }),
@@ -190,13 +175,13 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
   });
 
   useEffect(() => {
-    if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+    if (!isEmpty(patchResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
       mutateTrainingList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [postResponseApply, errorResponse, errorTrainingList]);
+  }, [patchResponseApply, errorResponse, errorTrainingList]);
 
   return (
     <>
@@ -208,7 +193,7 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
       ) : null}
 
       {/* Training List Load Failed */}
-      {!isEmpty(postResponseApply) ? (
+      {!isEmpty(patchResponseApply) ? (
         <>
           <ToastNotification toastType="success" notifMessage={`Training Action submitted successfully.`} />
         </>
@@ -224,7 +209,7 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
           <title>Personnel Development Comittee Approvals</title>
         </Head>
 
-        <SideNav employeeDetails={employeeDetails} />
+        <SideNav employeeDetails={userDetails} />
 
         <TrainingDetailsModal
           modalState={trainingModalIsOpen}
@@ -280,7 +265,18 @@ export default function PdcApprovals({ employeeDetails }: InferGetServerSideProp
 // };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
-  const employeeDetails = getUserDetails();
+  const userDetails = getUserDetails();
 
-  return { props: { employeeDetails } };
+  // check if user is not pdc chairman or secretary = kick out
+  if (!userDetails.employmentDetails.isPdcChairman && !userDetails.employmentDetails.isPdcSecretariat) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${userDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { userDetails } };
+  }
 });

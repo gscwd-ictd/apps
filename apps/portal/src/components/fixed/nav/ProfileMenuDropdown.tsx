@@ -198,23 +198,42 @@ export const ProfileMenuDropdown = ({
                       {/* GENERAL MANAGER */}
                       {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              className={`${
-                                active ? 'bg-slate-100' : 'text-gray-900'
-                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
-                            >
-                              <HiClipboardCheck className="h-5 w-5 text-slate-600" />
-                              <div className="flex w-full items-end justify-between">
-                                <span className="text-sm tracking-tight text-slate-500 text-left">
-                                  Appointing Authority Selection
-                                </span>
-                              </div>
-                            </button>
-                          )}
-                        </Menu.Item>
+                        <>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                                onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
+                              >
+                                <HiClipboardCheck className="h-5 w-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">
+                                    Appointing Authority Selection
+                                  </span>
+                                </div>
+                              </button>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                                onClick={() => router.push(`/${router.query.id}/pdc-gm-approvals`)}
+                              >
+                                <HiAcademicCap className="w-5 h-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">
+                                    Training Approvals
+                                  </span>
+                                </div>
+                              </button>
+                            )}
+                          </Menu.Item>
+                        </>
                       ) : null}
 
                       {/* MANAGERIAL ACTIONS */}
@@ -249,7 +268,7 @@ export const ProfileMenuDropdown = ({
                             )}
                           </Menu.Item>
 
-                          {/* <Menu.Item>
+                          <Menu.Item>
                             {({ active }) => (
                               <button
                                 className={`${
@@ -265,7 +284,7 @@ export const ProfileMenuDropdown = ({
                                 </div>
                               </button>
                             )}
-                          </Menu.Item> */}
+                          </Menu.Item>
 
                           <Menu.Item>
                             {({ active }) => (
@@ -389,6 +408,25 @@ export const ProfileMenuDropdown = ({
                                 <span className="text-sm tracking-tight text-slate-500 text-left">
                                   Overtime Application
                                 </span>
+                              </div>
+                            </button>
+                          )}
+                        </Menu.Item>
+                      ) : null}
+
+                      {employeeDetails.employmentDetails.isPdcChairman ||
+                      employeeDetails.employmentDetails.isPdcSecretariat ? (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              className={`${
+                                active ? 'bg-slate-100' : 'text-gray-900'
+                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                              onClick={() => router.push(`/${router.query.id}/pdc-approvals`)}
+                            >
+                              <HiAcademicCap className="w-5 h-5 text-rose-600" />
+                              <div className="flex w-full items-end justify-between">
+                                <span className="text-sm tracking-tight text-slate-500 text-left">PDC Approvals</span>
                               </div>
                             </button>
                           )}

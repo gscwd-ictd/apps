@@ -289,7 +289,7 @@ export default function FinalLeaveApprovals({
             <div className="w-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Final Leave Approvals"
-                subtitle="Approve Employee Leaves"
+                subtitle="Approve or Disapprove Employee Leaves"
                 backUrl={`/${router.query.id}`}
               >
                 {/* <ApprovalTypeSelect /> */}

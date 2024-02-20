@@ -305,7 +305,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
           <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
             <ContentHeader
               title="Employee Overtime Approvals"
-              subtitle="Approve or disapprove Employee Overtimes"
+              subtitle="Approve or Disapprove Employee Overtimes"
               backUrl={`/${router.query.id}/manager-approvals`}
             ></ContentHeader>
 

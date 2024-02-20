@@ -115,11 +115,9 @@ export const CommitteeMenuDropdown = ({
                   </Menu.Item>
                 ) : null}
 
-                {/* show secretariat */}
-                {employeeDetails.employmentDetails.overtimeImmediateSupervisorId !== null ||
-                employeeDetails.employmentDetails.overtimeImmediateSupervisorId ||
-                (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
-                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
+                {/* show pdc */}
+                {employeeDetails.employmentDetails.isPdcChairman ||
+                employeeDetails.employmentDetails.isPdcSecretariat ? (
                   <Menu.Item>
                     {({ active }) => (
                       <button

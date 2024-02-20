@@ -1,27 +1,38 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import {
-  NomineeStatus,
-  NomineeType,
-  TrainingPreparationStatus,
-  TrainingStatus,
-} from 'libs/utils/src/lib/enums/training.enum';
+import { NomineeType, PdcApprovalAction, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
 import { useEffect, useState } from 'react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
-import { ConfirmationNominationModal } from './ConfirmationModal';
+import { isEmpty, isEqual } from 'lodash';
 import UseRenderTrainingNomineeStatus from 'apps/portal/src/utils/functions/RenderTrainingNomineeStatus';
+import { ApprovalOtpContentsPdc } from './PdcApprovalOtp/ApprovalOtpContentsPdc';
+import { ConfirmationPdcModal } from './PdcApprovalOtp/ConfirmationPdcModal';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { stat } from 'fs';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { PdcChairmanApproval, PdcSecretariatApproval } from 'libs/utils/src/lib/types/training.type';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 type ModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
+
+type PdcAction = {
+  action: PdcApprovalAction;
+};
+
+const approvalAction: Array<SelectOption> = [
+  { label: 'Approve', value: `${PdcApprovalAction.APPROVE}` },
+  { label: 'Disapprove', value: `${PdcApprovalAction.DISAPPROVE}` },
+];
 
 export const TrainingDetailsModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
@@ -34,12 +45,13 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     nominatedEmployeeList,
     nominatedEmployees,
     auxiliaryEmployees,
-    trainingNominationModalIsOpen,
-    confirmNominationModalIsOpen,
-    trainingModalIsOpen,
 
-    setConfirmNominationModalIsOpen,
-    setTrainingNominationModalIsOpen,
+    trainingModalIsOpen,
+    confirmTrainingModalIsOpen,
+    otpPdcModalIsOpen,
+    setConfirmTrainingModalIsOpen,
+    setOtpPdcModalIsOpen,
+
     getRecommendedEmployees,
     getRecommendedEmployeesSuccess,
     getRecommendedEmployeesFail,
@@ -47,21 +59,22 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getNominatedEmployeeListSuccess,
     getNominatedEmployeeListFail,
   } = usePdcApprovalsStore((state) => ({
-    confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
     recommendedEmployees: state.recommendedEmployees,
     loadingRecommendedEmployee: state.loading.loadingRecommendedEmployee,
     errorRecommendedEmployee: state.error.errorRecommendedEmployee,
     errorNominatedEmployeeList: state.error.errorNominatedEmployeeList,
     individualTrainingDetails: state.individualTrainingDetails,
-    trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
+
     nominatedEmployeeList: state.nominatedEmployeeList,
     nominatedEmployees: state.nominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
     trainingModalIsOpen: state.trainingModalIsOpen,
     loadingResponse: state.loading.loadingResponse,
+    otpPdcModalIsOpen: state.otpPdcModalIsOpen,
+    confirmTrainingModalIsOpen: state.confirmTrainingModalIsOpen,
+    setConfirmTrainingModalIsOpen: state.setConfirmTrainingModalIsOpen,
+    setOtpPdcModalIsOpen: state.setOtpPdcModalIsOpen,
 
-    setConfirmNominationModalIsOpen: state.setConfirmNominationModalIsOpen,
-    setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     getRecommendedEmployees: state.getRecommendedEmployees,
     getRecommendedEmployeesSuccess: state.getRecommendedEmployeesSuccess,
     getRecommendedEmployeesFail: state.getRecommendedEmployeesFail,
@@ -70,14 +83,35 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getNominatedEmployeeListFail: state.getNominatedEmployeeListFail,
   }));
 
-  //close training nomination modal
-  const closeTrainingNominationModal = async () => {
-    setTrainingNominationModalIsOpen(false);
+  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
+
+  const [reason, setReason] = useState<string>('');
+
+  // React hook form
+  const { reset, register, handleSubmit, watch, setValue } = useForm<PdcAction>({
+    mode: 'onChange',
+    defaultValues: {
+      action: PdcApprovalAction.APPROVE,
+    },
+  });
+
+  useEffect(() => {
+    if (!modalState) {
+      setValue('action', null);
+    }
+  }, [modalState]);
+
+  const onSubmit: SubmitHandler<PdcAction> = (data: PdcAction) => {
+    if (data.action === PdcApprovalAction.APPROVE) {
+      setOtpPdcModalIsOpen(true);
+    } else {
+      setConfirmTrainingModalIsOpen(true);
+    }
   };
 
   //close confirmation modal
   const closeConfirmationModal = async () => {
-    setConfirmNominationModalIsOpen(false);
+    setConfirmTrainingModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -99,17 +133,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2">
-            <ConfirmationNominationModal
-              modalState={confirmNominationModalIsOpen}
-              setModalState={setConfirmNominationModalIsOpen}
-              closeModalAction={closeConfirmationModal}
-            />
-
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {/* {individualTrainingDetails.trainingPreparationStatus === TrainingPreparationStatus.ON_GOING_NOMINATION ? (
-                <AlertNotification alertType="info" notifMessage="On Going Nomination" dismissible={false} />
-              ) : null} */}
-
               {/* loading post reponse */}
               {loadingResponse ? (
                 <AlertNotification
@@ -119,6 +143,76 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   dismissible={false}
                 />
               ) : null}
+
+              <AlertNotification
+                alertType={
+                  individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
+                    ? 'error'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    ? 'error'
+                    : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
+                    ? 'error'
+                    : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.UPCOMING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.PENDING
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.COMPLETED
+                    ? 'success'
+                    : 'info'
+                }
+                notifMessage={
+                  individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
+                    ? 'On Going Nomination'
+                    : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
+                    ? 'Nomination Done'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    ? 'For PDC Secretary Review'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+                    ? 'For PDC Chairman Review'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
+                    ? 'Disapproved by PDC Chairman'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    ? 'Disapproved by PDC Secretary'
+                    : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+                    ? 'For GM Review'
+                    : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
+                    ? 'Disapproved by GM'
+                    : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
+                    ? 'On Going Batching'
+                    : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
+                    ? 'Done Batching'
+                    : individualTrainingDetails.status === TrainingStatus.UPCOMING
+                    ? 'Upcoming'
+                    : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
+                    ? 'On Going Training'
+                    : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
+                    ? 'For Requirements Submission'
+                    : individualTrainingDetails.status === TrainingStatus.PENDING
+                    ? 'Pending'
+                    : individualTrainingDetails.status === TrainingStatus.COMPLETED
+                    ? 'Completed'
+                    : individualTrainingDetails.status
+                }
+                dismissible={false}
+              />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Course Title:</label>
@@ -146,10 +240,14 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               </div>
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Slots:</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
+                  No. of Participants:
+                </label>
 
                 <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.numberOfSlots}</label>
+                  <label className="text-slate-500 h-12 w-96 text-md ">
+                    {individualTrainingDetails.numberOfParticipants}
+                  </label>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
@@ -171,157 +269,149 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 </div>
               </div>
 
-              {/* <div className="flex flex-row md:gap-2 justify-between items-start md:items-start">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Participants:</label>
+              {(employeeDetail.employmentDetails.isPdcSecretariat &&
+                individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL) ||
+              (employeeDetail.employmentDetails.isPdcChairman &&
+                individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL) ||
+              ((isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+                individualTrainingDetails.status === TrainingStatus.GM_APPROVAL) ? (
+                <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
+                  <div className="w-full overflow-x-auto">
+                    <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
+                      <thead className="border-0">
+                        <tr>
+                          <th
+                            colSpan={3}
+                            className="px-10 py-2 text-sm text-center items-center border md:px-6 md:text-md font-medium text-gray-700 "
+                          >
+                            Nominated Employee(s)
+                          </th>
+                        </tr>
 
-                <div className="w-auto ">
-                  {nominatedEmployeeList?.length <= 0 ? (
-                    <Button
-                      variant={'primary'}
-                      size={'sm'}
-                      loading={false}
-                      onClick={() => setTrainingNominationModalIsOpen(true)}
+                        {individualTrainingDetails.nominee?.length > 0 ? (
+                          <tr>
+                            <td className={`px-2 w-12 text-center border`}>No.</td>
+                            <td className={`px-2 text-center border`}>Name</td>
+                            <td className={`px-2 text-center border`}>Supervisor</td>
+                          </tr>
+                        ) : (
+                          <tr>
+                            <td colSpan={3} className={`px-2 w-1/2 text-center border`}>
+                              Name
+                            </td>
+                          </tr>
+                        )}
+                      </thead>
+                      <tbody className="text-sm text-center ">
+                        {individualTrainingDetails.nominee?.length > 0 ? (
+                          individualTrainingDetails.nominee.map((employees, index) => (
+                            <tr key={index}>
+                              <td className={`px-2 py-1 text-start border`}>{index + 1}</td>
+                              <td className={`px-2 py-1 text-start border`}>{employees.name}</td>
+                              <td className={`px-2 text-start border`}>{employees.supervisor.name}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr className="border-0">
+                            <td colSpan={3}>NO EMPLOYEE NOMINATED</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : null}
+
+              {(employeeDetail.employmentDetails.isPdcSecretariat &&
+                individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL) ||
+              (employeeDetail.employmentDetails.isPdcChairman &&
+                individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL) ||
+              ((isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+                individualTrainingDetails.status === TrainingStatus.GM_APPROVAL) ? (
+                <form id="PdcAction" onSubmit={handleSubmit(onSubmit)}>
+                  <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-start items-start md:items-center pt-1 md:pt-2">
+                    <span className="text-slate-500 text-md font-medium">Action:</span>
+
+                    <select
+                      id="action"
+                      className="text-slate-500 h-12 w-full md:w-40 rounded text-md border-slate-300"
+                      required
+                      {...register('action')}
                     >
-                      <div className="flex justify-center">Set Participants</div>
-                    </Button>
+                      <option value="" disabled>
+                        Select Action
+                      </option>
+                      {approvalAction.map((item: SelectOption, idx: number) => (
+                        <option value={item.value} key={idx}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {watch('action') === PdcApprovalAction.DISAPPROVE ? (
+                    <textarea
+                      required={true}
+                      className={'resize-none mt-4 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                      placeholder="Enter Reason for Disapproval"
+                      rows={3}
+                      onChange={(e) => setReason(e.target.value as unknown as string)}
+                    ></textarea>
                   ) : null}
-                </div>
-              </div> */}
-              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
-                <div className="w-full overflow-x-auto">
-                  <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
-                    <thead className="border-0">
-                      <tr>
-                        <th
-                          colSpan={3}
-                          className="px-10 py-2 text-sm text-center items-center border md:px-6 md:text-md font-medium text-gray-700 "
-                        >
-                          Nominated Employee(s)
-                        </th>
-                      </tr>
-
-                      {nominatedEmployeeList?.length > 0 ? (
-                        <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
-                          <td className={`px-2 w-1/6 text-center border`}>Status</td>
-                          <td className={`px-2 text-center border`}>Remarks</td>
-                        </tr>
-                      ) : (
-                        <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
-                        </tr>
-                      )}
-                    </thead>
-                    <tbody className="text-sm text-center ">
-                      {nominatedEmployeeList?.length > 0 ? (
-                        nominatedEmployeeList.map((employees, index) =>
-                          employees.nomineeType === NomineeType.NOMINEE ? (
-                            <tr key={index}>
-                              <td className={`px-2 py-1 w-1/2 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 py-1 w-1/6 text-center border capitalize`}>
-                                {UseRenderTrainingNomineeStatus(employees.status)}
-                              </td>
-                              <td className={`px-2 text-start border`}>{employees.remarks}</td>
-                            </tr>
-                          ) : null
-                        )
-                      ) : nominatedEmployees?.length > 0 ? (
-                        nominatedEmployees.map((employees, index) => {
-                          return (
-                            <tr key={index}>
-                              <td colSpan={3} className={`px-2 text-start border`}>
-                                {employees.label}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr className="border-0">
-                          <td colSpan={3}>NO EMPLOYEE NOMINATED</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-1">
-                <div className="w-full overflow-x-auto">
-                  <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
-                    <thead className="border-0">
-                      <tr>
-                        <th
-                          colSpan={3}
-                          className="px-10 py-2 text-sm text-center items-center border md:px-6 md:text-md font-medium text-gray-700 "
-                        >
-                          Auxiliary Employee(s)
-                        </th>
-                      </tr>
-
-                      {nominatedEmployeeList?.length > 0 ? (
-                        <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
-                          <td className={`px-2 w-1/6 text-center border`}>Status</td>
-                          <td className={`px-2 text-center border`}>Remarks</td>
-                        </tr>
-                      ) : (
-                        <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
-                        </tr>
-                      )}
-                    </thead>
-                    <tbody className="text-sm text-center ">
-                      {nominatedEmployeeList?.length > 0 ? (
-                        nominatedEmployeeList.map((employees, index) =>
-                          employees.nomineeType === NomineeType.STAND_IN ? (
-                            <tr key={index}>
-                              <td className={`px-2 py-1 w-1/2 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 py-1 w-1/6 text-center border capitalize`}>
-                                {UseRenderTrainingNomineeStatus(employees.status)}
-                              </td>
-                              <td className={`px-2 text-start border`}>{employees.remarks}</td>
-                            </tr>
-                          ) : null
-                        )
-                      ) : auxiliaryEmployees?.length > 0 ? (
-                        auxiliaryEmployees.map((employees, index) => {
-                          return (
-                            <tr key={index}>
-                              <td colSpan={3} className={`px-2 text-start border`}>
-                                {employees.label}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr className="border-0">
-                          <td colSpan={3}>NO EMPLOYEE NOMINATED</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                </form>
+              ) : null}
             </div>
           </div>
+          <OtpModal modalState={otpPdcModalIsOpen} setModalState={setOtpPdcModalIsOpen} title={'TRAINING APPROVAL OTP'}>
+            {/* contents */}
+            <ApprovalOtpContentsPdc
+              mobile={employeeDetail.profile.mobileNumber}
+              employeeId={employeeDetail.user._id}
+              action={PdcApprovalAction.APPROVE}
+              tokenId={individualTrainingDetails.distributionId}
+              otpName={`${
+                employeeDetail.employmentDetails.isPdcSecretariat
+                  ? 'pdcSecretariatApproval'
+                  : employeeDetail.employmentDetails.isPdcChairman &&
+                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
+                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)
+                  ? 'pdcChairmanApproval'
+                  : !employeeDetail.employmentDetails.isPdcChairman &&
+                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
+                  ? 'pdcGeneralManagerApproval'
+                  : employeeDetail.employmentDetails.isPdcChairman &&
+                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
+                  ? 'pdcGmAndChairmanApproval'
+                  : 'N/A'
+              }`}
+            />
+          </OtpModal>
+          {/* <ConfirmationPdcModal
+            modalState={confirmTrainingModalIsOpen}
+            setModalState={setConfirmTrainingModalIsOpen}
+            closeModalAction={closeConfirmationModal}
+            action={PdcApprovalAction.DISAPPROVE}
+            tokenId={individualTrainingDetails.distributionId}
+            remarks={reason}
+          /> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
             <div className="max-w-auto">
-              {nominatedEmployeeList?.length > 0 ? (
-                <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
-                  Close
+              {(employeeDetail.employmentDetails.isPdcSecretariat &&
+                individualTrainingDetails.status == TrainingStatus.PDC_SECRETARY_APPROVAL) ||
+              (employeeDetail.employmentDetails.isPdcChairman &&
+                individualTrainingDetails.status == TrainingStatus.PDC_CHAIRMAN_APPROVAL) ? (
+                <Button form={`PdcAction`} variant={'primary'} size={'md'} loading={false} type="submit">
+                  Submit
                 </Button>
               ) : (
-                <Button
-                  variant={'primary'}
-                  size={'md'}
-                  loading={false}
-                  form="ApplyOvertimeForm"
-                  type="submit"
-                  onClick={(e) => setConfirmNominationModalIsOpen(true)}
-                  disabled={nominatedEmployees.length <= 0 ? true : false}
-                >
-                  Send Invitation
+                <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                  Close
                 </Button>
               )}
             </div>

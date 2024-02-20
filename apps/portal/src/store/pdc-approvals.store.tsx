@@ -3,9 +3,10 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import {
   NominatedEmployees,
+  PdcChairmanApproval,
+  PdcSecretariatApproval,
   RecommendedEmployee,
   Training,
-  TrainingNominationData,
 } from '../../../../libs/utils/src/lib/types/training.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
@@ -16,7 +17,7 @@ export type PdcApprovalsState = {
   individualTrainingDetails: Training;
   recommendedEmployees: Array<RecommendedEmployee>;
   response: {
-    postResponseApply: any;
+    patchResponseApply: any;
     cancelResponse: any;
   };
 
@@ -59,17 +60,20 @@ export type PdcApprovalsState = {
   trainingNominationModalIsOpen: boolean;
   setTrainingNominationModalIsOpen: (trainingNominationModalIsOpen: boolean) => void;
 
-  confirmNominationModalIsOpen: boolean;
-  setConfirmNominationModalIsOpen: (confirmNominationModalIsOpen: boolean) => void;
+  confirmTrainingModalIsOpen: boolean;
+  setConfirmTrainingModalIsOpen: (confirmTrainingModalIsOpen: boolean) => void;
+
+  otpPdcModalIsOpen: boolean;
+  setOtpPdcModalIsOpen: (otpPdcModalIsOpen: boolean) => void;
 
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
   getTrainingSelectionListSuccess: (loading: boolean, response) => void;
   getTrainingSelectionListFail: (loading: boolean, error: string) => void;
 
-  postTrainingSelection: () => void;
-  postTrainingSelectionSuccess: (response) => void;
-  postTrainingSelectionFail: (error: string) => void;
+  patchTrainingSelection: () => void;
+  patchTrainingSelectionSuccess: (response) => void;
+  patchTrainingSelectionFail: (error: string) => void;
 
   emptyResponseAndError: () => void;
 };
@@ -81,7 +85,7 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
     trainingList: [],
     individualTrainingDetails: {} as Training,
     response: {
-      postResponseApply: {},
+      patchResponseApply: {},
       cancelResponse: {},
     },
 
@@ -102,7 +106,8 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
 
     trainingModalIsOpen: false,
     trainingNominationModalIsOpen: false,
-    confirmNominationModalIsOpen: false,
+    confirmTrainingModalIsOpen: false,
+    otpPdcModalIsOpen: false,
 
     nominatedEmployees: [],
     setNominatedEmployees: (nominatedEmployees: Array<SelectOption>) => {
@@ -124,8 +129,12 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
       set((state) => ({ ...state, trainingModalIsOpen }));
     },
 
-    setConfirmNominationModalIsOpen: (confirmNominationModalIsOpen: boolean) => {
-      set((state) => ({ ...state, confirmNominationModalIsOpen }));
+    setConfirmTrainingModalIsOpen: (confirmTrainingModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmTrainingModalIsOpen }));
+    },
+
+    setOtpPdcModalIsOpen: (otpPdcModalIsOpen: boolean) => {
+      set((state) => ({ ...state, otpPdcModalIsOpen }));
     },
 
     setTrainingNominationModalIsOpen: (trainingNominationModalIsOpen: boolean) => {
@@ -208,12 +217,12 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
       }));
     },
 
-    postTrainingSelection: () => {
+    patchTrainingSelection: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {},
+          patchResponseApply: {},
         },
         loading: {
           ...state.loading,
@@ -225,12 +234,12 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
         },
       }));
     },
-    postTrainingSelectionSuccess: (response: TrainingNominationData) => {
+    patchTrainingSelectionSuccess: (response: PdcChairmanApproval | PdcSecretariatApproval) => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          postResponseApply: response,
+          patchResponseApply: response,
         },
         loading: {
           ...state.loading,
@@ -238,7 +247,7 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
         },
       }));
     },
-    postTrainingSelectionFail: (error: string) => {
+    patchTrainingSelectionFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -335,7 +344,7 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
         ...state,
         response: {
           ...state.response,
-          postResponseApply: {},
+          patchResponseApply: {},
           cancelResponse: {},
         },
         error: {
