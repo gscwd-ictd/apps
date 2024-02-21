@@ -28,6 +28,7 @@ export type Training = {
   type: TrainingTypes;
   trainingPreparationStatus?: TrainingStatus; //for training selection
   status?: TrainingStatus; //for training selection
+  remarks?: string;
 };
 
 // edit/viewing type
@@ -73,9 +74,17 @@ export type TrainingByEmployeeId = {
 export type PdcSecretariatApproval = {
   pdcSecretary: string;
   trainingDetails: string;
+  remarks?: string;
 };
 
 export type PdcChairmanApproval = {
   pdcChairman: string;
   trainingDetails: string;
+  remarks?: string;
+};
+
+export type PdcGeneralManagerApproval = {
+  generalManager: string;
+  trainingDetails: string;
+  remarks?: string;
 };

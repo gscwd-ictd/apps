@@ -2,13 +2,9 @@
 
 import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
-import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { TrainingNominationData } from 'libs/utils/src/lib/types/training.type';
-import { isEmpty } from 'lodash';
 import { NomineeType } from 'libs/utils/src/lib/enums/training.enum';
 
 type ConfirmationNominationModalProps = {
@@ -23,25 +19,17 @@ export const ConfirmationNominationModal = ({
   closeModalAction,
 }: ConfirmationNominationModalProps) => {
   const {
-    recommendedEmployees,
     individualTrainingDetails,
     nominatedEmployees,
     auxiliaryEmployees,
-    errorResponse,
-    trainingModalIsOpen,
-    confirmNominationModalIsOpen,
     setTrainingModalIsOpen,
     postTrainingSelection,
     postTrainingSelectionSuccess,
     postTrainingSelectionFail,
   } = useTrainingSelectionStore((state) => ({
-    recommendedEmployees: state.recommendedEmployees,
     individualTrainingDetails: state.individualTrainingDetails,
     nominatedEmployees: state.nominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
-    errorResponse: state.error.errorResponse,
-    trainingModalIsOpen: state.trainingModalIsOpen,
-    confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     postTrainingSelection: state.postTrainingSelection,
     postTrainingSelectionSuccess: state.postTrainingSelectionSuccess,
@@ -50,7 +38,6 @@ export const ConfirmationNominationModal = ({
 
   const handleSubmit = () => {
     let finalNominated = [];
-    let finalAuxiliary = [];
     let finalEmployees = [];
     //mutate nominated employees array for post
     for (let a = 0; a < nominatedEmployees.length; a++) {

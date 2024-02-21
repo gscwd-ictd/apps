@@ -1,29 +1,14 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import Link from 'next/link';
-import { HiPencilAlt, HiPlus, HiX } from 'react-icons/hi';
-import { usePassSlipStore } from '../../../store/passslip.store';
-import { useRouter } from 'next/router';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { MySelectList } from '../../modular/inputs/SelectList';
 
-const listOfEmployees: Array<SelectOption> = [
-  { label: 'Ricardo Vicente Narvaiza', value: '0' },
-  { label: 'Mikhail Sebua', value: '6e0eecab-0e63-11ee-8b82-005056b680ac' },
-  { label: 'Jay Nosotros', value: 'af761daa-b26e-11ed-a79b-000c29f95a80' },
-  { label: 'Eric Sison', value: '62fef63c-b26f-11ed-a79b-000c29f95a80' },
-  { label: 'Allyn Joseph Cubero', value: 'af5633d6-b26e-11ed-a79b-000c29f95a80' },
-  { label: 'John Henry Alfeche', value: '05b0614c-b191-11ed-a79b-000c29f95a80' },
-  { label: 'Phyll Patrick Fragata', value: 'af635f15-b26e-11ed-a79b-000c29f95a80' },
-  { label: 'Deo Del Rosario', value: 'af59e049-b26e-11ed-a79b-000c29f95a80' },
-  { label: 'Cara Jade Reyes', value: '6e0ef093-0e63-11ee-8b82-005056b680ac' },
-  { label: 'Rizza Baugbog', value: 'b34db5e3-b1c6-11ed-a79b-000c29f95a80' },
-];
+// const listOfEmployees: Array<SelectOption> = [
+//   { label: 'Ricardo Vicente Narvaiza', value: '0' },
+// ];
 
 type TrainingNominationModalProps = {
   modalState: boolean;
@@ -39,8 +24,6 @@ export const TrainingNominationModal = ({
   const {
     recommendedEmployees,
     individualTrainingDetails,
-    trainingModalIsOpen,
-    setIndividualTrainingDetails,
     nominatedEmployees,
     setNominatedEmployees,
     auxiliaryEmployees,
@@ -49,8 +32,6 @@ export const TrainingNominationModal = ({
   } = useTrainingSelectionStore((state) => ({
     recommendedEmployees: state.recommendedEmployees,
     individualTrainingDetails: state.individualTrainingDetails,
-    trainingModalIsOpen: state.setTrainingModalIsOpen,
-    setIndividualTrainingDetails: state.setIndividualTrainingDetails,
     nominatedEmployees: state.nominatedEmployees,
     setNominatedEmployees: state.setNominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
@@ -59,7 +40,6 @@ export const TrainingNominationModal = ({
   }));
 
   const [employeePool, setEmployeePool] = useState<Array<SelectOption>>([]);
-  const [tempEmployeePool, setTempEmployeePool] = useState<Array<SelectOption>>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
   const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees

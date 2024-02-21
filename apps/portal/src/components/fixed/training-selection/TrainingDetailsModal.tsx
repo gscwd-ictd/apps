@@ -246,9 +246,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
                     ? 'Disapproved by PDC Secretary'
                     : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
-                    ? 'For GM Review'
+                    ? 'For General Manager Review'
                     : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
-                    ? 'Disapproved by GM'
+                    ? 'Disapproved by General Manager'
                     : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
                     ? 'On Going Batching'
                     : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
@@ -394,7 +394,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   </table>
                 </div>
               </div>
-              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-1">
+              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-2">
                 <div className="w-full overflow-x-auto">
                   <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                     <thead className="border-0">

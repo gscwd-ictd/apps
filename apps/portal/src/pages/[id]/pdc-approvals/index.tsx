@@ -27,7 +27,6 @@ import dayjs from 'dayjs';
 import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/pdc-approvals/TrainingDetailsModal';
-import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function PdcApprovals({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { employeeDetails, setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -51,11 +50,7 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
     getTrainingSelectionList,
     getTrainingSelectionListSuccess,
     getTrainingSelectionListFail,
-    setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails,
-    getEmployeeList,
-    getEmployeeListSuccess,
-    getEmployeeListFail,
     emptyResponseAndError,
   } = usePdcApprovalsStore((state) => ({
     trainingList: state.trainingList,
@@ -68,11 +63,7 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
     getTrainingSelectionList: state.getTrainingSelectionList,
     getTrainingSelectionListSuccess: state.getTrainingSelectionListSuccess,
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
-    setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
-    getEmployeeList: state.getEmployeeList,
-    getEmployeeListSuccess: state.getEmployeeListSuccess,
-    getEmployeeListFail: state.getEmployeeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
@@ -105,7 +96,6 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingList)) {
-      console.log(swrTrainingList);
       getTrainingSelectionListSuccess(swrTrainingListIsLoading, swrTrainingList);
     }
 
@@ -116,10 +106,6 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
 
   const closeTrainingModal = async () => {
     setTrainingModalIsOpen(false);
-  };
-
-  const closeTrainingNominationModal = async () => {
-    setTrainingNominationModalIsOpen(false);
   };
 
   // Render row actions in the table component
@@ -151,11 +137,11 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
       filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
-    // columnHelper.accessor('numberOfHours', {
-    //   header: 'Hours',
-    //   filterFn: 'equalsString',
-    //   cell: (info) => info.getValue(),
-    // }),
+    columnHelper.accessor('numberOfHours', {
+      header: 'Hours',
+      filterFn: 'equalsString',
+      cell: (info) => info.getValue(),
+    }),
     columnHelper.accessor('numberOfParticipants', {
       header: 'Participants',
       cell: (info) => info.getValue(),
@@ -187,16 +173,12 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
     <>
       {/* Training List Load Failed */}
       {!isEmpty(errorTrainingList) ? (
-        <>
-          <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
-        </>
+        <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
       ) : null}
 
       {/* Training List Load Failed */}
       {!isEmpty(patchResponseApply) ? (
-        <>
-          <ToastNotification toastType="success" notifMessage={`Training Action submitted successfully.`} />
-        </>
+        <ToastNotification toastType="success" notifMessage={`Training Action submitted successfully.`} />
       ) : null}
 
       {/* failed to submit */}

@@ -12,7 +12,13 @@ import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store'
 import AuthCode from 'react-auth-code-input';
 import { PdcApprovalAction, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { PdcChairmanApproval, PdcSecretariatApproval } from 'libs/utils/src/lib/types/training.type';
+import {
+  PdcChairmanApproval,
+  PdcGeneralManagerApproval,
+  PdcSecretariatApproval,
+} from 'libs/utils/src/lib/types/training.type';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
+import { isEqual } from 'lodash';
 
 interface OtpProps {
   mobile: string;
@@ -167,23 +173,29 @@ export const ApprovalOtpContentsPdc: FunctionComponent<OtpProps> = ({
     }, 200);
   };
 
-  const handlePatchResult = async (data: PdcSecretariatApproval | PdcChairmanApproval) => {
+  const handlePatchResult = async (data: PdcSecretariatApproval | PdcChairmanApproval | PdcGeneralManagerApproval) => {
     const { error, result } = await patchPortal(
-      otpName === 'pdcChairmanApproval'
+      employeeDetail.employmentDetails.isPdcChairman
         ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/chairman`
-        : otpName === 'pdcSecretariatApproval'
+        : employeeDetail.employmentDetails.isPdcSecretariat
         ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/secretariat`
-        : otpName === 'pdcGeneralManagerApproval'
-        ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/generalmanager`
-        : otpName === 'pdcGmAndChairmanApproval' &&
+        : !employeeDetail.employmentDetails.isPdcChairman &&
+          (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+            isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
+        ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/gm`
+        : employeeDetail.employmentDetails.isPdcChairman &&
+          (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+            isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
           individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
         ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/chairman`
-        : otpName === 'pdcGmAndChairmanApproval' && individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
-        ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/generalmanager`
+        : employeeDetail.employmentDetails.isPdcChairman &&
+          (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+            isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+          individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+        ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/gm`
         : null,
       data
     );
-    console.log(data);
     if (error) {
       patchTrainingSelectionFail(result);
     } else {
@@ -194,14 +206,51 @@ export const ApprovalOtpContentsPdc: FunctionComponent<OtpProps> = ({
   useEffect(() => {
     if (otpComplete) {
       let data;
-      if (employeeDetail.employmentDetails.isPdcChairman) {
+      if (
+        employeeDetail.employmentDetails.isPdcChairman &&
+        individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+      ) {
+        //for chairman
         data = {
           pdcChairman: employeeDetail.employmentDetails.userId,
           trainingDetails: individualTrainingDetails.id,
         };
-      } else {
+      } else if (employeeDetail.employmentDetails.isPdcSecretariat) {
+        //for secretary
         data = {
           pdcSecretary: employeeDetail.employmentDetails.userId,
+          trainingDetails: individualTrainingDetails.id,
+        };
+      } else if (
+        (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+          isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+        individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+      ) {
+        data = {
+          //for GM
+          generalManager: employeeDetail.employmentDetails.userId,
+          trainingDetails: individualTrainingDetails.id,
+        };
+      } else if (
+        employeeDetail.employmentDetails.isPdcChairman &&
+        (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+          isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+        individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+      ) {
+        //for chairman and GM at the same time but approving as chairman
+        data = {
+          pdcChairman: employeeDetail.employmentDetails.userId,
+          trainingDetails: individualTrainingDetails.id,
+        };
+      } else if (
+        employeeDetail.employmentDetails.isPdcChairman &&
+        (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+          isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+        individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+      ) {
+        //for chairman and GM at the same time but approving as GM
+        data = {
+          generalManager: employeeDetail.employmentDetails.userId,
           trainingDetails: individualTrainingDetails.id,
         };
       }

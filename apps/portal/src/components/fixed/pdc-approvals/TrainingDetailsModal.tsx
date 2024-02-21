@@ -6,16 +6,11 @@ import { NomineeType, PdcApprovalAction, TrainingStatus } from 'libs/utils/src/l
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
 import { useEffect, useState } from 'react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import useSWR from 'swr';
-import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty, isEqual } from 'lodash';
-import UseRenderTrainingNomineeStatus from 'apps/portal/src/utils/functions/RenderTrainingNomineeStatus';
+import { isEqual } from 'lodash';
 import { ApprovalOtpContentsPdc } from './PdcApprovalOtp/ApprovalOtpContentsPdc';
 import { ConfirmationPdcModal } from './PdcApprovalOtp/ConfirmationPdcModal';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { stat } from 'fs';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { PdcChairmanApproval, PdcSecretariatApproval } from 'libs/utils/src/lib/types/training.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
@@ -36,51 +31,19 @@ const approvalAction: Array<SelectOption> = [
 
 export const TrainingDetailsModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    recommendedEmployees,
-    loadingRecommendedEmployee,
     loadingResponse,
-    errorRecommendedEmployee,
-    errorNominatedEmployeeList,
     individualTrainingDetails,
-    nominatedEmployeeList,
-    nominatedEmployees,
-    auxiliaryEmployees,
-
-    trainingModalIsOpen,
-    confirmTrainingModalIsOpen,
     otpPdcModalIsOpen,
+    confirmTrainingModalIsOpen,
     setConfirmTrainingModalIsOpen,
     setOtpPdcModalIsOpen,
-
-    getRecommendedEmployees,
-    getRecommendedEmployeesSuccess,
-    getRecommendedEmployeesFail,
-    getNominatedEmployeeList,
-    getNominatedEmployeeListSuccess,
-    getNominatedEmployeeListFail,
   } = usePdcApprovalsStore((state) => ({
-    recommendedEmployees: state.recommendedEmployees,
-    loadingRecommendedEmployee: state.loading.loadingRecommendedEmployee,
-    errorRecommendedEmployee: state.error.errorRecommendedEmployee,
-    errorNominatedEmployeeList: state.error.errorNominatedEmployeeList,
     individualTrainingDetails: state.individualTrainingDetails,
-
-    nominatedEmployeeList: state.nominatedEmployeeList,
-    nominatedEmployees: state.nominatedEmployees,
-    auxiliaryEmployees: state.auxiliaryEmployees,
-    trainingModalIsOpen: state.trainingModalIsOpen,
     loadingResponse: state.loading.loadingResponse,
     otpPdcModalIsOpen: state.otpPdcModalIsOpen,
     confirmTrainingModalIsOpen: state.confirmTrainingModalIsOpen,
     setConfirmTrainingModalIsOpen: state.setConfirmTrainingModalIsOpen,
     setOtpPdcModalIsOpen: state.setOtpPdcModalIsOpen,
-
-    getRecommendedEmployees: state.getRecommendedEmployees,
-    getRecommendedEmployeesSuccess: state.getRecommendedEmployeesSuccess,
-    getRecommendedEmployeesFail: state.getRecommendedEmployeesFail,
-    getNominatedEmployeeList: state.getNominatedEmployeeList,
-    getNominatedEmployeeListSuccess: state.getNominatedEmployeeListSuccess,
-    getNominatedEmployeeListFail: state.getNominatedEmployeeListFail,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
@@ -192,9 +155,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
                     ? 'Disapproved by PDC Secretary'
                     : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
-                    ? 'For GM Review'
+                    ? 'For General Manager Review'
                     : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
-                    ? 'Disapproved by GM'
+                    ? 'Disapproved by General Manager'
                     : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
                     ? 'On Going Batching'
                     : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
@@ -269,13 +232,17 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 </div>
               </div>
 
-              {(employeeDetail.employmentDetails.isPdcSecretariat &&
-                individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL) ||
-              (employeeDetail.employmentDetails.isPdcChairman &&
-                individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL) ||
-              ((isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+              <div className="flex flex-row md:gap-2 justify-between items-start md:items-start">
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Participants:</label>
+              </div>
+
+              {(employeeDetail.employmentDetails.isPdcSecretariat ||
+                employeeDetail.employmentDetails.isPdcChairman ||
+                isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
                 isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
-                individualTrainingDetails.status === TrainingStatus.GM_APPROVAL) ? (
+              individualTrainingDetails.status != TrainingStatus.ON_GOING_NOMINATION &&
+              individualTrainingDetails.status != TrainingStatus.NOMINATION_DONE &&
+              individualTrainingDetails.status != TrainingStatus.PENDING ? (
                 <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
                   <div className="w-full overflow-x-auto">
                     <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
@@ -307,7 +274,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         {individualTrainingDetails.nominee?.length > 0 ? (
                           individualTrainingDetails.nominee.map((employees, index) => (
                             <tr key={index}>
-                              <td className={`px-2 py-1 text-start border`}>{index + 1}</td>
+                              <td className={`px-2 py-1 text-start border`}>{`${index + 1}.`}</td>
                               <td className={`px-2 py-1 text-start border`}>{employees.name}</td>
                               <td className={`px-2 text-start border`}>{employees.supervisor.name}</td>
                             </tr>
@@ -321,6 +288,30 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     </table>
                   </div>
                 </div>
+              ) : null}
+
+              {individualTrainingDetails.status === TrainingStatus.GM_DECLINED ||
+              individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED ||
+              individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED ? (
+                <>
+                  <div className="flex flex-row items-center justify-between w-full pt-1">
+                    <label className="text-md font-medium text-slate-500 whitespace-nowrap">
+                      {individualTrainingDetails.status === TrainingStatus.GM_DECLINED
+                        ? 'Remarks by General Manager:'
+                        : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
+                        ? 'Remarks by PDC Chairman:'
+                        : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                        ? 'Remarks by PDC Secretary:'
+                        : 'Remarks:'}
+                    </label>
+                  </div>
+                  <textarea
+                    disabled
+                    rows={2}
+                    className="w-full p-2 text-md rounded resize-none text-slate-500 border-slate-300"
+                    value={individualTrainingDetails.remarks ?? 'None'}
+                  ></textarea>
+                </>
               ) : null}
 
               {(employeeDetail.employmentDetails.isPdcSecretariat &&
@@ -370,7 +361,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               mobile={employeeDetail.profile.mobileNumber}
               employeeId={employeeDetail.user._id}
               action={PdcApprovalAction.APPROVE}
-              tokenId={individualTrainingDetails.distributionId}
+              tokenId={individualTrainingDetails.id}
               otpName={`${
                 employeeDetail.employmentDetails.isPdcSecretariat
                   ? 'pdcSecretariatApproval'
@@ -390,14 +381,14 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               }`}
             />
           </OtpModal>
-          {/* <ConfirmationPdcModal
+          <ConfirmationPdcModal
             modalState={confirmTrainingModalIsOpen}
             setModalState={setConfirmTrainingModalIsOpen}
             closeModalAction={closeConfirmationModal}
             action={PdcApprovalAction.DISAPPROVE}
-            tokenId={individualTrainingDetails.distributionId}
+            tokenId={individualTrainingDetails.id}
             remarks={reason}
-          /> */}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
@@ -405,7 +396,10 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               {(employeeDetail.employmentDetails.isPdcSecretariat &&
                 individualTrainingDetails.status == TrainingStatus.PDC_SECRETARY_APPROVAL) ||
               (employeeDetail.employmentDetails.isPdcChairman &&
-                individualTrainingDetails.status == TrainingStatus.PDC_CHAIRMAN_APPROVAL) ? (
+                individualTrainingDetails.status == TrainingStatus.PDC_CHAIRMAN_APPROVAL) ||
+              ((isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+                individualTrainingDetails.status == TrainingStatus.GM_APPROVAL) ? (
                 <Button form={`PdcAction`} variant={'primary'} size={'md'} loading={false} type="submit">
                   Submit
                 </Button>

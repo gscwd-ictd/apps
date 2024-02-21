@@ -94,7 +94,6 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrUnavailableDates)) {
-      console.log(swrUnavailableDates);
       getUnavailableSuccess(swrIsLoading, swrUnavailableDates);
     }
 
@@ -108,7 +107,6 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
       setSelectedDay(day);
       const specifiedDate = format(day, 'yyyy-MM-dd');
       //check if selected date exist in array - returns true/false
-      console.log(dayjs(`${specifiedDate}`).diff(`${today}`, 'day'));
       if (selectedDates.includes(specifiedDate)) {
         //removes date
         setSelectedDates(

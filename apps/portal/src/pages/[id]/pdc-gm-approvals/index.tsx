@@ -44,7 +44,6 @@ export default function PdcGeneralManagerApprovals({
 
   const {
     trainingList,
-    loadingTrainingList,
     errorTrainingList,
     trainingModalIsOpen,
     patchResponseApply,
@@ -53,11 +52,7 @@ export default function PdcGeneralManagerApprovals({
     getTrainingSelectionList,
     getTrainingSelectionListSuccess,
     getTrainingSelectionListFail,
-    setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails,
-    getEmployeeList,
-    getEmployeeListSuccess,
-    getEmployeeListFail,
     emptyResponseAndError,
   } = usePdcApprovalsStore((state) => ({
     trainingList: state.trainingList,
@@ -70,30 +65,20 @@ export default function PdcGeneralManagerApprovals({
     getTrainingSelectionList: state.getTrainingSelectionList,
     getTrainingSelectionListSuccess: state.getTrainingSelectionListSuccess,
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
-    setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
-    getEmployeeList: state.getEmployeeList,
-    getEmployeeListSuccess: state.getEmployeeListSuccess,
-    getEmployeeListFail: state.getEmployeeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
 
-  const trainingGeneralManagerUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/chairman`;
+  const trainingGeneralManagerUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/gm`;
 
   const {
     data: swrTrainingList,
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
     mutate: mutateTrainingList,
-  } = useSWR(
-    isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-      isEqual(userDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)
-      ? trainingGeneralManagerUrl
-      : null,
-    fetchWithToken
-  );
+  } = useSWR(trainingGeneralManagerUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -105,7 +90,6 @@ export default function PdcGeneralManagerApprovals({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingList)) {
-      console.log(swrTrainingList);
       getTrainingSelectionListSuccess(swrTrainingListIsLoading, swrTrainingList);
     }
 
@@ -116,10 +100,6 @@ export default function PdcGeneralManagerApprovals({
 
   const closeTrainingModal = async () => {
     setTrainingModalIsOpen(false);
-  };
-
-  const closeTrainingNominationModal = async () => {
-    setTrainingNominationModalIsOpen(false);
   };
 
   // Render row actions in the table component
@@ -161,7 +141,7 @@ export default function PdcGeneralManagerApprovals({
       cell: (info) => info.getValue(),
     }),
 
-    columnHelper.accessor('trainingPreparationStatus', {
+    columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderTrainingStatus(info.getValue(), TextSize.TEXT_SM),
     }),
@@ -187,16 +167,12 @@ export default function PdcGeneralManagerApprovals({
     <>
       {/* Training List Load Failed */}
       {!isEmpty(errorTrainingList) ? (
-        <>
-          <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
-        </>
+        <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
       ) : null}
 
       {/* Training List Load Failed */}
       {!isEmpty(patchResponseApply) ? (
-        <>
-          <ToastNotification toastType="success" notifMessage={`Training Action submitted successfully.`} />
-        </>
+        <ToastNotification toastType="success" notifMessage={`Training Action submitted successfully.`} />
       ) : null}
 
       {/* failed to submit */}
