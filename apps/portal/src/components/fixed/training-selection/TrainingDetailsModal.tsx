@@ -159,7 +159,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         </>
       ) : null}
 
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -268,54 +268,54 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 dismissible={false}
               />
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Course Title:</label>
+              <div className="flex flex-col justify-between items-start">
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80 ">Course Title:</label>
 
-                <div className="w-auto sm:w-96">
+                <div className="w-auto pl-0 md:pl-4">
                   <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.courseTitle}</label>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              <div className="flex flex-col justify-between items-start">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Location:</label>
 
-                <div className="w-auto sm:w-96">
+                <div className="w-auto pl-0 md:pl-4">
                   <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.location}</label>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              <div className="flex flex-col justify-between items-start">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Duration:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">
+                <div className="w-auto">
+                  <label className="text-slate-500 h-12 pl-0 md:pl-4 text-md ">
                     {DateFormatter(individualTrainingDetails.trainingStart, 'MM-DD-YYYY')} -{' '}
                     {DateFormatter(individualTrainingDetails.trainingEnd, 'MM-DD-YYYY')}{' '}
                   </label>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">No. of Slots:</label>
+              <div className="flex flex-row md:gap-2 justify-between items-start w-full">
+                <div className="flex flex-col justify-between items-start">
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">No. of Slots:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.numberOfSlots}</label>
+                  <div className="pl-0 md:pl-4">
+                    <label className="text-slate-500 h-12 text-md ">{individualTrainingDetails.numberOfSlots}</label>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Source:</label>
+                <div className="flex flex-col justify-between items-start">
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">Source:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md capitalize ">
-                    {individualTrainingDetails.source}
-                  </label>
+                  <div className="pl-0 md:pl-4">
+                    <label className="text-slate-500 h-12 text-md capitalize ">
+                      {individualTrainingDetails.source}
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Type:</label>
+                <div className="flex flex-col justify-between items-start">
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">Type:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md capitalize">
-                    {individualTrainingDetails?.type}
-                  </label>
+                  <div className="pl-0 md:pl-4">
+                    <label className="text-slate-500 h-12 text-md capitalize">{individualTrainingDetails?.type}</label>
+                  </div>
                 </div>
               </div>
 
@@ -325,7 +325,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 <div className="w-auto ">
                   {nominatedEmployeeList?.length <= 0 ? (
                     <Button
-                      variant={'primary'}
+                      variant={'warning'}
                       size={'sm'}
                       loading={false}
                       onClick={() => setTrainingNominationModalIsOpen(true)}
@@ -337,49 +337,67 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               </div>
               <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
                 <div className="w-full overflow-x-auto">
-                  <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
-                    <thead className="border-0">
-                      <tr>
+                  <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
+                    <thead className="border-0 ">
+                      <tr className="border-l border-r">
                         <th
                           colSpan={3}
-                          className="px-10 py-2 text-sm text-center items-center border md:px-6 md:text-md font-medium text-gray-700 "
+                          className="px-10 py-2 text-sm text-center items-center md:px-6 md:text-md font-medium border-b"
                         >
                           Nominated Employee(s)
                         </th>
                       </tr>
 
                       {nominatedEmployeeList?.length > 0 ? (
-                        <tr>
-                          <td className={`px-2 w-2/5 text-center border`}>Name</td>
-                          <td className={`px-2 w-36 text-center border`}>Status</td>
-                          <td className={`px-2 text-center border`}>Remarks</td>
+                        <tr className="border-l border-r">
+                          <td className={`px-2 w-1/2 text-center border-b border-r text-sm`}>Name</td>
+                          <td className={`px-2 w-24 text-center border-b border-r text-sm`}>Status</td>
+                          <td className={`px-2 w-auto text-center border-b text-sm`}>Remarks</td>
                         </tr>
-                      ) : (
-                        <tr>
-                          <td colSpan={3} className={`px-2 w-1/2 text-center border`}>
+                      ) : nominatedEmployees?.length > 0 ? (
+                        <tr className="border-l border-r">
+                          <td colSpan={1} className={`px-2 text-center border-b border-r text-sm w-12`}>
+                            No.
+                          </td>
+                          <td colSpan={2} className={`px-2 text-center border-b text-sm`}>
                             Name
                           </td>
                         </tr>
-                      )}
+                      ) : null}
                     </thead>
                     <tbody className="text-sm text-center ">
                       {nominatedEmployeeList?.length > 0 ? (
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.NOMINEE ? (
-                            <tr key={index}>
-                              <td className={`px-2 py-1 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 py-1 text-center border capitalize`}>
+                            <tr key={index} className="border-l border-r">
+                              <td className={`px-2 py-1 text-start border-r border-b rounded-bl-md`}>
+                                {employees.name}
+                              </td>
+                              <td className={`px-2 py-1 text-center border-r border-b`}>
                                 {UseRenderTrainingNomineeStatus(employees.status)}
                               </td>
-                              <td className={`px-2 text-start border`}>{employees.remarks}</td>
+                              <td className={`px-2 py-1 text-start border-b rounded-br-md`}>{employees.remarks}</td>
                             </tr>
                           ) : null
                         )
                       ) : nominatedEmployees?.length > 0 ? (
                         nominatedEmployees.map((employees, index) => {
                           return (
-                            <tr key={index}>
-                              <td colSpan={3} className={`px-2 text-start border`}>
+                            <tr key={index} className="border-l border-r">
+                              <td
+                                colSpan={1}
+                                className={`px-2 text-start border-r ${
+                                  nominatedEmployees.length === index + 1 ? '' : 'border-b'
+                                }`}
+                              >
+                                {`${index + 1}.`}
+                              </td>
+                              <td
+                                colSpan={2}
+                                className={`px-2 text-start ${
+                                  nominatedEmployees.length === index + 1 ? '' : 'border-b'
+                                }`}
+                              >
                                 {employees.label}
                               </td>
                             </tr>
@@ -396,12 +414,12 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               </div>
               <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-2">
                 <div className="w-full overflow-x-auto">
-                  <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
+                  <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
                     <thead className="border-0">
                       <tr>
                         <th
                           colSpan={3}
-                          className="px-10 py-2 text-sm text-center items-center border md:px-6 md:text-md font-medium text-gray-700 "
+                          className="px-10 py-2 text-sm text-center items-center md:px-6 md:text-md font-medium border-b"
                         >
                           Auxiliary Employee(s)
                         </th>
@@ -409,36 +427,54 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
                       {nominatedEmployeeList?.length > 0 ? (
                         <tr>
-                          <td className={`px-2 w-2/5 text-center border`}>Name</td>
-                          <td className={`px-2 w-36 text-center border`}>Status</td>
-                          <td className={`px-2 text-center border`}>Remarks</td>
+                          <td className={`px-2 w-1/2 text-center border-b border-r text-sm`}>Name</td>
+                          <td className={`px-2 w-24 text-center border-b border-r text-sm`}>Status</td>
+                          <td className={`px-2 w-auto text-center border-b text-sm`}>Remarks</td>
                         </tr>
-                      ) : (
-                        <tr>
-                          <td colSpan={3} className={`px-2 w-1/2 text-center border`}>
+                      ) : auxiliaryEmployees?.length > 0 ? (
+                        <tr className="border-l border-r">
+                          <td colSpan={1} className={`px-2 text-center border-b border-r text-sm w-12`}>
+                            No.
+                          </td>
+                          <td colSpan={2} className={`px-2 text-center border-b text-sm`}>
                             Name
                           </td>
                         </tr>
-                      )}
+                      ) : null}
                     </thead>
                     <tbody className="text-sm text-center ">
                       {nominatedEmployeeList?.length > 0 ? (
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.STAND_IN ? (
                             <tr key={index}>
-                              <td className={`px-2 py-1 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 py-1 text-center border capitalize`}>
+                              <td className={`px-2 py-1 text-start border-b border-r rounded-bl-md`}>
+                                {employees.name}
+                              </td>
+                              <td className={`px-2 py-1 text-center border-b border-r capitalize`}>
                                 {UseRenderTrainingNomineeStatus(employees.status)}
                               </td>
-                              <td className={`px-2 text-start border`}>{employees.remarks}</td>
+                              <td className={`px-2 text-start border-b rounded-br-md`}>{employees.remarks}</td>
                             </tr>
                           ) : null
                         )
                       ) : auxiliaryEmployees?.length > 0 ? (
                         auxiliaryEmployees.map((employees, index) => {
                           return (
-                            <tr key={index}>
-                              <td colSpan={3} className={`px-2 text-start border`}>
+                            <tr key={index} className="border-l border-r">
+                              <td
+                                colSpan={1}
+                                className={`px-2 text-start border-r ${
+                                  auxiliaryEmployees.length === index + 1 ? '' : 'border-b'
+                                }`}
+                              >
+                                {`${index + 1}.`}
+                              </td>
+                              <td
+                                colSpan={2}
+                                className={`px-2 text-start ${
+                                  auxiliaryEmployees.length === index + 1 ? '' : 'border-b'
+                                }`}
+                              >
                                 {employees.label}
                               </td>
                             </tr>
@@ -473,7 +509,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   onClick={(e) => setConfirmNominationModalIsOpen(true)}
                   disabled={nominatedEmployees.length <= 0 ? true : false}
                 >
-                  Send Invitation
+                  Submit
                 </Button>
               )}
             </div>
