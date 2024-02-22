@@ -111,7 +111,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   useEffect(() => {
     if (!isEmpty(swrOvertimeDetails)) {
       getOvertimeDetailsSuccess(swrOvertimeDetailsIsLoading, swrOvertimeDetails);
-      console.log(overtimeDetails);
     }
 
     if (!isEmpty(swrOvertimeDetailsError)) {

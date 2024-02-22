@@ -204,7 +204,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
-      console.log(swrFaceScan);
       getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
     }
 

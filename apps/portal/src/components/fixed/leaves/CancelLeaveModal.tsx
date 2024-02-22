@@ -96,11 +96,13 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
 
   const handleCancel = async () => {
     const data = {
-      id: leaveIndividualDetail.leaveApplicationBasicInfo.id,
+      leaveApplicationId: leaveIndividualDetail.leaveApplicationBasicInfo.id,
+      status: 'cancelled',
+      leaveDates: leaveDates,
       cancelReason: remarks,
     };
     patchLeave();
-    const { error, result } = await patchPortal('/v1/leave/employee', data);
+    const { error, result } = await patchPortal('/v1/leave/employee/leave-date-cancellation', data);
     if (error) {
       patchLeaveFail(result);
     } else {

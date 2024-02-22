@@ -17,9 +17,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty, isEqual } from 'lodash';
-import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
+import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
 import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
-import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
 import { useRouter } from 'next/router';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import { Training } from 'libs/utils/src/lib/types/training.type';
@@ -27,91 +26,59 @@ import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import TrainingDetailsModal from 'apps/portal/src/components/fixed/pdc-approvals/TrainingDetailsModal';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
-export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { setEmployeeDetails } = useEmployeeStore((state) => ({
+export default function PdcGeneralManagerApprovals({
+  userDetails,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { employeeDetails, setEmployeeDetails } = useEmployeeStore((state) => ({
+    employeeDetails: state.employeeDetails,
     setEmployeeDetails: state.setEmployeeDetails,
   }));
 
   // set the employee details on page load
   useEffect(() => {
-    setEmployeeDetails(employeeDetails);
-  }, [employeeDetails]);
+    setEmployeeDetails(userDetails);
+  }, [userDetails]);
 
   const {
     trainingList,
-    loadingTrainingList,
     errorTrainingList,
     trainingModalIsOpen,
-    postResponseApply,
+    patchResponseApply,
     errorResponse,
     setTrainingModalIsOpen,
     getTrainingSelectionList,
     getTrainingSelectionListSuccess,
     getTrainingSelectionListFail,
-    setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails,
-    getEmployeeList,
-    getEmployeeListSuccess,
-    getEmployeeListFail,
     emptyResponseAndError,
-  } = useTrainingSelectionStore((state) => ({
+  } = usePdcApprovalsStore((state) => ({
     trainingList: state.trainingList,
     loadingTrainingList: state.loading.loadingTrainingList,
     errorTrainingList: state.error.errorTrainingList,
     trainingModalIsOpen: state.trainingModalIsOpen,
-    postResponseApply: state.response.postResponseApply,
+    patchResponseApply: state.response.patchResponseApply,
     errorResponse: state.error.errorResponse,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     getTrainingSelectionList: state.getTrainingSelectionList,
     getTrainingSelectionListSuccess: state.getTrainingSelectionListSuccess,
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
-    setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
-    getEmployeeList: state.getEmployeeList,
-    getEmployeeListSuccess: state.getEmployeeListSuccess,
-    getEmployeeListFail: state.getEmployeeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
 
-  const employeeListUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
-
-  const {
-    data: swrEmployeeList,
-    isLoading: swrEmployeeListIsLoading,
-    error: swrEmployeeListError,
-    mutate: mutateEmployeeList,
-  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
-
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrEmployeeListIsLoading) {
-      getEmployeeList(swrEmployeeListIsLoading);
-    }
-  }, [swrEmployeeListIsLoading]);
-
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrEmployeeList)) {
-      getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
-    }
-
-    if (!isEmpty(swrEmployeeListError)) {
-      getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
-    }
-  }, [swrEmployeeList, swrEmployeeListError]);
-
-  const trainingUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/supervisors/${employeeDetails.employmentDetails.userId}`;
+  const trainingGeneralManagerUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/approval/gm`;
 
   const {
     data: swrTrainingList,
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
     mutate: mutateTrainingList,
-  } = useSWR(employeeDetails.employmentDetails.userId ? trainingUrl : null, fetchWithToken);
+  } = useSWR(trainingGeneralManagerUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -133,10 +100,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   const closeTrainingModal = async () => {
     setTrainingModalIsOpen(false);
-  };
-
-  const closeTrainingNominationModal = async () => {
-    setTrainingNominationModalIsOpen(false);
   };
 
   // Render row actions in the table component
@@ -168,8 +131,13 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
       filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
-    columnHelper.accessor('numberOfSlots', {
-      header: 'Slots',
+    columnHelper.accessor('numberOfHours', {
+      header: 'Hours',
+      filterFn: 'equalsString',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('numberOfParticipants', {
+      header: 'Participants',
       cell: (info) => info.getValue(),
     }),
 
@@ -187,38 +155,24 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
   });
 
   useEffect(() => {
-    if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+    if (!isEmpty(patchResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
       mutateTrainingList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [postResponseApply, errorResponse, errorTrainingList]);
+  }, [patchResponseApply, errorResponse, errorTrainingList]);
 
   return (
     <>
-      {/* Employee List Load Failed */}
-      {!isEmpty(swrEmployeeListError) ? (
-        <>
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
-          />
-        </>
-      ) : null}
-
       {/* Training List Load Failed */}
       {!isEmpty(errorTrainingList) ? (
-        <>
-          <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
-        </>
+        <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
       ) : null}
 
       {/* Training List Load Failed */}
-      {!isEmpty(postResponseApply) ? (
-        <>
-          <ToastNotification toastType="success" notifMessage={`Nominations submitted successfully.`} />
-        </>
+      {!isEmpty(patchResponseApply) ? (
+        <ToastNotification toastType="success" notifMessage={`Training Action submitted successfully.`} />
       ) : null}
 
       {/* failed to submit */}
@@ -228,10 +182,10 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
       <EmployeeProvider employeeData={employee}>
         <Head>
-          <title>Training Attendee Selection</title>
+          <title>General Manager Training Approvals</title>
         </Head>
 
-        <SideNav employeeDetails={employeeDetails} />
+        <SideNav employeeDetails={userDetails} />
 
         <TrainingDetailsModal
           modalState={trainingModalIsOpen}
@@ -242,8 +196,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
         <MainContainer>
           <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader
-              title="Training Attendee Selection"
-              subtitle="Select employees to attend training"
+              title="General Manager Training Approvals"
+              subtitle="Final Approve or disapprove Trainings"
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
@@ -287,21 +241,21 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 // };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
-  const employeeDetails = getUserDetails();
+  const userDetails = getUserDetails();
 
   // check if user role is rank_and_file or job order = kick out
   if (
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) ||
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
+    !isEqual(userDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
+    !isEqual(userDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)
   ) {
     // if true, the employee is not allowed to access this page
     return {
       redirect: {
         permanent: false,
-        destination: `/${employeeDetails.user._id}`,
+        destination: `/${userDetails.user._id}`,
       },
     };
   } else {
-    return { props: { employeeDetails } };
+    return { props: { userDetails } };
   }
 });

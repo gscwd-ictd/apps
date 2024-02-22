@@ -420,13 +420,13 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
                     <form id="OvertimeAccomplishmentAction" onSubmit={handleSubmit(onSubmit)}>
-                      <div className="w-full flex flex-col md:flex-row gap-1 justify-between items-start md:items-center pt-0 md:pt-3">
-                        <span className="text-slate-500 text-md font-medium">Approved Hours:</span>
+                      <div className="w-full flex flex-col md:flex-row gap-1 justify-start items-start md:items-center pt-0 md:pt-3">
+                        <span className="text-slate-500 text-md font-medium w-36">Approved Hours:</span>
 
                         <div className="w-full md:w-60">
                           <input
                             type="number"
-                            className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded-lg"
+                            className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-44 rounded-lg"
                             placeholder="Enter number of hours"
                             required
                             defaultValue={0}
@@ -437,12 +437,12 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         </div>
                       </div>
 
-                      <div className="w-full flex flex-col md:flex-row gap-1 justify-between items-start md:items-center pt-3 md:pt-4">
-                        <span className="text-slate-500 text-md font-medium">Action:</span>
+                      <div className="w-full flex flex-col md:flex-row gap-1 justify-start items-start md:items-center pt-3 md:pt-4">
+                        <span className="text-slate-500 text-md font-medium w-36">Select Action:</span>
 
                         <select
                           id="action"
-                          className="text-slate-500 h-12 w-full md:w-60 rounded-lg text-md border-slate-300"
+                          className="text-slate-500 h-12 w-full md:w-44 rounded-lg text-md border-slate-300"
                           required
                           {...register('status')}
                         >

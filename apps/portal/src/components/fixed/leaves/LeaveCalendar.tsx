@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useLeaveStore } from '../../../store/leave.store';
 import useSWR from 'swr';
 import {
@@ -18,6 +19,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -26,9 +28,10 @@ function classNames(...classes: any) {
 type CalendarProps = {
   clickableDate: boolean;
   type: string; // single or range
+  leaveName: string;
 };
 
-export default function Calendar({ type = 'single', clickableDate = true }: CalendarProps) {
+export default function Calendar({ type = 'single', clickableDate = true, leaveName }: CalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
@@ -78,6 +81,11 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
 
   // Initial zustand state update
   useEffect(() => {
+    setSelectedDates([]);
+  }, [leaveName]);
+
+  // Initial zustand state update
+  useEffect(() => {
     if (swrIsLoading) {
       getUnavailableDates(swrIsLoading);
     }
@@ -108,9 +116,35 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
         );
       } else {
         //adds date to array
-
+        //if selected date is not found in unavailable dates array
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
-          setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          //for vacation or forced leave
+          if (
+            (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
+          //for SPL
+          // else if (
+          //   leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0
+          // ) {
+          //   setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          // }
+          //for Solo Parent
+          else if (leaveName === LeaveName.SOLO_PARENT && dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          } else if (
+            leaveName === LeaveName.SICK ||
+            leaveName === LeaveName.PATERNITY ||
+            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+            leaveName === LeaveName.VAWC ||
+            leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY ||
+            leaveName === LeaveName.LEAVE_WITHOUT_PAY
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
         }
       }
     }
@@ -249,12 +283,17 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
                         onClick={() => viewDateActivities(day)}
                         className={classNames(
                           isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
-                          !isEqual(day, selectedDay) && isToday(day) && 'text-red-500',
+                          (leaveName === LeaveName.VACATION ||
+                            leaveName === LeaveName.FORCED ||
+                            leaveName === LeaveName.SOLO_PARENT) &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
+                            'text-slate-300',
+                          isToday(day) && 'text-red-500',
                           swrUnavailableDates &&
                             swrUnavailableDates.some(
                               (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                             ) &&
-                            'text-red-600 bg-red-200 rounded-full',
+                            'text-red-600 bg-red-300 rounded-full',
                           swrUnavailableDates &&
                             swrUnavailableDates.some(
                               (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Leave'
