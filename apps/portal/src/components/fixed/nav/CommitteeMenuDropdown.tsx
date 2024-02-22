@@ -5,7 +5,14 @@ import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 import { isEqual } from 'lodash';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import { HiBadgeCheck, HiClock, HiOutlineBadgeCheck, HiOutlineIdentification, HiUserGroup } from 'react-icons/hi';
+import {
+  HiAcademicCap,
+  HiBadgeCheck,
+  HiClock,
+  HiOutlineBadgeCheck,
+  HiOutlineIdentification,
+  HiUserGroup,
+} from 'react-icons/hi';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -103,6 +110,26 @@ export const CommitteeMenuDropdown = ({
                           <HiClock className="w-6 h-6 text-green-600" />
                         </div>
                         <span className="text-sm tracking-tight text-gray-700 text-left">Overtime Application</span>
+                      </button>
+                    )}
+                  </Menu.Item>
+                ) : null}
+
+                {/* show pdc */}
+                {employeeDetails.employmentDetails.isPdcChairman ||
+                employeeDetails.employmentDetails.isPdcSecretariat ? (
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? 'bg-slate-100' : 'text-gray-900'
+                        } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
+                        onClick={() => router.push(`/${router.query.id}/pdc-approvals`)}
+                      >
+                        <div>
+                          <HiAcademicCap className="w-6 h-6 text-rose-600" />
+                        </div>
+                        <span className="text-sm tracking-tight text-gray-700 text-left">PDC Approvals</span>
                       </button>
                     )}
                   </Menu.Item>

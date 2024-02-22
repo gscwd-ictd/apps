@@ -290,7 +290,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Pass Slip Approvals"
-                subtitle="Approve or disapprove Employee Pass Slips"
+                subtitle="Approve or Disapprove Employee Pass Slips"
                 backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 

@@ -732,7 +732,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <span className="font-bold">{watch('typeOfLeaveDetails.leaveName')}</span>
                       <span>
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
-                          ? 'It shall be filed five(5) days in advance, whenever possible, of the effective date of such leave. Vacation leave within the Phillipines or abroad shall be indicated in the form for purposes of securing travel authority and completing clearance from the money and work accountabilities.'
+                          ? 'It shall be filed five(5) days in advance, whenever possible, of the effective date of such leave. Vacation leave within the Philippines or abroad shall be indicated in the form for purposes of securing travel authority and completing clearance from the money and work accountabilities.'
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                           ? 'Annual five-day vacatuin leave shall be forfeited if not taken during the year. In case the scheduled leave has been cancelled in the exigency of the service by the head of agency, it shall no longer be deducted from the accumulated vacation leave. Availment of one (1) day or more Vacation Leave (VL) shall be considered for complying the mandatory/forced leave subject to the conditions under Section 25, Rule XVI of the Omnibus Rules Implementing E.O. No. 292.'
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
@@ -1030,9 +1030,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.REHABILITATION ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION ? (
-                        <Calendar type={'range'} clickableDate={true} />
+                        <Calendar
+                          type={'range'}
+                          clickableDate={true}
+                          leaveName={watch('typeOfLeaveDetails.leaveName')}
+                        />
                       ) : (
-                        <Calendar type={'single'} clickableDate={true} />
+                        <Calendar
+                          type={'single'}
+                          clickableDate={true}
+                          leaveName={watch('typeOfLeaveDetails.leaveName')}
+                        />
                       )}
                     </div>
                   </>

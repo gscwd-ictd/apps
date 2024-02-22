@@ -301,7 +301,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Leave Approvals"
-                subtitle="Approve or disapprove Employee Leaves"
+                subtitle="Approve or Disapprove Employee Leaves"
                 backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 

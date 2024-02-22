@@ -2,12 +2,7 @@
 import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import {
-  NomineeStatus,
-  NomineeType,
-  TrainingPreparationStatus,
-  TrainingStatus,
-} from 'libs/utils/src/lib/enums/training.enum';
+import { NomineeStatus, NomineeType, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { useEffect, useState } from 'react';
 import TrainingNominationModal from './TrainingNominationModal';
@@ -193,10 +188,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             />
 
             <div className="w-full flex flex-col gap-2 p-4 rounded">
-              {individualTrainingDetails.trainingPreparationStatus === TrainingPreparationStatus.ON_GOING_NOMINATION ? (
-                <AlertNotification alertType="info" notifMessage="On Going Nomination" dismissible={false} />
-              ) : null}
-
               {/* loading post reponse */}
               {loadingResponse ? (
                 <AlertNotification
@@ -206,6 +197,76 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   dismissible={false}
                 />
               ) : null}
+
+              <AlertNotification
+                alertType={
+                  individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
+                    ? 'error'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    ? 'error'
+                    : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
+                    ? 'error'
+                    : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.UPCOMING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
+                    ? 'info'
+                    : individualTrainingDetails.status === TrainingStatus.PENDING
+                    ? 'warning'
+                    : individualTrainingDetails.status === TrainingStatus.COMPLETED
+                    ? 'success'
+                    : 'info'
+                }
+                notifMessage={
+                  individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
+                    ? 'On Going Nomination'
+                    : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
+                    ? 'Nomination Done'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    ? 'For PDC Secretary Review'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+                    ? 'For PDC Chairman Review'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
+                    ? 'Disapproved by PDC Chairman'
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    ? 'Disapproved by PDC Secretary'
+                    : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+                    ? 'For General Manager Review'
+                    : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
+                    ? 'Disapproved by General Manager'
+                    : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
+                    ? 'On Going Batching'
+                    : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
+                    ? 'Done Batching'
+                    : individualTrainingDetails.status === TrainingStatus.UPCOMING
+                    ? 'Upcoming'
+                    : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
+                    ? 'On Going Training'
+                    : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
+                    ? 'For Requirements Submission'
+                    : individualTrainingDetails.status === TrainingStatus.PENDING
+                    ? 'Pending'
+                    : individualTrainingDetails.status === TrainingStatus.COMPLETED
+                    ? 'Completed'
+                    : individualTrainingDetails.status
+                }
+                dismissible={false}
+              />
 
               <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Course Title:</label>
@@ -289,13 +350,15 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
                       {nominatedEmployeeList?.length > 0 ? (
                         <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
-                          <td className={`px-2 w-1/6 text-center border`}>Status</td>
+                          <td className={`px-2 w-2/5 text-center border`}>Name</td>
+                          <td className={`px-2 w-36 text-center border`}>Status</td>
                           <td className={`px-2 text-center border`}>Remarks</td>
                         </tr>
                       ) : (
                         <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
+                          <td colSpan={3} className={`px-2 w-1/2 text-center border`}>
+                            Name
+                          </td>
                         </tr>
                       )}
                     </thead>
@@ -304,8 +367,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.NOMINEE ? (
                             <tr key={index}>
-                              <td className={`px-2 py-1 w-1/2 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 py-1 w-1/6 text-center border capitalize`}>
+                              <td className={`px-2 py-1 text-start border`}>{employees.name}</td>
+                              <td className={`px-2 py-1 text-center border capitalize`}>
                                 {UseRenderTrainingNomineeStatus(employees.status)}
                               </td>
                               <td className={`px-2 text-start border`}>{employees.remarks}</td>
@@ -331,7 +394,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   </table>
                 </div>
               </div>
-              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-1">
+              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-2">
                 <div className="w-full overflow-x-auto">
                   <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                     <thead className="border-0">
@@ -346,13 +409,15 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
                       {nominatedEmployeeList?.length > 0 ? (
                         <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
-                          <td className={`px-2 w-1/6 text-center border`}>Status</td>
+                          <td className={`px-2 w-2/5 text-center border`}>Name</td>
+                          <td className={`px-2 w-36 text-center border`}>Status</td>
                           <td className={`px-2 text-center border`}>Remarks</td>
                         </tr>
                       ) : (
                         <tr>
-                          <td className={`px-2 w-1/2 text-center border`}>Name</td>
+                          <td colSpan={3} className={`px-2 w-1/2 text-center border`}>
+                            Name
+                          </td>
                         </tr>
                       )}
                     </thead>
@@ -361,8 +426,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.STAND_IN ? (
                             <tr key={index}>
-                              <td className={`px-2 py-1 w-1/2 text-start border`}>{employees.name}</td>
-                              <td className={`px-2 py-1 w-1/6 text-center border capitalize`}>
+                              <td className={`px-2 py-1 text-start border`}>{employees.name}</td>
+                              <td className={`px-2 py-1 text-center border capitalize`}>
                                 {UseRenderTrainingNomineeStatus(employees.status)}
                               </td>
                               <td className={`px-2 text-start border`}>{employees.remarks}</td>

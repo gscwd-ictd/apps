@@ -63,7 +63,7 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
           <div className="w-full pl-4 pr-4 lg:pl-32 lg:pr-32">
             <ContentHeader
               title="Employee Approvals"
-              subtitle="Approve Employee Pass Slips, Leaves and Overtimes"
+              subtitle="Approve or Disapprove Pass Slips, Leaves and Overtimes"
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
