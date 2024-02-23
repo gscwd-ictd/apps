@@ -42,6 +42,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getNominatedEmployeeList,
     getNominatedEmployeeListSuccess,
     getNominatedEmployeeListFail,
+    setNominatedEmployees,
+    setAuxiliaryEmployees,
   } = useTrainingSelectionStore((state) => ({
     confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
     recommendedEmployees: state.recommendedEmployees,
@@ -64,6 +66,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getNominatedEmployeeList: state.getNominatedEmployeeList,
     getNominatedEmployeeListSuccess: state.getNominatedEmployeeListSuccess,
     getNominatedEmployeeListFail: state.getNominatedEmployeeListFail,
+    setNominatedEmployees: state.setNominatedEmployees,
+    setAuxiliaryEmployees: state.setAuxiliaryEmployees,
   }));
 
   const recommendedEmployeeUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/distributions/${individualTrainingDetails.distributionId}/recommended`;
@@ -125,6 +129,20 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
       getNominatedEmployeeListFail(swrNominatedEmployeeIsLoading, swrNominatedEmployeeError.message);
     }
   }, [swrNominatedEmployee, swrNominatedEmployeeError]);
+
+  //open training nomination modal
+  const openTrainingNominationModal = async () => {
+    setNominatedEmployees([]);
+    setAuxiliaryEmployees([]);
+    setTrainingNominationModalIsOpen(true);
+  };
+
+  useEffect(() => {
+    if (trainingModalIsOpen) {
+      setNominatedEmployees([]);
+      setAuxiliaryEmployees([]);
+    }
+  }, [trainingModalIsOpen]);
 
   //close training nomination modal
   const closeTrainingNominationModal = async () => {

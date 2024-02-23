@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { MySelectList } from '../../modular/inputs/SelectList';
 import { HiX } from 'react-icons/hi';
+import { isEmpty } from 'lodash';
 
 // const listOfEmployees: Array<SelectOption> = [
 //   { label: 'Ricardo Vicente Narvaiza', value: '0' },
@@ -47,63 +48,111 @@ export const TrainingNominationModal = ({
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
   const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
-
-  useEffect(() => {
-    // setEmployeePool(listOfEmployees);
-    // setNominatedEmployees(selectedEmployees); //store
-    // setAuxiliaryEmployees(selectedAuxiliaryEmployees); //store
-    if (trainingNominationModalIsOpen) {
-      setEmployeePool(
-        employeeList.sort(function (a, b) {
-          return a.label.localeCompare(b.label);
-        })
-      );
-
-      setSelectedEmployees(nominatedEmployees);
-      setSelectedAuxiliaryEmployees(auxiliaryEmployees);
-      handledCombinedNominatedEmployees(nominatedEmployees, auxiliaryEmployees);
-    }
-  }, [trainingNominationModalIsOpen]);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
 
   const addRecommendedNominee = (employee: SelectOption) => {
     if (!selectedEmployees.some((e) => e.value === employee.value)) {
       setSelectedEmployees([...selectedEmployees, employee]);
+      //remove employee from pool
+      const filteredEmployees = employeePool.filter(function (person) {
+        return person.value != person.value;
+      });
+      setEmployeePool(filteredEmployees);
+
+      // setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+      // for (let i = 0; i < employeePool.length; i++) {
+      //   for (let a = 0; a < combinedNominatedEmployees.length; a++) {
+      //     if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
+      //       setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+      //       console.log(combinedNominatedEmployees[a].label, 'removed');
+      //     }
+      //     // if (employeePool[i].value === combinedNominatedEmployees[a].value) {
+      //     //   setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+      //     //   console.log(combinedNominatedEmployees[a].label, 'removed');
+      //     // }
+      //     else {
+      //       //do nothing
+      //     }
+      //   }
+      // }
     }
   };
 
-  const handledCombinedNominatedEmployees = (nominated: Array<SelectOption>, aux: Array<SelectOption>) => {
-    const uniqueNames = Array.from(new Set([...nominated, ...aux]));
-    setCombinedNominatedEmployees(uniqueNames);
-  };
+  useEffect(() => {
+    console.log(employeePool);
+  }, [employeePool]);
 
   useEffect(() => {
-    const uniqueNames = Array.from(new Set([...selectedEmployees, ...selectedAuxiliaryEmployees]));
-    setCombinedNominatedEmployees(uniqueNames);
-  }, [selectedEmployees, selectedAuxiliaryEmployees]);
-
-  useEffect(() => {
-    //remove employee from pool
-    for (let i = 0; i < employeePool.length; i++) {
-      for (let a = 0; a < combinedNominatedEmployees.length; a++) {
-        // if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
-        //   setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
-        // }
-        if (employeePool[i].value === combinedNominatedEmployees[a].value) {
-          setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
-        } else {
-          //do nothing
-        }
-      }
-    }
-    //add back employee
-    for (let i = 0; i < employeeList.length; i++) {
-      if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
-        const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
+    if (trainingNominationModalIsOpen) {
+      if (isEmpty(nominatedEmployees) && isEmpty(nominatedEmployees)) {
+        console.log('1');
+        setInitialLoad(true);
         setEmployeePool(
-          uniqueNames.sort(function (a, b) {
+          employeeList.sort(function (a, b) {
             return a.label.localeCompare(b.label);
           })
         );
+      } else {
+        const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
+        handledCombinedNominatedEmployees(uniqueNames);
+      }
+    }
+  }, [trainingNominationModalIsOpen]);
+
+  //initial rearrangement of employee pool - will run once during opening of modal
+  const handledCombinedNominatedEmployees = (uniqueNames: Array<SelectOption>) => {
+    console.log('2');
+    //remove employee from pool
+    for (let i = 0; i < employeePool.length; i++) {
+      for (let a = 0; a < uniqueNames.length; a++) {
+        if (employeePool.some((e) => e.value === uniqueNames[a].value)) {
+          setEmployeePool(employeePool.filter((e) => e.value !== uniqueNames[a].value));
+          console.log(uniqueNames[a].label, 'removed');
+        }
+      }
+    }
+
+    setSelectedEmployees(nominatedEmployees);
+    setSelectedAuxiliaryEmployees(auxiliaryEmployees);
+    setInitialLoad(false);
+  };
+
+  useEffect(() => {
+    if (!initialLoad && trainingNominationModalIsOpen) {
+      const uniqueNames = Array.from(new Set([...selectedEmployees, ...selectedAuxiliaryEmployees]));
+      setCombinedNominatedEmployees(uniqueNames);
+    }
+  }, [selectedEmployees, selectedAuxiliaryEmployees]);
+
+  useEffect(() => {
+    if (!initialLoad && trainingNominationModalIsOpen) {
+      console.log('3');
+      //remove employee from pool
+      for (let i = 0; i < employeePool.length; i++) {
+        for (let a = 0; a < combinedNominatedEmployees.length; a++) {
+          if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
+            setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+            console.log(combinedNominatedEmployees[a].label, 'removed');
+          }
+          // if (employeePool[i].value === combinedNominatedEmployees[a].value) {
+          //   setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+          //   console.log(combinedNominatedEmployees[a].label, 'removed');
+          // }
+          else {
+            //do nothing
+          }
+        }
+      }
+      //add back employee
+      for (let i = 0; i < employeeList.length; i++) {
+        if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
+          const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
+          setEmployeePool(
+            uniqueNames.sort(function (a, b) {
+              return a.label.localeCompare(b.label);
+            })
+          );
+        }
       }
     }
   }, [combinedNominatedEmployees]);
