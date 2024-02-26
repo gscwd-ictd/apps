@@ -178,24 +178,28 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               />
 
               <div className="flex flex-col justify-between items-start">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80 ">Course Title:</label>
+                <label className="text-slate-500 text-md whitespace-nowrap sm:w-80 ">Course Title:</label>
 
                 <div className="w-auto pl-0 md:pl-4">
-                  <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.courseTitle}</label>
+                  <label className="text-slate-500 h-12 w-96 text-md font-medium">
+                    {individualTrainingDetails.courseTitle}
+                  </label>
                 </div>
               </div>
               <div className="flex flex-col justify-between items-start">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Location:</label>
+                <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Location:</label>
 
                 <div className="w-auto pl-0 md:pl-4">
-                  <label className="text-slate-500 h-12 w-96 text-md ">{individualTrainingDetails.location}</label>
+                  <label className="text-slate-500 h-12 w-96 text-md font-medium">
+                    {individualTrainingDetails.location}
+                  </label>
                 </div>
               </div>
               <div className="flex flex-col justify-between items-start">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Duration:</label>
+                <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Duration:</label>
 
                 <div className="w-auto">
-                  <label className="text-slate-500 h-12 pl-0 md:pl-4 text-md ">
+                  <label className="text-slate-500 h-12 pl-0 md:pl-4 text-md font-medium">
                     {DateFormatter(individualTrainingDetails.trainingStart, 'MM-DD-YYYY')} -{' '}
                     {DateFormatter(individualTrainingDetails.trainingEnd, 'MM-DD-YYYY')}{' '}
                   </label>
@@ -204,34 +208,36 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
               <div className="flex flex-row md:gap-2 justify-between items-start w-full">
                 <div className="flex flex-col justify-between items-start">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">No. of Participants:</label>
+                  <label className="text-slate-500 text-md whitespace-nowrap">No. of Participants:</label>
 
                   <div className="pl-0 md:pl-4">
-                    <label className="text-slate-500 h-12 text-md ">
+                    <label className="text-slate-500 h-12 text-md font-medium">
                       {individualTrainingDetails.numberOfParticipants}
                     </label>
                   </div>
                 </div>
                 <div className="flex flex-col justify-between items-start">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">Source:</label>
+                  <label className="text-slate-500 text-md whitespace-nowrap">Source:</label>
 
                   <div className="pl-0 md:pl-4">
-                    <label className="text-slate-500 h-12 text-md capitalize ">
+                    <label className="text-slate-500 h-12 text-md capitalize font-medium">
                       {individualTrainingDetails.source}
                     </label>
                   </div>
                 </div>
                 <div className="flex flex-col justify-between items-start">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">Type:</label>
+                  <label className="text-slate-500 text-md whitespace-nowrap">Type:</label>
 
                   <div className="pl-0 md:pl-4">
-                    <label className="text-slate-500 h-12 text-md capitalize">{individualTrainingDetails?.type}</label>
+                    <label className="text-slate-500 h-12 text-md capitalize font-medium">
+                      {individualTrainingDetails?.type}
+                    </label>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-row md:gap-2 justify-between items-start md:items-start">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Participants:</label>
+              <div className="flex flex-row md:gap-2 justify-between items-start md:items-start pt-2">
+                <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Participants:</label>
               </div>
 
               {(employeeDetail.employmentDetails.isPdcSecretariat ||

@@ -26,6 +26,7 @@ export type EmployeeDtrWithSchedule = {
   holidayType: HolidayTypes | null; // recently added
   isHoliday: boolean;
   isRestDay: boolean;
+  leaveStatus?: string; //for leave cancellation checker
 };
 
 export type EmployeeDtrWithSummary = {
