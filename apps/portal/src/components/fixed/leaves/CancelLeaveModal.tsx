@@ -14,7 +14,7 @@ import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import dayjs from 'dayjs';
-import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveDateStatus, LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -34,7 +34,6 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
     emptyResponseAndError,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
-
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
     patchLeave: state.patchLeave,
@@ -69,7 +68,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           );
 
           //check if there's a time in or time out
-          if (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) {
+          if ((timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) && timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED) {
             //add leave date to selection array
             leaveDates.push({
               label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],

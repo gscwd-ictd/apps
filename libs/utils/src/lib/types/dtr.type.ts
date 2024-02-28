@@ -1,5 +1,7 @@
 import { Schedule } from './schedule.type';
 import { HolidayTypes } from '../../../../utils/src/lib/enums/holiday-types.enum';
+import { CANCELLED } from 'dns';
+import { LeaveDateStatus } from '../enums/leave.enum';
 
 // dtr / time log
 export type EmployeeTimeLog = {
@@ -26,7 +28,7 @@ export type EmployeeDtrWithSchedule = {
   holidayType: HolidayTypes | null; // recently added
   isHoliday: boolean;
   isRestDay: boolean;
-  leaveStatus?: string; //for leave cancellation checker
+  leaveDateStatus?: LeaveDateStatus; //for leave cancellation checker
 };
 
 export type EmployeeDtrWithSummary = {
