@@ -98,8 +98,18 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
 
   const handleCancel = async () => {
     let finalDatesToCancel = [];
-    for (let i = 0; i < selectedDatesToCancel.length; i++) {
-      finalDatesToCancel = Array.from(new Set([...finalDatesToCancel, selectedDatesToCancel[i].value]));
+    if (
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION
+    ) {
+      finalDatesToCancel = Array.from(new Set([startDateToCancel]));
+    } else {
+      for (let i = 0; i < selectedDatesToCancel.length; i++) {
+        finalDatesToCancel = Array.from(new Set([...finalDatesToCancel, selectedDatesToCancel[i].value]));
+      }
     }
 
     const data = {
@@ -143,29 +153,24 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <AlertNotification
-            alertType="error"
-            notifMessage={
-              (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
-                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
-                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
-                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                  LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION) &&
-              DateFormatter(startDateToCancel, 'MM-DD-YYYY') <
-                DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0], 'MM-DD-YYYY') &&
-              DateFormatter(startDateToCancel, 'MM-DD-YYYY') >
-                DateFormatter(
-                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length
-                  ],
-                  'MM-DD-YYYY'
-                )
-                ? 'Invalid Date Selected'
-                : ''
-            }
-            dismissible={false}
-          />
+          {startDateToCancel &&
+          (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+              LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION) &&
+          (DateFormatter(startDateToCancel, 'MM-DD-YYYY') <
+            DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0], 'MM-DD-YYYY') ||
+            DateFormatter(startDateToCancel, 'MM-DD-YYYY') >
+              DateFormatter(
+                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                ],
+                'MM-DD-YYYY'
+              )) ? (
+            <AlertNotification alertType="error" notifMessage={'Invalid Date Selected'} dismissible={false} />
+          ) : null}
 
           <div className="flex flex-col w-full h-full px-2 gap-1 text-md ">
             {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
@@ -214,7 +219,38 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
             <div className="max-w-auto flex">
               <Button
                 variant={'primary'}
-                disabled={!isEmpty(remarks) && selectedDatesToCancel.length > 0 ? false : true}
+                disabled={
+                  (!isEmpty(remarks) &&
+                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                        LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION) &&
+                    DateFormatter(startDateToCancel, 'MM-DD-YYYY') >=
+                      DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0], 'MM-DD-YYYY') &&
+                    DateFormatter(startDateToCancel, 'MM-DD-YYYY') <=
+                      DateFormatter(
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                        ],
+                        'MM-DD-YYYY'
+                      )) ||
+                  (!isEmpty(remarks) &&
+                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.PATERNITY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SOLO_PARENT ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                        LeaveName.SPECIAL_EMERGENCY_CALAMITY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VAWC) &&
+                    selectedDatesToCancel.length > 0)
+                    ? false
+                    : true
+                }
                 onClick={(e) => handleCancel()}
               >
                 Submit

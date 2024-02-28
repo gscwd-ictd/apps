@@ -209,7 +209,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
               required
               type="date"
               value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
-              className="text-slate-500 text-md border-slate-300"
+              className="text-slate-500 text-md border-slate-300 rounded"
               onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
             />
           </div>
@@ -220,7 +220,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
               required
               type="date"
               value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
-              className="text-slate-500 text-md border-slate-300"
+              className="text-slate-500 text-md border-slate-300 rounded"
               onChange={(e) => setLeaveDateTo(e.target.value as unknown as string)}
             />
           </div>
