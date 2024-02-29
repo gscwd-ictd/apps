@@ -33,11 +33,7 @@ type SidebarComposition = {
 /**
  *  the actual sidebar component with its compositions
  */
-export const Sidebar: FunctionComponent<SidebarProps> & SidebarComposition = ({
-  background,
-  children,
-  className,
-}) => {
+export const Sidebar: FunctionComponent<SidebarProps> & SidebarComposition = ({ background, children, className }) => {
   return <div className={sidebarClass(className, background)}>{children}</div>;
 };
 
@@ -53,7 +49,9 @@ const Header: FunctionComponent<Props> = ({ children, className }) => {
  */
 const Content: FunctionComponent<Props> = ({ children, className }) => {
   return (
-    <main className={`${className} flex-1 overflow-y-auto overflow-x-hidden`}>
+    <main
+      className={`${className} flex-1 scrollbar scrollbar-w-1 scrollbar-thumb-gray-400 scrollbar-thumb-rounded-lg overflow-y-auto overflow-x-hidden mr-1 `}
+    >
       {children}
     </main>
   );
@@ -86,17 +84,11 @@ const Item: FunctionComponent<ItemProps> = ({
   return (
     <li className={itemClass(className, selected, hasSubItem)}>
       {!hasSubItem ? (
-        <Link
-          href={path}
-          className={linkClass(isCollapsed, selected, isDarkMode)}
-        >
+        <Link href={path} className={linkClass(isCollapsed, selected, isDarkMode)}>
           {icon}
           <AnimatePresence initial={false}>
             {!isCollapsed && (
-              <motion.span
-                initial={{ opacity: 0, x: -100 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
+              <motion.span initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }}>
                 {display}
               </motion.span>
             )}
@@ -104,41 +96,20 @@ const Item: FunctionComponent<ItemProps> = ({
         </Link>
       ) : (
         <Accordion className="flex flex-col justify-center w-full">
-          <Accordion.Button
-            className={linkClass(isCollapsed, selected, isDarkMode)}
-          >
-            <div
-              className={`flex w-full ${
-                isCollapsed ? 'gap-0' : 'gap-5'
-              } pr-2 text-center place-items-center`}
-            >
-              <span
-                className={`${
-                  isCollapsed ? 'w-full' : 'w-[10%]'
-                } flex justify-center`}
-              >
-                {icon}
-              </span>
+          <Accordion.Button className={linkClass(isCollapsed, selected, isDarkMode)}>
+            <div className={`flex w-full ${isCollapsed ? 'gap-0' : 'gap-5'} pr-2 text-center place-items-center`}>
+              <span className={`${isCollapsed ? 'w-full' : 'w-[10%]'} flex justify-center`}>{icon}</span>
               {!isCollapsed ? (
                 <div className="flex justify-between w-full text-left place-items-center">
-                  <motion.span
-                    initial={{ opacity: 0, x: -100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                  >
-                    <span className={`${isCollapsed ? '' : ''}`}>
-                      {display}
-                    </span>
+                  <motion.span initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }}>
+                    <span className={`${isCollapsed ? '' : ''}`}>{display}</span>
                   </motion.span>
 
                   <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
                 </div>
               ) : isCollapsed ? (
                 <>
-                  <motion.span
-                    initial={{ opacity: 0, x: -100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    hidden
-                  >
+                  <motion.span initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }} hidden>
                     {display}
                   </motion.span>
 

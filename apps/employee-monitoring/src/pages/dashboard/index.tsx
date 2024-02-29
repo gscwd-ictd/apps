@@ -5,10 +5,7 @@ import { Holidays } from '../../components/cards/Holidays';
 import { TardinessChart } from '../../components/charts/Tardiness';
 import { PendingDashboard } from '../../components/layouts/PendingDashboard';
 import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
-import {
-  getUserLoginDetails,
-  withCookieSession,
-} from '../../utils/helper/session';
+import { getUserLoginDetails, withCookieSession } from '../../utils/helper/session';
 
 export function Index() {
   return (
