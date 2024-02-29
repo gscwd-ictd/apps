@@ -218,7 +218,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
               ) : null}
 
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-3 p-4 rounded">
+                <div className="w-full flex flex-col gap-3 px-4 rounded">
                   <div className="flex flex-col gap-2">
                     {passwordModalPage === 1 ? (
                       <div
@@ -304,7 +304,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2 text-md">
+          <div className="flex justify-end gap-2 px-4">
             <div className="flex justify-end gap-2 text-md">
               {passwordModalPage === 1 ? (
                 <Button variant={'primary'} size={'md'} loading={false} form="ChangePasswordForm" type="submit">
@@ -316,7 +316,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
                 </Button>
               ) : (
                 <Button
-                  variant={'primary'}
+                  variant={'default'}
                   size={'md'}
                   loading={false}
                   type="submit"

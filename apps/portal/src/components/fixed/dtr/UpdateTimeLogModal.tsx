@@ -356,7 +356,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-2">
               <Button
                 variant={'primary'}

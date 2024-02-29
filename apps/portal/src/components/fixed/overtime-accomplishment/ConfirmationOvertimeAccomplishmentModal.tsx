@@ -77,12 +77,12 @@ export const ConfirmationOvertimeAccomplishmentModal = ({
               dismissible={false}
             />
           ) : null}
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-left px-4">
             {`Are you sure you want to submit this Overtime Accomplishment Report?`}
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes

@@ -160,12 +160,12 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('trainingStart', {
       header: 'Start',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('trainingEnd', {
       header: 'End',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('numberOfSlots', {

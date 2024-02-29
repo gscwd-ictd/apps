@@ -40,7 +40,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 <AlertNotification
                   alertType="info"
@@ -108,7 +108,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                 Close

@@ -225,7 +225,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                         </h3>
                       </Modal.Header>
                       <Modal.Body>
-                        <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
+                        <div className="flex flex-col w-full h-full px-4 gap-2 text-md ">
                           {'Please indicate reason for declining this position request:'}
                           <textarea
                             required
@@ -237,7 +237,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                         </div>
                       </Modal.Body>
                       <Modal.Footer>
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-2 px-4">
                           <div className="min-w-[6rem] max-w-auto flex gap-4">
                             <Button
                               variant={'primary'}

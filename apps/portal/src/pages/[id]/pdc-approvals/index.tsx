@@ -129,17 +129,17 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
     }),
     columnHelper.accessor('trainingStart', {
       header: 'Start',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('trainingEnd', {
       header: 'End',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('numberOfHours', {
       header: 'Hours',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('numberOfParticipants', {

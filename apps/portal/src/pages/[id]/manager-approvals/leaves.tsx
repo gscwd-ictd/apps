@@ -212,7 +212,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employee.employeeName', {

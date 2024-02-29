@@ -112,18 +112,14 @@ const AppEndModal: FunctionComponent = () => {
                 : null}
             </p>
           </div>
-          <i
-            className="bx bx-x text-2xl"
-            role="button"
-            onClick={modalCancel}
-          ></i>
+          <i className="bx bx-x text-2xl" role="button" onClick={modalCancel}></i>
         </div>
       </Modal.Header>
       <Modal.Body>
         <AppEndModalController page={modal.page} />
       </Modal.Body>
       <Modal.Footer>
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 px-4">
           {modal.page !== 4 ? (
             <button
               onClick={modalCancel}

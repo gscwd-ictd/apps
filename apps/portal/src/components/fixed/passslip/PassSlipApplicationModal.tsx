@@ -183,7 +183,7 @@ export const PassSlipApplicationModal = ({
 
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col">
-              <div className="w-full flex flex-col p-4 rounded">
+              <div className="w-full flex flex-col px-4 rounded">
                 <div className="w-full flex gap-2 justify-start items-center pb-2">
                   <span className="text-slate-500 text-md font-medium">Date:</span>
                   <div className="text-slate-500 text-md">{DateFormatter(dateToday, 'MM-DD-YYYY')}</div>
@@ -339,7 +339,7 @@ export const PassSlipApplicationModal = ({
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
                 variant={'primary'}

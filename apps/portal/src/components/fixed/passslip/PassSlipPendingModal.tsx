@@ -51,7 +51,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <AlertNotification
                 alertType={
                   passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
@@ -155,7 +155,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                 Cancel Pass Slip

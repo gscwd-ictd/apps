@@ -382,8 +382,8 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
-            <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+          <div className="flex justify-end gap-2 px-4">
+            <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
               Close
             </Button>
           </div>

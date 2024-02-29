@@ -72,12 +72,12 @@ export const ConfirmationApplicationModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-center px-4">
             {`Are you sure you want to cancel this application?`}
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-2">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes

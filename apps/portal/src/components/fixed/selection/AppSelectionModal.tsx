@@ -7,9 +7,7 @@ import { isEmpty } from 'lodash';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 export const AppSelectionModal = () => {
-  const publicationDetails = useAppSelectionStore(
-    (state) => state.publicationDetails
-  );
+  const publicationDetails = useAppSelectionStore((state) => state.publicationDetails);
 
   // get state for the modal
   const {
@@ -63,22 +61,16 @@ export const AppSelectionModal = () => {
                   ? 'Select a publication'
                   : modal.page === 2 &&
                     !isEmpty(selectedPublication) &&
-                    selectedPublication.postingStatus ===
-                      PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION
+                    selectedPublication.postingStatus === PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION
                   ? 'Select Applicant/s'
                   : modal.page === 2 &&
                     !isEmpty(selectedPublication) &&
-                    selectedPublication.postingStatus ===
-                      PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
+                    selectedPublication.postingStatus === PublicationPostingStatus.APPOINTING_AUTHORITY_SELECTION_DONE
                   ? 'Selection Done'
                   : null}
               </div>
             </h3>
-            <i
-              role="button"
-              className="bx bx-x text-2xl"
-              onClick={closeModalFunction}
-            ></i>
+            <i role="button" className="bx bx-x text-2xl" onClick={closeModalFunction}></i>
           </div>
         </Modal.Header>
 
@@ -86,7 +78,7 @@ export const AppSelectionModal = () => {
           <AppSelectionModalController page={modal.page} />
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             {modal.page !== 4 ? (
               <button
                 className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
@@ -106,8 +98,7 @@ export const AppSelectionModal = () => {
                     !(selectedApplicants.length === 0) &&
                     modal.page === 2 &&
                     selectedApplicants.length > 0 &&
-                    selectedApplicants.length !==
-                      parseInt(selectedPublication.numberOfPositions!)
+                    selectedApplicants.length !== parseInt(selectedPublication.numberOfPositions!)
                   }
                   className="min-w-[6rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
                 >

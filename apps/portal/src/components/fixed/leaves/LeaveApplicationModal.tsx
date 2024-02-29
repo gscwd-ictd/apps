@@ -347,6 +347,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         };
       }
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SICK) {
+      console.log('sick');
       if (data.hospital === 'inHospital') {
         dataToSend = {
           leaveBenefitsId: data.typeOfLeaveDetails.id,
@@ -539,7 +540,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           ) : null}
           <form id="ApplyLeaveForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
-              <div className="w-full flex flex-col gap-2 p-4 rounded">
+              <div className="w-full flex flex-col gap-2 px-4 rounded">
                 <div className="w-full flex flex-col gap-0">
                   {/* Has Existing Pending Leave of the Same Name - cannot file a new one */}
                   {hasPendingLeave ? (
@@ -1220,7 +1221,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
                 variant={'primary'}

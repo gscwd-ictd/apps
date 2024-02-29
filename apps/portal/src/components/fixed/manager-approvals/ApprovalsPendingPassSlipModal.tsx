@@ -121,7 +121,7 @@ export const ApprovalsPendingPassSlipModal = ({
           <div className="w-full h-full flex flex-col gap-2">
             {/* OTP Modal */}
 
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 {loadingResponse ? (
                   <AlertNotification
@@ -396,8 +396,8 @@ export const ApprovalsPendingPassSlipModal = ({
 
               {passSlip.status != PassSlipStatus.APPROVED ? (
                 <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
-                  <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-start items-start md:items-center pt-1 md:pt-2">
-                    <span className="text-slate-500 text-md font-medium">Action:</span>
+                  <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center">
+                    <span className="text-slate-500 text-md">Action:</span>
 
                     <select
                       id="action"
@@ -415,15 +415,6 @@ export const ApprovalsPendingPassSlipModal = ({
                       ))}
                     </select>
                   </div>
-                  {/* {watch('status') === PassSlipStatus.DISAPPROVED && passSlip.status === PassSlipStatus.FOR_DISPUTE ? (
-                  <textarea
-                    required={true}
-                    className={'resize-none mt-3 w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                    placeholder="Enter Reason"
-                    rows={3}
-                    {...register('remarks')}
-                  ></textarea>
-                ) : null} */}
                 </form>
               ) : null}
             </div>
@@ -466,15 +457,15 @@ export const ApprovalsPendingPassSlipModal = ({
           </CaptchaModal>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full flex justify-end">
               {passSlip.status != PassSlipStatus.APPROVED ? (
                 <Button variant={'primary'} size={'md'} loading={false} form="PassSlipAction" type="submit">
                   Submit
                 </Button>
-              ) : (
+              ) : passSlip.status ? (
                 <Button
-                  variant={'primary'}
+                  variant={'default'}
                   size={'md'}
                   loading={false}
                   onClick={(e) => closeModalAction()}
@@ -482,7 +473,7 @@ export const ApprovalsPendingPassSlipModal = ({
                 >
                   Close
                 </Button>
-              )}
+              ) : null}
             </div>
           </div>
         </Modal.Footer>
