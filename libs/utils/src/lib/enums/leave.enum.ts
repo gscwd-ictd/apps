@@ -14,6 +14,12 @@ export enum LeaveStatus {
   DISAPPROVED_BY_HRMO = 'disapproved by hrmo',
 }
 
+export enum LeaveDateStatus {
+  APPROVED = 'approved',
+  CANCELLED = 'cancelled',
+  NULL = '',
+}
+
 // hrmo_approval(SLB), immediate supervisor, hrdm_approval,
 
 export enum LeaveName {
