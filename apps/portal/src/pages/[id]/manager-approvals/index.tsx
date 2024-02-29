@@ -17,7 +17,7 @@ import useSWR from 'swr';
 import { employeeDummy } from '../../../types/employee.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { TabHeader } from 'apps/portal/src/components/fixed/tab/TabHeader';
-import { HiCalendar, HiClipboard, HiDocumentText, HiQuestionMarkCircle } from 'react-icons/hi';
+import { HiCalendar, HiClipboard, HiClock, HiDocumentText, HiQuestionMarkCircle } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
@@ -105,6 +105,17 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     }
                     className="bg-indigo-500"
                     onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
+                  />
+
+                  <TabHeader
+                    tab={0}
+                    tabIndex={4}
+                    title="Time Log Requests"
+                    icon={<HiClock size={26} />}
+                    subtitle="Show all Time Log Correction requests"
+                    notificationCount={0}
+                    className="bg-indigo-500"
+                    onClick={() => router.push(`/${router.query.id}/manager-approvals/timelogs`)}
                   />
                 </ul>
               </>

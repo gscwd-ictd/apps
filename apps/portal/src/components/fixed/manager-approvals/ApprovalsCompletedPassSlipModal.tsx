@@ -35,7 +35,7 @@ export const ApprovalsCompletedPassSlipModal = ({
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold  text-gray-700">
             <div className="px-5 flex justify-between">
@@ -120,7 +120,109 @@ export const ApprovalsCompletedPassSlipModal = ({
                 confirmName={ManagerOtpApproval.PASSSLIP}
               />
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Employee Name:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{passSlip.employeeName}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Nature of Business:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{passSlip.natureOfBusiness}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date of Application:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                    {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
+                      ? 'For Medical Business:'
+                      : 'Mode of Transportation:'}
+                  </label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
+                        ? passSlip.isMedical
+                          ? 'Yes'
+                          : 'No'
+                        : passSlip.obTransportation ?? 'N/A'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Estimated Hours:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{passSlip.estimateHours}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Time Out:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Time In:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
+                    </label>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Purpose/Desination:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{passSlip.purposeDestination}</label>
+                  </div>
+                </div>
+
+                {passSlip.disputeRemarks ? (
+                  <div className={`flex flex-col`}>
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        Employee Dispute Remarks:
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <div className="w-auto ml-5 flex flex-col">
+                          <label className="text-md font-medium">
+                            {`Disputed Time In is ${
+                              passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
+                            }.`}
+                          </label>
+                          <label className="text-md font-medium">{` ${passSlip.disputeRemarks}`}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Employee Name:</label>
 
                 <div className="w-auto md:w-96">
@@ -215,7 +317,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                     disabled={true}
                   ></textarea>
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </Modal.Body>

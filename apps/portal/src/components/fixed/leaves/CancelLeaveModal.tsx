@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../store/leave.store';
 import { HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
@@ -14,6 +14,7 @@ import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import dayjs from 'dayjs';
+import { LeaveDateStatus, LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -33,7 +34,6 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
     emptyResponseAndError,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
-
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
     patchLeave: state.patchLeave,
@@ -45,6 +45,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [remarks, setRemarks] = useState<string>('');
   const [selectedDatesToCancel, setSelectedDatesToCancel] = useState<Array<SelectOption>>([]);
+  const [startDateToCancel, setStartDateToCancel] = useState<string>(); //for SBL
   const [leaveDates, setLeaveDates] = useState<Array<SelectOption>>([]);
 
   //get dtr for the day
@@ -67,7 +68,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           );
 
           //check if there's a time in or time out
-          if (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) {
+          if ((timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) && timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED) {
             //add leave date to selection array
             leaveDates.push({
               label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
@@ -95,14 +96,29 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
   }, [leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates]);
 
   const handleCancel = async () => {
+    let finalDatesToCancel = [];
+    if (
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION
+    ) {
+      finalDatesToCancel = Array.from(new Set([startDateToCancel]));
+    } else {
+      for (let i = 0; i < selectedDatesToCancel.length; i++) {
+        finalDatesToCancel = Array.from(new Set([...finalDatesToCancel, selectedDatesToCancel[i].value]));
+      }
+    }
+
     const data = {
       leaveApplicationId: leaveIndividualDetail.leaveApplicationBasicInfo.id,
       status: 'cancelled',
-      leaveDates: leaveDates,
-      cancelReason: remarks,
+      leaveDates: finalDatesToCancel,
+      remarks: remarks,
     };
     patchLeave();
-    const { error, result } = await patchPortal('/v1/leave/employee/leave-date-cancellation', data);
+    const { error, result } = await patchPortal(`/v1/leave/employee/leave-date-cancellation`, data);
     if (error) {
       patchLeaveFail(result);
     } else {
@@ -136,16 +152,55 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {startDateToCancel &&
+          (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+              LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION) &&
+          (DateFormatter(startDateToCancel, 'MM-DD-YYYY') <
+            DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0], 'MM-DD-YYYY') ||
+            DateFormatter(startDateToCancel, 'MM-DD-YYYY') >
+              DateFormatter(
+                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                ],
+                'MM-DD-YYYY'
+              )) ? (
+            <AlertNotification alertType="error" notifMessage={'Invalid Date Selected'} dismissible={false} />
+          ) : null}
+
           <div className="flex flex-col w-full h-full px-2 gap-1 text-md ">
-            <label>Select dates possible for cancellation:</label>
-            <MySelectList
-              id="employees"
-              label=""
-              multiple
-              options={leaveDates}
-              onChange={(o) => setSelectedDatesToCancel(o)}
-              value={selectedDatesToCancel}
-            />
+            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+              LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
+              <>
+                <label>Select start date and onwards to cancel:</label>
+                <input
+                  required
+                  type="date"
+                  value={startDateToCancel}
+                  className="text-slate-500 text-md border-slate-300 rounded-md"
+                  onChange={(e) => setStartDateToCancel(e.target.value as unknown as string)}
+                />
+              </>
+            ) : (
+              <>
+                <label>Select dates possible for cancellation:</label>
+                <MySelectList
+                  id="employees"
+                  label=""
+                  multiple
+                  options={leaveDates}
+                  onChange={(o) => setSelectedDatesToCancel(o)}
+                  value={selectedDatesToCancel}
+                />
+              </>
+            )}
 
             <label className="pt-3">Indicate reason for cancelling application:</label>
 
@@ -163,7 +218,38 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
             <div className="max-w-auto flex">
               <Button
                 variant={'primary'}
-                disabled={!isEmpty(remarks) && selectedDatesToCancel.length > 0 ? false : true}
+                disabled={
+                  (!isEmpty(remarks) &&
+                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                        LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION) &&
+                    DateFormatter(startDateToCancel, 'MM-DD-YYYY') >=
+                      DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0], 'MM-DD-YYYY') &&
+                    DateFormatter(startDateToCancel, 'MM-DD-YYYY') <=
+                      DateFormatter(
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                        ],
+                        'MM-DD-YYYY'
+                      )) ||
+                  (!isEmpty(remarks) &&
+                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.PATERNITY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SOLO_PARENT ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                        LeaveName.SPECIAL_EMERGENCY_CALAMITY ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VAWC) &&
+                    selectedDatesToCancel.length > 0)
+                    ? false
+                    : true
+                }
                 onClick={(e) => handleCancel()}
               >
                 Submit
