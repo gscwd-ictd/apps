@@ -51,7 +51,7 @@ export const ApprovalsCompletedPassSlipModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 <AlertNotification
                   alertType={
@@ -322,7 +322,7 @@ export const ApprovalsCompletedPassSlipModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED ? (
                 passSlip.natureOfBusiness !== NatureOfBusiness.HALF_DAY &&
@@ -346,7 +346,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                       Cancel Pass Slip
                     </Button>
                     <Button
-                      variant={'primary'}
+                      variant={'default'}
                       size={'md'}
                       loading={false}
                       onClick={(e) => closeModalAction()}
@@ -357,7 +357,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                   </>
                 ) : (
                   <Button
-                    variant={'primary'}
+                    variant={'default'}
                     size={'md'}
                     loading={false}
                     onClick={(e) => closeModalAction()}
@@ -368,7 +368,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                 )
               ) : (
                 <Button
-                  variant={'primary'}
+                  variant={'default'}
                   size={'md'}
                   loading={false}
                   onClick={(e) => closeModalAction()}

@@ -99,7 +99,7 @@ export const ConfirmationNominationModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-0 text-lg text-center">
+          <div className="w-full h-full flex flex-col gap-0 text-lg text-center px-4">
             <label>{`Are you sure you want to submit this nomination?`}</label>
             <label>{`You have nominated ${nominatedEmployees.length} participants and ${
               auxiliaryEmployees.length
@@ -107,7 +107,7 @@ export const ConfirmationNominationModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes

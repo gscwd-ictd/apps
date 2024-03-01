@@ -128,7 +128,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
+                <div className="w-full flex flex-col gap-2 px-4 rounded">
                   {leaveIndividualDetail?.leaveApplicationBasicInfo ? (
                     <AlertNotification
                       alertType={
@@ -220,7 +220,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                   }
                                 )}
                               </ul>
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length > 3 ? (
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length > 3 ? (
                                 <label
                                   className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
                                   onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
@@ -339,9 +339,15 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
                       leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther) ? (
-                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
+                      <div
+                        className={`flex flex-col sm:flex-col justify-start items-start w-full ${
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
+                            ? 'sm:w-1/2'
+                            : ''
+                        } px-0.5 pb-3`}
+                      >
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Specific Details:</label>
-                        <div className="w-auto ml-5">
+                        <div className="w-auto ml-5 mr-5">
                           <label className=" text-md font-medium">
                             {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -388,7 +394,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                 LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                               ? leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
                               : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                              ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason
+                              ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason == ''
+                                ? 'N/A'
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason
                               : 'N/A'}
                           </label>
                         </div>
@@ -749,20 +757,15 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED ||
             leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
             leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
             leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ? (
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+              <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
                 Close
               </Button>
-            ) : (
-              // : dateNow >= leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[0] ? (
-              //   <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
-              //     Close
-              //   </Button>
-              // )
+            ) : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ? (
               <Button
                 variant={'warning'}
                 size={'md'}
@@ -772,7 +775,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
               >
                 Cancel Leave
               </Button>
-            )}
+            ) : null}
           </div>
         </Modal.Footer>
       </Modal>

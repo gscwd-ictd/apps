@@ -122,7 +122,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
+                <div className="w-full flex flex-col gap-2 px-4 rounded">
                   {leaveIndividualDetail?.leaveApplicationBasicInfo ? (
                     <AlertNotification
                       alertType="info"
@@ -197,7 +197,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                   }
                                 )}
                               </ul>
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length > 3 ? (
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length > 3 ? (
                                 <label
                                   className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
                                   onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
@@ -316,9 +316,9 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                       LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
                       leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther) ? (
-                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
+                      <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Specific Details:</label>
-                        <div className="w-auto ml-5">
+                        <div className="w-auto ml-5 mr-5">
                           <label className=" text-md font-medium">
                             {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -451,16 +451,18 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
-            <Button
-              variant={'warning'}
-              size={'md'}
-              loading={false}
-              onClick={(e) => setCancelLeaveModalIsOpen(true)}
-              type="submit"
-            >
-              Cancel Leave
-            </Button>
+          <div className="flex justify-end gap-2 px-4">
+            {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ? (
+              <Button
+                variant={'warning'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => setCancelLeaveModalIsOpen(true)}
+                type="submit"
+              >
+                Cancel Leave
+              </Button>
+            ) : null}
           </div>
         </Modal.Footer>
       </Modal>

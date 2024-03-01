@@ -182,7 +182,7 @@ export const TrainingNominationModal = ({
           ) : null}
 
           <div className="w-full h-full flex flex-col gap-2">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="flex flex-col sm:flex-row md:gap-2 justify-start items-start md:items-start">
                 <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">No. of Slots:</label>
 
@@ -256,7 +256,7 @@ export const TrainingNominationModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
                 onClick={handleSubmit}

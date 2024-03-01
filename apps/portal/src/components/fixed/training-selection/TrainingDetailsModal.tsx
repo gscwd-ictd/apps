@@ -205,7 +205,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               closeModalAction={closeTrainingNominationModal}
             />
 
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               {/* loading post reponse */}
               {loadingResponse ? (
                 <AlertNotification
@@ -519,7 +519,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="max-w-auto">
               {nominatedEmployeeList?.length > 0 ? (
                 <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>

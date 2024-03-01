@@ -83,7 +83,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
           />
 
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 {psbMessage?.details?.acknowledgedSchedule ? (
                   <AlertNotification
@@ -186,10 +186,10 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               {psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? (
-                <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
+                <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                   Close
                 </Button>
               ) : (
