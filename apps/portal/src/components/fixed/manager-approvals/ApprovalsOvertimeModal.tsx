@@ -104,22 +104,21 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   // Initial zustand state update
   useEffect(() => {
-    if (modalState) {
+    if (overtimeDetails) {
       setPendingAccomplishmentEmployees(Array.from(new Set([])));
+      let employeeIdList = [];
       for (let i = 0; i < overtimeDetails.employees?.length; i++) {
         if (
           overtimeDetails?.employees[i]?.isAccomplishmentSubmitted == true &&
           overtimeDetails?.employees[i]?.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING
         ) {
-          console.log(overtimeDetails?.employees[i]?.accomplishmentStatus);
-          setPendingAccomplishmentEmployees([
-            ...pendingAccomplishmentEmployees,
-            overtimeDetails?.employees[i]?.employeeId,
-          ]);
+          console.log(overtimeDetails?.employees[i]?.employeeId);
+          employeeIdList.push(overtimeDetails?.employees[i]?.employeeId);
         }
       }
+      setPendingAccomplishmentEmployees(employeeIdList);
     }
-  }, [modalState]);
+  }, [overtimeDetails]);
 
   useEffect(() => {
     console.log(pendingAccomplishmentEmployees);
