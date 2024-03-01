@@ -16,6 +16,8 @@ function UseRenderOvertimeStatus(status: OvertimeStatus | string, textSize: Text
           ? 'error'
           : status === OvertimeStatus.PENDING || status === 'pending'
           ? 'warning'
+          : status === OvertimeStatus.CANCELLED || status === 'cancelled'
+          ? 'default'
           : 'default'
       }
       label={
@@ -25,7 +27,9 @@ function UseRenderOvertimeStatus(status: OvertimeStatus | string, textSize: Text
           ? 'Disapproved'
           : status === OvertimeStatus.PENDING
           ? 'For Approval'
-          : null
+          : status === OvertimeStatus.CANCELLED
+          ? 'Cancelled'
+          : status
       }
     />
   );

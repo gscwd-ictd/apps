@@ -213,6 +213,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         ? 'info'
                         : overtimeDetails.status === OvertimeStatus.DISAPPROVED
                         ? 'error'
+                        : overtimeDetails.status === OvertimeStatus.CANCELLED
+                        ? 'error'
                         : 'info'
                     }
                     notifMessage={
@@ -222,6 +224,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         ? 'Approved'
                         : overtimeDetails.status === OvertimeStatus.DISAPPROVED
                         ? 'Disapproved'
+                        : overtimeDetails.status === OvertimeStatus.CANCELLED
+                        ? 'Cancelled'
                         : overtimeDetails.status
                     }
                     dismissible={false}
@@ -462,7 +466,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                   onClick={(e) => setApproveAllCaptchaModalIsOpen(true)}
                   type="submit"
                 >
-                  Approve All
+                  Approve All Accomplishments
                 </Button>
 
                 <Button
