@@ -84,9 +84,7 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
         <Modal open={modalState} setOpen={setModalState} size="md">
           <Modal.Header withCloseBtn>
             <div className="flex justify-between text-2xl font-semibold text-gray-800">
-              <div className="flex gap-1 px-5 text-xl font-semibold text-gray-800">
-                <span>System Log</span>
-              </div>
+              <span className="px-5">System Log</span>
               <button
                 type="button"
                 className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -109,7 +107,7 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
                         <LabelValue
                           label="Date Logged"
                           direction="top-to-bottom"
-                          textSize="xs"
+                          textSize="md"
                           value={
                             SystemLogDetails.dateLogged
                               ? dayjs(SystemLogDetails.dateLogged).format('MMMM DD, YYYY')
@@ -119,32 +117,32 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
                         <LabelValue
                           label="Time Logged"
                           direction="top-to-bottom"
-                          textSize="xs"
+                          textSize="md"
                           value={dayjs(SystemLogDetails.dateLogged).format('hh:mm A')}
                         />
                       </div>
                       <LabelValue
                         label="Name"
                         direction="top-to-bottom"
-                        textSize="xs"
+                        textSize="md"
                         value={SystemLogDetails.userFullName}
                       />
                       <LabelValue
                         label="Method"
                         direction="top-to-bottom"
-                        textSize="xs"
+                        textSize="md"
                         value={SystemLogDetails.method}
                       />
                       <LabelValue
                         label="Route"
                         direction="top-to-bottom"
-                        textSize="xs"
+                        textSize="md"
                         value={SystemLogDetails.route}
                       />
                       <LabelValue
                         label="Body"
                         direction="top-to-bottom"
-                        textSize="xs"
+                        textSize="md"
                         value={JSON.stringify(SystemLogDetails.body)}
                       />
                     </div>
