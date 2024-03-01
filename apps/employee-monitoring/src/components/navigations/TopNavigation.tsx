@@ -4,6 +4,9 @@ import { AuthmiddlewareContext } from '../../pages/_app';
 import { isEmpty } from 'lodash';
 import Image from 'next/image';
 import { ProfileMenu } from '../dropdown/ProfileMenu';
+import * as Popover from '@radix-ui/react-popover';
+
+const actionItems = [{ action: 'Logout', icon: 'bx-power-off' }];
 
 export const TopNavigation = () => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
@@ -39,7 +42,7 @@ export const TopNavigation = () => {
       }  shadow-slate-200/30 transition-all`}
     >
       <div className="flex justify-between h-16 pr-3 mx-2 my-auto text-center ">
-        <section className="w-[30%] flex text-left">
+        <section className="w-[20%] flex text-left">
           <button
             onClick={collapseOnClick}
             disabled={isMobile}
@@ -61,77 +64,91 @@ export const TopNavigation = () => {
 
         <section className="w-[50%]"></section>
 
-        <section className="w-[20%]  flex justify-end hover:cursor-pointer">
-          <div className="flex items-center gap-4">
-            {/* <div className="text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 animate-wiggle"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-                />
-              </svg>
-            </div> */}
+        <section className="w-[30%]  flex justify-end hover:cursor-pointer">
+          <Popover.Root>
+            <Popover.Trigger asChild tabIndex={-1}>
+              <div className="flex items-center gap-2">
+                {/* User photo */}
+                <div className="flex items-center gap-2 shrink-0 ">
+                  {/* Default user profile photo */}
+                  {isEmpty(userProfile?.photoUrl) ? (
+                    <div className="text-gray-500 ">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-8 h-8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    </div>
+                  ) : (
+                    <div className="w-[2rem]">
+                      <Image
+                        src={userProfile?.photoUrl}
+                        width={100}
+                        height={100}
+                        alt="employee-photo"
+                        className="h-auto max-w-full align-middle rounded-full shadow border-solid border-2 border-[#e5e5e5]"
+                      />
+                    </div>
+                  )}
 
-            {/* User photo */}
-            <div className="flex items-center gap-2 shrink-0 ">
-              {/* Default user profile photo */}
+                  {/* Email */}
+                  <div className="hidden sm:hidden md:hidden lg:block">
+                    <span className="text-xs text-gray-600 select-none ">{userProfile?.email ?? 'Superuseradmin'}</span>
+                  </div>
+                </div>
 
-              {isEmpty(userProfile?.photoUrl) ? (
-                <div className="text-gray-500 ">
+                {/* Chevron icon */}
+                <div className="w-2 h-2 sm:hidden lg:block">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-8 h-8"
+                    className="w-full h-full"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                   </svg>
                 </div>
-              ) : (
-                <div className="w-[2rem]">
-                  <Image
-                    src={userProfile?.photoUrl}
-                    width={100}
-                    height={100}
-                    alt="employee-photo"
-                    className="h-auto max-w-full align-middle rounded-full shadow border-solid border-2 border-[#e5e5e5]"
-                  />
-                </div>
-              )}
-
-              {/* Email */}
-              <div className="hidden sm:hidden md:hidden lg:block">
-                <span className="text-xs text-gray-600 select-none ">{userProfile?.email ?? 'Superuseradmin'}</span>
               </div>
+            </Popover.Trigger>
 
-              {/* Chevron down icon */}
-              <ProfileMenu />
-              {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-full h-full"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                </svg> */}
-            </div>
-          </div>
+            <Popover.Portal>
+              <Popover.Content
+                className="rounded p-1 w-[160px] bg-white shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)]
+                focus:shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2),0_0_0_2px_theme(colors.violet7)]
+                will-change-[transform,opacity]
+                data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade
+                data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
+                // className="rounded shadow-2xl w-[160px] PopoverContent "
+                sideOffset={3}
+                collisionPadding={20}
+                avoidCollisions
+              >
+                {actionItems.map((item: any, idx: number) => (
+                  <div className="z-50w-full bg-white outline-none ring-0  p-3" key={idx}>
+                    <a
+                      rel="noreferrer"
+                      href={`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/logout`}
+                      className={`active:text-slate-600 focus:text-slate-600 hover:text-slate-600 group text-xs flex w-full items-center z-50 flex gap-2`}
+                    >
+                      <i className={`bx ${item.icon} text-sm text-red-500`} />
+                      {item.action}
+                    </a>
+                  </div>
+                ))}
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
         </section>
       </div>
     </header>
