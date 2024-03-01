@@ -25,8 +25,8 @@ export const ActionDropdownEmployee: FunctionComponent<ActionDropdownProps> = ({
         <Popover.Content className="shadow-2xl PopoverContent" sideOffset={5} collisionPadding={20} avoidCollisions>
           {actionItems.map((item: string, idx: number) =>
             item === 'View Daily Time Record' ? (
-              <Can I="access" this="Daily_time_record">
-                <div key={idx} className="z-50 flex w-full bg-white outline-none ring-0">
+              <Can I="access" this="Daily_time_record" key={idx}>
+                <div className="z-50 flex w-full bg-white outline-none ring-0">
                   <a
                     rel="noreferrer"
                     target="_blank"
@@ -38,8 +38,8 @@ export const ActionDropdownEmployee: FunctionComponent<ActionDropdownProps> = ({
                 </div>
               </Can>
             ) : item === 'View Leave Ledger' ? (
-              <Can I="access" this="Leave_ledger">
-                <div key={idx} className="z-50 flex w-full bg-white outline-none ring-0">
+              <Can I="access" this="Leave_ledger" key={idx}>
+                <div className="z-50 flex w-full bg-white outline-none ring-0">
                   <a
                     rel="noreferrer"
                     target="_blank"

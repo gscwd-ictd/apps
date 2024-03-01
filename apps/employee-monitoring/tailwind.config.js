@@ -24,6 +24,9 @@ module.exports = {
       animation: {
         wiggle: 'wiggle 0.3s ease-in-out infinite',
       },
+      colors: {
+        'skote-blue': '#2a3042',
+      },
     },
     screens: {
       xs: '200px',
@@ -48,5 +51,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@headlessui/tailwindcss')({ prefix: 'ui' }),
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
 };

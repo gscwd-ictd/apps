@@ -239,7 +239,16 @@ export const EducationalBackgroundPdf = ({
             <Text style={[styles.verticalCenter]}>{secondary.from || 'N/A'}</Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
-            <Text style={[styles.verticalCenter]}>{secondary.to || 'PRESENT'}</Text>
+            <Text style={[styles.verticalCenter]}>
+              {/* {secondary.to || 'PRESENT'} */}
+              {isEmpty(secondary.schoolName)
+                ? 'N/A'
+                : !isEmpty(secondary.schoolName) && secondary.to === null
+                ? 'PRESENT'
+                : !isEmpty(secondary.schoolName) && secondary.to !== null
+                ? secondary.to
+                : 'N/A'}
+            </Text>
           </View>
         </View>
 
