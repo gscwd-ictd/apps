@@ -108,7 +108,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
+                <div className="w-full flex flex-col gap-2 px-4 rounded">
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-col justify-center items-center w-full -mt-4 pb-4">
                       <label className="text-slate-500 text-xl font-medium">
@@ -238,12 +238,12 @@ export const LeaveCreditMonetizationCalculatorModal = ({
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2 text-md">
+          <div className="flex justify-end gap-2 text-md px-4">
             <div className="flex justify-end gap-2 text-md">
               <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={resetComputation}>
                 Reset
               </Button>
-              <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+              <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                 Close
               </Button>
             </div>

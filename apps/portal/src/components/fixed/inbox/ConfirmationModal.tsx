@@ -136,7 +136,7 @@ export const ConfirmationInboxModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col w-full h-full gap-2 text-lg text-center">
+          <div className="flex flex-col w-full h-full gap-2 text-lg text-center px-4">
             {confirmationResponse == InboxMessageResponse.PSB_ACCEPT ||
             confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
               ? 'Are you sure you want accept?'
@@ -144,7 +144,7 @@ export const ConfirmationInboxModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button variant={'primary'} size={'lg'} loading={false} onClick={(e) => handleResponse()}>
                 Yes

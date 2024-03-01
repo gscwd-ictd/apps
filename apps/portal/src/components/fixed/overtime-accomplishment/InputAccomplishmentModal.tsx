@@ -50,7 +50,7 @@ export const InputAccomplishmentModal = ({ modalState, setModalState, closeModal
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
+          <div className="flex flex-col w-full h-full px-4 gap-2 text-md ">
             {'Please enter accomplishment'}
             <textarea
               required
@@ -62,7 +62,7 @@ export const InputAccomplishmentModal = ({ modalState, setModalState, closeModal
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end">
+          <div className="flex justify-end px-4">
             <div className="max-w-auto flex">
               {/* <Button
                 variant={'primary'}

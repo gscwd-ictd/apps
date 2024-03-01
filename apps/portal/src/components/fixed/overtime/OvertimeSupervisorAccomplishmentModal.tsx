@@ -90,7 +90,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
 
   return (
     <>
-      <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>
+      <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -120,7 +120,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
+                <div className="w-full flex flex-col gap-2 px-4 rounded">
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
                     <AlertNotification alertType="warning" notifMessage={'For Supervisor Review'} dismissible={false} />
                   ) : null}
@@ -130,7 +130,144 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                   {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
                     <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
                   ) : null}
-                  <div className="flex flex-row justify-between items-center w-full">
+
+                  <div className="flex flex-wrap justify-between">
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Name:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">{overtimeAccomplishmentEmployeeName}</label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Overtime Date:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Estimated Hours:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">{overtimeDetails.estimatedHours}</label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Time In & Out:</label>
+
+                      <div className="w-auto ml-5">
+                        <div className="w-full md:w-2/3 flex flex-row gap-2 items-center justify-between">
+                          <label className="w-full">
+                            <LabelInput
+                              id={'ivmsTimeIn'}
+                              type="text"
+                              label={''}
+                              className="w-full font-medium"
+                              textSize="sm"
+                              disabled
+                              value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeIn)}
+                            />
+                          </label>
+                          <label className="w-auto text-sm">-</label>
+                          <label className="w-full ">
+                            <LabelInput
+                              id={'ivmsTimeOut'}
+                              type="text"
+                              label={''}
+                              className="w-full font-medium"
+                              textSize="sm"
+                              disabled
+                              value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeOut)}
+                            />
+                          </label>
+                          <label className="w-full">
+                            <LabelInput
+                              id={'estimate'}
+                              type="text"
+                              label={''}
+                              className="w-full font-medium"
+                              textSize="sm"
+                              disabled
+                              value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Encoded Time In & Out:</label>
+
+                      <div className="w-auto ml-5">
+                        <div className="w-full md:w-2/3 flex flex-row gap-2 items-center justify-between">
+                          <label className="w-full text-md ">
+                            <LabelInput
+                              id={'encodeTimeIn'}
+                              type="text"
+                              label={''}
+                              className="w-full font-medium"
+                              textSize="sm"
+                              disabled
+                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeIn)}
+                            />
+                          </label>
+                          <label className="w-auto text-sm">-</label>
+                          <label className="w-full text-md ">
+                            <LabelInput
+                              id={'encodeTimeOut'}
+                              type="text"
+                              label={''}
+                              className="w-full font-medium"
+                              textSize="sm"
+                              disabled
+                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeOut)}
+                            />
+                          </label>
+                          <label className="w-full text-md ">
+                            <LabelInput
+                              id={'estimate'}
+                              type="text"
+                              label={''}
+                              className="w-full font-medium"
+                              textSize="sm"
+                              disabled
+                              value={`${accomplishmentDetails?.computedEncodedHours} Hours(s)`}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishment:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {accomplishmentDetails.accomplishments ?? 'Not yet filled out'}
+                        </label>
+                      </div>
+                    </div>
+
+                    {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                      <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Remarks:</label>
+
+                        <div className="w-auto ml-5">
+                          <label className="text-md font-medium">
+                            {accomplishmentDetails.remarks ?? 'Not yet filled out'}
+                          </label>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Name:</label>
 
@@ -138,9 +275,9 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                         <label className="text-slate-500 w-full text-md ">{overtimeAccomplishmentEmployeeName}</label>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="flex flex-row justify-between items-center w-full">
+                  {/* <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
 
@@ -150,9 +287,9 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                         </label>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="flex flex-row justify-between items-center w-full">
+                  {/* <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">IVMS In & Out:</label>
 
@@ -193,9 +330,9 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                         </label>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
-                  {!accomplishmentDetails.ivmsTimeIn || !accomplishmentDetails.ivmsTimeOut ? (
+                  {/* {!accomplishmentDetails.ivmsTimeIn || !accomplishmentDetails.ivmsTimeOut ? (
                     <div className="flex flex-row justify-between items-center w-full">
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                         <label className="text-slate-500 text-md font-medium whitespace-nowrap">
@@ -240,9 +377,9 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                         </div>
                       </div>
                     </div>
-                  ) : null}
+                  ) : null} */}
 
-                  <div className="flex flex-col justify-between items-center w-full">
+                  {/* <div className="flex flex-col justify-between items-center w-full">
                     <div className="flex flex-row justify-between items-center w-full">
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap">Accomplishment:</label>
                     </div>
@@ -253,8 +390,8 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       placeholder="N/A"
                       value={accomplishmentDetails.accomplishments ?? 'Not yet filled'}
                     ></textarea>
-                  </div>
-                  {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                  </div> */}
+                  {/* {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
                     <div className="flex flex-col justify-between items-center w-full">
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="text-slate-500 text-md font-medium whitespace-nowrap">Remarks:</label>
@@ -267,7 +404,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                         defaultValue={accomplishmentDetails?.remarks ?? 'N/A'}
                       ></textarea>
                     </div>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>
@@ -279,7 +416,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
           />
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             {accomplishmentDetails.status == OvertimeAccomplishmentStatus.APPROVED ? (
               <Button
                 variant={'primary'}
@@ -292,7 +429,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               </Button>
             ) : null}
 
-            <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+            <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
               Close
             </Button>
           </div>

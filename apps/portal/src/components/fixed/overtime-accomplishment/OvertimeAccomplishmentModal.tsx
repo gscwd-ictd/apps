@@ -255,7 +255,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             <form id="SubmitAccomplishmentForm" onSubmit={handleSubmit(onSubmit)}>
               <div className="w-full h-full flex flex-col  ">
                 <div className="w-full h-full flex flex-col gap-2 ">
-                  <div className="w-full flex flex-col gap-2 p-4 rounded">
+                  <div className="w-full flex flex-col gap-2 px-4 rounded">
                     <div className="w-full flex flex-col gap-0">
                       {/* Scheduled OT but IVMS is incomplete/empty - for Office, Field, Pumping*/}
                       {overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
@@ -662,13 +662,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             {
               //status is approved or disapproved
               overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
               overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
               overtimeAccomplishmentDetails?.accomplishments ? (
-                <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>
               ) : (

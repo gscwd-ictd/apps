@@ -136,6 +136,9 @@ export type ApprovalState = {
   captchaModalIsOpen: boolean;
   setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
 
+  approveAllCaptchaModalIsOpen: boolean;
+  setApproveAllCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
+
   // PASS SLIPS
   passSlipId: string;
   setPassSlipId: (value: string) => void;
@@ -285,6 +288,7 @@ export const useApprovalStore = create<ApprovalState>()(
     overtimeAccomplishmentModalIsOpen: false,
 
     captchaModalIsOpen: false,
+    approveAllCaptchaModalIsOpen: false,
 
     accomplishmentDetails: {} as OvertimeAccomplishment,
 
@@ -348,6 +352,10 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => {
       set((state) => ({ ...state, captchaModalIsOpen }));
+    },
+
+    setApproveAllCaptchaModalIsOpen: (approveAllCaptchaModalIsOpen: boolean) => {
+      set((state) => ({ ...state, approveAllCaptchaModalIsOpen }));
     },
 
     setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {

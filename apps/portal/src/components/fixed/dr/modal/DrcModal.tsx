@@ -12,27 +12,18 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 const DrcModal: FunctionComponent = () => {
   // use modal store
-  const {
-    modal,
-    action,
-    setModal,
-    closeModal,
-    nextPage,
-    prevPage,
-    openModal,
-    setModalAction,
-    setModalPage,
-  } = useModalStore((state) => ({
-    modal: state.modal,
-    action: state.modalAction,
-    setModal: state.setModal,
-    setModalPage: state.setModalPage,
-    openModal: state.openModal,
-    closeModal: state.closeModal,
-    setModalAction: state.setModalAction,
-    nextPage: state.nextPage,
-    prevPage: state.prevPage,
-  }));
+  const { modal, action, setModal, closeModal, nextPage, prevPage, openModal, setModalAction, setModalPage } =
+    useModalStore((state) => ({
+      modal: state.modal,
+      action: state.modalAction,
+      setModal: state.setModal,
+      setModalPage: state.setModalPage,
+      openModal: state.openModal,
+      closeModal: state.closeModal,
+      setModalAction: state.setModalAction,
+      nextPage: state.nextPage,
+      prevPage: state.prevPage,
+    }));
 
   // use dnr store
   const {
@@ -54,12 +45,10 @@ const DrcModal: FunctionComponent = () => {
   }));
 
   // use position store
-  const { selectedPosition, emptySelectedPosition } = usePositionStore(
-    (state) => ({
-      selectedPosition: state.selectedPosition,
-      emptySelectedPosition: state.emptySelectedPosition,
-    })
-  );
+  const { selectedPosition, emptySelectedPosition } = usePositionStore((state) => ({
+    selectedPosition: state.selectedPosition,
+    emptySelectedPosition: state.emptySelectedPosition,
+  }));
 
   // use alert confirmation store
   const confOpen = useAlertConfirmationStore((state) => state.setOpen);
@@ -107,12 +96,10 @@ const DrcModal: FunctionComponent = () => {
         DrcChecker(selectedDnrs).onEditCounter > 0 ||
         (selectedDnrs.core.length === 0 && selectedDnrs.support.length === 0) ||
         (selectedDnrs.core.length > 0 &&
-          (DrcChecker(selectedDnrs).coreTotal < 100 ||
-            DrcChecker(selectedDnrs).coreTotal > 100)) ||
+          (DrcChecker(selectedDnrs).coreTotal < 100 || DrcChecker(selectedDnrs).coreTotal > 100)) ||
         DrcChecker(selectedDnrs).noCompetencyCounter > 0 ||
         (selectedDnrs.support.length > 0 &&
-          (DrcChecker(selectedDnrs).supportTotal < 100 ||
-            DrcChecker(selectedDnrs).supportTotal > 100)) ||
+          (DrcChecker(selectedDnrs).supportTotal < 100 || DrcChecker(selectedDnrs).supportTotal > 100)) ||
         isEqual(selectedDnrs, selectedDnrsOnLoad) === true)
     )
       return true;
@@ -120,9 +107,7 @@ const DrcModal: FunctionComponent = () => {
       modal.page === 3 &&
       selectedDrcType === 'core' &&
       (checkedDnrs.core.length === 0 ||
-        (checkedDnrs.core.length > 0 &&
-          CompetencyChecker(checkedDnrs, selectedDrcType)
-            .noCoreCompetencyCounter > 0))
+        (checkedDnrs.core.length > 0 && CompetencyChecker(checkedDnrs, selectedDrcType).noCoreCompetencyCounter > 0))
     )
       return true;
     else if (
@@ -130,8 +115,7 @@ const DrcModal: FunctionComponent = () => {
       selectedDrcType === 'support' &&
       (checkedDnrs.support.length === 0 ||
         (checkedDnrs.support.length > 0 &&
-          CompetencyChecker(checkedDnrs, selectedDrcType)
-            .noSupportCompetencyCounter > 0))
+          CompetencyChecker(checkedDnrs, selectedDrcType).noSupportCompetencyCounter > 0))
     )
       return true;
     else return false;
@@ -149,9 +133,7 @@ const DrcModal: FunctionComponent = () => {
           <div className="flex justify-between w-full">
             <div className="flex w-full flex-col px-5">
               <h3 className="text-xl font-semibold text-gray-700 md:text-2xl">
-                {modal.page === 6
-                  ? 'Setting Successful'
-                  : 'Set Duties, Responsibilities, and Competencies'}
+                {modal.page === 6 ? 'Setting Successful' : 'Set Duties, Responsibilities, and Competencies'}
               </h3>
               <div className="text-gray-500">
                 {modal.page === 1 ? (
@@ -161,9 +143,7 @@ const DrcModal: FunctionComponent = () => {
                 ) : modal.page === 3 ? (
                   <>
                     <div>{selectedPosition.positionTitle}</div>
-                    <div className="text-xs text-gray-600">
-                      {selectedPosition.designation}
-                    </div>
+                    <div className="text-xs text-gray-600">{selectedPosition.designation}</div>
                   </>
                 ) : (
                   modal.page === 4 && 'Position Summary'
@@ -171,19 +151,14 @@ const DrcModal: FunctionComponent = () => {
               </div>
             </div>
 
-            <i
-              className="bx bx-x text-2xl"
-              role="button"
-              onClick={closeDrcModal}
-              tabIndex={-1}
-            ></i>
+            <i className="bx bx-x text-2xl" role="button" onClick={closeDrcModal} tabIndex={-1}></i>
           </div>
         </Modal.Header>
         <Modal.Body>
           <DrcModalController />
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <button
               onClick={cancelBtn}
               className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"

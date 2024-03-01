@@ -63,7 +63,7 @@ export const PassSlipCompletedModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 {passSlip.status === PassSlipStatus.APPROVED ? (
                   <AlertNotification
@@ -329,7 +329,7 @@ export const PassSlipCompletedModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED &&
               passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
@@ -342,7 +342,7 @@ export const PassSlipCompletedModal = ({
                   File Dispute
                 </Button>
               ) : null}
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
+              <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                 Close
               </Button>
             </div>
