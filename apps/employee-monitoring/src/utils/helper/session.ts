@@ -52,7 +52,7 @@ export async function getCookieFromServer(cookie) {
   // get the hrms ssid length else redirect to /login
   if (hrmsSsid && hrmsSsid.length > 0) {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/users/details`, {
-      withCredentials: true,
+      // withCredentials: true,
       headers: { Cookie: `${hrmsSsid}` },
     });
 

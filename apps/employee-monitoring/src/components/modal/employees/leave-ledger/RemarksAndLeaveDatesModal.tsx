@@ -1,13 +1,10 @@
 import { Modal, PageContentContext } from '@gscwd-apps/oneui';
 import UseRenderBadgePill from '../../../../utils/functions/RenderBadgePill';
 import dayjs from 'dayjs';
-import React, {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useContext,
-} from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction, useContext } from 'react';
 import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
+import { LabelValue } from '../../../labels/LabelValue';
+import { isEmpty } from 'lodash';
 
 type RemarksAndLeaveDates = {
   leaveDates: Array<string>;
@@ -27,9 +24,12 @@ const transformDateToString = (date: string | null) => {
   else return dayjs(date).format('MMMM DD, YYYY');
 };
 
-const RemarksAndLeaveDatesModal: FunctionComponent<
-  LeaveDatesAndRemarksModalProps
-> = ({ modalState, closeModalAction, setModalState, rowData }) => {
+const RemarksAndLeaveDatesModal: FunctionComponent<LeaveDatesAndRemarksModalProps> = ({
+  modalState,
+  closeModalAction,
+  setModalState,
+  rowData,
+}) => {
   const {
     aside: { windowWidth },
   } = useContext(PageContentContext);
@@ -66,25 +66,40 @@ const RemarksAndLeaveDatesModal: FunctionComponent<
             </button>
           </div>
         </Modal.Header>
+
         <Modal.Body>
-          <div className="flex flex-col w-full gap-2 px-2">
-            <div className="text-2xl font-medium text-gray-700">
-              {UseCapitalizer(rowData.remarks)}
-            </div>
-            <div className="grid sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-2 gap-2 pb-1.5">
-              {rowData.leaveDates &&
-                rowData.leaveDates.map((date, idx) => {
-                  return (
-                    <React.Fragment key={idx}>
-                      <span className="w-full">
-                        {UseRenderBadgePill(transformDateToString(date))}
-                      </span>
-                    </React.Fragment>
-                  );
-                })}
-            </div>
+          <div className="flex flex-col w-full gap-2 px-2 pb-2">
+            <LabelValue
+              label="Remarks"
+              direction="top-to-bottom"
+              textSize="md"
+              value={<p className="text-lg pl-4">{UseCapitalizer(rowData.remarks)}</p>}
+            />
+            {!isEmpty(rowData.leaveDates) ? (
+              <LabelValue
+                label="Leave Date/s"
+                direction="top-to-bottom"
+                textSize="md"
+                value={
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 pl-4 py-1.5">
+                    {rowData.leaveDates &&
+                      rowData.leaveDates.map((date, idx) => {
+                        return (
+                          <React.Fragment key={idx}>
+                            <span className="w-full">{UseRenderBadgePill(transformDateToString(date))}</span>
+                          </React.Fragment>
+                        );
+                      })}
+                  </div>
+                }
+              />
+            ) : null}
           </div>
         </Modal.Body>
+
+        <Modal.Footer>
+          <></>
+        </Modal.Footer>
       </Modal>
     </>
   );

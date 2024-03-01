@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
 
   table: {
-    display: 'table',
+    display: 'flex',
     width: '100%',
     borderStyle: 'solid',
     borderWidth: 1,

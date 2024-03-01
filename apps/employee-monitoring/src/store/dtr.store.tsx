@@ -3,10 +3,7 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { create } from 'zustand';
 import { EmployeeRowData } from '../utils/types/table-row-types/monitoring/employee.type';
 import { devtools } from 'zustand/middleware';
-import {
-  EmployeeDtrWithScheduleAndSummary,
-  EmployeeDtrWithSummary,
-} from 'libs/utils/src/lib/types/dtr.type';
+import { EmployeeDtrWithScheduleAndSummary, EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
 type LoadingDtrEmployee = {
@@ -119,8 +116,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
     },
     employeeDailyRecord: {} as EmployeeDtr,
     isDateSearched: false,
-    setIsDateSearched: (isDateSearched: boolean) =>
-      set((state) => ({ ...state, isDateSearched })),
+    setIsDateSearched: (isDateSearched: boolean) => set((state) => ({ ...state, isDateSearched })),
 
     selectedMonth: '--',
     selectedYear: '--',
@@ -143,11 +139,9 @@ export const useDtrStore = create<DailyTimeRecordState>()(
 
     setDate: (value: string) => set((state) => ({ ...state, date: value })),
 
-    setSelectedMonth: (value: string) =>
-      set((state) => ({ ...state, selectedMonth: value })),
+    setSelectedMonth: (value: string) => set((state) => ({ ...state, selectedMonth: value })),
 
-    setSelectedYear: (value: string) =>
-      set((state) => ({ ...state, selectedYear: value })),
+    setSelectedYear: (value: string) => set((state) => ({ ...state, selectedYear: value })),
 
     emptyErrorsAndResponse: () =>
       set((state) => ({
@@ -163,8 +157,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
     setEmployeeWithSchedule: (employeeWithSchedule: EmployeeSchedule) =>
       set((state) => ({ ...state, employeeWithSchedule })),
 
-    setSelectedEmployee: (selectedEmployee: EmployeeRowData) =>
-      set((state) => ({ ...state, selectedEmployee })),
+    setSelectedEmployee: (selectedEmployee: EmployeeRowData) => set((state) => ({ ...state, selectedEmployee })),
     setSearchValue: (searchValue: string) => {
       set((state) => ({ ...state, searchValue }));
     },
@@ -201,7 +194,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         ...state,
         loading: { ...state.loading, loadingEmployeeDtr: false },
         employeeDtr: response,
-        isDateSearched: false,
+        // isDateSearched: false,
       })),
 
     getEmployeeDtrFail: (error: string) =>
@@ -209,7 +202,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         ...state,
         loading: { ...state.loading, loadingEmployeeDtr: false },
         error: { ...state.error, errorEmployeeDtr: error },
-        isDateSearched: false,
+        // isDateSearched: false,
       })),
 
     defineSchedule: () =>
@@ -271,6 +264,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         ...state,
         loading: { ...state.loading, loadingUpdateEmployeeDtr: false },
         employeeDailyRecord: response,
+        // isDateSearched: true,
       })),
 
     updateEmployeeDtrFail: (error: string) =>

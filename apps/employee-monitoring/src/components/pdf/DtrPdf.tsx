@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
+import { ScheduleBase } from '../../utils/enum/schedule-bases.enum';
 
 type DtrPdfProps = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
@@ -129,10 +130,6 @@ const styles = StyleSheet.create({
 
 export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeDtr }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
-
-  // Temporary states
-  const [isOfficeSchedule] = useState<boolean>(true);
-  const [isFieldStationSchedule] = useState<boolean>(false);
 
   // convert to 12-hour time format
   const twelveHourFormat = (time: string | null) => {
@@ -291,7 +288,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* COLUMN HEADERS  */}
                   <View>
                     {/* For Office Schedule */}
-                    {isOfficeSchedule ? (
+                    {employeeData.scheduleBase === ScheduleBase.OFFICE ? (
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w10]}>
                           <Text style={[styles.tableHeaderText]}>DATE</Text>
@@ -318,7 +315,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     ) : null}
 
                     {/* For Field/Pumping Station Schedule */}
-                    {isFieldStationSchedule ? (
+                    {employeeData.scheduleBase === ScheduleBase.FIELD ||
+                    employeeData.scheduleBase === ScheduleBase.PUMPING_STATION ? (
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w25]}>
                           <Text style={{ margin: 'auto 0' }}>REMARKS</Text>
@@ -366,7 +364,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* TABLE ROWS */}
                   <View>
                     {/* For Office Schedule */}
-                    {isOfficeSchedule
+                    {employeeData.scheduleBase === ScheduleBase.OFFICE
                       ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
@@ -497,8 +495,9 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                         })
                       : null}
 
-                    {/* For Field/Pumping Station Schedule | WAITING FOR UPDATES*/}
-                    {isFieldStationSchedule
+                    {/* For Field/Pumping Station Schedule */}
+                    {employeeData.scheduleBase === ScheduleBase.FIELD ||
+                    employeeData.scheduleBase === ScheduleBase.PUMPING_STATION
                       ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
@@ -582,13 +581,15 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                                       {/* add 1 day if night shift */}
                                       {log.schedule.shift === 'night'
                                         ? dayjs(log.day).add(1, 'day').format('YYYY-MM-DD')
-                                        : log.dtr.dtrDate}
+                                        : dayjs(log.day).format('YYYY-MM-DD')}
                                     </Text>
                                   </View>
 
                                   <View style={[styles.tableData, styles.w10]}>
                                     <Text style={[styles.tableDataText]}>
-                                      {dayjs(log.day).add(1, 'day').format('ddd')}
+                                      {log.schedule.shift === 'night'
+                                        ? dayjs(log.day).add(1, 'day').format('ddd')
+                                        : dayjs(log.day).format('ddd')}
                                     </Text>
                                   </View>
 
