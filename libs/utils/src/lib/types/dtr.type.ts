@@ -2,6 +2,7 @@ import { Schedule } from './schedule.type';
 import { HolidayTypes } from '../../../../utils/src/lib/enums/holiday-types.enum';
 import { CANCELLED } from 'dns';
 import { LeaveDateStatus } from '../enums/leave.enum';
+import { DtrCorrectionApproval } from '../enums/approval.enum';
 
 // dtr / time log
 export type EmployeeTimeLog = {
@@ -46,4 +47,21 @@ export type EmployeeDtrWithSummary = {
 export type EmployeeDtrWithScheduleAndSummary = {
   summary: EmployeeDtrWithSummary;
   dtrDays: Array<EmployeeDtrWithSchedule>;
+};
+
+export type GetDtrCorrection = {
+  companyId: string;
+  employeeFullName: string;
+  id: string;
+  dtrId: string;
+  dtrDate: string;
+  dtrTimeIn: string;
+  correctedTimeIn: string;
+  dtrLunchOut: string;
+  correctedLunchOut: string;
+  dtrLunchIn: string;
+  correctedLunchIn: string;
+  dtrTimeOut: string;
+  correctedTimeOut: string;
+  status: DtrCorrectionApproval;
 };

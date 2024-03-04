@@ -7,7 +7,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
-import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
+import { EmployeeOvertimeDetail, OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { overtimeAction } from 'apps/portal/src/types/approvals.type';
 import { useEffect, useState } from 'react';
@@ -83,8 +83,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   }));
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [reason, setReason] = useState<string>('');
-  const [approveAllAccomplishmentData, setApproveAllAccomplishmentData] = useState<string>('');
+  const [approveAllAccomplishmentData, setApproveAllAccomplishmentData] =
+    useState<OvertimeAccomplishmentApprovalPatch>();
   const [pendingAccomplishmentEmployees, setPendingAccomplishmentEmployees] = useState<Array<string>>([]);
+  const [actualHours, setActualHours] = useState<number>(0);
 
   const overtimeDetailsUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval/${selectedOvertimeId}`;
 
@@ -121,8 +123,17 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   }, [overtimeDetails]);
 
   useEffect(() => {
-    console.log(pendingAccomplishmentEmployees);
-  }, [pendingAccomplishmentEmployees]);
+    setApproveAllAccomplishmentData({
+      employeeIds: pendingAccomplishmentEmployees,
+      overtimeApplicationId: overtimeDetails.id,
+      status: OvertimeAccomplishmentStatus.APPROVED,
+      actualHrs: actualHours,
+    });
+  }, [actualHours]);
+
+  useEffect(() => {
+    setActualHours(0);
+  }, [modalState]);
 
   // Initial zustand state update
   useEffect(() => {
@@ -254,6 +265,16 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     }
                     dismissible={false}
                   />
+
+                  {pendingAccomplishmentEmployees.length > 0 ? (
+                    <AlertNotification
+                      alertType={'warning'}
+                      notifMessage={
+                        'Approving All Accomplishments will approve only the submitted and pending Overtime Accomplishments.'
+                      }
+                      dismissible={false}
+                    />
+                  ) : null}
 
                   <div className="flex flex-wrap justify-between">
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
@@ -427,6 +448,23 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       ) : null}
                     </form>
                   ) : null}
+
+                  {overtimeDetails.status === OvertimeStatus.APPROVED && pendingAccomplishmentEmployees.length > 0 ? (
+                    <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center pb-3">
+                      <span className="text-slate-500 text-md">Approved Hours:</span>
+
+                      <input
+                        type="number"
+                        className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-44 rounded-lg"
+                        placeholder="Enter number of hours"
+                        required
+                        value={actualHours}
+                        max="24"
+                        min="1"
+                        onChange={(e) => setActualHours(e.target.value as unknown as number)}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -468,8 +506,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           >
             {/* contents */}
             <ApprovalCaptcha
-              employeeId={employeeDetails.user._id}
-              dataToSubmitApproveAllAccomplishment={overtimeDetails}
+              dataToSubmitApproveAllAccomplishment={approveAllAccomplishmentData}
               tokenId={overtimeDetails.id}
               captchaName={'Approve All Accomplishment Captcha'}
             />
@@ -483,15 +520,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               </Button>
             ) : overtimeDetails.status === OvertimeStatus.APPROVED ? (
               <>
-                <Button
-                  variant={'primary'}
-                  size={'md'}
-                  loading={false}
-                  onClick={(e) => setApproveAllCaptchaModalIsOpen(true)}
-                  type="submit"
-                >
-                  Approve All Accomplishments
-                </Button>
+                {overtimeDetails.status === OvertimeStatus.APPROVED && pendingAccomplishmentEmployees.length > 0 ? (
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setApproveAllCaptchaModalIsOpen(true)}
+                    type="submit"
+                    disabled={
+                      pendingAccomplishmentEmployees.length > 0 && actualHours > 0 && actualHours ? false : true
+                    }
+                  >
+                    Approve All Accomplishments
+                  </Button>
+                ) : null}
 
                 <Button
                   variant={'default'}

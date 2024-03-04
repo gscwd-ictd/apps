@@ -15,7 +15,7 @@ interface CaptchaProps {
   captchaName: any;
   dataToSubmitOvertimeAccomplishment?: OvertimeAccomplishmentApprovalPatch;
   dataToSubmitPassSlipDispute?: passSlipAction;
-  dataToSubmitApproveAllAccomplishment?: OvertimeDetails;
+  dataToSubmitApproveAllAccomplishment?: OvertimeAccomplishmentApprovalPatch;
 }
 
 export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
@@ -111,6 +111,21 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
         if (error) {
           patchOvertimeAccomplishmentFail(result);
         } else {
+          patchOvertimeAccomplishmentSuccess(result);
+          handleClose(); // close confirmation of decline modal
+        }
+      }
+      //approve all pending accomplishment
+      else if (dataToSubmitApproveAllAccomplishment) {
+        patchOvertimeAccomplishment();
+        const { error, result } = await patchPortal(
+          '/v1/overtime/accomplishments/approval/all',
+          dataToSubmitApproveAllAccomplishment
+        );
+        if (error) {
+          patchOvertimeAccomplishmentFail(result);
+        } else {
+          console.log(result);
           patchOvertimeAccomplishmentSuccess(result);
           handleClose(); // close confirmation of decline modal
         }

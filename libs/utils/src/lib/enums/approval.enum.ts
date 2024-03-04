@@ -4,3 +4,9 @@ export enum ManagerOtpApproval {
   LEAVE = 'approvalLeave',
   OVERTIME = 'approvalOvertime',
 }
+
+export enum DtrCorrectionApproval {
+  APPROVED = 'approved',
+  DISAPPROVED = 'disapproved',
+  PENDING = 'for approval',
+}
