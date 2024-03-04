@@ -79,29 +79,9 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
 
-  // cancel action for Pending Pass Slip Application Modal
-  const closePendingPassSlipModal = async () => {
-    setPendingPassSlipModalIsOpen(false);
-  };
-
-  // cancel action for Approved Pass Slip Application Modal
-  const closeApprovedPassSlipModal = async () => {
-    setApprovedPassSlipModalIsOpen(false);
-  };
-
-  // cancel action for Dispproved Pass Slip Application Modal
-  const closeDisapprovedPassSlipModal = async () => {
-    setDisapprovedPassSlipModalIsOpen(false);
-  };
-
-  // cancel action for Cancelled Pass Slip Application Modal
-  const closeCancelledPassSlipModal = async () => {
-    setCancelledPassSlipModalIsOpen(false);
-  };
-
-  // cancel action for Dispute Pass Slip Application Modal
-  const closeDisputedPassSlipModal = async () => {
-    setDisputedPassSlipModalIsOpen(false);
+  // cancel action for DTR Correction Details Modal
+  const closeDtrCorrectionModal = async () => {
+    setDtrCorrectionModalIsOpen(false);
   };
 
   const dtrCorrectionUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/dtr-correction/`;
@@ -111,66 +91,42 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     data: swrDtrCorrection,
     isLoading: swrDtrCorrectionIsLoading,
     error: swrDtrCorrectionError,
-    mutate: mutatePassSlips,
+    mutate: mutateDtrCorrection,
   } = useSWR(dtrCorrectionUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
     if (swrDtrCorrectionIsLoading) {
-      getPassSlipApplicationsList(swrDtrCorrectionIsLoading);
+      getDtrCorrectionApplicationsList(swrDtrCorrectionIsLoading);
     }
   }, [swrDtrCorrectionIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrDtrCorrection)) {
-      getPassSlipApplicationsListSuccess(swrDtrCorrectionIsLoading, swrDtrCorrection);
+      getDtrCorrectionApplicationsListSuccess(swrDtrCorrectionIsLoading, swrDtrCorrection);
     }
 
     if (!isEmpty(swrDtrCorrectionError)) {
-      getPassSlipApplicationsListFail(swrDtrCorrectionIsLoading, swrDtrCorrectionError.message);
+      getDtrCorrectionApplicationsListFail(swrDtrCorrectionIsLoading, swrDtrCorrectionError.message);
     }
   }, [swrDtrCorrection, swrDtrCorrectionError]);
 
   useEffect(() => {
-    if (!isEmpty(patchResponsePassSlip)) {
-      mutatePassSlips();
+    if (!isEmpty(patchResponseDtrCorrection)) {
+      mutateDtrCorrection();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [patchResponsePassSlip]);
+  }, [patchResponseDtrCorrection]);
 
   // Render row actions in the table component
   const renderRowActions = (rowData: DtrCorrection) => {
-    setPassSlipIndividualDetail(rowData);
-    if (rowData.status == PassSlipStatus.APPROVED) {
-      if (!approvedPassSlipModalIsOpen) {
-        setApprovedPassSlipModalIsOpen(true);
-      }
-    } else if (rowData.status == PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
-      // PENDING APPROVAL
-      if (!pendingPassSlipModalIsOpen) {
-        setPendingPassSlipModalIsOpen(true);
-      }
-    } else if (rowData.status == PassSlipStatus.DISAPPROVED) {
-      // DISAPPROVED
-      if (!disapprovedPassSlipModalIsOpen) {
-        setDisapprovedPassSlipModalIsOpen(true);
-      }
-    } else if (rowData.status == PassSlipStatus.CANCELLED) {
-      // CANCELLED
-      if (!cancelledPassSlipModalIsOpen) {
-        setCancelledPassSlipModalIsOpen(true);
-      }
-    } else if (rowData.status == PassSlipStatus.FOR_DISPUTE) {
-      // DISPUTE
-      if (!disputedPassSlipModalIsOpen) {
-        setDisputedPassSlipModalIsOpen(true);
-      }
-    } else {
-      if (!approvedPassSlipModalIsOpen) {
-        setApprovedPassSlipModalIsOpen(true);
+    setDtrCorrectionDetail(rowData);
+    if (rowData.status) {
+      if (!dtrCorrectionModalIsOpen) {
+        setDtrCorrectionModalIsOpen(true);
       }
     }
   };
@@ -217,24 +173,27 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: passSlipApplications,
+    data: dtrCorrectionApplications,
     columnVisibility: { id: false, employeeId: false },
   });
 
   return (
     <>
       <>
-        {/* Pass Slip Approval Patch Success */}
-        {!isEmpty(patchResponsePassSlip) ? (
-          <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
+        {/* DTR Correction Approval Patch Success */}
+        {!isEmpty(patchResponseDtrCorrection) ? (
+          <ToastNotification toastType="success" notifMessage={`DTR Correction action submitted.`} />
         ) : null}
-        {/* Pass Slip Patch Failed Error */}
-        {!isEmpty(errorPassSlipResponse) ? (
-          <ToastNotification toastType="error" notifMessage={`Pass Slip Application action failed.`} />
+        {/* DTR Correction Patch Failed Error */}
+        {!isEmpty(errorDtrCorrectionResponse) ? (
+          <ToastNotification toastType="error" notifMessage={`DTR Correction action failed.`} />
         ) : null}
-        {/* Pass Slip List Load Failed Error */}
-        {!isEmpty(errorPassSlip) ? (
-          <ToastNotification toastType="error" notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`} />
+        {/* DTR Correction List Load Failed Error */}
+        {!isEmpty(errorDtrCorrection) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorDtrCorrection}: Failed to load DTR Correction List.`}
+          />
         ) : null}
 
         <EmployeeProvider employeeData={employee}>
