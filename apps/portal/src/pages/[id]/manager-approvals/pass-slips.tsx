@@ -31,7 +31,6 @@ import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
-    tab,
     pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,

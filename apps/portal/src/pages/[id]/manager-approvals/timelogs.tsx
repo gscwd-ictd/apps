@@ -28,58 +28,43 @@ import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/ma
 import { useRouter } from 'next/router';
 import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { DtrCorrection } from 'libs/utils/src/lib/types/dtr.type';
+import UseRenderDtrCorrectionStatus from 'apps/portal/src/utils/functions/RenderDtrCorrectionStatus';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
-    tab,
-    pendingPassSlipModalIsOpen,
-    approvedPassSlipModalIsOpen,
-    disapprovedPassSlipModalIsOpen,
-    cancelledPassSlipModalIsOpen,
-    disputedPassSlipModalIsOpen,
-    patchResponsePassSlip,
-    loadingPassSlip,
-    errorPassSlip,
-    errorPassSlipResponse,
-    passSlipApplications,
+    dtrCorrectionModalIsOpen,
+    patchResponseDtrCorrection,
+    loadingDtrCorrection,
+    errorDtrCorrection,
+    errorDtrCorrectionResponse,
+    dtrCorrectionApplications,
 
-    setPendingPassSlipModalIsOpen,
-    setApprovedPassSlipModalIsOpen,
-    setDisapprovedPassSlipModalIsOpen,
-    setCancelledPassSlipModalIsOpen,
-    setDisputedPassSlipModalIsOpen,
+    setDtrCorrectionModalIsOpen,
 
-    getPassSlipApplicationsList,
-    getPassSlipApplicationsListSuccess,
-    getPassSlipApplicationsListFail,
+    getDtrCorrectionApplicationsList,
+    getDtrCorrectionApplicationsListSuccess,
+    getDtrCorrectionApplicationsListFail,
 
-    setPassSlipIndividualDetail,
+    setDtrCorrectionDetail,
 
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
-    tab: state.tab,
-    pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
-    approvedPassSlipModalIsOpen: state.approvedPassSlipModalIsOpen,
-    disapprovedPassSlipModalIsOpen: state.disapprovedPassSlipModalIsOpen,
-    cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
-    disputedPassSlipModalIsOpen: state.disputedPassSlipModalIsOpen,
-    patchResponsePassSlip: state.response.patchResponsePassSlip,
-    loadingPassSlip: state.loading.loadingPassSlips,
-    errorPassSlip: state.error.errorPassSlips,
-    errorPassSlipResponse: state.error.errorPassSlipResponse,
-    passSlipApplications: state.passSlipApplications,
+    dtrCorrectionModalIsOpen: state.dtrCorrectionModalIsOpen,
+    patchResponseDtrCorrection: state.response.patchResponseDtrCorrection,
+    loadingDtrCorrection: state.loading.loadingDtrCorrection,
+    errorDtrCorrection: state.error.errorDtrCorrection,
+    errorDtrCorrectionResponse: state.error.errorDtrCorrectionResponse,
+    dtrCorrectionApplications: state.dtrCorrectionApplications,
 
-    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
-    setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
-    setDisapprovedPassSlipModalIsOpen: state.setDisapprovedPassSlipModalIsOpen,
-    setCancelledPassSlipModalIsOpen: state.setCancelledPassSlipModalIsOpen,
-    setDisputedPassSlipModalIsOpen: state.setDisputedPassSlipModalIsOpen,
-    getPassSlipApplicationsList: state.getPassSlipApplicationsList,
-    getPassSlipApplicationsListSuccess: state.getPassSlipApplicationsListSuccess,
-    getPassSlipApplicationsListFail: state.getPassSlipApplicationsListFail,
+    setDtrCorrectionModalIsOpen: state.setDtrCorrectionModalIsOpen,
+
+    getDtrCorrectionApplicationsList: state.getDtrCorrectionApplicationsList,
+    getDtrCorrectionApplicationsListSuccess: state.getDtrCorrectionApplicationsListSuccess,
+    getDtrCorrectionApplicationsListFail: state.getDtrCorrectionApplicationsListFail,
+
+    setDtrCorrectionDetail: state.setDtrCorrectionDetail,
     emptyResponseAndError: state.emptyResponseAndError,
-
-    setPassSlipIndividualDetail: state.setPassSlipIndividualDetail,
   }));
 
   const router = useRouter();
@@ -119,33 +104,33 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     setDisputedPassSlipModalIsOpen(false);
   };
 
-  const passSlipUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/pass-slip/supervisor/${employeeDetails.employmentDetails.userId}`;
+  const dtrCorrectionUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/dtr-correction/`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
-    data: swrPassSlips,
-    isLoading: swrPassSlipIsLoading,
-    error: swrPassSlipError,
+    data: swrDtrCorrection,
+    isLoading: swrDtrCorrectionIsLoading,
+    error: swrDtrCorrectionError,
     mutate: mutatePassSlips,
-  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken);
+  } = useSWR(dtrCorrectionUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
-    if (swrPassSlipIsLoading) {
-      getPassSlipApplicationsList(swrPassSlipIsLoading);
+    if (swrDtrCorrectionIsLoading) {
+      getPassSlipApplicationsList(swrDtrCorrectionIsLoading);
     }
-  }, [swrPassSlipIsLoading]);
+  }, [swrDtrCorrectionIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (!isEmpty(swrPassSlips)) {
-      getPassSlipApplicationsListSuccess(swrPassSlipIsLoading, swrPassSlips);
+    if (!isEmpty(swrDtrCorrection)) {
+      getPassSlipApplicationsListSuccess(swrDtrCorrectionIsLoading, swrDtrCorrection);
     }
 
-    if (!isEmpty(swrPassSlipError)) {
-      getPassSlipApplicationsListFail(swrPassSlipIsLoading, swrPassSlipError.message);
+    if (!isEmpty(swrDtrCorrectionError)) {
+      getPassSlipApplicationsListFail(swrDtrCorrectionIsLoading, swrDtrCorrectionError.message);
     }
-  }, [swrPassSlips, swrPassSlipError]);
+  }, [swrDtrCorrection, swrDtrCorrectionError]);
 
   useEffect(() => {
     if (!isEmpty(patchResponsePassSlip)) {
@@ -157,7 +142,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   }, [patchResponsePassSlip]);
 
   // Render row actions in the table component
-  const renderRowActions = (rowData: PassSlip) => {
+  const renderRowActions = (rowData: DtrCorrection) => {
     setPassSlipIndividualDetail(rowData);
     if (rowData.status == PassSlipStatus.APPROVED) {
       if (!approvedPassSlipModalIsOpen) {
@@ -191,33 +176,41 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   };
 
   // Define table columns
-  const columnHelper = createColumnHelper<PassSlip>();
+  const columnHelper = createColumnHelper<DtrCorrection>();
   const columns = [
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('dateOfApplication', {
-      header: 'Date of Filing',
+    columnHelper.accessor('dtrDate', {
+      header: 'Date to Correct',
       // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
-    columnHelper.accessor('employeeName', {
+    columnHelper.accessor('employeeFullName', {
       header: 'Employee Name',
       filterFn: 'fuzzy',
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('natureOfBusiness', {
-      header: 'Nature of Business',
+    columnHelper.accessor('dtrTimeIn', {
+      header: 'Time In',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('estimateHours', {
-      header: 'Estimated Hours',
+    columnHelper.accessor('dtrLunchOut', {
+      header: 'Lunch Out',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('dtrLunchIn', {
+      header: 'Lunch In',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('dtrTimeOut', {
+      header: 'Time Out',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      cell: (info) => UseRenderPassSlipStatus(info.getValue(), TextSize.TEXT_SM),
+      cell: (info) => UseRenderDtrCorrectionStatus(info.getValue(), TextSize.TEXT_SM),
     }),
   ];
 
@@ -294,7 +287,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
                 backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 
-              {swrPassSlipIsLoading ? (
+              {swrDtrCorrectionIsLoading ? (
                 <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}
@@ -308,7 +301,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
                 <ContentBody>
                   <div>
                     <DataTablePortal
-                      onRowClick={(row) => renderRowActions(row.original as PassSlip)}
+                      onRowClick={(row) => renderRowActions(row.original as DtrCorrection)}
                       textSize={'text-lg'}
                       model={table}
                       showGlobalFilter={true}

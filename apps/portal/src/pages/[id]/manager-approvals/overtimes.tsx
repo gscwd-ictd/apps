@@ -32,7 +32,6 @@ import Image from 'next/image';
 
 export default function OvertimeApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
-    tab,
     pendingOvertimeModalIsOpen,
     approvedOvertimeModalIsOpen,
     disapprovedOvertimeModalIsOpen,

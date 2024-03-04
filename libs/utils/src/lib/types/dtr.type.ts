@@ -49,7 +49,7 @@ export type EmployeeDtrWithScheduleAndSummary = {
   dtrDays: Array<EmployeeDtrWithSchedule>;
 };
 
-export type GetDtrCorrection = {
+export type DtrCorrection = {
   companyId: string;
   employeeFullName: string;
   id: string;
@@ -63,5 +63,10 @@ export type GetDtrCorrection = {
   correctedLunchIn: string;
   dtrTimeOut: string;
   correctedTimeOut: string;
+  status: DtrCorrectionApproval;
+};
+
+export type DtrCorrectionApprovalPatch = {
+  id: string;
   status: DtrCorrectionApproval;
 };
