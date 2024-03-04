@@ -25,7 +25,7 @@ function UseRenderOvertimeAccomplishmentStatus(status: OvertimeAccomplishmentSta
           ? 'Disapproved'
           : status === OvertimeAccomplishmentStatus.PENDING
           ? 'Pending'
-          : ''
+          : status
       }
     />
   );

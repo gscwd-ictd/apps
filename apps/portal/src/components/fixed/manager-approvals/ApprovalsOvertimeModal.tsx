@@ -4,7 +4,7 @@ import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
@@ -83,6 +83,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   }));
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [reason, setReason] = useState<string>('');
+  const [approveAllAccomplishmentData, setApproveAllAccomplishmentData] = useState<string>('');
+  const [pendingAccomplishmentEmployees, setPendingAccomplishmentEmployees] = useState<Array<string>>([]);
 
   const overtimeDetailsUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval/${selectedOvertimeId}`;
 
@@ -99,6 +101,28 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       revalidateOnFocus: true,
     }
   );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (overtimeDetails) {
+      setPendingAccomplishmentEmployees(Array.from(new Set([])));
+      let employeeIdList = [];
+      for (let i = 0; i < overtimeDetails.employees?.length; i++) {
+        if (
+          overtimeDetails?.employees[i]?.isAccomplishmentSubmitted == true &&
+          overtimeDetails?.employees[i]?.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING
+        ) {
+          console.log(overtimeDetails?.employees[i]?.employeeId);
+          employeeIdList.push(overtimeDetails?.employees[i]?.employeeId);
+        }
+      }
+      setPendingAccomplishmentEmployees(employeeIdList);
+    }
+  }, [overtimeDetails]);
+
+  useEffect(() => {
+    console.log(pendingAccomplishmentEmployees);
+  }, [pendingAccomplishmentEmployees]);
 
   // Initial zustand state update
   useEffect(() => {
@@ -213,6 +237,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         ? 'info'
                         : overtimeDetails.status === OvertimeStatus.DISAPPROVED
                         ? 'error'
+                        : overtimeDetails.status === OvertimeStatus.CANCELLED
+                        ? 'error'
                         : 'info'
                     }
                     notifMessage={
@@ -222,6 +248,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         ? 'Approved'
                         : overtimeDetails.status === OvertimeStatus.DISAPPROVED
                         ? 'Disapproved'
+                        : overtimeDetails.status === OvertimeStatus.CANCELLED
+                        ? 'Cancelled'
                         : overtimeDetails.status
                     }
                     dismissible={false}
@@ -462,7 +490,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                   onClick={(e) => setApproveAllCaptchaModalIsOpen(true)}
                   type="submit"
                 >
-                  Approve All
+                  Approve All Accomplishments
                 </Button>
 
                 <Button

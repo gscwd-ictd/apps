@@ -132,6 +132,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
                   ) : null}
 
+                  {overtimeDetails.status === OvertimeStatus.CANCELLED ? (
+                    <AlertNotification alertType="error" notifMessage={'Cancelled'} dismissible={false} />
+                  ) : null}
+
                   <div className="flex flex-wrap justify-between">
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Overtime Type:</label>
@@ -176,7 +180,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                           ? 'Date Disapproved:'
                           : overtimeDetails.status === OvertimeStatus.CANCELLED
                           ? 'Date Cancelled'
-                          : ''}
+                          : 'Date Approved:'}
                       </label>
 
                       <div className="w-auto ml-5">

@@ -212,7 +212,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
       if (!pendingOvertimeModalIsOpen) {
         setPendingOvertimeModalIsOpen(true);
       }
-    } else if (rowData.status == OvertimeStatus.DISAPPROVED) {
+    } else if (rowData.status == OvertimeStatus.DISAPPROVED || rowData.status == OvertimeStatus.CANCELLED) {
       // DISAPPROVED
       if (!disapprovedOvertimeModalIsOpen) {
         setDisapprovedOvertimeModalIsOpen(true);

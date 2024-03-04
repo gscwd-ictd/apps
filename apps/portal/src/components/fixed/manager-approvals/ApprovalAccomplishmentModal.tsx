@@ -76,7 +76,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const { windowWidth } = UseWindowDimensions();
-  const [followEstimatedHrs, setFollowEstimatedHrs] = useState<boolean>(false);
   const [pwdArray, setPwdArray] = useState<string[]>();
   const [wiggleEffect, setWiggleEffect] = useState(false);
   const [password, setPassword] = useState<string>('');
@@ -107,7 +106,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     defaultValues: {
       status: null,
       remarks: '',
-      followEstimatedHrs: false,
+      actualHrs: null,
     },
   });
 
@@ -122,10 +121,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     setPassword('');
     setPwdArray([]);
   }, [overtimeAccomplishmentModalIsOpen]);
-
-  useEffect(() => {
-    setValue('followEstimatedHrs', followEstimatedHrs);
-  }, [followEstimatedHrs]);
 
   const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
 
@@ -170,33 +165,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   const [encodedHours, setEncodedHours] = useState<number>(0);
   const [finalEncodedHours, setFinalEncodedHours] = useState<number>(0);
   const [dataToSubmit, setDataToSubmit] = useState<OvertimeAccomplishmentApprovalPatch>();
-
-  useEffect(() => {
-    setEncodedHours(
-      GetDateDifference(
-        `2023-01-01 ${accomplishmentDetails.encodedTimeIn}:00`,
-        `2023-01-01 ${accomplishmentDetails.encodedTimeOut}:00`
-      ).hours
-    );
-  }, [accomplishmentDetails]);
-
-  //compute encoded overtime duration based on encoded time IN and OUT
-  useEffect(() => {
-    if (encodedHours % 5 == 0 || encodedHours >= 5) {
-      if (encodedHours % 5 == 0) {
-        setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 5));
-        // console.log(Math.floor(encodedHours / 5));
-      } else if (encodedHours / 5 > 0) {
-        setFinalEncodedHours(encodedHours - Math.floor(encodedHours / 5));
-        // console.log(Math.floor(encodedHours / 5), 'else');
-      } else {
-        setFinalEncodedHours(encodedHours);
-        // console.log(encodedHours, 'else 2');
-      }
-    } else {
-      setFinalEncodedHours(encodedHours);
-    }
-  }, [encodedHours]);
 
   const onSubmit: SubmitHandler<OvertimeAccomplishmentApprovalPatch> = async (
     data: OvertimeAccomplishmentApprovalPatch
@@ -288,7 +256,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Estimated Hours:</label>
 
                       <div className="w-auto ml-5">
@@ -296,11 +264,19 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       </div>
                     </div>
 
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Approved Hours:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">{'--'}</label>
+                      </div>
+                    </div>
+
                     <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Time In & Out:</label>
 
                       <div className="w-auto ml-5">
-                        <div className="w-full md:w-2/3 flex flex-row gap-2 items-center justify-between">
+                        <div className="w-full flex flex-row gap-2 items-center justify-between">
                           <label className="w-full">
                             <LabelInput
                               id={'ivmsTimeIn'}
@@ -343,7 +319,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Encoded Time In & Out:</label>
 
                       <div className="w-auto ml-5">
-                        <div className="w-full md:w-2/3 flex flex-row gap-2 items-center justify-between">
+                        <div className="w-full flex flex-row gap-2 items-center justify-between">
                           <label className="w-full text-md ">
                             <LabelInput
                               id={'encodeTimeIn'}
@@ -562,8 +538,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                           required
                           defaultValue={0}
                           max="24"
-                          min="0"
-                          // {...register('estimatedHours')}
+                          min={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '1'}
+                          {...register('actualHrs')}
                         />
                       </div>
 
