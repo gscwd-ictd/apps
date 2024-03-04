@@ -243,6 +243,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
             </button>
           </div>
         </Modal.Header>
+
         <Modal.Body>
           {swrIsLoading ? (
             <Skeleton count={6} enableAnimation />
