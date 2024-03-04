@@ -13,7 +13,7 @@ function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: TextSize)
         status === LeaveStatus.APPROVED || status === 'approved'
           ? 'success'
           : status === LeaveStatus.CANCELLED || status === 'cancelled'
-          ? 'error'
+          ? 'default'
           : status === LeaveStatus.FOR_HRDM_APPROVAL || status === 'for hrdm approval'
           ? 'warning'
           : status === LeaveStatus.FOR_HRMO_APPROVAL || status === 'for hrmo approval'
@@ -45,7 +45,7 @@ function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: TextSize)
           ? 'Disapproved By HRMO'
           : status === LeaveStatus.CANCELLED
           ? 'Cancelled'
-          : null
+          : status
       }
     />
   );

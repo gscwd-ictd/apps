@@ -61,13 +61,8 @@ export const TrainingNominationModal = ({
   };
 
   useEffect(() => {
-    console.log(employeePool);
-  }, [employeePool]);
-
-  useEffect(() => {
     if (trainingNominationModalIsOpen) {
       if (isEmpty(nominatedEmployees) && isEmpty(auxiliaryEmployees)) {
-        console.log('1');
         setInitialLoad(true);
         setEmployeePool(
           employeeList.sort(function (a, b) {
@@ -88,11 +83,8 @@ export const TrainingNominationModal = ({
 
   //initial rearrangement of employee pool - should run once during opening of modal
   const handleInitialEmployeePool = (uniqueNames: Array<SelectOption>) => {
-    console.log('2');
     //remove employee from pool
     const filtered = employeePool.filter((item) => uniqueNames.every(({ value }) => item[value] != value));
-    console.log(uniqueNames);
-    console.log(filtered);
     setEmployeePool(filtered);
 
     setSelectedEmployees(nominatedEmployees);
@@ -111,20 +103,18 @@ export const TrainingNominationModal = ({
 
   useEffect(() => {
     if (!initialLoad && trainingNominationModalIsOpen) {
-      console.log('3');
-      console.log(combinedNominatedEmployees);
       //remove employee from pool
 
       for (let a = 0; a < combinedNominatedEmployees.length; a++) {
         if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
           setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
-          console.log(combinedNominatedEmployees[a].label, 'removed from pool');
+          // console.log(combinedNominatedEmployees[a].label, 'removed from pool');
         }
       }
       //add back employee
       for (let i = 0; i < employeeList.length; i++) {
         if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
-          console.log(employeeList[i].label, 'added to pool');
+          // console.log(employeeList[i].label, 'added to pool');
           const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
           setEmployeePool(
             uniqueNames.sort(function (a, b) {

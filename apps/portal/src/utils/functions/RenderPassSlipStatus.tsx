@@ -24,7 +24,7 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize: TextSize) {
           ? 'default'
           : status === PassSlipStatus.USED || status === PassSlipStatus.UNUSED
           ? 'default'
-          : null
+          : 'default'
       }
       label={
         status === PassSlipStatus.APPROVED
@@ -47,7 +47,7 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize: TextSize) {
           ? 'Used'
           : status === PassSlipStatus.UNUSED
           ? 'Unused'
-          : ''
+          : status
       }
     />
   );
