@@ -12,7 +12,7 @@ import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { DtrCorrectionApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { NatureOfBusiness, DtrCorrectionApproval } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DtrCorrectionApprovalPatch } from 'libs/utils/src/lib/types/dtr.type';
@@ -81,10 +81,11 @@ export const ApprovalsDtrCorrectionModal = ({
       setOtpPassSlipModalIsOpen(true);
     } else if (data.status === DtrCorrectionApproval.DISAPPROVED) {
       setDeclineApplicationModalIsOpen(true);
-    } else if (dtrCorrectionDetail.status === DtrCorrectionApproval.FOR_DISPUTE) {
-      setDataToSubmitForCaptcha(data);
-      setCaptchaModalIsOpen(true);
     }
+    //  else if (dtrCorrectionDetail.status === DtrCorrectionApproval.FOR_DISPUTE) {
+    //   setDataToSubmitForCaptcha(data);
+    //   setCaptchaModalIsOpen(true);
+    // }
   };
 
   // set state for employee store
@@ -155,215 +156,143 @@ export const ApprovalsDtrCorrectionModal = ({
               </div>
 
               <div className="flex flex-wrap justify-between">
-                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Employee Name:</label>
 
                   <div className="w-auto ml-5">
-                    <label className="text-md font-medium">{passSlip.employeeName}</label>
+                    <label className="text-md font-medium">{dtrCorrectionDetail.employeeFullName}</label>
                   </div>
                 </div>
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Nature of Business:</label>
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Date to Correct:</label>
 
                   <div className="w-auto ml-5">
-                    <label className="text-md font-medium">{passSlip.natureOfBusiness}</label>
+                    <label className="text-md font-medium">
+                      {' '}
+                      {DateFormatter(dtrCorrectionDetail.dtrDate, 'MM-DD-YYYY')}
+                    </label>
                   </div>
                 </div>
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date of Application:</label>
-
-                  <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">
-                      {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
-                    {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
-                      ? 'For Medical Business:'
-                      : 'Mode of Transportation:'}
-                  </label>
-
-                  <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">
-                      {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
-                        ? passSlip.isMedical
-                          ? 'Yes'
-                          : 'No'
-                        : passSlip.obTransportation ?? 'N/A'}
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Estimated Hours:</label>
-
-                  <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">{passSlip.estimateHours}</label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Time Out:</label>
-
-                  <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">
-                      {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Time In:</label>
 
                   <div className="w-auto ml-5">
                     <label className=" text-md font-medium">
-                      {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
+                      {UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeIn) ?? '-- -- --'}
                     </label>
                   </div>
                 </div>
-                <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Purpose/Desination:</label>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Time In:</label>
 
                   <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">{passSlip.purposeDestination}</label>
+                    <label
+                      className={`text-md font-medium ${
+                        UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeIn) !=
+                        UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeIn)
+                          ? 'text-green-500'
+                          : ''
+                      }`}
+                    >
+                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeIn) ?? '-- -- --'}
+                    </label>
                   </div>
                 </div>
 
-                {passSlip.disputeRemarks ? (
-                  <div className={`flex flex-col`}>
-                    <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
-                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                        Employee Dispute Remarks:
-                      </label>
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Lunch Out:</label>
 
-                      <div className="w-auto ml-5">
-                        <div className="w-auto flex flex-col">
-                          <label className="text-md font-medium">
-                            {`Disputed Time In is ${
-                              passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
-                            }.`}
-                          </label>
-                          <label className="text-md font-medium">{` ${passSlip.disputeRemarks}`}</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-
-              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Employee Name:</label>
-
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.employeeName}</label>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                  Date of Application:
-                </label>
-
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">
-                    {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                  Nature of Business:
-                </label>
-
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.natureOfBusiness}</label>
-                </div>
-              </div>
-
-              {passSlip.natureOfBusiness === 'Official Business' ? (
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className={`text-slate-500 text-md whitespace-nowrap font-medium sm:w-80`}>
-                    Mode of Transportation:
-                  </label>
-                  <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.obTransportation}</label>
+                  <div className="w-auto ml-5">
+                    <label className={`text-md font-medium `}>
+                      {UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchOut) ?? '-- -- --'}
+                    </label>
                   </div>
                 </div>
-              ) : null}
 
-              <div className={` flex flex-col gap-2`}>
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                    Estimated Hours:
-                  </label>
-                  <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.estimateHours}</label>
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Lunch Out:</label>
+
+                  <div className="w-auto ml-5">
+                    <label
+                      className={` text-md font-medium ${
+                        UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchOut) !=
+                        UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchOut)
+                          ? 'text-green-500'
+                          : ''
+                      }`}
+                    >
+                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchOut) ?? '-- -- --'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Lunch In:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchIn) ?? '-- -- --'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Lunch In:</label>
+
+                  <div className="w-auto ml-5">
+                    <label
+                      className={`text-md font-medium ${
+                        UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchIn) !=
+                        UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchIn)
+                          ? 'text-green-500'
+                          : ''
+                      }`}
+                    >
+                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchIn) ?? '-- -- --'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Time Out:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeOut) ?? '-- -- --'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Time Out:</label>
+
+                  <div className="w-auto ml-5">
+                    <label
+                      className={`text-md font-medium ${
+                        UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeOut) !=
+                        UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeOut)
+                          ? 'text-green-500'
+                          : ''
+                      }`}
+                    >
+                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeOut) ?? '-- -- --'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Remarks:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium"> {dtrCorrectionDetail.remarks ?? 'N/A'}</label>
                   </div>
                 </div>
               </div>
 
-              {dtrCorrectionDetail.status === DtrCorrectionApproval.FOR_DISPUTE ? (
-                <>
-                  <div className={` flex flex-col gap-2`}>
-                    <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Time Out:</label>
-                      <div className="w-auto md:w-96">
-                        <label className="text-slate-500 h-12 w-96  text-md ">
-                          {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  {passSlip.natureOfBusiness == NatureOfBusiness.UNDERTIME ||
-                  passSlip.natureOfBusiness == NatureOfBusiness.HALF_DAY ? null : (
-                    <div className={` flex flex-col gap-2`}>
-                      <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                        <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Time In:</label>
-                        <div className="w-auto md:w-96">
-                          <label className="text-slate-500 h-12 w-96  text-md ">
-                            {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : null}
-
-              <div
-                className={`flex flex-col gap-2
-            `}
-              >
-                <label className="text-slate-500 text-md font-medium">Purpose/Desination:</label>
-                <textarea
-                  className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                  value={passSlip.purposeDestination}
-                  rows={2}
-                  disabled={true}
-                ></textarea>
-              </div>
-
-              {passSlip.disputeRemarks ? (
-                <div className={`flex flex-col gap-2`}>
-                  <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
-                  <textarea
-                    className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                    value={`Disputed Time In: ${
-                      passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
-                    }.\n${passSlip.disputeRemarks}`}
-                    rows={3}
-                    disabled={true}
-                  ></textarea>
-                </div>
-              ) : null} */}
-
-              {dtrCorrectionDetail.status != DtrCorrectionApproval.APPROVED ? (
+              {dtrCorrectionDetail.status === DtrCorrectionApproval.PENDING ? (
                 <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
                   <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center">
                     <span className="text-slate-500 text-md">Action:</span>
@@ -388,7 +317,7 @@ export const ApprovalsDtrCorrectionModal = ({
               ) : null}
             </div>
           </div>
-          <OtpModal
+          {/* <OtpModal
             modalState={otpPassSlipModalIsOpen}
             setModalState={setOtpPassSlipModalIsOpen}
             title={'PASS SLIP APPROVAL OTP'}
@@ -400,8 +329,8 @@ export const ApprovalsDtrCorrectionModal = ({
               tokenId={passSlip.id}
               otpName={ManagerOtpApproval.PASSSLIP}
             />
-          </OtpModal>
-          <ConfirmationApprovalModal
+          </OtpModal> */}
+          {/* <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
             closeModalAction={closeDeclineModal}
@@ -409,26 +338,26 @@ export const ApprovalsDtrCorrectionModal = ({
             tokenId={passSlip.id}
             confirmName={ManagerOtpApproval.PASSSLIP}
             employeeId={employeeDetails.user._id}
-          />
+          /> */}
 
-          <CaptchaModal
+          {/* <CaptchaModal
             modalState={captchaModalIsOpen}
             setModalState={setCaptchaModalIsOpen}
             title={'PASS SLIP DISPUTE CAPTCHA'}
           >
-            {/* contents */}
+           
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
               dataToSubmitPassSlipDispute={dataToSubmitForCaptcha}
               tokenId={passSlip.id}
               captchaName={'Dispute Captcha'}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full flex justify-end">
-              {dtrCorrectionDetail.status != DtrCorrectionApproval.APPROVED ? (
+              {dtrCorrectionDetail.status === DtrCorrectionApproval.PENDING ? (
                 <Button variant={'primary'} size={'md'} loading={false} form="PassSlipAction" type="submit">
                   Submit
                 </Button>
@@ -451,4 +380,4 @@ export const ApprovalsDtrCorrectionModal = ({
   );
 };
 
-export default ApprovalsPendingPassSlipModal;
+export default ApprovalsDtrCorrectionModal;

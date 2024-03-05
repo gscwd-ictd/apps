@@ -29,6 +29,7 @@ export type EmployeeDtrWithSchedule = {
   holidayType: HolidayTypes | null; // recently added
   isHoliday: boolean;
   isRestDay: boolean;
+  hasPendingDtrCorrection: boolean;
   leaveDateStatus?: LeaveDateStatus; //for leave cancellation checker
 };
 
@@ -64,9 +65,20 @@ export type DtrCorrection = {
   dtrTimeOut: string;
   correctedTimeOut: string;
   status: DtrCorrectionApproval;
+  remarks: string;
 };
 
 export type DtrCorrectionApprovalPatch = {
   id: string;
   status: DtrCorrectionApproval;
+};
+
+// Time Log Update/Correction application form
+export type DtrCorrectionForm = {
+  dtrId: string;
+  timeIn: string;
+  timeOut: string;
+  lunchIn: string;
+  lunchOut: string;
+  remarks: string;
 };

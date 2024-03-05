@@ -1,0 +1,545 @@
+[36minfo[39m  - Loaded env from /home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/apps/portal/.env
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[35mevent[39m - compiled client and server successfully in 2.8s (180 modules)
+[ [32mready[39m ] on http://0.0.0.0:3002
+[36mwait[39m  - compiling /login (client and server)...
+[35mevent[39m - compiled client and server successfully in 1795 ms (461 modules)
+[31merror[39m - AxiosError: connect ECONNREFUSED 172.20.110.45:4001
+    at AxiosError.from [90m(file:///home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4maxios[24m/lib/core/AxiosError.js:89:14[90m)[39m
+    at RedirectableRequest.handleRequestError [90m(file:///home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4maxios[24m/lib/adapters/http.js:526:25[90m)[39m
+[90m    at RedirectableRequest.emit (node:events:514:28)[39m
+    at eventHandlers.<computed> [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mfollow-redirects[24m/index.js:14:24[90m)[39m
+[90m    at ClientRequest.emit (node:events:514:28)[39m
+[90m    at Socket.socketErrorListener (node:_http_client:495:9)[39m
+[90m    at Socket.emit (node:events:514:28)[39m
+[90m    at emitErrorNT (node:internal/streams/destroy:151:8)[39m
+[90m    at emitErrorCloseNT (node:internal/streams/destroy:116:3)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)[39m {
+  port: [33m4001[39m,
+  address: [32m'172.20.110.45'[39m,
+  syscall: [32m'connect'[39m,
+  code: [32m'ECONNREFUSED'[39m,
+  errno: [33m-111[39m,
+  config: {
+    transitional: {
+      silentJSONParsing: [33mtrue[39m,
+      forcedJSONParsing: [33mtrue[39m,
+      clarifyTimeoutError: [33mfalse[39m
+    },
+    adapter: [ [32m'xhr'[39m, [32m'http'[39m ],
+    transformRequest: [ [36m[Function: transformRequest][39m ],
+    transformResponse: [ [36m[Function: transformResponse][39m ],
+    timeout: [33m0[39m,
+    xsrfCookieName: [32m'XSRF-TOKEN'[39m,
+    xsrfHeaderName: [32m'X-XSRF-TOKEN'[39m,
+    maxContentLength: [33m-1[39m,
+    maxBodyLength: [33m-1[39m,
+    env: { FormData: [36m[Function][39m, Blob: [36m[class Blob][39m },
+    validateStatus: [36m[Function: validateStatus][39m,
+    headers: AxiosHeaders {
+      Accept: [32m'application/json, text/plain, */*'[39m,
+      Cookie: [36m[Array][39m,
+      [32m'User-Agent'[39m: [32m'axios/1.2.1'[39m,
+      [32m'Accept-Encoding'[39m: [32m'gzip, compress, deflate, br'[39m
+    },
+    withCredentials: [33mtrue[39m,
+    method: [32m'get'[39m,
+    url: [32m'http://172.20.110.45:4001/users'[39m,
+    data: [90mundefined[39m
+  },
+  request: [36m<ref *1>[39m Writable {
+    _writableState: WritableState {
+      state: [33m802924[39m,
+      highWaterMark: [33m16384[39m,
+      defaultEncoding: [32m'utf8'[39m,
+      length: [33m0[39m,
+      corked: [33m0[39m,
+      onwrite: [36m[Function: bound onwrite][39m,
+      writecb: [1mnull[22m,
+      writelen: [33m0[39m,
+      afterWriteTickInfo: [1mnull[22m,
+      buffered: [],
+      bufferedIndex: [33m0[39m,
+      pendingcb: [33m0[39m,
+      errored: [1mnull[22m,
+      [[32mSymbol(kOnFinished)[39m]: []
+    },
+    _events: [Object: null prototype] {
+      response: [36m[Function: handleResponse][39m,
+      error: [36m[Function: handleRequestError][39m,
+      socket: [36m[Function: handleRequestSocket][39m
+    },
+    _eventsCount: [33m3[39m,
+    _maxListeners: [90mundefined[39m,
+    _options: {
+      maxRedirects: [33m21[39m,
+      maxBodyLength: [33mInfinity[39m,
+      protocol: [32m'http:'[39m,
+      path: [32m'/users'[39m,
+      method: [32m'GET'[39m,
+      headers: [36m[Object: null prototype][39m,
+      agents: [36m[Object][39m,
+      auth: [90mundefined[39m,
+      beforeRedirect: [36m[Function: dispatchBeforeRedirect][39m,
+      beforeRedirects: [36m[Object][39m,
+      hostname: [32m'172.20.110.45'[39m,
+      port: [32m'4001'[39m,
+      agent: [90mundefined[39m,
+      nativeProtocols: [36m[Object][39m,
+      pathname: [32m'/users'[39m
+    },
+    _ended: [33mtrue[39m,
+    _ending: [33mtrue[39m,
+    _redirectCount: [33m0[39m,
+    _redirects: [],
+    _requestBodyLength: [33m0[39m,
+    _requestBodyBuffers: [],
+    _onNativeResponse: [36m[Function (anonymous)][39m,
+    _currentRequest: ClientRequest {
+      _events: [36m[Object: null prototype][39m,
+      _eventsCount: [33m7[39m,
+      _maxListeners: [90mundefined[39m,
+      outputData: [],
+      outputSize: [33m0[39m,
+      writable: [33mtrue[39m,
+      destroyed: [33mtrue[39m,
+      _last: [33mtrue[39m,
+      chunkedEncoding: [33mfalse[39m,
+      shouldKeepAlive: [33mtrue[39m,
+      maxRequestsOnConnectionReached: [33mfalse[39m,
+      _defaultKeepAlive: [33mtrue[39m,
+      useChunkedEncodingByDefault: [33mfalse[39m,
+      sendDate: [33mfalse[39m,
+      _removedConnection: [33mfalse[39m,
+      _removedContLen: [33mfalse[39m,
+      _removedTE: [33mfalse[39m,
+      strictContentLength: [33mfalse[39m,
+      _contentLength: [33m0[39m,
+      _hasBody: [33mtrue[39m,
+      _trailer: [32m''[39m,
+      finished: [33mtrue[39m,
+      _headerSent: [33mtrue[39m,
+      _closed: [33mtrue[39m,
+      socket: [36m[Socket][39m,
+      _header: [32m'GET /users HTTP/1.1\r\n'[39m +
+        [32m'Accept: application/json, text/plain, */*\r\n'[39m +
+        [32m'Cookie: ssid_portal=s%3A9teS8ODemPBnEMko0CR9tSROwCN3Nbit.cMBR2nfbzwwOr6dJh56UpQYq0gFvXALasYnmpKBEnEY\r\n'[39m +
+        [32m'User-Agent: axios/1.2.1\r\n'[39m +
+        [32m'Accept-Encoding: gzip, compress, deflate, br\r\n'[39m +
+        [32m'Host: 172.20.110.45:4001\r\n'[39m +
+        [32m'Connection: keep-alive\r\n'[39m +
+        [32m'\r\n'[39m,
+      _keepAliveTimeout: [33m0[39m,
+      _onPendingData: [36m[Function: nop][39m,
+      agent: [36m[Agent][39m,
+      socketPath: [90mundefined[39m,
+      method: [32m'GET'[39m,
+      maxHeaderSize: [90mundefined[39m,
+      insecureHTTPParser: [90mundefined[39m,
+      joinDuplicateHeaders: [90mundefined[39m,
+      path: [32m'/users'[39m,
+      _ended: [33mfalse[39m,
+      res: [1mnull[22m,
+      aborted: [33mfalse[39m,
+      timeoutCb: [36m[Function: emitRequestTimeout][39m,
+      upgradeOrConnect: [33mfalse[39m,
+      parser: [1mnull[22m,
+      maxHeadersCount: [1mnull[22m,
+      reusedSocket: [33mfalse[39m,
+      host: [32m'172.20.110.45'[39m,
+      protocol: [32m'http:'[39m,
+      _redirectable: [36m[Circular *1][39m,
+      [[32mSymbol(kCapture)[39m]: [33mfalse[39m,
+      [[32mSymbol(kBytesWritten)[39m]: [33m0[39m,
+      [[32mSymbol(kNeedDrain)[39m]: [33mfalse[39m,
+      [[32mSymbol(corked)[39m]: [33m0[39m,
+      [[32mSymbol(kOutHeaders)[39m]: [36m[Object: null prototype][39m,
+      [[32mSymbol(errored)[39m]: [1mnull[22m,
+      [[32mSymbol(kHighWaterMark)[39m]: [33m16384[39m,
+      [[32mSymbol(kRejectNonStandardBodyWrites)[39m]: [33mfalse[39m,
+      [[32mSymbol(kUniqueHeaders)[39m]: [1mnull[22m
+    },
+    _currentUrl: [32m'http://172.20.110.45:4001/users'[39m,
+    [[32mSymbol(kCapture)[39m]: [33mfalse[39m
+  },
+  cause: Error: connect ECONNREFUSED 172.20.110.45:4001
+  [90m    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1595:16)[39m {
+    errno: [33m-111[39m,
+    code: [32m'ECONNREFUSED'[39m,
+    syscall: [32m'connect'[39m,
+    address: [32m'172.20.110.45'[39m,
+    port: [33m4001[39m
+  },
+  page: [32m'/login'[39m
+}
+[36mwait[39m  - compiling /_error (client and server)...
+[35mevent[39m - compiled client and server successfully in 96 ms (462 modules)
+[36mwait[39m  - compiling /[id] (client and server)...
+[33mwarn[39m  - Fast Refresh had to perform a full reload due to a runtime error.
+[35mevent[39m - compiled client and server successfully in 2.8s (1595 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled successfully in 1113 ms (1193 modules)
+[36mwait[39m  - compiling / (client and server)...
+[35mevent[39m - compiled client and server successfully in 799 ms (1406 modules)
+[36mwait[39m  - compiling /login (client and server)...
+[35mevent[39m - compiled client and server successfully in 207 ms (1597 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled successfully in 1133 ms (1193 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals...
+[35mevent[39m - compiled client and server successfully in 671 ms (1418 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals/timelogs...
+[35mevent[39m - compiled client and server successfully in 517 ms (1449 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1151 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1366 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1206 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1099 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1190 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1374 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1916 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1157 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1084 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1052 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 942 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1026 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1331 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1435 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1033 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1251 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 2.3s (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1704 ms (1057 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals...
+[35mevent[39m - compiled client and server successfully in 745 ms (1062 modules)
+[36mwait[39m  - compiling /login...
+[35mevent[39m - compiled client and server successfully in 986 ms (1269 modules)
+[36mwait[39m  - compiling /[id] (client and server)...
+[35mevent[39m - compiled client and server successfully in 824 ms (1640 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals/pass-slips...
+[35mevent[39m - compiled client and server successfully in 1488 ms (1683 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals/leaves...
+[35mevent[39m - compiled client and server successfully in 692 ms (1676 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals/overtimes...
+[35mevent[39m - compiled client and server successfully in 1167 ms (1445 modules)
+[36mwait[39m  - compiling /[id]/training-selection...
+[35mevent[39m - compiled client and server successfully in 1418 ms (2389 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled successfully in 1754 ms (1803 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals...
+[35mevent[39m - compiled client and server successfully in 182 ms (2011 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals/timelogs...
+[35mevent[39m - compiled client and server successfully in 666 ms (2020 modules)
+[36mwait[39m  - compiling /[id]...
+[35mevent[39m - compiled client and server successfully in 394 ms (1444 modules)
+[36mwait[39m  - compiling /login (client and server)...
+[35mevent[39m - compiled client and server successfully in 160 ms (1635 modules)
+[36mwait[39m  - compiling /[id]/dtr...
+[35mevent[39m - compiled client and server successfully in 857 ms (1656 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1328 ms (1547 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 987 ms (1547 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled successfully in 1084 ms (1348 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 988 ms (1547 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1676 ms (1551 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1344 ms (1551 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1398 ms (1551 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1338 ms (1551 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1377 ms (1551 modules)
+[36mwait[39m  - compiling /[id] (client and server)...
+[35mevent[39m - compiled client and server successfully in 2.1s (1616 modules)
+[36mwait[39m  - compiling /login (client and server)...
+[35mevent[39m - compiled client and server successfully in 594 ms (1631 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1824 ms (1551 modules)
+[36mwait[39m  - compiling /[id]...
+[35mevent[39m - compiled client and server successfully in 285 ms (1616 modules)
+[36mwait[39m  - compiling /login (client and server)...
+[35mevent[39m - compiled client and server successfully in 310 ms (1631 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 622 ms (1551 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 801 ms (1551 modules)
+[36mwait[39m  - compiling /[id] (client and server)...
+[35mevent[39m - compiled client and server successfully in 563 ms (1616 modules)
+[36mwait[39m  - compiling /login (client and server)...
+[35mevent[39m - compiled client and server successfully in 159 ms (1631 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1908 ms (1580 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 3.7s (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1381 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1357 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1058 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 551 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 571 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 463 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 535 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 516 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 339 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 708 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 384 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 2.1s (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 489 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 509 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1950 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1579 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1331 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1321 ms (1549 modules)
+TypeError: Cannot read properties of undefined (reading 'id')
+    at UpdateTimeLogModal (webpack-internal:///./src/components/fixed/dtr/UpdateTimeLogModal.tsx:146:40)
+    at renderWithHooks [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5658:16[90m)[39m
+    at renderIndeterminateComponent [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5731:15[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5946:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderChildrenArray [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6211:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6141:7[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5971:9[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderIndeterminateComponent [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5785:7[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5946:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5971:9[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderIndeterminateComponent [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5785:7[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5946:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderChildrenArray [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6211:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6141:7[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5971:9[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+[31merror[39m - src/components/fixed/dtr/UpdateTimeLogModal.tsx (169:30) @ id
+[31merror[39m - TypeError: Cannot read properties of undefined (reading 'id')
+    at UpdateTimeLogModal (webpack-internal:///./src/components/fixed/dtr/UpdateTimeLogModal.tsx:146:40)
+    at renderWithHooks [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5658:16[90m)[39m
+    at renderIndeterminateComponent [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5731:15[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5946:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderChildrenArray [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6211:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6141:7[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5971:9[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderIndeterminateComponent [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5785:7[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5946:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5971:9[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderIndeterminateComponent [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5785:7[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5946:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderChildrenArray [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6211:7[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6141:7[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderNode [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6259:12[90m)[39m
+    at renderHostElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5642:3[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5952:5[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m
+    at renderNodeDestructive [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6076:14[90m)[39m
+    at renderElement [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:5971:9[90m)[39m
+    at renderNodeDestructiveImpl [90m(/home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-server.browser.development.js:6104:11[90m)[39m {
+  page: [32m'/af5633d6-b26e-11ed-a79b-000c29f95a80/dtr'[39m
+}
+[0m [90m 167 | [39m        closeModalAction[33m=[39m{closeConfirmationModal}[0m
+[0m [90m 168 | [39m        dataToSubmit[33m=[39m{{[0m
+[0m[31m[1m>[22m[39m[90m 169 | [39m          dtrId[33m:[39m rowData[33m?[39m[33m.[39mdtr[33m.[39mid[33m,[39m[0m
+[0m [90m     | [39m                             [31m[1m^[22m[39m[0m
+[0m [90m 170 | [39m          timeIn[33m:[39m watch([32m'timeIn'[39m)[33m,[39m[0m
+[0m [90m 171 | [39m          timeOut[33m:[39m watch([32m'timeOut'[39m)[33m,[39m[0m
+[0m [90m 172 | [39m          lunchIn[33m:[39m watch([32m'lunchIn'[39m)[33m,[39m[0m
+[36mwait[39m  - compiling /_error (client and server)...
+[35mevent[39m - compiled client and server successfully in 781 ms (1550 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 830 ms (181 modules)
+[33mwarn[39m  - Fast Refresh had to perform a full reload due to a runtime error.
+[36mwait[39m  - compiling /[id]/dtr (client and server)...
+[33mwarn[39m  - Fast Refresh had to perform a full reload due to a runtime error.
+[35mevent[39m - compiled client and server successfully in 682 ms (1550 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 2.2s (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 2.2s (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1115 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1065 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1369 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1731 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1160 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1413 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1384 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1212 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1544 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1160 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1445 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1709 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1255 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1284 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1477 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1378 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1433 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1321 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1373 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1379 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1163 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1444 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 782 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 2.1s (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1056 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1278 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1493 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1664 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1239 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1415 ms (1549 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1322 ms (1549 modules)
+[36mwait[39m  - compiling /login (client and server)...
+[35mevent[39m - compiled client and server successfully in 940 ms (1580 modules)
+[36mwait[39m  - compiling /[id] (client and server)...
+[35mevent[39m - compiled client and server successfully in 644 ms (1629 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals...
+[35mevent[39m - compiled client and server successfully in 632 ms (1634 modules)
+[36mwait[39m  - compiling /[id]/manager-approvals/timelogs...
+[35mevent[39m - compiled client and server successfully in 723 ms (1663 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1594 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1095 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1297 ms (1057 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1502 ms (1059 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1360 ms (1059 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 957 ms (1059 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1524 ms (1059 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1125 ms (1059 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1452 ms (1059 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1329 ms (1059 modules)

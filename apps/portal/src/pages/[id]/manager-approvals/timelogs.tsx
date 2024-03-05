@@ -30,6 +30,7 @@ import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassS
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { DtrCorrection } from 'libs/utils/src/lib/types/dtr.type';
 import UseRenderDtrCorrectionStatus from 'apps/portal/src/utils/functions/RenderDtrCorrectionStatus';
+import ApprovalsDtrCorrectionModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsDtrCorrectionModal';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -174,7 +175,14 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   const { table } = useDataTable({
     columns: columns,
     data: dtrCorrectionApplications,
-    columnVisibility: { id: false, employeeId: false },
+    columnVisibility: {
+      id: false,
+      employeeId: false,
+      // dtrTimeIn: false,
+      // dtrLunchOut: false,
+      // dtrLunchIn: false,
+      // dtrTimeOut: false,
+    },
   });
 
   return (
@@ -203,39 +211,11 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 
           <SideNav employeeDetails={employeeDetails} />
 
-          {/* Pending Pass Slip For Approval Modal */}
-          <ApprovalsPendingPassSlipModal
-            modalState={pendingPassSlipModalIsOpen}
-            setModalState={setPendingPassSlipModalIsOpen}
-            closeModalAction={closePendingPassSlipModal}
-          />
-
-          {/* Pass Slip Approved/Disapproved/Cancelled Modal */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={approvedPassSlipModalIsOpen}
-            setModalState={setApprovedPassSlipModalIsOpen}
-            closeModalAction={closeApprovedPassSlipModal}
-          />
-
-          {/* Disapproved Pass Slips */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={disapprovedPassSlipModalIsOpen}
-            setModalState={setDisapprovedPassSlipModalIsOpen}
-            closeModalAction={closeDisapprovedPassSlipModal}
-          />
-
-          {/* Cancelled Pass Slips */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={cancelledPassSlipModalIsOpen}
-            setModalState={setCancelledPassSlipModalIsOpen}
-            closeModalAction={closeCancelledPassSlipModal}
-          />
-
-          {/* Disputed Pass Slip For Approval Modal */}
-          <ApprovalsPendingPassSlipModal
-            modalState={disputedPassSlipModalIsOpen}
-            setModalState={setDisputedPassSlipModalIsOpen}
-            closeModalAction={closeDisputedPassSlipModal}
+          {/* DTR Correction Approval Modal */}
+          <ApprovalsDtrCorrectionModal
+            modalState={dtrCorrectionModalIsOpen}
+            setModalState={setDtrCorrectionModalIsOpen}
+            closeModalAction={closeDtrCorrectionModal}
           />
 
           <MainContainer>
@@ -264,7 +244,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
                       textSize={'text-lg'}
                       model={table}
                       showGlobalFilter={true}
-                      showColumnFilter={true}
+                      showColumnFilter={false}
                       paginate={true}
                     />
                   </div>

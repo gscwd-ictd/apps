@@ -24,9 +24,21 @@ import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 
 export default function DailyTimeRecord({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const isLoadingDtr = useDtrStore((state) => state.loading.loadingDtr);
-  const isErrorDtr = useDtrStore((state) => state.error.errorDtr);
-  const emptyResponseAndError = useDtrStore((state) => state.emptyResponseAndError);
+  const {
+    isErrorDtr,
+    isLoadingDtr,
+    errorUpdateEmployeeDtr,
+    loadingUpdateEmployeeDtr,
+    responseUpdateDtr,
+    emptyResponseAndError,
+  } = useDtrStore((state) => ({
+    isErrorDtr: state.error.errorDtr,
+    isLoadingDtr: state.loading.loadingDtr,
+    errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
+    loadingUpdateEmployeeDtr: state.loading.loadingUpdateEmployeeDtr,
+    responseUpdateDtr: state.response.employeeDailyRecord,
+    emptyResponseAndError: state.emptyResponseAndError,
+  }));
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
@@ -48,13 +60,11 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     });
   }, []);
 
-  useEffect(() => {
-    if (!isEmpty(isErrorDtr)) {
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 5000);
-    }
-  }, [isErrorDtr]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     emptyResponseAndError();
+  //   }, 5000);
+  // }, [isErrorDtr, errorUpdateEmployeeDtr, responseUpdateDtr]);
 
   return (
     <>
@@ -62,6 +72,24 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
         {/* DTR Fetch Error */}
         {!isEmpty(isErrorDtr) ? (
           <ToastNotification toastType="error" notifMessage={`${isErrorDtr}: Failed to load DTR.`} />
+        ) : null}
+
+        {!isEmpty(errorUpdateEmployeeDtr) ? (
+          <>
+            <ToastNotification
+              toastType="error"
+              notifMessage={`${errorUpdateEmployeeDtr}: Failed to submit Time Log Correction request.`}
+            />
+          </>
+        ) : null}
+
+        {!isEmpty(responseUpdateDtr) ? (
+          <>
+            <ToastNotification
+              toastType="success"
+              notifMessage={`Time Log Correction request submitted successfully.`}
+            />
+          </>
         ) : null}
 
         <EmployeeProvider employeeData={employee}>

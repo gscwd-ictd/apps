@@ -20,30 +20,32 @@ type DtrtableProps = {
 };
 
 export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
-  const date = useDtrStore((state) => state.date);
-  const employeeDtr = useDtrStore((state) => state.employeeDtr);
-  const dtrIsLoading = useDtrStore((state) => state.loading.loadingDtr);
+  const { employeeDtr, dtrIsLoading, dtrModalIsOpen, setDtrModalIsOpen } = useDtrStore((state) => ({
+    employeeDtr: state.employeeDtr,
+    dtrIsLoading: state.loading.loadingDtr,
+    dtrModalIsOpen: state.dtrModalIsOpen,
+    setDtrModalIsOpen: state.setDtrModalIsOpen,
+  }));
+
   const now = dayjs().toDate().toDateString();
 
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
-  // edit modal state
-  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
 
   // open edit action modal function
   const openEditActionModal = (rowData: EmployeeDtrWithSchedule) => {
-    setEditModalIsOpen(true);
+    setDtrModalIsOpen(true);
     setCurrentRowData(rowData);
   };
 
   // close edit action modal function
-  const closeEditActionModal = () => setEditModalIsOpen(false);
+  const closeEditActionModal = () => setDtrModalIsOpen(false);
 
   return (
     <>
       <UpdateTimeLogModal
-        modalState={editModalIsOpen}
-        setModalState={setEditModalIsOpen}
+        modalState={dtrModalIsOpen}
+        setModalState={setDtrModalIsOpen}
         closeModalAction={closeEditActionModal}
         rowData={currentRowData}
       />
