@@ -472,11 +472,21 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/cards/CardEmployee.tsx",
-            "hash": "15354585689368807693",
+            "hash": "11121135457516684155",
             "dependencies": [
               {
-                "target": "npm:react",
                 "source": "employee-monitoring",
+                "target": "npm:react",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "npm:next",
                 "type": "static"
               }
             ]
@@ -556,7 +566,7 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/cards/Holidays.tsx",
-            "hash": "6602968760108702543",
+            "hash": "6791923042737946091",
             "dependencies": [
               {
                 "source": "employee-monitoring",
@@ -609,22 +619,6 @@
           {
             "file": "apps/employee-monitoring/src/components/dropdown/ActionDropdownEmployee.tsx",
             "hash": "15711397329187402374",
-            "dependencies": [
-              {
-                "target": "npm:react",
-                "source": "employee-monitoring",
-                "type": "static"
-              },
-              {
-                "target": "npm:@radix-ui/react-popover",
-                "source": "employee-monitoring",
-                "type": "static"
-              }
-            ]
-          },
-          {
-            "file": "apps/employee-monitoring/src/components/dropdown/ProfileMenu.tsx",
-            "hash": "7755355076959546090",
             "dependencies": [
               {
                 "target": "npm:react",
@@ -2151,36 +2145,41 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/office/ViewOfficeSsModal.tsx",
-            "hash": "17928122060647224012",
+            "hash": "9508540865010416425",
             "dependencies": [
               {
+                "source": "employee-monitoring",
                 "target": "npm:react",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "npm:swr",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
                 "target": "npm:dayjs",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "utils",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "npm:react-hook-form",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
-                "target": "oneui",
                 "source": "employee-monitoring",
+                "target": "oneui",
                 "type": "static"
               }
             ]
@@ -2419,26 +2418,31 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/ViewEmployeesSsTable.tsx",
-            "hash": "9907963011954855855",
+            "hash": "12294198199188088374",
             "dependencies": [
               {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
                 "target": "npm:react",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "npm:@tanstack/react-table",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "oneui",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
-                "target": "utils",
                 "source": "employee-monitoring",
+                "target": "utils",
                 "type": "static"
               }
             ]
@@ -2999,26 +3003,31 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/navigations/TopNavigation.tsx",
-            "hash": "1234210081028626881",
+            "hash": "9880460888160534507",
             "dependencies": [
               {
+                "source": "employee-monitoring",
                 "target": "oneui",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "npm:react",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
                 "target": "npm:next",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
-                "target": "npm:@radix-ui/react-popover",
                 "source": "employee-monitoring",
+                "target": "npm:@radix-ui/react-popover",
                 "type": "static"
               }
             ]
@@ -3557,7 +3566,7 @@
           },
           {
             "file": "apps/employee-monitoring/src/pages/_app.tsx",
-            "hash": "3131151358648971416",
+            "hash": "5154856078296323970",
             "dependencies": [
               {
                 "source": "employee-monitoring",
@@ -38049,6 +38058,16 @@
       },
       {
         "source": "employee-monitoring",
+        "target": "npm:lodash",
+        "type": "static"
+      },
+      {
+        "source": "employee-monitoring",
+        "target": "npm:next",
+        "type": "static"
+      },
+      {
+        "source": "employee-monitoring",
         "target": "npm:@tanstack/react-table",
         "type": "static"
       },
@@ -38070,11 +38089,6 @@
       {
         "source": "employee-monitoring",
         "target": "npm:react-loading-skeleton",
-        "type": "static"
-      },
-      {
-        "source": "employee-monitoring",
-        "target": "npm:lodash",
         "type": "static"
       },
       {
@@ -38115,11 +38129,6 @@
       {
         "source": "employee-monitoring",
         "target": "npm:react-select",
-        "type": "static"
-      },
-      {
-        "source": "employee-monitoring",
-        "target": "npm:next",
         "type": "static"
       },
       {
