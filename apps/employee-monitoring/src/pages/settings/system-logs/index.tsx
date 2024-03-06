@@ -77,7 +77,7 @@ const Index = () => {
     }),
     columnHelper.accessor('userFullName', {
       enableSorting: true,
-      header: () => 'Name',
+      header: () => <span className="w-full text-center">Name</span>,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('dateLogged', {
@@ -91,7 +91,7 @@ const Index = () => {
     }),
     columnHelper.display({
       id: 'actions',
-      header: () => <span className="w-full text-center ">Actions</span>,
+      header: () => <span className="w-full text-center">Actions</span>,
       cell: (props) => <div className="w-full text-center">{renderRowActions(props.row.original)}</div>,
     }),
   ];
