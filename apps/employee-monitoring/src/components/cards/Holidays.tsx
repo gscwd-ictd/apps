@@ -42,7 +42,6 @@ export const Holidays = (): JSX.Element => {
       }
     });
 
-    console.log('regular: ', count);
     return count;
   };
 
@@ -58,7 +57,6 @@ export const Holidays = (): JSX.Element => {
       }
     });
 
-    console.log('special: ', count);
     return count;
   };
 
@@ -91,9 +89,9 @@ export const Holidays = (): JSX.Element => {
             {swrIsLoading ? (
               <Skeleton count={4} borderRadius={1} />
             ) : countRegularHolidays(holidays) <= 0 ? (
-              <div className="flex justify-center w-full h-full text-gray-400">-- No Holidays --</div>
+              <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
             ) : (
-              <div className="flex flex-col w-full gap-1 px-2 py-1 rounded-lg bg-blue-50">
+              <div className="flex flex-col w-full gap-1 p-2 rounded-lg bg-blue-50">
                 {!isEmpty(holidays) ? (
                   <>
                     {holidays.map((holiday) => {
@@ -114,7 +112,7 @@ export const Holidays = (): JSX.Element => {
                     })}
                   </>
                 ) : (
-                  <div className="flex justify-center w-full h-full text-gray-400">-- No Data --</div>
+                  <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
                 )}
               </div>
             )}
@@ -125,9 +123,9 @@ export const Holidays = (): JSX.Element => {
             {swrIsLoading ? (
               <Skeleton count={4} borderRadius={1} />
             ) : countSpecialHolidays(holidays) <= 0 ? (
-              <div className="flex justify-center w-full h-full text-gray-400">-- No Holidays --</div>
+              <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
             ) : (
-              <div className="flex flex-col w-full gap-1 px-2 py-2 rounded-lg bg-blue-50">
+              <div className="flex flex-col w-full gap-1 p-2 rounded-lg bg-blue-50">
                 {!isEmpty(holidays) ? (
                   holidays.map((holiday) => {
                     const { holidayDate, id, name, type } = holiday;
@@ -146,7 +144,7 @@ export const Holidays = (): JSX.Element => {
                     }
                   })
                 ) : (
-                  <div className="flex justify-center w-full h-full text-gray-400">-- No Data --</div>
+                  <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
                 )}
               </div>
             )}

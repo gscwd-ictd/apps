@@ -15,7 +15,7 @@ export const CardEmployee = () => {
           <span className="font-medium text-sky-800">Welcome Back!</span>
           <span className="z-10 text-xs font-normal text-sky-800">EMS Dashboard</span>
         </div>
-        <div className="flex justify-end w-full h-full pl-[50%] -mt-20">
+        <div className="flex justify-end w-full h-full -mt-20">
           <OfficeSVG />
         </div>
       </section>

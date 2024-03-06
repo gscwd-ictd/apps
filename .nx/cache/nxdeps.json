@@ -472,7 +472,7 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/cards/CardEmployee.tsx",
-            "hash": "11121135457516684155",
+            "hash": "14854318360861175652",
             "dependencies": [
               {
                 "source": "employee-monitoring",
@@ -528,6 +528,37 @@
             ]
           },
           {
+            "file": "apps/employee-monitoring/src/components/cards/CardLeaveRequests.tsx",
+            "hash": "1894953277976073758",
+            "dependencies": [
+              {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "npm:react",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "npm:swr",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "utils",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "oneui",
+                "type": "static"
+              }
+            ]
+          },
+          {
             "file": "apps/employee-monitoring/src/components/cards/CardMiniStats.tsx",
             "hash": "10695265077549608010",
             "dependencies": [
@@ -545,28 +576,38 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/cards/CardPassSlipRequests.tsx",
-            "hash": "16585173893236900273",
+            "hash": "16953779944143170284",
             "dependencies": [
               {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
                 "target": "npm:react",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "npm:swr",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
-                "target": "utils",
                 "source": "employee-monitoring",
+                "target": "utils",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "oneui",
                 "type": "static"
               }
             ]
           },
           {
             "file": "apps/employee-monitoring/src/components/cards/Holidays.tsx",
-            "hash": "6791923042737946091",
+            "hash": "15778865462643417938",
             "dependencies": [
               {
                 "source": "employee-monitoring",
@@ -597,21 +638,21 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/charts/Tardiness.tsx",
-            "hash": "14123330493875367182",
+            "hash": "12947387789418260797",
             "dependencies": [
               {
+                "source": "employee-monitoring",
                 "target": "npm:chart.js",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "npm:react-chartjs-2",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
-                "target": "npm:react",
                 "source": "employee-monitoring",
+                "target": "npm:react",
                 "type": "static"
               }
             ]
@@ -719,7 +760,7 @@
           },
           {
             "file": "apps/employee-monitoring/src/components/layouts/PendingDashboard.tsx",
-            "hash": "12252798827688647284"
+            "hash": "5814741659819084736"
           },
           {
             "file": "apps/employee-monitoring/src/components/modal/employees/DailyTimeRecordPdfModal.tsx",
@@ -3625,11 +3666,11 @@
           },
           {
             "file": "apps/employee-monitoring/src/pages/dashboard/index.tsx",
-            "hash": "9277185212952240581",
+            "hash": "14735959315028118911",
             "dependencies": [
               {
-                "target": "npm:next",
                 "source": "employee-monitoring",
+                "target": "npm:next",
                 "type": "static"
               }
             ]
@@ -3951,36 +3992,41 @@
           },
           {
             "file": "apps/employee-monitoring/src/pages/monitoring/leave-applications/index.tsx",
-            "hash": "1781131387470482286",
+            "hash": "6214635484193552018",
             "dependencies": [
               {
+                "source": "employee-monitoring",
                 "target": "npm:react",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
                 "target": "npm:swr",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "utils",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "npm:@tanstack/react-table",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
+                "source": "employee-monitoring",
                 "target": "oneui",
-                "source": "employee-monitoring",
                 "type": "static"
               },
               {
-                "target": "npm:dayjs",
                 "source": "employee-monitoring",
+                "target": "npm:dayjs",
                 "type": "static"
               }
             ]
@@ -5396,6 +5442,32 @@
           {
             "file": "apps/employee-monitoring/tsconfig.spec.json",
             "hash": "7936155694672839485"
+          },
+          {
+            "file": "apps/employee-monitoring/src/components/cards/CardOvertimeRequests.tsx",
+            "hash": "18024760206929716921",
+            "dependencies": [
+              {
+                "source": "employee-monitoring",
+                "target": "npm:lodash",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "npm:react",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "npm:swr",
+                "type": "static"
+              },
+              {
+                "source": "employee-monitoring",
+                "target": "oneui",
+                "type": "static"
+              }
+            ]
           }
         ]
       }
