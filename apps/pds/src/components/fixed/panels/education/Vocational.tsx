@@ -4,11 +4,7 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import {
-  Table,
-  TableDimension,
-  TableHeader,
-} from '../../../modular/tables/Table';
+import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { CheckboxRF } from '../../../modular/inputs/CheckboxRF';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -32,27 +28,17 @@ export const Vocational = (): JSX.Element => {
   const employee = useEmployeeStore((state) => state.employeeDetails);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const vocational = usePdsStore((state) => state.vocational);
-  const allowDeleteVocational = useUpdatePdsStore(
-    (state) => state.allowDeleteVocational
-  );
-  const [courseForEdit, setCourseForEdit] = useState<EducationInfo>(
-    {} as EducationInfo
-  );
+  const allowDeleteVocational = useUpdatePdsStore((state) => state.allowDeleteVocational);
+  const [courseForEdit, setCourseForEdit] = useState<EducationInfo>({} as EducationInfo);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const [courseToRemove, setCourseToRemove] = useState<number>(-1); // set course to remove state (number)
   const vocationalOnEdit = usePdsStore((state) => state.vocationalOnEdit);
   const [addCourseIsOpen, setAddVocationalIsOpen] = useState(false); // set add modal state
-  const [removedVocational, setRemovedVocational] = useState<EducationInfo>(
-    {} as EducationInfo
-  );
+  const [removedVocational, setRemovedVocational] = useState<EducationInfo>({} as EducationInfo);
   const [removeCourseIsOpen, setRemoveCourseIsOpen] = useState(false); // set remove course modal state
-  const deletedVocationalEducs = useUpdatePdsStore(
-    (state) => state.deletedVocationalEducs
-  );
+  const deletedVocationalEducs = useUpdatePdsStore((state) => state.deletedVocationalEducs);
   const [courseIndexForEdit, setCourseIndexForEdit] = useState<number>(-1);
-  const allowEditVocational = useUpdatePdsStore(
-    (state) => state.allowEditVocational
-  );
+  const allowEditVocational = useUpdatePdsStore((state) => state.allowEditVocational);
   const setVocational = usePdsStore((state) => state.setVocational);
 
   // initialize react hook forms and set default values, mode is onchange
@@ -99,14 +85,8 @@ export const Vocational = (): JSX.Element => {
       e.preventDefault();
       const updatedVocationalOnCreate = [...vocational];
       updatedVocationalOnCreate.push(course);
-      const sortedUpdatedVocationalOnCreate = [
-        ...updatedVocationalOnCreate,
-      ].sort((firstItem, secondItem) =>
-        firstItem.from! > secondItem.from!
-          ? -1
-          : secondItem.from! > firstItem.from!
-          ? 1
-          : 0
+      const sortedUpdatedVocationalOnCreate = [...updatedVocationalOnCreate].sort((firstItem, secondItem) =>
+        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
       );
       setVocational(sortedUpdatedVocationalOnCreate);
       setCourseForEdit({} as EducationInfo);
@@ -116,37 +96,30 @@ export const Vocational = (): JSX.Element => {
     } else if (action === 'update') {
       e.preventDefault();
       const updatedCourses: Array<EducationInfo> = [...vocational];
-      const newUpdatedCourses = updatedCourses.map(
-        (previousCourse: EducationInfo, orgIdx: number) => {
-          if (orgIdx === courseIndexForEdit) {
-            return {
-              ...previousCourse,
-              _id: course._id,
-              awards: course.awards,
-              degree: course.degree,
-              employeeId: course.employeeId,
-              from: course.from,
-              to: course.to,
-              schoolName: course.schoolName,
-              units: course.units,
-              yearGraduated: course.yearGraduated,
-              isGraduated: course.isGraduated,
-              isOngoing: course.isOngoing,
-              isEdited: true,
-            };
-          }
-
-          return previousCourse;
+      const newUpdatedCourses = updatedCourses.map((previousCourse: EducationInfo, orgIdx: number) => {
+        if (orgIdx === courseIndexForEdit) {
+          return {
+            ...previousCourse,
+            _id: course._id,
+            awards: course.awards,
+            degree: course.degree,
+            employeeId: course.employeeId,
+            from: course.from,
+            to: course.to,
+            schoolName: course.schoolName,
+            units: course.units,
+            yearGraduated: course.yearGraduated,
+            isGraduated: course.isGraduated,
+            isOngoing: course.isOngoing,
+            isEdited: true,
+          };
         }
-      );
 
-      const sortedUpdatedCourses = [...newUpdatedCourses].sort(
-        (firstItem, secondItem) =>
-          firstItem.from! > secondItem.from!
-            ? -1
-            : secondItem.from! > firstItem.from!
-            ? 1
-            : 0
+        return previousCourse;
+      });
+
+      const sortedUpdatedCourses = [...newUpdatedCourses].sort((firstItem, secondItem) =>
+        firstItem.from! > secondItem.from! ? -1 : secondItem.from! > firstItem.from! ? 1 : 0
       );
       setVocational(sortedUpdatedCourses);
       setCourseForEdit({} as EducationInfo);
@@ -209,8 +182,7 @@ export const Vocational = (): JSX.Element => {
   const handleRemoveCourse = (courseIdx: number) => {
     const updatedVocational = [...vocational];
     updatedVocational.splice(courseIdx, 1);
-    if (!isEmpty(removedVocational._id))
-      deletedVocationalEducs.push(removedVocational);
+    if (!isEmpty(removedVocational._id)) deletedVocationalEducs.push(removedVocational);
     setVocational(updatedVocational);
     setRemoveCourseIsOpen(false);
   };
@@ -227,6 +199,7 @@ export const Vocational = (): JSX.Element => {
   useEffect(() => {
     if (getValues('isGraduated') === true) {
       setValue('yearGraduated', getValues('to'));
+      setValue('units', '');
       clearErrors('yearGraduated');
     } else if (getValues('isGraduated') === false) {
       setValue('yearGraduated', null);
@@ -244,10 +217,7 @@ export const Vocational = (): JSX.Element => {
         }
 
         // sets the graduated checkbox
-        else if (
-          courseForEdit.to !== null &&
-          courseForEdit.yearGraduated !== null
-        ) {
+        else if (courseForEdit.to !== null && courseForEdit.yearGraduated !== null) {
           setValue('isGraduated', true);
         }
         setIsLoaded(false);
@@ -259,11 +229,7 @@ export const Vocational = (): JSX.Element => {
     <>
       <Card
         title="Vocational"
-        subtitle={
-          vocational.length === 0
-            ? ''
-            : "Courses are sorted by 'Year Started' in descending order."
-        }
+        subtitle={vocational.length === 0 ? '' : "Courses are sorted by 'Year Started' in descending order."}
         remarks={
           <div className="">
             <VocationalAlert setInitialValues={setInitialValues} />
@@ -272,11 +238,7 @@ export const Vocational = (): JSX.Element => {
       >
         <div
           className={`flex flex-col items-end justify-end ${
-            hasPds && vocationalOnEdit
-              ? 'visible'
-              : !hasPds
-              ? 'visible'
-              : 'hidden'
+            hasPds && vocationalOnEdit ? 'visible' : !hasPds ? 'visible' : 'hidden'
           }`}
         >
           <Button
@@ -292,8 +254,7 @@ export const Vocational = (): JSX.Element => {
             title="Vocational Education"
             subtitle={
               <>
-                Please fill-out all required fields ({' '}
-                <span className="text-red-700">*</span> )
+                Please fill-out all required fields ( <span className="text-red-700">*</span> )
               </>
             }
             formId="vocational"
@@ -305,13 +266,7 @@ export const Vocational = (): JSX.Element => {
             isStatic={true}
             verticalCenter
             modalSize="xxxxxl"
-            actionLabel={
-              action === 'create'
-                ? 'Submit'
-                : action === 'update'
-                ? 'Update'
-                : ''
-            }
+            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
             cancelLabel="Cancel"
             modalChildren={
               <>
@@ -326,11 +281,7 @@ export const Vocational = (): JSX.Element => {
                       labelIsRequired
                       controller={{ ...register('schoolName') }}
                       withLabel={true}
-                      isError={
-                        errors.schoolName && errors.schoolName.message
-                          ? true
-                          : false
-                      }
+                      isError={errors.schoolName && errors.schoolName.message ? true : false}
                       errorMessage={errors.schoolName?.message}
                     />
                   </div>
@@ -345,9 +296,7 @@ export const Vocational = (): JSX.Element => {
                       labelIsRequired
                       controller={{ ...register('degree') }}
                       withLabel={true}
-                      isError={
-                        errors.degree && errors.degree.message ? true : false
-                      }
+                      isError={errors.degree && errors.degree.message ? true : false}
                       errorMessage={errors.degree?.message}
                     />
                   </div>
@@ -367,9 +316,7 @@ export const Vocational = (): JSX.Element => {
                         withLabel={true}
                         withHelpButton
                         helpContent="Indicate beginning school year"
-                        isError={
-                          errors.from && errors.from.message ? true : false
-                        }
+                        isError={errors.from && errors.from.message ? true : false}
                         errorMessage={errors.from?.message}
                       />
                     </div>
@@ -389,9 +336,7 @@ export const Vocational = (): JSX.Element => {
                         id="vocyearended"
                         name="vocyearended"
                         label="To"
-                        placeholder={
-                          getIsOnGoing === true ? 'Present' : 'Year Ended'
-                        }
+                        placeholder={getIsOnGoing === true ? 'Present' : 'Year Ended'}
                         labelIsRequired={getIsOnGoing === true ? false : true}
                         type="number"
                         controller={{ ...register('to') }}
@@ -411,7 +356,8 @@ export const Vocational = (): JSX.Element => {
                         id="vocunits"
                         name="vocunits"
                         label="Highest Level or Units Earned"
-                        placeholder="Leave blank if not applicable"
+                        placeholder={watchIsGraduated ? 'Not applicable' : 'Leave blank if not applicable'}
+                        muted={watchIsGraduated ? true : false}
                         type="text"
                         controller={{
                           ...register('units', { required: false }),
@@ -419,9 +365,7 @@ export const Vocational = (): JSX.Element => {
                         withHelpButton
                         helpContent="Indicated the highest level or units earned only if not graduated"
                         withLabel={true}
-                        isError={
-                          errors.units && errors.units.message ? true : false
-                        }
+                        isError={errors.units && errors.units.message ? true : false}
                         errorMessage={errors.units?.message}
                       />
                     </div>
@@ -455,11 +399,7 @@ export const Vocational = (): JSX.Element => {
                           controller={{ ...register('yearGraduated') }}
                           withLabel={true}
                           muted={true}
-                          isError={
-                            errors.yearGraduated && errors.yearGraduated.message
-                              ? true
-                              : false
-                          }
+                          isError={errors.yearGraduated && errors.yearGraduated.message ? true : false}
                           errorMessage={errors.yearGraduated?.message}
                         />
                       </div>
@@ -475,9 +415,7 @@ export const Vocational = (): JSX.Element => {
                       type="text"
                       controller={{ ...register('awards') }}
                       withLabel={true}
-                      isError={
-                        errors.awards && errors.awards.message ? true : false
-                      }
+                      isError={errors.awards && errors.awards.message ? true : false}
                       errorMessage={errors.awards?.message}
                     />
                   </div>
@@ -492,18 +430,11 @@ export const Vocational = (): JSX.Element => {
             <Alert.Footer>
               <div className="flex w-full gap-4">
                 <div className="w-full border border-gray-300 rounded">
-                  <Button
-                    variant="light"
-                    onClick={() => setRemoveCourseIsOpen(false)}
-                    className="hover:bg-gray-300"
-                  >
+                  <Button variant="light" onClick={() => setRemoveCourseIsOpen(false)} className="hover:bg-gray-300">
                     No
                   </Button>
                 </div>
-                <Button
-                  variant="danger"
-                  onClick={() => handleRemoveCourse(courseToRemove)}
-                >
+                <Button variant="danger" onClick={() => handleRemoveCourse(courseToRemove)}>
                   Yes
                 </Button>
               </div>
@@ -517,151 +448,95 @@ export const Vocational = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader
-                      label="Name of School"
-                      headerWidth="w-[20%]"
-                      className="pl-4"
-                    />
+                    <TableHeader label="Name of School" headerWidth="w-[20%]" className="pl-4" />
                     <TableHeader label="Course" headerWidth="w-[25%]" />
                     <TableHeader label="Period" headerWidth="w-[10%]" />
                     <TableHeader label="Year Graduated" headerWidth="w-[10%]" />
-                    <TableHeader
-                      label="Level/Units Earned"
-                      headerWidth="w-[10%]"
-                    />
-                    <TableHeader
-                      label="Honors Received"
-                      headerWidth="w-[10%]"
-                    />
-                    <TableHeader
-                      label="Actions"
-                      headerWidth="w-[15%]"
-                      alignment="center"
-                    />
+                    <TableHeader label="Level/Units Earned" headerWidth="w-[10%]" />
+                    <TableHeader label="Honors Received" headerWidth="w-[10%]" />
+                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
                   </>
                 }
                 tableBody={
                   <tbody>
-                    {vocational.map(
-                      (course: EducationInfo, courseIdx: number) => {
-                        return (
-                          <tr
-                            key={courseIdx}
-                            className={`odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default  hover:bg-indigo-200 hover:transition-all`}
-                          >
-                            <TableDimension
-                              isText={true}
-                              label={course.schoolName}
-                              className="px-4"
-                            />
-                            <TableDimension
-                              isText={true}
-                              label={course.degree}
-                              className="px-1 select-none"
-                            />
-                            <TableDimension
-                              isText={true}
-                              isPeriod={true}
-                              periodLabel1={course.from}
-                              periodLabel2={course.to ? course.to : 'Present'}
-                              label=""
-                            />
-                            <TableDimension
-                              isText={true}
-                              className="px-1"
-                              label={
-                                course.yearGraduated
-                                  ? course.yearGraduated
-                                  : 'N/A'
-                              }
-                            />
-                            <TableDimension
-                              isText={true}
-                              className="px-1"
-                              label={course.units ? course.units : 'N/A'}
-                            />
-                            <TableDimension
-                              isText={true}
-                              className="px-1"
-                              label={course.awards ? course.awards : 'N/A'}
-                            />
-                            <TableDimension
-                              isText={false}
-                              className="px-2 text-center select-none"
-                              tableDimension={
-                                <>
-                                  {!isEmpty(course._id) ? (
-                                    <div className="flex justify-center gap-4">
-                                      {allowEditVocational ? (
-                                        <div className="w-8">
-                                          <EditButton
-                                            action={() =>
-                                              onEdit(course, courseIdx)
-                                            }
-                                            type="button"
-                                            disabled={
-                                              vocationalOnEdit ? false : true
-                                            }
-                                          />
-                                        </div>
-                                      ) : null}
-                                      {allowDeleteVocational ? (
-                                        <div className="w-8">
-                                          <DeleteButton
-                                            muted={
-                                              hasPds && vocationalOnEdit
-                                                ? false
-                                                : hasPds && !vocationalOnEdit
-                                                ? true
-                                                : !hasPds && false
-                                            }
-                                            action={() =>
-                                              openRemoveActionModal(
-                                                courseIdx,
-                                                course
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      ) : null}
-
-                                      {allowEditVocational === false &&
-                                      allowDeleteVocational === false ? (
-                                        <div className="flex justify-center w-full">
-                                          -
-                                        </div>
-                                      ) : null}
-                                    </div>
-                                  ) : isEmpty(course._id) ? (
-                                    <div className="flex justify-center gap-4">
+                    {vocational.map((course: EducationInfo, courseIdx: number) => {
+                      return (
+                        <tr
+                          key={courseIdx}
+                          className={`odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default  hover:bg-indigo-200 hover:transition-all`}
+                        >
+                          <TableDimension isText={true} label={course.schoolName} className="px-4" />
+                          <TableDimension isText={true} label={course.degree} className="px-1 select-none" />
+                          <TableDimension
+                            isText={true}
+                            isPeriod={true}
+                            periodLabel1={course.from}
+                            periodLabel2={course.to ? course.to : 'Present'}
+                            label=""
+                          />
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={course.yearGraduated ? course.yearGraduated : 'N/A'}
+                          />
+                          <TableDimension isText={true} className="px-1" label={course.units ? course.units : 'N/A'} />
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={course.awards ? course.awards : 'N/A'}
+                          />
+                          <TableDimension
+                            isText={false}
+                            className="px-2 text-center select-none"
+                            tableDimension={
+                              <>
+                                {!isEmpty(course._id) ? (
+                                  <div className="flex justify-center gap-4">
+                                    {allowEditVocational ? (
                                       <div className="w-8">
                                         <EditButton
-                                          action={() =>
-                                            onEdit(course, courseIdx)
-                                          }
+                                          action={() => onEdit(course, courseIdx)}
                                           type="button"
+                                          disabled={vocationalOnEdit ? false : true}
                                         />
                                       </div>
-
+                                    ) : null}
+                                    {allowDeleteVocational ? (
                                       <div className="w-8">
                                         <DeleteButton
-                                          action={() =>
-                                            openRemoveActionModal(
-                                              courseIdx,
-                                              course
-                                            )
+                                          muted={
+                                            hasPds && vocationalOnEdit
+                                              ? false
+                                              : hasPds && !vocationalOnEdit
+                                              ? true
+                                              : !hasPds && false
                                           }
+                                          action={() => openRemoveActionModal(courseIdx, course)}
                                         />
                                       </div>
+                                    ) : null}
+
+                                    {allowEditVocational === false && allowDeleteVocational === false ? (
+                                      <div className="flex justify-center w-full">-</div>
+                                    ) : null}
+                                  </div>
+                                ) : isEmpty(course._id) ? (
+                                  <div className="flex justify-center gap-4">
+                                    <div className="w-8">
+                                      <EditButton action={() => onEdit(course, courseIdx)} type="button" />
                                     </div>
-                                  ) : null}
-                                </>
-                              }
-                            />
-                          </tr>
-                        );
-                      }
-                    )}
+
+                                    <div className="w-8">
+                                      <DeleteButton action={() => openRemoveActionModal(courseIdx, course)} />
+                                    </div>
+                                  </div>
+                                ) : null}
+                              </>
+                            }
+                          />
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 }
               />

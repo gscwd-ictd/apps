@@ -1,12 +1,7 @@
 import cls from 'classnames';
 import { ButtonProps } from './Button';
 
-export const buttonClass = ({
-  className,
-  variant,
-  size,
-  disabled,
-}: ButtonProps) => {
+export const buttonClass = ({ className, variant, size, disabled }: ButtonProps) => {
   return cls(className, {
     /**
      *  *default classes
@@ -36,6 +31,9 @@ export const buttonClass = ({
      */
 
     // disabled state for primary button
+    'bg-gray-400 cursor-not-allowed': disabled && variant === 'default',
+
+    // disabled state for primary button
     'bg-indigo-400 cursor-not-allowed': disabled && variant === 'primary',
 
     // disabled state for warning
@@ -48,6 +46,19 @@ export const buttonClass = ({
     'bg-red-400 cursor-not-allowed': disabled && variant === 'danger',
 
     /**
+     *  *default button states
+     */
+
+    // default state of primary button
+    'bg-gray-400 focus:ring-gray-100': !disabled && variant === 'default',
+
+    // hover state of primary button
+    'hover:shadow-gray-100': !disabled && variant === 'default',
+
+    // active state of primary button
+    'active:bg-gray-500 active:shadow-gray-200': !disabled && variant === 'default',
+
+    /**
      *  *primary button states
      */
 
@@ -58,8 +69,7 @@ export const buttonClass = ({
     'hover:shadow-indigo-100': !disabled && variant === 'primary',
 
     // active state of primary button
-    'active:bg-indigo-600 active:shadow-indigo-200':
-      !disabled && variant === 'primary',
+    'active:bg-indigo-600 active:shadow-indigo-200': !disabled && variant === 'primary',
 
     /**
      *  *warning button states
@@ -72,8 +82,7 @@ export const buttonClass = ({
     'hover:shadow-orange-100': !disabled && variant === 'warning',
 
     // active state of warning button
-    'active:bg-orange-600 active:shadow-orange-200':
-      !disabled && variant === 'warning',
+    'active:bg-orange-600 active:shadow-orange-200': !disabled && variant === 'warning',
 
     /**
      *  *danger button states
@@ -86,8 +95,7 @@ export const buttonClass = ({
     'hover:shadow-red-100': !disabled && variant === 'danger',
 
     // active state of danger button
-    'active:bg-red-600 active:shadow-red-200':
-      !disabled && variant === 'danger',
+    'active:bg-red-600 active:shadow-red-200': !disabled && variant === 'danger',
 
     /**
      *  *info button states
@@ -100,15 +108,15 @@ export const buttonClass = ({
     'hover:shadow-blue-100': !disabled && variant === 'info',
 
     // active state of danger button
-    'active:bg-blue-600 active:shadow-blue-200':
-      !disabled && variant === 'info',
+    'active:bg-blue-600 active:shadow-blue-200': !disabled && variant === 'info',
 
     // *text colors
     'text-white text-opacity-85':
       variant === 'primary' ||
       variant === 'warning' ||
       variant === 'danger' ||
-      variant === 'info',
+      variant === 'info' ||
+      variant === 'default',
 
     /**
      *  *button sizes

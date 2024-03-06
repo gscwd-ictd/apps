@@ -27,6 +27,8 @@ import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { useRouter } from 'next/router';
 import UseRenderOvertimeStatus from 'apps/portal/src/utils/functions/RenderOvertimeStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import TempPhotoProfile from '../.../../../../../public/profile.jpg';
+import Image from 'next/image';
 
 export default function OvertimeApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -118,10 +120,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     isLoading: swrOvertimeListIsLoading,
     error: swrOvertimeListError,
     mutate: mutateOvertime,
-  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeListUrl : null, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeListUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -150,7 +149,11 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     }
   }, [patchResponseOvertime]);
 
-  const photoUrl_temp = '/profile.jpg';
+  useEffect(() => {
+    if (!pendingOvertimeModalIsOpen) {
+      setSelectedOvertimeId(''); //reset selected OT ID for OT modal content
+    }
+  }, [pendingOvertimeModalIsOpen]);
 
   // // Rendering of leave dates in row
   const renderRowEmployeeAvatar = (employee: Array<EmployeeOvertimeDetail>) => {
@@ -159,11 +162,18 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
         <div className="flex flex-row gap-1 justify-start items-center">
           {employee.map((employees: EmployeeOvertimeDetail) => (
             <div key={employees.employeeId}>
-              <img
+              <Image
+                width={20}
+                height={20}
                 className="rounded-full border w-8"
-                src={employees.avatarUrl ? employees.avatarUrl : photoUrl_temp}
+                src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
                 alt={'photo'}
-              ></img>
+              />
+              {/* <img
+                className="rounded-full border w-8"
+                src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
+                alt={'photo'}
+              ></img> */}
             </div>
           ))}
         </div>
@@ -171,11 +181,18 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     } else {
       return (
         <div className="flex flex-row gap-1 justify-start items-center">
-          <img
+          <Image
+            width={20}
+            height={20}
             className="rounded-full border w-8"
-            src={employee[0].avatarUrl ? employee[0].avatarUrl : photoUrl_temp}
+            src={employee[0].avatarUrl ? employee[0].avatarUrl : TempPhotoProfile}
             alt={'photo'}
-          ></img>
+          />
+          {/* <img
+            className="rounded-full border w-8"
+            src={employee[0].avatarUrl ? employee[0].avatarUrl : TempPhotoProfile}
+            alt={'photo'}
+          ></img> */}
           <label>{`+ ${employee.length - 1} more...`}</label>
         </div>
       );
@@ -195,7 +212,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
       if (!pendingOvertimeModalIsOpen) {
         setPendingOvertimeModalIsOpen(true);
       }
-    } else if (rowData.status == OvertimeStatus.DISAPPROVED) {
+    } else if (rowData.status == OvertimeStatus.DISAPPROVED || rowData.status == OvertimeStatus.CANCELLED) {
       // DISAPPROVED
       if (!disapprovedOvertimeModalIsOpen) {
         setDisapprovedOvertimeModalIsOpen(true);
@@ -213,7 +230,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('plannedDate', {
       header: 'Planned Date',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('immediateSupervisorName', {
@@ -267,7 +284,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
       ) : null}
       {/* Overtime List Load Failed Error */}
       {!isEmpty(errorOvertime) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtimes.`} />
+        <ToastNotification toastType="error" notifMessage={`${errorOvertime}: Failed to load Overtime List.`} />
       ) : null}
       {/* Overtime Accomplishment Data Load Failed Error */}
       {!isEmpty(errorAccomplishment) ? (
@@ -288,11 +305,11 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
           <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
             <ContentHeader
               title="Employee Overtime Approvals"
-              subtitle="Approve or disapprove Employee Overtimes"
+              subtitle="Approve or Disapprove Employee Overtimes"
               backUrl={`/${router.query.id}/manager-approvals`}
             ></ContentHeader>
 
-            {loadingOvertime ? (
+            {swrOvertimeListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

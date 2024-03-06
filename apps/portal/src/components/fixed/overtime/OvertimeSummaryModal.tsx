@@ -66,6 +66,8 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
   const {
     selectedMonth,
     selectedPeriod,
+    selectedYear,
+    selectedEmployeeType,
     setSelectedMonth,
     setSelectedYear,
     setSelectedPeriod,
@@ -75,6 +77,8 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
   } = useOvertimeStore((state) => ({
     selectedMonth: state.selectedMonth,
     selectedPeriod: state.selectedPeriod,
+    selectedYear: state.selectedYear,
+    selectedEmployeeType: state.selectedEmployeeType,
     setSelectedMonth: state.setSelectedMonth,
     setSelectedYear: state.setSelectedYear,
     setSelectedPeriod: state.setSelectedPeriod,
@@ -102,10 +106,10 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setSelectedEmployeeType(type);
   };
 
-  useEffect(() => {
-    // setSelectedYear(yearNow as unknown as number);
-    setSelectedMonth(Number(monthNow) - 1);
-  }, []);
+  // useEffect(() => {
+  //   // setSelectedYear(yearNow as unknown as number);
+  //   setSelectedMonth(Number(monthNow) - 1);
+  // }, []);
 
   const closePdfOvertimeSummaryModal = async () => {
     setPdfOvertimeSummaryModalIsOpen(false);
@@ -131,7 +135,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employee Type:</label>
                 <div className="w-full md:w-80">
@@ -139,9 +143,10 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                     required
                     onChange={(e) => onChangeEmployeeType(e.target.value)}
+                    defaultValue={''}
                   >
-                    <option value="" disabled>
-                      Type
+                    <option value={''} disabled>
+                      Selected Type
                     </option>
                     {employeeTypeList.map((item: Item, idx: number) => (
                       <option value={item.value} key={idx} disabled={item.label === 'Job Order' ? true : false}>
@@ -159,9 +164,9 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                     required
                     onChange={(e) => onChangeMonth(e.target.value as unknown as number)}
-                    defaultValue={selectedMonth}
+                    defaultValue={''}
                   >
-                    <option value="" disabled>
+                    <option value={''} disabled>
                       Select Month
                     </option>
                     {monthList.map((item: Item, idx: number) => (
@@ -180,9 +185,10 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                     required
                     onChange={(e) => onChangeYear(e.target.value as unknown as number)}
+                    defaultValue={''}
                   >
-                    <option value="" disabled>
-                      Year
+                    <option value={''} disabled>
+                      Select Year
                     </option>
                     {yearList.map((item: Item, idx: number) => (
                       <option value={item.value} key={idx}>
@@ -200,10 +206,10 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
                     required
                     onChange={(e) => onChangePeriod(e.target.value)}
-                    defaultValue={selectedPeriod}
+                    defaultValue={''}
                   >
-                    <option value="" disabled>
-                      Period
+                    <option value={''} disabled>
+                      Select Period
                     </option>
                     {periodList.map((item: Item, idx: number) => (
                       <option value={item.value} key={idx}>
@@ -222,9 +228,10 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
           />
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
+                disabled={selectedMonth && selectedPeriod && selectedYear && selectedEmployeeType ? false : true}
                 variant={'primary'}
                 size={'md'}
                 loading={false}

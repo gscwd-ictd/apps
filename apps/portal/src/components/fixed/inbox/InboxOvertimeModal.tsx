@@ -14,7 +14,7 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions();
 
@@ -40,12 +40,12 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 <AlertNotification
                   alertType="info"
                   notifMessage={
-                    'This is to inform you that you have been requested for Overtime with the specified details below'
+                    'This is to inform you that you have been requested for Overtime with the specified details below.'
                   }
                   dismissible={false}
                 />
@@ -108,7 +108,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                 Close
@@ -121,4 +121,4 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
   );
 };
 
-export default InboxPsbModal;
+export default InboxOvertimeModal;

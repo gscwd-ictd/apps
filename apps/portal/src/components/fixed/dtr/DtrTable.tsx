@@ -13,6 +13,7 @@ import { useState } from 'react';
 import UpdateTimeLogModal from './UpdateTimeLogModal';
 import { SpinnerDotted } from 'spinners-react';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -148,7 +149,12 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
                                 : ''
-                            } py-2 text-center border`}
+                            } py-2 text-center border ${
+                              UseUndertimeChecker(logs.dtr.lunchIn, logs.schedule.lunchIn) == true &&
+                              logs.schedule.scheduleBase === 'Office'
+                                ? 'text-red-500'
+                                : ''
+                            }`}
                           >
                             {logs.dtr.lunchIn ? UseTwelveHourFormat(logs.dtr.lunchIn) : ''}
                           </td>
@@ -193,6 +199,12 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                               size={'sm'}
                               loading={false}
                               onClick={() => openEditActionModal(logs)}
+                              disabled={
+                                DateFormatter(logs.day, 'MM-DD-YYYY') <
+                                dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
+                                  ? false
+                                  : true
+                              }
                             >
                               <div className="flex justify-center">
                                 <HiPencilAlt className="w-4 h-5 md:w-4 md:h-5" />

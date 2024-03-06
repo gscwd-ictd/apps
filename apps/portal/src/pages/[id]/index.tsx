@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -30,6 +32,8 @@ import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.ty
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
+import dayjs from 'dayjs';
+import { useApprovalStore } from '../../store/approvals.store';
 
 export type NavDetails = {
   fullName: string;
@@ -43,19 +47,32 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
   const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
-  const sgAmount = employee.employmentDetails.salaryGradeAmount;
-  const sgIncrement = employee.employmentDetails.salaryGrade;
+  const sgAmount = userDetails.employmentDetails.salaryGradeAmount;
+  const sgIncrement = userDetails.employmentDetails.salaryGrade;
 
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
-  const { leaveCalculatorModalIsOpen, setLeaveCalculatorModalIsOpen } = useLeaveMonetizationCalculatorStore(
-    (state) => ({
-      leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
-      setLeaveCalculatorModalIsOpen: state.setLeaveCalculatorModalIsOpen,
-    })
-  );
+  const {
+    leaveCalculatorModalIsOpen,
+    setLeaveCalculatorModalIsOpen,
+    monetizationConstant,
+    loadingMonetizationConstant,
+    errorMonetizationConstant,
+    getMonetizationConstant,
+    getMonetizationConstantSuccess,
+    getMonetizationConstantFail,
+  } = useLeaveMonetizationCalculatorStore((state) => ({
+    leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
+    setLeaveCalculatorModalIsOpen: state.setLeaveCalculatorModalIsOpen,
+    monetizationConstant: state.monetizationConstant,
+    loadingMonetizationConstant: state.loading.loadingMonetizationConstant,
+    errorMonetizationConstant: state.error.errorMonetizationConstant,
+    getMonetizationConstant: state.getMonetizationConstant,
+    getMonetizationConstantSuccess: state.getMonetizationConstantSuccess,
+    getMonetizationConstantFail: state.getMonetizationConstantFail,
+  }));
 
   const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
     useTimeLogStore((state) => ({
@@ -105,6 +122,36 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
   };
 
+  //fetch leave monetization settings (monetization constant)
+  const leaveMonetizationUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/ems-settings/monetization`;
+
+  const {
+    data: swrLeaveMonetization,
+    isLoading: swrLeaveMonetizationLoading,
+    error: swrLeaveMonetizationError,
+  } = useSWR(leaveMonetizationUrl, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveMonetizationLoading) {
+      getMonetizationConstant(swrLeaveMonetizationLoading);
+    }
+  }, [swrLeaveMonetizationLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveMonetization)) {
+      getMonetizationConstantSuccess(swrLeaveMonetizationLoading, swrLeaveMonetization);
+    }
+
+    if (!isEmpty(swrLeaveMonetizationError)) {
+      getMonetizationConstantFail(swrLeaveMonetizationLoading, swrLeaveMonetizationError.message);
+    }
+  }, [swrLeaveMonetization, swrLeaveMonetizationError]);
+
   //fetch employee leave ledger
   const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${userDetails.user._id}/${userDetails.profile.companyId}`;
 
@@ -112,8 +159,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     data: swrLeaveLedger,
     isLoading: swrLeaveLedgerLoading,
     error: swrLeaveLedgerError,
-  } = useSWR(leaveLedgerUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.user._id && userDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
 
@@ -146,8 +193,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(faceScanUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: true,
   });
 
@@ -179,8 +226,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     isLoading: swrDtrIsLoading,
     error: swrDtrError,
     mutate: mutateDtrUrl,
-  } = useSWR(dtrUrl, fetchWithToken, {
-    shouldRetryOnError: false,
+  } = useSWR(userDetails.employmentDetails.companyId ? dtrUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
     revalidateOnFocus: true,
   });
 
@@ -219,9 +266,12 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   //compute max leave credits
   useEffect(() => {
-    const totalValue = sgAmount * leaveCredits * leaveCreditMultiplier;
-    setEstimatedAmount(totalValue);
-  }, [leaveCredits]);
+    if (leaveCredits && monetizationConstant) {
+      setEstimatedAmount(sgAmount * leaveCredits * monetizationConstant);
+    } else {
+      setEstimatedAmount(0);
+    }
+  }, [leaveCredits, monetizationConstant]);
 
   const closeLeaveCalculator = async () => {
     setLeaveCalculatorModalIsOpen(false);
@@ -233,8 +283,33 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   };
 
+  const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY');
+
   return (
     <>
+      {/* Falling Hears Effect for February Only */}
+      {/* January is 0  */}
+      {dateNow == '02-14-2024' ? (
+        <div className="wrapper absolute">
+          <div className="heart x1"></div>
+          <div className="heart x2"></div>
+          <div className="heart x3"></div>
+          <div className="heart x4"></div>
+          <div className="heart x5"></div>
+          <div className="altheart x6"></div>
+        </div>
+      ) : null}
+
+      {/* Leave Monetization Constant Load Failed */}
+      {!isEmpty(errorMonetizationConstant) ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorMonetizationConstant}: Failed to load Monetization Constant and compute Leave Monetization.`}
+          />
+        </>
+      ) : null}
+
       {/* Leave Ledger Load Failed */}
       {!isEmpty(errorLedger) ? (
         <>
@@ -265,13 +340,14 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
         sgAmount={employee.employmentDetails.salaryGradeAmount}
         sgIncrement={employee.employmentDetails.salaryGrade}
         estimatedMaxAmount={estimatedAmount}
+        monetizationConstant={monetizationConstant}
       />
 
       <MainContainer>
         <>
           <>
             <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
-              <Image src={'/gwdlogo.png'} className="w-2/4 " alt={''} width={'500'} height={'500'} />
+              <Image src={'/gwdlogo.png'} priority className="w-2/4 " alt={''} width={'500'} height={'500'} />
             </div>
             <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
               <div className="z-10 order-1 col-span-1 md:col-span-5 lg:col-span-5 lg:order-1">

@@ -120,10 +120,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     isLoading: swrLeaveIsLoading,
     error: swrLeaveError,
     mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -215,7 +212,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employee.employeeName', {
@@ -304,11 +301,11 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Leave Approvals"
-                subtitle="Approve or disapprove Employee Leaves"
+                subtitle="Approve or Disapprove Employee Leaves"
                 backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 
-              {loadingLeave ? (
+              {swrLeaveIsLoading ? (
                 <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}

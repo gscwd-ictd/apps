@@ -1,12 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { leaveAction, passSlipAction } from '../../../../types/approvals.type';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
@@ -76,11 +71,7 @@ export const ConfirmationLeaveModal = ({
 
   return (
     <>
-      <Modal
-        size={`${windowWidth > 768 ? 'sm' : 'xl'}`}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={`${windowWidth > 768 ? 'sm' : 'xl'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
@@ -103,7 +94,7 @@ export const ConfirmationLeaveModal = ({
               dismissible={false}
             />
           ) : null}
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-left px-4">
             {`Are you sure you want to ${
               action === LeaveStatus.DISAPPROVED_BY_HRDM
                 ? 'disapprove'
@@ -114,22 +105,12 @@ export const ConfirmationLeaveModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => handleSubmit()}
-              >
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes
               </Button>
-              <Button
-                variant={'danger'}
-                size={'md'}
-                loading={false}
-                onClick={closeModalAction}
-              >
+              <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
                 No
               </Button>
             </div>

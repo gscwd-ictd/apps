@@ -1,15 +1,17 @@
 import { OfficeSVG } from '../svgs/Office';
+import { useContext } from 'react';
+import { AuthmiddlewareContext } from '../../pages/_app';
 
 export const CardEmployee = () => {
+  const { userProfile } = useContext(AuthmiddlewareContext);
+
   return (
     <div className="static flex flex-col w-full h-[18rem] bg-white rounded-md border shadow">
       {/** TOP PART */}
       <section className="min-w-full h-[50%] bg-sky-300/80 rounded-t">
         <div className="flex flex-col m-5">
           <span className="font-medium text-sky-800">Welcome Back!</span>
-          <span className="z-10 text-xs font-normal text-sky-800">
-            Employee Monitoring Dashboard
-          </span>
+          <span className="z-10 text-xs font-normal text-sky-800">EMS Dashboard</span>
         </div>
         <div className="flex justify-end w-full h-full pl-[50%] -mt-20">
           <OfficeSVG />
@@ -32,10 +34,8 @@ export const CardEmployee = () => {
           </svg>
         </span>
         <div className="flex flex-col m-5 ">
-          <span className="font-medium text-gray-700">Employee Name</span>
-          <span className="text-sm font-light text-gray-500 ">
-            Position Title
-          </span>
+          <span className="font-medium text-gray-700">{userProfile?.fullName}</span>
+          <span className="text-sm font-light text-gray-500 ">{userProfile?.email}</span>
         </div>
       </section>
     </div>

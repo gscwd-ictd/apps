@@ -5,26 +5,31 @@ import { OvertimeMessageContent, PsbMessageContent } from '../types/inbox.type';
 import { InboxMessageResponse, InboxMessageType } from '../../../../libs/utils/src/lib/enums/inbox.enum';
 import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { TrainingByEmployeeId } from 'libs/utils/src/lib/types/training.type';
 
 export type InboxState = {
   message: {
     overtimeMessages: Array<OvertimeMessageContent>;
     psbMessages: Array<PsbMessageContent>;
+    trainingMessages: Array<TrainingByEmployeeId>;
     psb: PsbMessageContent;
     overtime: OvertimeMessageContent;
-    training: any;
+    training: TrainingByEmployeeId;
   };
   response: {
     patchResponseApply: any;
+    putResponseApply: any;
   };
   loading: {
     loadingOvertimeMessages: boolean;
     loadingPsbMessages: boolean;
+    loadingTrainingMessages: boolean;
     loadingResponse: boolean;
   };
   error: {
     errorOvertimeMessages: string;
     errorPsbMessages: string;
+    errorTrainingMessages: string;
     errorResponse: string;
   };
 
@@ -43,14 +48,16 @@ export type InboxState = {
 
   setMessageOvertime: (overtime: OvertimeMessageContent) => void;
 
+  setMessageTraining: (training: TrainingByEmployeeId) => void;
+
   confirmModalIsOpen: boolean;
   setConfirmModalIsOpen: (submitModalIsOpen: boolean) => void;
 
   confirmationModalTitle: string;
   setConfirmationModalTitle: (confirmationModalTitle: string) => void;
 
-  selectedVppId: string;
-  setSelectedVppId: (selectedVppId: string) => void;
+  selectedPayloadId: string;
+  setSelectedPayloadId: (selectedPayloadId: string) => void;
 
   selectedMessageType: InboxMessageType;
   setSelectedMessageType: (selectedMessageType: InboxMessageType) => void;
@@ -73,17 +80,28 @@ export type InboxState = {
   isMessageOpen: boolean;
   setIsMessageOpen: (isMessageOpen: boolean) => void;
 
+  //get list of psb messages
   getPsbMessageList: (loading: boolean) => void;
   getPsbMessageListSuccess: (loading: boolean, response) => void;
   getPsbMessageListFail: (loading: boolean, error: string) => void;
 
+  //get list of overtime assignment messages
   getOvertimeMessageList: (loading: boolean) => void;
   getOvertimeMessageListSuccess: (loading: boolean, response) => void;
   getOvertimeMessageListFail: (loading: boolean, error: string) => void;
 
-  patchInboxReponse: () => void;
-  patchInboxReponseSuccess: (response: any) => void;
-  patchInboxReponseFail: (error: string) => void;
+  //get training invites messages
+  getTrainingMessageList: (loading: boolean) => void;
+  getTrainingMessageListSuccess: (loading: boolean, response) => void;
+  getTrainingMessageListFail: (loading: boolean, error: string) => void;
+
+  patchInboxResponse: () => void;
+  patchInboxResponseSuccess: (response: any) => void;
+  patchInboxResponseFail: (error: string) => void;
+
+  putInboxResponse: () => void;
+  putInboxResponseSuccess: (response: any) => void;
+  putInboxResponseFail: (error: string) => void;
 
   emptyResponseAndError: () => void;
 };
@@ -93,21 +111,25 @@ export const useInboxStore = create<InboxState>()(
     message: {
       overtimeMessages: [],
       psbMessages: [],
+      trainingMessages: [],
       psb: {} as PsbMessageContent,
       overtime: {} as OvertimeMessageContent,
-      training: {} as any,
+      training: {} as TrainingByEmployeeId,
     },
     response: {
       patchResponseApply: {},
+      putResponseApply: {},
     },
     loading: {
       loadingOvertimeMessages: false,
       loadingPsbMessages: false,
+      loadingTrainingMessages: false,
       loadingResponse: false,
     },
     error: {
       errorOvertimeMessages: '',
       errorPsbMessages: '',
+      errorTrainingMessages: '',
       errorResponse: '',
     },
 
@@ -148,9 +170,9 @@ export const useInboxStore = create<InboxState>()(
       set((state) => ({ ...state, selectedMessageType }));
     },
 
-    selectedVppId: '',
-    setSelectedVppId: (selectedVppId: string) => {
-      set((state) => ({ ...state, selectedVppId }));
+    selectedPayloadId: '',
+    setSelectedPayloadId: (selectedPayloadId: string) => {
+      set((state) => ({ ...state, selectedPayloadId }));
     },
 
     declineRemarks: '',
@@ -201,6 +223,17 @@ export const useInboxStore = create<InboxState>()(
         message: {
           ...state.message,
           overtime: overtime,
+        },
+      }));
+    },
+
+    //SET TRAINING MESSAGE CONTENT
+    setMessageTraining: (training: TrainingByEmployeeId) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          training: training,
         },
       }));
     },
@@ -305,8 +338,58 @@ export const useInboxStore = create<InboxState>()(
       }));
     },
 
-    //POST PASS SLIP ACTIONS
-    patchInboxReponse: () => {
+    //GET TRAINING MESSAGES
+    getTrainingMessageList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          trainingMessages: [],
+        },
+        loading: {
+          ...state.loading,
+          loadingTrainingMessages: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeMessages: '',
+        },
+      }));
+    },
+    getTrainingMessageListSuccess: (loading: boolean, response: Array<TrainingByEmployeeId>) => {
+      set((state) => ({
+        ...state,
+        message: {
+          ...state.message,
+          trainingMessages: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingTrainingMessages: loading,
+        },
+
+        error: {
+          ...state.error,
+          errorTrainingMessages: '',
+        },
+      }));
+    },
+    getTrainingMessageListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingTrainingMessages: loading,
+        },
+        error: {
+          ...state.error,
+          errorTrainingMessages: error,
+        },
+      }));
+    },
+
+    //PATCH ACTIONS
+    patchInboxResponse: () => {
       set((state) => ({
         ...state,
         response: {
@@ -323,7 +406,7 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    patchInboxReponseSuccess: (response) => {
+    patchInboxResponseSuccess: (response) => {
       set((state) => ({
         ...state,
         response: {
@@ -336,7 +419,7 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
-    patchInboxReponseFail: (error: string) => {
+    patchInboxResponseFail: (error: string) => {
       set((state) => ({
         ...state,
         loading: {
@@ -349,12 +432,58 @@ export const useInboxStore = create<InboxState>()(
         },
       }));
     },
+
+    putInboxResponse: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          putResponseApply: {},
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    putInboxResponseSuccess: (response) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          putResponseApply: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    putInboxResponseFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
         response: {
           ...state.response,
           patchResponseApply: {},
+          putResponseApply: {},
         },
         error: {
           ...state.error,

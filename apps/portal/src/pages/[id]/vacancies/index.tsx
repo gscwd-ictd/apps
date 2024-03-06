@@ -19,8 +19,8 @@ import { AlertNotification, Button, CaptchaModal, Modal, ToastNotification } fro
 import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsPanel';
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
-import { useWorkExpStore } from '../../../../src/store/workexperience.store';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { useWorkExpStore } from '../../../store/workexperience.store';
+import { employeeDummy } from '../../../types/employee.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { useRouter } from 'next/router';
@@ -199,7 +199,7 @@ export default function Vacancies({
         <ToastNotification toastType="success" notifMessage={`Job Application Submitted`} />
       ) : null}
 
-      {data && (
+      {data ? (
         <div>
           <Head>
             <title>Job Vacancies</title>
@@ -356,6 +356,8 @@ export default function Vacancies({
             </div>
           </MainContainer>
         </div>
+      ) : (
+        'No Data'
       )}
     </>
   );

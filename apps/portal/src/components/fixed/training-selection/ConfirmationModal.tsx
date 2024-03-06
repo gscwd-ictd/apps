@@ -1,104 +1,118 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
-import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
+import { TrainingNominationData } from 'libs/utils/src/lib/types/training.type';
+import { NomineeType } from 'libs/utils/src/lib/enums/training.enum';
 
-type ConfirmationApplicationModalProps = {
+type ConfirmationNominationModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  action: PassSlipStatus; // disapprove or cancel
-  tokenId: string; //like pass Slip Id, leave Id etc.
 };
 
-export const ConfirmationApplicationModal = ({
+export const ConfirmationNominationModal = ({
   modalState,
   setModalState,
   closeModalAction,
-  action, tokenId
-}: ConfirmationApplicationModalProps) => {
+}: ConfirmationNominationModalProps) => {
   const {
-    cancelPassSlip,
-    cancelPassSlipSuccess,
-    cancelPassSlipFail,
-    setPendingPassSlipModalIsOpen
-  } = usePassSlipStore((state) => ({
-    cancelPassSlip: state.cancelPassSlip,
-    cancelPassSlipSuccess: state.cancelPassSlipSuccess,
-    cancelPassSlipFail: state.cancelPassSlipFail,
-    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    individualTrainingDetails,
+    nominatedEmployees,
+    auxiliaryEmployees,
+    setTrainingModalIsOpen,
+    postTrainingSelection,
+    postTrainingSelectionSuccess,
+    postTrainingSelectionFail,
+  } = useTrainingSelectionStore((state) => ({
+    individualTrainingDetails: state.individualTrainingDetails,
+    nominatedEmployees: state.nominatedEmployees,
+    auxiliaryEmployees: state.auxiliaryEmployees,
+    setTrainingModalIsOpen: state.setTrainingModalIsOpen,
+    postTrainingSelection: state.postTrainingSelection,
+    postTrainingSelectionSuccess: state.postTrainingSelectionSuccess,
+    postTrainingSelectionFail: state.postTrainingSelectionFail,
   }));
 
   const handleSubmit = () => {
-    if (tokenId) {
-      const data = {
-        passSlipId: tokenId,
-        status: action,
-      };
-      cancelPassSlip(true);
-      handlePatchResult(data);
-    } else {
-      //nothing to do
+    let finalNominated = [];
+    let finalEmployees = [];
+    //mutate nominated employees array for post
+    for (let a = 0; a < nominatedEmployees.length; a++) {
+      finalNominated = Array.from(
+        new Set([
+          ...finalNominated,
+          {
+            employeeId: nominatedEmployees[a].value,
+            nomineeType: NomineeType.NOMINEE,
+          },
+        ])
+      );
+    }
+    //mutate nominated employees array with auxiliary for post
+    finalEmployees = [...finalNominated];
+    for (let b = 0; b < auxiliaryEmployees.length; b++) {
+      finalEmployees = Array.from(
+        new Set([
+          ...finalEmployees,
+          {
+            employeeId: auxiliaryEmployees[b].value,
+            nomineeType: NomineeType.STAND_IN,
+          },
+        ])
+      );
     }
 
-  }
-      
-  const handlePatchResult = async (data: passSlipAction) => {
-    const { error, result } = await patchPortal('/v1/pass-slip', data);
+    let data = {
+      trainingDistribution: individualTrainingDetails.distributionId,
+      employees: finalEmployees,
+    };
+    handlePatchResult(data);
+  };
+
+  const handlePatchResult = async (data: TrainingNominationData) => {
+    postTrainingSelection();
+    const { error, result } = await postPortal(`${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/nominees/`, data);
     if (error) {
-      cancelPassSlipFail(result);
+      postTrainingSelectionFail(result);
     } else {
-      cancelPassSlipSuccess(result);
-      closeModalAction(); // close confirmation of decline modal
+      postTrainingSelectionSuccess(result);
+      closeModalAction();
       setTimeout(() => {
-        setPendingPassSlipModalIsOpen(false); // close main pass slip info modal
+        setTrainingModalIsOpen(false); // close training details modal
       }, 200);
     }
   };
-  
-  
+
   const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
-      <Modal
-        size={`${windowWidth > 768 ? 'sm' : 'xl'}`}
-        open={modalState}
-        setOpen={setModalState}
-      >
+      <Modal size={`${windowWidth > 768 ? 'sm' : 'xl'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Cancel Application</span>
+              <span>Submit Nomination</span>
             </div>
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center">
-            {`Are you sure you want to cancel this application?`}
+          <div className="w-full h-full flex flex-col gap-0 text-lg text-center px-4">
+            <label>{`Are you sure you want to submit this nomination?`}</label>
+            <label>{`You have nominated ${nominatedEmployees.length} participants and ${
+              auxiliaryEmployees.length
+            } stand-in ${auxiliaryEmployees.length > 1 ? 'participants' : 'participant'}.`}</label>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => handleSubmit()}
-              >
+              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes
               </Button>
-              <Button
-                variant={'danger'}
-                size={'md'}
-                loading={false}
-                onClick={closeModalAction}
-              >
+              <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
                 No
               </Button>
             </div>

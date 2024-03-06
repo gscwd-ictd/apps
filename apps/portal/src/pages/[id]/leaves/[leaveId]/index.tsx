@@ -3,12 +3,12 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../../utils/helpers/session';
 import React, { useEffect } from 'react';
 import { employeeDummy } from '../../../../types/employee.type';
-import LeavePdf from '../../../../../src/components/fixed/leaves/LeavePdf';
-import { useLeaveStore } from '../../../../../src/store/leave.store';
+import LeavePdf from '../../../../components/fixed/leaves/LeavePdf';
+import { useLeaveStore } from '../../../../store/leave.store';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
-import { fetchWithToken } from '../../../../../src/utils/hoc/fetcher';
+import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
 

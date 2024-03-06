@@ -35,7 +35,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -51,7 +51,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <AlertNotification
                 alertType={
                   passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
@@ -68,11 +68,11 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                 }
                 notifMessage={`${
                   passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-                    ? `For Supervisor Approval`
+                    ? `For Supervisor Review`
                     : passSlip.status === PassSlipStatus.FOR_DISPUTE
-                    ? 'For Dispute Approval'
+                    ? 'For Dispute Review'
                     : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
-                    ? 'For HRMO Approval'
+                    ? 'For HRMO Review'
                     : passSlip.status === PassSlipStatus.DISAPPROVED
                     ? 'Disapproved'
                     : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
@@ -98,75 +98,64 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                 title={'Cancel Pass Slip'}
               />
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 txt-md font-medium whitespace-nowrap sm:w-80">
-                  Date of Application:
-                </label>
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Nature of Business:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  txt-md ">
-                    {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 txt-md font-medium whitespace-nowrap sm:w-80">
-                  Nature of Business:
-                </label>
-
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  txt-md ">{passSlip.natureOfBusiness}</label>
-                </div>
-              </div>
-
-              {passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ? (
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className={`text-slate-500 txt-md whitespace-nowrap font-medium sm:w-80`}>
-                    Mode of Transportation:
-                  </label>
-                  <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  txt-md ">{passSlip.obTransportation}</label>
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{passSlip.natureOfBusiness}</label>
                   </div>
                 </div>
-              ) : null}
 
-              <div className={` flex flex-col gap-2`}>
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className="text-slate-500 txt-md font-medium whitespace-nowrap sm:w-80">
-                    Estimated Hours:
-                  </label>
-                  <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  txt-md ">{passSlip.estimateHours}</label>
-                  </div>
-                </div>
-              </div>
-              {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS ? (
-                <div className={` flex flex-col gap-2`}>
-                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                    <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">
-                      For Medical Purpose:
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date of Application:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
                     </label>
-                    <div className="w-auto md:w-96">
-                      <label className="text-slate-500 h-12 w-96  text-md ">{passSlip.isMedical ? 'Yes' : 'No'}</label>
-                    </div>
                   </div>
                 </div>
-              ) : null}
-              <div className={`flex flex-col gap-2`}>
-                <label className="text-slate-500 txt-md font-medium">Purpose/Desination:</label>
-                <textarea
-                  className={'resize-none w-full p-2 rounded text-slate-500 txt-md border-slate-300'}
-                  value={passSlip.purposeDestination}
-                  rows={2}
-                  disabled={true}
-                ></textarea>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                    {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
+                      ? 'For Medical Business:'
+                      : 'Mode of Transportation:'}
+                  </label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
+                        ? passSlip.isMedical
+                          ? 'Yes'
+                          : 'No'
+                        : passSlip.obTransportation ?? 'N/A'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Estimated Hours:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{passSlip.estimateHours}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Purpose/Desination:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{passSlip.purposeDestination}</label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                 Cancel Pass Slip

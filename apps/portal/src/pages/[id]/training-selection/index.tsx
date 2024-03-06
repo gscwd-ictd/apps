@@ -12,17 +12,22 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import React from 'react';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
-import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import { TrainingTable } from 'apps/portal/src/components/fixed/training-selection/TrainingTable';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
-import TrainingNominationModal from 'apps/portal/src/components/fixed/training-selection/TrainingNominationModal';
 import { useRouter } from 'next/router';
+import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { Training } from 'libs/utils/src/lib/types/training.type';
+import { createColumnHelper } from '@tanstack/react-table';
+import dayjs from 'dayjs';
+import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -39,39 +44,74 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     loadingTrainingList,
     errorTrainingList,
     trainingModalIsOpen,
+    postResponseApply,
+    errorResponse,
     setTrainingModalIsOpen,
     getTrainingSelectionList,
     getTrainingSelectionListSuccess,
     getTrainingSelectionListFail,
-    trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
+    setIndividualTrainingDetails,
+    getEmployeeList,
+    getEmployeeListSuccess,
+    getEmployeeListFail,
+    emptyResponseAndError,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
     loadingTrainingList: state.loading.loadingTrainingList,
     errorTrainingList: state.error.errorTrainingList,
     trainingModalIsOpen: state.trainingModalIsOpen,
+    postResponseApply: state.response.postResponseApply,
+    errorResponse: state.error.errorResponse,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     getTrainingSelectionList: state.getTrainingSelectionList,
     getTrainingSelectionListSuccess: state.getTrainingSelectionListSuccess,
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
-    trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
+    setIndividualTrainingDetails: state.setIndividualTrainingDetails,
+    getEmployeeList: state.getEmployeeList,
+    getEmployeeListSuccess: state.getEmployeeListSuccess,
+    getEmployeeListFail: state.getEmployeeListFail,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
 
+  const employeeListUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
+
+  const {
+    data: swrEmployeeList,
+    isLoading: swrEmployeeListIsLoading,
+    error: swrEmployeeListError,
+    mutate: mutateEmployeeList,
+  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrEmployeeListIsLoading) {
+      getEmployeeList(swrEmployeeListIsLoading);
+    }
+  }, [swrEmployeeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrEmployeeList)) {
+      getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
+    }
+
+    if (!isEmpty(swrEmployeeListError)) {
+      getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
+    }
+  }, [swrEmployeeList, swrEmployeeListError]);
+
   const trainingUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/supervisors/${employeeDetails.employmentDetails.userId}`;
-  // const trainingUrl = `${process.env.NEXT_PUBLIC_LMS}api/lms/v1/training-details?lsp-type=individual`;
 
   const {
     data: swrTrainingList,
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
-    mutate: mutateTraining,
-  } = useSWR(trainingUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+    mutate: mutateTrainingList,
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -99,13 +139,91 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     setTrainingNominationModalIsOpen(false);
   };
 
+  // Render row actions in the table component
+  const renderRowActions = (rowData: Training) => {
+    setIndividualTrainingDetails(rowData);
+    setTrainingModalIsOpen(true);
+  };
+
+  // Define table columns
+  const columnHelper = createColumnHelper<Training>();
+  const columns = [
+    columnHelper.accessor('courseTitle', {
+      header: 'Course Title',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('source', {
+      header: 'Source',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('trainingStart', {
+      header: 'Start',
+      // filterFn: 'equalsString',
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+    columnHelper.accessor('trainingEnd', {
+      header: 'End',
+      // filterFn: 'equalsString',
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+    columnHelper.accessor('numberOfSlots', {
+      header: 'Slots',
+      cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.accessor('status', {
+      header: 'Status',
+      cell: (info) => UseRenderTrainingStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+  ];
+
+  // React Table initialization
+  const { table } = useDataTable({
+    columns: columns,
+    data: trainingList,
+    columnVisibility: { id: false, employeeId: false },
+  });
+
+  useEffect(() => {
+    if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+      mutateTrainingList();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [postResponseApply, errorResponse, errorTrainingList]);
+
   return (
     <>
+      {/* Employee List Load Failed */}
+      {!isEmpty(swrEmployeeListError) ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
+          />
+        </>
+      ) : null}
+
       {/* Training List Load Failed */}
       {!isEmpty(errorTrainingList) ? (
         <>
           <ToastNotification toastType="error" notifMessage={`${errorTrainingList}: Failed to load Trainings.`} />
         </>
+      ) : null}
+
+      {/* Training List Load Failed */}
+      {!isEmpty(postResponseApply) ? (
+        <>
+          <ToastNotification toastType="success" notifMessage={`Nominations submitted successfully.`} />
+        </>
+      ) : null}
+
+      {/* failed to submit */}
+      {!isEmpty(errorResponse) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
       ) : null}
 
       <EmployeeProvider employeeData={employee}>
@@ -129,12 +247,12 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {loadingTrainingList ? (
+            {swrTrainingListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
-                  className="flex w-full h-full transition-all "
+                  className="w-full flex h-full transition-all "
                   color="slateblue"
                   size={100}
                 />
@@ -142,7 +260,14 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
             ) : (
               <ContentBody>
                 <div className="pb-10">
-                  <TrainingTable employeeDetails={employeeDetails} />
+                  <DataTablePortal
+                    onRowClick={(row) => renderRowActions(row.original as Training)}
+                    textSize={'text-lg'}
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={false}
+                    paginate={true}
+                  />
                 </div>
               </ContentBody>
             )}
@@ -164,5 +289,19 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  return { props: { employeeDetails } };
+  // check if user role is rank_and_file or job order = kick out
+  if (
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) ||
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
+  }
 });

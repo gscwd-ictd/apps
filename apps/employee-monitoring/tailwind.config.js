@@ -20,9 +20,22 @@ module.exports = {
           '0%, 100%': { transform: 'rotate(-8deg)' },
           '50%': { transform: 'rotate(8deg)' },
         },
+        slideUpAndFade: {
+          from: { opacity: '0', transform: 'translateY(2px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideDownAndFade: {
+          from: { opacity: '0', transform: 'translateY(-2px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         wiggle: 'wiggle 0.3s ease-in-out infinite',
+        slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideDownAndFade: 'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+      },
+      colors: {
+        'skote-blue': '#2a3042',
       },
     },
     screens: {
@@ -48,5 +61,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@headlessui/tailwindcss')({ prefix: 'ui' }),
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
 };

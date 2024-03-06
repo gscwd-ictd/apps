@@ -18,10 +18,10 @@ import {
 import { getPrfById, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
 import { Position, PrfDetailsForApproval, PrfStatus } from '../../../../types/prf.types';
-import { withCookieSession } from '../../../../../src/utils/helpers/session';
+import { withCookieSession } from '../../../../utils/helpers/session';
 import { Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
-import { PrfOtpContents } from '../../../../../src/components/fixed/prf/prfOtp/PrfOtpContents';
-import { usePrfStore } from '../../../../../src/store/prf.store';
+import { PrfOtpContents } from '../../../../components/fixed/prf/prfOtp/PrfOtpContents';
+import { usePrfStore } from '../../../../store/prf.store';
 import { useEffect, useState } from 'react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { isEmpty } from 'lodash';
@@ -127,7 +127,7 @@ export default function ForApproval({ profile, employee, prfDetails }: ForApprov
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
+          <div className="flex flex-col w-full h-full px-4 gap-2 text-md ">
             {'Please indicate reason for declining this position request:'}
             <textarea
               required
@@ -138,7 +138,7 @@ export default function ForApproval({ profile, employee, prfDetails }: ForApprov
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button
                 variant={'primary'}

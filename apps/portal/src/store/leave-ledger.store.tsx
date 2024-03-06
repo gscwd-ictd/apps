@@ -1,4 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+//this store is for the leave ledger found under the completed leave modal
 import { create } from 'zustand';
 import { LeaveLedgerEntry } from '../../../../libs/utils/src/lib/types/leave-ledger-entry.type';
 import { devtools } from 'zustand/middleware';

@@ -16,6 +16,7 @@ import { Checkbox } from '../components/modular/common/forms/Checkbox';
 import { TextField } from '../components/modular/common/forms/TextField';
 import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
+import Image from 'next/image';
 
 type LoginFormInput = {
   email: string;
@@ -108,13 +109,9 @@ export default function Login() {
     setError({ status: true, message, animate: true });
   };
 
-  const login: SubmitHandler<LoginFormInput> = async ({
-    email,
-    password,
-  }: LoginFormInput) => {
+  const login: SubmitHandler<LoginFormInput> = async ({ email, password }: LoginFormInput) => {
     // check if there is a query error in the url and remove the query param
-    if (router.query.error)
-      router.replace('/login', undefined, { shallow: true });
+    if (router.query.error) router.replace('/login', undefined, { shallow: true });
 
     // set the loading state to true
     setIsLoading(true);
@@ -132,49 +129,47 @@ export default function Login() {
     error ? handleLoginError(result) : router.reload();
   };
 
+  const [heartCount, setHeartCount] = useState(0);
+
   return (
     <>
+      <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
+        <Image src={'/gwdlogo.png'} priority className="w-full md:w-2/4 " alt={''} width={'500'} height={'500'} />
+      </div>
       <Head>
         <title>Employee Portal Login</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col items-center justify-center pt-16 overflow-y-auto drop-shadow-xl">
-        <main className="w-full md:w-[40rem] py-5  flex justify-center">
+        <main className="w-full md:w-[45rem] py-5 flex justify-center">
           <div className="hidden md:block w-[25%] bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-slate-300 to-slate-600 rounded-tl-xl rounded-bl-xl ">
-            <div className="h-full px-4 mt-48 text-2xl font-medium tracking-wider text-left text-white uppercase place-items-center drop-shadow-2xl">
-              Employee Portal
+            <div className="px-0 mt-0 flex flex-row text-2xl font-medium h-full tracking-wider text-left text-white uppercase place-items-center ">
+              <div className="w-80 p-3">
+                <label>Employee Portal</label>
+              </div>
+              <div
+                className="bg-contain bg-right w-80 "
+                style={{ backgroundImage: `url('/ethnic.jpg')`, width: '100%', height: '100%' }}
+              ></div>
             </div>
           </div>
-          <div className="w-[95%] md:w-[75%] px-6 md:px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl">
+          <div className="w-[95%] md:w-[75%] px-6 md:px-10 pb-4 bg-white rounded-tr-xl rounded-br-xl opacity-80">
             <header className="mb-8">
-              <h1 className="mt-10 text-2xl font-medium text-gray-700">
-                Sign in
-              </h1>
-              <p className="text-sm text-gray-500">
-                Welcome back! Please enter your credentials below.
-              </p>
+              <h1 className="mt-10 text-2xl font-medium text-gray-700">Sign in</h1>
+              <p className="text-sm text-gray-500">Welcome back! Please enter your credentials below.</p>
             </header>
 
             {error.status && (
-              <section
-                className="mb-5"
-                onAnimationEnd={() => setError({ ...error, animate: false })}
-              >
-                <Alert
-                  type="error"
-                  message={error.message}
-                  animate={error.animate}
-                />
+              <section className="mb-5" onAnimationEnd={() => setError({ ...error, animate: false })}>
+                <Alert type="error" message={error.message} animate={error.animate} />
               </section>
             )}
 
             <form className="flex flex-col" onSubmit={handleSubmit(login)}>
-              <section
-                className={`${errors.email ? 'space-y-5' : 'space-y-3'}`}
-              >
+              <section className={`${errors.email ? 'space-y-5' : 'space-y-3'}`}>
                 <TextField
                   controller={{ ...register('email', { required: true }) }}
-                  type="text"
+                  type="email"
                   defaultValue=""
                   placeholder="Email Address"
                   isError={errors.email && errors.email.message ? true : false}
@@ -187,9 +182,7 @@ export default function Login() {
                     type={`${isShowPassword ? 'text' : 'password'}`}
                     defaultValue=""
                     placeholder="Password"
-                    isError={
-                      errors.password && errors.password.message ? true : false
-                    }
+                    isError={errors.password && errors.password.message ? true : false}
                     errorMessage={errors.password?.message}
                   />
                   {isShowPassword ? (
@@ -206,19 +199,11 @@ export default function Login() {
                 </div>
               </section>
 
-              <section
-                className={`${
-                  errors.password ? 'mt-5' : 'mt-3'
-                } flex items-end justify-between`}
-              >
-                <Checkbox
-                  label="Remember me"
-                  isChecked={rememberMe}
-                  setIsChecked={setRememberMe}
-                />
-                <a href="#" className="text-sm text-indigo-700">
+              <section className={`${errors.password ? 'mt-5' : 'mt-3'} flex items-end justify-between`}>
+                <Checkbox label="Remember me" isChecked={rememberMe} setIsChecked={setRememberMe} />
+                {/* <a href="#" className="text-sm text-indigo-700">
                   Forgot password?
-                </a>
+                </a> */}
               </section>
 
               <section className="mt-10">
@@ -241,9 +226,7 @@ export default function Login() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   // check if session cookie is defined
   if (context.req.headers.cookie !== undefined) {
     // assign context cookie to cookie
@@ -257,17 +240,14 @@ export const getServerSideProps: GetServerSideProps = async (
 
     // used if else instead of trycatch
     if (portalSsid.length > 0) {
-      const userDetails = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-        {
-          withCredentials: true,
+      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+        withCredentials: true,
 
-          // pass the generated ssid
+        // pass the generated ssid
 
-          headers: { Cookie: portalSsid },
-          // headers: { Cookie: `${context.req.headers.cookie}` },
-        }
-      );
+        headers: { Cookie: portalSsid },
+        // headers: { Cookie: `${context.req.headers.cookie}` },
+      });
 
       const { user } = userDetails.data;
 

@@ -2,7 +2,11 @@
   "cSpell.words": [
     "Accreditor",
     "casl",
+    "COMPANYID",
+    "DTRDATE",
     "ivms",
+    "LUNCHIN",
+    "LUNCHOUT",
     "Monetizable",
     "navigations",
     "oneui",
@@ -10,6 +14,7 @@
     "sched",
     "socotec",
     "tanstack",
+    "TIMEIN",
     "UNDERTIME",
     "Zustand"
   ]

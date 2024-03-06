@@ -19,10 +19,6 @@ const DailyTimeRecordPdfModal: FunctionComponent<DailyTimeRecordPdfModalProps> =
     employeeDtr: state.employeeDtr,
   }));
 
-  // useEffect(() => {
-  //   console.log(employeeData);
-  // }, [employeeData]);
-
   return (
     <>
       <Modal open={printModalIsOpen} setOpen={toggle} size={'full'} steady>

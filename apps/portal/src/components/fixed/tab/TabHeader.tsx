@@ -35,18 +35,10 @@ export const TabHeader: FC<TabHeaderProps> = ({
         } w-[90%] hover:bg-slate-100 border-b border-gray-200 cursor-pointer rounded-xl rounded-tr-none rounded-bl-none pt-1 hover:drop-shadow-lg  transition-all ease-in-out hover:scale-105 h-[5rem]  items-center flex justify-start mr-6`}
         rel="noreferrer"
       >
-        <div
-          className={`${
-            icon ? 'hidden md:flex' : 'invisible'
-          }  justify-center w-[10%]`}
-        >
-          {icon}
-        </div>
+        <div className={`${icon ? 'hidden md:flex' : 'invisible'}  justify-center w-[15%]`}>{icon}</div>
 
-        <div className="flex flex-col w-full pl-4">
-          <p
-            className={`text-lg lg:text-xl font-normal text-black transition-colors ease-in-out select-none`}
-          >
+        <div className="flex flex-col w-full px-3 md:px-0 ">
+          <p className={`text-lg lg:text-xl font-normal text-black transition-colors ease-in-out select-none`}>
             {title}
           </p>
           <p

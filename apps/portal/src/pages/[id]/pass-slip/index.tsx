@@ -13,21 +13,23 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { PassSlipTabs } from '../../../../src/components/fixed/passslip/PassSlipTabs';
-import { PassSlipTabWindow } from '../../../../src/components/fixed/passslip/PassSlipTabWindow';
-import { usePassSlipStore } from '../../../../src/store/passslip.store';
+import { PassSlipTabs } from '../../../components/fixed/passslip/PassSlipTabs';
+import { PassSlipTabWindow } from '../../../components/fixed/passslip/PassSlipTabWindow';
+import { usePassSlipStore } from '../../../store/passslip.store';
 import React from 'react';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
-import PassSlipApplicationModal from '../../../../src/components/fixed/passslip/PassSlipApplicationModal';
-import PassSlipPendingModal from '../../../../src/components/fixed/passslip/PassSlipPendingModal';
-import PassSlipCompletedModal from '../../../../src/components/fixed/passslip/PassSlipCompletedModal';
+import PassSlipApplicationModal from '../../../components/fixed/passslip/PassSlipApplicationModal';
+import PassSlipPendingModal from '../../../components/fixed/passslip/PassSlipPendingModal';
+import PassSlipCompletedModal from '../../../components/fixed/passslip/PassSlipCompletedModal';
 import { isEmpty } from 'lodash';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
-import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useRouter } from 'next/router';
+import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
+import { format } from 'date-fns';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -72,6 +74,17 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
+  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      schedule: state.schedule,
+      loadingTimeLogs: state.loading.loadingTimeLogs,
+      errorTimeLogs: state.error.errorTimeLogs,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+    }));
+
   const router = useRouter();
 
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -113,10 +126,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutatePassSlips,
-  } = useSWR(passSlipUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -145,6 +155,36 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [responsePatch, responsePost, responseCancel]);
 
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+    employeeDetails.employmentDetails.companyId
+  }/${format(new Date(), 'yyyy-MM-dd')}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrFaceScan,
+    isLoading: swrFaceScanIsLoading,
+    error: swrFaceScanError,
+    mutate: mutateFaceScanUrl,
+  } = useSWR(faceScanUrl, fetchWithToken);
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrFaceScanIsLoading) {
+      getTimeLogs(swrFaceScanIsLoading);
+    }
+  }, [swrFaceScanIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrFaceScan)) {
+      getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
+    }
+
+    if (!isEmpty(swrFaceScanError)) {
+      getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
+    }
+  }, [swrFaceScan, swrFaceScanError]);
+
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
   useEffect(() => {
@@ -158,6 +198,11 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   return (
     <>
       <>
+        {/* Failed to get face scan today */}
+        {!isEmpty(swrFaceScanError) ? (
+          <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
+        ) : null}
+
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlips) ? (
           <ToastNotification toastType="error" notifMessage={`${errorPassSlips}: Failed to load Pass Slips.`} />
@@ -228,7 +273,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
               </Button>
             </ContentHeader>
 
-            {loading ? (
+            {swrIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

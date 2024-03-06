@@ -26,7 +26,7 @@ export const OvertimeAccomplishmentTabs = ({ tab }: TabsProps) => {
             }}
             title="Pending Accomplishments"
             icon={<HiOutlineCheckCircle size={26} />}
-            subtitle="Show pending Overtime Accomplishments"
+            subtitle="Pending OT Accomplishments"
             notificationCount={OvertimeForApproval ? OvertimeForApproval.length : 0}
             className="bg-indigo-500"
           />
@@ -38,7 +38,7 @@ export const OvertimeAccomplishmentTabs = ({ tab }: TabsProps) => {
             }}
             title="Completed Accomplishments"
             icon={<HiCheck size={26} />}
-            subtitle="Show fulfilled Overtime Accomplishments"
+            subtitle="Fulfilled OT Accomplishments"
             notificationCount={overtimeCompleted ? overtimeCompleted.length : 0}
             className="bg-gray-500"
           />

@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiDocumentAdd } from 'react-icons/hi';
+import { HiArchive, HiDocument, HiDocumentAdd, HiDocumentReport, HiFolder } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -14,18 +14,20 @@ import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
 import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../../src/store/leave.store';
-import { employeeDummy } from '../../../../src/types/employee.type';
-import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
+import { useLeaveStore } from '../../../store/leave.store';
+import { employeeDummy } from '../../../types/employee.type';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import { LeaveApplicationModal } from '../../../../src/components/fixed/leaves/LeaveApplicationModal';
+import { LeaveApplicationModal } from '../../../components/fixed/leaves/LeaveApplicationModal';
 import { LeavePendingModal } from '../../../components/fixed/leaves/LeavePendingModal';
-import LeaveCompletedModal from '../../../../src/components/fixed/leaves/LeaveCompletedModal';
+import LeaveCompletedModal from '../../../components/fixed/leaves/LeaveCompletedModal';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { useRouter } from 'next/router';
+import { useLeaveLedgerPageStore } from 'apps/portal/src/store/leave-ledger-page.store';
+import LeaveLedgerModal from 'apps/portal/src/components/fixed/leaves/LeaveLedgerModal';
 
 export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -87,7 +89,22 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     errorLedger: state.error.errorLeaveLedger,
   }));
 
-  // open the modal
+  const { leaveLedgerModalIsOpen, setLeaveLedgerModalIsOpen, errorLeaveEntry, errorLeaveLedger } =
+    useLeaveLedgerPageStore((state) => ({
+      leaveLedgerModalIsOpen: state.leaveLedgerModalIsOpen,
+      setLeaveLedgerModalIsOpen: state.setLeaveLedgerModalIsOpen,
+      errorLeaveEntry: state.error.errorEntry,
+      errorLeaveLedger: state.error.errorLedger,
+    }));
+
+  // open the view leave ledger modal
+  const openLeaveLedgerModal = () => {
+    if (!leaveLedgerModalIsOpen) {
+      setLeaveLedgerModalIsOpen(true);
+    }
+  };
+
+  // open the leave application modal
   const openApplyLeaveModal = () => {
     if (!applyLeaveModalIsOpen) {
       setApplyLeaveModalIsOpen(true);
@@ -109,6 +126,11 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     setCompletedLeaveModalIsOpen(false);
   };
 
+  // cancel action for Leave Completed Modal
+  const closeLeaveLedgerModal = async () => {
+    setLeaveLedgerModalIsOpen(false);
+  };
+
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
 
@@ -124,10 +146,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -189,6 +208,13 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
           </>
         ) : null}
 
+        {/* Leave Ledger Modal Error */}
+        {!isEmpty(errorLeaveLedger) && leaveLedgerModalIsOpen ? (
+          <>
+            <ToastNotification toastType="error" notifMessage={`${errorLeaveLedger}: Failed to load Leave Ledger.`} />
+          </>
+        ) : null}
+
         {/* Unavailable Calendar Dates Load Failed Error */}
         {!isEmpty(errorUnavailableDates) ? (
           <>
@@ -236,43 +262,57 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
 
         <SideNav employeeDetails={employeeDetails} />
 
-        {/* Pass Slip Application Modal */}
+        {/* Leave Application Modal */}
         <LeaveApplicationModal
           modalState={applyLeaveModalIsOpen}
           setModalState={setApplyLeaveModalIsOpen}
           closeModalAction={closeApplyLeaveModal}
         />
 
-        {/* Pass Slip Pending Modal */}
+        {/* Leave Pending Modal */}
         <LeavePendingModal
           modalState={pendingLeaveModalIsOpen}
           setModalState={setPendingLeaveModalIsOpen}
           closeModalAction={closePendingLeaveModal}
         />
 
-        {/* Pass Slip Completed Modal */}
+        {/* Leave Completed Modal */}
         <LeaveCompletedModal
           modalState={completedLeaveModalIsOpen}
           setModalState={setCompletedLeaveModalIsOpen}
           closeModalAction={closeCompletedLeaveModal}
         />
 
+        {/* Leave Ledger Modal */}
+        <LeaveLedgerModal
+          modalState={leaveLedgerModalIsOpen}
+          setModalState={setLeaveLedgerModalIsOpen}
+          closeModalAction={closeLeaveLedgerModal}
+        />
+
         <MainContainer>
           <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader title="Employee Leaves" subtitle="Apply for company leave" backUrl={`/${router.query.id}`}>
-              <Button onClick={openApplyLeaveModal} className="hidden lg:block" size={`md`}>
-                <div className="flex items-center w-full gap-2">
-                  <HiDocumentAdd /> Apply for Leave
-                </div>
-              </Button>
+              <div className="flex flex-row justify-end gap-2">
+                <Button onClick={openLeaveLedgerModal} className="hidden lg:block" size={`md`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiDocument /> View Ledger
+                  </div>
+                </Button>
+                <Button onClick={openApplyLeaveModal} className="hidden lg:block" size={`md`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiDocumentAdd /> Apply for Leave
+                  </div>
+                </Button>
 
-              <Button onClick={openApplyLeaveModal} className="block lg:hidden" size={`lg`}>
-                <div className="flex items-center w-full gap-2">
-                  <HiDocumentAdd />
-                </div>
-              </Button>
+                <Button onClick={openApplyLeaveModal} className="block lg:hidden" size={`lg`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiDocumentAdd />
+                  </div>
+                </Button>
+              </div>
             </ContentHeader>
-            {loading ? (
+            {swrIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

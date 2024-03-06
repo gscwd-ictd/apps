@@ -14,7 +14,8 @@ type Province = {
 
 type MyVariant = 'default' | 'primary' | 'secondary' | 'warning' | 'danger' | 'light' | 'simple';
 
-interface MySelectProvinceProps extends React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
+interface MySelectProvinceProps
+  extends React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
   id: string;
 
   codeVariable: Address;
@@ -92,8 +93,12 @@ export const SelectProvince: React.FC<MySelectProvinceProps> = ({
   useEffect(() => {
     if (!isEmpty(data)) {
       // sort provinces by name
-      var sortedProvinces = data.sort((firstItem: Province, secondItem: Province) =>
-        firstItem.province_name > secondItem.province_name ? 1 : secondItem.province_name > firstItem.province_name ? -1 : 0
+      const sortedProvinces = data.sort((firstItem: Province, secondItem: Province) =>
+        firstItem.province_name > secondItem.province_name
+          ? 1
+          : secondItem.province_name > firstItem.province_name
+          ? -1
+          : 0
       );
       setProvinces(sortedProvinces);
     }

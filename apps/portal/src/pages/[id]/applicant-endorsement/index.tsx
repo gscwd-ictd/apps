@@ -20,7 +20,7 @@ import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import AppEndAlert from 'apps/portal/src/components/fixed/endorsement/alert/AppEndAlert';
 import AppEndModal from 'apps/portal/src/components/fixed/endorsement/modal/AppEndModal';
-import { employeeDummy } from '../../../../src/types/employee.type';
+import { employeeDummy } from '../../../types/employee.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';

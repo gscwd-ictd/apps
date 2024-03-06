@@ -27,9 +27,8 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
     psbMessage,
     declineRemarks,
     confirmModalIsOpen,
-    setConfirmPsbModalIsOpen,
     setConfirmModalIsOpen,
-    setSelectedVppId,
+    setSelectedPayloadId,
     setConfirmationResponse,
     setConfirmationModalTitle,
     setDeclineRemarks,
@@ -37,9 +36,8 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
     declineRemarks: state.declineRemarks,
     psbMessage: state.message.psb,
     confirmModalIsOpen: state.confirmModalIsOpen,
-    setConfirmPsbModalIsOpen: state.setConfirmPsbModalIsOpen,
     setConfirmModalIsOpen: state.setConfirmModalIsOpen,
-    setSelectedVppId: state.setSelectedVppId,
+    setSelectedPayloadId: state.setSelectedPayloadId,
     setConfirmationResponse: state.setConfirmationResponse,
     setConfirmationModalTitle: state.setConfirmationModalTitle,
     setDeclineRemarks: state.setDeclineRemarks,
@@ -50,8 +48,8 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
     setDeclineRemarks(e);
   };
 
-  const openSubmitModalAction = async (selectedVppId: any, response: InboxMessageResponse) => {
-    setSelectedVppId(selectedVppId); // to be used for psb patch request
+  const openSubmitModalAction = async (selectedPayloadId: any, response: InboxMessageResponse) => {
+    setSelectedPayloadId(selectedPayloadId); // to be used for psb patch request
     setConfirmationResponse(response); // set as accept or decline
     setConfirmationModalTitle('PSB Member Acknowledgment');
     setConfirmModalIsOpen(true);
@@ -85,20 +83,20 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
           />
 
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 {psbMessage?.details?.acknowledgedSchedule ? (
                   <AlertNotification
                     alertType={`success`}
-                    notifMessage={`You have accepted this assignment`}
+                    notifMessage={`You have accepted this assignment.`}
                     dismissible={false}
                   />
                 ) : null}
 
                 {psbMessage?.details?.declinedSchedule ? (
                   <AlertNotification
-                    alertType="info"
-                    notifMessage={'You have declined this assignment'}
+                    alertType="error"
+                    notifMessage={'You have declined this assignment.'}
                     dismissible={false}
                   />
                 ) : null}
@@ -188,10 +186,10 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               {psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? (
-                <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
+                <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                   Close
                 </Button>
               ) : (
@@ -199,7 +197,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                   <Button
                     variant={'primary'}
                     size={'md'}
-                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.ACCEPT)}
+                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.PSB_ACCEPT)}
                   >
                     Accept
                   </Button>
@@ -207,7 +205,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                     variant={'danger'}
                     size={'md'}
                     disabled={declineRemarks ? false : true}
-                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.DECLINE)}
+                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.PSB_DECLINE)}
                   >
                     Decline
                   </Button>

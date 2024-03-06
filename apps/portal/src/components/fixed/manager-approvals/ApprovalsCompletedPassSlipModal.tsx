@@ -35,7 +35,7 @@ export const ApprovalsCompletedPassSlipModal = ({
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold  text-gray-700">
             <div className="px-5 flex justify-between">
@@ -51,7 +51,7 @@ export const ApprovalsCompletedPassSlipModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 <AlertNotification
                   alertType={
@@ -71,14 +71,21 @@ export const ApprovalsCompletedPassSlipModal = ({
                   }
                   notifMessage={`${
                     passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-                      ? `For Supervisor Approval`
+                      ? `For Supervisor Review`
                       : passSlip.status === PassSlipStatus.FOR_DISPUTE
-                      ? 'For Dispute Approval'
+                      ? 'For Dispute Review'
                       : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
-                      ? 'For HRMO Approval'
+                      ? 'For HRMO Review'
                       : passSlip.status === PassSlipStatus.APPROVED
-                      ? 'Approved'
-                      : passSlip.status === PassSlipStatus.DISAPPROVED
+                      ? `Approved`
+                      : // ${
+                      //   GetDateDifference(
+                      //     `${dayjs(passSlip.dateOfApplication).format('YYYY-MM-DD')} 00:00:00`,
+                      //     `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
+                      //   ).days
+                      // } days ago
+
+                      passSlip.status === PassSlipStatus.DISAPPROVED
                       ? 'Disapproved'
                       : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
                       ? 'Disapproved by HRMO'
@@ -97,7 +104,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                   <AlertNotification
                     alertType={`${passSlip.isDisputeApproved ? 'success' : 'error'}`}
                     notifMessage={`${
-                      passSlip.isDisputeApproved ? 'Dispute filed is Approved' : 'Dispute filed is Disapproved'
+                      passSlip.isDisputeApproved ? 'Dispute filed is Approved.' : 'Dispute filed is Disapproved.'
                     }`}
                     dismissible={false}
                   />
@@ -113,7 +120,109 @@ export const ApprovalsCompletedPassSlipModal = ({
                 confirmName={ManagerOtpApproval.PASSSLIP}
               />
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Employee Name:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{passSlip.employeeName}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Nature of Business:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{passSlip.natureOfBusiness}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date of Application:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                    {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
+                      ? 'For Medical Business:'
+                      : 'Mode of Transportation:'}
+                  </label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS
+                        ? passSlip.isMedical
+                          ? 'Yes'
+                          : 'No'
+                        : passSlip.obTransportation ?? 'N/A'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Estimated Hours:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{passSlip.estimateHours}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Time Out:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Time In:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">
+                      {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
+                    </label>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Purpose/Desination:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{passSlip.purposeDestination}</label>
+                  </div>
+                </div>
+
+                {passSlip.disputeRemarks ? (
+                  <div className={`flex flex-col`}>
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        Employee Dispute Remarks:
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <div className="w-auto ml-5 flex flex-col">
+                          <label className="text-md font-medium">
+                            {`Disputed Time In is ${
+                              passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
+                            }.`}
+                          </label>
+                          <label className="text-md font-medium">{` ${passSlip.disputeRemarks}`}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Employee Name:</label>
 
                 <div className="w-auto md:w-96">
@@ -208,20 +317,24 @@ export const ApprovalsCompletedPassSlipModal = ({
                     disabled={true}
                   ></textarea>
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               {passSlip.status === PassSlipStatus.APPROVED ? (
-                ((passSlip.natureOfBusiness === NatureOfBusiness.HALF_DAY || NatureOfBusiness.UNDERTIME) &&
-                  !passSlip.timeOut) ||
-                ((passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ||
-                  NatureOfBusiness.PERSONAL_BUSINESS) &&
-                  !passSlip.timeOut &&
-                  !passSlip.timeIn) ? (
+                passSlip.natureOfBusiness !== NatureOfBusiness.HALF_DAY &&
+                passSlip.natureOfBusiness !== NatureOfBusiness.UNDERTIME &&
+                // &&
+                // GetDateDifference(
+                //   `${dayjs(passSlip.dateOfApplication).format('YYYY-MM-DD')} 00:00:00`,
+                //   `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
+                // ).days <= 1
+                (passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS ||
+                  passSlip.natureOfBusiness === NatureOfBusiness.PERSONAL_BUSINESS) &&
+                !passSlip.timeIn ? (
                   <>
                     <Button
                       variant={'warning'}
@@ -233,7 +346,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                       Cancel Pass Slip
                     </Button>
                     <Button
-                      variant={'primary'}
+                      variant={'default'}
                       size={'md'}
                       loading={false}
                       onClick={(e) => closeModalAction()}
@@ -244,7 +357,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                   </>
                 ) : (
                   <Button
-                    variant={'primary'}
+                    variant={'default'}
                     size={'md'}
                     loading={false}
                     onClick={(e) => closeModalAction()}
@@ -255,7 +368,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                 )
               ) : (
                 <Button
-                  variant={'primary'}
+                  variant={'default'}
                   size={'md'}
                   loading={false}
                   onClick={(e) => closeModalAction()}

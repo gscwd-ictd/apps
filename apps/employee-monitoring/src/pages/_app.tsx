@@ -32,7 +32,9 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 //     { I: 'access', this: 'Settings' },
 //     { I: 'access', this: 'Dashboard' },
 //     { I: 'access', this: 'Employee_schedules' },
+//     { I: 'access', this: 'Employee_schedules_view' },
 //     { I: 'access', this: 'Daily_time_record' },
+//     { I: 'access', this: 'Daily_time_record_view' },
 //     { I: 'access', this: 'Leave_ledger' },
 //     { I: 'access', this: 'Scheduling_sheets' },
 //     { I: 'access', this: 'Scheduling_sheet_station' },
@@ -69,15 +71,15 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 export default function CustomApp({ Component, pageProps, userDetails }: AppProps & AppOwnProps) {
   const [userProfile, setUserProfile] = useState<UserProfile>(null);
 
-  // useEffect(() => {
-  //   setUserProfile(mockData);
-  // }, [mockData]);
-
   useEffect(() => {
     if (!isEmpty(userDetails) && isEmpty(userProfile)) {
       setUserProfile(userDetails);
     }
   }, [userDetails, userProfile]);
+
+  // useEffect(() => {
+  //   setUserProfile(mockData);
+  // }, [mockData]);
 
   return (
     <>

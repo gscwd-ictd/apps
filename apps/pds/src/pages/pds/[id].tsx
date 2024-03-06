@@ -1,18 +1,11 @@
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useEffect, useState } from 'react';
 import { NavTab } from '../../components/fixed/tabs/NavTab';
 import { useEmployeeStore } from '../../store/employee.store';
 import { usePdsStore } from '../../store/pds.store';
 import { isEmpty, isEqual } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
-import {
-  getUserDetails,
-  withCookieSessionPds,
-} from '../../../utils/helpers/session';
+import { getUserDetails, withCookieSessionPds } from '../../../utils/helpers/session';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { pdsToSubmit } from '../../../utils/helpers/pds.helper';
@@ -23,35 +16,25 @@ import { useRouter } from 'next/router';
 
 dayjs.extend(utc);
 
-export default function Dashboard({
-  employee,
-  pdsDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const setHasPds = useEmployeeStore((state) => state.setHasPds);
-  const setEmployeeDetails = useEmployeeStore(
-    (state) => state.setEmployeeDetails
-  );
+  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLoadingEmployeeData, setIsLoadingEmployeeData] =
-    useState<boolean>(false);
+  const [isLoadingEmployeeData, setIsLoadingEmployeeData] = useState<boolean>(false);
   const [isLoadingPdsData, setIsLoadingPdsData] = useState<boolean>(false);
   const { employmentDetails, profile, user } = employeeDetails;
   const pds = pdsToSubmit(usePdsStore((state) => state));
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
-  const setCheckboxAddressInitialState = usePdsStore(
-    (state) => state.setCheckboxAddressInitialState
-  );
+  const setCheckboxAddressInitialState = usePdsStore((state) => state.setCheckboxAddressInitialState);
   const numberOfTabs = useTabStore((state) => state.numberOfTabs);
   const setNumberOfTabs = useTabStore((state) => state.setNumberOfTabs);
   const background = useTabStore((state) => state.background);
-  const permanentAddressOnEdit = usePdsStore(
-    (state) => state.permanentAddressOnEdit
-  );
+  const permanentAddressOnEdit = usePdsStore((state) => state.permanentAddressOnEdit);
 
   const {
     personalInfo,
@@ -158,9 +141,7 @@ export default function Dashboard({
       lastName: profile.lastName,
       firstName: profile.firstName,
       middleName: isEmpty(profile.middleName) ? 'N/A' : profile.middleName,
-      nameExtension: isEmpty(profile.nameExtension)
-        ? 'N/A'
-        : profile.nameExtension,
+      nameExtension: isEmpty(profile.nameExtension) ? 'N/A' : profile.nameExtension,
       birthDate: profile.birthDate,
       sex: profile.sex,
       email: user.email,
@@ -176,9 +157,7 @@ export default function Dashboard({
         lastName: profile.lastName,
         firstName: profile.firstName,
         middleName: isEmpty(profile.middleName) ? 'N/A' : profile.middleName,
-        nameExtension: isEmpty(profile.nameExtension)
-          ? 'N/A'
-          : profile.nameExtension,
+        nameExtension: isEmpty(profile.nameExtension) ? 'N/A' : profile.nameExtension,
         birthDate: profile.birthDate,
         sex: profile.sex,
         email: user.email,
@@ -326,6 +305,7 @@ export default function Dashboard({
     } else {
       setNumberOfTabs(tabs.length);
     }
+    setIsLoadingPdsData(true);
   }
 
   // set the employee details state from server side props
@@ -363,7 +343,7 @@ export default function Dashboard({
   useEffect(() => {
     if (isLoadingEmployeeData) {
       setPdsDetailsOnLoad();
-      setIsLoadingPdsData(true);
+      // setIsLoadingPdsData(true);
     }
   }, [isLoadingEmployeeData]);
 
@@ -381,11 +361,7 @@ export default function Dashboard({
   // set the checkbox to true if residential address and permanent address is the same
   useEffect(() => {
     if (isLoading === false) {
-      if (
-        hasPds &&
-        !permanentAddressOnEdit &&
-        isEqual(residentialAddress, permanentAddress)
-      ) {
+      if (hasPds && !permanentAddressOnEdit && isEqual(residentialAddress, permanentAddress)) {
         setCheckboxAddressInitialState(true);
         setTimeout(() => {
           setCheckboxAddress(true);
@@ -430,31 +406,16 @@ export default function Dashboard({
 export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
   async (context: GetServerSidePropsContext) => {
     const employee = getUserDetails();
-    try {
-      const applicantPds = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`
-      );
 
-      if (
-        applicantPds.status === 200 &&
-        employee.employmentDetails.userId === context.params?.id
-      ) {
+    try {
+      const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`);
+
+      if (applicantPds.status === 200 && employee.employmentDetails.userId === context.params?.id) {
         return { props: { employee, pdsDetails: applicantPds.data } };
-      } else if (
-        applicantPds.status === 200 &&
-        employee.employmentDetails.userId !== context.params?.id
-      ) {
+      } else if (applicantPds.status === 200 && employee.employmentDetails.userId !== context.params?.id) {
         return {
           props: {},
           redirect: { destination: '/404', permanent: false },
-        };
-      } else if (
-        applicantPds.status === 404 &&
-        employee.employmentDetails.userId === context.params?.id
-      ) {
-        return {
-          props: { employee, pdsDetails: applicantPds.data },
-          redirect: { destination: '/401', permanent: false },
         };
       } else {
         return {
@@ -466,9 +427,21 @@ export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
         };
       }
     } catch {
-      return {
-        props: { employee, pdsDetails: {} },
-      };
+      if (employee.employmentDetails.userId === context.params?.id) {
+        return {
+          props: { employee, pdsDetails: {} },
+          // redirect: { destination: '/404', permanent: false },
+        };
+      } else if (employee.employmentDetails.userId !== context.params?.id) {
+        return {
+          props: {},
+          redirect: { destination: '/401', permanent: false },
+        };
+      } else
+        return {
+          props: {},
+          redirect: { destination: '/404', permanent: false },
+        };
     }
   }
 );

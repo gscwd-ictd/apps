@@ -21,13 +21,12 @@ export const Holidays = (): JSX.Element => {
   });
 
   // holiday store
-  const { holidays, getHolidays, getHolidaysFail, getHolidaysSuccess } =
-    useHolidaysStore((state) => ({
-      holidays: state.holidays,
-      getHolidays: state.getHolidays,
-      getHolidaysSuccess: state.getHolidaysSuccess,
-      getHolidaysFail: state.getHolidaysFail,
-    }));
+  const { holidays, getHolidays, getHolidaysFail, getHolidaysSuccess } = useHolidaysStore((state) => ({
+    holidays: state.holidays,
+    getHolidays: state.getHolidays,
+    getHolidaysSuccess: state.getHolidaysSuccess,
+    getHolidaysFail: state.getHolidaysFail,
+  }));
 
   // Initial zustand state update
   useEffect(() => {
@@ -49,10 +48,7 @@ export const Holidays = (): JSX.Element => {
 
   return (
     <div className="flex w-full h-full border rounded-md shadow">
-      <Card
-        title="Upcoming Holidays"
-        className="overflow-y-hidden border-none rounded"
-      >
+      <Card title="Upcoming Holidays" className="overflow-y-hidden border-none rounded">
         <div className="flex flex-col justify-between w-full min-h-max">
           <div className="flex flex-col w-full gap-2 overflow-y-auto text-xs">
             {/* Regular Holidays */}
@@ -68,19 +64,12 @@ export const Holidays = (): JSX.Element => {
                       const { holidayDate, id, name, type } = holiday;
                       if (
                         type === 'regular' &&
-                        dayjs().isBefore(
-                          dayjs(holidayDate).format('MM DD, YYYY')
-                        ) &&
-                        dayjs().isSame(
-                          dayjs(holidayDate).format('MM DD, YYYY'),
-                          'year'
-                        )
+                        dayjs().isBefore(dayjs(holidayDate).format('MM DD, YYYY')) &&
+                        dayjs().isSame(dayjs(holidayDate).format('MM DD, YYYY'), 'year')
                       ) {
                         return (
                           <div key={id} className="flex gap-2 px-2">
-                            <div className="w-full ">
-                              {dayjs(holidayDate).format('MMMM D')}
-                            </div>
+                            <div className="w-full ">{dayjs(holidayDate).format('MMMM D')}</div>
                             <div className="w-full">{name}</div>
                           </div>
                         );
@@ -88,9 +77,7 @@ export const Holidays = (): JSX.Element => {
                     })}
                   </>
                 ) : (
-                  <div className="flex justify-center w-full h-full text-gray-400">
-                    -- No Data --
-                  </div>
+                  <div className="flex justify-center w-full h-full text-gray-400">-- No Data --</div>
                 )}
               </div>
             )}
@@ -108,28 +95,19 @@ export const Holidays = (): JSX.Element => {
                     const { holidayDate, id, name, type } = holiday;
                     if (
                       type === 'special' &&
-                      dayjs().isBefore(
-                        dayjs(holidayDate).format('MM DD, YYYY')
-                      ) &&
-                      dayjs().isSame(
-                        dayjs(holidayDate).format('MM DD, YYYY'),
-                        'year'
-                      )
+                      dayjs().isBefore(dayjs(holidayDate).format('MM DD, YYYY')) &&
+                      dayjs().isSame(dayjs(holidayDate).format('MM DD, YYYY'), 'year')
                     ) {
                       return (
                         <div key={id} className="flex gap-2 px-2 ">
-                          <div className="w-full ">
-                            {dayjs(holidayDate).format('MMMM D')}
-                          </div>
+                          <div className="w-full ">{dayjs(holidayDate).format('MMMM D')}</div>
                           <div className="w-full ">{name}</div>
                         </div>
                       );
                     }
                   })
                 ) : (
-                  <div className="flex justify-center w-full h-full text-gray-400">
-                    -- No Data --
-                  </div>
+                  <div className="flex justify-center w-full h-full text-gray-400">-- No Data --</div>
                 )}
               </div>
             )}

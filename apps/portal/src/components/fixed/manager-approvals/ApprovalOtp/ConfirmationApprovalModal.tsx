@@ -8,6 +8,7 @@ import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -55,6 +56,9 @@ export const ConfirmationApprovalModal = ({
     setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen,
     loadingPassSlipResponse,
+
+    setSelectedOvertimeId,
+    setOvertimeDetails,
   } = useApprovalStore((state) => ({
     patchOvertime: state.patchOvertime,
     patchOvertimeSuccess: state.patchOvertimeSuccess,
@@ -76,6 +80,9 @@ export const ConfirmationApprovalModal = ({
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     loadingPassSlipResponse: state.loading.loadingPassSlipResponse,
+
+    setSelectedOvertimeId: state.setSelectedOvertimeId,
+    setOvertimeDetails: state.setOvertimeDetails,
   }));
 
   const handleSubmit = () => {
@@ -137,15 +144,16 @@ export const ConfirmationApprovalModal = ({
         patchPassSlipSuccess(result);
         closeModalAction(); // close confirmation of decline modal
         setTimeout(() => {
-          setPendingPassSlipModalIsOpen(false); // close leave pending modal
+          setPendingPassSlipModalIsOpen(false); // close pass slip pending modal
           setApprovedPassSlipModalIsOpen(false);
         }, 200);
       } else if (confirmName === ManagerOtpApproval.OVERTIME) {
         patchOvertimeSuccess(result);
         closeModalAction(); // close confirmation of decline modal
         setTimeout(() => {
-          setPendingOvertimeModalIsOpen(false); // close leave pending modal
+          setPendingOvertimeModalIsOpen(false); // close ot pending modal
           setApprovedOvertimeModalIsOpen(false);
+          setOvertimeDetails({} as OvertimeDetails);
         }, 200);
       }
     }
@@ -180,7 +188,7 @@ export const ConfirmationApprovalModal = ({
               dismissible={false}
             />
           ) : null}
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-left px-4">
             {`Are you sure you want to 
           
           ${
@@ -194,7 +202,7 @@ export const ConfirmationApprovalModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes

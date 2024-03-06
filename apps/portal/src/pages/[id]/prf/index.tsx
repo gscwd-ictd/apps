@@ -23,13 +23,13 @@ import { PrfModal } from '../../../components/fixed/prf/prf-modal/PrfModal';
 import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingPrfList';
 import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
 import { TabHeader } from '../../../components/fixed/prf/prf-index/TabHeader';
-import SideNav from '../../../../src/components/fixed/nav/SideNav';
-import { MainContainer } from '../../../../src/components/modular/custom/containers/MainContainer';
-import { ContentHeader } from '../../../../src/components/modular/custom/containers/ContentHeader';
-import { ContentBody } from '../../../../src/components/modular/custom/containers/ContentBody';
+import SideNav from '../../../components/fixed/nav/SideNav';
+import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
+import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
+import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { SpinnerDotted } from 'spinners-react';
-import { getUserDetails, withCookieSession } from '../../../../src/utils/helpers/session';
-import { useEmployeeStore } from '../../../../src/store/employee.store';
+import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
+import { useEmployeeStore } from '../../../store/employee.store';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
@@ -377,7 +377,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
       <MainContainer>
         <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-          <ContentHeader title="Position Request" subtitle="Request for new personnel" backUrl={''}>
+          <ContentHeader title="Position Request" subtitle="Request for new personnel" backUrl={`/${router.query.id}`}>
             <Button className="hidden lg:block" size={`md`} onClick={handleOpen}>
               <div className="flex items-center w-full gap-2">
                 <HiDocumentAdd /> Create Request

@@ -26,10 +26,7 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateLeaveApplications,
-  } = useSWR('/leave/hrmo', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR('/leave/hrmo', fetcherEMS);
 
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -88,7 +85,7 @@ const Index = () => {
     }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employee.employeeName', {

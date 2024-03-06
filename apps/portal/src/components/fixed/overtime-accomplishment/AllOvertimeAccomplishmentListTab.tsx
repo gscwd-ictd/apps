@@ -2,6 +2,7 @@
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import { OvertimeAccomplishment } from 'libs/utils/src/lib/types/overtime.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 type TabProps = {
   overtime: Array<OvertimeAccomplishment>;
@@ -53,8 +54,15 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
                     {DateFormatter(overtime.plannedDate, 'MMMM DD, YYYY')}
                   </h1>
                   <p className="text-sm text-gray-500">Purpose: {overtime.purpose}</p>
-                  <p className="text-sm text-gray-500">Estimated Hours: {overtime.computedIvmsHours}</p>
-                  <p className="text-sm text-indigo-500">Status: {overtime.status?.toUpperCase()}</p>
+                  <p className="text-sm text-gray-500">Overtime Estimated Hours: {overtime.estimatedHours}</p>
+                  <p className="text-sm text-indigo-500">
+                    Status:{' '}
+                    {overtime.status === OvertimeAccomplishmentStatus.PENDING && !overtime.accomplishments
+                      ? 'NOT SUBMITTED'
+                      : overtime.status === OvertimeAccomplishmentStatus.PENDING && overtime.accomplishments
+                      ? 'SUBMITTED: FOR SUPERVISOR REVIEW'
+                      : overtime.status.toUpperCase()}
+                  </p>
                 </div>
               </li>
             );
