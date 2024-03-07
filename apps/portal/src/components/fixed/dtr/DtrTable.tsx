@@ -1,13 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Button, ListDef, Select } from '@gscwd-apps/oneui';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
-import Link from 'next/link';
 import { useDtrStore } from '../../../store/dtr.store';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
 import { UseUndertimeChecker } from 'libs/utils/src/lib/functions/UndertimeChecker';
 import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
-import { HiOutlineSearch, HiPencil, HiPencilAlt } from 'react-icons/hi';
+import { HiPencilAlt } from 'react-icons/hi';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { useState } from 'react';
 import UpdateTimeLogModal from './UpdateTimeLogModal';

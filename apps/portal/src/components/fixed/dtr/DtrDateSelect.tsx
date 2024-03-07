@@ -15,6 +15,22 @@ type DtrDateSelectProps = {
 };
 
 export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
+  const {
+    isErrorDtr,
+    isLoadingDtr,
+    errorUpdateEmployeeDtr,
+    loadingUpdateEmployeeDtr,
+    responseUpdateDtr,
+    emptyResponseAndError,
+  } = useDtrStore((state) => ({
+    isErrorDtr: state.error.errorDtr,
+    isLoadingDtr: state.loading.loadingDtr,
+    errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
+    loadingUpdateEmployeeDtr: state.loading.loadingUpdateEmployeeDtr,
+    responseUpdateDtr: state.response.employeeDailyRecord,
+    emptyResponseAndError: state.emptyResponseAndError,
+  }));
+
   const selectedMonth = useDtrStore((state) => state.selectedMonth);
   const selectedYear = useDtrStore((state) => state.selectedYear);
   const date = useDtrStore((state) => state.date);
@@ -23,9 +39,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const setSelectedYear = useDtrStore((state) => state.setSelectedYear);
   const setDate = useDtrStore((state) => state.setDate);
   const getEmployeeDtr = useDtrStore((state) => state.getEmployeeDtr);
-  const getEmployeeDtrSuccess = useDtrStore(
-    (state) => state.getEmployeeDtrSuccess
-  );
+  const getEmployeeDtrSuccess = useDtrStore((state) => state.getEmployeeDtrSuccess);
   const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
 
   const monthNow = format(new Date(), 'M');
@@ -46,20 +60,13 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     { month: 'December', code: '12' },
   ] as Month[];
 
-  const years = [
-    { year: `${yearNow}` },
-    { year: `${Number(yearNow) - 1}` },
-  ] as Year[];
+  const years = [{ year: `${yearNow}` }, { year: `${Number(yearNow) - 1}` }] as Year[];
 
   //month select
   const list: ListDef<Month> = {
     key: 'month',
     render: (info, state) => (
-      <div
-        className={`${
-          state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''
-        } pl-2 cursor-pointer`}
-      >
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''} pl-2 cursor-pointer`}>
         {info.month}
       </div>
     ),
@@ -69,11 +76,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const yearList: ListDef<Year> = {
     key: 'year',
     render: (info, state) => (
-      <div
-        className={`${
-          state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''
-        } pl-4 cursor-pointer`}
-      >
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
         {info.year}
       </div>
     ),
@@ -90,29 +93,35 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   useEffect(() => {
     setSelectedYear(yearNow);
     setSelectedMonth(monthNow);
+  }, [responseUpdateDtr]);
+
+  useEffect(() => {
+    setSelectedYear(format(new Date(), 'yyyy'));
+    setSelectedMonth(format(new Date(), 'M'));
   }, []);
 
-  const searchDtr = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    searchDtr();
+  }, [responseUpdateDtr]);
+
+  const searchDtr = async () => {
     getEmployeeDtr(true);
 
-    try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}`
-      );
+    if (employeeDetails.employmentDetails.companyId && selectedYear && selectedMonth) {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}`
+        );
 
-      if (!isEmpty(data)) {
-        getEmployeeDtrSuccess(false, data);
+        if (!isEmpty(data)) {
+          getEmployeeDtrSuccess(false, data);
+        }
+      } catch (error) {
+        getEmployeeDtrFail(false, error.message);
       }
-    } catch (error) {
-      getEmployeeDtrFail(false, error.message);
-    }
 
-    setDate(
-      `${selectedMonth ? selectedMonth : monthNow}-01-${
-        selectedYear ? selectedYear : yearNow
-      }`
-    );
+      setDate(`${selectedMonth ? selectedMonth : monthNow}-01-${selectedYear ? selectedYear : yearNow}`);
+    }
   };
 
   return (
@@ -131,13 +140,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
         listDef={yearList}
         onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
       />
-      <Button
-        variant={'primary'}
-        size={'sm'}
-        loading={false}
-        onClick={(e) => searchDtr(e)}
-        type="submit"
-      >
+      <Button variant={'primary'} size={'sm'} loading={false} onClick={() => searchDtr()} type="button">
         <div className="flex justify-center">
           <HiOutlineSearch className="w-6 h-6 md:w-5 md:h-5" />
         </div>

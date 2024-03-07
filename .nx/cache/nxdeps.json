@@ -10117,37 +10117,53 @@
             ]
           },
           {
-            "file": "apps/portal/src/components/fixed/dtr/DtrDateSelect.tsx",
-            "hash": "4742532815039450566",
+            "file": "apps/portal/src/components/fixed/dtr/ConfirmationModal.tsx",
+            "hash": "6981893777778295207",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "oneui",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
+                "target": "utils",
+                "type": "static"
+              }
+            ]
+          },
+          {
+            "file": "apps/portal/src/components/fixed/dtr/DtrDateSelect.tsx",
+            "hash": "10767915523930389427",
+            "dependencies": [
+              {
+                "source": "portal",
+                "target": "oneui",
+                "type": "static"
+              },
+              {
+                "source": "portal",
                 "target": "npm:date-fns",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react-icons",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:axios",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:lodash",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:react",
                 "source": "portal",
+                "target": "npm:react",
                 "type": "static"
               }
             ]
@@ -10175,16 +10191,11 @@
           },
           {
             "file": "apps/portal/src/components/fixed/dtr/DtrTable.tsx",
-            "hash": "3477217885310138126",
+            "hash": "10935732499638617149",
             "dependencies": [
               {
                 "source": "portal",
                 "target": "oneui",
-                "type": "static"
-              },
-              {
-                "source": "portal",
-                "target": "npm:next",
                 "type": "static"
               },
               {
@@ -10237,7 +10248,7 @@
           },
           {
             "file": "apps/portal/src/components/fixed/dtr/UpdateTimeLogModal.tsx",
-            "hash": "2386041869263895307",
+            "hash": "136256386669582679",
             "dependencies": [
               {
                 "source": "portal",
@@ -11487,21 +11498,21 @@
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalOtp/ApprovalOtpContents.tsx",
-            "hash": "11740896540791239778",
+            "hash": "4155076696074693448",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "npm:react",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "utils",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:react-auth-code-input",
                 "source": "portal",
+                "target": "npm:react-auth-code-input",
                 "type": "static"
               }
             ]
@@ -11576,7 +11587,7 @@
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalsDtrCorrectionModal.tsx",
-            "hash": "11382564951187077372",
+            "hash": "483077815834676229",
             "dependencies": [
               {
                 "source": "portal",
@@ -14975,7 +14986,7 @@
           },
           {
             "file": "apps/portal/src/pages/[id]/manager-approvals/timelogs.tsx",
-            "hash": "14842338657499199453",
+            "hash": "17846618363708349353",
             "dependencies": [
               {
                 "source": "portal",
@@ -15611,16 +15622,16 @@
           },
           {
             "file": "apps/portal/src/store/approvals.store.tsx",
-            "hash": "11106122823600296538",
+            "hash": "10955097527977718212",
             "dependencies": [
               {
-                "target": "npm:zustand",
                 "source": "portal",
+                "target": "npm:zustand",
                 "type": "static"
               },
               {
-                "target": "utils",
                 "source": "portal",
+                "target": "utils",
                 "type": "static"
               }
             ]
@@ -16176,11 +16187,11 @@
           },
           {
             "file": "apps/portal/src/utils/functions/RenderDtrCorrectionStatus.tsx",
-            "hash": "11214110570592155627",
+            "hash": "12056263501317257084",
             "dependencies": [
               {
-                "target": "utils",
                 "source": "portal",
+                "target": "utils",
                 "type": "static"
               }
             ]
@@ -16542,22 +16553,6 @@
           {
             "file": "apps/portal/tsconfig.spec.json",
             "hash": "6932660931697717727"
-          },
-          {
-            "file": "apps/portal/src/components/fixed/dtr/ConfirmationModal.tsx",
-            "hash": "5086123405478270175",
-            "dependencies": [
-              {
-                "source": "portal",
-                "target": "oneui",
-                "type": "static"
-              },
-              {
-                "source": "portal",
-                "target": "utils",
-                "type": "static"
-              }
-            ]
           }
         ]
       }
@@ -17825,11 +17820,15 @@
           },
           {
             "file": "libs/utils/src/lib/enums/approval.enum.ts",
-            "hash": "8601824265397767372"
+            "hash": "2272979740851004252"
           },
           {
             "file": "libs/utils/src/lib/enums/category.enum.ts",
             "hash": "3265815894217436635"
+          },
+          {
+            "file": "libs/utils/src/lib/enums/dtr.enum.ts",
+            "hash": "16360092204754707975"
           },
           {
             "file": "libs/utils/src/lib/enums/event.enum.ts",

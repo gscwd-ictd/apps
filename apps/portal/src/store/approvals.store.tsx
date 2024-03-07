@@ -136,6 +136,9 @@ export type ApprovalState = {
   overtimeAccomplishmentApplicationId: string;
   setOvertimeAccomplishmentApplicationId: (overtimeAccomplishmentApplicationId: string) => void;
 
+  otpDtrCorrectionModalIsOpen: boolean;
+  setOtpDtrCorrectionModalIsOpen: (otpDtrCorrectionModalIsOpen: boolean) => void;
+
   otpPassSlipModalIsOpen: boolean;
   setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => void;
 
@@ -296,6 +299,7 @@ export const useApprovalStore = create<ApprovalState>()(
       errorPendingApprovalsCount: '',
     },
 
+    otpDtrCorrectionModalIsOpen: false,
     otpPassSlipModalIsOpen: false,
     otpLeaveModalIsOpen: false,
     otpOvertimeModalIsOpen: false,
@@ -396,6 +400,10 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
       set((state) => ({ ...state, declineApplicationModalIsOpen }));
+    },
+
+    setOtpDtrCorrectionModalIsOpen: (otpDtrCorrectionModalIsOpen: boolean) => {
+      set((state) => ({ ...state, otpDtrCorrectionModalIsOpen }));
     },
 
     setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => {
@@ -967,15 +975,15 @@ export const useApprovalStore = create<ApprovalState>()(
         ...state,
         response: {
           ...state.response,
-          patchResponseAccomplishment: {} as any,
+          patchResponseDtrCorrection: {} as DtrCorrectionApprovalPatch,
         },
         loading: {
           ...state.loading,
-          loadingAccomplishmentResponse: true,
+          loadingDtrCorrectionResponse: true,
         },
         error: {
           ...state.error,
-          errorAccomplishmentResponse: '',
+          errorDtrCorrectionResponse: '',
         },
       }));
     },
@@ -997,11 +1005,11 @@ export const useApprovalStore = create<ApprovalState>()(
         ...state,
         loading: {
           ...state.loading,
-          loadingAccomplishmentResponse: false,
+          loadingDtrCorrectionResponse: false,
         },
         error: {
           ...state.error,
-          errorAccomplishmentResponse: error,
+          errorDtrCorrectionResponse: error,
         },
       }));
     },

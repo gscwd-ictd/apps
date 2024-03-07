@@ -132,6 +132,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
   useEffect(() => {
     if (modalState) setDefaultValues(rowData, '');
+    console.log(rowData);
   }, [modalState]);
 
   // cancel action for Confirmation Application Modal
@@ -340,7 +341,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
-            <div className="min-w-[6rem] max-w-auto flex gap-2">
+            <div className="max-w-auto flex gap-2">
               {rowData?.hasPendingDtrCorrection ? (
                 <Button
                   variant={'default'}

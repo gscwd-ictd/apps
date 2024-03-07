@@ -1,0 +1,12 @@
+[36minfo[39m  - Loaded env from /home/ictd2022/gscwd-projects/dev/frontend/gscwd-apps/apps/pds/.env
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[35mevent[39m - compiled client and server successfully in 4.7s (188 modules)
+[ [32mready[39m ] on http://0.0.0.0:3003
+[36mwait[39m  - compiling /pds/[id] (client and server)...
+[35mevent[39m - compiled client and server successfully in 9.4s (1462 modules)
+[36mwait[39m  - compiling /pds/[id]/view (client and server)...
+[35mevent[39m - compiled client and server successfully in 841 ms (1489 modules)
+[36mwait[39m  - compiling...
+[35mevent[39m - compiled client and server successfully in 1144 ms (1462 modules)

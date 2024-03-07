@@ -85,7 +85,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     setDtrCorrectionModalIsOpen(false);
   };
 
-  const dtrCorrectionUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/dtr-correction/`;
+  const dtrCorrectionUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/dtr-corrections/`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {

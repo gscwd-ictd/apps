@@ -3,27 +3,27 @@
 
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import BadgePill from '../../components/modular/badges/BadgePill';
-import { DtrCorrectionApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 
-function UseRenderDtrCorrectionStatus(status: DtrCorrectionApproval, textSize: TextSize) {
+function UseRenderDtrCorrectionStatus(status: DtrCorrectionStatus, textSize: TextSize) {
   return (
     <BadgePill
       textSize={textSize}
       variant={
-        status === DtrCorrectionApproval.APPROVED
+        status === DtrCorrectionStatus.APPROVED
           ? 'success'
-          : status === DtrCorrectionApproval.DISAPPROVED
+          : status === DtrCorrectionStatus.DISAPPROVED
           ? 'error'
-          : status === DtrCorrectionApproval.PENDING
+          : status === DtrCorrectionStatus.PENDING
           ? 'warning'
           : 'default'
       }
       label={
-        status === DtrCorrectionApproval.APPROVED
+        status === DtrCorrectionStatus.APPROVED
           ? 'Approved'
-          : status === DtrCorrectionApproval.DISAPPROVED
+          : status === DtrCorrectionStatus.DISAPPROVED
           ? 'Disapproved'
-          : status === DtrCorrectionApproval.PENDING
+          : status === DtrCorrectionStatus.PENDING
           ? 'Pending'
           : status
       }

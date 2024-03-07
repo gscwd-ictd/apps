@@ -9,10 +9,10 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
-import { DtrCorrectionApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
+import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DtrCorrectionApprovalPatch } from 'libs/utils/src/lib/types/dtr.type';
@@ -35,8 +35,8 @@ export const ApprovalsDtrCorrectionModal = ({
 }: ApprovalsDtrCorrectionModalProps) => {
   const {
     dtrCorrectionDetail,
-    otpPassSlipModalIsOpen,
-    setOtpPassSlipModalIsOpen,
+    otpDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen,
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
     loadingResponse,
@@ -44,8 +44,8 @@ export const ApprovalsDtrCorrectionModal = ({
     setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
     dtrCorrectionDetail: state.dtrCorrectionDetail,
-    otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
-    setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+    otpDtrCorrectionModalIsOpen: state.otpDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen: state.setOtpDtrCorrectionModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
     loadingResponse: state.loading.loadingPassSlipResponse,
@@ -77,9 +77,9 @@ export const ApprovalsDtrCorrectionModal = ({
 
   const onSubmit: SubmitHandler<DtrCorrectionApprovalPatch> = (data: DtrCorrectionApprovalPatch) => {
     setValue('id', dtrCorrectionDetail.id);
-    if (data.status === DtrCorrectionApproval.APPROVED) {
-      setOtpPassSlipModalIsOpen(true);
-    } else if (data.status === DtrCorrectionApproval.DISAPPROVED) {
+    if (data.status === DtrCorrectionStatus.APPROVED) {
+      setOtpDtrCorrectionModalIsOpen(true);
+    } else if (data.status === DtrCorrectionStatus.DISAPPROVED) {
       setDeclineApplicationModalIsOpen(true);
     }
     //  else if (dtrCorrectionDetail.status === DtrCorrectionApproval.FOR_DISPUTE) {
@@ -105,11 +105,11 @@ export const ApprovalsDtrCorrectionModal = ({
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Daily Time Record Correction for Approval</span>
+              <span className="text-xl md:text-2xl">DTR Correction for Approval</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -136,18 +136,20 @@ export const ApprovalsDtrCorrectionModal = ({
 
                 <AlertNotification
                   alertType={
-                    dtrCorrectionDetail.status === DtrCorrectionApproval.APPROVED
+                    dtrCorrectionDetail.status === DtrCorrectionStatus.APPROVED
                       ? 'info'
-                      : dtrCorrectionDetail.status === DtrCorrectionApproval.DISAPPROVED
+                      : dtrCorrectionDetail.status === DtrCorrectionStatus.DISAPPROVED
                       ? 'error'
+                      : dtrCorrectionDetail.status === DtrCorrectionStatus.PENDING
+                      ? 'warning'
                       : 'info'
                   }
                   notifMessage={`${
-                    dtrCorrectionDetail.status === DtrCorrectionApproval.APPROVED
+                    dtrCorrectionDetail.status === DtrCorrectionStatus.APPROVED
                       ? 'Approved'
-                      : dtrCorrectionDetail.status === DtrCorrectionApproval.DISAPPROVED
+                      : dtrCorrectionDetail.status === DtrCorrectionStatus.DISAPPROVED
                       ? 'Disapproved'
-                      : dtrCorrectionDetail.status === DtrCorrectionApproval.PENDING
+                      : dtrCorrectionDetail.status === DtrCorrectionStatus.PENDING
                       ? 'For Supervisor Review'
                       : dtrCorrectionDetail.status
                   }`}
@@ -184,23 +186,24 @@ export const ApprovalsDtrCorrectionModal = ({
                     </label>
                   </div>
                 </div>
+                {dtrCorrectionDetail.status != DtrCorrectionStatus.APPROVED ? (
+                  <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Time In:</label>
 
-                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Time In:</label>
-
-                  <div className="w-auto ml-5">
-                    <label
-                      className={`text-md font-medium ${
-                        UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeIn) !=
-                        UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeIn)
-                          ? 'text-green-500'
-                          : ''
-                      }`}
-                    >
-                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeIn) ?? '-- -- --'}
-                    </label>
+                    <div className="w-auto ml-5">
+                      <label
+                        className={`text-md font-medium ${
+                          UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeIn) !=
+                          UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeIn)
+                            ? 'text-green-500'
+                            : ''
+                        }`}
+                      >
+                        {UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeIn) ?? '-- -- --'}
+                      </label>
+                    </div>
                   </div>
-                </div>
+                ) : null}
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Lunch Out:</label>
@@ -212,22 +215,24 @@ export const ApprovalsDtrCorrectionModal = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Lunch Out:</label>
+                {dtrCorrectionDetail.status != DtrCorrectionStatus.APPROVED ? (
+                  <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Lunch Out:</label>
 
-                  <div className="w-auto ml-5">
-                    <label
-                      className={` text-md font-medium ${
-                        UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchOut) !=
-                        UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchOut)
-                          ? 'text-green-500'
-                          : ''
-                      }`}
-                    >
-                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchOut) ?? '-- -- --'}
-                    </label>
+                    <div className="w-auto ml-5">
+                      <label
+                        className={` text-md font-medium ${
+                          UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchOut) !=
+                          UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchOut)
+                            ? 'text-green-500'
+                            : ''
+                        }`}
+                      >
+                        {UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchOut) ?? '-- -- --'}
+                      </label>
+                    </div>
                   </div>
-                </div>
+                ) : null}
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Lunch In:</label>
@@ -239,22 +244,24 @@ export const ApprovalsDtrCorrectionModal = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Lunch In:</label>
+                {dtrCorrectionDetail.status != DtrCorrectionStatus.APPROVED ? (
+                  <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Lunch In:</label>
 
-                  <div className="w-auto ml-5">
-                    <label
-                      className={`text-md font-medium ${
-                        UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchIn) !=
-                        UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchIn)
-                          ? 'text-green-500'
-                          : ''
-                      }`}
-                    >
-                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchIn) ?? '-- -- --'}
-                    </label>
+                    <div className="w-auto ml-5">
+                      <label
+                        className={`text-md font-medium ${
+                          UseTwelveHourFormat(dtrCorrectionDetail.dtrLunchIn) !=
+                          UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchIn)
+                            ? 'text-green-500'
+                            : ''
+                        }`}
+                      >
+                        {UseTwelveHourFormat(dtrCorrectionDetail.correctedLunchIn) ?? '-- -- --'}
+                      </label>
+                    </div>
                   </div>
-                </div>
+                ) : null}
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Time Out:</label>
@@ -266,22 +273,24 @@ export const ApprovalsDtrCorrectionModal = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Time Out:</label>
+                {dtrCorrectionDetail.status != DtrCorrectionStatus.APPROVED ? (
+                  <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Updated Time Out:</label>
 
-                  <div className="w-auto ml-5">
-                    <label
-                      className={`text-md font-medium ${
-                        UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeOut) !=
-                        UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeOut)
-                          ? 'text-green-500'
-                          : ''
-                      }`}
-                    >
-                      {UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeOut) ?? '-- -- --'}
-                    </label>
+                    <div className="w-auto ml-5">
+                      <label
+                        className={`text-md font-medium ${
+                          UseTwelveHourFormat(dtrCorrectionDetail.dtrTimeOut) !=
+                          UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeOut)
+                            ? 'text-green-500'
+                            : ''
+                        }`}
+                      >
+                        {UseTwelveHourFormat(dtrCorrectionDetail.correctedTimeOut) ?? '-- -- --'}
+                      </label>
+                    </div>
                   </div>
-                </div>
+                ) : null}
 
                 <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Remarks:</label>
@@ -292,8 +301,8 @@ export const ApprovalsDtrCorrectionModal = ({
                 </div>
               </div>
 
-              {dtrCorrectionDetail.status === DtrCorrectionApproval.PENDING ? (
-                <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
+              {dtrCorrectionDetail.status === DtrCorrectionStatus.PENDING ? (
+                <form id="DtrCorrectionAction" onSubmit={handleSubmit(onSubmit)}>
                   <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center">
                     <span className="text-slate-500 text-md">Action:</span>
 
@@ -317,19 +326,19 @@ export const ApprovalsDtrCorrectionModal = ({
               ) : null}
             </div>
           </div>
-          {/* <OtpModal
-            modalState={otpPassSlipModalIsOpen}
-            setModalState={setOtpPassSlipModalIsOpen}
-            title={'PASS SLIP APPROVAL OTP'}
+          <OtpModal
+            modalState={otpDtrCorrectionModalIsOpen}
+            setModalState={setOtpDtrCorrectionModalIsOpen}
+            title={'DTR CORRECTION APPROVAL OTP'}
           >
             <ApprovalOtpContents
               mobile={employeeDetails.profile.mobileNumber}
               employeeId={employeeDetails.user._id}
-              actionPassSlip={watch('status')}
-              tokenId={passSlip.id}
-              otpName={ManagerOtpApproval.PASSSLIP}
+              actionDtrCorrection={watch('status')}
+              tokenId={dtrCorrectionDetail.id}
+              otpName={ManagerOtpApproval.DTRCORRECTION}
             />
-          </OtpModal> */}
+          </OtpModal>
           {/* <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
@@ -357,8 +366,8 @@ export const ApprovalsDtrCorrectionModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full flex justify-end">
-              {dtrCorrectionDetail.status === DtrCorrectionApproval.PENDING ? (
-                <Button variant={'primary'} size={'md'} loading={false} form="PassSlipAction" type="submit">
+              {dtrCorrectionDetail.status === DtrCorrectionStatus.PENDING ? (
+                <Button variant={'primary'} size={'md'} loading={false} form="DtrCorrectionAction" type="submit">
                   Submit
                 </Button>
               ) : dtrCorrectionDetail.status ? (
