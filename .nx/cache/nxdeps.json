@@ -10134,7 +10134,7 @@
           },
           {
             "file": "apps/portal/src/components/fixed/dtr/DtrDateSelect.tsx",
-            "hash": "10767915523930389427",
+            "hash": "6967943383421046106",
             "dependencies": [
               {
                 "source": "portal",
@@ -10248,7 +10248,7 @@
           },
           {
             "file": "apps/portal/src/components/fixed/dtr/UpdateTimeLogModal.tsx",
-            "hash": "136256386669582679",
+            "hash": "8411482140538838389",
             "dependencies": [
               {
                 "source": "portal",
@@ -11519,75 +11519,75 @@
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalOtp/ConfirmationApprovalModal.tsx",
-            "hash": "13015243886335854772",
+            "hash": "5432779842448898571",
             "dependencies": [
               {
-                "target": "oneui",
                 "source": "portal",
+                "target": "oneui",
                 "type": "static"
               },
               {
-                "target": "utils",
                 "source": "portal",
+                "target": "utils",
                 "type": "static"
               }
             ]
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedLeaveModal.tsx",
-            "hash": "6641789599207321773",
+            "hash": "1757783200538049070",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "npm:react-icons",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "oneui",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:spinners-react",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "utils",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:react",
                 "source": "portal",
+                "target": "npm:react",
                 "type": "static"
               }
             ]
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedPassSlipModal.tsx",
-            "hash": "10548075805094129991",
+            "hash": "12358268189065012284",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "oneui",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react-icons",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "utils",
                 "source": "portal",
+                "target": "utils",
                 "type": "static"
               }
             ]
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalsDtrCorrectionModal.tsx",
-            "hash": "483077815834676229",
+            "hash": "8940661811966804565",
             "dependencies": [
               {
                 "source": "portal",
@@ -11664,72 +11664,72 @@
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingLeaveModal.tsx",
-            "hash": "2304375361742383603",
+            "hash": "12067612910656405871",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "npm:axios",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react-icons",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "oneui",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:spinners-react",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "utils",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:react-hook-form",
                 "source": "portal",
+                "target": "npm:react-hook-form",
                 "type": "static"
               }
             ]
           },
           {
             "file": "apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingPassSlipModal.tsx",
-            "hash": "18038781556840478497",
+            "hash": "15365994875866367733",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "oneui",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react-icons",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "utils",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:react-hook-form",
                 "source": "portal",
+                "target": "npm:react-hook-form",
                 "type": "static"
               }
             ]
@@ -11999,37 +11999,6 @@
               },
               {
                 "target": "utils",
-                "source": "portal",
-                "type": "static"
-              }
-            ]
-          },
-          {
-            "file": "apps/portal/src/components/fixed/overtime-accomplishment/InputAccomplishmentModal.tsx",
-            "hash": "15209480684599487817",
-            "dependencies": [
-              {
-                "target": "oneui",
-                "source": "portal",
-                "type": "static"
-              },
-              {
-                "target": "npm:react-icons",
-                "source": "portal",
-                "type": "static"
-              },
-              {
-                "target": "npm:lodash",
-                "source": "portal",
-                "type": "static"
-              },
-              {
-                "target": "utils",
-                "source": "portal",
-                "type": "static"
-              },
-              {
-                "target": "npm:react",
                 "source": "portal",
                 "type": "static"
               }
@@ -13575,36 +13544,36 @@
           },
           {
             "file": "apps/portal/src/components/fixed/training-selection/TrainingDetailsModal.tsx",
-            "hash": "4477192386983969821",
+            "hash": "14953348753857564009",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "oneui",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react-icons",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "utils",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:swr",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:lodash",
                 "source": "portal",
+                "target": "npm:lodash",
                 "type": "static"
               }
             ]
@@ -14495,7 +14464,7 @@
           },
           {
             "file": "apps/portal/src/pages/[id]/dtr/index.tsx",
-            "hash": "2825994050418619189",
+            "hash": "8314550543682993075",
             "dependencies": [
               {
                 "source": "portal",
@@ -14525,6 +14494,11 @@
               {
                 "source": "portal",
                 "target": "npm:react-icons",
+                "type": "static"
+              },
+              {
+                "source": "portal",
+                "target": "npm:swr",
                 "type": "static"
               },
               {
@@ -14664,51 +14638,51 @@
           },
           {
             "file": "apps/portal/src/pages/[id]/index.tsx",
-            "hash": "2652791203027374926",
+            "hash": "16281069245305713044",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "npm:next",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:swr",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:date-fns",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "oneui",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:lodash",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "npm:react-icons",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "utils",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:dayjs",
                 "source": "portal",
+                "target": "npm:dayjs",
                 "type": "static"
               }
             ]
@@ -17954,7 +17928,7 @@
           },
           {
             "file": "libs/utils/src/lib/types/dtr.type.ts",
-            "hash": "14575868798652381173"
+            "hash": "11418019678194417495"
           },
           {
             "file": "libs/utils/src/lib/types/employee.type.ts",

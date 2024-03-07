@@ -2,7 +2,7 @@ import { Schedule } from './schedule.type';
 import { HolidayTypes } from '../../../../utils/src/lib/enums/holiday-types.enum';
 import { CANCELLED } from 'dns';
 import { LeaveDateStatus } from '../enums/leave.enum';
-import { DtrCorrectionApproval } from '../enums/approval.enum';
+import { DtrCorrectionStatus } from '../enums/dtr.enum';
 
 // dtr / time log
 export type EmployeeTimeLog = {
@@ -25,6 +25,7 @@ export type EmployeeDtrWithSchedule = {
   day: string;
   companyId: string;
   dtr: EmployeeTimeLog; //dtr
+  dtrCorrection?: DtrCorrectionForEmployee;
   schedule: Schedule & EmployeeRestDay; // schedule with rest days
   holidayType: HolidayTypes | null; // recently added
   isHoliday: boolean;
@@ -50,6 +51,7 @@ export type EmployeeDtrWithScheduleAndSummary = {
   dtrDays: Array<EmployeeDtrWithSchedule>;
 };
 
+//for manager view
 export type DtrCorrection = {
   companyId: string;
   employeeFullName: string;
@@ -64,13 +66,23 @@ export type DtrCorrection = {
   correctedLunchIn: string;
   dtrTimeOut: string;
   correctedTimeOut: string;
-  status: DtrCorrectionApproval;
+  status: DtrCorrectionStatus;
   remarks: string;
+};
+
+//for employee view - dtr page
+export type DtrCorrectionForEmployee = {
+  lunchIn: string;
+  luncOut: string;
+  remarks: string;
+  status: DtrCorrectionStatus;
+  timeIn: string;
+  timeOut: string;
 };
 
 export type DtrCorrectionApprovalPatch = {
   id: string;
-  status: DtrCorrectionApproval;
+  status: DtrCorrectionStatus;
 };
 
 // Time Log Update/Correction application form

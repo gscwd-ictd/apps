@@ -109,7 +109,7 @@ export const ApprovalsDtrCorrectionModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">DTR Correction for Approval</span>
+              <span className="text-xl md:text-2xl">Time Log Correction</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -329,7 +329,7 @@ export const ApprovalsDtrCorrectionModal = ({
           <OtpModal
             modalState={otpDtrCorrectionModalIsOpen}
             setModalState={setOtpDtrCorrectionModalIsOpen}
-            title={'DTR CORRECTION APPROVAL OTP'}
+            title={'TIME LOG CORRECTION APPROVAL OTP'}
           >
             <ApprovalOtpContents
               mobile={employeeDetails.profile.mobileNumber}
@@ -339,15 +339,15 @@ export const ApprovalsDtrCorrectionModal = ({
               otpName={ManagerOtpApproval.DTRCORRECTION}
             />
           </OtpModal>
-          {/* <ConfirmationApprovalModal
+          <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
             closeModalAction={closeDeclineModal}
-            actionPassSlip={watch('status')}
-            tokenId={passSlip.id}
-            confirmName={ManagerOtpApproval.PASSSLIP}
+            actionDtrCorrection={watch('status')}
+            tokenId={dtrCorrectionDetail.id}
+            confirmName={ManagerOtpApproval.DTRCORRECTION}
             employeeId={employeeDetails.user._id}
-          /> */}
+          />
 
           {/* <CaptchaModal
             modalState={captchaModalIsOpen}

@@ -13,7 +13,7 @@ import { SpinnerDotted } from 'spinners-react';
 import { Button, ListDef, Select, ToastNotification } from '@gscwd-apps/oneui';
 import { format } from 'date-fns';
 import { HiOutlineSearch } from 'react-icons/hi';
-import Link from 'next/link';
+import useSWR from 'swr';
 import { DtrDateSelect } from '../../../components/fixed/dtr/DtrDateSelect';
 import { useDtrStore } from '../../../store/dtr.store';
 import { DtrTable } from '../../../components/fixed/dtr/DtrTable';
@@ -22,6 +22,7 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 
 export default function DailyTimeRecord({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -31,6 +32,11 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     loadingUpdateEmployeeDtr,
     responseUpdateDtr,
     emptyResponseAndError,
+    getEmployeeDtr,
+    getEmployeeDtrSuccess,
+    getEmployeeDtrFail,
+    selectedMonth,
+    selectedYear,
   } = useDtrStore((state) => ({
     isErrorDtr: state.error.errorDtr,
     isLoadingDtr: state.loading.loadingDtr,
@@ -38,7 +44,46 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     loadingUpdateEmployeeDtr: state.loading.loadingUpdateEmployeeDtr,
     responseUpdateDtr: state.response.employeeDailyRecord,
     emptyResponseAndError: state.emptyResponseAndError,
+
+    getEmployeeDtr: state.getEmployeeDtr,
+    getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+    getEmployeeDtrFail: state.getEmployeeDtrFail,
+    selectedMonth: state.selectedMonth,
+    selectedYear: state.selectedYear,
   }));
+
+  // const monthNow = format(new Date(), 'M');
+  // const yearNow = format(new Date(), 'yyyy');
+  const dtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrDtr,
+    isLoading: swrDtrIsLoading,
+    error: swrDtrError,
+    mutate: mutateDtrUrl,
+  } = useSWR(employeeDetails.employmentDetails.companyId ? dtrUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrDtrIsLoading) {
+      getEmployeeDtr(swrDtrIsLoading);
+    }
+  }, [swrDtrIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrDtr)) {
+      getEmployeeDtrSuccess(swrDtrIsLoading, swrDtr);
+    }
+
+    if (!isEmpty(swrDtrError)) {
+      getEmployeeDtrFail(swrDtrIsLoading, swrDtrError.message);
+    }
+  }, [swrDtr, swrDtrError]);
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
@@ -49,6 +94,10 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
+
+  useEffect(() => {
+    mutateDtrUrl;
+  }, [responseUpdateDtr]);
 
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 

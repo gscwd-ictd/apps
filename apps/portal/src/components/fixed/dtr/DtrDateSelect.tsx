@@ -90,10 +90,10 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     setSelectedYear(year);
   };
 
-  useEffect(() => {
-    setSelectedYear(yearNow);
-    setSelectedMonth(monthNow);
-  }, [responseUpdateDtr]);
+  // useEffect(() => {
+  //   setSelectedYear(yearNow);
+  //   setSelectedMonth(monthNow);
+  // }, [responseUpdateDtr]);
 
   useEffect(() => {
     setSelectedYear(format(new Date(), 'yyyy'));

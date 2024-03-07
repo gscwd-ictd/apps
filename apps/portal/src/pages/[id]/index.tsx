@@ -218,6 +218,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
+
   const dtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${userDetails.employmentDetails.companyId}/${yearNow}/${monthNow}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 

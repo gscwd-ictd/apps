@@ -1,8 +1,8 @@
 {
   "run": {
     "command": "nx serve portal --port 3002 --hostname 0.0.0.0",
-    "startTime": "2024-03-06T00:13:29.630Z",
-    "endTime": "2024-03-06T09:10:22.464Z",
+    "startTime": "2024-03-07T00:54:58.359Z",
+    "endTime": "2024-03-07T02:23:43.987Z",
     "inner": false
   },
   "tasks": [
@@ -10,9 +10,9 @@
       "taskId": "portal:serve:development",
       "target": "serve",
       "projectName": "portal",
-      "hash": "3f1bae2dacea9349df83ae74886ba0ded5491de8868456cb00e85dab1b942c00",
-      "startTime": "2024-03-06T00:13:29.640Z",
-      "endTime": "2024-03-06T09:10:22.463Z",
+      "hash": "1cc696457dd7dcfa25aabe745c0d6b337df0377b0342751eb7fe3961872305a2",
+      "startTime": "2024-03-07T00:54:58.368Z",
+      "endTime": "2024-03-07T02:23:43.987Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 1
