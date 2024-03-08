@@ -34,6 +34,7 @@ import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
 import { useApprovalStore } from '../../store/approvals.store';
+import { usePassSlipStore } from '../../store/passslip.store';
 
 export type NavDetails = {
   fullName: string;
@@ -85,10 +86,20 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
       getTimeLogsFail: state.getTimeLogsFail,
     }));
 
-  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail } = useDtrStore((state) => ({
-    getEmployeeDtr: state.getEmployeeDtr,
-    getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
-    getEmployeeDtrFail: state.getEmployeeDtrFail,
+  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail, setSelectedYear, setSelectedMonth } = useDtrStore(
+    (state) => ({
+      getEmployeeDtr: state.getEmployeeDtr,
+      getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+      getEmployeeDtrFail: state.getEmployeeDtrFail,
+      setSelectedYear: state.setSelectedYear,
+      setSelectedMonth: state.setSelectedMonth,
+    })
+  );
+
+  const { getPassSlipCount, getPassSlipCountSuccess, getPassSlipCountFail } = usePassSlipStore((state) => ({
+    getPassSlipCount: state.getPassSlipCount,
+    getPassSlipCountSuccess: state.getPassSlipCountSuccess,
+    getPassSlipCountFail: state.getPassSlipCountFail,
   }));
 
   const { leaveLedger, loadingLedger, errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } =
@@ -242,6 +253,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrDtr)) {
+      setSelectedYear(yearNow);
+      setSelectedMonth(monthNow);
       getEmployeeDtrSuccess(swrDtrIsLoading, swrDtr);
     }
 
@@ -249,6 +262,39 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
       getEmployeeDtrFail(swrDtrIsLoading, swrDtrError.message);
     }
   }, [swrDtr, swrDtrError]);
+
+  //pass slip count
+  const passSlipCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/pass-slips/used/count`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPassSlipCount,
+    isLoading: swrPassSlipCountIsLoading,
+    error: swrPassSlipCountError,
+    mutate: mutatePassSlipCount,
+  } = useSWR(userDetails.employmentDetails.companyId ? passSlipCountUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPassSlipCountIsLoading) {
+      getPassSlipCount(swrPassSlipCountIsLoading);
+    }
+  }, [swrPassSlipCountIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPassSlipCount)) {
+      console.log(swrPassSlipCount);
+      getPassSlipCountSuccess(swrPassSlipCountIsLoading, swrPassSlipCount);
+    }
+
+    if (!isEmpty(swrPassSlipCountError)) {
+      getPassSlipCountFail(swrPassSlipCountIsLoading, swrPassSlipCountError.message);
+    }
+  }, [swrPassSlipCount, swrPassSlipCountError]);
 
   //store server side props (userDetails) to store
   //run hydration function which displays allowed modules of employee
@@ -326,6 +372,10 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
         <ToastNotification toastType="error" notifMessage={`DTR: ${swrDtrError.message}.`} />
       ) : null}
 
+      {!isEmpty(swrPassSlipCountError) ? (
+        <ToastNotification toastType="error" notifMessage={`Pass Slip Count: ${swrPassSlipCountError.message}.`} />
+      ) : null}
+
       <Head>
         <title>{employeeName}</title>
       </Head>
@@ -383,7 +433,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                     />
                     <StatsCard
                       name={'Pass Slip Count'}
-                      count={0}
+                      count={swrPassSlipCount?.passSlipCount}
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
                       height={windowHeight > 820 ? 'h-52' : 'h-36'}

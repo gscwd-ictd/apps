@@ -10191,7 +10191,7 @@
           },
           {
             "file": "apps/portal/src/components/fixed/dtr/DtrTable.tsx",
-            "hash": "10935732499638617149",
+            "hash": "1333837193478227784",
             "dependencies": [
               {
                 "source": "portal",
@@ -10222,6 +10222,11 @@
                 "source": "portal",
                 "target": "npm:spinners-react",
                 "type": "static"
+              },
+              {
+                "source": "portal",
+                "target": "npm:next",
+                "type": "static"
               }
             ]
           },
@@ -10248,7 +10253,7 @@
           },
           {
             "file": "apps/portal/src/components/fixed/dtr/UpdateTimeLogModal.tsx",
-            "hash": "8411482140538838389",
+            "hash": "9355366051122967347",
             "dependencies": [
               {
                 "source": "portal",
@@ -10816,21 +10821,21 @@
           },
           {
             "file": "apps/portal/src/components/fixed/home/attendance/AttendanceCard.tsx",
-            "hash": "15955316480496938932",
+            "hash": "6474886811255373826",
             "dependencies": [
               {
+                "source": "portal",
                 "target": "npm:dayjs",
-                "source": "portal",
                 "type": "static"
               },
               {
+                "source": "portal",
                 "target": "utils",
-                "source": "portal",
                 "type": "static"
               },
               {
-                "target": "npm:react-loading-skeleton",
                 "source": "portal",
+                "target": "npm:react-loading-skeleton",
                 "type": "static"
               }
             ]
@@ -14464,7 +14469,7 @@
           },
           {
             "file": "apps/portal/src/pages/[id]/dtr/index.tsx",
-            "hash": "8314550543682993075",
+            "hash": "14538819692583275599",
             "dependencies": [
               {
                 "source": "portal",
@@ -14638,7 +14643,7 @@
           },
           {
             "file": "apps/portal/src/pages/[id]/index.tsx",
-            "hash": "16281069245305713044",
+            "hash": "4991301244098886889",
             "dependencies": [
               {
                 "source": "portal",
@@ -15859,16 +15864,16 @@
           },
           {
             "file": "apps/portal/src/store/passslip.store.tsx",
-            "hash": "3404934253090677274",
+            "hash": "16852779306637223525",
             "dependencies": [
               {
-                "target": "npm:zustand",
                 "source": "portal",
+                "target": "npm:zustand",
                 "type": "static"
               },
               {
-                "target": "utils",
                 "source": "portal",
+                "target": "utils",
                 "type": "static"
               }
             ]

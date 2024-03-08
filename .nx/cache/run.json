@@ -1,18 +1,18 @@
 {
   "run": {
-    "command": "nx serve portal --port 3002 --hostname 0.0.0.0",
-    "startTime": "2024-03-07T00:54:58.359Z",
-    "endTime": "2024-03-07T02:23:43.987Z",
+    "command": "nx serve employee-monitoring --port 3005 --hostname 0.0.0.0",
+    "startTime": "2024-03-07T01:02:14.162Z",
+    "endTime": "2024-03-07T09:08:19.493Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "portal:serve:development",
+      "taskId": "employee-monitoring:serve:development",
       "target": "serve",
-      "projectName": "portal",
-      "hash": "1cc696457dd7dcfa25aabe745c0d6b337df0377b0342751eb7fe3961872305a2",
-      "startTime": "2024-03-07T00:54:58.368Z",
-      "endTime": "2024-03-07T02:23:43.987Z",
+      "projectName": "employee-monitoring",
+      "hash": "1fbc13d0d03fc4108be3b349641f8dac7a6edeedd3cb4f44d50386dc8af5c6f3",
+      "startTime": "2024-03-07T01:02:14.175Z",
+      "endTime": "2024-03-07T09:08:19.492Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 1

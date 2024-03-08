@@ -52,9 +52,10 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     selectedYear: state.selectedYear,
   }));
 
-  // const monthNow = format(new Date(), 'M');
-  // const yearNow = format(new Date(), 'yyyy');
+  const monthNow = format(new Date(), 'M');
+  const yearNow = format(new Date(), 'yyyy');
   const dtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}`;
+  const dtrUrlDefault = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${yearNow}/${monthNow}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
@@ -62,10 +63,18 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     isLoading: swrDtrIsLoading,
     error: swrDtrError,
     mutate: mutateDtrUrl,
-  } = useSWR(employeeDetails.employmentDetails.companyId ? dtrUrl : null, fetchWithToken, {
-    shouldRetryOnError: true,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(
+    employeeDetails.employmentDetails.companyId && selectedYear && selectedMonth
+      ? dtrUrl
+      : employeeDetails.employmentDetails.companyId
+      ? dtrUrlDefault
+      : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: true,
+      revalidateOnFocus: true,
+    }
+  );
 
   // Initial zustand state update
   useEffect(() => {

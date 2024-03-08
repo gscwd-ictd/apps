@@ -16,6 +16,7 @@ import { HiX } from 'react-icons/hi';
 import { EmployeeDtr, useDtrStore } from 'apps/portal/src/store/dtr.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { ConfirmationUpdateTimeLogModal } from './ConfirmationModal';
+import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 
 type EditDailySchedModalProps = {
   modalState: boolean;
@@ -131,8 +132,9 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   };
 
   useEffect(() => {
-    if (modalState) setDefaultValues(rowData, '');
-    console.log(rowData);
+    if (modalState) {
+      setDefaultValues(rowData, '');
+    }
   }, [modalState]);
 
   // cancel action for Confirmation Application Modal
@@ -177,6 +179,22 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
             />
           ) : null}
 
+          {rowData?.dtrCorrection?.status === DtrCorrectionStatus.APPROVED ? (
+            <AlertNotification
+              alertType={'success'}
+              notifMessage={'Time Log Correction Approved.'}
+              dismissible={false}
+            />
+          ) : null}
+
+          {rowData?.dtrCorrection?.status === DtrCorrectionStatus.DISAPPROVED ? (
+            <AlertNotification
+              alertType={'error'}
+              notifMessage={'Time Log Correction Disapproved.'}
+              dismissible={false}
+            />
+          ) : null}
+
           <form onSubmit={handleSubmit(onSubmit)} id="editEmployeeDtrModal">
             <div className="flex flex-col w-full gap-5 px-5 mt-5">
               <div className="">
@@ -190,151 +208,207 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
               <hr />
 
-              <div className="">
-                <LabelInput
-                  required
-                  id="timeIn"
-                  label="Time in"
-                  step="any"
-                  isDirty={dirtyFields.timeIn}
-                  type="time"
-                  controller={{
-                    ...register('timeIn', {
-                      onChange: (e) => {
-                        setValue('timeIn', e.target.value, {
-                          shouldValidate: true,
-                        });
-                        trigger(); // triggers all validations for inputs
-                      },
-                    }),
-                  }}
-                  isError={errors.timeIn ? true : false}
-                  errorMessage={errors.timeIn?.message}
-                  className={
-                    dirtyFields.timeIn && !errors.timeIn ? 'bg-green-300' : errors.timeIn ? 'bg-red-200' : 'bg-inherit'
-                  }
-                  disabled={rowData.dtr?.timeIn ? true : false}
-                />
-              </div>
-              <div className="">
-                <LabelInput
-                  required={false}
-                  id={'scheduleLunchOut'}
-                  type="time"
-                  label={'Lunch Out'}
-                  isDirty={dirtyFields.lunchOut}
-                  controller={{
-                    ...register('lunchOut', {
-                      onChange: (e) => {
-                        setValue('lunchOut', e.target.value, {
-                          shouldValidate: true,
-                        });
-                        trigger(); // trigger all validations for inputs
-                      },
-                    }),
-                  }}
-                  isError={errors.lunchOut ? true : false}
-                  errorMessage={errors.lunchOut?.message}
-                  className={
-                    dirtyFields.lunchOut && !errors.lunchOut
-                      ? 'bg-green-300'
-                      : errors.lunchOut
-                      ? 'bg-red-200'
-                      : 'bg-inherit'
-                  }
-                  disabled={getValues('withLunch') === true ? (rowData.dtr?.lunchOut ? true : false) : true}
-                />
-              </div>
-              <div className="">
-                <LabelInput
-                  required={false}
-                  id={'scheduleLunchIn'}
-                  type="time"
-                  label={'Lunch In'}
-                  step="any"
-                  isDirty={dirtyFields.lunchIn}
-                  controller={{
-                    ...register('lunchIn', {
-                      onChange: (e) => {
-                        setValue('lunchIn', e.target.value, {
-                          shouldValidate: true,
-                        });
-                        trigger(); // trigger all validations for inputs
-                      },
-                    }),
-                  }}
-                  isError={errors.lunchIn ? true : false}
-                  errorMessage={errors.lunchIn?.message}
-                  className={
-                    dirtyFields.lunchIn && !errors.lunchIn
-                      ? 'bg-green-300'
-                      : errors.lunchIn
-                      ? 'bg-red-200'
-                      : 'bg-inherit'
-                  }
-                  disabled={getValues('withLunch') === true ? (rowData.dtr?.lunchIn ? true : false) : true}
-                />
-              </div>
-              <div className="">
-                <LabelInput
-                  required
-                  id="timeOut"
-                  label="Time out"
-                  type="time"
-                  isDirty={dirtyFields.timeOut}
-                  step="any"
-                  controller={{
-                    ...register('timeOut', {
-                      onChange: (e) => {
-                        setValue('timeOut', e.target.value, {
-                          shouldValidate: true,
-                        });
-                        trigger(); // trigger all validations for all inputs
-                      },
-                    }),
-                  }}
-                  isError={errors.timeOut ? true : false}
-                  errorMessage={errors.timeOut?.message}
-                  className={
-                    dirtyFields.timeOut && !errors.timeOut
-                      ? 'bg-green-300'
-                      : errors.timeOut
-                      ? 'bg-red-200'
-                      : 'bg-inherit'
-                  }
-                  disabled={rowData.dtr?.timeOut ? true : false}
-                />
-              </div>
-              <div className="">
-                <LabelInput
-                  required
-                  id="remarks"
-                  label="Remarks"
-                  type="textarea"
-                  rows={3}
-                  isDirty={dirtyFields.remarks}
-                  step="any"
-                  placeholder="Enter remarks"
-                  controller={{
-                    ...register('remarks', {
-                      onChange: (e) => {
-                        setValue('remarks', e.target.value, {
-                          shouldValidate: true,
-                        });
-                        trigger(); // trigger all validations for all inputs
-                      },
-                    }),
-                  }}
-                  isError={errors.remarks ? true : false}
-                  errorMessage={errors.remarks?.message}
-                  className={
-                    dirtyFields.remarks && !errors.remarks
-                      ? 'bg-green-300'
-                      : errors.remarks
-                      ? 'bg-red-200'
-                      : 'bg-inherit'
-                  }
-                />
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 sm:pr-5 px-0.5 pb-3  ">
+                  {/* <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Time In:</label> */}
+
+                  <div className="w-full ">
+                    <LabelInput
+                      textSize="sm"
+                      required
+                      id="timeIn"
+                      label="Time In:"
+                      step="any"
+                      isDirty={dirtyFields.timeIn}
+                      type="time"
+                      controller={{
+                        ...register('timeIn', {
+                          onChange: (e) => {
+                            setValue('timeIn', e.target.value, {
+                              shouldValidate: true,
+                            });
+                            trigger(); // triggers all validations for inputs
+                          },
+                        }),
+                      }}
+                      isError={errors.timeIn ? true : false}
+                      errorMessage={errors.timeIn?.message}
+                      className={`
+                        ${
+                          dirtyFields.timeIn && !errors.timeIn
+                            ? 'bg-green-300'
+                            : errors.timeIn
+                            ? 'bg-red-200'
+                            : 'bg-inherit'
+                        }
+                      `}
+                      disabled={rowData.dtr?.timeIn ? true : false}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
+                  {/* <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Lunch Out:</label> */}
+
+                  <div className="w-full">
+                    <LabelInput
+                      textSize="sm"
+                      required={false}
+                      id={'scheduleLunchOut'}
+                      type="time"
+                      label={'Lunch Out:'}
+                      isDirty={dirtyFields.lunchOut}
+                      controller={{
+                        ...register('lunchOut', {
+                          onChange: (e) => {
+                            setValue('lunchOut', e.target.value, {
+                              shouldValidate: true,
+                            });
+                            trigger(); // trigger all validations for inputs
+                          },
+                        }),
+                      }}
+                      isError={errors.lunchOut ? true : false}
+                      errorMessage={errors.lunchOut?.message}
+                      className={`
+                        ${
+                          dirtyFields.lunchOut && !errors.lunchOut
+                            ? 'bg-green-300'
+                            : errors.lunchOut
+                            ? 'bg-red-200'
+                            : 'bg-inherit'
+                        }
+                      `}
+                      disabled={getValues('withLunch') === true ? (rowData.dtr?.lunchOut ? true : false) : true}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pr-5 pb-3  ">
+                  {/* <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Lunch In:</label> */}
+
+                  <div className="w-full">
+                    <LabelInput
+                      textSize="sm"
+                      required={false}
+                      id={'scheduleLunchIn'}
+                      type="time"
+                      label={'Lunch In:'}
+                      step="any"
+                      isDirty={dirtyFields.lunchIn}
+                      controller={{
+                        ...register('lunchIn', {
+                          onChange: (e) => {
+                            setValue('lunchIn', e.target.value, {
+                              shouldValidate: true,
+                            });
+                            trigger(); // trigger all validations for inputs
+                          },
+                        }),
+                      }}
+                      isError={errors.lunchIn ? true : false}
+                      errorMessage={errors.lunchIn?.message}
+                      className={`
+                        ${
+                          dirtyFields.lunchIn && !errors.lunchIn
+                            ? 'bg-green-300'
+                            : errors.lunchIn
+                            ? 'bg-red-200'
+                            : 'bg-inherit'
+                        }
+                      `}
+                      disabled={getValues('withLunch') === true ? (rowData.dtr?.lunchIn ? true : false) : true}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
+                  {/* <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Time Out:</label> */}
+
+                  <div className="w-full">
+                    <LabelInput
+                      required
+                      textSize="sm"
+                      id="timeOut"
+                      label="Time Out"
+                      type="time"
+                      isDirty={dirtyFields.timeOut}
+                      step="any"
+                      controller={{
+                        ...register('timeOut', {
+                          onChange: (e) => {
+                            setValue('timeOut', e.target.value, {
+                              shouldValidate: true,
+                            });
+                            trigger(); // trigger all validations for all inputs
+                          },
+                        }),
+                      }}
+                      isError={errors.timeOut ? true : false}
+                      errorMessage={errors.timeOut?.message}
+                      className={` 
+                        ${
+                          dirtyFields.timeOut && !errors.timeOut
+                            ? 'bg-green-300'
+                            : errors.timeOut
+                            ? 'bg-red-200'
+                            : 'bg-inherit'
+                        }
+                      `}
+                      disabled={rowData?.dtr?.timeOut ? true : false}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  {rowData?.dtrCorrection?.remarks ? (
+                    <label className="font-medium text-gray-900 dark:text-gray-800 text-sm whitespace-nowrap pb-0.5 ">
+                      Remarks:
+                    </label>
+                  ) : null}
+
+                  <div className="w-full">
+                    {rowData?.dtrCorrection?.remarks ? (
+                      <label className=" text-sm ml-5">{rowData?.dtrCorrection?.remarks}</label>
+                    ) : rowData?.dtr?.timeIn &&
+                      rowData?.dtr?.lunchOut &&
+                      rowData?.dtr?.lunchIn &&
+                      rowData?.dtr?.timeOut ? null : (
+                      <LabelInput
+                        required
+                        textSize="sm"
+                        id="remarks"
+                        label="Remarks"
+                        type="textarea"
+                        rows={3}
+                        isDirty={dirtyFields.remarks}
+                        step="any"
+                        placeholder="Enter remarks"
+                        controller={{
+                          ...register('remarks', {
+                            onChange: (e) => {
+                              setValue('remarks', e.target.value, {
+                                shouldValidate: true,
+                              });
+                              trigger(); // trigger all validations for all inputs
+                            },
+                          }),
+                        }}
+                        isError={errors.remarks ? true : false}
+                        errorMessage={errors.remarks?.message}
+                        className={`
+                        ${
+                          dirtyFields.remarks && !errors.remarks
+                            ? 'bg-green-300'
+                            : errors.remarks
+                            ? 'bg-red-200'
+                            : 'bg-inherit'
+                        }
+                      `}
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </form>
@@ -342,7 +416,9 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="max-w-auto flex gap-2">
-              {rowData?.hasPendingDtrCorrection ? (
+              {rowData?.hasPendingDtrCorrection ||
+              (rowData?.dtr?.timeIn && rowData?.dtr?.lunchOut && rowData?.dtr?.lunchIn && rowData?.dtr?.timeOut) ||
+              rowData?.dtrCorrection?.status === DtrCorrectionStatus.DISAPPROVED ? (
                 <Button
                   variant={'default'}
                   size={'md'}

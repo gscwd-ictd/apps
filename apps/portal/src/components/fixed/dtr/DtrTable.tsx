@@ -13,6 +13,7 @@ import UpdateTimeLogModal from './UpdateTimeLogModal';
 import { SpinnerDotted } from 'spinners-react';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import Link from 'next/link';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -66,25 +67,25 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
               <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                 <thead className="border-0">
                   <tr>
-                    <th className="px-10 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
+                    <th className="w-1/12 px-10 py-2 text-sm text-center border md:px-6 md:text-md font-medium text-gray-700 ">
                       Date
                     </th>
-                    <th className="px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    <th className="w-1/12 px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Time In
                     </th>
-                    <th className="px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    <th className="w-1/12 px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Lunch Out
                     </th>
-                    <th className="px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    <th className="w-1/12 px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Lunch In
                     </th>
-                    <th className="px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    <th className="w-1/12 px-10 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Time Out
                     </th>
-                    <th className="px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    <th className="w-3/12 px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Remarks
                     </th>
-                    <th className="px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
+                    <th className="w-1/12 px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Edit
                     </th>
                   </tr>
@@ -185,6 +186,9 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                             } py-2 text-center border`}
                           >
                             {logs.dtr.remarks}
+                            {logs.dtrCorrection ? (
+                              <label className="capitalize">Time Log Correction {logs.dtrCorrection.status}</label>
+                            ) : null}
                           </td>
                           <td
                             className={`${
@@ -350,13 +354,13 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-end w-full pt-4">
-            {/* <Link href={`/123/dtr/${date}`} target={'_blank'}>
-                <Button variant={'primary'} size={'md'} loading={false}>
-                  View
-                </Button>
-              </Link> */}
-          </div>
+          {/* <div className="flex justify-end w-full pt-4">
+            <Link href={`/${employeeDetails.employmentDetails.userId}/dtr/${now}`} target={'_blank'}>
+              <Button variant={'primary'} size={'md'} loading={false}>
+                View
+              </Button>
+            </Link>
+          </div> */}
         </>
       ) : (
         <div className="h-80 w-full text-8xl text-slate-200 flex justify-center items-center">NO DATA</div>
