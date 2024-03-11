@@ -30,14 +30,7 @@ const Index = () => {
   const [currentRowData, setCurrentRowData] = useState<SystemLog>({} as SystemLog);
 
   // fetch data for list of user
-  const {
-    data: systemLogs,
-    error: systemLogsError,
-    isLoading: systemLogsLoading,
-  } = useSWR('/user-logs', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  const { data: systemLogs, error: systemLogsError, isLoading: systemLogsLoading } = useSWR('/user-logs', fetcherEMS);
 
   // Zustand initialization
   const {
@@ -77,7 +70,7 @@ const Index = () => {
     }),
     columnHelper.accessor('userFullName', {
       enableSorting: true,
-      header: () => <span className="w-full text-center">Name</span>,
+      header: () => 'Name',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('dateLogged', {
@@ -110,7 +103,26 @@ const Index = () => {
     }
 
     if (!isEmpty(systemLogsError)) {
-      SetErrorSystemLogs(systemLogsError);
+      switch (systemLogsError?.response?.status) {
+        case 400:
+          SetErrorSystemLogs('Bad Request');
+          break;
+        case 401:
+          SetErrorSystemLogs('Unauthorized');
+          break;
+        case 403:
+          SetErrorSystemLogs('Forbidden');
+          break;
+        case 404:
+          SetErrorSystemLogs('System logs not found');
+          break;
+        case 500:
+          SetErrorSystemLogs('Internal Server Error');
+          break;
+        default:
+          SetErrorSystemLogs('An error occurred. Please try again later.');
+          break;
+      }
     }
   }, [systemLogs, systemLogsError]);
 

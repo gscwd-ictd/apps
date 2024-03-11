@@ -28,8 +28,8 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
   // useSWR
   const {
     data: swrSystemLogDetails,
-    isLoading: swrIsLoading,
-    error: swrError,
+    error: swrSystemLogDetailsError,
+    isLoading: swrSystemLogsLoading,
   } = useSWR(modalState && rowData.id ? `/user-logs/${rowData.id}` : null, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
@@ -49,21 +49,6 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
     SetErrorSystemLog: state.setErrorSystemLog,
   }));
 
-  // isLoading
-  useEffect(() => {
-    if (swrIsLoading) {
-      SetGetSystemLogDetails({
-        id: '',
-        dateLogged: '',
-        timeLogged: '',
-        userFullName: '',
-        method: '',
-        route: '',
-        body: undefined,
-      });
-    }
-  }, [swrIsLoading]);
-
   // SystemLogDetails
   useEffect(() => {
     if (!isEmpty(swrSystemLogDetails)) {
@@ -71,13 +56,33 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
     }
 
     // Error
-    if (!isEmpty(swrError)) {
-      SetErrorSystemLog(swrError);
+    if (!isEmpty(swrSystemLogDetailsError)) {
+      switch (swrSystemLogDetailsError?.response?.status) {
+        case 400:
+          SetErrorSystemLog('Bad Request');
+          break;
+        case 401:
+          SetErrorSystemLog('Unauthorized');
+          break;
+        case 403:
+          SetErrorSystemLog('Forbidden');
+          break;
+        case 404:
+          SetErrorSystemLog('System log not found');
+          break;
+        case 500:
+          SetErrorSystemLog('Internal Server Error');
+          break;
+        default:
+          SetErrorSystemLog('An error occurred. Please try again later.');
+          break;
+      }
     }
-  }, [swrSystemLogDetails, swrError]);
+  }, [swrSystemLogDetails, swrSystemLogDetailsError]);
 
   return (
     <>
+      {/* Error notification */}
       {ErrorSystemLog ? (
         <ToastNotification toastType="error" notifMessage={ErrorSystemLog} />
       ) : (
@@ -99,7 +104,7 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
             <div className="w-full min-h-[14rem]">
               <div className="flex flex-col w-full px-2 py-4">
                 <div className="flex flex-col gap-4">
-                  {swrIsLoading ? (
+                  {swrSystemLogsLoading ? (
                     <LoadingSpinner size="lg" />
                   ) : (
                     <div className="grid px-5 gap-3">

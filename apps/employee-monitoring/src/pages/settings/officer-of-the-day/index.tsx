@@ -50,24 +50,44 @@ const Index = () => {
     data: officersOfTheDay,
     error: officersOfTheDayError,
     isLoading: officersOfTheDayLoading,
-  } = useSWR('/officer-of-the-day', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+    mutate: mutateOfficersOfTheDay,
+  } = useSWR('/officer-of-the-day', fetcherEMS);
 
   // Zustand initialization
   const {
     OfficersOfTheDay,
     SetGetOfficersOfTheDay,
 
+    PostOfficerOfTheDay,
+    SetPostOfficerOfTheDay,
+
+    DeleteOfficerOfTheDay,
+    SetDeleteOfficerOfTheDay,
+
+    ErrorOfficerOfTheDay,
+    SetErrorOfficerOfTheDay,
+
     ErrorOfficersOfTheDay,
     SetErrorOfficersOfTheDay,
+
+    EmptyResponse,
   } = useOfficerOfTheDayStore((state) => ({
     OfficersOfTheDay: state.getOfficersOfTheDay,
     SetGetOfficersOfTheDay: state.setGetOfficersOfTheDay,
 
+    PostOfficerOfTheDay: state.postOfficerOfTheDay,
+    SetPostOfficerOfTheDay: state.setPostOfficerOfTheDay,
+
+    DeleteOfficerOfTheDay: state.deleteOfficerOfTheDay,
+    SetDeleteOfficerOfTheDay: state.setDeleteOfficerOfTheDay,
+
+    ErrorOfficerOfTheDay: state.errorOfficerOfTheDay,
+    SetErrorOfficerOfTheDay: state.setErrorOfficerOfTheDay,
+
     ErrorOfficersOfTheDay: state.errorOfficersOfTheDay,
     SetErrorOfficersOfTheDay: state.setErrorOfficersOfTheDay,
+
+    EmptyResponse: state.emptyResponse,
   }));
 
   // Render row actions in the table component
@@ -114,14 +134,14 @@ const Index = () => {
         }),
         columnHelper.accessor('dateTo', {
           enableSorting: true,
-          header: () => <span className="w-full text-center ">Date To</span>,
+          header: () => <span className="w-full text-center">Date To</span>,
           cell: (info) => <div className="w-full text-center">{transformDate(info.getValue())}</div>,
         }),
       ],
     }),
     columnHelper.display({
       id: 'actions',
-      header: () => <span className="w-full text-center ">Actions</span>,
+      header: () => <span className="w-full text-center">Actions</span>,
       cell: (props) => <div className="w-full text-center">{renderRowActions(props.row.original)}</div>,
     }),
   ];
@@ -135,14 +155,48 @@ const Index = () => {
 
   // Initial zustand state update
   useEffect(() => {
-    if (officersOfTheDay) {
+    if (!isEmpty(officersOfTheDay)) {
       SetGetOfficersOfTheDay(officersOfTheDay.data);
     }
 
-    if (officersOfTheDayError) {
-      SetErrorOfficersOfTheDay(officersOfTheDayError);
+    if (!isEmpty(officersOfTheDayError)) {
+      switch (officersOfTheDayError?.response?.status) {
+        case 400:
+          SetErrorOfficersOfTheDay('Bad Request');
+          break;
+        case 401:
+          SetErrorOfficersOfTheDay('Unauthorized');
+          break;
+        case 403:
+          SetErrorOfficersOfTheDay('Forbidden');
+          break;
+        case 404:
+          SetErrorOfficersOfTheDay('Officers of the day not found');
+          break;
+        case 500:
+          SetErrorOfficersOfTheDay('Internal Server Error');
+          break;
+        default:
+          SetErrorOfficersOfTheDay('An error occurred. Please try again later.');
+          break;
+      }
     }
   }, [officersOfTheDay, officersOfTheDayError]);
+
+  useEffect(() => {
+    if (
+      !isEmpty(PostOfficerOfTheDay) ||
+      !isEmpty(DeleteOfficerOfTheDay) ||
+      !isEmpty(ErrorOfficerOfTheDay) ||
+      !isEmpty(ErrorOfficersOfTheDay)
+    ) {
+      mutateOfficersOfTheDay();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 5000);
+    }
+  }, [PostOfficerOfTheDay, DeleteOfficerOfTheDay, ErrorOfficerOfTheDay, ErrorOfficersOfTheDay]);
 
   return (
     <>

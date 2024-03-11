@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { OfficerOfTheDay, OfficerOfTheDayId } from '../utils/types/officer-of-the-day.type';
+import { Assignment, Employee, OfficerOfTheDay, OfficerOfTheDayId } from '../utils/types/officer-of-the-day.type';
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
@@ -8,8 +8,11 @@ export type OfficerOfTheDayState = {
   getOfficersOfTheDay: Array<OfficerOfTheDay>;
   setGetOfficersOfTheDay: (getOfficersOfTheDay: Array<OfficerOfTheDay>) => void;
 
-  errorOfficersOfTheDay: string;
-  setErrorOfficersOfTheDay: (errorOfficersOfTheDay: string) => void;
+  getEmployees: Array<Employee>;
+  setGetEmployees: (getEmployees: Array<Employee>) => void;
+
+  getAssignments: Array<Assignment>;
+  setGetAssignments: (getAssignments: Array<Assignment>) => void;
 
   postOfficerOfTheDay: OfficerOfTheDay;
   setPostOfficerOfTheDay: (postOfficerOfTheDay: OfficerOfTheDay) => void;
@@ -17,8 +20,17 @@ export type OfficerOfTheDayState = {
   deleteOfficerOfTheDay: OfficerOfTheDayId;
   setDeleteOfficerOfTheDay: (deleteOfficerOfTheDay: OfficerOfTheDayId) => void;
 
+  errorOfficersOfTheDay: string;
+  setErrorOfficersOfTheDay: (errorOfficersOfTheDay: string) => void;
+
   errorOfficerOfTheDay: string;
   setErrorOfficerOfTheDay: (errorOfficerOfTheDay: string) => void;
+
+  errorEmployees: string;
+  setErrorEmployees: (errorEmployees: string) => void;
+
+  errorAssignments: string;
+  setErrorAssignments: (errorAssignments: string) => void;
 
   emptyResponse: () => void;
 };
@@ -28,8 +40,11 @@ export const useOfficerOfTheDayStore = create<OfficerOfTheDayState>()(
     getOfficersOfTheDay: [],
     setGetOfficersOfTheDay: (getOfficersOfTheDay) => set({ getOfficersOfTheDay }),
 
-    errorOfficersOfTheDay: '',
-    setErrorOfficersOfTheDay: (errorOfficersOfTheDay) => set({ errorOfficersOfTheDay }),
+    getEmployees: [],
+    setGetEmployees: (getEmployees) => set({ getEmployees }),
+
+    getAssignments: [],
+    setGetAssignments: (getAssignments) => set({ getAssignments }),
 
     postOfficerOfTheDay: {} as OfficerOfTheDay,
     setPostOfficerOfTheDay: (postOfficerOfTheDay) => set({ postOfficerOfTheDay }),
@@ -37,8 +52,17 @@ export const useOfficerOfTheDayStore = create<OfficerOfTheDayState>()(
     deleteOfficerOfTheDay: {} as OfficerOfTheDayId,
     setDeleteOfficerOfTheDay: (deleteOfficerOfTheDay) => set({ deleteOfficerOfTheDay }),
 
+    errorOfficersOfTheDay: '',
+    setErrorOfficersOfTheDay: (errorOfficersOfTheDay) => set({ errorOfficersOfTheDay }),
+
     errorOfficerOfTheDay: '',
     setErrorOfficerOfTheDay: (errorOfficerOfTheDay) => set({ errorOfficerOfTheDay }),
+
+    errorEmployees: '',
+    setErrorEmployees: (errorEmployees) => set({ errorEmployees }),
+
+    errorAssignments: '',
+    setErrorAssignments: (errorAssignments) => set({ errorAssignments }),
 
     emptyResponse: () =>
       set({

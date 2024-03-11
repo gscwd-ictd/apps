@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { FunctionComponent } from 'react';
 import { isEmpty } from 'lodash';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
@@ -40,6 +40,7 @@ const DeleteOfficerOfTheDayModal: FunctionComponent<DeleteModalProps> = ({
   // React hook form
   const {
     handleSubmit,
+    reset,
     formState: { isSubmitting: deleteFormLoading },
   } = useForm();
 
@@ -47,20 +48,19 @@ const DeleteOfficerOfTheDayModal: FunctionComponent<DeleteModalProps> = ({
   const onSubmit = () => {
     if (!isEmpty(rowData.id)) {
       EmptyResponse();
-
       handleDeleteResult(rowData.id);
     }
   };
 
   const handleDeleteResult = async (id: string) => {
-    const { error, result } = await deleteEmpMonitoring(`/officer-of-the-day/${id}`);
+    const { error, result } = await deleteEmpMonitoring(`/1officer-of-the-day/${id}`);
 
     if (error) {
-      SetErrorOfficerOfTheDay(result);
+      SetErrorOfficerOfTheDay('An error occurred. Please try again later.');
     } else {
       SetDeleteOfficerOfTheDay(result);
-
       closeModalAction();
+      reset();
     }
   };
 
