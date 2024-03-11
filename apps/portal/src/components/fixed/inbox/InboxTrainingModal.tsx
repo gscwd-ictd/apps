@@ -59,7 +59,7 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -112,7 +112,71 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                 ) : null}
               </div>
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Training Title:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{trainingMessage.name}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Location:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{trainingMessage.location}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Start Date:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">
+                      {DateFormatter(trainingMessage.trainingStart, 'MM-DD-YYYY')}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">End Date:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">
+                      {DateFormatter(trainingMessage.trainingEnd, 'MM-DD-YYYY')}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                    {' '}
+                    Remarks:{' '}
+                    {trainingMessage?.nomineeStatus === NomineeStatus.ACCEPTED ||
+                    trainingMessage?.nomineeStatus === NomineeStatus.DECLINED ? null : (
+                      <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
+                    )}
+                  </label>
+
+                  <textarea
+                    className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                    disabled={trainingMessage?.nomineeStatus === NomineeStatus.PENDING ? false : true}
+                    value={
+                      trainingMessage?.remarks
+                        ? trainingMessage?.remarks
+                        : trainingMessage?.nomineeStatus === NomineeStatus.PENDING
+                        ? declineRemarks
+                        : 'N/A'
+                    }
+                    placeholder={'If declining, please state reason.'}
+                    onChange={(e) => handleRemarks(e.target.value as unknown as string)}
+                    rows={3}
+                  ></textarea>
+                </div>
+              </div>
+
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Training Title:</label>
 
                 <div className="w-auto sm:w-96">
@@ -148,9 +212,9 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
-              <div className={`flex flex-col gap-2`}>
+              {/* <div className={`flex flex-col gap-2`}>
                 <label className="text-slate-500 text-md font-medium">
                   Remarks:{' '}
                   {trainingMessage?.nomineeStatus === NomineeStatus.ACCEPTED ||
@@ -173,7 +237,7 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                   onChange={(e) => handleRemarks(e.target.value as unknown as string)}
                   rows={3}
                 ></textarea>
-              </div>
+              </div> */}
             </div>
           </div>
         </Modal.Body>

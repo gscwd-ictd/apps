@@ -2,7 +2,7 @@
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
@@ -19,6 +19,8 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
     individualTrainingDetails,
     nominatedEmployees,
     auxiliaryEmployees,
+    skipNominationModalIsOpen,
+    setSkipNominationModalIsOpen,
     setTrainingModalIsOpen,
     postTrainingSelection,
     postTrainingSelectionSuccess,
@@ -27,6 +29,8 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
     individualTrainingDetails: state.individualTrainingDetails,
     nominatedEmployees: state.nominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
+    skipNominationModalIsOpen: state.skipNominationModalIsOpen,
+    setSkipNominationModalIsOpen: state.setSkipNominationModalIsOpen,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     postTrainingSelection: state.postTrainingSelection,
     postTrainingSelectionSuccess: state.postTrainingSelectionSuccess,
@@ -51,6 +55,12 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
     }
   };
 
+  useEffect(() => {
+    if (skipNominationModalIsOpen) {
+      setRemarks('');
+    }
+  }, [skipNominationModalIsOpen]);
+
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
@@ -71,7 +81,6 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
         <Modal.Body>
           <div className="flex flex-col w-full h-full px-4 gap-1 text-md ">
             <label>Indicate reason for skipping nomination:</label>
-
             <textarea
               required
               placeholder="Reason for skipping nomination"

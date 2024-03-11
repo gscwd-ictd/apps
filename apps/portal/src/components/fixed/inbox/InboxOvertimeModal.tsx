@@ -24,7 +24,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -51,35 +51,36 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Date:</label>
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Date:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">
-                    {DateFormatter(overtimeMessage.plannedDate, 'MM-DD-YYYY')}
-                  </label>
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">
+                      {DateFormatter(overtimeMessage.plannedDate, 'MM-DD-YYYY')}
+                    </label>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Estimated Hours:</label>
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Estimated Hours:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">{overtimeMessage.estimatedHours}</label>
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{overtimeMessage.estimatedHours}</label>
+                  </div>
                 </div>
-              </div>
 
-              <div className={` flex flex-col gap-2`}>
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Purpose:</label>
-                  <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">{overtimeMessage.purpose}</label>
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{overtimeMessage.purpose}</label>
                   </div>
                 </div>
               </div>
 
               <div className={`flex flex-col gap-2`}>
-                <label className="text-slate-500 text-md font-medium">Other Employees Assigned:</label>
+                <label className="text-slate-500 text-md">Other Employees Assigned:</label>
                 {overtimeMessage?.employeeDetails?.map((employee: OvertimeMembers, index: number) => {
                   return (
                     <div
@@ -97,7 +98,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
                         <div className="w-full flex flex-row items-center gap-4 text-sm md:text-md text-slate-500">
                           <label className="w-full">{employee.employeeFullName}</label>
                           <label className="w-full">{employee.position}</label>
-                          <label className="w-full">{employee.assignment}</label>
+                          {/* <label className="w-full">{employee.assignment}</label> */}
                         </div>
                       </div>
                     </div>
@@ -110,7 +111,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
+              <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                 Close
               </Button>
             </div>
