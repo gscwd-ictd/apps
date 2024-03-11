@@ -144,7 +144,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishment)) {
-      console.log(swrOvertimeAccomplishment, 'manager ni');
       getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
     }
 

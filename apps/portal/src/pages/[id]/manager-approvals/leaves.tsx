@@ -33,7 +33,6 @@ import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
-    tab,
     pendingLeaveModalIsOpen,
     approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen,

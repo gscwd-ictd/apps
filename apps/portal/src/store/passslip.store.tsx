@@ -3,6 +3,9 @@ import { create } from 'zustand';
 import { PassSlip, PassSlipId, EmployeePassSlipList } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 
+export type PassSlipCount = {
+  passSlipCount: number;
+};
 export type PassSlipState = {
   //PASS SLIP TO SUBMIT
   passSlips: {
@@ -18,13 +21,16 @@ export type PassSlipState = {
 
   loading: {
     loadingPassSlips: boolean;
+    loadingPassSlipCount: boolean;
     loadingResponse: boolean;
   };
   error: {
     errorPassSlips: string;
+    errorPassSlipCount: string;
     errorResponse: string;
   };
 
+  passSlipCount: PassSlipCount;
   passSlip: PassSlip;
   cancelApplicationModalIsOpen: boolean;
   applyPassSlipModalIsOpen: boolean;
@@ -32,6 +38,10 @@ export type PassSlipState = {
   completedPassSlipModalIsOpen: boolean;
   disputePassSlipModalIsOpen: boolean;
   tab: number;
+
+  getPassSlipCount: (loading: boolean) => void;
+  getPassSlipCountSuccess: (loading: boolean, response) => void;
+  getPassSlipCountFail: (loading: boolean, error: string) => void;
 
   getPassSlipList: (loading: boolean) => void;
   getPassSlipListSuccess: (loading: boolean, response) => void;
@@ -76,12 +86,16 @@ export const usePassSlipStore = create<PassSlipState>()(
     },
     loading: {
       loadingPassSlips: false,
+      loadingPassSlipCount: false,
       loadingResponse: false,
     },
     error: {
       errorPassSlips: '',
+      errorPassSlipCount: '',
       errorResponse: '',
     },
+
+    passSlipCount: {} as PassSlipCount,
 
     passSlip: {} as PassSlip,
 
@@ -121,6 +135,46 @@ export const usePassSlipStore = create<PassSlipState>()(
 
     getPassSlip: (passSlip: PassSlip) => {
       set((state) => ({ ...state, passSlip }));
+    },
+
+    //GET PASS SLIP COUNT ACTIONS
+    getPassSlipCount: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        passSlipCount: {} as PassSlipCount,
+
+        loading: {
+          ...state.loading,
+          loadingPassSlipCount: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlipCount: '',
+        },
+      }));
+    },
+    getPassSlipCountSuccess: (loading: boolean, response: PassSlipCount) => {
+      set((state) => ({
+        ...state,
+        passSlipCount: response,
+        loading: {
+          ...state.loading,
+          loadingPassSlipCount: loading,
+        },
+      }));
+    },
+    getPassSlipCountFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingPassSlipCount: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlipCount: error,
+        },
+      }));
     },
 
     //GET PASS SLIP ACTIONS

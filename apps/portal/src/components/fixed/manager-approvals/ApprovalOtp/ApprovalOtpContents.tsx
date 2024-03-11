@@ -14,6 +14,7 @@ import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import AuthCode from 'react-auth-code-input';
+import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 
 interface OtpProps {
   mobile: string;
@@ -21,6 +22,7 @@ interface OtpProps {
   actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
   actionLeave?: LeaveStatus; // approve or disapprove for leave
   actionPassSlip?: PassSlipStatus; // approve or disapprove pass slip
+  actionDtrCorrection?: DtrCorrectionStatus; // approve or disapprove time log correction
   tokenId: string; //like pass Slip Id, leave Id etc.
   otpName: ManagerOtpApproval;
   remarks?: string;
@@ -35,6 +37,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
   actionOvertime,
   actionLeave,
   actionPassSlip,
+  actionDtrCorrection,
   tokenId,
   otpName,
   remarks,
@@ -71,6 +74,12 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     patchPassSlipFail,
     setPendingPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen,
+
+    patchDtrCorrection,
+    patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen,
   } = useApprovalStore((state) => ({
     patchOvertime: state.patchOvertime,
     patchOvertimeSuccess: state.patchOvertimeSuccess,
@@ -89,6 +98,12 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     patchPassSlipFail: state.patchPassSlipFail,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+
+    patchDtrCorrection: state.patchDtrCorrection,
+    patchDtrCorrectionSuccess: state.patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail: state.patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen: state.setDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen: state.setOtpDtrCorrectionModalIsOpen,
   }));
 
   // set state for controlling the displaying of error status
@@ -185,6 +200,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
       setOtpOvertimeModalIsOpen(false);
       setOtpLeaveModalIsOpen(false);
       setOtpPassSlipModalIsOpen(false);
+      setOtpDtrCorrectionModalIsOpen(false); //close OTP modal first
     }
   };
 
@@ -194,10 +210,12 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
     setOtpOvertimeModalIsOpen(false); //close OTP modal first
     setOtpPassSlipModalIsOpen(false); //close OTP modal first
     setOtpLeaveModalIsOpen(false); //close OTP modal first
+    setOtpDtrCorrectionModalIsOpen(false); //close OTP modal first
     setTimeout(() => {
       setPendingOvertimeModalIsOpen(false); //then close Pass Slip modal
       setPendingPassSlipModalIsOpen(false); //then close Pass Slip modal
       setPendingLeaveModalIsOpen(false); //then close Pass Slip modal
+      setDtrCorrectionModalIsOpen(false);
     }, 200);
   };
 
@@ -210,6 +228,8 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
       otpPatchUrl = '/v1/pass-slip';
     } else if (otpName === ManagerOtpApproval.OVERTIME) {
       otpPatchUrl = '/v1/overtime/approval';
+    } else if (otpName === ManagerOtpApproval.DTRCORRECTION) {
+      otpPatchUrl = '/v1/dtr-correction';
     }
 
     const { error, result } = await patchPortal(otpPatchUrl, data);
@@ -220,6 +240,8 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
         patchPassSlipFail(result);
       } else if (otpName === ManagerOtpApproval.OVERTIME) {
         patchOvertimeFail(result);
+      } else if (otpName === ManagerOtpApproval.DTRCORRECTION) {
+        patchDtrCorrectionFail(result);
       }
     } else {
       if (otpName === ManagerOtpApproval.LEAVE) {
@@ -228,6 +250,8 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
         patchPassSlipSuccess(result);
       } else if (otpName === ManagerOtpApproval.OVERTIME) {
         patchOvertimeSuccess(result);
+      } else if (otpName === ManagerOtpApproval.DTRCORRECTION) {
+        patchDtrCorrectionSuccess(result);
       }
     }
   };
@@ -257,6 +281,12 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
           overtimeApplicationId: tokenId,
         };
         patchOvertime();
+      } else if (otpName === ManagerOtpApproval.DTRCORRECTION) {
+        data = {
+          id: tokenId,
+          status: actionDtrCorrection,
+        };
+        patchDtrCorrection();
       }
 
       localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
@@ -311,6 +341,12 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                 ? `To ${
                     actionOvertime === OvertimeStatus.APPROVED ? 'approve' : 'disapprove'
                   } this Overtime request, click Send Code
+                                and enter the code sent to your mobile number:
+                                ${mobile}. `
+                : otpName === ManagerOtpApproval.DTRCORRECTION
+                ? `To ${
+                    actionDtrCorrection === DtrCorrectionStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this Time Log Correction request, click Send Code
                                 and enter the code sent to your mobile number:
                                 ${mobile}. `
                 : null}
@@ -413,6 +449,8 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
                 ? `Pass Slip has been ${actionPassSlip}.`
                 : otpName === ManagerOtpApproval.OVERTIME
                 ? `Overtime has been ${actionOvertime}.`
+                : otpName === ManagerOtpApproval.DTRCORRECTION
+                ? `Time Log Correction has been ${actionDtrCorrection}.`
                 : null}
             </div>
 

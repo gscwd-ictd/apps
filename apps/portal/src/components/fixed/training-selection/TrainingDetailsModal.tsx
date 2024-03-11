@@ -520,23 +520,34 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
-            <div className="max-w-auto">
+            <div className="max-w-auto flex gap-4 ">
               {nominatedEmployeeList?.length > 0 ? (
                 <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>
               ) : (
-                <Button
-                  variant={'primary'}
-                  size={'md'}
-                  loading={false}
-                  form="ApplyOvertimeForm"
-                  type="submit"
-                  onClick={(e) => setConfirmNominationModalIsOpen(true)}
-                  disabled={nominatedEmployees.length <= 0 ? true : false}
-                >
-                  Submit
-                </Button>
+                <>
+                  <Button
+                    variant={'danger'}
+                    size={'md'}
+                    loading={false}
+                    type="button"
+                    onClick={(e) => setConfirmNominationModalIsOpen(true)}
+                  >
+                    Skip Nomination
+                  </Button>
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    form="ApplyOvertimeForm"
+                    type="submit"
+                    onClick={(e) => setConfirmNominationModalIsOpen(true)}
+                    disabled={nominatedEmployees.length <= 0 ? true : false}
+                  >
+                    Submit
+                  </Button>
+                </>
               )}
             </div>
           </div>

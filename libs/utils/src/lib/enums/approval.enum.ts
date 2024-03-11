@@ -3,4 +3,5 @@ export enum ManagerOtpApproval {
   PASSSLIP = 'approvalPassSlip',
   LEAVE = 'approvalLeave',
   OVERTIME = 'approvalOvertime',
+  DTRCORRECTION = 'approvalDtrCorrection',
 }

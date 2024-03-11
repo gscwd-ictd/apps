@@ -39,7 +39,7 @@ export const ApprovalsCompletedPassSlipModal = ({
         <Modal.Header>
           <h3 className="font-semibold  text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Completed Pass Slips</span>
+              <span className="text-xl md:text-2xl">Pass Slips Application</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
