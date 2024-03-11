@@ -133,13 +133,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     }
   }, [swrNominatedEmployee, swrNominatedEmployeeError]);
 
-  //open training nomination modal
-  const openTrainingNominationModal = async () => {
-    setNominatedEmployees([]);
-    setAuxiliaryEmployees([]);
-    setTrainingNominationModalIsOpen(true);
-  };
-
   useEffect(() => {
     if (trainingModalIsOpen) {
       setNominatedEmployees([]);
