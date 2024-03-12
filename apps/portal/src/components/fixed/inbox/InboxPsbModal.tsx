@@ -61,7 +61,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -106,41 +106,129 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                 ) : null}
               </div>
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Assignment:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.assignment}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Position:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.positionTitle}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Schedule:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.schedule}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Venue:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.venue}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">PSB Members:</label>
+
+                  <div className="w-auto ml-5">
+                    <ul className="text-md font-medium">
+                      {psbMessage?.psbMembers?.map((member: PsbMembers, messageIdx: number) => {
+                        return <li key={messageIdx}>{member.fullName}</li>;
+                      })}
+                    </ul>
+                  </div>
+                </div>
+
+                {psbMessage?.details?.declinedSchedule ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Remarks:</label>
+
+                    <div className="w-auto ml-5">
+                      <label className="text-md font-medium">{psbMessage?.details?.declineReason}</label>
+                    </div>
+                  </div>
+                ) : null}
+
+                {!psbMessage?.details?.declinedSchedule && !psbMessage?.details?.acknowledgedSchedule ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                      Remarks:{' '}
+                      {psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? null : (
+                        <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
+                      )}
+                    </label>
+
+                    <textarea
+                      className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                      disabled={
+                        psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule
+                          ? true
+                          : false
+                      }
+                      value={
+                        psbMessage?.details?.acknowledgedSchedule
+                          ? 'N/A'
+                          : psbMessage?.details?.declinedSchedule
+                          ? psbMessage?.details?.declineReason
+                          : declineRemarks
+                      }
+                      placeholder={
+                        'If declining, please state reason and indicate personnel you recommend to be your replacement.'
+                      }
+                      onChange={(e) => handleRemarks(e.target.value as unknown as string)}
+                      rows={3}
+                    ></textarea>
+                  </div>
+                ) : null}
+              </div>
+
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Assignment:</label>
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96 text-md ">{psbMessage?.details?.assignment}</label>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
+              {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Position:</label>
 
                 <div className="w-auto sm:w-96">
                   <label className="text-slate-500 h-12 w-96  text-md ">{psbMessage?.details?.positionTitle}</label>
                 </div>
-              </div>
+              </div> */}
 
-              <div className={` flex flex-col gap-2`}>
+              {/* <div className={` flex flex-col gap-2`}>
                 <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Schedule:</label>
                   <div className="w-auto sm:w-96">
                     <label className="text-slate-500 h-12 w-96  text-md ">{psbMessage?.details?.schedule}</label>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
-              <div className={` flex flex-col gap-2`}>
+              {/* <div className={` flex flex-col gap-2`}>
                 <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Venue:</label>
                   <div className="w-auto md:w-96">
                     <label className="text-slate-500 h-12 w-96  text-md ">{psbMessage?.details?.venue}</label>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
-              <div className={` flex flex-col gap-2`}>
+              {/* <div className={` flex flex-col gap-2`}>
                 <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">PSB Members:</label>
                   <div className="w-auto md:w-96">
@@ -153,9 +241,9 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
-              <div className={`flex flex-col gap-2`}>
+              {/* <div className={`flex flex-col gap-2`}>
                 <label className="text-slate-500 text-md font-medium">
                   Remarks:{' '}
                   {psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? null : (
@@ -181,7 +269,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                   onChange={(e) => handleRemarks(e.target.value as unknown as string)}
                   rows={3}
                 ></textarea>
-              </div>
+              </div> */}
             </div>
           </div>
         </Modal.Body>

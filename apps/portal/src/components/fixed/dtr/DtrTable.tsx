@@ -13,7 +13,6 @@ import UpdateTimeLogModal from './UpdateTimeLogModal';
 import { SpinnerDotted } from 'spinners-react';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import Link from 'next/link';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -200,7 +199,12 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                             } py-2 text-center border`}
                           >
                             <Button
-                              variant={'primary'}
+                              variant={
+                                DateFormatter(logs.day, 'MM-DD-YYYY') <
+                                dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
+                                  ? 'primary'
+                                  : 'danger'
+                              }
                               size={'sm'}
                               loading={false}
                               onClick={() => openEditActionModal(logs)}

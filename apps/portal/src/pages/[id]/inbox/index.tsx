@@ -195,6 +195,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingMessages)) {
+      console.log(swrTrainingMessages);
       getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
     }
 
@@ -314,16 +315,14 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
               </div>
             ) : (
               <ContentBody>
-                <>
-                  <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}>
-                      <InboxTabs tab={tab} />
-                    </div>
-                    <div className="w-full">
-                      <InboxTabWindow />
-                    </div>
+                <div className={`w-full flex lg:flex-row flex-col`}>
+                  <div className={`lg:w-[58rem] w-full`}>
+                    <InboxTabs tab={tab} />
                   </div>
-                </>
+                  <div className="w-full">
+                    <InboxTabWindow />
+                  </div>
+                </div>
               </ContentBody>
             )}
           </div>
@@ -332,14 +331,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

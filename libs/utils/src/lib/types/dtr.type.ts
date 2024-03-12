@@ -73,7 +73,7 @@ export type DtrCorrection = {
 //for employee view - dtr page
 export type DtrCorrectionForEmployee = {
   lunchIn: string;
-  luncOut: string;
+  lunchOut: string;
   remarks: string;
   status: DtrCorrectionStatus;
   timeIn: string;

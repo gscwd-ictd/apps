@@ -12,6 +12,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { ConfirmationNominationModal } from './ConfirmationModal';
 import UseRenderTrainingNomineeStatus from 'apps/portal/src/utils/functions/RenderTrainingNomineeStatus';
+import SkipNominationModal from './SkipNominationModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -33,7 +34,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     trainingNominationModalIsOpen,
     confirmNominationModalIsOpen,
     trainingModalIsOpen,
-
+    skipNominationModalIsOpen,
+    setSkipNominationModalIsOpen,
     setConfirmNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
     getRecommendedEmployees,
@@ -57,7 +59,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     auxiliaryEmployees: state.auxiliaryEmployees,
     trainingModalIsOpen: state.trainingModalIsOpen,
     loadingResponse: state.loading.loadingResponse,
-
+    skipNominationModalIsOpen: state.skipNominationModalIsOpen,
+    setSkipNominationModalIsOpen: state.setSkipNominationModalIsOpen,
     setConfirmNominationModalIsOpen: state.setConfirmNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     getRecommendedEmployees: state.getRecommendedEmployees,
@@ -130,13 +133,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     }
   }, [swrNominatedEmployee, swrNominatedEmployeeError]);
 
-  //open training nomination modal
-  const openTrainingNominationModal = async () => {
-    setNominatedEmployees([]);
-    setAuxiliaryEmployees([]);
-    setTrainingNominationModalIsOpen(true);
-  };
-
   useEffect(() => {
     if (trainingModalIsOpen) {
       setNominatedEmployees([]);
@@ -152,6 +148,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   //close confirmation modal
   const closeConfirmationModal = async () => {
     setConfirmNominationModalIsOpen(false);
+    setSkipNominationModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -159,22 +156,18 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     <>
       {/* failed to load previously nominated employee list */}
       {!isEmpty(errorNominatedEmployeeList) && trainingModalIsOpen ? (
-        <>
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorNominatedEmployeeList}: Failed to load nominated participants.`}
-          />
-        </>
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorNominatedEmployeeList}: Failed to load nominated participants.`}
+        />
       ) : null}
 
       {/* failed to load recommended employee list */}
       {!isEmpty(errorRecommendedEmployee) && trainingModalIsOpen ? (
-        <>
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorRecommendedEmployee}: Failed to load recommended participants.`}
-          />
-        </>
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorRecommendedEmployee}: Failed to load recommended participants.`}
+        />
       ) : null}
 
       <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
@@ -199,6 +192,12 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               closeModalAction={closeConfirmationModal}
             />
 
+            <SkipNominationModal
+              modalState={skipNominationModalIsOpen}
+              setModalState={setSkipNominationModalIsOpen}
+              closeModalAction={closeConfirmationModal}
+            />
+
             <TrainingNominationModal
               modalState={trainingNominationModalIsOpen}
               setModalState={setTrainingNominationModalIsOpen}
@@ -215,7 +214,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   dismissible={false}
                 />
               ) : null}
-
               <AlertNotification
                 alertType={
                   individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
@@ -286,66 +284,68 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 dismissible={false}
               />
 
-              <div className="flex flex-col justify-between items-start">
-                <label className="text-slate-500 text-md whitespace-nowrap sm:w-80 ">Course Title:</label>
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-between items-start w-full md:w-1/2 px-0.5 pb-3">
+                  <label className="text-slate-500 text-md whitespace-nowrap sm:w-80 ">Course Title:</label>
 
-                <div className="w-auto pl-0 md:pl-4">
-                  <label className="text-slate-500 h-12 w-96 text-md font-medium">
-                    {individualTrainingDetails.courseTitle}
-                  </label>
-                </div>
-              </div>
-              <div className="flex flex-col justify-between items-start">
-                <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Location:</label>
-
-                <div className="w-auto pl-0 md:pl-4">
-                  <label className="text-slate-500 h-12 w-96 text-md font-medium">
-                    {individualTrainingDetails.location}
-                  </label>
-                </div>
-              </div>
-              <div className="flex flex-col justify-between items-start">
-                <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Duration:</label>
-
-                <div className="w-auto">
-                  <label className="text-slate-500 h-12 pl-0 md:pl-4 text-md font-medium">
-                    {DateFormatter(individualTrainingDetails.trainingStart, 'MM-DD-YYYY')} -{' '}
-                    {DateFormatter(individualTrainingDetails.trainingEnd, 'MM-DD-YYYY')}{' '}
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex flex-row md:gap-2 justify-between items-start w-full">
-                <div className="flex flex-col justify-between items-start">
-                  <label className="text-slate-500 text-md whitespace-nowrap">No. of Slots:</label>
-
-                  <div className="pl-0 md:pl-4">
-                    <label className="text-slate-500 h-12 text-md font-medium">
-                      {individualTrainingDetails.numberOfSlots}
+                  <div className="w-auto pl-0 md:pl-4">
+                    <label className="text-slate-500 h-12 w-96 text-md font-medium">
+                      {individualTrainingDetails.courseTitle}
                     </label>
                   </div>
                 </div>
-                <div className="flex flex-col justify-between items-start">
-                  <label className="text-slate-500 text-md whitespace-nowrap ">Source:</label>
+                <div className="flex flex-col justify-between items-start w-full md:w-1/2 px-0.5 pb-3">
+                  <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Duration:</label>
 
-                  <div className="pl-0 md:pl-4">
-                    <label className="text-slate-500 h-12 text-md capitalize font-medium">
-                      {individualTrainingDetails.source}
+                  <div className="w-auto">
+                    <label className="text-slate-500 h-12 pl-0 md:pl-4 text-md font-medium">
+                      {DateFormatter(individualTrainingDetails.trainingStart, 'MM-DD-YYYY')} -{' '}
+                      {DateFormatter(individualTrainingDetails.trainingEnd, 'MM-DD-YYYY')}{' '}
                     </label>
                   </div>
                 </div>
-                <div className="flex flex-col justify-between items-start">
-                  <label className="text-slate-500 text-md whitespace-nowrap">Type:</label>
 
-                  <div className="pl-0 md:pl-4">
-                    <label className="text-slate-500 h-12 text-md capitalize font-medium">
-                      {individualTrainingDetails?.type}
+                <div className="flex flex-col justify-between items-start px-0.5 pb-3">
+                  <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Location:</label>
+
+                  <div className="w-auto pl-0 md:pl-4">
+                    <label className="text-slate-500 h-12 w-96 text-md font-medium">
+                      {individualTrainingDetails.location}
                     </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-row md:gap-2 justify-between items-start w-full px-0.5 pb-3">
+                  <div className="flex flex-col justify-between items-start">
+                    <label className="text-slate-500 text-md whitespace-nowrap">No. of Slots:</label>
+
+                    <div className="pl-0 md:pl-4">
+                      <label className="text-slate-500 h-12 text-md font-medium">
+                        {individualTrainingDetails.numberOfSlots}
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-between items-start px-0.5 pb-3">
+                    <label className="text-slate-500 text-md whitespace-nowrap ">Source:</label>
+
+                    <div className="pl-0 md:pl-4">
+                      <label className="text-slate-500 h-12 text-md capitalize font-medium">
+                        {individualTrainingDetails.source}
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-between items-start px-0.5 pb-3">
+                    <label className="text-slate-500 text-md whitespace-nowrap">Type:</label>
+
+                    <div className="pl-0 md:pl-4">
+                      <label className="text-slate-500 h-12 text-md capitalize font-medium">
+                        {individualTrainingDetails?.type}
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div className="flex flex-row md:gap-2 justify-between items-start md:items-start pt-2">
+              <div className="flex flex-row md:gap-2 justify-between items-start md:items-start ">
                 <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Participants:</label>
 
                 <div className="w-auto ">
@@ -532,7 +532,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     size={'md'}
                     loading={false}
                     type="button"
-                    onClick={(e) => setConfirmNominationModalIsOpen(true)}
+                    onClick={(e) => setSkipNominationModalIsOpen(true)}
                   >
                     Skip Nomination
                   </Button>

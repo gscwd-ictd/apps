@@ -334,7 +334,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
                     <div
                       className={`flex flex-col justify-start items-start w-full ${
-                        overtimeDetails.status === OvertimeStatus.PENDING ? '' : 'sm:w-1/2'
+                        overtimeDetails.status === OvertimeStatus.PENDING ||
+                        overtimeDetails.status === OvertimeStatus.APPROVED
+                          ? ''
+                          : 'sm:w-1/2'
                       } px-0.5 pb-3`}
                     >
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
