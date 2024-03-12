@@ -360,7 +360,8 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   </div>
                 </div>
 
-                {rowData?.dtrCorrection?.status ? (
+                {rowData?.dtrCorrection?.status === DtrCorrectionStatus.DISAPPROVED ||
+                rowData?.dtrCorrection?.status === DtrCorrectionStatus.PENDING ? (
                   <>
                     <hr className="w-full mt-2 mb-4"></hr>
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 sm:pr-5 px-0.5 pb-3  ">
