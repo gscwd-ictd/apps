@@ -1,13 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import {
-  EmployeeDtrWithSchedule,
-  EmployeeDtrWithScheduleAndSummary,
-} from 'libs/utils/src/lib/types/dtr.type';
+import { DtrCorrectionForm, EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
 import { devtools } from 'zustand/middleware';
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
 export type EmployeeDtr = {
+  dtrId: string;
   companyId: string;
   dtrDate: string;
   timeIn: string | null;
@@ -20,8 +18,10 @@ export type EmployeeDtr = {
 
 export type DtrState = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
-  employeeDailyRecord: EmployeeDtr;
 
+  response: {
+    employeeDailyRecord: DtrCorrectionForm; // for response
+  };
   loading: {
     loadingDtr: boolean;
     loadingUpdateEmployeeDtr: boolean;
@@ -48,14 +48,22 @@ export type DtrState = {
   emptyResponseAndError: () => void;
 
   updateEmployeeDtr: () => void;
-  updateEmployeeDtrSuccess: (response: EmployeeDtr) => void;
+  updateEmployeeDtrSuccess: (response: DtrCorrectionForm) => void;
   updateEmployeeDtrFail: (error: string) => void;
+
+  confirmUpdateModalIsOpen: boolean;
+  setConfirmUpdateModalIsOpen: (confirmUpdateModalIsOpen: boolean) => void;
+
+  dtrModalIsOpen: boolean;
+  setDtrModalIsOpen: (dtrModalIsOpen: boolean) => void;
 };
 
 export const useDtrStore = create<DtrState>()(
   devtools((set) => ({
     employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
-    employeeDailyRecord: {} as EmployeeDtr,
+    response: {
+      employeeDailyRecord: {} as DtrCorrectionForm,
+    },
     loading: {
       loadingDtr: false,
       loadingUpdateEmployeeDtr: false,
@@ -68,6 +76,15 @@ export const useDtrStore = create<DtrState>()(
     selectedYear: '',
     selectedMonth: '',
     date: '01-0001',
+
+    dtrModalIsOpen: false,
+    setDtrModalIsOpen: (dtrModalIsOpen: boolean) => {
+      set((state) => ({ ...state, dtrModalIsOpen }));
+    },
+    confirmUpdateModalIsOpen: false,
+    setConfirmUpdateModalIsOpen: (confirmUpdateModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmUpdateModalIsOpen }));
+    },
 
     setSelectedYear: (selectedYear: string) => {
       set((state) => ({ ...state, selectedYear }));
@@ -88,10 +105,7 @@ export const useDtrStore = create<DtrState>()(
         error: { ...state.error, errorDtr: '' },
       }));
     },
-    getEmployeeDtrSuccess: (
-      loading: boolean,
-      response: EmployeeDtrWithScheduleAndSummary
-    ) => {
+    getEmployeeDtrSuccess: (loading: boolean, response: EmployeeDtrWithScheduleAndSummary) => {
       set((state) => ({
         ...state,
         employeeDtr: response,
@@ -109,6 +123,7 @@ export const useDtrStore = create<DtrState>()(
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
+        response: { ...state.response, employeeDailyRecord: {} as DtrCorrectionForm },
         error: { ...state.error, errorDtr: '' },
       }));
     },
@@ -116,16 +131,16 @@ export const useDtrStore = create<DtrState>()(
     updateEmployeeDtr: () =>
       set((state) => ({
         ...state,
+        response: { ...state.response, employeeDailyRecord: {} as DtrCorrectionForm },
         loading: { ...state.loading, loadingUpdateEmployeeDtr: true },
-        employeeDailyRecord: {} as EmployeeDtr,
         error: { ...state.error, errorUpdateEmployeeDtr: '' },
       })),
 
-    updateEmployeeDtrSuccess: (response: EmployeeDtr) =>
+    updateEmployeeDtrSuccess: (response: DtrCorrectionForm) =>
       set((state) => ({
         ...state,
+        response: { ...state.response, employeeDailyRecord: response },
         loading: { ...state.loading, loadingUpdateEmployeeDtr: false },
-        employeeDailyRecord: response,
       })),
 
     updateEmployeeDtrFail: (error: string) =>

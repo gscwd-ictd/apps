@@ -134,7 +134,7 @@ export type OvertimeAccomplishmentPatch = {
 //updating of employee's accomplishment report by manager (approve/disapprove)
 export type OvertimeAccomplishmentApprovalPatch = {
   employeeId?: string;
-  employeeIds?: string;
+  employeeIds?: Array<string>;
   overtimeApplicationId: string;
   remarks?: string;
   status: OvertimeAccomplishmentStatus;

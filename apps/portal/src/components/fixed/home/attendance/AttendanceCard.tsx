@@ -20,7 +20,6 @@ export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoad
   const isLunchInLate = UseUndertimeChecker(timeLogData?.dtr?.lunchIn, timeLogData?.schedule?.lunchIn); //change to scheduled timeOut prop when ready
 
   const { windowHeight } = UseWindowDimensions();
-
   return (
     <div
       className={`w-full ${

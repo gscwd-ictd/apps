@@ -107,7 +107,7 @@ export const ApprovalsPendingLeaveModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="flex justify-between px-5">
-              <span className="text-xl md:text-2xl">Leave Application For Approval</span>
+              <span className="text-xl md:text-2xl">Leave Application</span>
               <button
                 className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                 onClick={customClose}

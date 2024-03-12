@@ -18,22 +18,7 @@ import dayjs from 'dayjs';
 // modals
 import ViewSystemLogModal from 'apps/employee-monitoring/src/components/modal/settings/system-logs/ViewSystemLogModal';
 
-// sample static data
-const SystemLogs: SystemLog[] = [
-  {
-    _id: '2001',
-    userName: 'John',
-    dateLogged: '2000-05-13',
-    timeLogged: '12:00 PM',
-    method: 'GET',
-    route: '/api/logs',
-    body: {},
-  },
-  { _id: '2002', userName: 'Doe', dateLogged: '2001-05-13', timeLogged: '12:00 PM', method: '', route: '', body: {} },
-];
-
 const Index = () => {
-  
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
   const openViewActionModal = (rowData: SystemLog) => {
@@ -44,11 +29,23 @@ const Index = () => {
 
   const [currentRowData, setCurrentRowData] = useState<SystemLog>({} as SystemLog);
 
-  // transform date
-  const transformDate = (date: string | Date | null) => {
-    if (date === null) return '-';
-    else return dayjs(date).format('MMMM DD, YYYY');
-  };
+  // fetch data for list of user
+  const { data: systemLogs, error: systemLogsError, isLoading: systemLogsLoading } = useSWR('/user-logs', fetcherEMS);
+
+  // Zustand initialization
+  const {
+    SystemLogs,
+    SetGetSystemLogs,
+
+    ErrorSystemLogs,
+    SetErrorSystemLogs,
+  } = useSystemLogsStore((state) => ({
+    SystemLogs: state.getSystemLogs,
+    SetGetSystemLogs: state.setGetSystemLogs,
+
+    ErrorSystemLogs: state.errorSystemLogs,
+    SetErrorSystemLogs: state.setErrorSystemLogs,
+  }));
 
   // Render row actions in the table component
   const renderRowActions = (rowData: SystemLog) => {
@@ -68,10 +65,10 @@ const Index = () => {
   // Define table columns
   const columnHelper = createColumnHelper<SystemLog>();
   const columns = [
-    columnHelper.accessor('_id', {
+    columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('userName', {
+    columnHelper.accessor('userFullName', {
       enableSorting: true,
       header: () => 'Name',
       cell: (info) => info.getValue(),
@@ -79,19 +76,15 @@ const Index = () => {
     columnHelper.accessor('dateLogged', {
       enableSorting: true,
       header: () => 'Date and Time Logged',
-      cell: (info: any) => {
-        const dateLogged = info.row.original.dateLogged;
-        const timeLogged = info.row.original.timeLogged;
-        return (
-          <>
-            {transformDate(dateLogged)} {timeLogged}
-          </>
-        );
+      cell: (info) => {
+        const dateLogged = info.getValue();
+        const formattedDate = dayjs(dateLogged).format('MMMM DD, YYYY HH:mm A');
+        return <>{formattedDate}</>;
       },
     }),
     columnHelper.display({
       id: 'actions',
-      header: () => <span className="w-full text-center ">Actions</span>,
+      header: () => <span className="w-full text-center">Actions</span>,
       cell: (props) => <div className="w-full text-center">{renderRowActions(props.row.original)}</div>,
     }),
   ];
@@ -100,20 +93,57 @@ const Index = () => {
   const { table } = useDataTable({
     columns: columns,
     data: SystemLogs,
-    columnVisibility: { _id: false },
+    columnVisibility: { id: false },
   });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (!isEmpty(systemLogs)) {
+      SetGetSystemLogs(systemLogs.data);
+    }
+
+    if (!isEmpty(systemLogsError)) {
+      switch (systemLogsError?.response?.status) {
+        case 400:
+          SetErrorSystemLogs('Bad Request');
+          break;
+        case 401:
+          SetErrorSystemLogs('Unauthorized');
+          break;
+        case 403:
+          SetErrorSystemLogs('Forbidden');
+          break;
+        case 404:
+          SetErrorSystemLogs('System logs not found');
+          break;
+        case 500:
+          SetErrorSystemLogs('Internal Server Error');
+          break;
+        default:
+          SetErrorSystemLogs('An error occurred. Please try again later.');
+          break;
+      }
+    }
+  }, [systemLogs, systemLogsError]);
 
   return (
     <>
       <div className="w-full">
         <BreadCrumbs title="System Logs" />
+        {/* Notifications */}
+        {!isEmpty(ErrorSystemLogs) ? <ToastNotification toastType="error" notifMessage={ErrorSystemLogs} /> : null}
+
         <Can I="access" this="System_logs">
           <div className="mx-5">
             <Card>
-              <div className="flex flex-row flex-wrap">
-                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper"></div>
-                <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
-              </div>
+              {systemLogsLoading ? (
+                <LoadingSpinner size="lg" />
+              ) : (
+                <div className="flex flex-row flex-wrap">
+                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper"></div>
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
+                </div>
+              )}
             </Card>
           </div>
 
