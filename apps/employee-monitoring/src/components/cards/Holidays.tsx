@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Card } from './Card';
 import useSWR from 'swr';
 import fetcherEMS from '../../utils/fetcher/FetcherEMS';
@@ -7,6 +8,7 @@ import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { Holiday } from '../../utils/types/holiday.type';
 
 export const Holidays = (): JSX.Element => {
   // fetch data for list of holidays
@@ -16,7 +18,6 @@ export const Holidays = (): JSX.Element => {
     isLoading: swrIsLoading,
     mutate: mutateHolidays,
   } = useSWR('/holidays', fetcherEMS, {
-    shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
 
@@ -27,6 +28,37 @@ export const Holidays = (): JSX.Element => {
     getHolidaysSuccess: state.getHolidaysSuccess,
     getHolidaysFail: state.getHolidaysFail,
   }));
+
+  // Check number of regular holidays
+  const countRegularHolidays = (holidays: Array<Holiday>) => {
+    let count = 0;
+    holidays.map((holiday) => {
+      if (
+        holiday.type === 'regular' &&
+        dayjs().isBefore(dayjs(holiday.holidayDate).format('MM DD, YYYY')) &&
+        dayjs().isSame(dayjs(holiday.holidayDate).format('MM DD, YYYY'), 'year')
+      ) {
+        count = count + 1;
+      }
+    });
+
+    return count;
+  };
+
+  const countSpecialHolidays = (holidays: Array<Holiday>) => {
+    let count = 0;
+    holidays.map((holiday) => {
+      if (
+        holiday.type === 'special' &&
+        dayjs().isBefore(dayjs(holiday.holidayDate).format('MM DD, YYYY')) &&
+        dayjs().isSame(dayjs(holiday.holidayDate).format('MM DD, YYYY'), 'year')
+      ) {
+        count = count + 1;
+      }
+    });
+
+    return count;
+  };
 
   // Initial zustand state update
   useEffect(() => {
@@ -56,12 +88,15 @@ export const Holidays = (): JSX.Element => {
             <div className="text-gray-500"> Regular Holidays</div>
             {swrIsLoading ? (
               <Skeleton count={4} borderRadius={1} />
+            ) : countRegularHolidays(holidays) <= 0 ? (
+              <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
             ) : (
-              <div className="flex flex-col w-full gap-1 px-2 py-1 rounded-lg bg-blue-50">
+              <div className="flex flex-col w-full gap-1 p-2 rounded-lg bg-blue-50">
                 {!isEmpty(holidays) ? (
                   <>
                     {holidays.map((holiday) => {
                       const { holidayDate, id, name, type } = holiday;
+
                       if (
                         type === 'regular' &&
                         dayjs().isBefore(dayjs(holidayDate).format('MM DD, YYYY')) &&
@@ -77,22 +112,24 @@ export const Holidays = (): JSX.Element => {
                     })}
                   </>
                 ) : (
-                  <div className="flex justify-center w-full h-full text-gray-400">-- No Data --</div>
+                  <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
                 )}
               </div>
             )}
 
             {/* Special Holidays */}
-
             <div className="text-gray-500"> Special non-working Holidays</div>
 
             {swrIsLoading ? (
               <Skeleton count={4} borderRadius={1} />
+            ) : countSpecialHolidays(holidays) <= 0 ? (
+              <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
             ) : (
-              <div className="flex flex-col w-full gap-1 px-2 py-2 rounded-lg bg-blue-50">
+              <div className="flex flex-col w-full gap-1 p-2 rounded-lg bg-blue-50">
                 {!isEmpty(holidays) ? (
                   holidays.map((holiday) => {
                     const { holidayDate, id, name, type } = holiday;
+
                     if (
                       type === 'special' &&
                       dayjs().isBefore(dayjs(holidayDate).format('MM DD, YYYY')) &&
@@ -107,17 +144,18 @@ export const Holidays = (): JSX.Element => {
                     }
                   })
                 ) : (
-                  <div className="flex justify-center w-full h-full text-gray-400">-- No Data --</div>
+                  <div className="flex justify-center w-full h-full text-gray-400 py-2">-- No Holidays --</div>
                 )}
               </div>
             )}
           </div>
 
           {/* Button */}
-
           <div className="flex flex-col mt-2">
             <button className="px-3 py-1 bg-blue-400 rounded">
-              <div className="text-xs text-white">View More →</div>
+              <a rel="noreferrer" href={`/maintenance/events/holidays`}>
+                <div className="text-xs text-white">View More →</div>
+              </a>
             </button>
           </div>
         </div>

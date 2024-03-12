@@ -16,6 +16,7 @@ export function Index() {
           <div className="gap-5 lg:flex lg:flex-row md:flex md:flex-col sm:flex sm:flex-col">
             <section className="sm:w-full md:w-full lg:w-[30%] flex flex-col gap-5 ">
               <CardEmployee />
+
               <Holidays />
             </section>
 
