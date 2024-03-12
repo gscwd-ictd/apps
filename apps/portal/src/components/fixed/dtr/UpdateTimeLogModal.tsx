@@ -1,4 +1,4 @@
-import { Alert, AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
@@ -6,8 +6,7 @@ import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/em
 
 import dayjs from 'dayjs';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
-import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
-import { isEmpty, isError } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { OfficeSchema } from './OfficeSchema';
@@ -28,14 +27,6 @@ type EditDailySchedModalProps = {
 type TimeLogRemarks = {
   remarks: string;
 };
-// enum KEYS {
-//   COMPANYID = 'companyId',
-//   DTRDATE = 'dtrDate',
-//   TIMEIN = 'timeIn',
-//   TIMEOUT = 'timeOut',
-//   LUNCHIN = 'lunchIn',
-//   LUNCHOUT = 'lunchOut',
-// }
 
 const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   modalState,
@@ -369,6 +360,71 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   </div>
                 </div>
 
+                {rowData?.dtrCorrection?.status ? (
+                  <>
+                    <hr className="w-full mt-2 mb-4"></hr>
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 sm:pr-5 px-0.5 pb-3  ">
+                      <div className="w-full ">
+                        <LabelInput
+                          textSize="sm"
+                          required
+                          id="updatedTimeIn"
+                          label="Requested Time In Update:"
+                          step="any"
+                          type="time"
+                          value={rowData.dtrCorrection.timeIn}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
+                      <div className="w-full">
+                        <LabelInput
+                          textSize="sm"
+                          required
+                          id="updatedLunchOut"
+                          label="Requested Lunch Out Update:"
+                          step="any"
+                          type="time"
+                          value={rowData.dtrCorrection.lunchOut}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pr-5 pb-3  ">
+                      <div className="w-full">
+                        <LabelInput
+                          textSize="sm"
+                          required
+                          id="updatedLunchIn"
+                          label="Requested Lunch In Update:"
+                          step="any"
+                          type="time"
+                          value={rowData.dtrCorrection.lunchIn}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
+                      <div className="w-full">
+                        <LabelInput
+                          textSize="sm"
+                          required
+                          id="updatedTimeOut"
+                          label="Requested Time Out Update:"
+                          step="any"
+                          type="time"
+                          value={rowData.dtrCorrection.timeOut}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+
                 <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                   {rowData?.dtrCorrection?.remarks ? (
                     <>
@@ -420,70 +476,6 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                     )}
                   </div>
                 </div>
-
-                {rowData?.dtrCorrection?.status ? (
-                  <>
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 sm:pr-5 px-0.5 pb-3  ">
-                      <div className="w-full ">
-                        <LabelInput
-                          textSize="sm"
-                          required
-                          id="updatedTimeIn"
-                          label="Updated Time In:"
-                          step="any"
-                          type="time"
-                          value={rowData.dtrCorrection.timeIn}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
-                      <div className="w-full">
-                        <LabelInput
-                          textSize="sm"
-                          required
-                          id="updatedLunchOut"
-                          label="Updated Lunch Out:"
-                          step="any"
-                          type="time"
-                          value={rowData.dtrCorrection.lunchOut}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pr-5 pb-3  ">
-                      <div className="w-full">
-                        <LabelInput
-                          textSize="sm"
-                          required
-                          id="updatedLunchIn"
-                          label="Updated Lunch In:"
-                          step="any"
-                          type="time"
-                          value={rowData.dtrCorrection.lunchIn}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
-                      <div className="w-full">
-                        <LabelInput
-                          textSize="sm"
-                          required
-                          id="updatedTimeOut"
-                          label="Updated Time Out:"
-                          step="any"
-                          type="time"
-                          value={rowData.dtrCorrection.timeOut}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                  </>
-                ) : null}
               </div>
             </div>
           </form>
