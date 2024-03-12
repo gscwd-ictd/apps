@@ -156,22 +156,18 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     <>
       {/* failed to load previously nominated employee list */}
       {!isEmpty(errorNominatedEmployeeList) && trainingModalIsOpen ? (
-        <>
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorNominatedEmployeeList}: Failed to load nominated participants.`}
-          />
-        </>
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorNominatedEmployeeList}: Failed to load nominated participants.`}
+        />
       ) : null}
 
       {/* failed to load recommended employee list */}
       {!isEmpty(errorRecommendedEmployee) && trainingModalIsOpen ? (
-        <>
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorRecommendedEmployee}: Failed to load recommended participants.`}
-          />
-        </>
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorRecommendedEmployee}: Failed to load recommended participants.`}
+        />
       ) : null}
 
       <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>

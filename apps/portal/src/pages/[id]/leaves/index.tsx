@@ -324,16 +324,14 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
               </div>
             ) : (
               <ContentBody>
-                <>
-                  <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}>
-                      <LeavesTabs tab={tab} />
-                    </div>
-                    <div className="w-full">
-                      <LeavesTabWindow />
-                    </div>
+                <div className={`w-full flex lg:flex-row flex-col`}>
+                  <div className={`lg:w-[58rem] w-full`}>
+                    <LeavesTabs tab={tab} />
                   </div>
-                </>
+                  <div className="w-full">
+                    <LeavesTabWindow />
+                  </div>
+                </div>
               </ContentBody>
             )}
           </div>
