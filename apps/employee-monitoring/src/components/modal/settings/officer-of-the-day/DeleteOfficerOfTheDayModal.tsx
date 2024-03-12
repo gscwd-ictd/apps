@@ -53,7 +53,7 @@ const DeleteOfficerOfTheDayModal: FunctionComponent<DeleteModalProps> = ({
   };
 
   const handleDeleteResult = async (id: string) => {
-    const { error, result } = await deleteEmpMonitoring(`/1officer-of-the-day/${id}`);
+    const { error, result } = await deleteEmpMonitoring(`/officer-of-the-day/${id}`);
 
     if (error) {
       SetErrorOfficerOfTheDay('An error occurred. Please try again later.');
