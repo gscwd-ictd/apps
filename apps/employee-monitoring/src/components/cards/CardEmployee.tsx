@@ -51,7 +51,7 @@ export const CardEmployee = () => {
 
         <div className="flex flex-col m-5 ">
           <span className="font-medium text-gray-700">{userProfile?.fullName}</span>
-          <span className="text-sm font-light text-gray-500 ">{userProfile?.email}</span>
+          <span className="text-sm font-light text-gray-500 ">{userProfile?.email ?? 'SuperUserAdmin'}</span>
         </div>
       </section>
     </div>
