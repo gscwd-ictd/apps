@@ -3,10 +3,29 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthmiddlewareContext } from '../../pages/_app';
 import { isEmpty } from 'lodash';
 import Image from 'next/image';
-import { ProfileMenu } from '../dropdown/ProfileMenu';
 import * as Popover from '@radix-ui/react-popover';
 
-const actionItems = [{ action: 'Logout', icon: 'bx-power-off' }];
+type ActionItem = {
+  action: string;
+  icon: string;
+  fontColor: string;
+  url: string;
+};
+
+const actionItems = [
+  {
+    action: 'HRMS Modules',
+    icon: 'bx-home',
+    fontColor: 'green-600',
+    url: `${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/module-dashboard`,
+  },
+  {
+    action: 'Logout',
+    icon: 'bx-power-off',
+    fontColor: 'red-500',
+    url: `${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/logout`,
+  },
+];
 
 export const TopNavigation = () => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
@@ -29,10 +48,6 @@ export const TopNavigation = () => {
       setIsToggled(false);
     }
   }, [isCollapsed, isToggled]);
-
-  useEffect(() => {
-    console.log(userProfile);
-  }, []);
 
   return (
     <header
@@ -102,7 +117,7 @@ export const TopNavigation = () => {
 
                   {/* Email */}
                   <div className="hidden sm:hidden md:hidden lg:block">
-                    <span className="text-xs text-gray-600 select-none ">{userProfile?.email ?? 'Superuseradmin'}</span>
+                    <span className="text-xs text-gray-600 select-none ">{userProfile?.email ?? 'SuperUserAdmin'}</span>
                   </div>
                 </div>
 
@@ -128,20 +143,19 @@ export const TopNavigation = () => {
                 focus:shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2),0_0_0_2px_theme(colors.violet7)]
                 will-change-[transform,opacity]
                 data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade
-                data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
-                // className="rounded shadow-2xl w-[160px] PopoverContent "
+                data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade PopoverContent"
                 sideOffset={3}
                 collisionPadding={20}
                 avoidCollisions
               >
-                {actionItems.map((item: any, idx: number) => (
+                {actionItems.map((item: ActionItem, idx: number) => (
                   <div className="z-50w-full bg-white outline-none ring-0  p-3" key={idx}>
                     <a
                       rel="noreferrer"
-                      href={`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/logout`}
+                      href={item.url}
                       className={`active:text-slate-600 focus:text-slate-600 hover:text-slate-600 group text-xs flex w-full items-center z-50 flex gap-2`}
                     >
-                      <i className={`bx ${item.icon} text-sm text-red-500`} />
+                      <i className={`bx ${item.icon} text-sm text-${item.fontColor}`} />
                       {item.action}
                     </a>
                   </div>

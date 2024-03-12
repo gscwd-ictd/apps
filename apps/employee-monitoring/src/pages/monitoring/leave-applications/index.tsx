@@ -28,6 +28,35 @@ const Index = () => {
     mutate: mutateLeaveApplications,
   } = useSWR('/leave/hrmo', fetcherEMS);
 
+  // Zustand initialization
+  const {
+    LeaveApplication,
+    LeaveApplications,
+    IsLoading,
+    ErrorLeaveApplications,
+    ErrorPatchLeaveApplication,
+    ErrorLeaveApplicationDetails,
+    EmptyResponseAndErrors,
+    setLeaveConfirmAction,
+    GetLeaveApplications,
+    GetLeaveApplicationsSuccess,
+    GetLeaveApplicationsFail,
+    setLeaveApplicationDetails,
+  } = useLeaveApplicationStore((state) => ({
+    LeaveApplication: state.leaveApplication.patchResponse,
+    LeaveApplications: state.leaveApplications,
+    IsLoading: state.loading.loadingLeaveApplications,
+    ErrorLeaveApplications: state.error.errorLeaveApplications,
+    ErrorLeaveApplicationDetails: state.error.errorLeaveApplicationDetails,
+    ErrorPatchLeaveApplication: state.error.errorPatchLeaveApplication,
+    setLeaveApplicationDetails: state.setLeaveApplicationDetails,
+    GetLeaveApplications: state.getLeaveApplications,
+    GetLeaveApplicationsSuccess: state.getLeaveApplicationsSuccess,
+    GetLeaveApplicationsFail: state.getLeaveApplicationsFail,
+    EmptyResponseAndErrors: state.emptyResponseAndErrors,
+    setLeaveConfirmAction: state.setLeaveConfirmAction,
+  }));
+
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
   const openViewActionModal = (rowData: MonitoringLeave) => {
@@ -118,35 +147,6 @@ const Index = () => {
       ),
     }),
   ];
-
-  // Zustand initialization
-  const {
-    LeaveApplication,
-    LeaveApplications,
-    IsLoading,
-    ErrorLeaveApplications,
-    ErrorPatchLeaveApplication,
-    ErrorLeaveApplicationDetails,
-    EmptyResponseAndErrors,
-    setLeaveConfirmAction,
-    GetLeaveApplications,
-    GetLeaveApplicationsSuccess,
-    GetLeaveApplicationsFail,
-    setLeaveApplicationDetails,
-  } = useLeaveApplicationStore((state) => ({
-    LeaveApplication: state.leaveApplication.patchResponse,
-    LeaveApplications: state.leaveApplications,
-    IsLoading: state.loading.loadingLeaveApplications,
-    ErrorLeaveApplications: state.error.errorLeaveApplications,
-    ErrorLeaveApplicationDetails: state.error.errorLeaveApplicationDetails,
-    ErrorPatchLeaveApplication: state.error.errorPatchLeaveApplication,
-    setLeaveApplicationDetails: state.setLeaveApplicationDetails,
-    GetLeaveApplications: state.getLeaveApplications,
-    GetLeaveApplicationsSuccess: state.getLeaveApplicationsSuccess,
-    GetLeaveApplicationsFail: state.getLeaveApplicationsFail,
-    EmptyResponseAndErrors: state.emptyResponseAndErrors,
-    setLeaveConfirmAction: state.setLeaveConfirmAction,
-  }));
 
   // React Table initialization
   const { table } = useDataTable({
