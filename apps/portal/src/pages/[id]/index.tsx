@@ -47,9 +47,9 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
-  const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
-  const sgAmount = userDetails.employmentDetails.salaryGradeAmount;
-  const sgIncrement = userDetails.employmentDetails.salaryGrade;
+  const employeeName = `${userDetails?.profile?.firstName} ${userDetails?.profile?.lastName}`;
+  const sgAmount = userDetails?.employmentDetails?.salaryGradeAmount;
+  const sgIncrement = userDetails?.employmentDetails?.salaryGrade;
 
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
@@ -287,7 +287,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlipCount)) {
-      console.log(swrPassSlipCount);
       getPassSlipCountSuccess(swrPassSlipCountIsLoading, swrPassSlipCount);
     }
 
@@ -300,8 +299,10 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   //run hydration function which displays allowed modules of employee
   //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
-    setEmployee(userDetails);
-    hydration();
+    if (userDetails) {
+      setEmployee(userDetails);
+      hydration();
+    }
   }, [userDetails, schedule]);
 
   const { windowHeight } = UseWindowDimensions();
@@ -330,13 +331,14 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   };
 
-  const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY');
+  //get month and day only
+  const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD');
+  const employeeBirthday = dayjs(employee.profile.birthDate).format('MM-DD');
 
   return (
     <>
-      {/* Falling Hears Effect for February Only */}
-      {/* January is 0  */}
-      {dateNow == '02-14-2024' ? (
+      {/* Falling Hearts Effect for February Only */}
+      {dateNow == '02-14' ? (
         <div className="wrapper absolute">
           <div className="heart x1"></div>
           <div className="heart x2"></div>
@@ -344,6 +346,18 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
           <div className="heart x4"></div>
           <div className="heart x5"></div>
           <div className="altheart x6"></div>
+        </div>
+      ) : null}
+
+      {/* Balloon Effect for Birthday */}
+      {dateNow === employeeBirthday && employee ? (
+        <div className="wrapper absolute">
+          <div className="balloon1 x1"></div>
+          <div className="balloon2 x2"></div>
+          <div className="balloon1 x3"></div>
+          <div className="balloon2 x4"></div>
+          <div className="balloon1 x5"></div>
+          <div className="balloon2 x6"></div>
         </div>
       ) : null}
 

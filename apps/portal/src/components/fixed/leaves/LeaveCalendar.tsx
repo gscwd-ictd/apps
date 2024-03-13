@@ -55,9 +55,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
   } = useLeaveStore((state) => ({
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
-
     overlappingLeaveCount: state.overlappingLeaveCount,
-
     setLeaveDateFrom: state.setLeaveDateFrom,
     setLeaveDateTo: state.setLeaveDateTo,
     setLeaveDates: state.setLeaveDates,
