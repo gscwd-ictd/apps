@@ -200,30 +200,31 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
   return (
     <>
       {type === 'range' ? (
-        <div className="flex flex-col md:flex-row gap-2 items-center">
-          <div className="flex gap-2 md:w-[30%] items-center">
-            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">From</label>
-            <input
-              required
-              type="date"
-              value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
-              className="text-slate-500 text-md border-slate-300 rounded"
-              onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
-            />
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center">
+          <div className="w-full flex flex-col md:flex-row lg:flex-col xl:flex-row justify-between gap-2 items-center">
+            <div className="flex gap-2 w-full items-center">
+              {/* <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">From</label> */}
+              <input
+                required
+                type="date"
+                value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
+                className="text-slate-500 text-md border-slate-300 rounded w-full"
+                onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
+              />
+            </div>
+            <label className="text-slate-500 text-md text-center border-slate-300 w-full">To</label>
+            <div className="flex gap-2 w-full items-center">
+              <input
+                required
+                type="date"
+                value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
+                className="text-slate-500 text-md border-slate-300 rounded w-full"
+                onChange={(e) => setLeaveDateTo(e.target.value as unknown as string)}
+              />
+            </div>
           </div>
 
-          <div className="flex gap-2 md:w-[30%] items-center">
-            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">To</label>
-            <input
-              required
-              type="date"
-              value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
-              className="text-slate-500 text-md border-slate-300 rounded"
-              onChange={(e) => setLeaveDateTo(e.target.value as unknown as string)}
-            />
-          </div>
-
-          <label className="text-center text-slate-500 text-sm border-slate-300">
+          <label className="text-center text-slate-500 text-sm border-slate-300 w-full">
             = {leaveDateFrom && leaveDateTo ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1 : 0} Calendar
             Day(s) - {holidayCount} Holiday(s) - {overlappingLeaveCount} Overlapping Leave(s) ={' '}
             <label className="font-bold">

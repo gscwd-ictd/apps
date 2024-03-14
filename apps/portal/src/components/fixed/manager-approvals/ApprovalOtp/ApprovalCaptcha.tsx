@@ -125,7 +125,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
         if (error) {
           patchOvertimeAccomplishmentFail(result);
         } else {
-          console.log(result);
           patchOvertimeAccomplishmentSuccess(result);
           handleClose(); // close confirmation of decline modal
         }

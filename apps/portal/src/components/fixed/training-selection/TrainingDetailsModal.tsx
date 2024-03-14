@@ -522,7 +522,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
           <div className="flex justify-end gap-2 px-4">
             <div className="max-w-auto flex gap-4 ">
               {nominatedEmployeeList?.length > 0 ? (
-                <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>
               ) : (
