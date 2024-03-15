@@ -125,7 +125,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                   ) : null}
 
                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
-                    <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
+                    <AlertNotification alertType="success" notifMessage={'Approved'} dismissible={false} />
                   ) : null}
 
                   {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
@@ -215,52 +215,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     ) : null}
                   </div>
 
-                  {/* <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
-
-                      <div className="w-full md:w-96 ">
-                        <label className="text-slate-500 w-full text-md ">
-                          {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
-                        </label>
-                      </div>
-                    </div>
-                  </div> */}
-
-                  {/* {overtimeDetails.status === OvertimeStatus.APPROVED ||
-                  overtimeDetails.status === OvertimeStatus.DISAPPROVED ||
-                  overtimeDetails.status === OvertimeStatus.CANCELLED ? (
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                          {overtimeDetails.status === OvertimeStatus.APPROVED
-                            ? 'Date Approved:'
-                            : overtimeDetails.status === OvertimeStatus.DISAPPROVED
-                            ? 'Date Disapproved:'
-                            : overtimeDetails.status === OvertimeStatus.CANCELLED
-                            ? 'Date Cancelled'
-                            : ''}
-                        </label>
-
-                        <div className="w-full md:w-96 ">
-                          <label className="text-slate-500 w-full text-md ">
-                            {DateFormatter(overtimeDetails.dateApproved, 'MM-DD-YYYY')}
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null} */}
-
-                  {/* <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Estimated Hours:</label>
-
-                      <div className="w-full md:w-96 ">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.estimatedHours}</label>
-                      </div>
-                    </div>
-                  </div> */}
-
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col justify-between items-start w-full">
                       <label className="text-slate-500 text-md whitespace-nowrap">Employees:</label>
@@ -323,18 +277,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       </div>
                     </div>
                   </div>
-
-                  {/* <div className="flex flex-col justify-between items-center w-full">
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Purpose:</label>
-                    </div>
-                    <textarea
-                      disabled
-                      rows={2}
-                      className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={overtimeDetails.purpose}
-                    ></textarea>
-                  </div> */}
                 </div>
               </div>
             </div>
