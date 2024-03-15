@@ -35,7 +35,11 @@ export const ApprovalsCompletedPassSlipModal = ({
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 1280 ? 'sm' : windowWidth > 1024 ? 'md' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold  text-gray-700">
             <div className="px-5 flex justify-between">

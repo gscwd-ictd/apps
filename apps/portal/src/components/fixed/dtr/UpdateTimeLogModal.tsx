@@ -125,7 +125,6 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   useEffect(() => {
     if (modalState) {
       setDefaultValues(rowData, '');
-      console.log(rowData);
     }
   }, [modalState]);
 

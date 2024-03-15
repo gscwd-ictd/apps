@@ -139,8 +139,8 @@ export const ConfirmationInboxModal = ({
           <div className="flex flex-col w-full h-full gap-2 text-lg text-center px-4">
             {confirmationResponse == InboxMessageResponse.PSB_ACCEPT ||
             confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
-              ? 'Are you sure you want accept?'
-              : 'Are you sure you want decline?'}
+              ? 'Are you sure you want accept this training invitiation? '
+              : 'Are you sure you want decline this training invitiation? Your response will be irreversible.'}
           </div>
         </Modal.Body>
         <Modal.Footer>

@@ -347,7 +347,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         };
       }
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SICK) {
-      console.log('sick');
       if (data.hospital === 'inHospital') {
         dataToSend = {
           leaveBenefitsId: data.typeOfLeaveDetails.id,
@@ -514,7 +513,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   return (
     <>
-      <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>
+      <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -705,7 +704,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                   <div className="flex gap-2 w-full items-center">
                     <select
-                      className="text-slate-500 w-full h-14 rounded text-md border-slate-300"
+                      className="text-slate-500 w-full h-14 rounded-md text-md border-slate-300"
                       required
                       defaultValue={''}
                       onChange={(e) => handleTypeOfLeave(e.target.value as unknown as string)}
@@ -800,7 +799,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           <>
                             <select
                               id="inPhilippinesOrAbroad"
-                              className="text-slate-500 w-full h-14 rounded text-md border-slate-300"
+                              className="text-slate-500 w-full h-14 rounded-md text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('inPhilippinesOrAbroad')}
@@ -821,7 +820,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           <>
                             <select
                               id="hospital"
-                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('hospital')}
@@ -842,7 +841,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           <>
                             <select
                               id="study"
-                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
                               required
                               defaultValue={''}
                               // {...register('study')}
@@ -864,7 +863,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           <>
                             <select
                               id="others"
-                              className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
+                              className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
                               required
                               defaultValue={''}
                               {...register('other')}
@@ -896,7 +895,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <div className="w-full">
                               <input
                                 type="number"
-                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
+                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
                                 placeholder="Vacation/Forced Leave Credits"
                                 min={0}
                                 max={Number(vacationLeaveBalance) + Number(forcedLeaveBalance)}
@@ -918,7 +917,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <div className="w-full">
                               <input
                                 type="number"
-                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
+                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
                                 placeholder="Sick Leave Credits"
                                 min={0}
                                 max={sickLeaveBalance}
@@ -939,7 +938,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <div className="w-full">
                               <input
                                 type="text"
-                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
+                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
                                 placeholder="Amount"
                                 disabled
                                 required
@@ -963,7 +962,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <div className="w-full">
                               <select
                                 id="commutation"
-                                className="text-slate-500 w-full h-16 rounded text-md border-slate-300"
+                                className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
                                 required
                                 defaultValue={''}
                                 {...register('commutation')}
@@ -1012,7 +1011,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             ? 'Specify Study Leave Purpose'
                             : 'Specify Leave Details'
                         }`}
-                        className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300 mb-2"
+                        className="resize-none w-full p-2 mt-1 rounded-md text-slate-500 text-md border-slate-300 mb-2"
                       ></textarea>
                     ) : null}
                   </>
@@ -1054,48 +1053,48 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                   <div className="w-full pb-4 pt-2">
                     <span className="text-slate-500 text-md font-medium">Your current Leave Credits:</span>
-                    <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md table-fixed">
+                    <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-200 w-full rounded-md table-fixed">
                       <tbody>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400"></td>
-                          <td className="border border-slate-400 text-center text-sm p-1">Vacation</td>
+                        <tr className="border border-slate-200">
+                          <td className="border border-slate-200"></td>
+                          <td className="border border-slate-200 text-center text-sm p-1">Vacation</td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
-                            <td className="border border-slate-400 text-center text-sm p-1">Forced</td>
+                            <td className="border border-slate-200 text-center text-sm p-1">Forced</td>
                           ) : null}
 
-                          <td className="border border-slate-400 text-center text-sm p-1">Sick</td>
+                          <td className="border border-slate-200 text-center text-sm p-1">Sick</td>
 
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
-                            <td className="border border-slate-400 text-center text-sm p-1">
+                            <td className="border border-slate-200 text-center text-sm p-1">
                               <label className="hidden sm:block">Special Privilege</label>
                               <label className="block sm:hidden">SPL</label>
                             </td>
                           ) : null}
                         </tr>
-                        <tr className="border border-slate-400">
-                          <td className="border border-slate-400 text-sm p-1">Total Earned</td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                        <tr className="border border-slate-200">
+                          <td className="border border-slate-200 text-sm p-1">Total Earned</td>
+                          <td className="border border-slate-200 p-1 text-center text-sm">
                             {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION
                               ? vacationLeaveBalance
                               : (Number(vacationLeaveBalance) + Number(forcedLeaveBalance)).toFixed(3)}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
-                            <td className="border border-slate-400 p-1 text-center text-sm">{forcedLeaveBalance}</td>
+                            <td className="border border-slate-200 p-1 text-center text-sm">{forcedLeaveBalance}</td>
                           ) : null}
 
-                          <td className="border border-slate-400 p-1 text-center text-sm">{sickLeaveBalance}</td>
+                          <td className="border border-slate-200 p-1 text-center text-sm">{sickLeaveBalance}</td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
-                            <td className="border border-slate-400 p-1 text-center text-sm">
+                            <td className="border border-slate-200 p-1 text-center text-sm">
                               {specialPrivilegeLeaveBalance}
                             </td>
                           ) : null}
                         </tr>
                         <tr>
-                          <td className="border border-slate-400 text-sm p-1">
+                          <td className="border border-slate-200 text-sm p-1">
                             <label className="hidden sm:block">Less this application</label>
                             <label className="block sm:hidden">Less</label>
                           </td>
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="border border-slate-200 p-1 text-center text-sm">
                             {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                               ? leaveDates.length
                               : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
@@ -1103,12 +1102,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               : 0}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
-                            <td className="border border-slate-400 p-1 text-center text-sm">
+                            <td className="border border-slate-200 p-1 text-center text-sm">
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? leaveDates.length : 0}
                             </td>
                           ) : null}
 
-                          <td className="border border-slate-400 p-1 text-center text-sm">
+                          <td className="border border-slate-200 p-1 text-center text-sm">
                             {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                               ? leaveDates.length
                               : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
@@ -1116,7 +1115,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               : 0}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
-                            <td className="border border-slate-400 p-1 text-center text-sm">
+                            <td className="border border-slate-200 p-1 text-center text-sm">
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                                 ? leaveDates.length
                                 : 0}
@@ -1124,11 +1123,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           ) : null}
                         </tr>
                         <tr
-                          className={`border border-slate-400 ${
+                          className={`border border-slate-200 ${
                             watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? '' : 'bg-green-100'
                           }`}
                         >
-                          <td className="border border-slate-400 text-sm p-1">Balance</td>
+                          <td className="border border-slate-200 text-sm p-1">Balance</td>
                           <td
                             className={`${
                               finalVacationLeaveBalance < 0 &&
@@ -1138,7 +1137,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                                 ? 'bg-red-300'
                                 : ''
-                            } border border-slate-400 p-1 text-center text-sm`}
+                            } border border-slate-200 p-1 text-center text-sm`}
                           >
                             {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                               ? finalVacationLeaveBalance.toFixed(3)
@@ -1153,7 +1152,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                                   ? 'bg-red-300'
                                   : ''
-                              } border border-slate-400 p-1 text-center text-sm`}
+                              } border border-slate-200 p-1 text-center text-sm`}
                             >
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                                 ? finalForcedLeaveBalance.toFixed(3)
@@ -1169,7 +1168,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                                 ? 'bg-red-300'
                                 : ''
-                            } border border-slate-400 p-1 text-center text-sm`}
+                            } border border-slate-200 p-1 text-center text-sm`}
                           >
                             {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
                             watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
@@ -1184,7 +1183,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                                   ? 'bg-red-300'
                                   : ''
-                              } border border-slate-400 p-1 text-center text-sm`}
+                              } border border-slate-200 p-1 text-center text-sm`}
                             >
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                                 ? finalSpecialPrivilegekBalance.toFixed(3)
@@ -1194,15 +1193,15 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         </tr>
 
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
-                          <tr className="border border-slate-400 bg-green-100">
-                            <td className="border border-slate-400 text-sm p-1">Total</td>
+                          <tr className="border border-slate-200 bg-green-100">
+                            <td className="border border-slate-200 text-sm p-1">Total</td>
                             <td
                               colSpan={2}
                               className={`${
                                 Number(finalVacationAndForcedLeaveBalance) + Number(sickLeaveBalance) < 10
                                   ? 'bg-red-300'
                                   : ''
-                              } border border-slate-400 p-1 text-center text-sm`}
+                              } border border-slate-200 p-1 text-center text-sm`}
                             >
                               {Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance)}
                             </td>

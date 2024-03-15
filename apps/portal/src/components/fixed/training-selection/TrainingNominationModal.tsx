@@ -104,17 +104,14 @@ export const TrainingNominationModal = ({
   useEffect(() => {
     if (!initialLoad && trainingNominationModalIsOpen) {
       //remove employee from pool
-
       for (let a = 0; a < combinedNominatedEmployees.length; a++) {
         if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
           setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
-          // console.log(combinedNominatedEmployees[a].label, 'removed from pool');
         }
       }
       //add back employee
       for (let i = 0; i < employeeList.length; i++) {
         if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
-          // console.log(employeeList[i].label, 'added to pool');
           const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
           setEmployeePool(
             uniqueNames.sort(function (a, b) {
@@ -184,7 +181,7 @@ export const TrainingNominationModal = ({
               <div className="flex flex-col sm:flex-col md:gap-2 justify-start items-start md:items-start">
                 <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Recommended Participants:</label>
 
-                <div className="w-auto flex flex-wrap text-slate-500 text-md font-medium px-2 md:px-4">
+                <div className="w-full flex flex-wrap text-slate-500 text-md font-medium px-2 md:px-4">
                   {recommendedEmployees.map((employee, index) => {
                     let e = {
                       value: employee.employeeId,
@@ -200,7 +197,6 @@ export const TrainingNominationModal = ({
                           className={`cursor-pointer select-none hover:text-blue-500 hover:bg-slate-300 w-auto px-4 md:px-2 ${
                             selectedEmployees.some((e) => e.value == employee.employeeId) ? 'text-blue-500' : ''
                           }`}
-                          // onClick={() => addRecommendedNominee(e)}
                           key={index}
                         >
                           {employee.name}

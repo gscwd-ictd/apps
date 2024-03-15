@@ -13,6 +13,7 @@ import UpdateTimeLogModal from './UpdateTimeLogModal';
 import { SpinnerDotted } from 'spinners-react';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { UseLateLunchInChecker } from 'libs/utils/src/lib/functions/LateLunchInChecker';
 
 type DtrtableProps = {
   employeeDetails: EmployeeDetails;
@@ -151,7 +152,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                                 ? 'border-blue-300'
                                 : ''
                             } py-2 text-center border ${
-                              UseUndertimeChecker(logs.dtr.lunchIn, logs.schedule.lunchIn) == true &&
+                              UseLateLunchInChecker(logs.dtr.lunchIn, logs.schedule.lunchIn) == true &&
                               logs.schedule.scheduleBase === 'Office'
                                 ? 'text-red-500'
                                 : ''

@@ -195,7 +195,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingMessages)) {
-      console.log(swrTrainingMessages);
       getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
     }
 

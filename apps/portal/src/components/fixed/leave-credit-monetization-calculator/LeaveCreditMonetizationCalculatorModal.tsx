@@ -78,7 +78,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
 
   return (
     <>
-      <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>
+      <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -129,13 +129,13 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                   </div>
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Salary Grade:</label>
+                      <label className="text-slate-500 text-md font-medium">Salary Grade:</label>
 
-                      <div className="w-full md:w-80">
+                      <div className="w-full md:w-44">
                         <input
                           disabled
                           type="text"
-                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="SG"
                           defaultValue={`SG ${sgIncrement} : P${sgAmount ? sgAmount.toLocaleString() : 0}`}
                         />
@@ -143,15 +143,13 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                     </div>
                   </div>
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Vacation & Forced Leave Credits:
-                      </label>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                      <label className="text-slate-500 text-md font-medium">Vacation & Forced Leave Credits:</label>
 
-                      <div className="w-full md:w-80">
+                      <div className="w-full md:w-44">
                         <input
                           type="number"
-                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="VL and Forced Leave Credits"
                           value={Number(vacationLeave) + Number(forcedLeave)}
                           disabled
@@ -161,15 +159,13 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                   </div>
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Sick Leave Credits:
-                      </label>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                      <label className="text-slate-500 text-md font-medium">Sick Leave Credits:</label>
 
-                      <div className="w-full md:w-80">
+                      <div className="w-full md:w-44">
                         <input
                           type="number"
-                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Sick Leave Credits"
                           value={sickLeave}
                           disabled
@@ -179,15 +175,13 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                   </div>
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Total Leave Credits:
-                      </label>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                      <label className="text-slate-500 text-md font-medium">Total Leave Credits:</label>
 
-                      <div className="w-full md:w-80">
+                      <div className="w-full md:w-44">
                         <input
                           type="number"
-                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Total Leave Credit"
                           value={Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)}
                           disabled
@@ -197,15 +191,13 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                   </div>
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Leave Credits To Compute:
-                      </label>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                      <label className="text-slate-500 text-md font-medium">Leave Credits To Compute:</label>
 
-                      <div className="w-full md:w-80">
+                      <div className="w-full md:w-44">
                         <input
                           type="number"
-                          className="border-blue-400 border-2 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-blue-400 border-2 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Enter Leave Credit"
                           onChange={(e: any) => computeEstimateAmount(e.target.value)}
                           value={leaveCreditsToCompute}
@@ -215,17 +207,15 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                   </div>
 
                   <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                        Estimated Monetization:
-                      </label>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                      <label className="text-slate-500 text-md font-medium">Estimated Monetization:</label>
 
-                      <div className="w-full md:w-80">
+                      <div className="w-full md:w-44">
                         <input
                           disabled
                           type="text"
                           id="monetization"
-                          className="border-slate-100 text-slate-500 h-12 text-md w-full md:w-80 rounded"
+                          className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Estimated Monetization"
                           value={estimatedAmount.toLocaleString()}
                         />

@@ -114,7 +114,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           overtimeDetails?.employees[i]?.isAccomplishmentSubmitted == true &&
           overtimeDetails?.employees[i]?.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING
         ) {
-          console.log(overtimeDetails?.employees[i]?.employeeId);
           employeeIdList.push(overtimeDetails?.employees[i]?.employeeId);
         }
       }

@@ -141,7 +141,7 @@ export const PassSlipApplicationModal = ({
   return (
     <>
       <Modal
-        size={windowWidth > 768 ? 'md' : windowWidth > 1024 ? 'lg' : 'full'}
+        size={windowWidth > 768 ? 'sm' : windowWidth > 1024 ? 'md' : 'full'}
         open={modalState}
         setOpen={setModalState}
       >
@@ -190,17 +190,17 @@ export const PassSlipApplicationModal = ({
                 </div>
 
                 <div
-                  className={`lg:flex-row lg:items-center flex-col items-start flex gap-0 md:gap-3 justify-between pb-2 `}
+                  className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-2 `}
                 >
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
                     Nature of Business:
                     <span className="text-red-600">*</span>
                   </label>
 
-                  <div className="w-full lg:w-64">
+                  <div className="w-full xl:w-64">
                     <select
                       id="natureOfBusiness"
-                      className="text-slate-500 h-12 w-full rounded text-md border-slate-300"
+                      className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
                       required
                       {...register('natureOfBusiness')}
                     >
@@ -230,18 +230,18 @@ export const PassSlipApplicationModal = ({
                 watch('natureOfBusiness') ? (
                   <div className="flex flex-col gap-2 pb-2">
                     <div
-                      className={`lg:flex-row lg:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
+                      className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between`}
                     >
                       <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
                         Estimated Hours:
                         <span className="text-red-600">*</span>
                       </label>
-                      <div className="w-full lg:w-64">
+                      <div className="w-full xl:w-64">
                         <input
                           type="number"
                           name="passSlip_estimatedHours"
                           id="estimateHours"
-                          className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
+                          className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
                           placeholder="Enter number of hours "
                           required
                           defaultValue={0}
@@ -261,17 +261,17 @@ export const PassSlipApplicationModal = ({
 
                 {watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? (
                   <div
-                    className={`lg:flex-row lg:items-center flex-col items-start flex gap-0 md:gap-3 justify-between pb-4`}
+                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-4`}
                   >
                     <label className="text-slate-500 text-md whitespace-nowrap font-medium w-1/2">
                       Mode of Transportation:
                       <span className="text-red-600">*</span>
                     </label>
-                    <div className="w-full lg:w-64">
+                    <div className="w-full xl:w-64">
                       <select
                         id="obTransportation"
                         required
-                        className="text-slate-500 h-12 w-full rounded text-md border-slate-300"
+                        className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
                         {...register('obTransportation')}
                       >
                         <option value="" disabled>
@@ -289,17 +289,17 @@ export const PassSlipApplicationModal = ({
 
                 {watch('natureOfBusiness') == NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <div
-                    className={`lg:flex-row lg:items-center flex-col items-start flex gap-0 md:gap-3 justify-between pb-4`}
+                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-4`}
                   >
                     <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
                       For Medical Purpose:
                       <span className="text-red-600">*</span>
                     </label>
 
-                    <div className="w-full lg:w-64">
+                    <div className="w-full xl:w-64">
                       <select
                         id="isMedical"
-                        className="text-slate-500 h-12 w-full rounded text-md border-slate-300"
+                        className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
                         required
                         {...register('isMedical')}
                       >
@@ -314,7 +314,7 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {watch('natureOfBusiness') ? (
-                  <div className="flex flex-col gap-0 md:gap-2">
+                  <div className="flex flex-col gap-2 md:gap-2">
                     <label className="text-slate-500 text-md font-medium">
                       Purpose/Desination:
                       <span className="text-red-600">*</span>
@@ -325,7 +325,7 @@ export const PassSlipApplicationModal = ({
                       placeholder={`Enter Purpose of Pass Slip`}
                       name="passSlip_purpose"
                       id="purposeDestination"
-                      className="resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300"
+                      className="resize-none w-full p-2 rounded-md text-slate-500 text-md border-slate-300"
                       required
                       {...register('purposeDestination')}
                     ></textarea>
