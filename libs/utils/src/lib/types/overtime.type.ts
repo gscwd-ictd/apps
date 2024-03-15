@@ -58,6 +58,7 @@ export type OvertimeList = {
 export type OvertimeDetails = {
   id: string;
   plannedDate: string;
+  dateApproved: string;
   estimatedHours: string;
   purpose: string;
   status: OvertimeStatus;
@@ -76,6 +77,7 @@ export type EmployeeOvertimeDetail = {
   assignment: string;
   isAccomplishmentSubmitted: boolean;
   accomplishmentStatus: OvertimeAccomplishmentStatus;
+  overtimeAccomplishmentId: string;
 };
 
 export type OvertimeAccomplishment = {
@@ -131,11 +133,12 @@ export type OvertimeAccomplishmentPatch = {
 
 //updating of employee's accomplishment report by manager (approve/disapprove)
 export type OvertimeAccomplishmentApprovalPatch = {
-  employeeId: string;
+  employeeId?: string;
+  employeeIds?: Array<string>;
   overtimeApplicationId: string;
-  remarks: string;
+  remarks?: string;
   status: OvertimeAccomplishmentStatus;
-  followEstimatedHrs: boolean;
+  actualHrs: number;
 };
 
 //for pdf

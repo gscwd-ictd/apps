@@ -2,19 +2,16 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import {
+  NominatedEmployees,
   RecommendedEmployee,
   Training,
   TrainingNominationData,
 } from '../../../../libs/utils/src/lib/types/training.type';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
-type NominatedEmployees = {
-  name: string;
-  id: string;
-  acknowledgment: string;
-};
-
 export type TrainingSelectionState = {
+  nominatedEmployeeList: Array<NominatedEmployees>;
+  employeeList: Array<SelectOption>;
   trainingList: Array<Training>;
   individualTrainingDetails: Training;
   recommendedEmployees: Array<RecommendedEmployee>;
@@ -27,11 +24,15 @@ export type TrainingSelectionState = {
     loadingTrainingList: boolean;
     loadingRecommendedEmployee: boolean;
     loadingResponse: boolean;
+    loadingEmployeeList: boolean;
+    loadingNominatedEmployeeList: boolean;
   };
   error: {
     errorTrainingList: string;
     errorRecommendedEmployee: string;
     errorResponse: string;
+    errorEmployeeList: string;
+    errorNominatedEmployeeList: string;
   };
 
   nominatedEmployees: Array<SelectOption>;
@@ -40,6 +41,14 @@ export type TrainingSelectionState = {
   getRecommendedEmployees: (loading: boolean) => void;
   getRecommendedEmployeesSuccess: (loading: boolean, response) => void;
   getRecommendedEmployeesFail: (loading: boolean, error: string) => void;
+
+  getNominatedEmployeeList: (loading: boolean) => void;
+  getNominatedEmployeeListSuccess: (loading: boolean, response) => void;
+  getNominatedEmployeeListFail: (loading: boolean, error: string) => void;
+
+  getEmployeeList: (loading: boolean) => void;
+  getEmployeeListSuccess: (loading: boolean, response) => void;
+  getEmployeeListFail: (loading: boolean, error: string) => void;
 
   auxiliaryEmployees: Array<SelectOption>;
   setAuxiliaryEmployees: (auxiliaryEmployees: Array<SelectOption>) => void;
@@ -52,6 +61,9 @@ export type TrainingSelectionState = {
 
   confirmNominationModalIsOpen: boolean;
   setConfirmNominationModalIsOpen: (confirmNominationModalIsOpen: boolean) => void;
+
+  skipNominationModalIsOpen: boolean;
+  setSkipNominationModalIsOpen: (skipNominationModalIsOpen: boolean) => void;
 
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
@@ -67,6 +79,8 @@ export type TrainingSelectionState = {
 
 export const useTrainingSelectionStore = create<TrainingSelectionState>()(
   devtools((set) => ({
+    nominatedEmployeeList: [],
+    employeeList: [],
     trainingList: [],
     individualTrainingDetails: {} as Training,
     response: {
@@ -78,16 +92,21 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
       loadingTrainingList: false,
       loadingRecommendedEmployee: false,
       loadingResponse: false,
+      loadingEmployeeList: false,
+      loadingNominatedEmployeeList: false,
     },
     error: {
       errorTrainingList: '',
       errorRecommendedEmployee: '',
       errorResponse: '',
+      errorEmployeeList: '',
+      errorNominatedEmployeeList: '',
     },
 
     trainingModalIsOpen: false,
     trainingNominationModalIsOpen: false,
     confirmNominationModalIsOpen: false,
+    skipNominationModalIsOpen: false,
 
     nominatedEmployees: [],
     setNominatedEmployees: (nominatedEmployees: Array<SelectOption>) => {
@@ -111,6 +130,10 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
 
     setConfirmNominationModalIsOpen: (confirmNominationModalIsOpen: boolean) => {
       set((state) => ({ ...state, confirmNominationModalIsOpen }));
+    },
+
+    setSkipNominationModalIsOpen: (skipNominationModalIsOpen: boolean) => {
+      set((state) => ({ ...state, skipNominationModalIsOpen }));
     },
 
     setTrainingNominationModalIsOpen: (trainingNominationModalIsOpen: boolean) => {
@@ -233,6 +256,84 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
         error: {
           ...state.error,
           errorResponse: error,
+        },
+      }));
+    },
+
+    //GET EMPLOYEE LIST ACTIONS
+    getEmployeeList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        employeeList: [],
+        loading: {
+          ...state.loading,
+          loadingEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorEmployeeList: '',
+        },
+      }));
+    },
+    getEmployeeListSuccess: (loading: boolean, response: Array<SelectOption>) => {
+      set((state) => ({
+        ...state,
+        employeeList: response,
+        loading: {
+          ...state.loading,
+          loadingEmployeeList: loading,
+        },
+      }));
+    },
+    getEmployeeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorEmployeeList: error,
+        },
+      }));
+    },
+
+    //GET EMPLOYEE LIST ACTIONS
+    getNominatedEmployeeList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        nominatedEmployeeList: [],
+        loading: {
+          ...state.loading,
+          loadingNominatedEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorNominatedEmployeeList: '',
+        },
+      }));
+    },
+    getNominatedEmployeeListSuccess: (loading: boolean, response: Array<NominatedEmployees>) => {
+      set((state) => ({
+        ...state,
+        nominatedEmployeeList: response,
+        loading: {
+          ...state.loading,
+          loadingNominatedEmployeeList: loading,
+        },
+      }));
+    },
+    getNominatedEmployeeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingNominatedEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorNominatedEmployeeList: error,
         },
       }));
     },

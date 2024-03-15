@@ -12,6 +12,7 @@ import {
   OvertimeDetails,
 } from 'libs/utils/src/lib/types/overtime.type';
 import { PendingApprovalsCount } from '../types/approvals.type';
+import { DtrCorrection, DtrCorrectionApprovalPatch } from 'libs/utils/src/lib/types/dtr.type';
 
 export type ApprovalState = {
   alert: AlertState;
@@ -26,12 +27,14 @@ export type ApprovalState = {
   leaveApplications: Array<SupervisorLeaveDetails>; // new approval page using data tables
   passSlipApplications: Array<PassSlip>; // new approval page using data tables
   overtimeApplications: Array<OvertimeDetails>;
+  dtrCorrectionApplications: Array<DtrCorrection>;
 
   response: {
     patchResponsePassSlip: PassSlip;
     patchResponseLeave: SupervisorLeaveDetails;
     patchResponseOvertime: OvertimeApprovalPatch;
     patchResponseAccomplishment: OvertimeAccomplishmentApprovalPatch;
+    patchResponseDtrCorrection: DtrCorrectionApprovalPatch;
   };
   loading: {
     loadingLeaves: boolean;
@@ -47,6 +50,9 @@ export type ApprovalState = {
 
     loadingAccomplishment: boolean;
     loadingAccomplishmentResponse: boolean;
+
+    loadingDtrCorrection: boolean;
+    loadingDtrCorrectionResponse: boolean;
 
     loadingPendingApprovalsCount: boolean;
   };
@@ -64,6 +70,9 @@ export type ApprovalState = {
 
     errorAccomplishment: string;
     errorAccomplishmentResponse: string;
+
+    errorDtrCorrection: string;
+    errorDtrCorrectionResponse: string;
 
     errorPendingApprovalsCount: string;
   };
@@ -115,6 +124,9 @@ export type ApprovalState = {
   overtimeAccomplishmentModalIsOpen: boolean;
   setOvertimeAccomplishmentModalIsOpen: (overtimeAccomplishmentModalIsOpen: boolean) => void;
 
+  dtrCorrectionModalIsOpen: boolean;
+  setDtrCorrectionModalIsOpen: (dtrCorrectionModalIsOpen: boolean) => void;
+
   overtimeAccomplishmentEmployeeId: string;
   setOvertimeAccomplishmentEmployeeId: (overtimeAccomplishmentEmployeeId: string) => void;
 
@@ -123,6 +135,9 @@ export type ApprovalState = {
 
   overtimeAccomplishmentApplicationId: string;
   setOvertimeAccomplishmentApplicationId: (overtimeAccomplishmentApplicationId: string) => void;
+
+  otpDtrCorrectionModalIsOpen: boolean;
+  setOtpDtrCorrectionModalIsOpen: (otpDtrCorrectionModalIsOpen: boolean) => void;
 
   otpPassSlipModalIsOpen: boolean;
   setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => void;
@@ -135,6 +150,9 @@ export type ApprovalState = {
 
   captchaModalIsOpen: boolean;
   setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
+
+  approveAllCaptchaModalIsOpen: boolean;
+  setApproveAllCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
 
   // PASS SLIPS
   passSlipId: string;
@@ -157,6 +175,15 @@ export type ApprovalState = {
   getLeaveApplicationsList: (loading: boolean) => void;
   getLeaveApplicationsListSuccess: (loading: boolean, response) => void;
   getLeaveApplicationsListFail: (loading: boolean, error: string) => void;
+
+  // DTR Correction
+  dtrCorrectionDetail: DtrCorrection;
+  setDtrCorrectionDetail: (dtrCorrectionDetail: DtrCorrection) => void;
+
+  //for data table format
+  getDtrCorrectionApplicationsList: (loading: boolean) => void;
+  getDtrCorrectionApplicationsListSuccess: (loading: boolean, response) => void;
+  getDtrCorrectionApplicationsListFail: (loading: boolean, error: string) => void;
 
   // OVERTIME
   overtimeDetails: OvertimeDetails;
@@ -198,6 +225,10 @@ export type ApprovalState = {
   patchOvertimeAccomplishmentSuccess: (response) => void;
   patchOvertimeAccomplishmentFail: (error: string) => void;
 
+  patchDtrCorrection: () => void;
+  patchDtrCorrectionSuccess: (response) => void;
+  patchDtrCorrectionFail: (error: string) => void;
+
   emptyResponseAndError: () => void;
 };
 
@@ -211,14 +242,20 @@ export const useApprovalStore = create<ApprovalState>()(
     leaveApplications: [],
     passSlipApplications: [],
     overtimeApplications: [],
+    dtrCorrectionApplications: [],
 
-    pendingApprovalsCount: {} as PendingApprovalsCount,
+    pendingApprovalsCount: {
+      pendingPassSlipsCount: 0,
+      pendingLeavesCount: 0,
+      pendingOvertimesCount: 0,
+    } as PendingApprovalsCount,
 
     response: {
       patchResponsePassSlip: {} as PassSlip,
       patchResponseLeave: {} as SupervisorLeaveDetails,
       patchResponseOvertime: {} as OvertimeApprovalPatch,
       patchResponseAccomplishment: {} as OvertimeAccomplishmentApprovalPatch,
+      patchResponseDtrCorrection: {} as DtrCorrection,
     },
 
     loading: {
@@ -235,6 +272,9 @@ export const useApprovalStore = create<ApprovalState>()(
 
       loadingAccomplishment: false,
       loadingAccomplishmentResponse: false,
+
+      loadingDtrCorrection: false,
+      loadingDtrCorrectionResponse: false,
 
       loadingPendingApprovalsCount: false,
     },
@@ -253,9 +293,13 @@ export const useApprovalStore = create<ApprovalState>()(
       errorAccomplishment: '',
       errorAccomplishmentResponse: '',
 
+      errorDtrCorrection: '',
+      errorDtrCorrectionResponse: '',
+
       errorPendingApprovalsCount: '',
     },
 
+    otpDtrCorrectionModalIsOpen: false,
     otpPassSlipModalIsOpen: false,
     otpLeaveModalIsOpen: false,
     otpOvertimeModalIsOpen: false,
@@ -280,8 +324,12 @@ export const useApprovalStore = create<ApprovalState>()(
 
     overtimeAccomplishmentModalIsOpen: false,
 
-    captchaModalIsOpen: false,
+    dtrCorrectionModalIsOpen: false,
 
+    captchaModalIsOpen: false,
+    approveAllCaptchaModalIsOpen: false,
+
+    dtrCorrectionDetail: {} as DtrCorrection,
     accomplishmentDetails: {} as OvertimeAccomplishment,
 
     overtimeDetails: {} as OvertimeDetails,
@@ -346,8 +394,16 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, captchaModalIsOpen }));
     },
 
+    setApproveAllCaptchaModalIsOpen: (approveAllCaptchaModalIsOpen: boolean) => {
+      set((state) => ({ ...state, approveAllCaptchaModalIsOpen }));
+    },
+
     setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
       set((state) => ({ ...state, declineApplicationModalIsOpen }));
+    },
+
+    setOtpDtrCorrectionModalIsOpen: (otpDtrCorrectionModalIsOpen: boolean) => {
+      set((state) => ({ ...state, otpDtrCorrectionModalIsOpen }));
     },
 
     setOtpPassSlipModalIsOpen: (otpPassSlipModalIsOpen: boolean) => {
@@ -412,6 +468,10 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setOvertimeAccomplishmentModalIsOpen: (overtimeAccomplishmentModalIsOpen: boolean) => {
       set((state) => ({ ...state, overtimeAccomplishmentModalIsOpen }));
+    },
+
+    setDtrCorrectionModalIsOpen: (dtrCorrectionModalIsOpen: boolean) => {
+      set((state) => ({ ...state, dtrCorrectionModalIsOpen }));
     },
 
     setLeaveId: (leaveId: string) => {
@@ -506,64 +566,53 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, leaveIndividualDetail }));
     },
 
-    //GET PASS SLIP ACTIONS OLD APPROVAL PAGE
-    // getPassSlipList: (loading: boolean) => {
-    //   set((state) => ({
-    //     ...state,
-    //     passSlips: {
-    //       ...state.passSlips,
-    //       completed: {
-    //         approved: [],
-    //         disapproved: [],
-    //         cancelled: [],
-    //       },
-    //       forApproval: [],
-    //     },
-    //     response: {
-    //       ...state.response,
-    //       patchResponsePassSlip: {} as PassSlip,
-    //     },
-    //     loading: {
-    //       ...state.loading,
-    //       loadingPassSlips: loading,
-    //     },
-    //     error: {
-    //       ...state.error,
-    //       errorPassSlips: '',
-    //     },
-    //   }));
-    // },
-    // getPassSlipListSuccess: (loading: boolean, response: ApprovalPassSlipList) => {
-    //   set((state) => ({
-    //     ...state,
-    //     passSlips: {
-    //       ...state.passSlips,
-    //       completed: {
-    //         approved: response.completed.approved,
-    //         disapproved: response.completed.disapproved,
-    //         cancelled: response.completed.cancelled,
-    //       },
-    //       forApproval: response.forApproval,
-    //     },
-    //     loading: {
-    //       ...state.loading,
-    //       loadingPassSlips: loading,
-    //     },
-    //   }));
-    // },
-    // getPassSlipListFail: (loading: boolean, error: string) => {
-    //   set((state) => ({
-    //     ...state,
-    //     loading: {
-    //       ...state.loading,
-    //       loadingPassSlips: loading,
-    //     },
-    //     error: {
-    //       ...state.error,
-    //       errorPassSlips: error,
-    //     },
-    //   }));
-    // },
+    //GET DTR CORRECTION ACTIONS NEW APPROVAL PAGE USING DATA TABLE
+    getDtrCorrectionApplicationsList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        dtrCorrectionApplications: [],
+
+        response: {
+          ...state.response,
+          patchResponseDtrCorrection: {} as DtrCorrection,
+        },
+        loading: {
+          ...state.loading,
+          loadingDtrCorrection: loading,
+        },
+        error: {
+          ...state.error,
+          errorDtrCorrection: '',
+        },
+      }));
+    },
+    getDtrCorrectionApplicationsListSuccess: (loading: boolean, response: Array<DtrCorrection>) => {
+      set((state) => ({
+        ...state,
+        dtrCorrectionApplications: response,
+        loading: {
+          ...state.loading,
+          loadingDtrCorrection: loading,
+        },
+      }));
+    },
+    getDtrCorrectionApplicationsListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingDtrCorrection: loading,
+        },
+        error: {
+          ...state.error,
+          errorDtrCorrection: error,
+        },
+      }));
+    },
+
+    setDtrCorrectionDetail: (dtrCorrectionDetail: DtrCorrection) => {
+      set((state) => ({ ...state, dtrCorrectionDetail }));
+    },
 
     //GET PASS SLIP ACTIONS NEW APPROVAL PAGE USING DATA TABLE
     getPassSlipApplicationsList: (loading: boolean) => {
@@ -875,7 +924,7 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
-    //PATCH OVERTIME ACTIONS FOR APPROVAL/DISAPPROVAL
+    //PATCH OVERTIME ACCOMPLISHMENT ACTIONS FOR APPROVAL/DISAPPROVAL
     patchOvertimeAccomplishment: () => {
       set((state) => ({
         ...state,
@@ -920,6 +969,51 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
+    //PATCH DTR CORRECTION ACTIONS FOR APPROVAL/DISAPPROVAL
+    patchDtrCorrection: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponseDtrCorrection: {} as DtrCorrectionApprovalPatch,
+        },
+        loading: {
+          ...state.loading,
+          loadingDtrCorrectionResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorDtrCorrectionResponse: '',
+        },
+      }));
+    },
+    patchDtrCorrectionSuccess: (response: DtrCorrectionApprovalPatch) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          patchResponseDtrCorrection: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingDtrCorrectionResponse: false,
+        },
+      }));
+    },
+    patchDtrCorrectionFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingDtrCorrectionResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorDtrCorrectionResponse: error,
+        },
+      }));
+    },
+
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
@@ -929,6 +1023,7 @@ export const useApprovalStore = create<ApprovalState>()(
           patchResponseLeave: {} as SupervisorLeaveDetails,
           patchResponseOvertime: {} as OvertimeApprovalPatch,
           patchResponseAccomplishment: {} as OvertimeAccomplishmentApprovalPatch,
+          patchResponseDtrCorrection: {} as DtrCorrection,
         },
         error: {
           ...state.error,
@@ -936,6 +1031,7 @@ export const useApprovalStore = create<ApprovalState>()(
           errorPassSlipResponse: '',
           errorOvertimeResponse: '',
           errorAccomplishmentResponse: '',
+          errorDtrCorrectionResponse: '',
         },
       }));
     },

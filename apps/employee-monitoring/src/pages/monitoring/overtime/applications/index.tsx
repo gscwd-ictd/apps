@@ -105,7 +105,7 @@ const Index = () => {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('plannedDate', {
-      header: 'Date',
+      header: 'Planned Date',
       filterFn: 'equalsString',
       cell: (info) => info.getValue(),
     }),

@@ -32,6 +32,7 @@ import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import ChangePasswordModal from '../change-password/ChangePasswordModal';
 import { useChangePasswordStore } from 'apps/portal/src/store/change-password.store';
 import { ToastNotification } from '@gscwd-apps/oneui';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -70,6 +71,11 @@ export const ProfileMenuDropdown = ({
   const { responseChangePassword, emptyResponseAndError } = useChangePasswordStore((state) => ({
     responseChangePassword: state.response.responseChangePassword,
     emptyResponseAndError: state.emptyResponseAndError,
+  }));
+
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
   }));
 
   // close Change Password Modal
@@ -192,23 +198,42 @@ export const ProfileMenuDropdown = ({
                       {/* GENERAL MANAGER */}
                       {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              className={`${
-                                active ? 'bg-slate-100' : 'text-gray-900'
-                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
-                            >
-                              <HiClipboardCheck className="h-5 w-5 text-slate-600" />
-                              <div className="flex w-full items-end justify-between">
-                                <span className="text-sm tracking-tight text-slate-500 text-left">
-                                  Appointing Authority Selection
-                                </span>
-                              </div>
-                            </button>
-                          )}
-                        </Menu.Item>
+                        <>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                                onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
+                              >
+                                <HiClipboardCheck className="h-5 w-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">
+                                    Appointing Authority Selection
+                                  </span>
+                                </div>
+                              </button>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                                onClick={() => router.push(`/${router.query.id}/pdc-gm-approvals`)}
+                              >
+                                <HiAcademicCap className="w-5 h-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">
+                                    Training Approvals
+                                  </span>
+                                </div>
+                              </button>
+                            )}
+                          </Menu.Item>
+                        </>
                       ) : null}
 
                       {/* MANAGERIAL ACTIONS */}
@@ -233,11 +258,17 @@ export const ProfileMenuDropdown = ({
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                                  pendingApprovalsCount.pendingLeavesCount != 0 ||
+                                  pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
 
-                          {/* <Menu.Item>
+                          <Menu.Item>
                             {({ active }) => (
                               <button
                                 className={`${
@@ -253,7 +284,7 @@ export const ProfileMenuDropdown = ({
                                 </div>
                               </button>
                             )}
-                          </Menu.Item> */}
+                          </Menu.Item>
 
                           <Menu.Item>
                             {({ active }) => (
@@ -377,6 +408,25 @@ export const ProfileMenuDropdown = ({
                                 <span className="text-sm tracking-tight text-slate-500 text-left">
                                   Overtime Application
                                 </span>
+                              </div>
+                            </button>
+                          )}
+                        </Menu.Item>
+                      ) : null}
+
+                      {employeeDetails.employmentDetails.isPdcChairman ||
+                      employeeDetails.employmentDetails.isPdcSecretariat ? (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              className={`${
+                                active ? 'bg-slate-100' : 'text-gray-900'
+                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                              onClick={() => router.push(`/${router.query.id}/pdc-approvals`)}
+                            >
+                              <HiAcademicCap className="w-5 h-5 text-rose-600" />
+                              <div className="flex w-full items-end justify-between">
+                                <span className="text-sm tracking-tight text-slate-500 text-left">PDC Approvals</span>
                               </div>
                             </button>
                           )}

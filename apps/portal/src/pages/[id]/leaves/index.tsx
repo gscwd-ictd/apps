@@ -146,10 +146,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -315,7 +312,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
                 </Button>
               </div>
             </ContentHeader>
-            {loading ? (
+            {swrIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
@@ -327,16 +324,14 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
               </div>
             ) : (
               <ContentBody>
-                <>
-                  <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}>
-                      <LeavesTabs tab={tab} />
-                    </div>
-                    <div className="w-full">
-                      <LeavesTabWindow />
-                    </div>
+                <div className={`w-full flex lg:flex-row flex-col`}>
+                  <div className={`lg:w-[58rem] w-full`}>
+                    <LeavesTabs tab={tab} />
                   </div>
-                </>
+                  <div className="w-full">
+                    <LeavesTabWindow />
+                  </div>
+                </div>
               </ContentBody>
             )}
           </div>

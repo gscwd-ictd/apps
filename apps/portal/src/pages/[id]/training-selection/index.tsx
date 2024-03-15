@@ -16,20 +16,18 @@ import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import { TrainingTable } from 'apps/portal/src/components/fixed/training-selection/TrainingTable';
 import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
-import TrainingNominationModal from 'apps/portal/src/components/fixed/training-selection/TrainingNominationModal';
 import { useRouter } from 'next/router';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import { Training } from 'libs/utils/src/lib/types/training.type';
 import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
-import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
 import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -54,6 +52,9 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionListFail,
     setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails,
+    getEmployeeList,
+    getEmployeeListSuccess,
+    getEmployeeListFail,
     emptyResponseAndError,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
@@ -68,10 +69,40 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     getTrainingSelectionListFail: state.getTrainingSelectionListFail,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
     setIndividualTrainingDetails: state.setIndividualTrainingDetails,
+    getEmployeeList: state.getEmployeeList,
+    getEmployeeListSuccess: state.getEmployeeListSuccess,
+    getEmployeeListFail: state.getEmployeeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const router = useRouter();
+
+  const employeeListUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/employees/supervisors/${employeeDetails.employmentDetails.userId}/subordinates/`;
+
+  const {
+    data: swrEmployeeList,
+    isLoading: swrEmployeeListIsLoading,
+    error: swrEmployeeListError,
+    mutate: mutateEmployeeList,
+  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrEmployeeListIsLoading) {
+      getEmployeeList(swrEmployeeListIsLoading);
+    }
+  }, [swrEmployeeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrEmployeeList)) {
+      getEmployeeListSuccess(swrEmployeeListIsLoading, swrEmployeeList);
+    }
+
+    if (!isEmpty(swrEmployeeListError)) {
+      getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
+    }
+  }, [swrEmployeeList, swrEmployeeListError]);
 
   const trainingUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/supervisors/${employeeDetails.employmentDetails.userId}`;
 
@@ -79,11 +110,8 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     data: swrTrainingList,
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
-    mutate: mutateTraining,
-  } = useSWR(trainingUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+    mutate: mutateTrainingList,
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -124,20 +152,20 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
       header: 'Course Title',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('location', {
-      header: 'Location',
+    columnHelper.accessor('source', {
+      header: 'Source',
       filterFn: 'fuzzy',
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('trainingStart', {
       header: 'Start',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('trainingEnd', {
       header: 'End',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('numberOfSlots', {
@@ -145,7 +173,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
       cell: (info) => info.getValue(),
     }),
 
-    columnHelper.accessor('trainingPreparationStatus', {
+    columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderTrainingStatus(info.getValue(), TextSize.TEXT_SM),
     }),
@@ -160,6 +188,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   useEffect(() => {
     if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
+      mutateTrainingList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
@@ -168,6 +197,16 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   return (
     <>
+      {/* Employee List Load Failed */}
+      {!isEmpty(swrEmployeeListError) ? (
+        <>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
+          />
+        </>
+      ) : null}
+
       {/* Training List Load Failed */}
       {!isEmpty(errorTrainingList) ? (
         <>
@@ -208,12 +247,12 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {loadingTrainingList ? (
+            {swrTrainingListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
                   thickness={70}
-                  className="flex w-full h-full transition-all "
+                  className="w-full flex h-full transition-all "
                   color="slateblue"
                   size={100}
                 />
@@ -229,7 +268,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
                     showColumnFilter={false}
                     paginate={true}
                   />
-                  {/* <TrainingTable employeeDetails={employeeDetails} /> */}
                 </div>
               </ContentBody>
             )}
@@ -251,5 +289,19 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  return { props: { employeeDetails } };
+  // check if user role is rank_and_file or job order = kick out
+  if (
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) ||
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
+  }
 });

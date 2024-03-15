@@ -11,7 +11,8 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 export type TimeLogState = {
   dtr: EmployeeTimeLog;
   schedule: Schedule & EmployeeRestDay;
-
+  isHoliday: boolean;
+  isRestDay: boolean;
   loading: {
     loadingTimeLogs: boolean;
   };
@@ -28,7 +29,8 @@ export const useTimeLogStore = create<TimeLogState>()(
   devtools((set) => ({
     dtr: {} as EmployeeTimeLog,
     schedule: {} as Schedule & EmployeeRestDay,
-
+    isHoliday: false,
+    isRestDay: false,
     loading: {
       loadingTimeLogs: false,
     },
@@ -42,6 +44,8 @@ export const useTimeLogStore = create<TimeLogState>()(
         ...state,
         dtr: {} as EmployeeTimeLog,
         schedule: {} as Schedule & EmployeeRestDay,
+        isHoliday: false,
+        isRestDay: false,
         loading: {
           ...state.loading,
           loadingTimeLogs: loading,
@@ -52,14 +56,13 @@ export const useTimeLogStore = create<TimeLogState>()(
         },
       }));
     },
-    getTimeLogsSuccess: (
-      loading: boolean,
-      response: EmployeeDtrWithSchedule
-    ) => {
+    getTimeLogsSuccess: (loading: boolean, response: EmployeeDtrWithSchedule) => {
       set((state) => ({
         ...state,
         dtr: response.dtr,
         schedule: response.schedule,
+        isHoliday: response.isHoliday,
+        isRestDay: response.isRestDay,
         loading: {
           ...state.loading,
           loadingTimeLogs: loading,

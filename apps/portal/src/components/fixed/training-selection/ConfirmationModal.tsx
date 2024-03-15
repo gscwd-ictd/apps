@@ -2,13 +2,10 @@
 
 import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
-import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { TrainingNominationData } from 'libs/utils/src/lib/types/training.type';
-import { isEmpty } from 'lodash';
+import { NomineeType } from 'libs/utils/src/lib/enums/training.enum';
 
 type ConfirmationNominationModalProps = {
   modalState: boolean;
@@ -22,25 +19,17 @@ export const ConfirmationNominationModal = ({
   closeModalAction,
 }: ConfirmationNominationModalProps) => {
   const {
-    recommendedEmployees,
     individualTrainingDetails,
     nominatedEmployees,
     auxiliaryEmployees,
-    errorResponse,
-    trainingModalIsOpen,
-    confirmNominationModalIsOpen,
     setTrainingModalIsOpen,
     postTrainingSelection,
     postTrainingSelectionSuccess,
     postTrainingSelectionFail,
   } = useTrainingSelectionStore((state) => ({
-    recommendedEmployees: state.recommendedEmployees,
     individualTrainingDetails: state.individualTrainingDetails,
     nominatedEmployees: state.nominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
-    errorResponse: state.error.errorResponse,
-    trainingModalIsOpen: state.trainingModalIsOpen,
-    confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
     postTrainingSelection: state.postTrainingSelection,
     postTrainingSelectionSuccess: state.postTrainingSelectionSuccess,
@@ -49,7 +38,6 @@ export const ConfirmationNominationModal = ({
 
   const handleSubmit = () => {
     let finalNominated = [];
-    let finalAuxiliary = [];
     let finalEmployees = [];
     //mutate nominated employees array for post
     for (let a = 0; a < nominatedEmployees.length; a++) {
@@ -58,7 +46,7 @@ export const ConfirmationNominationModal = ({
           ...finalNominated,
           {
             employeeId: nominatedEmployees[a].value,
-            nomineeType: 'nominee',
+            nomineeType: NomineeType.NOMINEE,
           },
         ])
       );
@@ -71,7 +59,7 @@ export const ConfirmationNominationModal = ({
           ...finalEmployees,
           {
             employeeId: auxiliaryEmployees[b].value,
-            nomineeType: 'stand-in',
+            nomineeType: NomineeType.STAND_IN,
           },
         ])
       );
@@ -111,7 +99,7 @@ export const ConfirmationNominationModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-0 text-lg text-center">
+          <div className="w-full h-full flex flex-col gap-0 text-lg text-center px-4">
             <label>{`Are you sure you want to submit this nomination?`}</label>
             <label>{`You have nominated ${nominatedEmployees.length} participants and ${
               auxiliaryEmployees.length
@@ -119,7 +107,7 @@ export const ConfirmationNominationModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes

@@ -106,11 +106,6 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setSelectedEmployeeType(type);
   };
 
-  // useEffect(() => {
-  //   // setSelectedYear(yearNow as unknown as number);
-  //   setSelectedMonth(Number(monthNow) - 1);
-  // }, []);
-
   const closePdfOvertimeSummaryModal = async () => {
     setPdfOvertimeSummaryModalIsOpen(false);
   };
@@ -135,7 +130,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employee Type:</label>
                 <div className="w-full md:w-80">
@@ -228,7 +223,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
           />
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
                 disabled={selectedMonth && selectedPeriod && selectedYear && selectedEmployeeType ? false : true}

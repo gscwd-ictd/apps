@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -30,6 +32,9 @@ import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.ty
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
+import dayjs from 'dayjs';
+import { useApprovalStore } from '../../store/approvals.store';
+import { usePassSlipStore } from '../../store/passslip.store';
 
 export type NavDetails = {
   fullName: string;
@@ -42,9 +47,9 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
-  const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
-  const sgAmount = userDetails.employmentDetails.salaryGradeAmount;
-  const sgIncrement = userDetails.employmentDetails.salaryGrade;
+  const employeeName = `${userDetails?.profile?.firstName} ${userDetails?.profile?.lastName}`;
+  const sgAmount = userDetails?.employmentDetails?.salaryGradeAmount;
+  const sgIncrement = userDetails?.employmentDetails?.salaryGrade;
 
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
@@ -81,10 +86,20 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
       getTimeLogsFail: state.getTimeLogsFail,
     }));
 
-  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail } = useDtrStore((state) => ({
-    getEmployeeDtr: state.getEmployeeDtr,
-    getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
-    getEmployeeDtrFail: state.getEmployeeDtrFail,
+  const { getEmployeeDtr, getEmployeeDtrSuccess, getEmployeeDtrFail, setSelectedYear, setSelectedMonth } = useDtrStore(
+    (state) => ({
+      getEmployeeDtr: state.getEmployeeDtr,
+      getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+      getEmployeeDtrFail: state.getEmployeeDtrFail,
+      setSelectedYear: state.setSelectedYear,
+      setSelectedMonth: state.setSelectedMonth,
+    })
+  );
+
+  const { getPassSlipCount, getPassSlipCountSuccess, getPassSlipCountFail } = usePassSlipStore((state) => ({
+    getPassSlipCount: state.getPassSlipCount,
+    getPassSlipCountSuccess: state.getPassSlipCountSuccess,
+    getPassSlipCountFail: state.getPassSlipCountFail,
   }));
 
   const { leaveLedger, loadingLedger, errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } =
@@ -214,6 +229,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
+
   const dtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${userDetails.employmentDetails.companyId}/${yearNow}/${monthNow}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
@@ -237,6 +253,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrDtr)) {
+      setSelectedYear(yearNow);
+      setSelectedMonth(monthNow);
       getEmployeeDtrSuccess(swrDtrIsLoading, swrDtr);
     }
 
@@ -245,12 +263,46 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   }, [swrDtr, swrDtrError]);
 
+  //pass slip count
+  const passSlipCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/pass-slips/used/count`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPassSlipCount,
+    isLoading: swrPassSlipCountIsLoading,
+    error: swrPassSlipCountError,
+    mutate: mutatePassSlipCount,
+  } = useSWR(userDetails.employmentDetails.companyId ? passSlipCountUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPassSlipCountIsLoading) {
+      getPassSlipCount(swrPassSlipCountIsLoading);
+    }
+  }, [swrPassSlipCountIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPassSlipCount)) {
+      getPassSlipCountSuccess(swrPassSlipCountIsLoading, swrPassSlipCount);
+    }
+
+    if (!isEmpty(swrPassSlipCountError)) {
+      getPassSlipCountFail(swrPassSlipCountIsLoading, swrPassSlipCountError.message);
+    }
+  }, [swrPassSlipCount, swrPassSlipCountError]);
+
   //store server side props (userDetails) to store
   //run hydration function which displays allowed modules of employee
   //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
-    setEmployee(userDetails);
-    hydration();
+    if (userDetails) {
+      setEmployee(userDetails);
+      hydration();
+    }
   }, [userDetails, schedule]);
 
   const { windowHeight } = UseWindowDimensions();
@@ -279,8 +331,36 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   };
 
+  //get month and day only
+  const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD');
+  const employeeBirthday = dayjs(employee.profile.birthDate).format('MM-DD');
+
   return (
     <>
+      {/* Falling Hearts Effect for February Only */}
+      {dateNow == '02-14' ? (
+        <div className="wrapper absolute">
+          <div className="heart x1"></div>
+          <div className="heart x2"></div>
+          <div className="heart x3"></div>
+          <div className="heart x4"></div>
+          <div className="heart x5"></div>
+          <div className="altheart x6"></div>
+        </div>
+      ) : null}
+
+      {/* Balloon Effect for Birthday */}
+      {dateNow === employeeBirthday && employee ? (
+        <div className="wrapper absolute">
+          <div className="balloon1 x1"></div>
+          <div className="balloon2 x2"></div>
+          <div className="balloon1 x3"></div>
+          <div className="balloon2 x4"></div>
+          <div className="balloon1 x5"></div>
+          <div className="balloon2 x6"></div>
+        </div>
+      ) : null}
+
       {/* Leave Monetization Constant Load Failed */}
       {!isEmpty(errorMonetizationConstant) ? (
         <>
@@ -304,6 +384,10 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
       {!isEmpty(swrDtrError) ? (
         <ToastNotification toastType="error" notifMessage={`DTR: ${swrDtrError.message}.`} />
+      ) : null}
+
+      {!isEmpty(swrPassSlipCountError) ? (
+        <ToastNotification toastType="error" notifMessage={`Pass Slip Count: ${swrPassSlipCountError.message}.`} />
       ) : null}
 
       <Head>
@@ -363,7 +447,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                     />
                     <StatsCard
                       name={'Pass Slip Count'}
-                      count={0}
+                      count={swrPassSlipCount?.passSlipCount}
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
                       height={windowHeight > 820 ? 'h-52' : 'h-36'}

@@ -116,7 +116,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
           ) : null}
           <form id="ApplyOvertimeForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
-              <div className="w-full flex flex-col gap-2 p-4 rounded">
+              <div className="w-full flex flex-col gap-2 px-4 rounded">
                 <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
                   <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                     Date:
@@ -145,7 +145,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       required
                       defaultValue={0}
                       max="8"
-                      min="1"
+                      min="2"
                       {...register('estimatedHours')}
                     />
                   </div>
@@ -184,7 +184,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button variant={'primary'} size={'md'} loading={false} form="ApplyOvertimeForm" type="submit">
                 Apply Overtime

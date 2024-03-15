@@ -24,17 +24,20 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 
 // const mockData = {
 //   _id: '123',
-//   fullName: 'Allyn Test',
+//   fullName: 'User Test',
 //   isSuperUser: true,
 //   photoUrl: 'http://172.20.110.45:3001/static/media/avatar-2.feb0f89d.jpg',
-//   email: 'allyn@gscwd.com',
+//   email: 'user@gscwd.com',
 //   userAccess: [
 //     { I: 'access', this: 'Settings' },
 //     { I: 'access', this: 'Dashboard' },
 //     { I: 'access', this: 'Employee_schedules' },
+//     { I: 'access', this: 'Employee_schedules_view' },
 //     { I: 'access', this: 'Daily_time_record' },
+//     { I: 'access', this: 'Daily_time_record_view' },
 //     { I: 'access', this: 'Leave_ledger' },
 //     { I: 'access', this: 'Scheduling_sheets' },
+//     { I: 'access', this: 'Scheduling_sheet_office' },
 //     { I: 'access', this: 'Scheduling_sheet_station' },
 //     { I: 'access', this: 'Scheduling_sheet_field' },
 //     { I: 'access', this: 'Overtime' },
@@ -69,15 +72,15 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 export default function CustomApp({ Component, pageProps, userDetails }: AppProps & AppOwnProps) {
   const [userProfile, setUserProfile] = useState<UserProfile>(null);
 
-  // useEffect(() => {
-  //   setUserProfile(mockData);
-  // }, [mockData]);
-
   useEffect(() => {
     if (!isEmpty(userDetails) && isEmpty(userProfile)) {
       setUserProfile(userDetails);
     }
   }, [userDetails, userProfile]);
+
+  // useEffect(() => {
+  //   setUserProfile(mockData);
+  // }, [mockData]);
 
   return (
     <>

@@ -52,6 +52,11 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeListSuccess,
     getOvertimeListFail,
     emptyResponseAndError,
+
+    setSelectedMonth,
+    setSelectedYear,
+    setSelectedPeriod,
+    setSelectedEmployeeType,
   } = useOvertimeStore((state) => ({
     tab: state.tab,
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
@@ -79,6 +84,11 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeListSuccess: state.getOvertimeListSuccess,
     getOvertimeListFail: state.getOvertimeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
+
+    setSelectedMonth: state.setSelectedMonth,
+    setSelectedYear: state.setSelectedYear,
+    setSelectedPeriod: state.setSelectedPeriod,
+    setSelectedEmployeeType: state.setSelectedEmployeeType,
   }));
 
   const router = useRouter();
@@ -92,6 +102,10 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   const openOvertimeSummaryModal = () => {
     if (!overtimeSummaryModalIsOpen) {
       setOvertimeSummaryModalIsOpen(true);
+      setSelectedMonth(null);
+      setSelectedYear(null);
+      setSelectedPeriod(null);
+      setSelectedEmployeeType(null);
     }
   };
 
@@ -130,10 +144,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrEmployeeListIsLoading,
     error: swrEmployeeListError,
     mutate: mutateEmployeeList,
-  } = useSWR(employeeListUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -160,10 +171,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrOvertimeListIsLoading,
     error: swrOvertimeListError,
     mutate: mutateOvertimeList,
-  } = useSWR(overtimeListUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.overtimeImmediateSupervisorId ? overtimeListUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -316,7 +324,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
                 </Button>
               </div>
             </ContentHeader>
-            {!overtimeList ? (
+            {swrOvertimeListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

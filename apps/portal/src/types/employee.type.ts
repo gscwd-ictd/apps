@@ -33,6 +33,8 @@ export type EmploymentDetails = {
   assignment: Assignment;
   userRole: string;
   isHRMPSB?: boolean;
+  isPdcChairman?: boolean;
+  isPdcSecretariat?: boolean;
   overtimeImmediateSupervisorId: string;
 };
 
@@ -99,5 +101,7 @@ export const employeeDummy: EmployeeDetails = {
       positionTitle: 'Management Information System Researcher',
     },
     userRole: 'general_manager',
+    isPdcChairman: false,
+    isPdcSecretariat: false,
   },
 };

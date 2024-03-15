@@ -8,7 +8,7 @@ import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/funct
 import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 
 const ViewEmployeesSsTable = () => {
-  const { currentScheduleSheet, scheduleSheet } = useScheduleSheetStore((state) => ({
+  const { currentScheduleSheet } = useScheduleSheetStore((state) => ({
     currentScheduleSheet: state.currentScheduleSheet,
     scheduleSheet: state.getScheduleSheetResponse,
   }));

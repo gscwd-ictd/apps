@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
 
   table: {
-    display: 'table',
+    display: 'flex',
     width: '100%',
     borderStyle: 'solid',
     borderWidth: 1,
@@ -928,8 +928,8 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
-            <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+          <div className="flex justify-end gap-2 px-4">
+            <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
               Close
             </Button>
           </div>

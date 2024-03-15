@@ -9,6 +9,7 @@ import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
+import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -19,6 +20,7 @@ type ConfirmationModalProps = {
   actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
   actionLeave?: LeaveStatus; // approve or disapprove for leave
   actionPassSlip?: PassSlipStatus; // approve or disapprove pass slip
+  actionDtrCorrection?: DtrCorrectionStatus; // approve or disapprove time log correction
   confirmName: ManagerOtpApproval;
   employeeId?: string;
 };
@@ -30,6 +32,7 @@ export const ConfirmationApprovalModal = ({
   actionOvertime,
   actionLeave,
   actionPassSlip,
+  actionDtrCorrection,
   tokenId,
   remarks,
   confirmName,
@@ -57,8 +60,12 @@ export const ConfirmationApprovalModal = ({
     setApprovedPassSlipModalIsOpen,
     loadingPassSlipResponse,
 
-    setSelectedOvertimeId,
     setOvertimeDetails,
+
+    patchDtrCorrection,
+    patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen,
   } = useApprovalStore((state) => ({
     patchOvertime: state.patchOvertime,
     patchOvertimeSuccess: state.patchOvertimeSuccess,
@@ -81,8 +88,12 @@ export const ConfirmationApprovalModal = ({
     setApprovedPassSlipModalIsOpen: state.setApprovedPassSlipModalIsOpen,
     loadingPassSlipResponse: state.loading.loadingPassSlipResponse,
 
-    setSelectedOvertimeId: state.setSelectedOvertimeId,
     setOvertimeDetails: state.setOvertimeDetails,
+
+    patchDtrCorrection: state.patchDtrCorrection,
+    patchDtrCorrectionSuccess: state.patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail: state.patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen: state.setDtrCorrectionModalIsOpen,
   }));
 
   const handleSubmit = () => {
@@ -108,22 +119,30 @@ export const ConfirmationApprovalModal = ({
         overtimeApplicationId: tokenId,
       };
       patchOvertime();
+    } else if (confirmName === ManagerOtpApproval.DTRCORRECTION) {
+      data = {
+        id: tokenId,
+        status: actionDtrCorrection,
+      };
+      patchDtrCorrection();
     }
     handlePatchResult(data);
   };
 
-  const handlePatchResult = async (data: leaveAction) => {
-    let otpPatchUrl;
+  const handlePatchResult = async (data) => {
+    let patchUrl;
 
     if (confirmName === ManagerOtpApproval.LEAVE) {
-      otpPatchUrl = '/v1/leave/supervisor';
+      patchUrl = '/v1/leave/supervisor';
     } else if (confirmName === ManagerOtpApproval.PASSSLIP) {
-      otpPatchUrl = '/v1/pass-slip';
+      patchUrl = '/v1/pass-slip';
     } else if (confirmName === ManagerOtpApproval.OVERTIME) {
-      otpPatchUrl = '/v1/overtime/approval';
+      patchUrl = '/v1/overtime/approval';
+    } else if (confirmName === ManagerOtpApproval.DTRCORRECTION) {
+      patchUrl = '/v1/dtr-correction';
     }
 
-    const { error, result } = await patchPortal(otpPatchUrl, data);
+    const { error, result } = await patchPortal(patchUrl, data);
     if (error) {
       if (confirmName === ManagerOtpApproval.LEAVE) {
         patchLeaveFail(result);
@@ -131,6 +150,8 @@ export const ConfirmationApprovalModal = ({
         patchPassSlipFail(result);
       } else if (confirmName === ManagerOtpApproval.OVERTIME) {
         patchOvertimeFail(result);
+      } else if (confirmName === ManagerOtpApproval.DTRCORRECTION) {
+        patchDtrCorrectionFail(result);
       }
     } else {
       if (confirmName === ManagerOtpApproval.LEAVE) {
@@ -155,6 +176,12 @@ export const ConfirmationApprovalModal = ({
           setApprovedOvertimeModalIsOpen(false);
           setOvertimeDetails({} as OvertimeDetails);
         }, 200);
+      } else if (confirmName === ManagerOtpApproval.DTRCORRECTION) {
+        patchDtrCorrectionSuccess(result);
+        closeModalAction(); // close confirmation of decline modal
+        setTimeout(() => {
+          setDtrCorrectionModalIsOpen(false); // close ot pending modal
+        }, 200);
       }
     }
   };
@@ -174,6 +201,8 @@ export const ConfirmationApprovalModal = ({
                   ? 'Overtime Application'
                   : confirmName === ManagerOtpApproval.PASSSLIP
                   ? 'Pass Slip Application'
+                  : confirmName === ManagerOtpApproval.DTRCORRECTION
+                  ? 'Time Log Correction'
                   : 'Application'}
               </span>
             </div>
@@ -188,7 +217,7 @@ export const ConfirmationApprovalModal = ({
               dismissible={false}
             />
           ) : null}
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-left pl-5">
+          <div className="w-full h-full flex flex-col gap-2 text-lg text-left px-4">
             {`Are you sure you want to 
           
           ${
@@ -202,7 +231,7 @@ export const ConfirmationApprovalModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
                 Yes

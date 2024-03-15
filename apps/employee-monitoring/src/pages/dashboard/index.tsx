@@ -1,14 +1,9 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next/types';
 import { Card } from '../../components/cards/Card';
 import { CardEmployee } from '../../components/cards/CardEmployee';
 import { Holidays } from '../../components/cards/Holidays';
 import { TardinessChart } from '../../components/charts/Tardiness';
 import { PendingDashboard } from '../../components/layouts/PendingDashboard';
 import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
-import {
-  getUserLoginDetails,
-  withCookieSession,
-} from '../../utils/helper/session';
 
 export function Index() {
   return (
@@ -19,6 +14,7 @@ export function Index() {
           <div className="gap-5 lg:flex lg:flex-row md:flex md:flex-col sm:flex sm:flex-col">
             <section className="sm:w-full md:w-full lg:w-[30%] flex flex-col gap-5 ">
               <CardEmployee />
+
               <Holidays />
             </section>
 

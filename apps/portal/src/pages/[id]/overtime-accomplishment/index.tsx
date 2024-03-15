@@ -104,10 +104,7 @@ export default function OvertimeAccomplishment({
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {
-    shouldRetryOnError: true,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -134,10 +131,7 @@ export default function OvertimeAccomplishment({
     isLoading: swrOvertimeAccomplishmentListIsLoading,
     error: swrOvertimeAccomplishmentListError,
     mutate: mutateOvertimeAccomplishments,
-  } = useSWR(overtimeAccomplishmentUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeAccomplishmentUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -224,7 +218,7 @@ export default function OvertimeAccomplishment({
               subtitle="Fill up Overtime Accomplishment Reports"
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
-            {!overtimeList ? (
+            {swrOvertimeAccomplishmentListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

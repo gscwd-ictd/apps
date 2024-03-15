@@ -112,10 +112,7 @@ export default function FinalLeaveApprovals({
     isLoading: swrLeaveIsLoading,
     error: swrLeaveError,
     mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(leaveUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -208,7 +205,7 @@ export default function FinalLeaveApprovals({
     }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employee.employeeName', {
@@ -292,12 +289,12 @@ export default function FinalLeaveApprovals({
             <div className="w-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Final Leave Approvals"
-                subtitle="Approve Employee Leaves"
+                subtitle="Approve or Disapprove Employee Leaves"
                 backUrl={`/${router.query.id}`}
               >
                 {/* <ApprovalTypeSelect /> */}
               </ContentHeader>
-              {loadingLeave ? (
+              {swrLeaveIsLoading ? (
                 <div className="w-full h-96  static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}

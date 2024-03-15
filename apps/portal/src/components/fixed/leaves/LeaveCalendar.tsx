@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useLeaveStore } from '../../../store/leave.store';
 import useSWR from 'swr';
 import {
@@ -18,6 +19,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -26,9 +28,10 @@ function classNames(...classes: any) {
 type CalendarProps = {
   clickableDate: boolean;
   type: string; // single or range
+  leaveName: string;
 };
 
-export default function Calendar({ type = 'single', clickableDate = true }: CalendarProps) {
+export default function Calendar({ type = 'single', clickableDate = true, leaveName }: CalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
@@ -52,9 +55,7 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
   } = useLeaveStore((state) => ({
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
-
     overlappingLeaveCount: state.overlappingLeaveCount,
-
     setLeaveDateFrom: state.setLeaveDateFrom,
     setLeaveDateTo: state.setLeaveDateTo,
     setLeaveDates: state.setLeaveDates,
@@ -75,6 +76,11 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
     revalidateOnFocus: false,
   });
   const [holidayCount, setHolidayCount] = useState<number>(0);
+
+  // Initial zustand state update
+  useEffect(() => {
+    setSelectedDates([]);
+  }, [leaveName]);
 
   // Initial zustand state update
   useEffect(() => {
@@ -108,9 +114,35 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
         );
       } else {
         //adds date to array
-
+        //if selected date is not found in unavailable dates array
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
-          setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          //for vacation or forced leave
+          if (
+            (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
+          //for SPL
+          // else if (
+          //   leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0
+          // ) {
+          //   setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          // }
+          //for Solo Parent
+          else if (leaveName === LeaveName.SOLO_PARENT && dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          } else if (
+            leaveName === LeaveName.SICK ||
+            leaveName === LeaveName.PATERNITY ||
+            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+            leaveName === LeaveName.VAWC ||
+            leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY ||
+            leaveName === LeaveName.LEAVE_WITHOUT_PAY
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
         }
       }
     }
@@ -168,30 +200,31 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
   return (
     <>
       {type === 'range' ? (
-        <div className="flex flex-col md:flex-row gap-2 items-center">
-          <div className="flex gap-2 md:w-[30%] items-center">
-            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">From</label>
-            <input
-              required
-              type="date"
-              value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
-              className="text-slate-500 text-md border-slate-300"
-              onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
-            />
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center">
+          <div className="w-full flex flex-col md:flex-row lg:flex-col xl:flex-row justify-between gap-2 items-center">
+            <div className="flex gap-2 w-full items-center">
+              {/* <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">From</label> */}
+              <input
+                required
+                type="date"
+                value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
+                className="text-slate-500 text-md border-slate-300 rounded w-full"
+                onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
+              />
+            </div>
+            <label className="text-slate-500 text-md text-center border-slate-300 w-full">To</label>
+            <div className="flex gap-2 w-full items-center">
+              <input
+                required
+                type="date"
+                value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
+                className="text-slate-500 text-md border-slate-300 rounded w-full"
+                onChange={(e) => setLeaveDateTo(e.target.value as unknown as string)}
+              />
+            </div>
           </div>
 
-          <div className="flex gap-2 md:w-[30%] items-center">
-            <label className="text-slate-500 text-md border-slate-300 w-14 md:w-auto">To</label>
-            <input
-              required
-              type="date"
-              value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
-              className="text-slate-500 text-md border-slate-300"
-              onChange={(e) => setLeaveDateTo(e.target.value as unknown as string)}
-            />
-          </div>
-
-          <label className="text-center text-slate-500 text-sm border-slate-300">
+          <label className="text-center text-slate-500 text-sm border-slate-300 w-full">
             = {leaveDateFrom && leaveDateTo ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1 : 0} Calendar
             Day(s) - {holidayCount} Holiday(s) - {overlappingLeaveCount} Overlapping Leave(s) ={' '}
             <label className="font-bold">
@@ -249,12 +282,17 @@ export default function Calendar({ type = 'single', clickableDate = true }: Cale
                         onClick={() => viewDateActivities(day)}
                         className={classNames(
                           isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
-                          !isEqual(day, selectedDay) && isToday(day) && 'text-red-500',
+                          (leaveName === LeaveName.VACATION ||
+                            leaveName === LeaveName.FORCED ||
+                            leaveName === LeaveName.SOLO_PARENT) &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
+                            'text-slate-300',
+                          isToday(day) && 'text-red-500',
                           swrUnavailableDates &&
                             swrUnavailableDates.some(
                               (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                             ) &&
-                            'text-red-600 bg-red-200 rounded-full',
+                            'text-red-600 bg-red-300 rounded-full',
                           swrUnavailableDates &&
                             swrUnavailableDates.some(
                               (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Leave'

@@ -31,7 +31,6 @@ import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
-    tab,
     pendingPassSlipModalIsOpen,
     approvedPassSlipModalIsOpen,
     disapprovedPassSlipModalIsOpen,
@@ -127,10 +126,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     isLoading: swrPassSlipIsLoading,
     error: swrPassSlipError,
     mutate: mutatePassSlips,
-  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -201,7 +197,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('dateOfApplication', {
       header: 'Date of Filing',
-      filterFn: 'equalsString',
+      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employeeName', {
@@ -293,11 +289,11 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
             <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
               <ContentHeader
                 title="Employee Pass Slip Approvals"
-                subtitle="Approve or disapprove Employee Pass Slips"
+                subtitle="Approve or Disapprove Employee Pass Slips"
                 backUrl={`/${router.query.id}/manager-approvals`}
               ></ContentHeader>
 
-              {loadingPassSlip ? (
+              {swrPassSlipIsLoading ? (
                 <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                   <SpinnerDotted
                     speed={70}

@@ -211,7 +211,7 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
         </Modal.Body>
 
         <Modal.Footer>
-          <div className="w-full flex items-center justify-end">
+          <div className="w-full flex items-center justify-end px-4">
             {modal.title === 'Accomplishments' ? (
               <Button
                 onClick={(e) => handleAddAccomplishment(modal.id, accomplishmentInput)}

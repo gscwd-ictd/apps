@@ -77,6 +77,7 @@ export const PassSlipApplicationModal = ({
     postPassSlipList,
     postPassSlipListSuccess,
     postPassSlipListFail,
+    applyPassSlipModalIsOpen,
   } = usePassSlipStore((state) => ({
     loadingResponse: state.loading.loadingResponse,
     passSlipsForApproval: state.passSlips.forApproval,
@@ -84,6 +85,7 @@ export const PassSlipApplicationModal = ({
     postPassSlipList: state.postPassSlipList,
     postPassSlipListSuccess: state.postPassSlipListSuccess,
     postPassSlipListFail: state.postPassSlipListFail,
+    applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
   }));
 
   // React hook form
@@ -130,10 +132,19 @@ export const PassSlipApplicationModal = ({
       closeModalAction();
     }
   };
+
+  useEffect(() => {
+    reset();
+  }, [applyPassSlipModalIsOpen]);
+
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={windowWidth > 768 ? 'sm' : windowWidth > 1024 ? 'md' : 'full'}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -161,35 +172,35 @@ export const PassSlipApplicationModal = ({
           {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
             <AlertNotification
               alertType="warning"
-              notifMessage="You already have an active Pass Slip request"
+              notifMessage="You already have an active Pass Slip request."
               dismissible={false}
             />
           ) : null}
 
           {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
-            <AlertNotification alertType="warning" notifMessage="No Face Scan Time-In Found" dismissible={false} />
+            <AlertNotification alertType="warning" notifMessage="No Face Scan Time-In Found." dismissible={false} />
           ) : null}
 
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
-            <div className="w-full h-full flex flex-col gap-2 ">
-              <div className="w-full flex flex-col gap-3 p-4 rounded">
-                <div className="w-full flex gap-2 justify-start items-center">
+            <div className="w-full h-full flex flex-col">
+              <div className="w-full flex flex-col px-4 rounded">
+                <div className="w-full flex gap-2 justify-start items-center pb-2">
                   <span className="text-slate-500 text-md font-medium">Date:</span>
                   <div className="text-slate-500 text-md">{DateFormatter(dateToday, 'MM-DD-YYYY')}</div>
                 </div>
 
                 <div
-                  className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between `}
+                  className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-2 `}
                 >
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                    Select Nature of Business:
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
+                    Nature of Business:
                     <span className="text-red-600">*</span>
                   </label>
 
-                  <div className="w-full md:w-80">
+                  <div className="w-full xl:w-64">
                     <select
                       id="natureOfBusiness"
-                      className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
+                      className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
                       required
                       {...register('natureOfBusiness')}
                     >
@@ -214,85 +225,81 @@ export const PassSlipApplicationModal = ({
                   </div>
                 </div>
 
-                {watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? (
-                  <>
-                    <div
-                      className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
-                    >
-                      <label className="text-slate-500 text-md whitespace-nowrap font-medium">
-                        Select Mode of Transportation:
-                        <span className="text-red-600">*</span>
-                      </label>
-                      <div className="w-full md:w-80">
-                        <select
-                          id="obTransportation"
-                          required
-                          className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
-                          {...register('obTransportation')}
-                        >
-                          <option value="" disabled>
-                            Select Mode of Transportation
-                          </option>
-                          {obTransportation.map((item: Item, idx: number) => (
-                            <option value={item.value} key={idx}>
-                              {item.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </>
-                ) : null}
-
                 {watch('natureOfBusiness') !== NatureOfBusiness.HALF_DAY &&
                 watch('natureOfBusiness') !== NatureOfBusiness.UNDERTIME &&
                 watch('natureOfBusiness') ? (
-                  <>
-                    <div className="flex flex-col gap-2">
-                      <div
-                        className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
-                      >
-                        <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                          Estimated Hours:
-                          <span className="text-red-600">*</span>
-                        </label>
-                        <div className="w-full md:w-80">
-                          <input
-                            type="number"
-                            name="passSlip_estimatedHours"
-                            id="estimateHours"
-                            className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-80 rounded"
-                            placeholder="Enter number of hours "
-                            required
-                            defaultValue={0}
-                            max={8}
-                            min={
-                              watch('natureOfBusiness') != NatureOfBusiness.HALF_DAY &&
-                              watch('natureOfBusiness') != NatureOfBusiness.UNDERTIME
-                                ? 1
-                                : 0
-                            }
-                            {...register('estimateHours')}
-                          />
-                        </div>
+                  <div className="flex flex-col gap-2 pb-2">
+                    <div
+                      className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between`}
+                    >
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
+                        Estimated Hours:
+                        <span className="text-red-600">*</span>
+                      </label>
+                      <div className="w-full xl:w-64">
+                        <input
+                          type="number"
+                          name="passSlip_estimatedHours"
+                          id="estimateHours"
+                          className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
+                          placeholder="Enter number of hours "
+                          required
+                          defaultValue={0}
+                          max={8}
+                          min={
+                            watch('natureOfBusiness') != NatureOfBusiness.HALF_DAY &&
+                            watch('natureOfBusiness') != NatureOfBusiness.UNDERTIME
+                              ? 1
+                              : 0
+                          }
+                          {...register('estimateHours')}
+                        />
                       </div>
                     </div>
-                  </>
+                  </div>
+                ) : null}
+
+                {watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? (
+                  <div
+                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-4`}
+                  >
+                    <label className="text-slate-500 text-md whitespace-nowrap font-medium w-1/2">
+                      Mode of Transportation:
+                      <span className="text-red-600">*</span>
+                    </label>
+                    <div className="w-full xl:w-64">
+                      <select
+                        id="obTransportation"
+                        required
+                        className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
+                        {...register('obTransportation')}
+                      >
+                        <option value="" disabled>
+                          Select Mode of Transportation
+                        </option>
+                        {obTransportation.map((item: Item, idx: number) => (
+                          <option value={item.value} key={idx}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 ) : null}
 
                 {watch('natureOfBusiness') == NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <div
-                    className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between `}
+                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-4`}
                   >
-                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                    <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
                       For Medical Purpose:
                       <span className="text-red-600">*</span>
                     </label>
 
-                    <div className="w-full md:w-80">
+                    <div className="w-full xl:w-64">
                       <select
                         id="isMedical"
-                        className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
+                        className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
                         required
                         {...register('isMedical')}
                       >
@@ -307,34 +314,32 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {watch('natureOfBusiness') ? (
-                  <>
-                    <div className="flex flex-col gap-0 md:gap-2">
-                      <label className="text-slate-500 text-md font-medium">
-                        Purpose/Desination:
-                        <span className="text-red-600">*</span>
-                      </label>
-                      <textarea
-                        minLength={watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? 20 : 10}
-                        rows={3}
-                        placeholder={`Enter Purpose of Pass Slip`}
-                        name="passSlip_purpose"
-                        id="purposeDestination"
-                        className="resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300"
-                        required
-                        {...register('purposeDestination')}
-                      ></textarea>
-                      <span className="text-slate-400 text-xs">{`Minimum of ${
-                        watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? '20' : '10'
-                      } characters required`}</span>
-                    </div>
-                  </>
+                  <div className="flex flex-col gap-2 md:gap-2">
+                    <label className="text-slate-500 text-md font-medium">
+                      Purpose/Desination:
+                      <span className="text-red-600">*</span>
+                    </label>
+                    <textarea
+                      minLength={watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? 20 : 10}
+                      rows={2}
+                      placeholder={`Enter Purpose of Pass Slip`}
+                      name="passSlip_purpose"
+                      id="purposeDestination"
+                      className="resize-none w-full p-2 rounded-md text-slate-500 text-md border-slate-300"
+                      required
+                      {...register('purposeDestination')}
+                    ></textarea>
+                    <span className="text-slate-400 text-xs">{`Minimum of ${
+                      watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? '20' : '10'
+                    } characters required`}</span>
+                  </div>
                 ) : null}
               </div>
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
                 variant={'primary'}

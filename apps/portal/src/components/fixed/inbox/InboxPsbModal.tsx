@@ -27,9 +27,8 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
     psbMessage,
     declineRemarks,
     confirmModalIsOpen,
-    setConfirmPsbModalIsOpen,
     setConfirmModalIsOpen,
-    setSelectedVppId,
+    setSelectedPayloadId,
     setConfirmationResponse,
     setConfirmationModalTitle,
     setDeclineRemarks,
@@ -37,9 +36,8 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
     declineRemarks: state.declineRemarks,
     psbMessage: state.message.psb,
     confirmModalIsOpen: state.confirmModalIsOpen,
-    setConfirmPsbModalIsOpen: state.setConfirmPsbModalIsOpen,
     setConfirmModalIsOpen: state.setConfirmModalIsOpen,
-    setSelectedVppId: state.setSelectedVppId,
+    setSelectedPayloadId: state.setSelectedPayloadId,
     setConfirmationResponse: state.setConfirmationResponse,
     setConfirmationModalTitle: state.setConfirmationModalTitle,
     setDeclineRemarks: state.setDeclineRemarks,
@@ -50,8 +48,8 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
     setDeclineRemarks(e);
   };
 
-  const openSubmitModalAction = async (selectedVppId: any, response: InboxMessageResponse) => {
-    setSelectedVppId(selectedVppId); // to be used for psb patch request
+  const openSubmitModalAction = async (selectedPayloadId: any, response: InboxMessageResponse) => {
+    setSelectedPayloadId(selectedPayloadId); // to be used for psb patch request
     setConfirmationResponse(response); // set as accept or decline
     setConfirmationModalTitle('PSB Member Acknowledgment');
     setConfirmModalIsOpen(true);
@@ -63,7 +61,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'lg' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -85,20 +83,20 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
           />
 
           <div className="w-full h-full flex flex-col gap-2 ">
-            <div className="w-full flex flex-col gap-2 p-4 rounded">
+            <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 {psbMessage?.details?.acknowledgedSchedule ? (
                   <AlertNotification
                     alertType={`success`}
-                    notifMessage={`You have accepted this assignment`}
+                    notifMessage={`You have accepted this assignment.`}
                     dismissible={false}
                   />
                 ) : null}
 
                 {psbMessage?.details?.declinedSchedule ? (
                   <AlertNotification
-                    alertType="info"
-                    notifMessage={'You have declined this assignment'}
+                    alertType="error"
+                    notifMessage={'You have declined this assignment.'}
                     dismissible={false}
                   />
                 ) : null}
@@ -108,90 +106,101 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                 ) : null}
               </div>
 
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Assignment:</label>
+              <div className="flex flex-wrap justify-between">
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Assignment:</label>
 
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96 text-md ">{psbMessage?.details?.assignment}</label>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Position:</label>
-
-                <div className="w-auto sm:w-96">
-                  <label className="text-slate-500 h-12 w-96  text-md ">{psbMessage?.details?.positionTitle}</label>
-                </div>
-              </div>
-
-              <div className={` flex flex-col gap-2`}>
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Schedule:</label>
-                  <div className="w-auto sm:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">{psbMessage?.details?.schedule}</label>
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.assignment}</label>
                   </div>
                 </div>
-              </div>
 
-              <div className={` flex flex-col gap-2`}>
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">Venue:</label>
-                  <div className="w-auto md:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">{psbMessage?.details?.venue}</label>
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Position:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.positionTitle}</label>
                   </div>
                 </div>
-              </div>
 
-              <div className={` flex flex-col gap-2`}>
-                <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                  <label className="text-slate-500 text-md font-medium whitespace-nowrap sm:w-80">PSB Members:</label>
-                  <div className="w-auto md:w-96">
-                    <label className="text-slate-500 h-12 w-96  text-md ">
-                      <ul>
-                        {psbMessage?.psbMembers?.map((member: PsbMembers, messageIdx: number) => {
-                          return <li key={messageIdx}>{member.fullName}</li>;
-                        })}
-                      </ul>
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Schedule:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.schedule}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Venue:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{psbMessage?.details?.venue}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">PSB Members:</label>
+
+                  <div className="w-auto ml-5">
+                    <ul className="text-md font-medium">
+                      {psbMessage?.psbMembers?.map((member: PsbMembers, messageIdx: number) => {
+                        return <li key={messageIdx}>{member.fullName}</li>;
+                      })}
+                    </ul>
+                  </div>
+                </div>
+
+                {psbMessage?.details?.declinedSchedule ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Remarks:</label>
+
+                    <div className="w-auto ml-5">
+                      <label className="text-md font-medium">{psbMessage?.details?.declineReason}</label>
+                    </div>
+                  </div>
+                ) : null}
+
+                {!psbMessage?.details?.declinedSchedule && !psbMessage?.details?.acknowledgedSchedule ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                      Remarks:{' '}
+                      {psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? null : (
+                        <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
+                      )}
                     </label>
+
+                    <textarea
+                      className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                      disabled={
+                        psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule
+                          ? true
+                          : false
+                      }
+                      value={
+                        psbMessage?.details?.acknowledgedSchedule
+                          ? 'N/A'
+                          : psbMessage?.details?.declinedSchedule
+                          ? psbMessage?.details?.declineReason
+                          : declineRemarks
+                      }
+                      placeholder={
+                        'If declining, please state reason and indicate personnel you recommend to be your replacement.'
+                      }
+                      onChange={(e) => handleRemarks(e.target.value as unknown as string)}
+                      rows={3}
+                    ></textarea>
                   </div>
-                </div>
-              </div>
-
-              <div className={`flex flex-col gap-2`}>
-                <label className="text-slate-500 text-md font-medium">
-                  Remarks:{' '}
-                  {psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? null : (
-                    <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
-                  )}
-                </label>
-
-                <textarea
-                  className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                  disabled={
-                    psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? true : false
-                  }
-                  value={
-                    psbMessage?.details?.acknowledgedSchedule
-                      ? 'N/A'
-                      : psbMessage?.details?.declinedSchedule
-                      ? psbMessage.details?.declineReason
-                      : declineRemarks
-                  }
-                  placeholder={
-                    'If declining, please state reason and indicate personnel you recommend to be your replacement.'
-                  }
-                  onChange={(e) => handleRemarks(e.target.value as unknown as string)}
-                  rows={3}
-                ></textarea>
+                ) : null}
               </div>
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               {psbMessage?.details?.acknowledgedSchedule || psbMessage?.details?.declinedSchedule ? (
-                <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
+                <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                   Close
                 </Button>
               ) : (
@@ -199,7 +208,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                   <Button
                     variant={'primary'}
                     size={'md'}
-                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.ACCEPT)}
+                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.PSB_ACCEPT)}
                   >
                     Accept
                   </Button>
@@ -207,7 +216,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
                     variant={'danger'}
                     size={'md'}
                     disabled={declineRemarks ? false : true}
-                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.DECLINE)}
+                    onClick={(e) => openSubmitModalAction(psbMessage?.details?.vppId, InboxMessageResponse.PSB_DECLINE)}
                   >
                     Decline
                   </Button>

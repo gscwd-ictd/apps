@@ -98,7 +98,7 @@ export const DisputeApplicationModal = ({
         </Modal.Header>
         <Modal.Body>
           <form id="DisputePassSlipForm" onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col w-full h-full px-2 gap-2 text-md ">
+            <div className="flex flex-col w-full h-full px-4 gap-2 text-md ">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                 <label className="text-slate-500 text-md font-medium">Update Time In:</label>
 
@@ -141,7 +141,7 @@ export const DisputeApplicationModal = ({
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-2">
               <Button variant={'primary'} size={'md'} loading={false} form="DisputePassSlipForm" type="submit">
                 Submit

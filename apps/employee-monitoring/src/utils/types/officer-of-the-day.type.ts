@@ -1,11 +1,23 @@
 export type OfficerOfTheDay = {
-  _id: string;
-  name: string;
-  assignment: string;
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  orgId: string;
+  orgName: string;
   dateFrom: string;
   dateTo: string;
 };
 
-export type FormPostOfficerOfTheDay = Omit<OfficerOfTheDay, '_id'> & { app: string };
+export type Employee = {
+  label: string;
+  value: string;
+};
 
-export type OfficerOfTheDayId = Pick<OfficerOfTheDay, '_id'>;
+export type Assignment = {
+  label: string;
+  value: string;
+};
+
+export type FormPostOfficerOfTheDay = Omit<OfficerOfTheDay, 'id' | 'employeeName' | 'orgName'> & { app: string };
+
+export type OfficerOfTheDayId = Pick<OfficerOfTheDay, 'id'>;

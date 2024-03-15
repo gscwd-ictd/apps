@@ -124,9 +124,9 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
     error: swrScheduleSheetError,
   } = useSWR(
     modalState
-      ? `/custom-groups/${selectedGroupId}/?date_from=${formatDate(rowData.dateFrom)}&date_to=${formatDate(
+      ? `/custom-groups/${rowData.customGroupId}/?date_from=${formatDate(rowData.dateFrom)}&date_to=${formatDate(
           rowData.dateTo
-        )}&schedule_id=${selectedScheduleId}`
+        )}&schedule_id=${rowData.scheduleId}`
       : null,
     fetcherEMS
   );
@@ -136,7 +136,7 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
     error: swrScheduleError,
-  } = useSWR(!isEmpty(selectedScheduleId) && modalState ? `/schedules/${selectedScheduleId}` : null, fetcherEMS);
+  } = useSWR(!isEmpty(rowData.scheduleId) && modalState ? `/schedules/${rowData.scheduleId}` : null, fetcherEMS);
 
   // set default values
   const setDefaultValues = (rowData: CurrentScheduleSheet) => {
@@ -207,6 +207,7 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
   }, [swrSchedule, swrScheduleError]);
 
   // load the members
+
   useEffect(() => {
     if (!isEmpty(scheduleSheet.members)) {
       // map the selected group and assign an empty array to rest days
@@ -228,6 +229,15 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
       setIsLoadingMembers(false);
     }
   }, [scheduleSheet]);
+
+  // useEffect(() => {
+  //   // console.log(selectedGroupId);
+  //   if (!isEmpty(selectedGroupId)) mutateScheduleSheet();
+  // }, [selectedGroupId]);
+
+  // useEffect(() => {
+  //   console.log(modalState);
+  // }, [modalState]);
 
   return (
     <>

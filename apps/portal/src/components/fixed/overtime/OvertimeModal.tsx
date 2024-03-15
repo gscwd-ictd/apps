@@ -72,7 +72,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   return (
     <>
-      <Modal size={`${windowWidth > 1024 ? 'lg' : 'full'}`} open={modalState} setOpen={setModalState}>
+      <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -119,44 +119,105 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 p-4 rounded">
+                <div className="w-full flex flex-col gap-2 px-4 rounded">
                   {overtimeDetails.status === OvertimeStatus.PENDING ? (
                     <AlertNotification alertType="warning" notifMessage={'For Supervisor Review'} dismissible={false} />
                   ) : null}
 
                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
-                    <AlertNotification alertType="info" notifMessage={'Approved'} dismissible={false} />
+                    <AlertNotification alertType="success" notifMessage={'Approved'} dismissible={false} />
                   ) : null}
 
                   {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
                     <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
                   ) : null}
 
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Overtime Date:</label>
+                  {overtimeDetails.status === OvertimeStatus.CANCELLED ? (
+                    <AlertNotification alertType="error" notifMessage={'Cancelled'} dismissible={false} />
+                  ) : null}
 
-                      <div className="w-full md:w-96 ">
-                        <label className="text-slate-500 w-full text-md ">
+                  <div className="flex flex-wrap justify-between">
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Overtime Type:</label>
+
+                      <div className="w-auto ml-5">
+                        {overtimeDetails.status === OvertimeStatus.APPROVED ? (
+                          <label className="text-md font-medium">
+                            {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY') <=
+                            DateFormatter(overtimeDetails.dateApproved, 'MM-DD-YYYY')
+                              ? 'Emergency Overtime'
+                              : 'Scheduled Overtime'}
+                          </label>
+                        ) : (
+                          <label className="text-md font-medium">N/A</label>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Overtime Date:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
                           {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
                         </label>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col md:flex-row justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Estimated Hours:</label>
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Estimated Hours:</label>
 
-                      <div className="w-full md:w-96 ">
-                        <label className="text-slate-500 w-full text-md ">{overtimeDetails.estimatedHours}</label>
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">{overtimeDetails.estimatedHours}</label>
                       </div>
                     </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                        {overtimeDetails.status === OvertimeStatus.APPROVED
+                          ? 'Date Approved:'
+                          : overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                          ? 'Date Disapproved:'
+                          : overtimeDetails.status === OvertimeStatus.CANCELLED
+                          ? 'Date Cancelled'
+                          : 'Date Approved:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {overtimeDetails.dateApproved
+                            ? DateFormatter(overtimeDetails.dateApproved, 'MM-DD-YYYY')
+                            : '-- -- ----'}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`flex flex-col justify-start items-start w-full ${
+                        overtimeDetails.status === OvertimeStatus.PENDING ? '' : 'sm:w-1/2'
+                      } px-0.5 pb-3`}
+                    >
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
+
+                      <div className="w-auto ml-5 mr-5">
+                        <label className="text-md font-medium">{overtimeDetails.purpose}</label>
+                      </div>
+                    </div>
+
+                    {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Remarks:</label>
+
+                        <div className="w-auto ml-5">
+                          <label className="text-md font-medium">{overtimeDetails.remarks}</label>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
 
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col justify-between items-start w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employees:</label>
+                      <label className="text-slate-500 text-md whitespace-nowrap">Employees:</label>
 
                       <div className="w-full ">
                         <div className="text-slate-500 w-full text-md flex flex-col">
@@ -169,7 +230,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
                               >
                                 <img
-                                  className="rounded-full border border-stone-100 shadow w-20"
+                                  className="rounded-full border border-stone-100 shadow w-16"
                                   src={employee?.avatarUrl ?? ''}
                                   alt={'photo'}
                                 ></img>
@@ -178,7 +239,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   <label className="w-full">{employee.assignment}</label>
                                   {/* <label className="w-full">{employee.positionTitle}</label> */}
                                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
-                                    <>
+                                    <div className="flex flex-col gap-2">
                                       <label className="w-full whitespace-nowrap">
                                         {UseRenderAccomplishmentSubmitted(
                                           employee.isAccomplishmentSubmitted,
@@ -191,7 +252,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                           TextSize.TEXT_SM
                                         )}
                                       </label>
-                                    </>
+                                    </div>
                                   ) : null}
 
                                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
@@ -216,18 +277,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       </div>
                     </div>
                   </div>
-
-                  <div className="flex flex-col justify-between items-center w-full">
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <label className="text-slate-500 text-md font-medium whitespace-nowrap">Purpose:</label>
-                    </div>
-                    <textarea
-                      disabled
-                      rows={2}
-                      className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
-                      value={overtimeDetails.purpose}
-                    ></textarea>
-                  </div>
                 </div>
               </div>
             </div>
@@ -239,7 +288,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           />
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 px-4">
             {overtimeDetails.status === OvertimeStatus.APPROVED ||
             overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
               <>
@@ -257,7 +306,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                   </>
                 ) : null}
                 <Button
-                  variant={'primary'}
+                  variant={'default'}
                   size={'md'}
                   loading={false}
                   onClick={(e) => closeModalAction()}

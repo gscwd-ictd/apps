@@ -126,10 +126,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutatePassSlips,
-  } = useSWR(passSlipUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -168,10 +165,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(faceScanUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(faceScanUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -279,7 +273,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
               </Button>
             </ContentHeader>
 
-            {loading ? (
+            {swrIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}

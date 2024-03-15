@@ -137,7 +137,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
 
   return (
     <>
-      <Modal size={`${windowWidth > 768 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
+      <Modal size={`${windowWidth > 768 ? 'sm' : 'full'}`} open={modalState} setOpen={setModalState}>
         {/* Incorrect Current Password Error */}
         {/* {!isEmpty(errorVerifyCurrentPassword) && modalState ? (
           <ToastNotification toastType="error" notifMessage={`${errorVerifyCurrentPassword}`} />
@@ -218,7 +218,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
               ) : null}
 
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-3 p-4 rounded">
+                <div className="w-full flex flex-col gap-3 px-4 rounded">
                   <div className="flex flex-col gap-2">
                     {passwordModalPage === 1 ? (
                       <div
@@ -244,15 +244,8 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
                             }}
                             isError={errorVerifyCurrentPassword ? true : false}
                             errorMessage={''}
-                            className="border-slate-300 text-slate-500 h-12 text-md w-full lg:w-60 rounded"
+                            className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
                           />
-                          {/* <input
-                            type="password"
-                            className="border-slate-300 text-slate-500 h-12 text-md w-full lg:w-60 rounded"
-                            placeholder="Enter Current Password"
-                            required
-                            {...register('currentPassword')}
-                          /> */}
                         </div>
                       </div>
                     ) : passwordModalPage === 2 ? (
@@ -260,14 +253,14 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
                         <div
                           className={`lg:flex-row lg:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
                         >
-                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                          <div className="text-slate-500 text-md font-medium w-full lg:w-1/2">
                             New Password:
                             <span className="text-red-600">*</span>
-                          </label>
-                          <div className="w-full lg:w-60">
+                          </div>
+                          <div className="w-full lg:w-auto">
                             <input
                               type="password"
-                              className="border-slate-300 text-slate-500 h-12 text-md w-full lg:w-60 rounded"
+                              className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
                               placeholder="Enter New Password"
                               required
                               minLength={6}
@@ -279,14 +272,14 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
                         <div
                           className={`lg:flex-row lg:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}
                         >
-                          <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                            Repeat New Password:
+                          <div className="text-slate-500 text-md font-medium w-full lg:w-1/2">
+                            Repeat Password:
                             <span className="text-red-600">*</span>
-                          </label>
-                          <div className="w-full lg:w-60">
+                          </div>
+                          <div className="w-full lg:w-auto">
                             <input
                               type="password"
-                              className="border-slate-300 text-slate-500 h-12 text-md w-full lg:w-60 rounded"
+                              className="border-slate-300 text-slate-500 h-12 text-md w-full rounded"
                               placeholder="Repeat New Password"
                               required
                               minLength={6}
@@ -304,7 +297,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end gap-2 text-md">
+          <div className="flex justify-end gap-2 px-4">
             <div className="flex justify-end gap-2 text-md">
               {passwordModalPage === 1 ? (
                 <Button variant={'primary'} size={'md'} loading={false} form="ChangePasswordForm" type="submit">
@@ -316,7 +309,7 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
                 </Button>
               ) : (
                 <Button
-                  variant={'primary'}
+                  variant={'default'}
                   size={'md'}
                   loading={false}
                   type="submit"

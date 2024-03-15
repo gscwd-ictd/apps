@@ -25,6 +25,8 @@ export default function AppEndSummary({ employee, publicationDetails }: AppEndSu
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
   const router = useRouter();
 
+  const router = useRouter();
+
   return (
     <>
       <Head>

@@ -20,18 +20,18 @@ export const SideNavigation = () => {
   const { pathname } = useRouter();
 
   return (
-    <Sidebar className="relative w-full transition-all" background="bg-slate-900">
+    <Sidebar className="relative w-full transition-all" background="bg-[#2a3042]">
       <Sidebar.Header>
         <Link href={`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/module-dashboard`}>
           <div className="flex items-center justify-center w-full gap-0 py-4 text-white">
             <section className="">
               <div className="text-cyan-800">
-                <i className="text-5xl bx bxs-analyse"></i>
+                <i className="text-4xl bx bxs-analyse"></i>
               </div>
             </section>
 
             <section className={`${isCollapsed ? 'hidden' : ''} flex flex-col text-center items-center select-none`}>
-              <span className="font-sans text-5xl font-medium text-cyan-400">HRMS</span>
+              <span className="font-sans text-4xl font-medium text-cyan-400">HRMS</span>
               <span className="text-xs font-medium text-cyan-400">Employee Monitoring</span>
             </section>
           </div>
@@ -167,8 +167,31 @@ export const SideNavigation = () => {
               display="Leave Applications"
               className="text-sm"
               icon={<i className="text-xl bx bx-run"></i>}
-              path={Paths[2]}
-              selected={pathname === Paths[2] ? true : false}
+              path=""
+              hasSubItem
+              selected={pathname === Paths[2] || pathname === Paths[30]}
+              subItems={
+                <>
+                  {/* APPLICATIONS */}
+
+                  <Sidebar.Item
+                    display="Applications"
+                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                    selected={pathname === Paths[2] ? true : false}
+                    icon={<i className="text-xl bx bxs-file-plus"></i>}
+                    path={Paths[2]}
+                  />
+
+                  {/* CANCELLATIONS */}
+                  <Sidebar.Item
+                    display="Cancellations"
+                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                    selected={pathname === Paths[30] ? true : false}
+                    icon={<i className="text-xl bx bxs-calendar-x"></i>}
+                    path={Paths[30]}
+                  />
+                </>
+              }
             />
           </Can>
 
