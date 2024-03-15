@@ -16,9 +16,14 @@ export const Holidays = (): JSX.Element => {
     data: swrHolidays,
     error: swrError,
     isLoading: swrIsLoading,
-    mutate: mutateHolidays,
   } = useSWR('/holidays', fetcherEMS, {
-    revalidateOnFocus: false,
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      // Only retry up to 10 times.
+      if (retryCount >= 5) return;
+
+      // Retry after 5 seconds.
+      setTimeout(() => revalidate({ retryCount }), 15000);
+    },
   });
 
   // holiday store

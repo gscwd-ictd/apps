@@ -173,3 +173,26 @@ export type SupervisorLeaveDetails = {
   leaveType?: string;
   leaveDates: Array<string>;
 };
+
+// leave cancellation
+export type LeaveCancellationDetails = {
+  leaveApplicationId: string;
+  dateOfFiling: string | null;
+  employeeDetails: {
+    employeeName: string;
+    companyId: string;
+    positionTitle: string;
+    photoUrl: string;
+  };
+  leaveName: string;
+  leaveDates: Array<string>;
+  forCancellationLeaveDates: Array<string>;
+  status: string;
+  remarks: string;
+};
+
+export type LeaveCancellation = {
+  leaveApplicationId: string;
+  status: string;
+  leaveDates: Array<string>;
+};

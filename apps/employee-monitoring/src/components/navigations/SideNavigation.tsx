@@ -167,8 +167,31 @@ export const SideNavigation = () => {
               display="Leave Applications"
               className="text-sm"
               icon={<i className="text-xl bx bx-run"></i>}
-              path={Paths[2]}
-              selected={pathname === Paths[2] ? true : false}
+              path=""
+              hasSubItem
+              selected={pathname === Paths[2] || pathname === Paths[30]}
+              subItems={
+                <>
+                  {/* APPLICATIONS */}
+
+                  <Sidebar.Item
+                    display="Applications"
+                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                    selected={pathname === Paths[2] ? true : false}
+                    icon={<i className="text-xl bx bxs-file-plus"></i>}
+                    path={Paths[2]}
+                  />
+
+                  {/* CANCELLATIONS */}
+                  <Sidebar.Item
+                    display="Cancellations"
+                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                    selected={pathname === Paths[30] ? true : false}
+                    icon={<i className="text-xl bx bxs-calendar-x"></i>}
+                    path={Paths[30]}
+                  />
+                </>
+              }
             />
           </Can>
 
