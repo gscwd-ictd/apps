@@ -106,11 +106,6 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setSelectedEmployeeType(type);
   };
 
-  // useEffect(() => {
-  //   // setSelectedYear(yearNow as unknown as number);
-  //   setSelectedMonth(Number(monthNow) - 1);
-  // }, []);
-
   const closePdfOvertimeSummaryModal = async () => {
     setPdfOvertimeSummaryModalIsOpen(false);
   };

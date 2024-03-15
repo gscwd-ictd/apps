@@ -216,13 +216,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {/* Cancel Overtime Application Modal */}
-          {/* <CancelOvertimeModal
-            modalState={cancelOvertimeModalIsOpen}
-            setModalState={setCancelOvertimeModalIsOpen}
-            closeModalAction={closeCancelOvertimeModal}
-          /> */}
-
           {!swrOvertimeDetails ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -244,7 +237,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       overtimeDetails.status === OvertimeStatus.PENDING
                         ? 'warning'
                         : overtimeDetails.status === OvertimeStatus.APPROVED
-                        ? 'info'
+                        ? 'success'
                         : overtimeDetails.status === OvertimeStatus.DISAPPROVED
                         ? 'error'
                         : overtimeDetails.status === OvertimeStatus.CANCELLED
@@ -424,7 +417,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
                         <select
                           id="action"
-                          className="text-slate-500 h-12 w-42 rounded text-md border-slate-300"
+                          className="text-slate-500 h-12 w-42 rounded-md text-md border-slate-300"
                           required
                           {...register('status')}
                         >
