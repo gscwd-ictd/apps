@@ -1,4 +1,4 @@
-import { LeaveStatus } from '../enums/leave.enum';
+import { LeaveCancellationStatus, LeaveStatus } from '../enums/leave.enum';
 import { LeaveBenefitOptions, LeaveType } from './leave-benefits.type';
 
 // Date range picker in leave application form
@@ -187,7 +187,7 @@ export type LeaveCancellationDetails = {
   leaveName: string;
   leaveDates: Array<string>;
   forCancellationLeaveDates: Array<string>;
-  status: string;
+  status: LeaveCancellationStatus;
   remarks: string;
 };
 

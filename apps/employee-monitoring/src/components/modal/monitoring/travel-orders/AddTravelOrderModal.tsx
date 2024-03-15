@@ -44,7 +44,7 @@ const AddTravelOrderModal: FunctionComponent<AddModalProps> = ({ modalState, set
     data: employees,
     error: employeesError,
     isLoading: employeesLoading,
-  } = useSWR(modalState ? '/employees/options1' : null, fetcherHRMS, {
+  } = useSWR(modalState ? '/employees/options' : null, fetcherHRMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
