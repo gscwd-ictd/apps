@@ -192,7 +192,7 @@ export type LeaveCancellationDetails = {
   leaveName: string;
   leaveDates: Array<string>;
   forCancellationLeaveDates: Array<string>;
-  status: string;
+  status: LeaveCancellationStatus;
   remarks: string;
 };
 
