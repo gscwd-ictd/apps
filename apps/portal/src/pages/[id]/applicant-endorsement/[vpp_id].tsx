@@ -23,6 +23,7 @@ export default function AppEndSummary({ employee, publicationDetails }: AppEndSu
   const publication = useAppEndStore((state) => state.selectedPublication);
   // const selectedApplicants = useAppEndStore((state) => state.selectedApplicants);
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
+  const router = useRouter();
 
   const router = useRouter();
 
