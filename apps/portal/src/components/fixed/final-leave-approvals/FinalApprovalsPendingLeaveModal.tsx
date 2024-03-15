@@ -150,7 +150,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                             leaveIndividualDetail?.status === LeaveStatus.CANCELLED
                           ? 'error'
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                          ? 'info'
+                          ? 'success'
                           : 'info'
                       }
                       notifMessage={
@@ -389,7 +389,7 @@ export const FinalApprovalsPendingLeaveModal = ({
 
                       <select
                         id="action"
-                        className="text-slate-500 h-12 w-full md:w-40 rounded text-md border-slate-300"
+                        className="text-slate-500 h-12 w-full md:w-40 rounded-md text-md border-slate-300"
                         required
                         {...register('status')}
                       >
@@ -414,157 +414,6 @@ export const FinalApprovalsPendingLeaveModal = ({
                       ></textarea>
                     ) : null}
                   </form>
-
-                  {/* <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employee Name:</label>
-
-                    <div className="w-96">
-                      <label className="w-full text-md text-slate-500 ">
-                        {leaveIndividualDetail?.employee?.employeeName}
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                    <label className="text-slate-500 text-md font-medium whitespace-nowrap">Leave Type:</label>
-
-                    <div className="w-96 ">
-                      <label className="w-full text-md text-slate-500 ">{leaveIndividualDetail?.leaveName}</label>
-                    </div>
-                  </div>
-
-                  {leaveIndividualDetail?.leaveName ? (
-                    <>
-                      {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                      leaveIndividualDetail?.leaveName === LeaveName.SICK ||
-                      leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
-                      leaveIndividualDetail?.leaveName === LeaveName.OTHERS ? (
-                        <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                          <label className="text-md font-medium text-slate-500">
-                            {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                            leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                              ? 'Location:'
-                              : leaveIndividualDetail?.leaveName === LeaveName.SICK
-                              ? 'Hospitalization:'
-                              : leaveIndividualDetail?.leaveName === LeaveName.STUDY
-                              ? 'Study:'
-                              : leaveIndividualDetail?.leaveName === LeaveName.OTHERS
-                              ? 'Other Purpose: '
-                              : null}
-                          </label>
-
-                          <div className="w-96 ">
-                            {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                            leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
-                              <div className="w-full text-md text-slate-500">
-                                {leaveIndividualDetail?.inPhilippines ? 'Within the Philippines' : 'Abroad'}
-                              </div>
-                            ) : null}
-
-                            {leaveIndividualDetail?.leaveName === LeaveName.SICK ? (
-                              <>
-                                <div className="w-full text-md text-slate-500">
-                                  {leaveIndividualDetail?.inHospital ? 'In Hospital' : 'Out Patient'}
-                                </div>
-                              </>
-                            ) : null}
-
-                            {leaveIndividualDetail?.leaveName === LeaveName.STUDY ? (
-                              <>
-                                <div className="w-full text-md text-slate-500">
-                                  {leaveIndividualDetail?.forBarBoardReview === '1'
-                                    ? 'For BAR/Board Examination Review '
-                                    : leaveIndividualDetail?.forMastersCompletion === '1'
-                                    ? `Completion of Master's Degree `
-                                    : 'Other'}
-                                </div>
-                              </>
-                            ) : null}
-                          </div>
-                        </div>
-                      ) : null}
-
-                      <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center w-full">
-                        <label className="text-md font-medium text-slate-500 whitespace-nowrap">Number of Days:</label>
-
-                        <div className="w-auto sm:w-96">
-                          <label className="text-slate-500 h-12 w-96  text-md ">
-                            {leaveIndividualDetail?.leaveDates?.length}
-                          </label>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center w-full">
-                        <label className="text-md font-medium text-slate-500 whitespace-nowrap">Leave Dates:</label>
-
-                        <div className="w-auto sm:w-96">
-                          <label className="text-slate-500 h-12 w-96  text-md ">
-                            {leaveIndividualDetail?.leaveName === LeaveName.MATERNITY ||
-                            leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
-                            leaveIndividualDetail?.leaveName === LeaveName.REHABILITATION ||
-                            leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveName === LeaveName.ADOPTION ? (
-                              // show first and last date (array) only if maternity or study leave
-                              `${DateFormatter(leaveIndividualDetail?.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
-                                leaveIndividualDetail?.leaveDates[leaveIndividualDetail?.leaveDates.length - 1],
-                                'MM-DD-YYYY'
-                              )}`
-                            ) : (
-                              // show all dates if not maternity or study leave
-                              <div className="flex flex-wrap flex-row">
-                                {leaveIndividualDetail?.leaveDates?.map((dates: string, index: number) => {
-                                  return (
-                                    <label key={index} className="pr-1">
-                                      {DateFormatter(dates, 'MM-DD-YYYY')}
-                                      {index == leaveIndividualDetail?.leaveDates.length - 1 ? '' : ','}
-                                    </label>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </label>
-                        </div>
-                      </div>
-
-                      {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                      leaveIndividualDetail?.leaveName === LeaveName.SICK ||
-                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                      (leaveIndividualDetail?.leaveName === LeaveName.STUDY && leaveIndividualDetail?.leaveName) ? (
-                        <div className="flex flex-col items-center justify-between w-full">
-                          <div className="flex flex-row items-center justify-between w-full">
-                            <label className="text-md font-medium text-slate-500 whitespace-nowrap">
-                              Specific Details:
-                            </label>
-                          </div>
-                          <textarea
-                            disabled
-                            rows={3}
-                            className="w-full p-2 mt-2 text-md rounded resize-none text-slate-500 border-slate-300"
-                            value={
-                              //VACATION OR SPL //
-                              leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                              leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                                ? leaveIndividualDetail.inPhilippines
-                                  ? leaveIndividualDetail.inPhilippines
-                                  : leaveIndividualDetail.abroad
-                                : //SICK LEAVE
-                                leaveIndividualDetail?.leaveName === LeaveName.SICK
-                                ? leaveIndividualDetail.inHospital
-                                  ? leaveIndividualDetail.inHospital
-                                  : leaveIndividualDetail.outPatient
-                                : //SLB FOR WOMEN
-                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
-                                ? leaveIndividualDetail.splWomen
-                                : //NON OF THE ABOVE
-                                  ''
-                            }
-                          ></textarea>
-                        </div>
-                      ) : null}
-                    </>
-                  ) : null} */}
                 </div>
               </div>
             </div>

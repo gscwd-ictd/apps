@@ -80,15 +80,6 @@ const leaveCommutation: Array<SelectOption> = [
 ];
 
 export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAction }: LeaveApplicationModalProps) => {
-  // // forced leave balance
-  // const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
-  // // vacation leave balance
-  // const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
-  // // sick leave balance
-  // const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
-  // // special privilege leave balance
-  // const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
-
   //zustand initialization to access Leave store
   const {
     pendingleavesList,

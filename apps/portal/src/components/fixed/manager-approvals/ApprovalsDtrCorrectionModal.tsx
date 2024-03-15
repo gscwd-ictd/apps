@@ -82,18 +82,10 @@ export const ApprovalsDtrCorrectionModal = ({
     } else if (data.status === DtrCorrectionStatus.DISAPPROVED) {
       setDeclineApplicationModalIsOpen(true);
     }
-    //  else if (dtrCorrectionDetail.status === DtrCorrectionApproval.FOR_DISPUTE) {
-    //   setDataToSubmitForCaptcha(data);
-    //   setCaptchaModalIsOpen(true);
-    // }
   };
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-
-  // const closeOtpModal = async () => {
-  //   setOtpPassSlipModalIsOpen(false);
-  // };
 
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
@@ -137,7 +129,7 @@ export const ApprovalsDtrCorrectionModal = ({
                 <AlertNotification
                   alertType={
                     dtrCorrectionDetail.status === DtrCorrectionStatus.APPROVED
-                      ? 'info'
+                      ? 'success'
                       : dtrCorrectionDetail.status === DtrCorrectionStatus.DISAPPROVED
                       ? 'error'
                       : dtrCorrectionDetail.status === DtrCorrectionStatus.PENDING
@@ -308,7 +300,7 @@ export const ApprovalsDtrCorrectionModal = ({
 
                     <select
                       id="action"
-                      className="text-slate-500 h-12 w-full md:w-40 rounded text-md border-slate-300"
+                      className="text-slate-500 h-12 w-full md:w-40 rounded-md text-md border-slate-300"
                       required
                       {...register('status')}
                     >
@@ -348,20 +340,6 @@ export const ApprovalsDtrCorrectionModal = ({
             confirmName={ManagerOtpApproval.DTRCORRECTION}
             employeeId={employeeDetails.user._id}
           />
-
-          {/* <CaptchaModal
-            modalState={captchaModalIsOpen}
-            setModalState={setCaptchaModalIsOpen}
-            title={'PASS SLIP DISPUTE CAPTCHA'}
-          >
-           
-            <ApprovalCaptcha
-              employeeId={employeeDetails.user._id}
-              dataToSubmitPassSlipDispute={dataToSubmitForCaptcha}
-              tokenId={passSlip.id}
-              captchaName={'Dispute Captcha'}
-            />
-          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">

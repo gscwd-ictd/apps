@@ -14,7 +14,9 @@ import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import dayjs from 'dayjs';
-import { LeaveDateStatus, LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveCancellationStatus, LeaveDateStatus, LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { ConfirmationLeaveCancellationModal } from './ConfirmationModal';
+import { LeaveCancellationSubmission } from 'libs/utils/src/lib/types/leave-application.type';
 
 type CancelLeaveModalProps = {
   modalState: boolean;
@@ -25,7 +27,8 @@ type CancelLeaveModalProps = {
 export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }: CancelLeaveModalProps) => {
   const {
     leaveIndividualDetail,
-
+    confirmCancelLeaveModalIsOpen,
+    setConfirmCancelLeaveModalIsOpen,
     setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen,
     patchLeave,
@@ -34,6 +37,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
     emptyResponseAndError,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
+    confirmCancelLeaveModalIsOpen: state.confirmCancelLeaveModalIsOpen,
+    setConfirmCancelLeaveModalIsOpen: state.setConfirmCancelLeaveModalIsOpen,
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     setCompletedLeaveModalIsOpen: state.setCompletedLeaveModalIsOpen,
     patchLeave: state.patchLeave,
@@ -47,6 +52,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
   const [selectedDatesToCancel, setSelectedDatesToCancel] = useState<Array<SelectOption>>([]);
   const [startDateToCancel, setStartDateToCancel] = useState<string>(); //for SBL
   const [leaveDates, setLeaveDates] = useState<Array<SelectOption>>([]);
+  const [leaveCancellationData, setLeaveCancellationData] = useState<LeaveCancellationSubmission>();
+  const [leaveCancellationUrl, setLeaveCancellationUrl] = useState<string>();
 
   //get dtr for the day
   const getDailyDtr = async (date: string) => {
@@ -110,43 +117,48 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
         finalDatesToCancel = Array.from(new Set([...finalDatesToCancel, selectedDatesToCancel[i].value]));
       }
     }
-    let data = {};
-    let cancelLeaveUrl = '';
     if (
       leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRDM_APPROVAL ||
       leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRMO_APPROVAL ||
       leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
     ) {
-      data = {
+      //FOR PENDING LEAVE CANCELLATION
+      let data = {
         id: leaveIndividualDetail.leaveApplicationBasicInfo.id,
         cancelReason: remarks,
       };
-      cancelLeaveUrl = '/v1/leave/employee';
+
+      patchLeave();
+      const { error, result } = await patchPortal('/v1/leave/employee', data);
+      if (error) {
+        patchLeaveFail(result);
+      } else {
+        patchLeaveSuccess(result);
+        closeModalAction();
+        setTimeout(() => {
+          setPendingLeaveModalIsOpen(false); //then close LEAVE modal
+          setCompletedLeaveModalIsOpen(false); //then close LEAVE modal
+        }, 200);
+        setTimeout(() => {
+          emptyResponseAndError();
+        }, 3000);
+      }
     } else {
-      data = {
+      //FOR APPROVED LEAVE BUT WITH LEAVE DATES CANCELLATION
+      setLeaveCancellationData({
         leaveApplicationId: leaveIndividualDetail.leaveApplicationBasicInfo.id,
-        status: 'cancelled',
+        status: LeaveCancellationStatus.FOR_CANCELLATION,
         leaveDates: finalDatesToCancel,
         remarks: remarks,
-      };
-      cancelLeaveUrl = '/v1/leave/employee/leave-date-cancellation';
+      });
+      setLeaveCancellationUrl('/v1/leave/employee/leave-date-cancellation');
+      setConfirmCancelLeaveModalIsOpen(true);
     }
+  };
 
-    patchLeave();
-    const { error, result } = await patchPortal(cancelLeaveUrl, data);
-    if (error) {
-      patchLeaveFail(result);
-    } else {
-      patchLeaveSuccess(result);
-      closeModalAction();
-      setTimeout(() => {
-        setPendingLeaveModalIsOpen(false); //then close LEAVE modal
-        setCompletedLeaveModalIsOpen(false); //then close LEAVE modal
-      }, 200);
-      setTimeout(() => {
-        emptyResponseAndError();
-      }, 3000);
-    }
+  // cancel action for Leave Completed Modal
+  const closeConfirmCancelLeaveModal = async () => {
+    setConfirmCancelLeaveModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -167,6 +179,16 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {/* Cancel Leave Confirmation Modal */}
+          <ConfirmationLeaveCancellationModal
+            modalState={confirmCancelLeaveModalIsOpen}
+            setModalState={setConfirmCancelLeaveModalIsOpen}
+            closeModalAction={closeConfirmCancelLeaveModal}
+            url={leaveCancellationUrl}
+            data={leaveCancellationData}
+            title={'Confirm Cancellation'}
+          />
+
           {startDateToCancel &&
           (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||

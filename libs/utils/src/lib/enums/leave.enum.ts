@@ -22,6 +22,7 @@ export enum LeaveCancellationStatus {
 export enum LeaveDateStatus {
   APPROVED = 'approved',
   CANCELLED = 'cancelled',
+  FOR_CANCELLATION = 'for cancellation',
   NULL = '',
 }
 

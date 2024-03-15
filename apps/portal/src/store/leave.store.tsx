@@ -52,6 +52,7 @@ export type LeavesState = {
   pendingLeaveModalIsOpen: boolean;
   completedLeaveModalIsOpen: boolean;
   cancelLeaveModalIsOpen: boolean;
+  confirmCancelLeaveModalIsOpen: boolean;
   tab: number;
   isGetLeaveLoading: boolean;
 
@@ -89,6 +90,7 @@ export type LeavesState = {
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
   setCompletedLeaveModalIsOpen: (completedLeaveModalIsOpen: boolean) => void;
   setCancelLeaveModalIsOpen: (cancelLeaveModalIsOpen: boolean) => void;
+  setConfirmCancelLeaveModalIsOpen: (confirmCancelLeaveModalIsOpen: boolean) => void;
 
   setIsGetLeaveLoading: (isLoading: boolean) => void;
   setTab: (tab: number) => void;
@@ -138,6 +140,7 @@ export const useLeaveStore = create<LeavesState>()(
     pendingLeaveModalIsOpen: false,
     completedLeaveModalIsOpen: false,
     cancelLeaveModalIsOpen: false,
+    confirmCancelLeaveModalIsOpen: false,
 
     isGetLeaveLoading: true,
     tab: 1,
@@ -184,6 +187,10 @@ export const useLeaveStore = create<LeavesState>()(
 
     setCancelLeaveModalIsOpen: (cancelLeaveModalIsOpen: boolean) => {
       set((state) => ({ ...state, cancelLeaveModalIsOpen }));
+    },
+
+    setConfirmCancelLeaveModalIsOpen: (confirmCancelLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmCancelLeaveModalIsOpen }));
     },
 
     //GET LEAVE ACTIONS
