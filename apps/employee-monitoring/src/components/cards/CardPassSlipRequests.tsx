@@ -14,7 +14,19 @@ export const CardPassSlipRequests: FunctionComponent = () => {
   const [countHrmoApproval, setCountHrmoApproval] = useState<string>('--');
 
   // use swr pass slips
-  const { data: swrPassSlips, isLoading: swrIsLoading, error: swrError } = useSWR('/pass-slip', fetcherEMS);
+  const {
+    data: swrPassSlips,
+    isLoading: swrIsLoading,
+    error: swrError,
+  } = useSWR('/pass-slip', fetcherEMS, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      // Only retry up to 10 times.
+      if (retryCount >= 5) return;
+
+      // Retry after 5 seconds.
+      setTimeout(() => revalidate({ retryCount }), 15000);
+    },
+  });
 
   // Zustand init
   const { PassSlips, ErrorPassSlips, GetPassSlips, GetPassSlipsFail, GetPassSlipsSuccess } = usePassSlipStore(
@@ -75,6 +87,7 @@ export const CardPassSlipRequests: FunctionComponent = () => {
         }
         title="Pass Slip Pending Approval"
         value={!isEmpty(PassSlips) ? countHrmoApproval : 0}
+        isLoading={swrIsLoading}
       />
     </>
   );

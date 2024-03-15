@@ -6,7 +6,7 @@ type Path = {
 export const Paths = [
   '/dashboard', //0
   '/employees', //1
-  '/monitoring/leave-applications', //2
+  '/monitoring/leave/applications', //2
   '/monitoring/travel-orders', // 3
   '/monitoring/trainings-and-seminars', // 4
   '/monitoring/overtime', // 5
@@ -34,6 +34,7 @@ export const Paths = [
   '/settings/system-logs', // 27
   '/settings/announcements', // 28
   '/reports', // 29
+  '/monitoring/leave/cancellations', //30
 ];
 
 export const UpdatedPaths: Array<Path> = [

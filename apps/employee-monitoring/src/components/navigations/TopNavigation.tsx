@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { PageContentContext } from '@gscwd-apps/oneui';
 import { useContext, useEffect, useState } from 'react';
 import { AuthmiddlewareContext } from '../../pages/_app';
@@ -153,7 +154,7 @@ export const TopNavigation = () => {
                     <a
                       rel="noreferrer"
                       href={item.url}
-                      className={`active:text-slate-600 focus:text-slate-600 hover:text-slate-600 group text-xs flex w-full items-center z-50 flex gap-2`}
+                      className={`active:text-slate-600 focus:text-slate-600 hover:text-slate-600 group text-xs flex w-full items-center z-50 gap-2`}
                     >
                       <i className={`bx ${item.icon} text-sm text-${item.fontColor}`} />
                       {item.action}
