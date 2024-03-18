@@ -16,9 +16,6 @@ type ModalProps = {
 
 export const SkipNominationModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    individualTrainingDetails,
-    nominatedEmployees,
-    auxiliaryEmployees,
     skipNominationModalIsOpen,
     setSkipNominationModalIsOpen,
     setTrainingModalIsOpen,
@@ -26,9 +23,6 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
     postTrainingSelectionSuccess,
     postTrainingSelectionFail,
   } = useTrainingSelectionStore((state) => ({
-    individualTrainingDetails: state.individualTrainingDetails,
-    nominatedEmployees: state.nominatedEmployees,
-    auxiliaryEmployees: state.auxiliaryEmployees,
     skipNominationModalIsOpen: state.skipNominationModalIsOpen,
     setSkipNominationModalIsOpen: state.setSkipNominationModalIsOpen,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
@@ -37,7 +31,6 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
     postTrainingSelectionFail: state.postTrainingSelectionFail,
   }));
 
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [remarks, setRemarks] = useState<string>('');
 
   const handleCancel = async () => {

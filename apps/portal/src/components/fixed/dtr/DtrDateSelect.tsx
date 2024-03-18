@@ -15,25 +15,12 @@ type DtrDateSelectProps = {
 };
 
 export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
-  const {
-    isErrorDtr,
-    isLoadingDtr,
-    errorUpdateEmployeeDtr,
-    loadingUpdateEmployeeDtr,
-    responseUpdateDtr,
-    emptyResponseAndError,
-  } = useDtrStore((state) => ({
-    isErrorDtr: state.error.errorDtr,
-    isLoadingDtr: state.loading.loadingDtr,
-    errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
-    loadingUpdateEmployeeDtr: state.loading.loadingUpdateEmployeeDtr,
+  const { responseUpdateDtr } = useDtrStore((state) => ({
     responseUpdateDtr: state.response.employeeDailyRecord,
-    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const selectedMonth = useDtrStore((state) => state.selectedMonth);
   const selectedYear = useDtrStore((state) => state.selectedYear);
-  const date = useDtrStore((state) => state.date);
 
   const setSelectedMonth = useDtrStore((state) => state.setSelectedMonth);
   const setSelectedYear = useDtrStore((state) => state.setSelectedYear);

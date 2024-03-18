@@ -2,11 +2,8 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
-import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
-import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
@@ -49,8 +46,6 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
     pdfAccomplishmentReportModalIsOpen: state.pdfAccomplishmentReportModalIsOpen,
     accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
   }));
-
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
 

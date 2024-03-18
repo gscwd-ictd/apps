@@ -15,9 +15,6 @@ import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourForm
 import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
-import { Checkbox } from '../../modular/forms/Checkbox';
-import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
-import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -48,10 +45,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail,
-    patchOvertimeAccomplishment,
-    patchOvertimeAccomplishmentSuccess,
-    patchOvertimeAccomplishmentFail,
-    setOvertimeAccomplishmentModalIsOpen,
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
     overtimeAccomplishmentModalIsOpen: state.overtimeAccomplishmentModalIsOpen,
@@ -67,10 +60,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     getAccomplishmentDetails: state.getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess: state.getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail: state.getAccomplishmentDetailsFail,
-    patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
-    patchOvertimeAccomplishmentSuccess: state.patchOvertimeAccomplishmentSuccess,
-    patchOvertimeAccomplishmentFail: state.patchOvertimeAccomplishmentFail,
-    setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 

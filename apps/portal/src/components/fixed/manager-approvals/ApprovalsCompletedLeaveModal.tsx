@@ -20,20 +20,8 @@ export const ApprovalsCompletedLeaveModal = ({
   setModalState,
   closeModalAction,
 }: ApprovalsCompletedLeaveModalProps) => {
-  const {
-    leaveIndividualDetail,
-    setOtpLeaveModalIsOpen,
-    declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen,
-  } = useApprovalStore((state) => ({
+  const { leaveIndividualDetail } = useApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
-    leaveId: state.leaveId,
-    pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
-    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
-    otpLeaveModalIsOpen: state.otpLeaveModalIsOpen,
-    setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
-    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
   }));
 
   const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false);

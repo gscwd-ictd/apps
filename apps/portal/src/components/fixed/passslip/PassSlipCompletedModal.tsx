@@ -3,16 +3,13 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
-import { useRouter } from 'next/router';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { ConfirmationApplicationModal } from './ConfirmationModal';
 import { DisputeApplicationModal } from './DisputeModal';
 import dayjs from 'dayjs';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
-import { isEmpty } from 'lodash';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -31,7 +28,6 @@ export const PassSlipCompletedModal = ({
     setDisputePassSlipModalIsOpen: state.setDisputePassSlipModalIsOpen,
   }));
 
-  const router = useRouter();
   const { windowWidth } = UseWindowDimensions();
 
   // for cancel pass slip button

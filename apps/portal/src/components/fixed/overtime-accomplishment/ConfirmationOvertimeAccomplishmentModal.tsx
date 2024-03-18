@@ -1,5 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';

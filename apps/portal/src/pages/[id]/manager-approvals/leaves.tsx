@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -15,12 +15,9 @@ import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePorta
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
-import { employeeDummy } from '../../../types/employee.type';
-
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
-
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { SupervisorLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
@@ -335,14 +332,6 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

@@ -37,7 +37,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
 
   // React hook form
