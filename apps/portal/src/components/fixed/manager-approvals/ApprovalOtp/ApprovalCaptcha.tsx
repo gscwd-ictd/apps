@@ -7,7 +7,7 @@ import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { GenerateCaptcha } from '../../captcha/CaptchaGenerator';
-import { OvertimeAccomplishmentApprovalPatch, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
 
 interface CaptchaProps {
   employeeId?: string;
@@ -28,7 +28,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   ...props
 }) => {
   const [wiggleEffect, setWiggleEffect] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [pwdArray, setPwdArray] = useState<string[]>();
   const [password, setPassword] = useState<string>('');
   const [captchaPassword, setCaptchaPassword] = useState<string>('');
@@ -56,7 +55,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     captchaModalIsOpen,
     setCaptchaModalIsOpen,
     setApproveAllCaptchaModalIsOpen,
-    setOvertimeAccomplishmentModalIsOpen,
     setDisputedPassSlipModalIsOpen,
     patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail,
@@ -68,7 +66,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen, //for overtime accomplishment captcha
     setApproveAllCaptchaModalIsOpen: state.setApproveAllCaptchaModalIsOpen,
-    setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
     setDisputedPassSlipModalIsOpen: state.setDisputedPassSlipModalIsOpen,
     patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail: state.patchOvertimeAccomplishmentFail,

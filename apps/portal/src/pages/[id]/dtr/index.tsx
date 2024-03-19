@@ -10,14 +10,12 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, ListDef, Select, ToastNotification } from '@gscwd-apps/oneui';
+import { ToastNotification } from '@gscwd-apps/oneui';
 import { format } from 'date-fns';
-import { HiOutlineSearch } from 'react-icons/hi';
 import useSWR from 'swr';
 import { DtrDateSelect } from '../../../components/fixed/dtr/DtrDateSelect';
 import { useDtrStore } from '../../../store/dtr.store';
 import { DtrTable } from '../../../components/fixed/dtr/DtrTable';
-import { employeeDummy } from '../../../types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { isEmpty } from 'lodash';
@@ -29,9 +27,7 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     isErrorDtr,
     isLoadingDtr,
     errorUpdateEmployeeDtr,
-    loadingUpdateEmployeeDtr,
     responseUpdateDtr,
-    emptyResponseAndError,
     getEmployeeDtr,
     getEmployeeDtrSuccess,
     getEmployeeDtrFail,
@@ -41,10 +37,7 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     isErrorDtr: state.error.errorDtr,
     isLoadingDtr: state.loading.loadingDtr,
     errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
-    loadingUpdateEmployeeDtr: state.loading.loadingUpdateEmployeeDtr,
     responseUpdateDtr: state.response.employeeDailyRecord,
-    emptyResponseAndError: state.emptyResponseAndError,
-
     getEmployeeDtr: state.getEmployeeDtr,
     getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
     getEmployeeDtrFail: state.getEmployeeDtrFail,
@@ -118,12 +111,6 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     });
   }, []);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     emptyResponseAndError();
-  //   }, 5000);
-  // }, [isErrorDtr, errorUpdateEmployeeDtr, responseUpdateDtr]);
-
   return (
     <>
       <>
@@ -191,14 +178,6 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

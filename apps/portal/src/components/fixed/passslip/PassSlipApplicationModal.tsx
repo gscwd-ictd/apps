@@ -58,16 +58,10 @@ export const PassSlipApplicationModal = ({
     employeeDetails: state.employeeDetails,
   }));
 
-  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
-    useTimeLogStore((state) => ({
-      dtr: state.dtr,
-      schedule: state.schedule,
-      loadingTimeLogs: state.loading.loadingTimeLogs,
-      errorTimeLogs: state.error.errorTimeLogs,
-      getTimeLogs: state.getTimeLogs,
-      getTimeLogsSuccess: state.getTimeLogsSuccess,
-      getTimeLogsFail: state.getTimeLogsFail,
-    }));
+  const { dtr, schedule } = useTimeLogStore((state) => ({
+    dtr: state.dtr,
+    schedule: state.schedule,
+  }));
 
   //zustand initialization to access pass slip store
   const {

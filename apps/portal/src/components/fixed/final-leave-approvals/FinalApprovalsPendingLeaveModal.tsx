@@ -242,38 +242,6 @@ export const FinalApprovalsPendingLeaveModal = ({
                       </div>
                     </div>
 
-                    {/* <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? 'Date Disapproved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? 'Date Disapproved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? 'Date Disapproved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                          ? 'Date Approved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                          ? 'Date Cancelled:'
-                          : null}
-                      </label>
-
-                      <div className="w-auto ml-5">
-                        <label className=" text-md font-medium ">
-                          {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                            ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
-                            : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                            ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate, 'MM-DD-YYYY')
-                            : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                            ? DateFormatter(leaveIndividualDetail?.hrmoApprovalDate, 'MM-DD-YYYY')
-                            : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                            ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
-                            : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                            ? DateFormatter(leaveIndividualDetail?.cancelDate, 'MM-DD-YYYY')
-                            : null}
-                        </label>
-                      </div>
-                    </div> */}
-
                     {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
@@ -352,36 +320,6 @@ export const FinalApprovalsPendingLeaveModal = ({
                         </div>
                       </div>
                     ) : null}
-
-                    {/* {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
-                    leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
-                    leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
-                    leaveIndividualDetail?.status === LeaveStatus.CANCELLED ? (
-                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                          {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                            ? 'HRDM Remarks:'
-                            : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                            ? 'Supervisor Remarks:'
-                            : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                            ? 'HRMO Remarks:'
-                            : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                            ? 'Cancel Reason:'
-                            : 'Remarks:'}
-                        </label>
-                        <div className="w-auto ml-5">
-                          <label className=" text-md font-medium">
-                            {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                              ? leaveIndividualDetail?.hrdmDisapprovalRemarks
-                              : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                              ? leaveIndividualDetail?.supervisorDisapprovalRemarks
-                              : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                              ? leaveIndividualDetail?.cancelReason
-                              : 'N/A'}
-                          </label>
-                        </div>
-                      </div>
-                    ) : null} */}
                   </div>
                   <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
                     <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center">

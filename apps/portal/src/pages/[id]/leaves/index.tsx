@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { HiArchive, HiDocument, HiDocumentAdd, HiDocumentReport, HiFolder } from 'react-icons/hi';
+import { HiDocument, HiDocumentAdd } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -15,7 +15,6 @@ import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
 import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../store/leave.store';
-import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
@@ -35,9 +34,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     applyLeaveModalIsOpen,
     pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen,
-    cancelLeaveModalIsOpen,
-
-    loading,
     errorLeaves,
     errorLeaveDetails,
     errorUnavailableDates,
@@ -59,9 +55,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
-    cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
-
-    loading: state.loading.loadingLeaves,
     errorLeaves: state.error.errorLeaves,
     errorLeaveDetails: state.error.errorIndividualLeave,
     errorUnavailableDates: state.error.errorUnavailableDates,
@@ -83,9 +76,7 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
 
   const router = useRouter();
 
-  const { leaveLedger, loadingLedger, errorLedger } = useLeaveLedgerStore((state) => ({
-    leaveLedger: state.leaveLedger,
-    loadingLedger: state.loading.loadingLeaveLedger,
+  const { errorLedger } = useLeaveLedgerStore((state) => ({
     errorLedger: state.error.errorLeaveLedger,
   }));
 
@@ -340,14 +331,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

@@ -18,7 +18,6 @@ import { ProfileCard } from '../../components/fixed/home/profile/ProfileCard';
 import { RemindersCard } from '../../components/fixed/home/reminders/RemindersCard';
 import { AttendanceCard } from '../../components/fixed/home/attendance/AttendanceCard';
 import { StatsCard } from '../../components/fixed/home/stats/StatsCard';
-import { employeeDummy } from '../../types/employee.type';
 import { fetchWithToken } from '../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { format } from 'date-fns';
@@ -33,7 +32,6 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
-import { useApprovalStore } from '../../store/approvals.store';
 import { usePassSlipStore } from '../../store/passslip.store';
 
 export type NavDetails = {
@@ -59,7 +57,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     leaveCalculatorModalIsOpen,
     setLeaveCalculatorModalIsOpen,
     monetizationConstant,
-    loadingMonetizationConstant,
     errorMonetizationConstant,
     getMonetizationConstant,
     getMonetizationConstantSuccess,
@@ -68,7 +65,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
     setLeaveCalculatorModalIsOpen: state.setLeaveCalculatorModalIsOpen,
     monetizationConstant: state.monetizationConstant,
-    loadingMonetizationConstant: state.loading.loadingMonetizationConstant,
     errorMonetizationConstant: state.error.errorMonetizationConstant,
     getMonetizationConstant: state.getMonetizationConstant,
     getMonetizationConstantSuccess: state.getMonetizationConstantSuccess,
@@ -102,15 +98,12 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     getPassSlipCountFail: state.getPassSlipCountFail,
   }));
 
-  const { leaveLedger, loadingLedger, errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } =
-    useLeaveLedgerStore((state) => ({
-      leaveLedger: state.leaveLedger,
-      loadingLedger: state.loading.loadingLeaveLedger,
-      errorLedger: state.error.errorLeaveLedger,
-      getLeaveLedger: state.getLeaveLedger,
-      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-      getLeaveLedgerFail: state.getLeaveLedgerFail,
-    }));
+  const { errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore((state) => ({
+    errorLedger: state.error.errorLeaveLedger,
+    getLeaveLedger: state.getLeaveLedger,
+    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+    getLeaveLedgerFail: state.getLeaveLedgerFail,
+  }));
 
   const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
@@ -529,14 +522,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     </>
   );
 }
-
-//use for dummy login only
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const userDetails = employeeDummy;
-//   return { props: { userDetails } };
-// };
 
 //use for official user
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {

@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { HiCalendar, HiDocumentAdd, HiNewspaper } from 'react-icons/hi';
+import { useEffect } from 'react';
+import { HiDocumentAdd, HiNewspaper } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -12,7 +12,6 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { Button, ToastNotification } from '@gscwd-apps/oneui';
-import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty, isEqual } from 'lodash';
@@ -31,8 +30,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     applyOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen,
     completedOvertimeModalIsOpen,
-    overtimeList,
-    employeeList,
     responseApply,
     cancelResponse,
     overtimeSummaryModalIsOpen,
@@ -44,7 +41,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
     setApplyOvertimeModalIsOpen,
-    setOvertimeDetails,
     getEmployeeList,
     getEmployeeListSuccess,
     getEmployeeListFail,
@@ -52,7 +48,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeListSuccess,
     getOvertimeListFail,
     emptyResponseAndError,
-
     setSelectedMonth,
     setSelectedYear,
     setSelectedPeriod,
@@ -62,8 +57,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     completedOvertimeModalIsOpen: state.completedOvertimeModalIsOpen,
-    overtimeList: state.overtime,
-    employeeList: state.employeeList,
     responseApply: state.response.postResponseApply,
     cancelResponse: state.response.cancelResponse,
     overtimeSummaryModalIsOpen: state.overtimeSummaryModalIsOpen,
@@ -72,11 +65,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     errorAccomplishmentReport: state.error.errorAccomplishmentReport,
     errorOvertimeSummaryReport: state.error.errorOvertimeSummaryReport,
     setOvertimeSummaryModalIsOpen: state.setOvertimeSummaryModalIsOpen,
-    setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
     setApplyOvertimeModalIsOpen: state.setApplyOvertimeModalIsOpen,
-
     getEmployeeList: state.getEmployeeList,
     getEmployeeListSuccess: state.getEmployeeListSuccess,
     getEmployeeListFail: state.getEmployeeListFail,
@@ -84,7 +75,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getOvertimeListSuccess: state.getOvertimeListSuccess,
     getOvertimeListFail: state.getOvertimeListFail,
     emptyResponseAndError: state.emptyResponseAndError,
-
     setSelectedMonth: state.setSelectedMonth,
     setSelectedYear: state.setSelectedYear,
     setSelectedPeriod: state.setSelectedPeriod,

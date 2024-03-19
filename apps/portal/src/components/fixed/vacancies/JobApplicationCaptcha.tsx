@@ -1,11 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FunctionComponent, useEffect, useState } from 'react';
-
-import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-
-import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
 import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { WorkExperience } from 'apps/portal/src/types/workexp.type';

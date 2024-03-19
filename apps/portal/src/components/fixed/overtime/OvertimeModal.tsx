@@ -2,19 +2,17 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
-import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import CancelOvertimeModal from './CancelOvertimeModal';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
-import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeSupervisorAccomplishmentModal from './OvertimeSupervisorAccomplishmentModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/RenderAccomplishmentSubmitted';
 import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimeAccomplishmentStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import OvertimeAuthorizationModal from './OvertimeAuthorizationModal';
-import OvertimeSummaryReportPdfModal from './OvertimeSummaryReportPdfModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -46,8 +44,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setOvertimeAccomplishmentApplicationId: state.setOvertimeAccomplishmentApplicationId,
     setPdfOvertimeAuthorizationModalIsOpen: state.setPdfOvertimeAuthorizationModalIsOpen,
   }));
-
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
 

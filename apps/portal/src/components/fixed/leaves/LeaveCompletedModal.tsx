@@ -10,7 +10,6 @@ import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveDateStatus, LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import CancelLeaveModal from './CancelLeaveModal';
-import dayjs from 'dayjs';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
@@ -86,9 +85,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   const closeCancelLeaveModal = async () => {
     setCancelLeaveModalIsOpen(false);
   };
-
-  const getDateNow = dayjs().toDate();
-  const dateNow = dayjs(getDateNow).format('YYYY-MM-DD');
 
   return (
     <>

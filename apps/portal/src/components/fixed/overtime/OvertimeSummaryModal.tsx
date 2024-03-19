@@ -1,20 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
-import { AlertNotification, Button, ListDef, LoadingSpinner, Modal, Select } from '@gscwd-apps/oneui';
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { postPortal } from '../../../utils/helpers/portal-axios-helper';
+import { Button, Modal } from '@gscwd-apps/oneui';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
-import { MySelectList } from '../../modular/inputs/SelectList';
-import { OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
 import { format } from 'date-fns';
 import OvertimeSummaryReportPdfModal from './OvertimeSummaryReportPdfModal';
-
-type Month = { month: string; code: string };
-type Year = { year: string };
 
 type ModalProps = {
   modalState: boolean;
@@ -26,9 +18,6 @@ type Item = {
   label: string;
   value: any;
 };
-
-const yearNow = format(new Date(), 'yyyy');
-const monthNow = format(new Date(), 'M');
 
 const monthList: Array<SelectOption> = [
   { label: 'January', value: 1 },

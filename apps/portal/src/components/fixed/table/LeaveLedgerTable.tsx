@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
-import { Fragment, FunctionComponent, useEffect, useState } from 'react';
-
+import { FunctionComponent, useEffect, useState } from 'react';
 import useSWR from 'swr';
 // import fetcherEMS from '../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
@@ -10,14 +9,11 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
 import { LoadingSpinner } from '@gscwd-apps/oneui';
-
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { useLeaveLedgerPageStore } from 'apps/portal/src/store/leave-ledger-page.store';
 import { CardMiniStats } from '../cards/CardMiniStats';
 import { ActionType } from 'libs/utils/src/lib/enums/leave-ledger.type';
-import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
 import RemarksAndLeaveDatesModal from '../leaves/RemarksAndLeaveDatesModal';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 

@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { HiNewspaper, HiX } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
@@ -20,7 +20,6 @@ import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsP
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
 import { useWorkExpStore } from '../../../store/workexperience.store';
-import { employeeDummy } from '../../../types/employee.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { useRouter } from 'next/router';
@@ -133,16 +132,10 @@ export default function Vacancies({
       resetExperience();
       setErrorJobOpening(null);
       setErrorWorkExperience(null);
-      // setErrorApplyJob(null);
       setErrorCaptcha(null);
       setErrorMessage(null);
     }
     if (e == 2) {
-      // setErrorJobOpening(null);
-      // setErrorWorkExperience(null);
-      // setErrorApplyJob(null);
-      // setErrorCaptcha(null);
-      // setErrorMessage(null);
       handleWorkExperience(employeeId);
     }
   };
@@ -153,18 +146,12 @@ export default function Vacancies({
 
     setErrorJobOpening(null);
     setErrorWorkExperience(null);
-    // setErrorApplyJob(null);
     setErrorCaptcha(null);
     setErrorMessage(null);
   };
 
   // set modal main modal action (confirm)
   const modalAction = async () => {
-    // setErrorJobOpening(null);
-    // setErrorWorkExperience(null);
-    // setErrorApplyJob(null);
-    // setErrorCaptcha(null);
-    // setErrorMessage(null);
     setTimeout(() => {
       if (!messageContent) {
         setErrorMessage('Failed to load message contents!');
@@ -362,25 +349,6 @@ export default function Vacancies({
     </>
   );
 }
-
-//use for dummy login only
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   try {
-//     const userDetails = employeeDummy;
-//     const { data } = await axios.get(
-//       `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`
-//     );
-//     if (data) {
-//       return { props: { data, employeeId: userDetails.user._id } };
-//     } else {
-//       return { props: {} };
-//     }
-//   } catch (error) {
-//     return { props: {} };
-//   }
-// };
 
 //get list of all posted job positions
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {

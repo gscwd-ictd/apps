@@ -65,16 +65,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     else return dayjs(rowData.dtr.dtrDate + ' ' + value).format('HH:mm');
   };
 
-  const {
-    employeeDailyRecord,
-    errorUpdateEmployeeDtr,
-    loadingUpdateEmployeeDtr,
-    confirmUpdateModalIsOpen,
-    setConfirmUpdateModalIsOpen,
-  } = useDtrStore((state) => ({
-    employeeDailyRecord: state.response.employeeDailyRecord,
-    errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
-    loadingUpdateEmployeeDtr: state.loading.loadingUpdateEmployeeDtr,
+  const { confirmUpdateModalIsOpen, setConfirmUpdateModalIsOpen } = useDtrStore((state) => ({
     confirmUpdateModalIsOpen: state.confirmUpdateModalIsOpen,
     setConfirmUpdateModalIsOpen: state.setConfirmUpdateModalIsOpen,
   }));
@@ -85,40 +76,40 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
   const setDefaultValues = (rowData: EmployeeDtrWithSchedule, remarks: string) => {
     reset({
-      dtrId: rowData.dtr.id,
-      companyId: rowData.companyId,
-      dtrDate: rowData.day,
-      timeIn: removeSeconds(rowData.dtr.timeIn),
-      lunchIn: removeSeconds(rowData.dtr.lunchIn),
-      lunchOut: removeSeconds(rowData.dtr.lunchOut),
-      timeOut: removeSeconds(rowData.dtr.timeOut),
+      dtrId: rowData?.dtr?.id,
+      companyId: rowData?.companyId,
+      dtrDate: rowData?.day,
+      timeIn: removeSeconds(rowData?.dtr?.timeIn),
+      lunchIn: removeSeconds(rowData?.dtr?.lunchIn),
+      lunchOut: removeSeconds(rowData?.dtr?.lunchOut),
+      timeOut: removeSeconds(rowData?.dtr?.timeOut),
       withLunch: true,
-      shift: rowData.schedule.shift,
+      shift: rowData?.schedule?.shift,
       remarks: remarks,
     });
 
     setDefaultDtrValues({
-      dtrId: rowData.dtr.id,
-      companyId: rowData.companyId,
-      dtrDate: rowData.day,
-      timeIn: removeSeconds(rowData.dtr.timeIn),
-      lunchIn: removeSeconds(rowData.dtr.lunchIn),
-      lunchOut: removeSeconds(rowData.dtr.lunchOut),
-      timeOut: removeSeconds(rowData.dtr.timeOut),
+      dtrId: rowData?.dtr?.id,
+      companyId: rowData?.companyId,
+      dtrDate: rowData?.day,
+      timeIn: removeSeconds(rowData?.dtr?.timeIn),
+      lunchIn: removeSeconds(rowData?.dtr?.lunchIn),
+      lunchOut: removeSeconds(rowData?.dtr?.lunchOut),
+      timeOut: removeSeconds(rowData?.dtr?.timeOut),
       withLunch: true,
-      shift: rowData.schedule.shift,
+      shift: rowData?.schedule?.shift,
       remarks: remarks,
     });
 
-    setValue('dtrId', rowData.dtr.id);
-    setValue('companyId', rowData.companyId);
-    setValue('dtrDate', rowData.day);
-    setValue('timeIn', removeSeconds(rowData.dtr.timeIn));
-    setValue('timeOut', removeSeconds(rowData.dtr.timeOut));
-    setValue('lunchIn', removeSeconds(rowData.dtr.lunchIn));
-    setValue('lunchOut', removeSeconds(rowData.dtr.lunchOut));
+    setValue('dtrId', rowData?.dtr?.id);
+    setValue('companyId', rowData?.companyId);
+    setValue('dtrDate', rowData?.day);
+    setValue('timeIn', removeSeconds(rowData?.dtr?.timeIn));
+    setValue('timeOut', removeSeconds(rowData?.dtr?.timeOut));
+    setValue('lunchIn', removeSeconds(rowData?.dtr?.lunchIn));
+    setValue('lunchOut', removeSeconds(rowData?.dtr?.lunchOut));
     setValue('withLunch', true);
-    setValue('shift', rowData.schedule.shift);
+    setValue('shift', rowData?.schedule?.shift);
     setValue('remarks', remarks);
   };
 

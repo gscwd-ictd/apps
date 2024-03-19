@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
-import { HiPlus, HiX } from 'react-icons/hi';
+import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationOvertimeAccomplishmentModal } from './ConfirmationOvertimeAccomplishmentModal';
@@ -43,27 +43,16 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
   }));
 
-  const {
-    dtr,
-    schedule,
-    isHoliday,
-    isRestday,
-    loadingTimeLogs,
-    errorTimeLogs,
-    getTimeLogs,
-    getTimeLogsSuccess,
-    getTimeLogsFail,
-  } = useTimeLogStore((state) => ({
-    dtr: state.dtr,
-    schedule: state.schedule,
-    loadingTimeLogs: state.loading.loadingTimeLogs,
-    errorTimeLogs: state.error.errorTimeLogs,
-    isHoliday: state.isHoliday,
-    isRestday: state.isRestDay,
-    getTimeLogs: state.getTimeLogs,
-    getTimeLogsSuccess: state.getTimeLogsSuccess,
-    getTimeLogsFail: state.getTimeLogsFail,
-  }));
+  const { schedule, isHoliday, isRestday, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } = useTimeLogStore(
+    (state) => ({
+      schedule: state.schedule,
+      isHoliday: state.isHoliday,
+      isRestday: state.isRestDay,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+    })
+  );
 
   const employeeDtr = useDtrStore((state) => state.employeeDtr);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
