@@ -1,10 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  DataTable,
-  LoadingSpinner,
-  ToastNotification,
-  useDataTable,
-} from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
@@ -12,10 +7,7 @@ import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Can } from '../../context/casl/Can';
-import {
-  EmployeeWithSchedule,
-  useScheduleSheetStore,
-} from '../../store/schedule-sheet.store';
+import { EmployeeWithSchedule, useScheduleSheetStore } from '../../store/schedule-sheet.store';
 import fetcherEMS from '../../utils/fetcher/FetcherEMS';
 import UseConvertRestDaysToString from '../../utils/functions/ConvertRestDaysToString';
 import UseRenderRestDays from '../../utils/functions/RenderRestDays';
@@ -42,12 +34,8 @@ type CardEmployeeSchedulesProps = {
   employeeData: EmployeeInfo;
 };
 
-const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
-  employeeData,
-}) => {
-  const [currentRowData, setCurrentRowData] = useState<EmployeeWithSchedule>(
-    {} as EmployeeWithSchedule
-  );
+const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ employeeData }) => {
+  const [currentRowData, setCurrentRowData] = useState<EmployeeWithSchedule>({} as EmployeeWithSchedule);
 
   // use swr
   const {
@@ -56,9 +44,7 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
     error: swrEsError,
     mutate: mutateEs,
   } = useSWR(
-    employeeData.userId
-      ? `/employee-schedule/${employeeData.userId}/all`
-      : null,
+    employeeData.userId ? `/employee-schedule/${employeeData.userId}/all` : null,
 
     fetcherEMS,
     {
@@ -107,20 +93,15 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
   }));
 
   // modal open
-  const [addSchedModalIsOpen, setAddSchedModalIsOpen] =
-    useState<boolean>(false);
+  const [addSchedModalIsOpen, setAddSchedModalIsOpen] = useState<boolean>(false);
 
   const openAddSchedModal = () => setAddSchedModalIsOpen(true);
   const closeAddSchedModal = () => {
     setAddSchedModalIsOpen(false);
   };
 
-  const [deleteSchedModalIsOpen, setDeleteSchedModalIsOpen] =
-    useState<boolean>(false);
-  const openDeleteSchedModal = (
-    rowData: EmployeeWithSchedule,
-    employeeData: any
-  ) => {
+  const [deleteSchedModalIsOpen, setDeleteSchedModalIsOpen] = useState<boolean>(false);
+  const openDeleteSchedModal = (rowData: EmployeeWithSchedule, employeeData: any) => {
     setCurrentRowData({
       ...rowData,
       employeeId: employeeData.userId,
@@ -192,17 +173,12 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
     columnHelper.accessor('restDays', {
       enableSorting: false,
       header: 'Rest Days',
-      cell: (info) =>
-        UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
+      cell: (info) => UseRenderRestDays(UseConvertRestDaysToString(info.getValue())),
     }),
     columnHelper.display({
       id: 'actions',
       header: () => <span className="w-full text-center ">Actions</span>,
-      cell: (props) => (
-        <div className="w-full text-center">
-          {renderRowActions(props.row.original)}
-        </div>
-      ),
+      cell: (props) => <div className="w-full text-center">{renderRowActions(props.row.original)}</div>,
     }),
   ];
 
@@ -254,15 +230,10 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
 
   return (
     <div className="w-full ">
-      {loadingEmployeeSchedules ? (
-        <ToastNotification notifMessage="Loading Schedules" toastType="info" />
-      ) : null}
+      {loadingEmployeeSchedules ? <ToastNotification notifMessage="Loading Schedules" toastType="info" /> : null}
 
       {!isEmpty(deleteResponse) ? (
-        <ToastNotification
-          notifMessage="Successfully deleted an entry!"
-          toastType="success"
-        />
+        <ToastNotification notifMessage="Successfully deleted an entry!" toastType="success" />
       ) : null}
 
       {!isEmpty(errorEmployeeSchedule) ? (
@@ -272,46 +243,42 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({
         />
       ) : null}
 
-      <Can I="access" this="Employee_schedules">
-        <Card title="Schedules">
-          <div className="flex flex-row flex-wrap">
-            <div className="flex justify-end order-2 w-1/2 pr-4 table-actions-wrapper">
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                onClick={openAddSchedModal}
-              >
-                <i className="bx bxs-plus-square"></i>&nbsp;{' '}
-                <span className="xs:hidden sm:hidden md:hidden lg:block">
-                  Add Schedule
-                </span>
-              </button>
-            </div>
-
-            <AddEmpSchedModal
-              modalState={addSchedModalIsOpen}
-              setModalState={setAddSchedModalIsOpen}
-              closeModalAction={closeAddSchedModal}
-              employeeData={employeeData}
-            />
-
-            <DeleteEmpSchedModal
-              modalState={deleteSchedModalIsOpen}
-              setModalState={setDeleteSchedModalIsOpen}
-              closeModalAction={closeDeleteSchedModal}
-              rowData={currentRowData}
-            />
-
-            {swrEsIsLoading ? (
-              <LoadingSpinner size="lg" />
-            ) : (
-              <>
-                <DataTable model={table} showColumnFilter={false} />
-              </>
-            )}
+      <Card title="Schedules">
+        <div className="flex flex-row flex-wrap">
+          <div className="flex justify-end order-2 w-1/2 pr-4 table-actions-wrapper">
+            <button
+              type="button"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+              onClick={openAddSchedModal}
+            >
+              <i className="bx bxs-plus-square"></i>&nbsp;{' '}
+              <span className="xs:hidden sm:hidden md:hidden lg:block">Add Schedule</span>
+            </button>
           </div>
-        </Card>
-      </Can>
+
+          <AddEmpSchedModal
+            modalState={addSchedModalIsOpen}
+            setModalState={setAddSchedModalIsOpen}
+            closeModalAction={closeAddSchedModal}
+            employeeData={employeeData}
+          />
+
+          <DeleteEmpSchedModal
+            modalState={deleteSchedModalIsOpen}
+            setModalState={setDeleteSchedModalIsOpen}
+            closeModalAction={closeDeleteSchedModal}
+            rowData={currentRowData}
+          />
+
+          {swrEsIsLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <>
+              <DataTable model={table} showColumnFilter={false} />
+            </>
+          )}
+        </div>
+      </Card>
     </div>
   );
 };

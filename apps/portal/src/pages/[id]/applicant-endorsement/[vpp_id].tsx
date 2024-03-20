@@ -21,8 +21,6 @@ type AppEndSummaryProps = {
 
 export default function AppEndSummary({ employee, publicationDetails }: AppEndSummaryProps) {
   const publication = useAppEndStore((state) => state.selectedPublication);
-  // const selectedApplicants = useAppEndStore((state) => state.selectedApplicants);
-  const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
   const router = useRouter();
 
