@@ -16,6 +16,7 @@ import useSWR from 'swr';
 import fetcherEMS from '../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import { useChartsStore } from '../../store/chart.store';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, BarElement, Title, Tooltip, Legend);
 
@@ -43,6 +44,7 @@ export const TardinessChart = () => {
     useChartsStore((state) => ({
       GetTardinessChartData: state.getTardinessChartData,
       SetGetTardinessChartData: state.setGetTardinessChartData,
+
       ErrorTardinessChartData: state.errorTardinessChartData,
       SetErrorTardinessChartData: state.setErrorTardinessChartData,
     }));
@@ -111,8 +113,16 @@ export const TardinessChart = () => {
   }, [GetTardinessChartData]);
 
   return (
+    <>
+    {/*  Notifications */}
+    {!isEmpty(ErrorTardinessChartData) ? (
+        <ToastNotification toastType="error" notifMessage={ErrorTardinessChartData} />
+      ) : null}
+
     <div className="flex justify-center w-full p-5 bg-white border rounded shadow">
       <Bar options={chartOptions} data={chartData} />
     </div>
+    </>
+    
   );
 };
