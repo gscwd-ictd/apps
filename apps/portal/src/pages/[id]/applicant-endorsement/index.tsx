@@ -20,7 +20,6 @@ import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import AppEndAlert from 'apps/portal/src/components/fixed/endorsement/alert/AppEndAlert';
 import AppEndModal from 'apps/portal/src/components/fixed/endorsement/modal/AppEndModal';
-import { employeeDummy } from '../../../types/employee.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
@@ -191,14 +190,6 @@ export default function ApplicantEndorsement({
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

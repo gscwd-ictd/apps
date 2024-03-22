@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,7 +14,6 @@ import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
-import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DtrCorrectionApprovalPatch } from 'libs/utils/src/lib/types/dtr.type';
 
 type ApprovalsDtrCorrectionModalProps = {
@@ -40,7 +39,6 @@ export const ApprovalsDtrCorrectionModal = ({
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
     loadingResponse,
-    captchaModalIsOpen,
     setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
     dtrCorrectionDetail: state.dtrCorrectionDetail,
@@ -49,11 +47,8 @@ export const ApprovalsDtrCorrectionModal = ({
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
     loadingResponse: state.loading.loadingPassSlipResponse,
-    captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
   }));
-
-  const [dataToSubmitForCaptcha, setDataToSubmitForCaptcha] = useState<DtrCorrectionApprovalPatch>();
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<DtrCorrectionApprovalPatch>({

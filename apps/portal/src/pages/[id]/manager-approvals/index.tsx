@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -9,30 +9,20 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { SpinnerDotted } from 'spinners-react';
-import { ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
-import useSWR from 'swr';
-import { employeeDummy } from '../../../types/employee.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { TabHeader } from 'apps/portal/src/components/fixed/tab/TabHeader';
-import { HiCalendar, HiClipboard, HiClock, HiDocumentText, HiQuestionMarkCircle } from 'react-icons/hi';
+import { HiCalendar, HiClipboard, HiClock, HiDocumentText } from 'react-icons/hi';
 import { useRouter } from 'next/router';
-import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty } from 'lodash';
 
 export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
-    tab,
-    errorPendingApprovalsCount,
     pendingApprovalsCount,
     getPendingApprovalsCount,
     getPendingApprovalsCountSuccess,
     getPendingApprovalsCountFail,
   } = useApprovalStore((state) => ({
-    tab: state.tab,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
     pendingApprovalsCount: state.pendingApprovalsCount,
     getPendingApprovalsCount: state.getPendingApprovalsCount,
     getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
@@ -42,8 +32,6 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
-  // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
   // set the employee details on page load
   useEffect(() => {

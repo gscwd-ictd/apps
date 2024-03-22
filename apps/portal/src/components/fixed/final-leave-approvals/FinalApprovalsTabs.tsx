@@ -79,7 +79,3 @@ export const FinalApprovalsTabs = ({ tab }: ApprovalsTabsProps) => {
     </>
   );
 };
-
-{
-  /* <div className="flex justify-center pt-20"><h1 className="text-4xl text-gray-300">No pending endorsement list at the moment</h1></div> */
-}

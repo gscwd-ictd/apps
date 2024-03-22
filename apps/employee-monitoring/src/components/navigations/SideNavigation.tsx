@@ -162,34 +162,37 @@ export const SideNavigation = () => {
           </Can>
 
           {/**LEAVE APPLICATIONS */}
-          <Can I="access" this="Leave_applications">
+          <Can I="access" this="Leave">
             <Sidebar.Item
               display="Leave Applications"
               className="text-sm"
               icon={<i className="text-xl bx bx-run"></i>}
               path=""
               hasSubItem
-              selected={pathname === Paths[2] || pathname === Paths[30]}
+              selected={pathname === Paths[2] || pathname === Paths[23]}
               subItems={
                 <>
                   {/* APPLICATIONS */}
-
-                  <Sidebar.Item
-                    display="Applications"
-                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                    selected={pathname === Paths[2] ? true : false}
-                    icon={<i className="text-xl bx bxs-file-plus"></i>}
-                    path={Paths[2]}
-                  />
+                  <Can I="access" this="Leave_applications">
+                    <Sidebar.Item
+                      display="Applications"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[2] ? true : false}
+                      icon={<i className="text-xl bx bxs-file-plus"></i>}
+                      path={Paths[2]}
+                    />
+                  </Can>
 
                   {/* CANCELLATIONS */}
-                  <Sidebar.Item
-                    display="Cancellations"
-                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                    selected={pathname === Paths[30] ? true : false}
-                    icon={<i className="text-xl bx bxs-calendar-x"></i>}
-                    path={Paths[30]}
-                  />
+                  <Can I="access" this="Leave_cancellations">
+                    <Sidebar.Item
+                      display="Cancellations"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[23] ? true : false}
+                      icon={<i className="text-xl bx bxs-calendar-x"></i>}
+                      path={Paths[23]}
+                    />
+                  </Can>
                 </>
               }
             />
@@ -400,7 +403,7 @@ export const SideNavigation = () => {
           </Can>
 
           {/** Maintenance Events */}
-          <Can I="access" this={'Event_holidays' && 'Event_work_suspensions'}>
+          <Can I="access" this={'Events'}>
             <Sidebar.Item
               display="Events"
               path=""
@@ -449,7 +452,10 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Settings Header */}
-          <Can I="access" this={'Custom_groups' && 'Modules' && 'Users' && 'Officer_of_the_day' && 'System_logs'}>
+          <Can
+            I="access"
+            this={'Custom_groups' || 'Modules' || 'Users' || 'Officer_of_the_day' || 'System_logs' || 'Announcements'}
+          >
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
                 {isCollapsed ? <hr className="border border-slate-600" /> : 'Settings'}

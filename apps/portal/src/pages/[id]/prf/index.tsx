@@ -1,24 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
-
-import { EmployeeDetails, employeeDummy } from '../../../types/employee.type';
+import { EmployeeDetails } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
-import { PrfDetails } from '../../../types/prf.types';
-
 import { Roles } from '../../../utils/constants/user-roles';
-
 import { usePrfStore } from '../../../store/prf.store';
 import { useUserStore } from '../../../store/user.store';
-
-import {
-  createPrf,
-  getDisapprovedPrfs,
-  getForApprovalPrfs,
-  getPendingPrfs,
-  savePrf,
-} from '../../../utils/helpers/prf.requests';
-
+import { createPrf, savePrf } from '../../../utils/helpers/prf.requests';
 import { PrfModal } from '../../../components/fixed/prf/prf-modal/PrfModal';
 import { PendingPrfList } from '../../../components/fixed/prf/prf-index/PendingPrfList';
 import { ForApprovalPrfList } from '../../../components/fixed/prf/prf-index/ForApprovalPrfList';
@@ -426,7 +414,6 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
   const employee = getUserDetails();
-  // const employee = employeeDummy;
 
   // check if user role is rank_and_file
   if (

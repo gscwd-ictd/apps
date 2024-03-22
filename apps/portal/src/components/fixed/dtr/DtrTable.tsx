@@ -15,19 +15,17 @@ import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseLateLunchInChecker } from 'libs/utils/src/lib/functions/LateLunchInChecker';
 
-type DtrtableProps = {
+type DtrTableProps = {
   employeeDetails: EmployeeDetails;
 };
 
-export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
+export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
   const { employeeDtr, dtrIsLoading, dtrModalIsOpen, setDtrModalIsOpen } = useDtrStore((state) => ({
     employeeDtr: state.employeeDtr,
     dtrIsLoading: state.loading.loadingDtr,
     dtrModalIsOpen: state.dtrModalIsOpen,
     setDtrModalIsOpen: state.setDtrModalIsOpen,
   }));
-
-  const now = dayjs().toDate().toDateString();
 
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
@@ -87,7 +85,7 @@ export const DtrTable = ({ employeeDetails }: DtrtableProps) => {
                     </th>
                     <th className="w-1/12 px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Edit
-                    </th> */}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="text-sm text-center ">

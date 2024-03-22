@@ -9,9 +9,7 @@ import { PdsTabs } from '../../../components/fixed/pds/PdsTabs';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
-import { useEmployeeStore } from '../../../store/employee.store';
 import { usePdsStore } from '../../../store/pds.store';
-import { employeeDummy } from 'apps/portal/src/types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
@@ -20,8 +18,6 @@ export default function Pds({ employeeDetails, userId }: InferGetServerSideProps
   const tab = usePdsStore((state) => state.tab);
 
   const router = useRouter();
-
-  const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
 
   const tabAction = () => {
     let link = '';
@@ -76,14 +72,6 @@ export default function Pds({ employeeDetails, userId }: InferGetServerSideProps
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

@@ -13,7 +13,6 @@ export const AllOvertimeAccomplishmentListTab = ({ overtime, tab }: TabProps) =>
   const {
     pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen,
-
     setPendingOvertimeAccomplishmentModalIsOpen,
     setCompletedOvertimeAccomplishmentModalIsOpen,
     setOvertimeDetails,

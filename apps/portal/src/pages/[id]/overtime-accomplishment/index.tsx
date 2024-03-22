@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -11,11 +11,9 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
-import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-import { OvertimeApplicationModal } from 'apps/portal/src/components/fixed/overtime/OvertimeApplicationModal';
 import { OvertimeAccomplishmentTabs } from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentTabs';
 import { OvertimeAccomplishmentTabWindow } from 'apps/portal/src/components/fixed/overtime-accomplishment/OvertimeAccomplishmentTabWindow';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
@@ -29,32 +27,24 @@ export default function OvertimeAccomplishment({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
-
     pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen,
-    overtimeList,
     patchResponse,
     errorResponse,
     errorOvertimeAccomplishment,
-
     setPendingOvertimeAccomplishmentModalIsOpen,
     setCompletedOvertimeAccomplishmentModalIsOpen,
-    setOvertimeDetails,
     emptyResponseAndError,
     getOvertimeAccomplishmentList,
     getOvertimeAccomplishmentListSuccess,
     getOvertimeAccomplishmentListFail,
   } = useOvertimeAccomplishmentStore((state) => ({
     tab: state.tab,
-
     pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen: state.completedOvertimeAccomplishmentModalIsOpen,
-    overtimeList: state.overtime,
     patchResponse: state.response.patchResponse,
     errorResponse: state.error.errorResponse,
     errorOvertimeAccomplishment: state.error.errorOvertimeAccomplishment,
-
-    setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeAccomplishmentModalIsOpen: state.setPendingOvertimeAccomplishmentModalIsOpen,
     setCompletedOvertimeAccomplishmentModalIsOpen: state.setCompletedOvertimeAccomplishmentModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
@@ -63,16 +53,11 @@ export default function OvertimeAccomplishment({
     getOvertimeAccomplishmentListFail: state.getOvertimeAccomplishmentListFail,
   }));
 
-  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
-    useTimeLogStore((state) => ({
-      dtr: state.dtr,
-      schedule: state.schedule,
-      loadingTimeLogs: state.loading.loadingTimeLogs,
-      errorTimeLogs: state.error.errorTimeLogs,
-      getTimeLogs: state.getTimeLogs,
-      getTimeLogsSuccess: state.getTimeLogsSuccess,
-      getTimeLogsFail: state.getTimeLogsFail,
-    }));
+  const { getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } = useTimeLogStore((state) => ({
+    getTimeLogs: state.getTimeLogs,
+    getTimeLogsSuccess: state.getTimeLogsSuccess,
+    getTimeLogsFail: state.getTimeLogsFail,
+  }));
 
   const router = useRouter();
 
@@ -248,14 +233,6 @@ export default function OvertimeAccomplishment({
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

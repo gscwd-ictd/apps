@@ -20,10 +20,10 @@ export const CardLeaveRequests: FunctionComponent = () => {
     isLoading: swrIsLoading,
   } = useSWR('/leave/hrmo', fetcherEMS, {
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 10 times.
+      // Only retry up to 5 times.
       if (retryCount >= 5) return;
 
-      // Retry after 5 seconds.
+      // Retry after 15 seconds.
       setTimeout(() => revalidate({ retryCount }), 15000);
     },
   });

@@ -1,7 +1,7 @@
-import { Modal, PageContentContext } from '@gscwd-apps/oneui';
+import { Modal } from '@gscwd-apps/oneui';
 
 import dayjs from 'dayjs';
-import React, { Dispatch, FunctionComponent, SetStateAction, useContext } from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction } from 'react';
 import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
 import UseRenderBadgePill from '../badge-pill/BadgePill';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -31,9 +31,6 @@ const RemarksAndLeaveDatesModal: FunctionComponent<LeaveDatesAndRemarksModalProp
   rowData,
 }) => {
   const { windowWidth } = UseWindowDimensions();
-  // const {
-  //   aside: { windowWidth },
-  // } = useContext(PageContentContext);
 
   return (
     <>

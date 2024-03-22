@@ -22,8 +22,6 @@ type ModalProps = {
 
 export const TrainingDetailsModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    recommendedEmployees,
-    loadingRecommendedEmployee,
     loadingResponse,
     errorRecommendedEmployee,
     errorNominatedEmployeeList,
@@ -48,8 +46,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     setAuxiliaryEmployees,
   } = useTrainingSelectionStore((state) => ({
     confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
-    recommendedEmployees: state.recommendedEmployees,
-    loadingRecommendedEmployee: state.loading.loadingRecommendedEmployee,
     errorRecommendedEmployee: state.error.errorRecommendedEmployee,
     errorNominatedEmployeeList: state.error.errorNominatedEmployeeList,
     individualTrainingDetails: state.individualTrainingDetails,
