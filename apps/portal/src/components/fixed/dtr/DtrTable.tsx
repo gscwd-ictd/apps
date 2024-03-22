@@ -85,7 +85,7 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                     </th>
                     <th className="w-1/12 px-5 py-2 text-sm text-center border md:px-5 md:text-md font-medium text-gray-700">
                       Edit
-                    </th> */}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="text-sm text-center ">
