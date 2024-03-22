@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
@@ -35,7 +34,6 @@ export const ApprovalsPendingLeaveModal = ({
 }: ApprovalsPendingLeaveModalProps) => {
   const {
     leaveIndividualDetail,
-    pendingLeaveModalIsOpen,
     setPendingLeaveModalIsOpen,
     otpLeaveModalIsOpen,
     setOtpLeaveModalIsOpen,
@@ -44,7 +42,6 @@ export const ApprovalsPendingLeaveModal = ({
   } = useApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
-    pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     otpLeaveModalIsOpen: state.otpLeaveModalIsOpen,
     setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,

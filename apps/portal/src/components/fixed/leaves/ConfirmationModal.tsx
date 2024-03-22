@@ -2,9 +2,6 @@
 
 import { Button, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 import { LeaveCancellationSubmission } from 'libs/utils/src/lib/types/leave-application.type';

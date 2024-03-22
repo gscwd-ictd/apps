@@ -2,7 +2,6 @@
 import { Button, Modal, PdfHeader } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
-import { useEmployeeStore } from '../../../store/employee.store';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -41,30 +40,22 @@ type ModalProps = {
 
 export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    overtimeDetails,
     overtimeAccomplishmentEmployeeId,
     overtimeAccomplishmentApplicationId,
-    overtimeAccomplishmentEmployeeName,
-    accomplishmentDetails,
     pdfAccomplishmentReportModalIsOpen,
     overtimeAccomplishmentReport,
     getOvertimeAccomplishmentReport,
     getOvertimeAccomplishmentReportSuccess,
     getOvertimeAccomplishmentReportFail,
   } = useOvertimeStore((state) => ({
-    overtimeDetails: state.overtimeDetails,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
     overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
-    overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
-    accomplishmentDetails: state.accomplishmentDetails,
     pdfAccomplishmentReportModalIsOpen: state.pdfAccomplishmentReportModalIsOpen,
     overtimeAccomplishmentReport: state.overtimeAccomplishmentReport,
     getOvertimeAccomplishmentReport: state.getOvertimeAccomplishmentReport,
     getOvertimeAccomplishmentReportSuccess: state.getOvertimeAccomplishmentReportSuccess,
     getOvertimeAccomplishmentReportFail: state.getOvertimeAccomplishmentReportFail,
   }));
-
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const overtimeAccomplishmentReportUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/accomplishment/individual/${overtimeAccomplishmentApplicationId}/${overtimeAccomplishmentEmployeeId}/`;
 

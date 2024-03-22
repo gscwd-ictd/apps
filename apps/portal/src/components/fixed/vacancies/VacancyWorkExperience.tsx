@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { WorkExperiencePds } from '../../../../src/types/workexp.type';
 import { NumericFormat } from 'react-number-format';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Button, Modal, TextField, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, Modal, TextField } from '@gscwd-apps/oneui';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
 import { HiPencil, HiPlus, HiTrash, HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -35,9 +35,6 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
   const inputOfficeUnit = (e: ChangeEvent<HTMLInputElement>, expId: string) => {
     inputOffice(e.target.value.trimStart(), expId);
   };
-
-  // const [errorAccomplishment, setErrorAccomplishment] = useState<string>('');
-  // const [errorDuty, setErrorDuty] = useState<string>('');
 
   const handleAccomplishmentInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setAccomplishmentInput(e.target.value.trim());

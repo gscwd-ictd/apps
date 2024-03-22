@@ -2,7 +2,7 @@
 import { AlertNotification, Button, LoadingSpinner, Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { NomineeType, PdcApprovalAction, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
+import { PdcApprovalAction, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
 import { useEffect, useState } from 'react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';

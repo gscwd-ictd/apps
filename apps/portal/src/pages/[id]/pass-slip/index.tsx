@@ -17,7 +17,6 @@ import { PassSlipTabs } from '../../../components/fixed/passslip/PassSlipTabs';
 import { PassSlipTabWindow } from '../../../components/fixed/passslip/PassSlipTabWindow';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import React from 'react';
-import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
 import PassSlipApplicationModal from '../../../components/fixed/passslip/PassSlipApplicationModal';
 import PassSlipPendingModal from '../../../components/fixed/passslip/PassSlipPendingModal';
@@ -37,7 +36,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     applyPassSlipModalIsOpen,
     pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen,
-    loading,
     errorPassSlips,
     errorResponse,
     responsePatch,
@@ -57,7 +55,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
     pendingPassSlipModalIsOpen: state.pendingPassSlipModalIsOpen,
     completedPassSlipModalIsOpen: state.completedPassSlipModalIsOpen,
-    loading: state.loading.loadingPassSlips,
     errorPassSlips: state.error.errorPassSlips,
     errorResponse: state.error.errorResponse,
     responsePatch: state.response.patchResponse,
@@ -303,14 +300,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

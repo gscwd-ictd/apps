@@ -10,10 +10,8 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-
 import React from 'react';
 import useSWR from 'swr';
-import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty, isEqual } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
@@ -37,9 +35,7 @@ export default function FinalLeaveApprovals({
     approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen,
-
     patchResponseLeave,
-    loadingLeave,
     errorLeave,
     leaveApplications,
     setPendingLeaveModalIsOpen,
@@ -57,9 +53,7 @@ export default function FinalLeaveApprovals({
     approvedLeaveModalIsOpen: state.approvedLeaveModalIsOpen,
     disapprovedLeaveModalIsOpen: state.disapprovedLeaveModalIsOpen,
     cancelledLeaveModalIsOpen: state.cancelledLeaveModalIsOpen,
-
     patchResponseLeave: state.response.patchResponseLeave,
-    loadingLeave: state.loading.loadingLeaves,
     errorLeave: state.error.errorLeaves,
     leaveApplications: state.leaveApplications,
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
@@ -77,8 +71,6 @@ export default function FinalLeaveApprovals({
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
-  // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
   // set the employee details on page load
   useEffect(() => {
@@ -325,14 +317,6 @@ export default function FinalLeaveApprovals({
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

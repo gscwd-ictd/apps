@@ -51,14 +51,14 @@ export const TrainingNominationModal = ({
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
 
-  const addRecommendedNominee = (employee: SelectOption) => {
-    if (
-      !selectedEmployees.some((e) => e.value === employee.value) &&
-      !selectedAuxiliaryEmployees.some((e) => e.value === employee.value)
-    ) {
-      setSelectedEmployees([employee, ...selectedEmployees]);
-    }
-  };
+  // const addRecommendedNominee = (employee: SelectOption) => {
+  //   if (
+  //     !selectedEmployees.some((e) => e.value === employee.value) &&
+  //     !selectedAuxiliaryEmployees.some((e) => e.value === employee.value)
+  //   ) {
+  //     setSelectedEmployees([employee, ...selectedEmployees]);
+  //   }
+  // };
 
   useEffect(() => {
     if (trainingNominationModalIsOpen) {

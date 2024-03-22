@@ -89,10 +89,6 @@ export const ApprovalsPendingPassSlipModal = ({
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  // const closeOtpModal = async () => {
-  //   setOtpPassSlipModalIsOpen(false);
-  // };
-
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
     setDeclineApplicationModalIsOpen(false);

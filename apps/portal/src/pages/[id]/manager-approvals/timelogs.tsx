@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -14,19 +14,13 @@ import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
-import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
-import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import ApprovalsPendingPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingPassSlipModal';
-import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedPassSlipModal';
 import { useRouter } from 'next/router';
-import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { DtrCorrection } from 'libs/utils/src/lib/types/dtr.type';
 import UseRenderDtrCorrectionStatus from 'apps/portal/src/utils/functions/RenderDtrCorrectionStatus';
@@ -36,34 +30,25 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   const {
     dtrCorrectionModalIsOpen,
     patchResponseDtrCorrection,
-    loadingDtrCorrection,
     errorDtrCorrection,
     errorDtrCorrectionResponse,
     dtrCorrectionApplications,
-
     setDtrCorrectionModalIsOpen,
-
     getDtrCorrectionApplicationsList,
     getDtrCorrectionApplicationsListSuccess,
     getDtrCorrectionApplicationsListFail,
-
     setDtrCorrectionDetail,
-
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
     dtrCorrectionModalIsOpen: state.dtrCorrectionModalIsOpen,
     patchResponseDtrCorrection: state.response.patchResponseDtrCorrection,
-    loadingDtrCorrection: state.loading.loadingDtrCorrection,
     errorDtrCorrection: state.error.errorDtrCorrection,
     errorDtrCorrectionResponse: state.error.errorDtrCorrectionResponse,
     dtrCorrectionApplications: state.dtrCorrectionApplications,
-
     setDtrCorrectionModalIsOpen: state.setDtrCorrectionModalIsOpen,
-
     getDtrCorrectionApplicationsList: state.getDtrCorrectionApplicationsList,
     getDtrCorrectionApplicationsListSuccess: state.getDtrCorrectionApplicationsListSuccess,
     getDtrCorrectionApplicationsListFail: state.getDtrCorrectionApplicationsListFail,
-
     setDtrCorrectionDetail: state.setDtrCorrectionDetail,
     emptyResponseAndError: state.emptyResponseAndError,
   }));
@@ -72,8 +57,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
-  // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
   // set the employee details on page load
   useEffect(() => {
@@ -257,14 +240,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
