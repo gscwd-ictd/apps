@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -14,7 +14,6 @@ import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
-import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
@@ -37,7 +36,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     cancelledPassSlipModalIsOpen,
     disputedPassSlipModalIsOpen,
     patchResponsePassSlip,
-    loadingPassSlip,
     errorPassSlip,
     errorPassSlipResponse,
     passSlipApplications,
@@ -63,7 +61,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     cancelledPassSlipModalIsOpen: state.cancelledPassSlipModalIsOpen,
     disputedPassSlipModalIsOpen: state.disputedPassSlipModalIsOpen,
     patchResponsePassSlip: state.response.patchResponsePassSlip,
-    loadingPassSlip: state.loading.loadingPassSlips,
     errorPassSlip: state.error.errorPassSlips,
     errorPassSlipResponse: state.error.errorPassSlipResponse,
     passSlipApplications: state.passSlipApplications,
@@ -85,8 +82,6 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
-  // set state for employee store
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
   // set the employee details on page load
   useEffect(() => {
@@ -229,109 +224,99 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 
   return (
     <>
-      <>
-        {/* Pass Slip Approval Patch Success */}
-        {!isEmpty(patchResponsePassSlip) ? (
-          <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
-        ) : null}
-        {/* Pass Slip Patch Failed Error */}
-        {!isEmpty(errorPassSlipResponse) ? (
-          <ToastNotification toastType="error" notifMessage={`Pass Slip Application action failed.`} />
-        ) : null}
-        {/* Pass Slip List Load Failed Error */}
-        {!isEmpty(errorPassSlip) ? (
-          <ToastNotification toastType="error" notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`} />
-        ) : null}
+      {/* Pass Slip Approval Patch Success */}
+      {!isEmpty(patchResponsePassSlip) ? (
+        <ToastNotification toastType="success" notifMessage={`Pass Slip Application action submitted.`} />
+      ) : null}
+      {/* Pass Slip Patch Failed Error */}
+      {!isEmpty(errorPassSlipResponse) ? (
+        <ToastNotification toastType="error" notifMessage={`Pass Slip Application action failed.`} />
+      ) : null}
+      {/* Pass Slip List Load Failed Error */}
+      {!isEmpty(errorPassSlip) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorPassSlip}: Failed to load Pass Slips.`} />
+      ) : null}
 
-        <EmployeeProvider employeeData={employee}>
-          <Head>
-            <title>Pass Slip Approvals</title>
-          </Head>
+      <EmployeeProvider employeeData={employee}>
+        <Head>
+          <title>Pass Slip Approvals</title>
+        </Head>
 
-          <SideNav employeeDetails={employeeDetails} />
+        <SideNav employeeDetails={employeeDetails} />
 
-          {/* Pending Pass Slip For Approval Modal */}
-          <ApprovalsPendingPassSlipModal
-            modalState={pendingPassSlipModalIsOpen}
-            setModalState={setPendingPassSlipModalIsOpen}
-            closeModalAction={closePendingPassSlipModal}
-          />
+        {/* Pending Pass Slip For Approval Modal */}
+        <ApprovalsPendingPassSlipModal
+          modalState={pendingPassSlipModalIsOpen}
+          setModalState={setPendingPassSlipModalIsOpen}
+          closeModalAction={closePendingPassSlipModal}
+        />
 
-          {/* Pass Slip Approved/Disapproved/Cancelled Modal */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={approvedPassSlipModalIsOpen}
-            setModalState={setApprovedPassSlipModalIsOpen}
-            closeModalAction={closeApprovedPassSlipModal}
-          />
+        {/* Pass Slip Approved/Disapproved/Cancelled Modal */}
+        <ApprovalsCompletedPassSlipModal
+          modalState={approvedPassSlipModalIsOpen}
+          setModalState={setApprovedPassSlipModalIsOpen}
+          closeModalAction={closeApprovedPassSlipModal}
+        />
 
-          {/* Disapproved Pass Slips */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={disapprovedPassSlipModalIsOpen}
-            setModalState={setDisapprovedPassSlipModalIsOpen}
-            closeModalAction={closeDisapprovedPassSlipModal}
-          />
+        {/* Disapproved Pass Slips */}
+        <ApprovalsCompletedPassSlipModal
+          modalState={disapprovedPassSlipModalIsOpen}
+          setModalState={setDisapprovedPassSlipModalIsOpen}
+          closeModalAction={closeDisapprovedPassSlipModal}
+        />
 
-          {/* Cancelled Pass Slips */}
-          <ApprovalsCompletedPassSlipModal
-            modalState={cancelledPassSlipModalIsOpen}
-            setModalState={setCancelledPassSlipModalIsOpen}
-            closeModalAction={closeCancelledPassSlipModal}
-          />
+        {/* Cancelled Pass Slips */}
+        <ApprovalsCompletedPassSlipModal
+          modalState={cancelledPassSlipModalIsOpen}
+          setModalState={setCancelledPassSlipModalIsOpen}
+          closeModalAction={closeCancelledPassSlipModal}
+        />
 
-          {/* Disputed Pass Slip For Approval Modal */}
-          <ApprovalsPendingPassSlipModal
-            modalState={disputedPassSlipModalIsOpen}
-            setModalState={setDisputedPassSlipModalIsOpen}
-            closeModalAction={closeDisputedPassSlipModal}
-          />
+        {/* Disputed Pass Slip For Approval Modal */}
+        <ApprovalsPendingPassSlipModal
+          modalState={disputedPassSlipModalIsOpen}
+          setModalState={setDisputedPassSlipModalIsOpen}
+          closeModalAction={closeDisputedPassSlipModal}
+        />
 
-          <MainContainer>
-            <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
-              <ContentHeader
-                title="Employee Pass Slip Approvals"
-                subtitle="Approve or Disapprove Employee Pass Slips"
-                backUrl={`/${router.query.id}/manager-approvals`}
-              ></ContentHeader>
+        <MainContainer>
+          <div className="w-full h-full pl-4 pr-4 lg:pl-32 lg:pr-32">
+            <ContentHeader
+              title="Employee Pass Slip Approvals"
+              subtitle="Approve or Disapprove Employee Pass Slips"
+              backUrl={`/${router.query.id}/manager-approvals`}
+            ></ContentHeader>
 
-              {swrPassSlipIsLoading ? (
-                <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                  <SpinnerDotted
-                    speed={70}
-                    thickness={70}
-                    className="w-full flex h-full transition-all "
-                    color="slateblue"
-                    size={100}
+            {swrPassSlipIsLoading ? (
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
+                <SpinnerDotted
+                  speed={70}
+                  thickness={70}
+                  className="w-full flex h-full transition-all "
+                  color="slateblue"
+                  size={100}
+                />
+              </div>
+            ) : (
+              <ContentBody>
+                <div>
+                  <DataTablePortal
+                    onRowClick={(row) => renderRowActions(row.original as PassSlip)}
+                    textSize={'text-lg'}
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={true}
+                    paginate={true}
                   />
                 </div>
-              ) : (
-                <ContentBody>
-                  <div>
-                    <DataTablePortal
-                      onRowClick={(row) => renderRowActions(row.original as PassSlip)}
-                      textSize={'text-lg'}
-                      model={table}
-                      showGlobalFilter={true}
-                      showColumnFilter={true}
-                      paginate={true}
-                    />
-                  </div>
-                </ContentBody>
-              )}
-            </div>
-          </MainContainer>
-        </EmployeeProvider>
-      </>
+              </ContentBody>
+            )}
+          </div>
+        </MainContainer>
+      </EmployeeProvider>
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

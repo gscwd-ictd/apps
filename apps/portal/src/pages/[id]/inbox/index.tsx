@@ -13,7 +13,6 @@ import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
-import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
 import { isEmpty } from 'lodash';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
@@ -29,7 +28,6 @@ import InboxTrainingModal from 'apps/portal/src/components/fixed/inbox/InboxTrai
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     tab,
-    loadingResponse,
     loadingPsbMessages,
     loadingOvertimeMessages,
     loadingTrainingMessages,
@@ -63,7 +61,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     setTrainingMessageModalIsOpen,
   } = useInboxStore((state) => ({
     tab: state.tab,
-    loadingResponse: state.loading.loadingResponse,
     loadingPsbMessages: state.loading.loadingPsbMessages,
     loadingOvertimeMessages: state.loading.loadingOvertimeMessages,
     loadingTrainingMessages: state.loading.loadingTrainingMessages,
@@ -195,7 +192,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingMessages)) {
-      console.log(swrTrainingMessages);
       getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
     }
 

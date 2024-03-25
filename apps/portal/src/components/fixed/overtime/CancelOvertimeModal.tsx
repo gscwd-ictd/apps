@@ -1,10 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
-import { useLeaveStore } from '../../../store/leave.store';
+import { Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { isEmpty } from 'lodash';
 import { useState } from 'react';
-import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
@@ -18,20 +15,13 @@ type ModalProps = {
 
 export const CancelOvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    pendingOvertimeModalIsOpen,
-    completedOvertimeModalIsOpen,
-
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
     overtimeDetails,
     cancelOvertime,
     cancelOvertimeSuccess,
     cancelOvertimeFail,
-    emptyResponseAndError,
-    setCancelOvertimeModalIsOpen,
   } = useOvertimeStore((state) => ({
-    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
-    completedOvertimeModalIsOpen: state.completedOvertimeModalIsOpen,
     overtimeDetails: state.overtimeDetails,
     setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
@@ -39,11 +29,8 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
     cancelOvertime: state.cancelOvertime,
     cancelOvertimeSuccess: state.cancelOvertimeSuccess,
     cancelOvertimeFail: state.cancelOvertimeFail,
-    emptyResponseAndError: state.emptyResponseAndError,
-    setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
   }));
 
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [remarks, setRemarks] = useState<string>('');
 
   const handleCancel = async () => {

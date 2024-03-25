@@ -1,11 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Alert, Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEffect, useState } from 'react';
 import { HiSearch } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
-import { employee } from '../../../utils/constants/data';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { AppSelectionTabs } from '../../../components/fixed/selection/AppSelectionTabs';
@@ -259,14 +258,6 @@ export default function AppPosAppointment({ employeeDetails }: InferGetServerSid
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

@@ -49,7 +49,6 @@ export const ConfirmationUpdateTimeLogModal = ({
 
   const handlePatchResult = async (data: DtrCorrectionForm) => {
     const { error, result } = await postPortal('/v1/dtr-correction/', data);
-    console.log(data);
     if (error) {
       updateEmployeeDtrFail(result);
     } else {

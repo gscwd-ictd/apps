@@ -24,11 +24,6 @@ export const InboxTabs = ({ tab }: TabsProps) => {
 
   //count any pending psb inbox action
   useEffect(() => {
-    // psbMessages.map((item: PsbMessageContent, index: number) => {
-    //   if (!item?.details?.acknowledgedSchedule && !item?.details?.declinedSchedule) {
-    //     setcurrentPendingPsbCount(currentPendingPsbCount + 1);
-    //   }
-    // });
     let pendingPsb = [];
     pendingPsb = psbMessages.filter((e) => !e.details.acknowledgedSchedule && !e.details.declinedSchedule);
     setcurrentPendingPsbCount(pendingPsb.length);

@@ -14,10 +14,18 @@ export const CardOvertimeRequests: FunctionComponent = () => {
 
   // fetch data for list of overtime applications
   const {
-    data: overtimeApplications,
-    error: overtimeApplicationsError,
-    isLoading: overtimeApplicationsLoading,
-  } = useSWR('/overtime', fetcherEMS);
+    data: swrOvertimeApplications,
+    isLoading: swrIsLoading,
+    error: swrError,
+  } = useSWR('/overtime', fetcherEMS, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      // Only retry up to 10 times.
+      if (retryCount >= 5) return;
+
+      // Retry after 5 seconds.
+      setTimeout(() => revalidate({ retryCount }), 15000);
+    },
+  });
 
   // Zustand initialization
   const {
@@ -36,14 +44,14 @@ export const CardOvertimeRequests: FunctionComponent = () => {
 
   // Set store state of overtime
   useEffect(() => {
-    if (!isEmpty(overtimeApplications)) {
-      SetOvertimeApplications(overtimeApplications.data);
+    if (!isEmpty(swrOvertimeApplications)) {
+      SetOvertimeApplications(swrOvertimeApplications.data);
     }
 
-    if (!isEmpty(overtimeApplicationsError)) {
-      SetErrorOvertimeApplications(overtimeApplicationsError.message);
+    if (!isEmpty(swrError)) {
+      SetErrorOvertimeApplications(swrError.message);
     }
-  }, [overtimeApplications, overtimeApplicationsError]);
+  }, [swrOvertimeApplications, swrError]);
 
   // Set count variable
   useEffect(() => {
@@ -76,6 +84,7 @@ export const CardOvertimeRequests: FunctionComponent = () => {
         }
         title="Overtime Applications"
         value={!isEmpty(OvertimeApplications) ? countOtApplication : 0}
+        isLoading={swrIsLoading}
       />
     </>
   );

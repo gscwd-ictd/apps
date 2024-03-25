@@ -11,7 +11,6 @@ import {
   Image,
 } from '@react-pdf/renderer';
 import { format } from 'date-fns';
-
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { EmployeeDetails } from '../../../../src/types/employee.type';

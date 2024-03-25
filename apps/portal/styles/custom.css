@@ -162,6 +162,27 @@ body {
   }
 }
 
+/* //  BIRTHDAY BALLOON CODE */
+.balloon1 {
+  background: url(../public/balloon1.png) no-repeat center;
+  width: 82px;
+  height: 155px;
+  position: relative;
+  display: block;
+  z-index: 1;
+  scale: 50%;
+}
+
+.balloon2 {
+  background: url(../public/balloon2.png) no-repeat center;
+  width: 82px;
+  height: 155px;
+  position: relative;
+  display: block;
+  z-index: 1;
+  scale: 50%;
+}
+
 /* //  HEART CODE */
 .altheart {
   background: url(../public/broken-heart.png) no-repeat center;

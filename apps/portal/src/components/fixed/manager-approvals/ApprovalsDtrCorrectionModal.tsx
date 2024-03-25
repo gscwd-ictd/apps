@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,7 +14,6 @@ import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
-import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DtrCorrectionApprovalPatch } from 'libs/utils/src/lib/types/dtr.type';
 
 type ApprovalsDtrCorrectionModalProps = {
@@ -40,7 +39,6 @@ export const ApprovalsDtrCorrectionModal = ({
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
     loadingResponse,
-    captchaModalIsOpen,
     setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
     dtrCorrectionDetail: state.dtrCorrectionDetail,
@@ -49,11 +47,8 @@ export const ApprovalsDtrCorrectionModal = ({
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
     loadingResponse: state.loading.loadingPassSlipResponse,
-    captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
   }));
-
-  const [dataToSubmitForCaptcha, setDataToSubmitForCaptcha] = useState<DtrCorrectionApprovalPatch>();
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<DtrCorrectionApprovalPatch>({
@@ -82,18 +77,10 @@ export const ApprovalsDtrCorrectionModal = ({
     } else if (data.status === DtrCorrectionStatus.DISAPPROVED) {
       setDeclineApplicationModalIsOpen(true);
     }
-    //  else if (dtrCorrectionDetail.status === DtrCorrectionApproval.FOR_DISPUTE) {
-    //   setDataToSubmitForCaptcha(data);
-    //   setCaptchaModalIsOpen(true);
-    // }
   };
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-
-  // const closeOtpModal = async () => {
-  //   setOtpPassSlipModalIsOpen(false);
-  // };
 
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
@@ -137,7 +124,7 @@ export const ApprovalsDtrCorrectionModal = ({
                 <AlertNotification
                   alertType={
                     dtrCorrectionDetail.status === DtrCorrectionStatus.APPROVED
-                      ? 'info'
+                      ? 'success'
                       : dtrCorrectionDetail.status === DtrCorrectionStatus.DISAPPROVED
                       ? 'error'
                       : dtrCorrectionDetail.status === DtrCorrectionStatus.PENDING
@@ -308,7 +295,7 @@ export const ApprovalsDtrCorrectionModal = ({
 
                     <select
                       id="action"
-                      className="text-slate-500 h-12 w-full md:w-40 rounded text-md border-slate-300"
+                      className="text-slate-500 h-12 w-full md:w-40 rounded-md text-md border-slate-300"
                       required
                       {...register('status')}
                     >
@@ -348,20 +335,6 @@ export const ApprovalsDtrCorrectionModal = ({
             confirmName={ManagerOtpApproval.DTRCORRECTION}
             employeeId={employeeDetails.user._id}
           />
-
-          {/* <CaptchaModal
-            modalState={captchaModalIsOpen}
-            setModalState={setCaptchaModalIsOpen}
-            title={'PASS SLIP DISPUTE CAPTCHA'}
-          >
-           
-            <ApprovalCaptcha
-              employeeId={employeeDetails.user._id}
-              dataToSubmitPassSlipDispute={dataToSubmitForCaptcha}
-              tokenId={passSlip.id}
-              captchaName={'Dispute Captcha'}
-            />
-          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">

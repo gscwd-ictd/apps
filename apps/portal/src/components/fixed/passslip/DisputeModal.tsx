@@ -4,13 +4,10 @@ import { Button, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
-import { useEffect, useState } from 'react';
-import { isEmpty } from 'lodash';
+import { useEffect } from 'react';
 import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { stat } from 'fs';
 
 type DisputeApplicationModalProps = {
   modalState: boolean;

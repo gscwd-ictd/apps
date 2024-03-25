@@ -1,4 +1,4 @@
-import { LeaveStatus } from '../enums/leave.enum';
+import { LeaveCancellationStatus, LeaveDateStatus, LeaveStatus } from '../enums/leave.enum';
 import { LeaveBenefitOptions, LeaveType } from './leave-benefits.type';
 
 // Date range picker in leave application form
@@ -81,6 +81,10 @@ export type EmployeeLeaveDetails = {
     hrmoApprovalDate: string;
     cancelReason: string;
     cancelDate: string;
+    leaveDateStatus: LeaveDateStatus;
+    cancelledLeaveDates: Array<string>;
+    forCancellationLeaveDates: Array<string>;
+    leaveDateCancellationRemarks: string;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
@@ -161,6 +165,7 @@ export type SupervisorLeaveDetails = {
   hrmoApprovalDate: string;
   cancelDate: string;
   cancelReason: string;
+
   employee: {
     employeeId: string;
     employeeName: string;
@@ -172,4 +177,35 @@ export type SupervisorLeaveDetails = {
   leaveName: string;
   leaveType?: string;
   leaveDates: Array<string>;
+};
+
+// leave cancellation
+export type LeaveCancellationDetails = {
+  leaveApplicationId: string;
+  dateOfFiling: string | null;
+  employeeDetails: {
+    employeeName: string;
+    companyId: string;
+    positionTitle: string;
+    photoUrl: string;
+  };
+  leaveName: string;
+  leaveDates: Array<string>;
+  forCancellationLeaveDates: Array<string>;
+  status: LeaveCancellationStatus;
+  remarks: string;
+};
+
+export type LeaveCancellation = {
+  leaveApplicationId: string;
+  status: string;
+  leaveDates: Array<string>;
+};
+
+//caters individual leave date cancellation and total leave cancellation (all dates)
+export type LeaveCancellationSubmission = {
+  leaveApplicationId: string;
+  status: LeaveCancellationStatus;
+  leaveDates: Array<string>;
+  remarks: string; // for individual leave date cancellation
 };

@@ -1,6 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { HiOutlineClock, HiOutlineCalendar, HiOutlineDocument } from 'react-icons/hi';
-import { LoadingSpinner } from '@gscwd-apps/oneui';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 

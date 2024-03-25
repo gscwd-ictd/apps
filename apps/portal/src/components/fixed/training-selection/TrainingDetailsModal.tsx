@@ -22,8 +22,6 @@ type ModalProps = {
 
 export const TrainingDetailsModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    recommendedEmployees,
-    loadingRecommendedEmployee,
     loadingResponse,
     errorRecommendedEmployee,
     errorNominatedEmployeeList,
@@ -48,8 +46,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     setAuxiliaryEmployees,
   } = useTrainingSelectionStore((state) => ({
     confirmNominationModalIsOpen: state.confirmNominationModalIsOpen,
-    recommendedEmployees: state.recommendedEmployees,
-    loadingRecommendedEmployee: state.loading.loadingRecommendedEmployee,
     errorRecommendedEmployee: state.error.errorRecommendedEmployee,
     errorNominatedEmployeeList: state.error.errorNominatedEmployeeList,
     individualTrainingDetails: state.individualTrainingDetails,
@@ -522,7 +518,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
           <div className="flex justify-end gap-2 px-4">
             <div className="max-w-auto flex gap-4 ">
               {nominatedEmployeeList?.length > 0 ? (
-                <Button variant={'primary'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>
               ) : (

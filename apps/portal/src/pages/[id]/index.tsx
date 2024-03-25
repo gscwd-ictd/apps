@@ -18,7 +18,6 @@ import { ProfileCard } from '../../components/fixed/home/profile/ProfileCard';
 import { RemindersCard } from '../../components/fixed/home/reminders/RemindersCard';
 import { AttendanceCard } from '../../components/fixed/home/attendance/AttendanceCard';
 import { StatsCard } from '../../components/fixed/home/stats/StatsCard';
-import { employeeDummy } from '../../types/employee.type';
 import { fetchWithToken } from '../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { format } from 'date-fns';
@@ -33,7 +32,6 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave-credit-monetization-calculator/LeaveCreditMonetizationCalculatorModal';
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
-import { useApprovalStore } from '../../store/approvals.store';
 import { usePassSlipStore } from '../../store/passslip.store';
 
 export type NavDetails = {
@@ -47,9 +45,9 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
-  const employeeName = `${userDetails.profile.firstName} ${userDetails.profile.lastName}`;
-  const sgAmount = userDetails.employmentDetails.salaryGradeAmount;
-  const sgIncrement = userDetails.employmentDetails.salaryGrade;
+  const employeeName = `${userDetails?.profile?.firstName} ${userDetails?.profile?.lastName}`;
+  const sgAmount = userDetails?.employmentDetails?.salaryGradeAmount;
+  const sgIncrement = userDetails?.employmentDetails?.salaryGrade;
 
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
@@ -59,7 +57,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     leaveCalculatorModalIsOpen,
     setLeaveCalculatorModalIsOpen,
     monetizationConstant,
-    loadingMonetizationConstant,
     errorMonetizationConstant,
     getMonetizationConstant,
     getMonetizationConstantSuccess,
@@ -68,7 +65,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
     setLeaveCalculatorModalIsOpen: state.setLeaveCalculatorModalIsOpen,
     monetizationConstant: state.monetizationConstant,
-    loadingMonetizationConstant: state.loading.loadingMonetizationConstant,
     errorMonetizationConstant: state.error.errorMonetizationConstant,
     getMonetizationConstant: state.getMonetizationConstant,
     getMonetizationConstantSuccess: state.getMonetizationConstantSuccess,
@@ -102,15 +98,12 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     getPassSlipCountFail: state.getPassSlipCountFail,
   }));
 
-  const { leaveLedger, loadingLedger, errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } =
-    useLeaveLedgerStore((state) => ({
-      leaveLedger: state.leaveLedger,
-      loadingLedger: state.loading.loadingLeaveLedger,
-      errorLedger: state.error.errorLeaveLedger,
-      getLeaveLedger: state.getLeaveLedger,
-      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-      getLeaveLedgerFail: state.getLeaveLedgerFail,
-    }));
+  const { errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore((state) => ({
+    errorLedger: state.error.errorLeaveLedger,
+    getLeaveLedger: state.getLeaveLedger,
+    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+    getLeaveLedgerFail: state.getLeaveLedgerFail,
+  }));
 
   const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
@@ -287,7 +280,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlipCount)) {
-      console.log(swrPassSlipCount);
       getPassSlipCountSuccess(swrPassSlipCountIsLoading, swrPassSlipCount);
     }
 
@@ -300,8 +292,10 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   //run hydration function which displays allowed modules of employee
   //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
-    setEmployee(userDetails);
-    hydration();
+    if (userDetails) {
+      setEmployee(userDetails);
+      hydration();
+    }
   }, [userDetails, schedule]);
 
   const { windowHeight } = UseWindowDimensions();
@@ -330,13 +324,14 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     }
   };
 
-  const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY');
+  //get month and day only
+  const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD');
+  const employeeBirthday = dayjs(employee.profile.birthDate).format('MM-DD');
 
   return (
     <>
-      {/* Falling Hears Effect for February Only */}
-      {/* January is 0  */}
-      {dateNow == '02-14-2024' ? (
+      {/* Falling Hearts Effect for February Only */}
+      {dateNow == '02-14' ? (
         <div className="wrapper absolute">
           <div className="heart x1"></div>
           <div className="heart x2"></div>
@@ -344,6 +339,18 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
           <div className="heart x4"></div>
           <div className="heart x5"></div>
           <div className="altheart x6"></div>
+        </div>
+      ) : null}
+
+      {/* Balloon Effect for Birthday */}
+      {dateNow === employeeBirthday && employee ? (
+        <div className="wrapper absolute">
+          <div className="balloon1 x1"></div>
+          <div className="balloon2 x2"></div>
+          <div className="balloon1 x3"></div>
+          <div className="balloon2 x4"></div>
+          <div className="balloon1 x5"></div>
+          <div className="balloon2 x6"></div>
         </div>
       ) : null}
 
@@ -515,14 +522,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     </>
   );
 }
-
-//use for dummy login only
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const userDetails = employeeDummy;
-//   return { props: { userDetails } };
-// };
 
 //use for official user
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {

@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { UseUndertimeChecker } from 'libs/utils/src/lib/functions/UndertimeChecker';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
+import { UseLateLunchInChecker } from 'libs/utils/src/lib/functions/LateLunchInChecker';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -17,7 +18,7 @@ export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoad
   const now = dayjs().toDate().toDateString();
   const isLate = UseLateChecker(timeLogData?.dtr?.timeIn, timeLogData?.schedule?.timeIn); //change to scheduled timeIn prop when ready
   const isUnderTime = UseUndertimeChecker(timeLogData?.dtr?.timeOut, timeLogData?.schedule?.timeOut); //change to scheduled timeOut prop when ready
-  const isLunchInLate = UseUndertimeChecker(timeLogData?.dtr?.lunchIn, timeLogData?.schedule?.lunchIn); //change to scheduled timeOut prop when ready
+  const isLunchInLate = UseLateLunchInChecker(timeLogData?.dtr?.lunchIn, timeLogData?.schedule?.lunchIn); //change to scheduled timeOut prop when ready
 
   const { windowHeight } = UseWindowDimensions();
   return (

@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -12,7 +12,6 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
 import { SpinnerDotted } from 'spinners-react';
 import React from 'react';
-import { employeeDummy } from '../../../types/employee.type';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
@@ -41,7 +40,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
 
   const {
     trainingList,
-    loadingTrainingList,
     errorTrainingList,
     trainingModalIsOpen,
     postResponseApply,
@@ -58,7 +56,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     emptyResponseAndError,
   } = useTrainingSelectionStore((state) => ({
     trainingList: state.trainingList,
-    loadingTrainingList: state.loading.loadingTrainingList,
     errorTrainingList: state.error.errorTrainingList,
     trainingModalIsOpen: state.trainingModalIsOpen,
     postResponseApply: state.response.postResponseApply,
@@ -277,14 +274,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

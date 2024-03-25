@@ -125,7 +125,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                 <div className="w-full flex flex-col gap-2 px-4 rounded">
                   {leaveIndividualDetail?.leaveApplicationBasicInfo ? (
                     <AlertNotification
-                      alertType="info"
+                      alertType="warning"
                       notifMessage={
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'Reviewed by Supervisor: For HRDM Final Review'

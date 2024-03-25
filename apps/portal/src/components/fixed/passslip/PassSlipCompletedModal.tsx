@@ -3,16 +3,13 @@
 import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
-import { useRouter } from 'next/router';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { ConfirmationApplicationModal } from './ConfirmationModal';
 import { DisputeApplicationModal } from './DisputeModal';
 import dayjs from 'dayjs';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
-import { isEmpty } from 'lodash';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -31,7 +28,6 @@ export const PassSlipCompletedModal = ({
     setDisputePassSlipModalIsOpen: state.setDisputePassSlipModalIsOpen,
   }));
 
-  const router = useRouter();
   const { windowWidth } = UseWindowDimensions();
 
   // for cancel pass slip button
@@ -67,7 +63,7 @@ export const PassSlipCompletedModal = ({
               <div className="w-full flex flex-col gap-0">
                 {passSlip.status === PassSlipStatus.APPROVED ? (
                   <AlertNotification
-                    alertType="info"
+                    alertType="success"
                     notifMessage={`Approved ${
                       GetDateDifference(
                         `${passSlip.dateOfApplication} 00:00:00`,
@@ -226,105 +222,6 @@ export const PassSlipCompletedModal = ({
                   </div>
                 ) : null}
               </div>
-
-              {/* <div className="flex flex-row justify-between pb-3">
-                <div className="flex flex-col sm:flex-col justify-between items-start w-1/2 gap-1">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 px-0.5 pb-3 "> Mode of Transportation:</label>
-
-                  <div className="w-auto">
-                    <label className=" text-md font-medium pl-5">{passSlip.obTransportation ?? 'N/A'}</label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-col justify-between items-start w-1/2 px-0.5 pb-3 ">
-                  <label className="text-slate-500 text-md  whitespace-nowrap pb-0.5 ">Estimated Hours:</label>
-
-                  <div className="w-auto">
-                    <label className=" text-md font-medium pl-5">{passSlip.estimateHours}</label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-row justify-between pb-3">
-                <div className="flex flex-col sm:flex-col justify-between items-start w-1/2 gap-1">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 px-0.5 pb-3 "> Time Out:</label>
-
-                  <div className="w-auto">
-                    <label className=" text-md font-medium pl-5">
-                      {' '}
-                      {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-col justify-between items-start w-1/2 px-0.5 pb-3 ">
-                  <label className="text-slate-500 text-md  whitespace-nowrap pb-0.5 ">Time In:</label>
-
-                  <div className="w-auto">
-                    <label className=" text-md font-medium pl-5">
-                      {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-row justify-between">
-                <div className="flex flex-col sm:flex-col justify-between items-start w-1/2 gap-1">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 px-0.5 pb-3 "> Time Out:</label>
-
-                  <div className="w-auto">
-                    <label className=" text-md font-medium pl-5">
-                      {' '}
-                      {passSlip.timeOut ? UseTwelveHourFormat(passSlip.timeOut) : 'None'}
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-col justify-between items-start w-1/2 px-0.5 pb-3 ">
-                  <label className="text-slate-500 text-md  whitespace-nowrap pb-0.5 ">Time In:</label>
-
-                  <div className="w-auto">
-                    <label className=" text-md font-medium pl-5">
-                      {passSlip.timeIn ? UseTwelveHourFormat(passSlip.timeIn) : 'None'}
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS ? (
-                <div className={` flex flex-col gap-2`}>
-                  <div className="flex flex-col sm:flex-row md:gap-2 justify-between items-start md:items-center">
-                    <label className="text-slate-500 text-md font-medium whitespace-nowrap pb-0.5 sm:w-80">
-                      For Medical Purpose:
-                    </label>
-                    <div className="w-auto md:w-96">
-                      <label className="text-slate-500  w-96  text-md ">{passSlip.isMedical ? 'Yes' : 'No'}</label>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-              <div className={`flex flex-col gap-2`}>
-                <label className="text-slate-500 text-md font-medium">Purpose/Desination:</label>
-                <textarea
-                  className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                  value={passSlip.purposeDestination}
-                  rows={2}
-                  disabled={true}
-                ></textarea>
-              </div>
-              {passSlip.status === PassSlipStatus.FOR_DISPUTE || passSlip.disputeRemarks ? (
-                <div className={`flex flex-col gap-2`}>
-                  <label className="text-slate-500 text-md font-medium">Employee Dispute Remarks:</label>
-                  <textarea
-                    className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                    value={`Disputed Time In: ${
-                      passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
-                    }.\n${passSlip.disputeRemarks}`}
-                    rows={3}
-                    disabled={true}
-                  ></textarea>
-                </div>
-              ) : null} */}
             </div>
           </div>
         </Modal.Body>

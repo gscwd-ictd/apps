@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -15,7 +15,6 @@ import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePorta
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
-import { employeeDummy } from '../../../types/employee.type';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
@@ -38,7 +37,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
 
     patchResponseOvertime,
     patchResponseAccomplishment,
-    loadingOvertime,
     errorOvertime,
     errorOvertimeResponse,
     errorAccomplishment,
@@ -53,7 +51,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     getOvertimeApplicationsListSuccess,
     getOvertimeApplicationsListFail,
 
-    selectedOvertimeId,
     setSelectedOvertimeId,
 
     emptyResponseAndError,
@@ -65,7 +62,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
 
     patchResponseOvertime: state.response.patchResponseOvertime,
     patchResponseAccomplishment: state.response.patchResponseAccomplishment,
-    loadingOvertime: state.loading.loadingOvertime,
+
     errorOvertime: state.error.errorOvertime,
     errorOvertimeResponse: state.error.errorOvertimeResponse,
     errorAccomplishment: state.error.errorAccomplishment,
@@ -81,7 +78,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     getOvertimeApplicationsListFail: state.getOvertimeApplicationsListFail,
     emptyResponseAndError: state.emptyResponseAndError,
 
-    selectedOvertimeId: state.selectedOvertimeId,
     setSelectedOvertimeId: state.setSelectedOvertimeId,
   }));
 

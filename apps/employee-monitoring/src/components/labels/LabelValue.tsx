@@ -21,7 +21,7 @@ export const LabelValue: FunctionComponent<LabelValueProps> = ({
         } w-full  items-start text-${textSize} text-gray-600`}
       >
         <div className="font-normal text-gray-500">{label}</div>
-        <div className="font-semibold text-black">{value}</div>
+        <div className="font-semibold text-black pl-3">{value}</div>
       </div>
     </>
   );

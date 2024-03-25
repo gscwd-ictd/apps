@@ -14,7 +14,19 @@ export const CardLeaveRequests: FunctionComponent = () => {
   const [countHrmoApproval, setCountHrmoApproval] = useState<string>('--');
 
   // fetch data for list of leave applications
-  const { data: swrLeaves, error: swrError, isLoading: swrIsLoading } = useSWR('/leave/hrmo', fetcherEMS);
+  const {
+    data: swrLeaves,
+    error: swrError,
+    isLoading: swrIsLoading,
+  } = useSWR('/leave/hrmo', fetcherEMS, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      // Only retry up to 5 times.
+      if (retryCount >= 5) return;
+
+      // Retry after 15 seconds.
+      setTimeout(() => revalidate({ retryCount }), 15000);
+    },
+  });
 
   // Zustand initialization
   const {
@@ -81,6 +93,7 @@ export const CardLeaveRequests: FunctionComponent = () => {
         }
         title="Leave Application Pending Approval"
         value={!isEmpty(LeaveApplications) ? countHrmoApproval : 0}
+        isLoading={swrIsLoading}
       />
     </>
   );
