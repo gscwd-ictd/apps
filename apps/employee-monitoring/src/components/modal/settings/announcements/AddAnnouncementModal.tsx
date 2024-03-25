@@ -30,11 +30,11 @@ type AddModalProps = {
 const yupSchema = yup
   .object({
     title: yup.string().required('Title is required'),
-    date: yup.string().required('Date is required'),
     description: yup.string().required('Description is required'),
     url: yup.string().required('URL is required'),
+    eventAnnouncementDate: yup.string().required('Date is required'),
     status: yup.string().required('Status is required'),
-    image: yup
+    photoUrl: yup
       .mixed()
       .test('fileExists', 'No file uploaded', async (value) => {
         return value instanceof FileList && value.length > 0;
@@ -80,16 +80,20 @@ const yupSchema = yup
 const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
   // Zustand initialization
   const {
-    PostAnnouncementResponse,
+    PostAnnouncement,
     SetPostAnnouncement,
 
+    ErrorAnnouncement,
     SetErrorAnnouncement,
+
     EmptyResponse,
   } = useAnnouncementsStore((state) => ({
-    PostAnnouncementResponse: state.postAnnouncement,
+    PostAnnouncement: state.postAnnouncement,
     SetPostAnnouncement: state.setPostAnnouncement,
 
+    ErrorAnnouncement: state.errorAnnouncement,
     SetErrorAnnouncement: state.setErrorAnnouncement,
+
     EmptyResponse: state.emptyResponse,
   }));
 
@@ -103,10 +107,10 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     mode: 'onChange',
     defaultValues: {
       title: '',
-      date: '',
+      eventAnnouncementDate: '',
       description: '',
       url: '',
-      image: '',
+      photoUrl: '',
       app: 'ems',
     },
     resolver: yupResolver(yupSchema),
@@ -120,7 +124,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   };
 
   const handlePostResult = async (data: FormPostAnnouncement) => {
-    const { error, result } = await postEmpMonitoring('/announcements', data);
+    const { error, result } = await postEmpMonitoring('/events-announcements', data);
 
     if (error) {
       SetErrorAnnouncement(result);
@@ -142,9 +146,10 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   return (
     <>
       {/* Notification */}
-      {!isEmpty(PostAnnouncementResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Module added successfully" />
+      {!isEmpty(PostAnnouncement) ? (
+        <ToastNotification toastType="success" notifMessage="Announcement added successfully" />
       ) : null}
+      {!isEmpty(ErrorAnnouncement) ? <ToastNotification toastType="error" notifMessage={ErrorAnnouncement} /> : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
@@ -172,13 +177,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                 dismissible={true}
               />
             ) : null}
-
-            {/* {!isEmpty(postFormError) ? (
-              <ToastNotification
-                toastType="error"
-                notifMessage={postFormError}
-              />
-            ) : null} */}
 
             <form onSubmit={handleSubmit(onSubmit)} id="addAnnouncementForm">
               {/* Title input */}
@@ -211,9 +209,9 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                   id={'date'}
                   label={'Date'}
                   type={'date'}
-                  controller={{ ...register('date') }}
-                  isError={errors.date ? true : false}
-                  errorMessage={errors.date?.message}
+                  controller={{ ...register('eventAnnouncementDate') }}
+                  isError={errors.eventAnnouncementDate ? true : false}
+                  errorMessage={errors.eventAnnouncementDate?.message}
                 />
               </div>
 
@@ -235,9 +233,9 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                   id={'image'}
                   label={'Image'}
                   type={'file'}
-                  controller={{ ...register('image') }}
-                  isError={errors.image ? true : false}
-                  errorMessage={errors.image?.message}
+                  controller={{ ...register('photoUrl') }}
+                  isError={errors.photoUrl ? true : false}
+                  errorMessage={errors.photoUrl?.message}
                   accept={'.jpg,.png'}
                 />
               </div>

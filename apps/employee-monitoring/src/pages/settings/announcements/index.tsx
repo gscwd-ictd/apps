@@ -23,50 +23,41 @@ import EditAnnouncementModal from 'apps/employee-monitoring/src/components/modal
 import DeleteAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/DeleteAnnouncementModal';
 
 // sample static data
-const Announcements: Announcement[] = [
-  {
-    _id: '2001',
-    title: 'Announcement 1',
-    description: 'This is announcement 1',
-    date: '2021-09-01',
-    url: 'https://www.google.com',
-    image: TestAnnouncement.src,
-    status: 'inactive',
-  },
-  {
-    _id: '2002',
-    title: 'Announcement 2',
-    description: 'This is announcement 2',
-    date: '2021-09-02',
-    url: 'https://www.google2.com',
-    image: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
-    status: 'active',
-  },
-  {
-    _id: '2003',
-    title: 'Announcement 3',
-    description: 'This is announcement 3',
-    date: '2021-09-03',
-    url: 'https://www.google3.com',
-    image: TestAnnouncement.src,
-    status: 'active',
-  },
-];
+// const Announcements: Announcement[] = [
+//   {
+//     id: '2001',
+//     title: 'Announcement 1',
+//     description: 'This is announcement 1',
+//     eventAnnouncementDate: '2021-09-01',
+//     url: 'https://www.google.com',
+//     photoUrl: 'TestAnnouncement.src',
+//     fileName: 'TestAnnouncement.png',
+//     status: 'inactive',
+//   },
+//   {
+//     id: '2002',
+//     title: 'Announcement 2',
+//     description: 'This is announcement 2',
+//     eventAnnouncementDate: '2021-09-02',
+//     url: 'https://www.google2.com',
+//     photoUrl: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
+//     fileName: 'TestAnnouncement.png',
+//     status: 'active',
+//   },
+//   {
+//     id: '2003',
+//     title: 'Announcement 3',
+//     description: 'This is announcement 3',
+//     eventAnnouncementDate: '2021-09-03',
+//     url: 'https://www.google3.com',
+//     photoUrl: TestAnnouncement.src,
+//     fileName: 'TestAnnouncement.png',
+//     status: 'active',
+//   },
+// ];
 
 const Index = () => {
-  // Current row data in the table that has been clicked
-  //   const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
 
-  // fetch data for list of announcements
-  // const {
-  //   data: swrAnnouncements,
-  //   error: swrError,
-  //   isLoading: swrIsLoading,
-  //   mutate: mutateOfficersOfTheDay,
-  // } = useSWR('/', fetcherEMS, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
 
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
@@ -89,13 +80,67 @@ const Index = () => {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-  const [currentRowData, setCurrentRowData] = useState<Announcement>({} as Announcement);
 
   // transform date
   const transformDate = (date: string | Date | null) => {
     if (date === null) return '-';
     else return dayjs(date).format('MMMM DD, YYYY');
   };
+
+    // Current row data in the table that has been clicked
+    const [currentRowData, setCurrentRowData] = useState<Announcement>({} as Announcement);
+
+    // fetch data for list of announcements
+    const {
+      data: announcements,
+      error: announcementsError,
+      isLoading: announcementsLoading,
+      mutate: mutateAnnouncements,
+    } = useSWR('/events-announcements', fetcherEMS, {
+    });
+
+  // Zustand initialization
+  const {
+    Announcements,
+    SetGetAnnouncements,
+
+    PostAnnouncement,
+    SetPostAnnouncement,
+
+    UpdateAnnouncement,
+    SetUpdateAnnouncement,
+
+    DeleteAnnouncement,
+    SetDeleteAnnouncement,
+
+    ErrorAnnouncement,
+    SetErrorAnnouncement,
+
+    ErrorAnnouncements,
+    SetErrorAnnouncements,
+
+    EmptyResponse,
+  } = useAnnouncementsStore((state) => ({
+    Announcements: state.getAnnouncements,
+    SetGetAnnouncements: state.setGetAnnouncements,
+
+    PostAnnouncement: state.postAnnouncement,
+    SetPostAnnouncement: state.setPostAnnouncement,
+
+    UpdateAnnouncement: state.updateAnnouncement,
+    SetUpdateAnnouncement: state.setUpdateAnnouncement,
+
+    DeleteAnnouncement: state.deleteAnnouncement,
+    SetDeleteAnnouncement: state.setDeleteAnnouncement,
+
+    ErrorAnnouncement: state.errorAnnouncement,
+    SetErrorAnnouncement: state.setErrorAnnouncement,
+
+    ErrorAnnouncements: state.errorAnnouncements,
+    SetErrorAnnouncements: state.setErrorAnnouncements,
+
+    EmptyResponse: state.emptyResponse,
+  }));
 
   // Render row actions in the table component
   const renderRowActions = (rowData: Announcement) => {
@@ -123,7 +168,7 @@ const Index = () => {
   // Define table columns
   const columnHelper = createColumnHelper<Announcement>();
   const columns = [
-    columnHelper.accessor('_id', {
+    columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('title', {
@@ -131,7 +176,7 @@ const Index = () => {
       header: () => 'Title',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('date', {
+    columnHelper.accessor('eventAnnouncementDate', {
       enableSorting: true,
       header: () => 'Date',
       cell: (info) => transformDate(info.getValue()),
@@ -145,7 +190,7 @@ const Index = () => {
         </a>
       ),
     }),
-    columnHelper.accessor('image', {
+    columnHelper.accessor('photoUrl', {
       enableSorting: true,
       header: () => 'Image',
       cell: (info) => (
@@ -166,33 +211,75 @@ const Index = () => {
     }),
   ];
 
-  // Zustand initialization
 
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
     data: Announcements,
-    columnVisibility: { _id: false },
+    columnVisibility: { id: false },
   });
-
-  // Reset responses on load of page
 
   // Initial zustand state update
 
-  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(announcements)) {
+      SetGetAnnouncements(announcements.data);
+    }
 
-  // Reset responses from all modal actions
+    if (!isEmpty(announcementsError)) {
+      switch (announcementsError?.response?.status) {
+        case 400:
+          SetErrorAnnouncements('Bad Request');
+          break;
+        case 401:
+          SetErrorAnnouncements('Unauthorized');
+          break;
+        case 403:
+          SetErrorAnnouncements('Forbidden');
+          break;
+        case 404:
+          SetErrorAnnouncements('Announcements not found');
+          break;
+        case 500:
+          SetErrorAnnouncements('Internal Server Error');
+          break;
+        default:
+          SetErrorAnnouncements('An error occurred. Please try again later.');
+          break;
+      }
+    }
+  }, [announcements, announcementsError]);
+
+  useEffect(() => {
+    if (
+      !isEmpty(PostAnnouncement) ||
+      !isEmpty(UpdateAnnouncement) ||
+      !isEmpty(DeleteAnnouncement) ||
+      !isEmpty(ErrorAnnouncement) ||
+      !isEmpty(ErrorAnnouncements)
+    ) {
+      mutateAnnouncements();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 5000);
+    }
+  }, [PostAnnouncement, UpdateAnnouncement, DeleteAnnouncement, ErrorAnnouncement, ErrorAnnouncements]);
 
   return (
     <>
       <div className="w-full">
         <BreadCrumbs title="Announcements" />
+        {/* Notifications */}
+        {!isEmpty(ErrorAnnouncements) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorAnnouncements} />
+        ) : null}
         <Can I="access" this="Announcements">
           <div className="mx-5">
             <Card>
-              {/* {swrIsLoading ? (
+              {announcementsLoading ? (
                 <LoadingSpinner size="lg" />
-              ) : ( */}
+              ) : (
               <div className="flex flex-row flex-wrap">
                 <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
                   <button
@@ -205,7 +292,7 @@ const Index = () => {
                 </div>
                 <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
               </div>
-              {/* )} */}
+              )}
             </Card>
           </div>
 
