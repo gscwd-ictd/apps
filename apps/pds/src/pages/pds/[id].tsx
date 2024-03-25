@@ -18,7 +18,6 @@ dayjs.extend(utc);
 
 export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const setHasPds = useEmployeeStore((state) => state.setHasPds);
