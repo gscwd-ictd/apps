@@ -102,6 +102,8 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     reset,
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting: postFormLoading },
   } = useForm<FormPostAnnouncement>({
     mode: 'onChange',
@@ -110,11 +112,22 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
       eventAnnouncementDate: '',
       description: '',
       url: '',
+      fileName: '',
       photoUrl: '',
       app: 'ems',
     },
     resolver: yupResolver(yupSchema),
   });
+
+  // Watch the value of photoUrl
+  const photoUrl = watch('photoUrl') as unknown as FileList;
+
+  // Update the value of fileName whenever photoUrl changes
+  useEffect(() => {
+    if (photoUrl && photoUrl.length > 0) {
+      setValue('fileName', photoUrl[0].name);
+    }
+  }, [photoUrl, setValue]);
 
   // form submission
   const onSubmit: SubmitHandler<FormPostAnnouncement> = (data: FormPostAnnouncement) => {
@@ -128,6 +141,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
 
     if (error) {
       SetErrorAnnouncement(result);
+      console.log(data);
     } else {
       SetPostAnnouncement(result);
 
@@ -227,13 +241,23 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                 />
               </div>
 
+              <input type="hidden" {...register('fileName')} />
+
               {/* Image input */}
               <div className="mb-6">
                 <LabelInput
-                  id={'image'}
+                  id={'photoUrl'}
                   label={'Image'}
                   type={'file'}
-                  controller={{ ...register('photoUrl') }}
+                  controller={{
+                    ...register('photoUrl'),
+                    onChange: (e) => {
+                      register('photoUrl').onChange(e); // call the original onChange
+                      if (e.target.files.length > 0) {
+                        setValue('fileName', e.target.files[0].name);
+                      }
+                    },
+                  }}
                   isError={errors.photoUrl ? true : false}
                   errorMessage={errors.photoUrl?.message}
                   accept={'.jpg,.png'}
