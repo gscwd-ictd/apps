@@ -45,11 +45,7 @@ Thumbs.db
 .next
 
 # NX
-<<<<<<< HEAD
 .nx
 
 # package.json
 package-lock.json
-=======
-.nx
->>>>>>> 520c7ddb8cef2a1167098337dfae63012f0507c3
