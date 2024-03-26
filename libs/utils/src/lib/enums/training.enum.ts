@@ -6,23 +6,18 @@ export enum TrainingTypes {
   MANAGERIAL = 'leadership/managerial',
 }
 
-// export enum TrainingPreparationStatus {
-//   PENDING = 'pending',
-//   ON_GOING_NOMINATION = 'on going nomination',
-//   NOMINATION_DONE = 'nomination done',
-//   PDC_APPROVAL = 'for pdc approval',
-//   GM_APPROVAL = 'for gm approval',
-//   FOR_BATCHING = 'for batching',
-//   DONE_BATCHING = 'done batching',
-//   DONE = 'done',
-// }
+export enum TrainingDistributionStatus {
+  NOMINATION_PENDING = 'nomination pending',
+  NOMINATION_INELIGIBLE = 'nomination ineligible',
+  NOMINATION_COMPLETED = 'nomination completed',
+}
 
 export enum TrainingStatus {
   PENDING = 'pending',
   ON_GOING_NOMINATION = 'on going nomination',
   NOMINATION_DONE = 'nomination done',
-  PDC_SECRETARY_APPROVAL = 'for pdc secretary approval',
-  PDC_SECRETARY_DECLINED = 'pdc secretary declined',
+  PDC_SECRETARIAT_APPROVAL = 'for pdc secretariat approval',
+  PDC_SECRETARIAT_DECLINED = 'pdc secretariat declined',
   PDC_CHAIRMAN_APPROVAL = 'for pdc chairman approval',
   PDC_CHAIRMAN_DECLINED = 'pdc chairman declined',
   GM_APPROVAL = 'for gm approval',

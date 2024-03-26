@@ -14,13 +14,13 @@ function UseRenderTrainingPreparationStatus(status: TrainingStatus, textSize: Te
           ? 'warning'
           : status === TrainingStatus.NOMINATION_DONE
           ? 'default'
-          : status === TrainingStatus.PDC_SECRETARY_APPROVAL
+          : status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
           ? 'warning'
           : status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
           ? 'warning'
           : status === TrainingStatus.PDC_CHAIRMAN_DECLINED
           ? 'error'
-          : status === TrainingStatus.PDC_SECRETARY_DECLINED
+          : status === TrainingStatus.PDC_SECRETARIAT_DECLINED
           ? 'error'
           : status === TrainingStatus.GM_APPROVAL
           ? 'warning'
@@ -47,13 +47,13 @@ function UseRenderTrainingPreparationStatus(status: TrainingStatus, textSize: Te
           ? 'On Going Nomination'
           : status === TrainingStatus.NOMINATION_DONE
           ? 'Nomination Done'
-          : status === TrainingStatus.PDC_SECRETARY_APPROVAL
+          : status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
           ? 'For PDC Secretary Review'
           : status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
           ? 'For PDC Chairman Review'
           : status === TrainingStatus.PDC_CHAIRMAN_DECLINED
           ? 'Disapproved by PDC Chairman'
-          : status === TrainingStatus.PDC_SECRETARY_DECLINED
+          : status === TrainingStatus.PDC_SECRETARIAT_DECLINED
           ? 'Disapproved by PDC Secretary'
           : status === TrainingStatus.GM_APPROVAL
           ? 'For GM Review'

@@ -14,18 +14,22 @@ import { SpinnerDotted } from 'spinners-react';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseLateLunchInChecker } from 'libs/utils/src/lib/functions/LateLunchInChecker';
+import { DtrPdfModal } from './DtrPdfModal';
 
 type DtrTableProps = {
   employeeDetails: EmployeeDetails;
 };
 
 export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
-  const { employeeDtr, dtrIsLoading, dtrModalIsOpen, setDtrModalIsOpen } = useDtrStore((state) => ({
-    employeeDtr: state.employeeDtr,
-    dtrIsLoading: state.loading.loadingDtr,
-    dtrModalIsOpen: state.dtrModalIsOpen,
-    setDtrModalIsOpen: state.setDtrModalIsOpen,
-  }));
+  const { employeeDtr, dtrIsLoading, dtrModalIsOpen, dtrPdfModalIsOpen, setDtrPdfModalIsOpen, setDtrModalIsOpen } =
+    useDtrStore((state) => ({
+      employeeDtr: state.employeeDtr,
+      dtrIsLoading: state.loading.loadingDtr,
+      dtrModalIsOpen: state.dtrModalIsOpen,
+      dtrPdfModalIsOpen: state.dtrPdfModalIsOpen,
+      setDtrPdfModalIsOpen: state.setDtrPdfModalIsOpen,
+      setDtrModalIsOpen: state.setDtrModalIsOpen,
+    }));
 
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
@@ -39,8 +43,18 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
   // close edit action modal function
   const closeEditActionModal = () => setDtrModalIsOpen(false);
 
+  // close dtr pdf modal function
+  const closeDtrPdfModal = () => setDtrPdfModalIsOpen(false);
+
   return (
     <>
+      <DtrPdfModal
+        modalState={dtrPdfModalIsOpen}
+        setModalState={setDtrPdfModalIsOpen}
+        closeModalAction={closeDtrPdfModal}
+        title={'Daily Time Record'}
+      />
+
       <UpdateTimeLogModal
         modalState={dtrModalIsOpen}
         setModalState={setDtrModalIsOpen}
@@ -357,13 +371,11 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
               </tbody>
             </table>
           </div>
-          {/* <div className="flex justify-end w-full pt-4">
-            <Link href={`/${employeeDetails.employmentDetails.userId}/dtr/${now}`} target={'_blank'}>
-              <Button variant={'primary'} size={'md'} loading={false}>
-                View
-              </Button>
-            </Link>
-          </div> */}
+          <div className="flex justify-end w-full pt-4">
+            <Button variant={'primary'} size={'md'} loading={false} onClick={() => setDtrPdfModalIsOpen(true)}>
+              View PDF
+            </Button>
+          </div>
         </>
       ) : (
         <div className="h-80 w-full text-8xl text-slate-200 flex justify-center items-center">NO DATA</div>

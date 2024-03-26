@@ -146,7 +146,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
       <Modal open={modalState} setOpen={setModalState} size={windowWidth > 1024 ? 'sm' : 'full'}>
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full pl-5">
-            <span className="font-semibold text-xl md:text-2xl">Time Log Correction</span>
+            <span className="font-semibold text-xl">Time Log Correction</span>
             <button className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full" onClick={closeModal}>
               <HiX />
             </button>

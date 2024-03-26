@@ -216,13 +216,13 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     ? 'warning'
                     : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
                     ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
                     ? 'warning'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
                     ? 'warning'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
                     ? 'error'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED
                     ? 'error'
                     : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
                     ? 'warning'
@@ -249,13 +249,13 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     ? 'On Going Nomination'
                     : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
                     ? 'Nomination Done'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
                     ? 'For PDC Secretary Review'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
                     ? 'For PDC Chairman Review'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
                     ? 'Disapproved by PDC Chairman'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED
                     ? 'Disapproved by PDC Secretary'
                     : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
                     ? 'For General Manager Review'
