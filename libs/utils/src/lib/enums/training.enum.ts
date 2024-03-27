@@ -6,7 +6,7 @@ export enum TrainingTypes {
   MANAGERIAL = 'leadership/managerial',
 }
 
-export enum TrainingDistributionStatus {
+export enum TrainingNominationStatus {
   NOMINATION_PENDING = 'nomination pending',
   NOMINATION_INELIGIBLE = 'nomination ineligible',
   NOMINATION_COMPLETED = 'nomination completed',

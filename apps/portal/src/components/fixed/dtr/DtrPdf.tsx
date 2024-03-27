@@ -251,7 +251,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                           },
                         ]}
                       >
-                        {employeeData.profile.firstName } {employeeData.profile.middleName } {employeeData.profile.lastName } {employeeData.profile.nameExt }
+                        {employeeData.profile.firstName} {employeeData.profile.middleName}{' '}
+                        {employeeData.profile.lastName} {employeeData.profile.nameExt}
                       </Text>
                     </View>
 
@@ -288,7 +289,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* COLUMN HEADERS  */}
                   <View>
                     {/* For Office Schedule */}
-                    {employeeData.employmentDetails. === ScheduleBases.OFFICE ? (
+                    {employeeData ? (
+                      // employeeData.employmentDetails. === ScheduleBases.OFFICE
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w10]}>
                           <Text style={[styles.tableHeaderText]}>DATE</Text>
@@ -315,8 +317,9 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     ) : null}
 
                     {/* For Field/Pumping Station Schedule */}
-                    {employeeData.scheduleBase === ScheduleBases.FIELD ||
-                    employeeData.scheduleBase === ScheduleBases.PUMPING_STATION ? (
+                    {employeeData ? (
+                      // employeeData.scheduleBase === ScheduleBases.FIELD ||
+                      // employeeData.scheduleBase === ScheduleBases.PUMPING_STATION
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w25]}>
                           <Text style={{ margin: 'auto 0' }}>REMARKS</Text>
@@ -364,8 +367,9 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* TABLE ROWS */}
                   <View>
                     {/* For Office Schedule */}
-                    {employeeData.scheduleBase === ScheduleBases.OFFICE
-                      ? employeeDtr.dtrDays?.map((log, index) => {
+                    {employeeData
+                      ? // employeeData.scheduleBase === ScheduleBases.OFFICE
+                        employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';
@@ -496,9 +500,10 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                       : null}
 
                     {/* For Field/Pumping Station Schedule */}
-                    {employeeData.scheduleBase === ScheduleBases.FIELD ||
-                    employeeData.scheduleBase === ScheduleBases.PUMPING_STATION
-                      ? employeeDtr.dtrDays?.map((log, index) => {
+                    {employeeData
+                      ? // employeeData.scheduleBase === ScheduleBases.FIELD ||
+                        // employeeData.scheduleBase === ScheduleBases.PUMPING_STATION
+                        employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';

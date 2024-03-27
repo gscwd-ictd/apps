@@ -65,6 +65,9 @@ export type TrainingSelectionState = {
   skipNominationModalIsOpen: boolean;
   setSkipNominationModalIsOpen: (skipNominationModalIsOpen: boolean) => void;
 
+  skipNominationRemarks: string;
+  setSkipNominationRemarks: (skipNominationRemarks: string) => void;
+
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
   getTrainingSelectionListSuccess: (loading: boolean, response) => void;
@@ -118,6 +121,11 @@ export const useTrainingSelectionStore = create<TrainingSelectionState>()(
     auxiliaryEmployees: [],
     setAuxiliaryEmployees: (auxiliaryEmployees: Array<SelectOption>) => {
       set((state) => ({ ...state, auxiliaryEmployees }));
+    },
+
+    skipNominationRemarks: '',
+    setSkipNominationRemarks: (skipNominationRemarks: string) => {
+      set((state) => ({ ...state, skipNominationRemarks }));
     },
 
     setIndividualTrainingDetails: (individualTrainingDetails: Training) => {

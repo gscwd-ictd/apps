@@ -293,7 +293,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
     if (userDetails) {
-      console.log(userDetails);
       setEmployee(userDetails);
       hydration();
     }

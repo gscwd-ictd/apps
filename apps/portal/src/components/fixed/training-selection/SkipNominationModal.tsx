@@ -18,40 +18,23 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
   const {
     skipNominationModalIsOpen,
     setSkipNominationModalIsOpen,
-    setTrainingModalIsOpen,
-    postTrainingSelection,
-    postTrainingSelectionSuccess,
-    postTrainingSelectionFail,
+    skipNominationRemarks,
+    setSkipNominationRemarks,
+    setConfirmNominationModalIsOpen,
   } = useTrainingSelectionStore((state) => ({
     skipNominationModalIsOpen: state.skipNominationModalIsOpen,
     setSkipNominationModalIsOpen: state.setSkipNominationModalIsOpen,
-    setTrainingModalIsOpen: state.setTrainingModalIsOpen,
-    postTrainingSelection: state.postTrainingSelection,
-    postTrainingSelectionSuccess: state.postTrainingSelectionSuccess,
-    postTrainingSelectionFail: state.postTrainingSelectionFail,
+    skipNominationRemarks: state.skipNominationRemarks,
+    setSkipNominationRemarks: state.setSkipNominationRemarks,
+    setConfirmNominationModalIsOpen: state.setConfirmNominationModalIsOpen,
   }));
 
-  const [remarks, setRemarks] = useState<string>('');
-
   const handleCancel = async () => {
-    let data;
-    postTrainingSelection();
-    const { error, result } = await postPortal(`${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/nominees/`, data);
-    if (error) {
-      postTrainingSelectionFail(result);
-    } else {
-      postTrainingSelectionSuccess(result);
-      closeModalAction();
-      setTimeout(() => {
-        setTrainingModalIsOpen(false); // close training details modal
-      }, 200);
-    }
+    setConfirmNominationModalIsOpen(true);
   };
 
   useEffect(() => {
-    if (skipNominationModalIsOpen) {
-      setRemarks('');
-    }
+    setSkipNominationRemarks('');
   }, [skipNominationModalIsOpen]);
 
   const { windowWidth } = UseWindowDimensions();
@@ -78,15 +61,19 @@ export const SkipNominationModal = ({ modalState, setModalState, closeModalActio
               required
               placeholder="Reason for skipping nomination"
               className={`w-full h-32 p-2 border resize-none rounded-lg border-gray-300/90 `}
-              onChange={(e) => setRemarks(e.target.value as unknown as string)}
-              value={remarks}
+              onChange={(e) => setSkipNominationRemarks(e.target.value as unknown as string)}
+              value={skipNominationRemarks}
             ></textarea>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end px-4">
             <div className="max-w-auto flex">
-              <Button variant={'primary'} disabled={!isEmpty(remarks) ? false : true} onClick={(e) => handleCancel()}>
+              <Button
+                variant={'primary'}
+                disabled={!isEmpty(skipNominationRemarks) ? false : true}
+                onClick={(e) => handleCancel()}
+              >
                 Submit
               </Button>
             </div>
