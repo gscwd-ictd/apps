@@ -2,8 +2,6 @@ import Head from 'next/head';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { getUserDetails, withCookieSession } from '../../../../utils/helpers/session';
 import React from 'react';
-import DtrPdf from '../../../../components/fixed/dtr/DtrPdf';
-import { employeeDummy } from '../../../../types/employee.type';
 
 export default function PassSlipPage({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
@@ -12,19 +10,11 @@ export default function PassSlipPage({ employeeDetails }: InferGetServerSideProp
         <Head>
           <title>Employee DTR</title>
         </Head>
-        <DtrPdf />
+        {/* <DtrPdf /> */}
       </>
     )
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
