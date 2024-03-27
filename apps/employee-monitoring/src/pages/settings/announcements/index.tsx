@@ -21,44 +21,9 @@ import dayjs from 'dayjs';
 import AddAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/AddAnnouncementModal';
 import EditAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/EditAnnouncementModal';
 import DeleteAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/DeleteAnnouncementModal';
-
-// sample static data
-// const Announcements: Announcement[] = [
-//   {
-//     id: '2001',
-//     title: 'Announcement 1',
-//     description: 'This is announcement 1',
-//     eventAnnouncementDate: '2021-09-01',
-//     url: 'https://www.google.com',
-//     photoUrl: 'TestAnnouncement.src',
-//     fileName: 'TestAnnouncement.png',
-//     status: 'inactive',
-//   },
-//   {
-//     id: '2002',
-//     title: 'Announcement 2',
-//     description: 'This is announcement 2',
-//     eventAnnouncementDate: '2021-09-02',
-//     url: 'https://www.google2.com',
-//     photoUrl: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
-//     fileName: 'TestAnnouncement.png',
-//     status: 'active',
-//   },
-//   {
-//     id: '2003',
-//     title: 'Announcement 3',
-//     description: 'This is announcement 3',
-//     eventAnnouncementDate: '2021-09-03',
-//     url: 'https://www.google3.com',
-//     photoUrl: TestAnnouncement.src,
-//     fileName: 'TestAnnouncement.png',
-//     status: 'active',
-//   },
-// ];
+import Image from 'next/image';
 
 const Index = () => {
-
-
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);
@@ -80,24 +45,22 @@ const Index = () => {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
-
   // transform date
   const transformDate = (date: string | Date | null) => {
     if (date === null) return '-';
     else return dayjs(date).format('MMMM DD, YYYY');
   };
 
-    // Current row data in the table that has been clicked
-    const [currentRowData, setCurrentRowData] = useState<Announcement>({} as Announcement);
+  // Current row data in the table that has been clicked
+  const [currentRowData, setCurrentRowData] = useState<Announcement>({} as Announcement);
 
-    // fetch data for list of announcements
-    const {
-      data: announcements,
-      error: announcementsError,
-      isLoading: announcementsLoading,
-      mutate: mutateAnnouncements,
-    } = useSWR('/events-announcements', fetcherEMS, {
-    });
+  // fetch data for list of announcements
+  const {
+    data: announcements,
+    error: announcementsError,
+    isLoading: announcementsLoading,
+    mutate: mutateAnnouncements,
+  } = useSWR('/events-announcements', fetcherEMS, {});
 
   // Zustand initialization
   const {
@@ -194,8 +157,11 @@ const Index = () => {
       enableSorting: true,
       header: () => 'Image',
       cell: (info) => (
+        // <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
+        //   <img src={info.getValue()} alt="Image" width={'84.3rem'} height={'84.3rem'} />
+        // </a>
         <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
-          <img src={info.getValue()} alt="Image" width={'84.3rem'} height={'84.3rem'} />
+          <Image src={info.getValue()} alt="Image" width={84.3} height={84.3} />
         </a>
       ),
     }),
@@ -210,7 +176,6 @@ const Index = () => {
       cell: (props) => <div className="w-full text-center">{renderRowActions(props.row.original)}</div>,
     }),
   ];
-
 
   // React Table initialization
   const { table } = useDataTable({
@@ -280,18 +245,18 @@ const Index = () => {
               {announcementsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-              <div className="flex flex-row flex-wrap">
-                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                  <button
-                    type="button"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                    onClick={openAddActionModal}
-                  >
-                    <i className="bx bxs-plus-square"></i>&nbsp; Add Announcement
-                  </button>
+                <div className="flex flex-row flex-wrap">
+                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                    <button
+                      type="button"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                      onClick={openAddActionModal}
+                    >
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Announcement
+                    </button>
+                  </div>
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
-                <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
-              </div>
               )}
             </Card>
           </div>

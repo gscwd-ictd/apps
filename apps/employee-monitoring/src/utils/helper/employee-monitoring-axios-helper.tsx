@@ -34,7 +34,8 @@ export const getEmpMonitoring = async (url: string, config = {}) =>
 // POST
 export const postEmpMonitoring = async (url: string, data: any, config = {}) =>
   await axiosApi
-    .post(url, { ...data }, { ...config })
+    // .post(url, {... data}, {... config})
+    .post(url, data, config)
     .then((response) => {
       return { error: false, result: response.data };
     })

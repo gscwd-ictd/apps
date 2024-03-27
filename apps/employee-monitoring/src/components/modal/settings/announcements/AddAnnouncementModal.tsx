@@ -34,50 +34,19 @@ const yupSchema = yup
     url: yup.string().required('URL is required'),
     eventAnnouncementDate: yup.string().required('Date is required'),
     status: yup.string().required('Status is required'),
-    photoUrl: yup
-      .mixed()
-      .test('fileExists', 'No file uploaded', async (value) => {
-        return value instanceof FileList && value.length > 0;
-      })
-      .test('type', 'Only .jpeg, .jpg, or .png file is supported', (value) => {
-        if (value instanceof FileList && value.length > 0) {
-          const isCorrectType = Array.from(value).every((file) => {
-            return ['image/jpeg', 'image/png'].includes(file.type);
-          });
-          if (!isCorrectType) {
-            return false;
-          }
-        }
-        return true;
-      })
-      .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
-        if (value instanceof FileList && value.length > 0) {
-          const file = value[0];
-          const fileSizeInMB = file.size / (1024 * 1024);
-          if (fileSizeInMB > 5) {
-            return false;
-          }
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-              const { width, height } = img;
-              resolve(width <= 843 && height <= 843);
-            };
-            img.onerror = () => resolve(false);
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              img.src = e.target.result as string;
-            };
-            reader.onerror = () => resolve(false);
-            reader.readAsDataURL(file);
-          });
-        }
-        return false;
-      }),
   })
   .required();
 
 const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
+  const [photoUrl, setPhotoUrl] = useState<File | undefined>();
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      setPhotoUrl(file);
+    }
+  };
+
   // Zustand initialization
   const {
     PostAnnouncement,
@@ -102,8 +71,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     reset,
     register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors, isSubmitting: postFormLoading },
   } = useForm<FormPostAnnouncement>({
     mode: 'onChange',
@@ -112,39 +79,34 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
       eventAnnouncementDate: '',
       description: '',
       url: '',
-      fileName: '',
-      photoUrl: '',
       app: 'ems',
+      photoUrl: '',
     },
     resolver: yupResolver(yupSchema),
   });
 
-  // Watch the value of photoUrl
-  const photoUrl = watch('photoUrl') as unknown as FileList;
-
-  // Update the value of fileName whenever photoUrl changes
-  useEffect(() => {
-    if (photoUrl && photoUrl.length > 0) {
-      setValue('fileName', photoUrl[0].name);
-    }
-  }, [photoUrl, setValue]);
-
   // form submission
   const onSubmit: SubmitHandler<FormPostAnnouncement> = (data: FormPostAnnouncement) => {
     EmptyResponse();
-
     handlePostResult(data);
   };
 
   const handlePostResult = async (data: FormPostAnnouncement) => {
-    const { error, result } = await postEmpMonitoring('/events-announcements', data);
+    const formData = new FormData();
+
+    formData.append('file', photoUrl, photoUrl?.name);
+    formData.append('title', data.title);
+    formData.append('url', data.url);
+    formData.append('description', data.description);
+    formData.append('status', data.status);
+    formData.append('eventAnnouncementDate', data.eventAnnouncementDate);
+
+    const { error, result } = await postEmpMonitoring('/events-announcements', formData);
 
     if (error) {
       SetErrorAnnouncement(result);
-      console.log(data);
     } else {
       SetPostAnnouncement(result);
-
       reset();
       closeModalAction();
     }
@@ -241,28 +203,16 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                 />
               </div>
 
-              <input type="hidden" {...register('fileName')} />
+              {/* current iteration*/}
+              {/* <input type="file" onChange={handleFileChange} /> */}
 
-              {/* Image input */}
-              <div className="mb-6">
-                <LabelInput
-                  id={'photoUrl'}
-                  label={'Image'}
-                  type={'file'}
-                  controller={{
-                    ...register('photoUrl'),
-                    onChange: (e) => {
-                      register('photoUrl').onChange(e); // call the original onChange
-                      if (e.target.files.length > 0) {
-                        setValue('fileName', e.target.files[0].name);
-                      }
-                    },
-                  }}
-                  isError={errors.photoUrl ? true : false}
-                  errorMessage={errors.photoUrl?.message}
-                  accept={'.jpg,.png'}
-                />
-              </div>
+              <LabelInput
+                type={'file'}
+                onChange={handleFileChange}
+                id={'photoUrl'}
+                label={'Image'}
+                accept={'.jpg,.png'}
+              />
 
               {/* Active / inactive announcement select*/}
               <SelectListRF
