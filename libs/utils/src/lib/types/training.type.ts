@@ -1,4 +1,10 @@
-import { NomineeStatus, NomineeType, TrainingStatus, TrainingTypes } from '../enums/training.enum';
+import {
+  NomineeStatus,
+  NomineeType,
+  TrainingNominationStatus,
+  TrainingStatus,
+  TrainingTypes,
+} from '../enums/training.enum';
 
 export type TrainingType = {
   id: string;
@@ -29,6 +35,7 @@ export type Training = {
   trainingPreparationStatus?: TrainingStatus; //for training selection
   status?: TrainingStatus; //for training selection
   remarks?: string;
+  nominationStatus: TrainingNominationStatus;
 };
 
 // edit/viewing type

@@ -188,7 +188,7 @@ export const TrainingNominationModal = ({
                       label: employee.name,
                     };
                     return (
-                      <div className="flex flex-row gap-1 items-center w-full md:w-1/2 ">
+                      <div key={index} className="flex flex-row gap-1 items-center w-full md:w-1/2 ">
                         {selectedEmployees.some((e) => e.value == employee.employeeId) ? (
                           <HiCheck className="text-blue-500" />
                         ) : null}

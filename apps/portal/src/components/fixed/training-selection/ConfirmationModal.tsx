@@ -22,7 +22,10 @@ export const ConfirmationNominationModal = ({
     individualTrainingDetails,
     nominatedEmployees,
     auxiliaryEmployees,
+    skipNominationModalIsOpen,
+    skipNominationRemarks,
     setTrainingModalIsOpen,
+    setSkipNominationModalIsOpen,
     postTrainingSelection,
     postTrainingSelectionSuccess,
     postTrainingSelectionFail,
@@ -30,7 +33,10 @@ export const ConfirmationNominationModal = ({
     individualTrainingDetails: state.individualTrainingDetails,
     nominatedEmployees: state.nominatedEmployees,
     auxiliaryEmployees: state.auxiliaryEmployees,
+    skipNominationModalIsOpen: state.skipNominationModalIsOpen,
+    skipNominationRemarks: state.skipNominationRemarks,
     setTrainingModalIsOpen: state.setTrainingModalIsOpen,
+    setSkipNominationModalIsOpen: state.setSkipNominationModalIsOpen,
     postTrainingSelection: state.postTrainingSelection,
     postTrainingSelectionSuccess: state.postTrainingSelectionSuccess,
     postTrainingSelectionFail: state.postTrainingSelectionFail,
@@ -65,10 +71,20 @@ export const ConfirmationNominationModal = ({
       );
     }
 
-    let data = {
-      trainingDistribution: individualTrainingDetails.distributionId,
-      employees: finalEmployees,
-    };
+    let data;
+    if (skipNominationModalIsOpen && skipNominationRemarks) {
+      data = {
+        trainingDistribution: individualTrainingDetails.distributionId,
+        employees: [],
+        remarks: skipNominationRemarks,
+      };
+    } else {
+      data = {
+        trainingDistribution: individualTrainingDetails.distributionId,
+        employees: finalEmployees,
+      };
+    }
+
     handlePatchResult(data);
   };
 
@@ -81,8 +97,11 @@ export const ConfirmationNominationModal = ({
       postTrainingSelectionSuccess(result);
       closeModalAction();
       setTimeout(() => {
-        setTrainingModalIsOpen(false); // close training details modal
+        setSkipNominationModalIsOpen(false);
       }, 200);
+      setTimeout(() => {
+        setTrainingModalIsOpen(false); // close training details modal
+      }, 300);
     }
   };
 
@@ -94,16 +113,26 @@ export const ConfirmationNominationModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>Submit Nomination</span>
+              <span>
+                {skipNominationModalIsOpen && skipNominationRemarks ? 'Skip Nomination' : 'Submit Nomination'}
+              </span>
             </div>
           </h3>
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-0 text-lg text-center px-4">
-            <label>{`Are you sure you want to submit this nomination?`}</label>
-            <label>{`You have nominated ${nominatedEmployees.length} participants and ${
-              auxiliaryEmployees.length
-            } stand-in ${auxiliaryEmployees.length > 1 ? 'participants' : 'participant'}.`}</label>
+            {skipNominationModalIsOpen && skipNominationRemarks ? (
+              <>
+                <label>{`Are you sure you want to skip nomination?`}</label>
+              </>
+            ) : (
+              <>
+                <label>{`Are you sure you want to submit this nomination?`}</label>
+                <label>{`You have nominated ${nominatedEmployees.length} participants and ${
+                  auxiliaryEmployees.length
+                } stand-in ${auxiliaryEmployees.length > 1 ? 'participants' : 'participant'}.`}</label>
+              </>
+            )}
           </div>
         </Modal.Body>
         <Modal.Footer>

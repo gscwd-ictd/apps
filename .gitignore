@@ -46,3 +46,7 @@ Thumbs.db
 
 # NX
 .nx
+
+# package.json
+package-lock.json
+

@@ -1,11 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-
 import { Button, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { usePassSlipStore } from 'apps/portal/src/store/passslip.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
-import { patchPortal, postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
-
+import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { DtrCorrectionForm } from 'libs/utils/src/lib/types/dtr.type';
 import { useDtrStore } from 'apps/portal/src/store/dtr.store';
 

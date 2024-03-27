@@ -113,13 +113,13 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     ? 'warning'
                     : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
                     ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
                     ? 'warning'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
                     ? 'warning'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
                     ? 'error'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED
                     ? 'error'
                     : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
                     ? 'warning'
@@ -146,13 +146,13 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     ? 'On Going Nomination'
                     : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
                     ? 'Nomination Done'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
                     ? 'For PDC Secretary Review'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
                     ? 'For PDC Chairman Review'
                     : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
                     ? 'Disapproved by PDC Chairman'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED
                     ? 'Disapproved by PDC Secretary'
                     : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
                     ? 'For General Manager Review'
@@ -306,7 +306,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
               {individualTrainingDetails.status === TrainingStatus.GM_DECLINED ||
               individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED ||
-              individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED ? (
+              individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED ? (
                 <>
                   <div className="flex flex-row items-center justify-between w-full pt-1">
                     <label className="text-md font-medium text-slate-500 whitespace-nowrap">
@@ -314,7 +314,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         ? 'Remarks by General Manager:'
                         : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
                         ? 'Remarks by PDC Chairman:'
-                        : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
+                        : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED
                         ? 'Remarks by PDC Secretary:'
                         : 'Remarks:'}
                     </label>
@@ -329,7 +329,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               ) : null}
 
               {(employeeDetail.employmentDetails.isPdcSecretariat &&
-                individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL) ||
+                individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_APPROVAL) ||
               (employeeDetail.employmentDetails.isPdcChairman &&
                 individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL) ||
               ((isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
@@ -408,7 +408,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
           <div className="flex justify-end gap-2 px-4">
             <div className="max-w-auto">
               {(employeeDetail.employmentDetails.isPdcSecretariat &&
-                individualTrainingDetails.status == TrainingStatus.PDC_SECRETARY_APPROVAL) ||
+                individualTrainingDetails.status == TrainingStatus.PDC_SECRETARIAT_APPROVAL) ||
               (employeeDetail.employmentDetails.isPdcChairman &&
                 individualTrainingDetails.status == TrainingStatus.PDC_CHAIRMAN_APPROVAL) ||
               ((isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
