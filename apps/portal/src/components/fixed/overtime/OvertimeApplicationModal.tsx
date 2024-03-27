@@ -143,7 +143,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       placeholder="Enter number of hours"
                       required
                       defaultValue={0}
-                      max="8"
+                      max="23"
                       min="2"
                       {...register('estimatedHours')}
                     />

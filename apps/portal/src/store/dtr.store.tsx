@@ -56,6 +56,9 @@ export type DtrState = {
 
   dtrModalIsOpen: boolean;
   setDtrModalIsOpen: (dtrModalIsOpen: boolean) => void;
+
+  dtrPdfModalIsOpen: boolean;
+  setDtrPdfModalIsOpen: (dtrPdfModalIsOpen: boolean) => void;
 };
 
 export const useDtrStore = create<DtrState>()(
@@ -81,6 +84,12 @@ export const useDtrStore = create<DtrState>()(
     setDtrModalIsOpen: (dtrModalIsOpen: boolean) => {
       set((state) => ({ ...state, dtrModalIsOpen }));
     },
+
+    dtrPdfModalIsOpen: false,
+    setDtrPdfModalIsOpen: (dtrPdfModalIsOpen: boolean) => {
+      set((state) => ({ ...state, dtrPdfModalIsOpen }));
+    },
+
     confirmUpdateModalIsOpen: false,
     setConfirmUpdateModalIsOpen: (confirmUpdateModalIsOpen: boolean) => {
       set((state) => ({ ...state, confirmUpdateModalIsOpen }));

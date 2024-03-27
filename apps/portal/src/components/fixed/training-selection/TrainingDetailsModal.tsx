@@ -2,7 +2,12 @@
 import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { NomineeStatus, NomineeType, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
+import {
+  NomineeStatus,
+  NomineeType,
+  TrainingNominationStatus,
+  TrainingStatus,
+} from 'libs/utils/src/lib/enums/training.enum';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 import { useEffect, useState } from 'react';
 import TrainingNominationModal from './TrainingNominationModal';
@@ -80,7 +85,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
-
   // Initial zustand state update
   useEffect(() => {
     if (swrRecommendedEmployeeIsLoading) {
@@ -144,6 +148,10 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   //close confirmation modal
   const closeConfirmationModal = async () => {
     setConfirmNominationModalIsOpen(false);
+  };
+
+  //close confirmation modal
+  const closeSkipNominationnModal = async () => {
     setSkipNominationModalIsOpen(false);
   };
 
@@ -191,7 +199,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             <SkipNominationModal
               modalState={skipNominationModalIsOpen}
               setModalState={setSkipNominationModalIsOpen}
-              closeModalAction={closeConfirmationModal}
+              closeModalAction={closeSkipNominationnModal}
             />
 
             <TrainingNominationModal
@@ -201,84 +209,108 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             />
 
             <div className="w-full flex flex-col gap-2 px-4 rounded">
-              {/* loading post reponse */}
-              {loadingResponse ? (
+              <div className="w-full flex flex-col gap-0">
+                {/* loading post reponse */}
+                {loadingResponse ? (
+                  <AlertNotification
+                    logo={<LoadingSpinner size="xs" />}
+                    alertType="info"
+                    notifMessage="Submitting Request"
+                    dismissible={false}
+                  />
+                ) : null}
                 <AlertNotification
-                  logo={<LoadingSpinner size="xs" />}
-                  alertType="info"
-                  notifMessage="Submitting Request"
+                  alertType={
+                    individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
+                      ? 'warning'
+                      : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
+                      ? 'info'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
+                      ? 'warning'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+                      ? 'warning'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
+                      ? 'error'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED
+                      ? 'error'
+                      : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+                      ? 'warning'
+                      : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
+                      ? 'error'
+                      : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
+                      ? 'info'
+                      : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
+                      ? 'info'
+                      : individualTrainingDetails.status === TrainingStatus.UPCOMING
+                      ? 'info'
+                      : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
+                      ? 'info'
+                      : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
+                      ? 'info'
+                      : individualTrainingDetails.status === TrainingStatus.PENDING
+                      ? 'warning'
+                      : individualTrainingDetails.status === TrainingStatus.COMPLETED
+                      ? 'success'
+                      : 'info'
+                  }
+                  notifMessage={
+                    individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
+                      ? 'On Going Nomination'
+                      : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
+                      ? 'Nomination Done'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_APPROVAL
+                      ? 'For PDC Secretary Review'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+                      ? 'For PDC Chairman Review'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
+                      ? 'Disapproved by PDC Chairman'
+                      : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARIAT_DECLINED
+                      ? 'Disapproved by PDC Secretary'
+                      : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+                      ? 'For General Manager Review'
+                      : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
+                      ? 'Disapproved by General Manager'
+                      : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
+                      ? 'On Going Batching'
+                      : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
+                      ? 'Done Batching'
+                      : individualTrainingDetails.status === TrainingStatus.UPCOMING
+                      ? 'Upcoming'
+                      : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
+                      ? 'On Going Training'
+                      : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
+                      ? 'For Requirements Submission'
+                      : individualTrainingDetails.status === TrainingStatus.PENDING
+                      ? 'Pending'
+                      : individualTrainingDetails.status === TrainingStatus.COMPLETED
+                      ? 'Completed'
+                      : individualTrainingDetails.status
+                  }
                   dismissible={false}
                 />
-              ) : null}
-              <AlertNotification
-                alertType={
-                  individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
-                    ? 'warning'
-                    : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
-                    ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
-                    ? 'warning'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
-                    ? 'warning'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
-                    ? 'error'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
-                    ? 'error'
-                    : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
-                    ? 'warning'
-                    : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
-                    ? 'error'
-                    : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
-                    ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
-                    ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.UPCOMING
-                    ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
-                    ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
-                    ? 'info'
-                    : individualTrainingDetails.status === TrainingStatus.PENDING
-                    ? 'warning'
-                    : individualTrainingDetails.status === TrainingStatus.COMPLETED
-                    ? 'success'
-                    : 'info'
-                }
-                notifMessage={
-                  individualTrainingDetails.status === TrainingStatus.ON_GOING_NOMINATION
-                    ? 'On Going Nomination'
-                    : individualTrainingDetails.status === TrainingStatus.NOMINATION_DONE
-                    ? 'Nomination Done'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_APPROVAL
-                    ? 'For PDC Secretary Review'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
-                    ? 'For PDC Chairman Review'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_DECLINED
-                    ? 'Disapproved by PDC Chairman'
-                    : individualTrainingDetails.status === TrainingStatus.PDC_SECRETARY_DECLINED
-                    ? 'Disapproved by PDC Secretary'
-                    : individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
-                    ? 'For General Manager Review'
-                    : individualTrainingDetails.status === TrainingStatus.GM_DECLINED
-                    ? 'Disapproved by General Manager'
-                    : individualTrainingDetails.status === TrainingStatus.FOR_BATCHING
-                    ? 'On Going Batching'
-                    : individualTrainingDetails.status === TrainingStatus.DONE_BATCHING
-                    ? 'Done Batching'
-                    : individualTrainingDetails.status === TrainingStatus.UPCOMING
-                    ? 'Upcoming'
-                    : individualTrainingDetails.status === TrainingStatus.ON_GOING_TRAINING
-                    ? 'On Going Training'
-                    : individualTrainingDetails.status === TrainingStatus.REQUIREMENTS_SUBMISSION
-                    ? 'For Requirements Submission'
-                    : individualTrainingDetails.status === TrainingStatus.PENDING
-                    ? 'Pending'
-                    : individualTrainingDetails.status === TrainingStatus.COMPLETED
-                    ? 'Completed'
-                    : individualTrainingDetails.status
-                }
-                dismissible={false}
-              />
+
+                <AlertNotification
+                  alertType={
+                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED
+                      ? 'success'
+                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_PENDING
+                      ? 'warning'
+                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE
+                      ? 'error'
+                      : 'info'
+                  }
+                  notifMessage={
+                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED
+                      ? 'Nomination Submitted'
+                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_PENDING
+                      ? 'Nomination Pending'
+                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE
+                      ? 'Nomination Skipped'
+                      : individualTrainingDetails.nominationStatus
+                  }
+                  dismissible={false}
+                />
+              </div>
 
               <div className="flex flex-wrap justify-between">
                 <div className="flex flex-col justify-between items-start w-full md:w-1/2 px-0.5 pb-3">
@@ -345,7 +377,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Participants:</label>
 
                 <div className="w-auto ">
-                  {nominatedEmployeeList?.length <= 0 ? (
+                  {individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_PENDING ? (
                     <Button
                       variant={'warning'}
                       size={'sm'}
@@ -517,7 +549,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="max-w-auto flex gap-4 ">
-              {nominatedEmployeeList?.length > 0 ? (
+              {individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED ||
+              individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE ? (
                 <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>

@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
-import { ScheduleBase } from '../../utils/enum/schedule-bases.enum';
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 
 type DtrPdfProps = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
@@ -288,7 +288,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* COLUMN HEADERS  */}
                   <View>
                     {/* For Office Schedule */}
-                    {employeeData.scheduleBase === ScheduleBase.OFFICE ? (
+                    {employeeData.scheduleBase === ScheduleBases.OFFICE ? (
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w10]}>
                           <Text style={[styles.tableHeaderText]}>DATE</Text>
@@ -315,8 +315,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     ) : null}
 
                     {/* For Field/Pumping Station Schedule */}
-                    {employeeData.scheduleBase === ScheduleBase.FIELD ||
-                    employeeData.scheduleBase === ScheduleBase.PUMPING_STATION ? (
+                    {employeeData.scheduleBase === ScheduleBases.FIELD ||
+                    employeeData.scheduleBase === ScheduleBases.PUMPING_STATION ? (
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w25]}>
                           <Text style={{ margin: 'auto 0' }}>REMARKS</Text>
@@ -364,7 +364,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* TABLE ROWS */}
                   <View>
                     {/* For Office Schedule */}
-                    {employeeData.scheduleBase === ScheduleBase.OFFICE
+                    {employeeData.scheduleBase === ScheduleBases.OFFICE
                       ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
@@ -496,8 +496,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                       : null}
 
                     {/* For Field/Pumping Station Schedule */}
-                    {employeeData.scheduleBase === ScheduleBase.FIELD ||
-                    employeeData.scheduleBase === ScheduleBase.PUMPING_STATION
+                    {employeeData.scheduleBase === ScheduleBases.FIELD ||
+                    employeeData.scheduleBase === ScheduleBases.PUMPING_STATION
                       ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
