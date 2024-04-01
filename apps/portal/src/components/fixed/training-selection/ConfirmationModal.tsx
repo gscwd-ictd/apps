@@ -78,13 +78,13 @@ export const ConfirmationNominationModal = ({
         employees: [],
         remarks: skipNominationRemarks,
       };
-    } else {
+    } else if (finalEmployees.length >= 1) {
       data = {
         trainingDistribution: individualTrainingDetails.distributionId,
         employees: finalEmployees,
       };
     }
-
+    console.log(data);
     handlePatchResult(data);
   };
 

@@ -27,6 +27,7 @@ import dayjs from 'dayjs';
 import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import UseRenderTrainingNominationStatus from 'apps/portal/src/utils/functions/RenderTrainingNominationStatus';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -151,8 +152,6 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('source', {
       header: 'Source',
-      filterFn: 'fuzzy',
-      sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('trainingStart', {
@@ -169,10 +168,13 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
       header: 'Slots',
       cell: (info) => info.getValue(),
     }),
-
     columnHelper.accessor('status', {
-      header: 'Status',
+      header: 'Training Status',
       cell: (info) => UseRenderTrainingStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+    columnHelper.accessor('nominationStatus', {
+      header: 'Nomination',
+      cell: (info) => UseRenderTrainingNominationStatus(info.getValue(), TextSize.TEXT_SM),
     }),
   ];
 

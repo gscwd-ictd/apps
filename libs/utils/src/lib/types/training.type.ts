@@ -69,13 +69,18 @@ export type NomineeSupervisor = {
 };
 
 export type TrainingByEmployeeId = {
+  batchEnd: string;
+  batchNumber: string;
+  batchStart: string;
   nomineeId: string;
   name: string; //training name
   location: string;
   trainingStart: string;
   trainingEnd: string;
   nomineeStatus: NomineeStatus; //pending,accepted,declined
+  trainingStatus: TrainingStatus;
   remarks: string;
+  supervisorName: string;
 };
 
 export type PdcSecretariatApproval = {

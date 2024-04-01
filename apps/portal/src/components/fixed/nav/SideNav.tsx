@@ -107,6 +107,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
+                    {/* {isEmpty(errorPendingApprovalsCount) &&
+                    (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-50 bg-red-600 rounded-full select-none" />
+                    ) : null} */}
                     <GeneralManagerMenuDropdown right />
                   </li>
 
@@ -176,6 +182,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
                 employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
+                    {/* {isEmpty(errorPendingApprovalsCount) &&
+                    (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
+                    ) : null} */}
                     <HRMenuDropdown right />
                   </li>
                 ) : null
@@ -187,6 +199,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
                 employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
+                    {/* {isEmpty(errorPendingApprovalsCount) &&
+                    (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
+                      pendingApprovalsCount.pendingLeavesCount != 0 ||
+                      pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
+                    ) : null} */}
                     <HRMenuDropdown right />
                   </li>
                 ) : null

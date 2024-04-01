@@ -110,10 +110,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     isLoading: swrNominatedEmployeeIsLoading,
     error: swrNominatedEmployeeError,
     mutate: mutateNominatedEmployees,
-  } = useSWR(individualTrainingDetails.distributionId ? nominatedEmployeeUrl : null, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(individualTrainingDetails.distributionId ? nominatedEmployeeUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -132,6 +129,11 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
       getNominatedEmployeeListFail(swrNominatedEmployeeIsLoading, swrNominatedEmployeeError.message);
     }
   }, [swrNominatedEmployee, swrNominatedEmployeeError]);
+
+  // Initial zustand state update
+  useEffect(() => {
+    mutateNominatedEmployees();
+  }, [individualTrainingDetails.distributionId]);
 
   useEffect(() => {
     if (trainingModalIsOpen) {
