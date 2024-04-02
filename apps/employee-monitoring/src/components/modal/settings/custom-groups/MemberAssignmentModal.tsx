@@ -402,7 +402,7 @@ const MemberAssignmentModal: FunctionComponent<EditModalProps> = ({
                       </button>
                     </div>
 
-                    <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={false} />
+                    <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
 
                     <div className="flex justify-start order-last mt-4">
                       <button

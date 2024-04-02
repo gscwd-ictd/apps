@@ -73,17 +73,18 @@ export const DtrDateSelect = () => {
         className="w-40"
         data={months}
         textSize="sm"
-        // initial={months[Number(monthNow)]}
-        initial={months[0]}
+        initial={months[Number(monthNow)]}
+        // initial={months[0]}
         listDef={list}
         onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
       />
+
       <Select
         className="w-28"
         data={years}
         textSize="sm"
-        initial={years[0]}
-        // initial={{ year: yearNow }}
+        // initial={years[0]}
+        initial={{ year: yearNow }}
         listDef={yearList}
         onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
       />
