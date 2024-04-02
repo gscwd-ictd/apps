@@ -9,8 +9,6 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
 import { Announcement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
-import TestAnnouncement from 'apps/employee-monitoring/public/Test-Announcement.png';
-
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -137,7 +135,11 @@ const Index = () => {
     columnHelper.accessor('title', {
       enableSorting: true,
       header: () => 'Title',
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <div className="w-40">
+          <p>{info.getValue()}</p>
+        </div>
+      ),
     }),
     columnHelper.accessor('eventAnnouncementDate', {
       enableSorting: true,
@@ -157,12 +159,19 @@ const Index = () => {
       enableSorting: true,
       header: () => 'Image',
       cell: (info) => (
-        // <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
-        //   <img src={info.getValue()} alt="Image" width={'84.3rem'} height={'84.3rem'} />
-        // </a>
-        <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
-          <Image src={info.getValue()} alt="Image" width={84.3} height={84.3} />
-        </a>
+        <div className="flex flex-row justify-center">
+          {info.getValue() ? (
+            <div className="flex flex-col items-center">
+              <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
+                <Image src={info.getValue()} alt="Image" width={84.3} height={84.3} />
+              </a>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center w-20 h-20 bg-gray-400">
+              <i className="bx bxs-error text-3xl text-white"></i>
+            </div>
+          )}
+        </div>
       ),
     }),
     columnHelper.accessor('status', {

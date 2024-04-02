@@ -55,11 +55,8 @@ const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
   const handleDeleteResult = async (id: string) => {
     const { error, result } = await deleteEmpMonitoring(`/events-announcements/${id}`);
 
-    console.log('deleteEmpMonitoring error:', error);
-    console.log('deleteEmpMonitoring result:', result);
-
     if (error) {
-      SetErrorAnnouncement('An error occurred. Please try again later.');
+      SetErrorAnnouncement('Error occurred when deleting announcement. Please try again later.');
     } else {
       SetDeleteAnnouncement(result);
       closeModalAction();
