@@ -270,7 +270,7 @@ export const useDtrStore = create<DailyTimeRecordState>()(
     updateEmployeeDtrFail: (error: string) =>
       set((state) => ({
         ...state,
-        loading: { ...state.loading, loadingUpdateEmployeeDtr: true },
+        loading: { ...state.loading, loadingUpdateEmployeeDtr: false },
         error: { ...state.error, errorUpdateEmployeeDtr: error },
       })),
 

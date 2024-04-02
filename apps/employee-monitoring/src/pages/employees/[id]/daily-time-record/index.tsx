@@ -139,7 +139,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
 
               <Can I="access" this="Daily_time_record_view">
                 <div className="flex justify-end gap-2">
-                  <DtrDateSelect />
+                  <DtrDateSelect employeeData={employeeData} />
                   <PrintButton onClick={toggle} />
                 </div>
 
