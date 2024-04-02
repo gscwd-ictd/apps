@@ -202,7 +202,7 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                               <label className="capitalize">Time Log Correction {logs.dtrCorrection.status}</label>
                             ) : null}
                           </td>
-                          {/* <td
+                          <td
                             className={`${
                               logs.holidayType === HolidayTypes.REGULAR
                                 ? 'border-rose-300'
@@ -232,7 +232,7 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                                 <HiPencilAlt className="w-4 h-5 md:w-4 md:h-5" />
                               </div>
                             </Button>
-                          </td> */}
+                          </td>
                         </tr>
                       );
                     })
