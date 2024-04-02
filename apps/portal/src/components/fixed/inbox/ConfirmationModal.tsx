@@ -108,7 +108,7 @@ export const ConfirmationInboxModal = ({
     putInboxResponse();
 
     const { error, result } = await putPortal(submitTrainingResponseRoute, {
-      id: selectedPayloadId,
+      nomineeId: selectedPayloadId,
       status: confirmationResponse,
       remarks: confirmationResponse == InboxMessageResponse.TRAINING_DECLINE ? declineRemarks : null,
     });
@@ -137,10 +137,15 @@ export const ConfirmationInboxModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="flex flex-col w-full h-full gap-2 text-lg text-center px-4">
-            {confirmationResponse == InboxMessageResponse.PSB_ACCEPT ||
-            confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
+            {confirmationResponse == InboxMessageResponse.PSB_ACCEPT
+              ? 'Are you sure you want accept this assignment?'
+              : confirmationResponse == InboxMessageResponse.PSB_DECLINE
+              ? 'Are you sure you want decline this assignment?'
+              : confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
               ? 'Are you sure you want accept this training invitiation? '
-              : 'Are you sure you want decline this training invitiation? Your response will be irreversible.'}
+              : confirmationResponse == InboxMessageResponse.TRAINING_DECLINE
+              ? 'Are you sure you want decline this training invitiation? Your response will be irreversible.'
+              : 'Do you want to submit?'}
           </div>
         </Modal.Body>
         <Modal.Footer>

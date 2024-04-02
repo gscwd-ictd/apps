@@ -145,10 +145,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoadingOvertimeMessages,
     error: swrOvertimeMessageError,
     mutate: mutateOvertimeMessages,
-  } = useSWR(overtimeMessagesUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(overtimeMessagesUrl, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -177,10 +174,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoadingTrainingMessages,
     error: swrTrainingMessageError,
     mutate: mutateTrainingMessages,
-  } = useSWR(trainingMessagesUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
