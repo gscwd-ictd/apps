@@ -19,13 +19,12 @@ export type RecommendedEmployee = {
 };
 
 export type Training = {
-  id?: string; //for pdc secretariat/chairman //training ID
   distributionId: string;
   numberOfSlots: number;
   numberOfParticipants?: number; //for pdc secretariat/chairman/gm
   numberOfHours?: number; //for pdc secretariat/chairman/gm
   nominee?: Array<NominatedEmployees>; //for pdc secretariat/chairman/gm
-  trainingId: string;
+  trainingId: string; //for pdc secretariat/chairman //training ID
   courseTitle: string;
   location: string;
   trainingStart: string;

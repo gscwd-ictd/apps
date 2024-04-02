@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, ListDef, Select } from '@gscwd-apps/oneui';
+import { Button } from '@gscwd-apps/oneui';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
 import { useDtrStore } from '../../../store/dtr.store';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
@@ -238,7 +238,7 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                     })
                   ) : (
                     <tr className="border-0">
-                      <td colSpan={6}>NO DATA FOUND</td>
+                      <td colSpan={7}>NO DATA FOUND</td>
                     </tr>
                   )}
                 </tbody>

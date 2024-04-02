@@ -1,22 +1,47 @@
 import { Button, ListDef, Select } from '@gscwd-apps/oneui';
 import { useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, FunctionComponent } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi';
+import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
+import axios from 'axios';
+import { isEmpty } from 'lodash';
 
 type Month = { month: string; code: string };
 type Year = { year: string };
 
-export const DtrDateSelect = () => {
-  const { selectedMonth, selectedYear, setSelectedMonth, setSelectedYear, setIsDateSearched } = useDtrStore(
-    (state) => ({
-      selectedMonth: state.selectedMonth,
-      selectedYear: state.selectedYear,
-      setSelectedMonth: state.setSelectedMonth,
-      setSelectedYear: state.setSelectedYear,
-      setIsDateSearched: state.setIsDateSearched,
-    })
-  );
+type EmployeeDtrTableProps = {
+  employeeData: EmployeeWithDetails;
+};
+
+export const DtrDateSelect: FunctionComponent<EmployeeDtrTableProps> = ({ employeeData }) => {
+  const {
+    SelectedMonth,
+    SetSelectedMonth,
+
+    SelectedYear,
+    SetSelectedYear,
+
+    IsDateSearched,
+    SetIsDateSearched,
+
+    GetEmployeeDtr,
+    GetEmployeeDtrFail,
+    GetEmployeeDtrSuccess,
+  } = useDtrStore((state) => ({
+    SelectedMonth: state.selectedMonth,
+    SetSelectedMonth: state.setSelectedMonth,
+
+    SelectedYear: state.selectedYear,
+    SetSelectedYear: state.setSelectedYear,
+
+    IsDateSearched: state.isDateSearched,
+    SetIsDateSearched: state.setIsDateSearched,
+
+    GetEmployeeDtr: state.getEmployeeDtr,
+    GetEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+    GetEmployeeDtrFail: state.getEmployeeDtrFail,
+  }));
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
@@ -59,13 +84,46 @@ export const DtrDateSelect = () => {
     ),
   };
 
+  // set value for month
   const onChangeMonth = (month: string) => {
-    setSelectedMonth(month);
+    SetSelectedMonth(month);
   };
 
+  // set value for year
   const onChangeYear = (year: string) => {
-    setSelectedYear(year);
+    SetSelectedYear(year);
   };
+
+  // first load search using curent month & year
+  const searchDtr = async () => {
+    if (employeeData.companyId && SelectedYear && SelectedMonth) {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/daily-time-record/employees/${employeeData.companyId}/${SelectedYear}/${SelectedMonth}`
+        );
+
+        if (!isEmpty(data)) {
+          GetEmployeeDtrSuccess(data);
+        }
+      } catch (error) {
+        GetEmployeeDtrFail(error.message);
+      }
+    }
+  };
+
+  // set zustand store default year and month value
+  useEffect(() => {
+    SetSelectedYear(format(new Date(), 'yyyy'));
+    SetSelectedMonth(format(new Date(), 'M'));
+  }, []);
+
+  // check if selected month and year has been set
+  useEffect(() => {
+    if (SelectedMonth !== '--' && SelectedYear !== '--') {
+      GetEmployeeDtr();
+      searchDtr();
+    }
+  }, [SelectedYear, SelectedMonth]);
 
   return (
     <div className="flex justify-end gap-2">
@@ -93,9 +151,9 @@ export const DtrDateSelect = () => {
         variant={'info'}
         size={'sm'}
         loading={false}
-        onClick={() => setIsDateSearched(true)}
+        onClick={() => SetIsDateSearched(true)}
         type="button"
-        disabled={selectedMonth === '--' || selectedYear === '--' ? true : false}
+        disabled={SelectedMonth === '--' || SelectedYear === '--' ? true : false}
       >
         <HiOutlineSearch className="w-4 h-4" />
       </Button>

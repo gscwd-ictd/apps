@@ -124,17 +124,6 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
       shift: rowData.schedule.shift,
     });
 
-    // setDefaultDtrValues({
-    //   companyId: rowData.companyId,
-    //   dtrDate: rowData.day,
-    //   timeIn: removeSeconds(rowData.dtr.timeIn),
-    //   lunchIn: removeSeconds(rowData.dtr.lunchIn),
-    //   lunchOut: removeSeconds(rowData.dtr.lunchOut),
-    //   timeOut: removeSeconds(rowData.dtr.timeOut),
-    //   withLunch: true,
-    //   shift: rowData.schedule.shift,
-    // });
-
     setValue('companyId', rowData.companyId);
     setValue('dtrDate', rowData.day);
     setValue('timeIn', removeSeconds(rowData.dtr.timeIn));
