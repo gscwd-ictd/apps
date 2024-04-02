@@ -245,12 +245,18 @@ export default function Vacancies({
             </Modal.Body>
 
             <Modal.Footer className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}>
-              <div className="flex flex-col justify-center w-full h-full">
+              <div className="flex flex-col justify-center w-full h-full px-4">
                 {modal.page === 1 ? (
                   <div className="flex flex-col items-end w-full">
-                    <Button className={`${hasApplied ? 'hidden' : 'h-10'}`} onClick={(e) => changeModalPage(2)}>
-                      Next
-                    </Button>
+                    {hasApplied ? (
+                      <Button variant="default" className={`h-10`} onClick={(e) => modalCancel()}>
+                        Close
+                      </Button>
+                    ) : (
+                      <Button className={`h-10`} onClick={(e) => changeModalPage(2)}>
+                        Next
+                      </Button>
+                    )}
                   </div>
                 ) : modal.page === 2 ? (
                   <div className="flex items-center justify-between w-full h-10">

@@ -61,14 +61,14 @@ export const ConfirmationPdcModal = ({
         //for chairman
         data = {
           pdcChairman: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
           remarks: remarks,
         };
       } else if (employeeDetail.employmentDetails.isPdcSecretariat) {
         //for secretary
         data = {
-          pdcSecretary: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          pdcSecretariat: employeeDetail.employmentDetails.userId,
+          trainingDetails: individualTrainingDetails.trainingId,
           remarks: remarks,
         };
       } else if (
@@ -79,7 +79,7 @@ export const ConfirmationPdcModal = ({
         data = {
           //for GM
           generalManager: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
           remarks: remarks,
         };
       } else if (
@@ -91,7 +91,7 @@ export const ConfirmationPdcModal = ({
         //for chairman and GM at the same time but approving as chairman
         data = {
           pdcChairman: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
           remarks: remarks,
         };
       } else if (
@@ -103,7 +103,7 @@ export const ConfirmationPdcModal = ({
         //for chairman and GM at the same time but approving as GM
         data = {
           generalManager: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
           remarks: remarks,
         };
       }

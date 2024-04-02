@@ -213,13 +213,13 @@ export const ApprovalOtpContentsPdc: FunctionComponent<OtpProps> = ({
         //for chairman
         data = {
           pdcChairman: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
         };
       } else if (employeeDetail.employmentDetails.isPdcSecretariat) {
         //for secretary
         data = {
-          pdcSecretary: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          pdcSecretariat: employeeDetail.employmentDetails.userId,
+          trainingDetails: individualTrainingDetails.trainingId,
         };
       } else if (
         (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
@@ -229,7 +229,7 @@ export const ApprovalOtpContentsPdc: FunctionComponent<OtpProps> = ({
         data = {
           //for GM
           generalManager: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
         };
       } else if (
         employeeDetail.employmentDetails.isPdcChairman &&
@@ -240,7 +240,7 @@ export const ApprovalOtpContentsPdc: FunctionComponent<OtpProps> = ({
         //for chairman and GM at the same time but approving as chairman
         data = {
           pdcChairman: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
         };
       } else if (
         employeeDetail.employmentDetails.isPdcChairman &&
@@ -251,7 +251,7 @@ export const ApprovalOtpContentsPdc: FunctionComponent<OtpProps> = ({
         //for chairman and GM at the same time but approving as GM
         data = {
           generalManager: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.id,
+          trainingDetails: individualTrainingDetails.trainingId,
         };
       }
 
