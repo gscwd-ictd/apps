@@ -66,6 +66,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
   const onSubmit: SubmitHandler<PdcAction> = (data: PdcAction) => {
     if (data.action === PdcApprovalAction.APPROVE) {
+      console.log(individualTrainingDetails);
       setOtpPdcModalIsOpen(true);
     } else {
       setConfirmTrainingModalIsOpen(true);
@@ -375,7 +376,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               mobile={employeeDetail.profile.mobileNumber}
               employeeId={employeeDetail.user._id}
               action={PdcApprovalAction.APPROVE}
-              tokenId={individualTrainingDetails.id}
+              tokenId={individualTrainingDetails.trainingId}
               otpName={`${
                 employeeDetail.employmentDetails.isPdcSecretariat
                   ? 'pdcSecretariatApproval'
@@ -400,7 +401,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             setModalState={setConfirmTrainingModalIsOpen}
             closeModalAction={closeConfirmationModal}
             action={PdcApprovalAction.DISAPPROVE}
-            tokenId={individualTrainingDetails.id}
+            tokenId={individualTrainingDetails.trainingId}
             remarks={reason}
           />
         </Modal.Body>
