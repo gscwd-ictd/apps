@@ -2,7 +2,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 import { Fragment, FunctionComponent, useEffect, useState } from 'react';
-import { EmployeeWithDetails } from '../../../../../libs/utils/src/lib/types/employee.type';
 import useSWR from 'swr';
 import { useDtrStore } from '../../store/dtr.store';
 import fetcherEMS from '../../utils/fetcher/FetcherEMS';
@@ -15,6 +14,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { ScheduleBase } from '../../utils/enum/schedule-bases.enum';
+import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -42,36 +42,41 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
   const {
     employeeDtr,
+    errorEmployeeDtr,
+
     isDateSearched,
     setIsDateSearched,
     selectedMonth,
     selectedYear,
+
     getEmployeeDtr,
     getEmployeeDtrFail,
     getEmployeeDtrSuccess,
+
     getIsLoading,
+    patchIsLoading,
     employeeDailyRecord,
-    errorEmployeeDtr,
   } = useDtrStore((state) => ({
-    date: state.date,
     employeeDtr: state.employeeDtr,
+    errorEmployeeDtr: state.error.errorEmployeeDtr,
+
     isDateSearched: state.isDateSearched,
     setIsDateSearched: state.setIsDateSearched,
     selectedMonth: state.selectedMonth,
     selectedYear: state.selectedYear,
+
     getEmployeeDtr: state.getEmployeeDtr,
     getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
     getEmployeeDtrFail: state.getEmployeeDtrFail,
-    setEmployeeDtr: state.setEmployeeDtr,
+
     getIsLoading: state.loading.loadingEmployeeDtr,
+    patchIsLoading: state.loading.loadingUpdateEmployeeDtr,
     employeeDailyRecord: state.employeeDailyRecord,
-    errorEmployeeDtr: state.error.errorEmployeeDtr,
   }));
 
   const {
     data: swrDtr,
     isLoading: swrDtrIsLoading,
-    isValidating: swrDtrIsValidating,
     error: swrDtrError,
     mutate: mutateDtr,
   } = useSWR(
@@ -130,6 +135,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
   // if a result is returned
   useEffect(() => {
+    setIsDateSearched(false);
+
     // success
     if (!isEmpty(swrDtr)) {
       getEmployeeDtrSuccess(swrDtr.data);
@@ -143,9 +150,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
   // reload table if successful update of DTR log
   useEffect(() => {
-    //   console.log(isDateSearched);
-
     if (!isEmpty(employeeDailyRecord)) {
+      setIsDateSearched(true);
       mutateDtr();
       getEmployeeDtr();
     }
@@ -167,7 +173,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
         />
       ) : null}
 
-      {swrDtrIsLoading || swrDtrIsValidating ? (
+      {/* getIsLoading || */}
+      {swrDtrIsLoading || getIsLoading || patchIsLoading ? (
         <>
           <LoadingSpinner size="lg" />
         </>
